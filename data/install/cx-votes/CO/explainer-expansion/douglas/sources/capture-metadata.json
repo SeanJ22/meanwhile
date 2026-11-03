@@ -1,0 +1,72 @@
+{
+  "officialUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+  "captureProvider": "search_service_web_run PDF extraction",
+  "rawFormat": "CAPTURED_SOURCE_TEXT",
+  "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+  "lineCount": 593,
+  "coverage": "Every line 0 through 592 captured from official PDF views",
+  "nativeGovernmentFetch": {
+    "status": 503,
+    "reason": "Shared runtime all-host HTTP outage per root; does not establish government origin failure"
+  },
+  "requests": [
+    {
+      "request": "initial PDF opens",
+      "capturedAt": "2026-11-03T04:12:29.005Z",
+      "reference": "turn887693view0",
+      "lineCount": 207
+    },
+    {
+      "request": "local-measure PDF views",
+      "capturedAt": "2026-11-03T04:12:29.006Z",
+      "reference": "turn162188view0",
+      "lineCount": 132
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+          "lineno": 242
+        },
+        {
+          "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "lineno": 370
+        }
+      ],
+      "capturedAt": "2026-11-03T04:12:29.384Z",
+      "reference": "turn510467view0",
+      "lineCount": 137
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+          "lineno": 459
+        },
+        {
+          "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "lineno": 502
+        }
+      ],
+      "capturedAt": "2026-11-03T04:12:29.713Z",
+      "reference": "turn754854view0",
+      "lineCount": 140
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+          "lineno": 585
+        },
+        {
+          "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "lineno": 502
+        }
+      ],
+      "capturedAt": "2026-11-03T04:12:30.037Z",
+      "reference": "turn659857view0",
+      "lineCount": 69
+    }
+  ],
+  "conflicts": []
+}

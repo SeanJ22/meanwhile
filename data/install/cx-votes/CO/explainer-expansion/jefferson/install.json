@@ -1,0 +1,102 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-jefferson-county-school-district-r1-2026-ballot-5a",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-jefferson-county-school-district-r1-2026-ballot-5b",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-blue-mountain-water-district-2026-ballot-6a",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-golden-gate-fire-protection-district-2026-ballot-6b",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-arvada-fire-protection-district-2026-ballot-6c",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-columbine-knolls-grove-metropolitan-recreation-district-2026-ballot-6d",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-columbine-knolls-grove-metropolitan-recreation-district-2026-ballot-6e",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-evergreen-fire-protection-district-2026-ballot-7b",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-edgewater-2026-ballot-2k",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-lakewood-2026-ballot-2g",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-lakewood-2026-ballot-2h",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-lakewood-2026-ballot-2i",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-lakewood-2026-ballot-2j",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-wheat-ridge-2026-ballot-2a",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-mountain-view-2026-ballot-2b",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-mountain-view-2026-ballot-2c",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-morrison-2026-ballot-2d",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-morrison-2026-ballot-2e",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-morrison-2026-ballot-2f",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    }
+  ],
+  "operation": "Append only these19 measure contests, official questions and explanations. Preserve all unrelated ballot data. Two more explanations in pending-attachment.json have no exact registered district ID and are excluded from input. No production writes or app changes.",
+  "validation": {
+    "measureRecordIssue": "PASS (21 records, 19 attached and2pending)",
+    "independentReview": "PENDING_ROOT",
+    "supportingQuotes": "PASS",
+    "originalAndSanitizedSourceHashes": "PASS",
+    "registrationDivisions": "PASS (19 exact existing IDs;2pending excluded)"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

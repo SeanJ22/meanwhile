@@ -1,0 +1,21 @@
+[
+  {
+    "id": "larimer-key",
+    "url": "https://www.larimer.gov/clerk/elections/results/key",
+    "originalSha256": "9b2d632dac5470a53866f54580e49c4dd15de61283b7e20b35396eb2567ee14f",
+    "retrievedAt": "2026-11-03T04:05:42.828717+00:00",
+    "sourceOrg": "Larimer County Clerk and Recorder",
+    "rawFormat": "HTML",
+    "hashScope": "complete original captured HTML bytes; repository sanitation separately identified",
+    "privateOriginalFile": "/workspace/work/election-day/explainers-only/CO/larimer-key.html",
+    "savedFile": "sources/larimer-key.sanitized.html",
+    "savedSha256": "9b2d632dac5470a53866f54580e49c4dd15de61283b7e20b35396eb2567ee14f",
+    "sanitization": {
+      "originalSha256": "9b2d632dac5470a53866f54580e49c4dd15de61283b7e20b35396eb2567ee14f",
+      "savedSha256": "9b2d632dac5470a53866f54580e49c4dd15de61283b7e20b35396eb2567ee14f",
+      "replacements": 0,
+      "redactions": [],
+      "preserved": []
+    }
+  }
+]

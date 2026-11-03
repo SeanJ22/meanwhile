@@ -1,0 +1,126 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:co/special_district:west_metropolitan_fire_protection_district",
+    "contestId": "co-west-metro-fire-protection-district-2026-ballot-7c",
+    "publishedDistrict": "West Metro Fire Protection District",
+    "sourceParts": [
+      {
+        "sourceUrl": "https://gisportal.jeffco.us/server/rest/services/Fire_District/FeatureServer/15/query?where=DISTRICT_ID%20IN%20%2874%2C138%29%20AND%20DISTRICT_STATUS%3D%27Active%27%20AND%20IN_OUT%3D%27IN%27&outFields=OBJECTID%2CDISTRICT_ID%2CDISTRICT_NAME%2CDISTRICT_STATUS%2CIN_OUT%2CNAME%2CUPDATE_DATE&returnGeometry=true&outSR=4326&f=geojson",
+        "originalSha256": "f6f680ed2a887735b920cd88b7dbc810d98c2e005d0ff0d4088daf42decf0848",
+        "sourceFeatureIds": [
+          76,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          114,
+          115,
+          118,
+          30,
+          31,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          63,
+          73
+        ],
+        "officialLabels": [
+          "WEST METRO FIRE PROTECTION - GENERAL"
+        ]
+      },
+      {
+        "sourceUrl": "https://apps.douglas.co.us/gisod/rest/services/DerivedData/MapServer/1/query?where=UPPER%28AUTHORITYNAME%29%20LIKE%20%27%25CONIFER%25%27%20OR%20UPPER%28AUTHORITYNAME%29%20LIKE%20%27%25WEST%25METRO%25%27&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "originalSha256": "a4b561f5edea080f03abef8283c164aade27493c6ace196d2154f1748733d00d",
+        "sourceFeatureIds": [
+          91
+        ],
+        "officialLabels": [
+          "West Metro Fire Protection District"
+        ]
+      }
+    ],
+    "boundaryYear": 2025,
+    "sourceNote": "Current Jefferson and Douglas county fire TAX district layers, read November3,2026. Latest Jefferson component update is July16,2025; Douglas current layer does not expose feature dates. Boundary year2025 records the latest dated source component; no claim every coordinate was surveyed in2025.",
+    "geometryTransformation": "Complete original GeoJSON polygon coordinate components concatenated without union, clipping, simplification, precision reduction, rounding, or inferred territory."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/special_district:conifer_fire_protection_district",
+    "contestId": "co-conifer-fire-protection-district-2026-ballot-7d",
+    "publishedDistrict": "Conifer Fire Protection District",
+    "sourceParts": [
+      {
+        "sourceUrl": "https://gisportal.jeffco.us/server/rest/services/Fire_District/FeatureServer/15/query?where=DISTRICT_ID%20IN%20%2874%2C138%29%20AND%20DISTRICT_STATUS%3D%27Active%27%20AND%20IN_OUT%3D%27IN%27&outFields=OBJECTID%2CDISTRICT_ID%2CDISTRICT_NAME%2CDISTRICT_STATUS%2CIN_OUT%2CNAME%2CUPDATE_DATE&returnGeometry=true&outSR=4326&f=geojson",
+        "originalSha256": "f6f680ed2a887735b920cd88b7dbc810d98c2e005d0ff0d4088daf42decf0848",
+        "sourceFeatureIds": [
+          100,
+          101,
+          102,
+          117,
+          127,
+          103,
+          104
+        ],
+        "officialLabels": [
+          "CONIFER FIREDISTRICT"
+        ]
+      },
+      {
+        "sourceUrl": "https://apps.douglas.co.us/gisod/rest/services/DerivedData/MapServer/1/query?where=UPPER%28AUTHORITYNAME%29%20LIKE%20%27%25CONIFER%25%27%20OR%20UPPER%28AUTHORITYNAME%29%20LIKE%20%27%25WEST%25METRO%25%27&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "originalSha256": "a4b561f5edea080f03abef8283c164aade27493c6ace196d2154f1748733d00d",
+        "sourceFeatureIds": [
+          149
+        ],
+        "officialLabels": [
+          "Conifer Fire Protection District"
+        ]
+      }
+    ],
+    "boundaryYear": 2026,
+    "sourceNote": "Current county fire TAX district layers explicitly name Conifer. Jefferson has seven active included components, latest update October21,2026. Douglas supplies its exact county portion. Existing DOLA30127 explicitly records prior name North Fork, matching Census government204143 by website and mailing address. No ElkCreek or separately named Inter-Canyon feature is silently added.",
+    "geometryTransformation": "Complete original GeoJSON polygon coordinate components concatenated without union, clipping, simplification, precision reduction, rounding, or inferred territory."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/judicial_district:17",
+    "contestId": "co-17th-judicial-district-2026-ballot-7e",
+    "publishedDistrict": "17th Judicial District",
+    "sourceParts": [
+      {
+        "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=GEOID%20IN%20%28%2708001%27%2C%2708014%27%2C%2708035%27%2C%2708059%27%29&outFields=GEOID%2CNAME%2CSTATE%2CCOUNTY%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&f=geojson",
+        "originalSha256": "677248a73864102d2c331fde3cfd82869b95a80cab555a526b7ce08923d4a08a",
+        "sourceFeatureIds": [
+          "08014",
+          "08001"
+        ],
+        "officialLabels": [
+          "Broomfield County",
+          "Adams County"
+        ]
+      }
+    ],
+    "boundaryYear": 2026,
+    "sourceNote": "Official Broomfield neutral7E summary expressly defines this district as Adams County and Broomfield. These are the complete January1,2026 Census county polygons08001 and08014. Their original polygon components are concatenated; no broader county or statewide scope is used.",
+    "geometryTransformation": "Complete original GeoJSON polygon coordinate components concatenated without union, clipping, simplification, precision reduction, rounding, or inferred territory."
+  }
+]

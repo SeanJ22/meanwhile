@@ -1,0 +1,17 @@
+{
+  "county": "adams",
+  "officialCurrentLocalMeasureCount": 20,
+  "newDraftCount": 15,
+  "exactRegisteredAttachmentCount": 13,
+  "pendingAttachmentCount": 2,
+  "alreadyPreparedElsewhere": [
+    "Aurora3A",
+    "Aurora3B",
+    "Aurora3C",
+    "Aurora3D",
+    "FRPR7A"
+  ],
+  "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+  "sourceCapture": "Every line 0 through 1103 captured from official PDF views",
+  "claimLimit": "This count describes this official current composite sample; it does not certify all Colorado local measures."
+}

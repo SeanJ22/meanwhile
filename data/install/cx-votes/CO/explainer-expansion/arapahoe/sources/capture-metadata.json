@@ -1,0 +1,54 @@
+{
+  "officialUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230",
+  "captureProvider": "search_service_web_run PDF extraction",
+  "rawFormat": "CAPTURED_SOURCE_TEXT",
+  "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+  "lineCount": 962,
+  "coverage": "Every line 0 through 961 captured from official PDF views",
+  "nativeGovernmentFetch": {
+    "status": null,
+    "reason": "Native fetch not attempted during known shared runtime all-host HTTP outage"
+  },
+  "requests": [
+    {
+      "request": "official PDF open",
+      "capturedAt": "2026-11-03T04:25:22.023Z",
+      "reference": "turn490448view2",
+      "lineCount": 304
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230",
+          "lineno": 339
+        }
+      ],
+      "capturedAt": "2026-11-03T04:25:22.292Z",
+      "reference": "turn828443view0",
+      "lineCount": 377
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230",
+          "lineno": 633
+        }
+      ],
+      "capturedAt": "2026-11-03T04:25:22.561Z",
+      "reference": "turn942063view0",
+      "lineCount": 346
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230",
+          "lineno": 905
+        }
+      ],
+      "capturedAt": "2026-11-03T04:25:22.894Z",
+      "reference": "turn450721view0",
+      "lineCount": 348
+    }
+  ],
+  "conflicts": []
+}

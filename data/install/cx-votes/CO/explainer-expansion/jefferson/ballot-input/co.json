@@ -1,0 +1,892 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-jefferson-county-school-district-r1-2026-ballot-5a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:jefferson_county_school_district_r_1",
+          "divisionVintage": "2026",
+          "title": "Jefferson County School District R-1 Ballot Issue 5A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL JEFFERSON COUNTY SCHOOL DISTRICT R-1 TAXES BE INCREASED $73 MILLION IN 2026 FOR COLLECTION IN 2027, AND BY SUCH AMOUNTS IN SUBSEQUENT YEARS THAT WILL PRODUCE, WHEN COMBINED WITH PRIOR MILL LEVY OVERRIDE AMOUNTS, UP TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S., WITH SUCH FUNDS TO BE USED FOR THE PURPOSES AUTHORIZED BY SECTION 22-54-108, C.R.S., SUCH AS THE FOLLOWING: ATTRACTING AND KEEPING · HIGH-QUALITY STAFF BY RAISING COMPENSATION CLOSER TO THE MARKET AVERAGE FOR TEACHERS, EDUCATION SUPPORT PROFESSIONALS, SUPPORT STAFF AND SCHOOL LEADERS; PROVIDING STUDENTS WITH THE · INSTRUCTION, SKILLS, AND HANDS-ON LEARNING NECESSARY FOR SUCCESS IN COLLEGE AND THE WORKPLACE THROUGH CAREER AND TECHNICAL EDUCATION PROGRAMS; AND SHALL THE SPENDING OF SUCH TAXES BE REVIEWED BY A BOARD-APPOINTED CITIZENS' COMMITTEE FOR ACCOUNTABILITY, SUMMARIZED IN ANNUAL PUBLIC REPORTS, AND POSTED PUBLICLY ON A WEBSITE FOR FULL TRANSPARENCY; AND SHALL A MILL LEVY BE IMPOSED AT A RATE WHICH WILL GENERATE REVENUES UP TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S., AND SHALL THE ADDITIONAL REVENUES BE DEPOSITED IN THE GENERAL FUND AND USED FOR EDUCATIONAL PURPOSES AS PROVIDED HEREIN, AS PREVIOUSLY APPROVED BY THE DISTRICT VOTERS PURSUANT TO SECTION 22-54-108(V), C.R.S., AND AS AUTHORIZED BY STATE LAW; AND SHALL THE REVENUE FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT THEREON BE COLLECTED AND SPENT AS VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-jefferson-county-school-district-r1-2026-ballot-5b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:jefferson_county_school_district_r_1",
+          "divisionVintage": "2026",
+          "title": "Jefferson County School District R-1 Ballot Issue 5B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL JEFFERSON COUNTY SCHOOL DISTRICT R-1 TAXES BE INCREASED $60 MILLION IN 2026 FOR COLLECTION IN 2027, AND ANNUALLY THEREAFTER, AND UTILIZED FOR THE PURPOSES AUTHORIZED AND IN ACCORDANCE WITH SECTION 22-54-108.7, C.R.S., (THE DEBT FREE SCHOOLS ACT), PROVIDED THAT SUCH REVENUE MAY BE INCREASED ANNUALLY (AFTER THE FIRST FULL FISCAL YEAR) FOR INFLATION BASED ON THE ANNUAL CHANGES IN THE CONSUMER PRICE INDEX; WITH SUCH REVENUE TO BE DEPOSITED INTO A DEDICATED FUND ONLY TO BE USED FOR CAPITAL CONSTRUCTION, TECHNOLOGY, AND MAINTENANCE, AND UTILIZED FOR AUTHORIZED PURPOSES SUCH AS: CRITICAL UPGRADES AND · MAINTENANCE OF SCHOOLS SUCH AS PLUMBING IMPROVEMENTS, PARKING LOT REPAIRS, AND REPLACING OR REPAIRING FAULTY, DANGEROUS, AND LEAKING ROOFS; PROVIDING AND REPAIRING COOLING, · HEATING, AND VENTILATION SYSTEMS FOR A BETTER LEARNING ENVIRONMENT; REPLACING AND UPDATING AGING · INFRASTRUCTURE AND TECHNOLOGY; SAFETY AND SECURITY INVESTMENTS · SUCH AS SECURE ACCESS AND MONITORING; AND SHALL THE SPENDING OF SUCH TAXES BE REVIEWED BY A BOARD-APPOINTED CITIZENS' COMMITTEE FOR ACCOUNTABILITY, SUMMARIZED IN ANNUAL PUBLIC REPORTS, AND POSTED PUBLICLY ON A WEBSITE FOR FULL TRANSPARENCY; AND SHALL A MILL LEVY BE IMPOSED AT A RATE SUFFICIENT TO GENERATE REVENUES UP TO SUCH AMOUNT SPECIFIED ABOVE, AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-blue-mountain-water-district-2026-ballot-6a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:blue_mountain_water_district",
+          "divisionVintage": "2026",
+          "title": "Blue Mountain Water District Ballot Issue 6A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL BLUE MOUNTAIN WATER DISTRICT DEBT BE INCREASED UP TO $1,200,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $2,082,000, BUT WITH NO ADDITIONAL TAX AUTHORIZATION, SUCH DEBT TO CONSIST OF A LOAN AGREEMENT OR OTHER MULTIPLE FISCAL YEAR OBLIGATION ENTERED INTO WITH A STATE AUTHORITY FOR THE PURPOSE OF PAYING OR FINANCING ALL OR A PART OF THE COSTS OF CONSTRUCTING AND COMPLETING WATER QUALITY, REGULATORY COMPLIANCE AND RELATED SYSTEM IMPROVEMENTS, WITH SUCH DEBT TO BE PAID FROM THE FEES AND CHARGES DERIVED FROM THE OPERATION OF THE DISTRICT'S WATER SYSTEM AND OTHER LEGALLY AVAILABLE REVENUES, TO BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 4.0% PER ANNUM AND TO BE ISSUED AT SUCH TIME, IN SUCH MANNER AND CONTAINING SUCH TERMS, NOT INCONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-golden-gate-fire-protection-district-2026-ballot-6b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:golden_gate_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Golden Gate Fire Protection District Ballot Issue 6B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "WITHOUT INCREASING THE DISTRICT'S EXISTING OPERATIONS MILL LEVY, SHALL THE GOLDEN GATE FIRE PROTECTION DISTRICT'S TAXES BE INCREASED BY AN ADDITIONAL 4.5 MILLS ANNUALLY, COMMENCING WITH TAXES COLLECTED IN 2027, TO GENERATE APPROXIMATELY $137,376 IN THE FIRST YEAR (2027), AND BY WHATEVER ADDITIONAL AMOUNTS ARE GENERATED ANNUALLY THEREAFTER FROM CHANGES IN THE DISTRICT'S ASSESSED VALUATION, FOR THE SOLE PURPOSE OF FUNDING THE ACQUISITION, REPLACEMENT, REVITALIZATION, OR REHABILITATION OF FIRE APPARATUS AND FLEET VEHICLES, INCLUDING PERMANENTLY INSTALLED EQUIPMENT INTEGRAL TO THE OPERATION OF SUCH APPARATUS AND VEHICLES; WITH ALL REVENUES DEPOSITED INTO A DEDICATED \"FLEET REVITALIZATION FUND\" TO BE USED EXCLUSIVELY FOR SUCH PURPOSES; AND SHALL ALL REVENUES FROM SUCH MILL LEVY, TOGETHER WITH ANY EARNINGS THEREON, CONSTITUTE A VOTER APPROVED REVENUE CHANGE AND BE COLLECTED, RETAINED, AND SPENT BY THE DISTRICT AS AUTHORIZED BY THE BOARD OF DIRECTORS, WITHOUT REGARD TO ANY REVENUE OR EXPENDITURE LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-arvada-fire-protection-district-2026-ballot-6c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:arvada_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Arvada Fire Protection District Ballot Issue 6C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL ARVADA FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $23,100,000 THE FIRST FISCAL YEAR, BEGINNING JANUARY 1, 2027, AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, BY A SALES TAX OF 1.0% (ONE PERCENT) EXCLUDING ON SALES OF FOOD FOR DOMESTIC HOME CONSUMPTION, PRESCRIPTION MEDICINES, DIAPERS, SCHOOL ACTIVITIES AND ALL OTHER CATEGORIES EXEMPT FROM STATE SALES TAX COLLECTIONS, FOR THE PURPOSES OF PROVIDING FIRE PROTECTION, AMBULANCE, EMERGENCY MEDICAL RESPONSE, RESCUE, SAFETY, AND SUPPORT SERVICES FOR THE RESIDENTS, PROPERTY OWNERS, AND BUSINESSES SERVED BY THE DISTRICT, INCLUDING: MAINTAINING FIREFIGHTER AND PARAMEDIC STAFFING LEVELS TO SAFELY AND EFFICIENTLY RESPOND TO EMERGENCIES. PROVIDE AND MAINTAIN EMERGENCY VEHICLES AND EQUIPMENT AND MODERNIZE FACILITIES TO BETTER PROTECT THE PUBLIC AND FIRST RESPONDERS. THE ABILITY TO RETAIN AND ATTRACT HIGHLY QUALIFIED FIRST RESPONDERS AND OTHER ESSENTIAL PERSONNEL. IMPROVING FIREFIGHTER HEALTH AND WELLNESS WITH PROGRAMS SUCH AS EARLY DETECTION AND TREATMENT FOR CARDIOVASCULAR CONDITIONS AND CANCER; MENTAL HEALTH SUPPORT; AND MANDATORY FITNESS TRAINING AND STANDARDS. WITH SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND ALL SPENDING OF SUCH REVENUES REPORTED IN THE DISTRICT'S ANNUAL INDEPENDENT AUDIT PUBLISHED ON THE DISTRICT WEBSITE AND REVIEWED BY AN EXTERNAL AUDITOR, AS WELL AS THE AUDIT AND FINANCE COMMITTEE; AND SHALL ALL REVENUE AND ANY EARNINGS ON THIS TAX CONSTITUTE PERMANENT VOTER-APPROVED REVENUE CHANGE WITHIN THE MEANING OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-columbine-knolls-grove-metropolitan-recreation-district-2026-ballot-6d",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:columbine_knolls_grove_metropolitan_recreation_district",
+          "divisionVintage": "2026",
+          "title": "Columbine Knolls Grove Metropolitan Recreation District Ballot Issue 6D",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL COLUMBINE KNOLLS GROVE METROPOLITAN RECREATION DISTRICT TAXES BE INCREASED BY UP TO $152,000 ANNUALLY FOR COLLECTION IN CALENDAR YEAR 2027, AND BY SUCH ADDITIONAL AMOUNTS AS MAY BE GENERATED ANNUALLY THEREAFTER, THROUGH AN ADDITIONAL PROPERTY TAX MILL LEVY OF 2.6 MILLS, IN ADDITION TO THE MILL LEVY CURRENTLY IMPOSED BY THE DISTRICT, FOR THE PURPOSE OF OPERATING, MAINTAINING, REPAIRING, AND IMPROVING DISTRICT FACILITIES; AND SHALL THE REVENUES DERIVED FROM SUCH MILL LEVY INCREASE BE AN EXCEPTION TO ALL LIMITS THAT MAY OTHERWISE APPLY, INCLUDING WITHOUT LIMITATION ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION (“TABOR”), AND SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AS WELL AS ANY OTHER PAST, PRESENT OR FUTURE LAW AS AUTHORIZED BY PRIOR BALLOT MEASURES AND THIS BALLOT MEASURE?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-columbine-knolls-grove-metropolitan-recreation-district-2026-ballot-6e",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:columbine_knolls_grove_metropolitan_recreation_district",
+          "divisionVintage": "2026",
+          "title": "Columbine Knolls Grove Metropolitan Recreation District Ballot Issue 6E",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL COLUMBINE KNOLLS GROVE METROPOLITAN RECREATION DISTRICT DEBT BE INCREASED BY UP TO $6,600,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $13,100,000, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $440,000 ANNUALLY FOR A PERIOD NOT TO EXCEED THIRTY (30) YEARS, FOR THE PURPOSE OF FINANCING THE COSTS OF REPAIRING, RENOVATING, REPLACING, CONSTRUCTING, EQUIPPING, PLANNING AND IMPROVING DISTRICT RECREATIONAL FACILITIES, PARKS, INFRASTRUCTURE, AND AMENITIES, INCLUDING WITHOUT LIMITATION: AQUATIC FACILITY IMPROVEMENTS; PARK, PLAYGROUND, ATHLETIC FACILITY, AND RECREATIONAL AMENITY IMPROVEMENTS; AND DISTRICT-WIDE INFRASTRUCTURE, ACCESSIBILITY, SAFETY, AND DEFERRED MAINTENANCE IMPROVEMENTS; SUCH DEBT TO CONSIST OF GENERAL OBLIGATION BONDS WHICH SHALL BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 5.25% PER ANNUM AND BE ISSUED AT SUCH TIME AND PRICES (AT, ABOVE OR BELOW PAR) AND CONTAINING SUCH TERMS CONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AN AMOUNT SUFFICIENT IN EACH YEAR TO PAY THE PRINCIPAL, PREMIUM IF ANY, AND INTEREST ON SUCH BONDS; AND SHALL ANY EARNINGS FROM THE INVESTMENT OF THE PROCEEDS OF SUCH TAXES AND BONDS CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION (“TABOR”)?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-evergreen-fire-protection-district-2026-ballot-7b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:evergreen_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Evergreen Fire Protection District Ballot Issue 7B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL EVERGREEN FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $5,440,000 ANNUALLY COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A 0.89 PERCENT SALES TAX, FOR THE PURPOSE OF MAINTAINING HIGH LEVELS OF FIRE AND EMERGENCY SERVICES, INCLUDING RECRUITING VOLUNTEER AND PAID FIREFIGHTER AND PARAMEDIC STAFF, AND ENHANCING REVENUE SOURCES FOR WILDFIRE MITIGATION, COMMUNITY EDUCATION, AND EMERGENCY RESPONSE CAPABILITY AND NECESSARY CAPITAL UPGRADES, REPAIRS AND MAINTENANCE IMPROVEMENTS, SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND NOT TO SUPPLANT ANY FUNDING THAT THE DISTRICT VOTERS PREVIOUSLY AUTHORIZED OR WHICH IT IS ENTITLED TO RECEIVE BY LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-edgewater-2026-ballot-2k",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:edgewater",
+          "divisionVintage": "2026",
+          "title": "City of Edgewater Ballot Issue 2K",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL CITY OF EDGEWATER TAXES BE INCREASED $1,200,000 IN 2027 (THE FIRST FISCAL YEAR OF SUCH RATE INCREASE) AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY IN EACH SUBSEQUENT YEAR, THROUGH A ONE-HALF PERCENT (0.5%) INCREASE IN THE CITY SALES TAX RATE, COMMENCING ON JANUARY 1, 2027, THE REVENUES FROM SUCH ONE-HALF PERCENT (0.5%) INCREASE TO BE USED SOLELY FOR THE PURPOSES OF INCREASING AND IMPROVING ACCESSIBILITY AND MOBILITY THROUGHOUT THE CITY, INCLUDING BUT NOT LIMITED TO THE DESIGN AND CONSTRUCTION OF IMPROVEMENTS TO SIDEWALKS, BIKE LANES, STREETSCAPING, STREETS, AND ALLEYS; THE REPAIR, IMPROVEMENT AND REPLACEMENT OF SUCH FACILITIES; REDUCING OR ELIMINATING THE OBLIGATION OF PRIVATE PROPERTY OWNERS TO CONSTRUCT AND REPAIR SIDEWALKS; CONSTRUCTING ADA-REQUIRED IMPROVEMENTS TO CURBS, CROSSWALKS, SIDEWALKS AND OTHER CITY FACILITIES; EDUCATION, TRAINING AND OUTREACH CONCERNING ACCESSIBILITY AND MOBILITY; AND SHALL ALL SUCH TAX REVENUES BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-lakewood-2026-ballot-2g",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:lakewood",
+          "divisionVintage": "2026",
+          "title": "City of Lakewood Ballot Issue 2G",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL CITY OF LAKEWOOD TAXES BE INCREASED BY UP TO $17,600,000 IN THE FIRST FULL FISCAL YEAR (COMMENCING JANUARY 1, 2027) AND BY WHATEVER ADDITIONAL AMOUNTS AS ARE RAISED ANNUALLY IN EACH SUBSEQUENT YEAR, THROUGH THE IMPOSITION OF AN ADDITIONAL SALES AND USE TAX OF 0.5% (INCREASING CITY'S SALES AND USE TAX RATE FROM THREE PERCENT (3%) TO THREE AND A HALF PERCENT (3.5%)), PROVIDED THAT: FOOD, AS DEFINED IN LAKEWOOD · MUNICIPAL CODE SECTION 3.01.430 (WHICH INCLUDES GROCERIES), SHALL BE EXEMPT FROM SUCH ADDITIONAL HALF-PERCENT SALES AND USE TAX, AND SHALL THE TAX REVENUES FROM SUCH ADDITIONAL HALF PERCENT SALES TAX BE USED ONLY FOR THE FOLLOWING SPECIFIC PURPOSES: PUBLIC SAFETY PURPOSES, INCLUDING · INVESTING IN CRIME PREVENTION AND HOMELESSNESS RESPONSE; AND TRAFFIC SAFETY IMPROVEMENTS, · INCLUDING MAINTENANCE AND CONSTRUCTION OF STREETS AND SIDEWALKS, ROAD IMPROVEMENTS TO REDUCE VEHICLE SPEEDS, AND PEDESTRIAN AND BICYCLE SAFETY ENHANCEMENTS. AND SHALL SUCH ADDITIONAL HALF PERCENT SALES AND USE TAX BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMIT CONTAINED WITHIN ARTICLE X, SECTION 20, OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-lakewood-2026-ballot-2h",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:lakewood",
+          "divisionVintage": "2026",
+          "title": "City of Lakewood Ballot Question 2H",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Section 2.6(a) of the Lakewood Home Rule Charter regarding terms of office of the Mayor and City Councilmembers be amended to specify that the term of a newly elected Mayor or City Councilmember begins at the first regular meeting following certification of the results of the regular municipal election?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-lakewood-2026-ballot-2i",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:lakewood",
+          "divisionVintage": "2026",
+          "title": "City of Lakewood Ballot Question 2I",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Section 12.12 of the Lakewood Home Rule Charter be repealed and replaced, to repeal obsolete language authorizing an annual property tax increase of up to 7% without voter approval, and to replace that provision with language stating that the City must comply with the Colorado Constitution and may not increase property taxes without approval of the City's electors?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-lakewood-2026-ballot-2j",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:lakewood",
+          "divisionVintage": "2026",
+          "title": "City of Lakewood Ballot Question 2J",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Sections 13.1(d) and 13.2(e) of the Lakewood Home Rule Charter regarding initiative and referendum procedures be amended to extend the time frame for conducting regular or special elections on initiative ordinances and referendums to not less than sixty (60) days and not more than one hundred fifty (150) days after the final determination of petition sufficiency?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-wheat-ridge-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:wheat_ridge",
+          "divisionVintage": "2026",
+          "title": "City of Wheat Ridge Ballot Issue 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL CITY OF WHEAT RIDGE TAXES BE INCREASED BY UP TO $11,700,000 ANNUALLY IN THE FIRST FULL FISCAL YEAR, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE CITY SALES AND USE TAX BY ONE PERCENT (1.0%) COMMENCING ON JANUARY 1, 2027, TO BE USED FOR COMMUNITY INVESTMENTS INCLUDING: PROACTIVE STREET AND INFRASTRUCTURE MAINTENANCE; BICYCLE AND PEDESTRIAN SAFETY IMPROVEMENTS; PRESERVATION OF COMMUNITY SPACES AT WILMORE DAVIS AND KULLERSTRAND ELEMENTARY SCHOOLS; REPLACEMENT OF ANDERSON PARK OUTDOOR POOL; AND MODERN POLICE AND CITY SERVICES FACILITIES, AND FOR THE OPERATIONS AND MAINTENANCE OF THE SAME; AND SHALL THE CITY BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH TAX AS A VOTER-APPROVED REVENUE CHANGE AND EXCEPTION TO ANY SPENDING OR REVENUE RESTRICTIONS OR OTHER LIMITS UNDER SECTION 20 OF ARTICLE X OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-mountain-view-2026-ballot-2b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:mountain_view",
+          "divisionVintage": "2026",
+          "title": "Town of Mountain View Ballot Question 2B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the Town of Mountain Views Home Rule Charter be amended to change the governance structure of the Town from a Council-Mayor form of government to a Council-Manager form of government; this means, among other things, that a town manager, appointed by Town Council, will be responsible for the general operations of the Town including supervising all Town departments and preparing an annual budget for Town Council approval?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-mountain-view-2026-ballot-2c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:mountain_view",
+          "divisionVintage": "2026",
+          "title": "Town of Mountain View Ballot Question 2C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the current Article VIII, Boards and Commissions, of the Town of Mountain View's Home Rule Charter be repealed in its entirety to allow for Town Boards and Commissions to be created by ordinance of Town Council rather than requiring a voter-approved Town Charter amendment?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-morrison-2026-ballot-2d",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:morrison",
+          "divisionVintage": "2026",
+          "title": "Town of Morrison Ballot Issue 2D",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF MORRISON'S TAXES BE INCREASED BY $125,000 IN THE FIRST FULL FISCAL YEAR, COMMENCING JANUARY 1, 2027, AND BY WHATEVER AMOUNTS RAISED ANNUALLY THEREAFTER, BY ELIMINATING AN EXISTING EXEMPTION FROM THE TOWN'S LODGING TAX AND THEREBY EXPANDING THE TAX TO APPLY TO ALL LODGING FACILITIES REGARDLESS OF THE NUMBER OF GUEST ROOMS, WITH THE REVENUES THEREFROM TO BE SPENT ON ANY LAWFUL MUNICIPAL PURPOSE; AND SHALL ALL REVENUES DERIVED FROM SUCH TAX AND ANY EARNINGS THEREON BE COLLECTED, RETAINED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMITATIONS CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-morrison-2026-ballot-2e",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:morrison",
+          "divisionVintage": "2026",
+          "title": "Town of Morrison Ballot Issue 2E",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF MORRISON'S TAXES BE INCREASED BY $500,000 IN THE FIRST FULL FISCAL YEAR, COMMENCING JANUARY 1, 2027, AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE RATE OF THE TOWN'S EXISTING LODGING TAX FROM 6% TO 8%, WITH THE REVENUES THEREFROM TO BE SPENT ON ANY LAWFUL MUNICIPAL PURPOSE; AND SHALL ALL REVENUES DERIVED FROM SUCH TAX AND ANY EARNINGS THEREON BE COLLECTED, RETAINED, AND SPENT AS A VOTER-APPROVED REVENUE CHANGE NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMITATIONS CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-morrison-2026-ballot-2f",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:morrison",
+          "divisionVintage": "2026",
+          "title": "Town of Morrison Ballot Question 2F",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Section 2.4 of The Town of Morrison Home Rule Charter be amended to read as follows: Section 2.4. Terms of Office Terms of office of Board members shall be four (4) years, staggered, and without term limits.",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-jefferson-county-school-district-r1-2026-ballot-5a#question",
+          "contestId": "co-jefferson-county-school-district-r1-2026-ballot-5a",
+          "officialNumber": "5A",
+          "questionText": "SHALL JEFFERSON COUNTY SCHOOL DISTRICT R-1 TAXES BE INCREASED $73 MILLION IN 2026 FOR COLLECTION IN 2027, AND BY SUCH AMOUNTS IN SUBSEQUENT YEARS THAT WILL PRODUCE, WHEN COMBINED WITH PRIOR MILL LEVY OVERRIDE AMOUNTS, UP TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S., WITH SUCH FUNDS TO BE USED FOR THE PURPOSES AUTHORIZED BY SECTION 22-54-108, C.R.S., SUCH AS THE FOLLOWING: ATTRACTING AND KEEPING · HIGH-QUALITY STAFF BY RAISING COMPENSATION CLOSER TO THE MARKET AVERAGE FOR TEACHERS, EDUCATION SUPPORT PROFESSIONALS, SUPPORT STAFF AND SCHOOL LEADERS; PROVIDING STUDENTS WITH THE · INSTRUCTION, SKILLS, AND HANDS-ON LEARNING NECESSARY FOR SUCCESS IN COLLEGE AND THE WORKPLACE THROUGH CAREER AND TECHNICAL EDUCATION PROGRAMS; AND SHALL THE SPENDING OF SUCH TAXES BE REVIEWED BY A BOARD-APPOINTED CITIZENS' COMMITTEE FOR ACCOUNTABILITY, SUMMARIZED IN ANNUAL PUBLIC REPORTS, AND POSTED PUBLICLY ON A WEBSITE FOR FULL TRANSPARENCY; AND SHALL A MILL LEVY BE IMPOSED AT A RATE WHICH WILL GENERATE REVENUES UP TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S., AND SHALL THE ADDITIONAL REVENUES BE DEPOSITED IN THE GENERAL FUND AND USED FOR EDUCATIONAL PURPOSES AS PROVIDED HEREIN, AS PREVIOUSLY APPROVED BY THE DISTRICT VOTERS PURSUANT TO SECTION 22-54-108(V), C.R.S., AND AS AUTHORIZED BY STATE LAW; AND SHALL THE REVENUE FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT THEREON BE COLLECTED AND SPENT AS VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL JEFFERSON COUNTY SCHOOL DISTRICT R-1 TAXES BE INCREASED $73 MILLION IN 2026 FOR COLLECTION IN 2027, AND BY SUCH AMOUNTS IN SUBSEQUENT YEARS THAT WILL PRODUCE, WHEN COMBINED WITH PRIOR MILL LEVY OVERRIDE AMOUNTS, UP TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S., WITH SUCH FUNDS TO BE USED FOR THE PURPOSES AUTHORIZED BY SECTION 22-54-108, C.R.S., SUCH AS THE FOLLOWING: ATTRACTING AND KEEPING · HIGH-QUALITY STAFF BY RAISING COMPENSATION CLOSER TO THE MARKET AVERAGE FOR TEACHERS, EDUCATION SUPPORT PROFESSIONALS, SUPPORT STAFF AND SCHOOL LEADERS; PROVIDING STUDENTS WITH THE · INSTRUCTION, SKILLS, AND HANDS-ON LEARNING NECESSARY FOR SUCCESS IN COLLEGE AND THE WORKPLACE THROUGH CAREER AND TECHNICAL EDUCATION PROGRAMS; AND SHALL THE SPENDING OF SUCH TAXES BE REVIEWED BY A BOARD-APPOINTED CITIZENS' COMMITTEE FOR ACCOUNTABILITY, SUMMARIZED IN ANNUAL PUBLIC REPORTS, AND POSTED PUBLICLY ON A WEBSITE FOR FULL TRANSPARENCY; AND SHALL A MILL LEVY BE IMPOSED AT A RATE WHICH WILL GENERATE REVENUES UP TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S., AND SHALL THE ADDITIONAL REVENUES BE DEPOSITED IN THE GENERAL FUND AND USED FOR EDUCATIONAL PURPOSES AS PROVIDED HEREIN, AS PREVIOUSLY APPROVED BY THE DISTRICT VOTERS PURSUANT TO SECTION 22-54-108(V), C.R.S., AND AS AUTHORIZED BY STATE LAW; AND SHALL THE REVENUE FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT THEREON BE COLLECTED AND SPENT AS VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-jefferson-county-school-district-r1-2026-ballot-5b#question",
+          "contestId": "co-jefferson-county-school-district-r1-2026-ballot-5b",
+          "officialNumber": "5B",
+          "questionText": "SHALL JEFFERSON COUNTY SCHOOL DISTRICT R-1 TAXES BE INCREASED $60 MILLION IN 2026 FOR COLLECTION IN 2027, AND ANNUALLY THEREAFTER, AND UTILIZED FOR THE PURPOSES AUTHORIZED AND IN ACCORDANCE WITH SECTION 22-54-108.7, C.R.S., (THE DEBT FREE SCHOOLS ACT), PROVIDED THAT SUCH REVENUE MAY BE INCREASED ANNUALLY (AFTER THE FIRST FULL FISCAL YEAR) FOR INFLATION BASED ON THE ANNUAL CHANGES IN THE CONSUMER PRICE INDEX; WITH SUCH REVENUE TO BE DEPOSITED INTO A DEDICATED FUND ONLY TO BE USED FOR CAPITAL CONSTRUCTION, TECHNOLOGY, AND MAINTENANCE, AND UTILIZED FOR AUTHORIZED PURPOSES SUCH AS: CRITICAL UPGRADES AND · MAINTENANCE OF SCHOOLS SUCH AS PLUMBING IMPROVEMENTS, PARKING LOT REPAIRS, AND REPLACING OR REPAIRING FAULTY, DANGEROUS, AND LEAKING ROOFS; PROVIDING AND REPAIRING COOLING, · HEATING, AND VENTILATION SYSTEMS FOR A BETTER LEARNING ENVIRONMENT; REPLACING AND UPDATING AGING · INFRASTRUCTURE AND TECHNOLOGY; SAFETY AND SECURITY INVESTMENTS · SUCH AS SECURE ACCESS AND MONITORING; AND SHALL THE SPENDING OF SUCH TAXES BE REVIEWED BY A BOARD-APPOINTED CITIZENS' COMMITTEE FOR ACCOUNTABILITY, SUMMARIZED IN ANNUAL PUBLIC REPORTS, AND POSTED PUBLICLY ON A WEBSITE FOR FULL TRANSPARENCY; AND SHALL A MILL LEVY BE IMPOSED AT A RATE SUFFICIENT TO GENERATE REVENUES UP TO SUCH AMOUNT SPECIFIED ABOVE, AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL JEFFERSON COUNTY SCHOOL DISTRICT R-1 TAXES BE INCREASED $60 MILLION IN 2026 FOR COLLECTION IN 2027, AND ANNUALLY THEREAFTER, AND UTILIZED FOR THE PURPOSES AUTHORIZED AND IN ACCORDANCE WITH SECTION 22-54-108.7, C.R.S., (THE DEBT FREE SCHOOLS ACT), PROVIDED THAT SUCH REVENUE MAY BE INCREASED ANNUALLY (AFTER THE FIRST FULL FISCAL YEAR) FOR INFLATION BASED ON THE ANNUAL CHANGES IN THE CONSUMER PRICE INDEX; WITH SUCH REVENUE TO BE DEPOSITED INTO A DEDICATED FUND ONLY TO BE USED FOR CAPITAL CONSTRUCTION, TECHNOLOGY, AND MAINTENANCE, AND UTILIZED FOR AUTHORIZED PURPOSES SUCH AS: CRITICAL UPGRADES AND · MAINTENANCE OF SCHOOLS SUCH AS PLUMBING IMPROVEMENTS, PARKING LOT REPAIRS, AND REPLACING OR REPAIRING FAULTY, DANGEROUS, AND LEAKING ROOFS; PROVIDING AND REPAIRING COOLING, · HEATING, AND VENTILATION SYSTEMS FOR A BETTER LEARNING ENVIRONMENT; REPLACING AND UPDATING AGING · INFRASTRUCTURE AND TECHNOLOGY; SAFETY AND SECURITY INVESTMENTS · SUCH AS SECURE ACCESS AND MONITORING; AND SHALL THE SPENDING OF SUCH TAXES BE REVIEWED BY A BOARD-APPOINTED CITIZENS' COMMITTEE FOR ACCOUNTABILITY, SUMMARIZED IN ANNUAL PUBLIC REPORTS, AND POSTED PUBLICLY ON A WEBSITE FOR FULL TRANSPARENCY; AND SHALL A MILL LEVY BE IMPOSED AT A RATE SUFFICIENT TO GENERATE REVENUES UP TO SUCH AMOUNT SPECIFIED ABOVE, AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-blue-mountain-water-district-2026-ballot-6a#question",
+          "contestId": "co-blue-mountain-water-district-2026-ballot-6a",
+          "officialNumber": "6A",
+          "questionText": "SHALL BLUE MOUNTAIN WATER DISTRICT DEBT BE INCREASED UP TO $1,200,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $2,082,000, BUT WITH NO ADDITIONAL TAX AUTHORIZATION, SUCH DEBT TO CONSIST OF A LOAN AGREEMENT OR OTHER MULTIPLE FISCAL YEAR OBLIGATION ENTERED INTO WITH A STATE AUTHORITY FOR THE PURPOSE OF PAYING OR FINANCING ALL OR A PART OF THE COSTS OF CONSTRUCTING AND COMPLETING WATER QUALITY, REGULATORY COMPLIANCE AND RELATED SYSTEM IMPROVEMENTS, WITH SUCH DEBT TO BE PAID FROM THE FEES AND CHARGES DERIVED FROM THE OPERATION OF THE DISTRICT'S WATER SYSTEM AND OTHER LEGALLY AVAILABLE REVENUES, TO BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 4.0% PER ANNUM AND TO BE ISSUED AT SUCH TIME, IN SUCH MANNER AND CONTAINING SUCH TERMS, NOT INCONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL BLUE MOUNTAIN WATER DISTRICT DEBT BE INCREASED UP TO $1,200,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $2,082,000, BUT WITH NO ADDITIONAL TAX AUTHORIZATION, SUCH DEBT TO CONSIST OF A LOAN AGREEMENT OR OTHER MULTIPLE FISCAL YEAR OBLIGATION ENTERED INTO WITH A STATE AUTHORITY FOR THE PURPOSE OF PAYING OR FINANCING ALL OR A PART OF THE COSTS OF CONSTRUCTING AND COMPLETING WATER QUALITY, REGULATORY COMPLIANCE AND RELATED SYSTEM IMPROVEMENTS, WITH SUCH DEBT TO BE PAID FROM THE FEES AND CHARGES DERIVED FROM THE OPERATION OF THE DISTRICT'S WATER SYSTEM AND OTHER LEGALLY AVAILABLE REVENUES, TO BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 4.0% PER ANNUM AND TO BE ISSUED AT SUCH TIME, IN SUCH MANNER AND CONTAINING SUCH TERMS, NOT INCONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-golden-gate-fire-protection-district-2026-ballot-6b#question",
+          "contestId": "co-golden-gate-fire-protection-district-2026-ballot-6b",
+          "officialNumber": "6B",
+          "questionText": "WITHOUT INCREASING THE DISTRICT'S EXISTING OPERATIONS MILL LEVY, SHALL THE GOLDEN GATE FIRE PROTECTION DISTRICT'S TAXES BE INCREASED BY AN ADDITIONAL 4.5 MILLS ANNUALLY, COMMENCING WITH TAXES COLLECTED IN 2027, TO GENERATE APPROXIMATELY $137,376 IN THE FIRST YEAR (2027), AND BY WHATEVER ADDITIONAL AMOUNTS ARE GENERATED ANNUALLY THEREAFTER FROM CHANGES IN THE DISTRICT'S ASSESSED VALUATION, FOR THE SOLE PURPOSE OF FUNDING THE ACQUISITION, REPLACEMENT, REVITALIZATION, OR REHABILITATION OF FIRE APPARATUS AND FLEET VEHICLES, INCLUDING PERMANENTLY INSTALLED EQUIPMENT INTEGRAL TO THE OPERATION OF SUCH APPARATUS AND VEHICLES; WITH ALL REVENUES DEPOSITED INTO A DEDICATED \"FLEET REVITALIZATION FUND\" TO BE USED EXCLUSIVELY FOR SUCH PURPOSES; AND SHALL ALL REVENUES FROM SUCH MILL LEVY, TOGETHER WITH ANY EARNINGS THEREON, CONSTITUTE A VOTER APPROVED REVENUE CHANGE AND BE COLLECTED, RETAINED, AND SPENT BY THE DISTRICT AS AUTHORIZED BY THE BOARD OF DIRECTORS, WITHOUT REGARD TO ANY REVENUE OR EXPENDITURE LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "WITHOUT INCREASING THE DISTRICT'S EXISTING OPERATIONS MILL LEVY, SHALL THE GOLDEN GATE FIRE PROTECTION DISTRICT'S TAXES BE INCREASED BY AN ADDITIONAL 4.5 MILLS ANNUALLY, COMMENCING WITH TAXES COLLECTED IN 2027, TO GENERATE APPROXIMATELY $137,376 IN THE FIRST YEAR (2027), AND BY WHATEVER ADDITIONAL AMOUNTS ARE GENERATED ANNUALLY THEREAFTER FROM CHANGES IN THE DISTRICT'S ASSESSED VALUATION, FOR THE SOLE PURPOSE OF FUNDING THE ACQUISITION, REPLACEMENT, REVITALIZATION, OR REHABILITATION OF FIRE APPARATUS AND FLEET VEHICLES, INCLUDING PERMANENTLY INSTALLED EQUIPMENT INTEGRAL TO THE OPERATION OF SUCH APPARATUS AND VEHICLES; WITH ALL REVENUES DEPOSITED INTO A DEDICATED \"FLEET REVITALIZATION FUND\" TO BE USED EXCLUSIVELY FOR SUCH PURPOSES; AND SHALL ALL REVENUES FROM SUCH MILL LEVY, TOGETHER WITH ANY EARNINGS THEREON, CONSTITUTE A VOTER APPROVED REVENUE CHANGE AND BE COLLECTED, RETAINED, AND SPENT BY THE DISTRICT AS AUTHORIZED BY THE BOARD OF DIRECTORS, WITHOUT REGARD TO ANY REVENUE OR EXPENDITURE LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-arvada-fire-protection-district-2026-ballot-6c#question",
+          "contestId": "co-arvada-fire-protection-district-2026-ballot-6c",
+          "officialNumber": "6C",
+          "questionText": "SHALL ARVADA FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $23,100,000 THE FIRST FISCAL YEAR, BEGINNING JANUARY 1, 2027, AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, BY A SALES TAX OF 1.0% (ONE PERCENT) EXCLUDING ON SALES OF FOOD FOR DOMESTIC HOME CONSUMPTION, PRESCRIPTION MEDICINES, DIAPERS, SCHOOL ACTIVITIES AND ALL OTHER CATEGORIES EXEMPT FROM STATE SALES TAX COLLECTIONS, FOR THE PURPOSES OF PROVIDING FIRE PROTECTION, AMBULANCE, EMERGENCY MEDICAL RESPONSE, RESCUE, SAFETY, AND SUPPORT SERVICES FOR THE RESIDENTS, PROPERTY OWNERS, AND BUSINESSES SERVED BY THE DISTRICT, INCLUDING: MAINTAINING FIREFIGHTER AND PARAMEDIC STAFFING LEVELS TO SAFELY AND EFFICIENTLY RESPOND TO EMERGENCIES. PROVIDE AND MAINTAIN EMERGENCY VEHICLES AND EQUIPMENT AND MODERNIZE FACILITIES TO BETTER PROTECT THE PUBLIC AND FIRST RESPONDERS. THE ABILITY TO RETAIN AND ATTRACT HIGHLY QUALIFIED FIRST RESPONDERS AND OTHER ESSENTIAL PERSONNEL. IMPROVING FIREFIGHTER HEALTH AND WELLNESS WITH PROGRAMS SUCH AS EARLY DETECTION AND TREATMENT FOR CARDIOVASCULAR CONDITIONS AND CANCER; MENTAL HEALTH SUPPORT; AND MANDATORY FITNESS TRAINING AND STANDARDS. WITH SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND ALL SPENDING OF SUCH REVENUES REPORTED IN THE DISTRICT'S ANNUAL INDEPENDENT AUDIT PUBLISHED ON THE DISTRICT WEBSITE AND REVIEWED BY AN EXTERNAL AUDITOR, AS WELL AS THE AUDIT AND FINANCE COMMITTEE; AND SHALL ALL REVENUE AND ANY EARNINGS ON THIS TAX CONSTITUTE PERMANENT VOTER-APPROVED REVENUE CHANGE WITHIN THE MEANING OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL ARVADA FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $23,100,000 THE FIRST FISCAL YEAR, BEGINNING JANUARY 1, 2027, AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, BY A SALES TAX OF 1.0% (ONE PERCENT) EXCLUDING ON SALES OF FOOD FOR DOMESTIC HOME CONSUMPTION, PRESCRIPTION MEDICINES, DIAPERS, SCHOOL ACTIVITIES AND ALL OTHER CATEGORIES EXEMPT FROM STATE SALES TAX COLLECTIONS, FOR THE PURPOSES OF PROVIDING FIRE PROTECTION, AMBULANCE, EMERGENCY MEDICAL RESPONSE, RESCUE, SAFETY, AND SUPPORT SERVICES FOR THE RESIDENTS, PROPERTY OWNERS, AND BUSINESSES SERVED BY THE DISTRICT, INCLUDING: MAINTAINING FIREFIGHTER AND PARAMEDIC STAFFING LEVELS TO SAFELY AND EFFICIENTLY RESPOND TO EMERGENCIES. PROVIDE AND MAINTAIN EMERGENCY VEHICLES AND EQUIPMENT AND MODERNIZE FACILITIES TO BETTER PROTECT THE PUBLIC AND FIRST RESPONDERS. THE ABILITY TO RETAIN AND ATTRACT HIGHLY QUALIFIED FIRST RESPONDERS AND OTHER ESSENTIAL PERSONNEL. IMPROVING FIREFIGHTER HEALTH AND WELLNESS WITH PROGRAMS SUCH AS EARLY DETECTION AND TREATMENT FOR CARDIOVASCULAR CONDITIONS AND CANCER; MENTAL HEALTH SUPPORT; AND MANDATORY FITNESS TRAINING AND STANDARDS. WITH SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND ALL SPENDING OF SUCH REVENUES REPORTED IN THE DISTRICT'S ANNUAL INDEPENDENT AUDIT PUBLISHED ON THE DISTRICT WEBSITE AND REVIEWED BY AN EXTERNAL AUDITOR, AS WELL AS THE AUDIT AND FINANCE COMMITTEE; AND SHALL ALL REVENUE AND ANY EARNINGS ON THIS TAX CONSTITUTE PERMANENT VOTER-APPROVED REVENUE CHANGE WITHIN THE MEANING OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-columbine-knolls-grove-metropolitan-recreation-district-2026-ballot-6d#question",
+          "contestId": "co-columbine-knolls-grove-metropolitan-recreation-district-2026-ballot-6d",
+          "officialNumber": "6D",
+          "questionText": "SHALL COLUMBINE KNOLLS GROVE METROPOLITAN RECREATION DISTRICT TAXES BE INCREASED BY UP TO $152,000 ANNUALLY FOR COLLECTION IN CALENDAR YEAR 2027, AND BY SUCH ADDITIONAL AMOUNTS AS MAY BE GENERATED ANNUALLY THEREAFTER, THROUGH AN ADDITIONAL PROPERTY TAX MILL LEVY OF 2.6 MILLS, IN ADDITION TO THE MILL LEVY CURRENTLY IMPOSED BY THE DISTRICT, FOR THE PURPOSE OF OPERATING, MAINTAINING, REPAIRING, AND IMPROVING DISTRICT FACILITIES; AND SHALL THE REVENUES DERIVED FROM SUCH MILL LEVY INCREASE BE AN EXCEPTION TO ALL LIMITS THAT MAY OTHERWISE APPLY, INCLUDING WITHOUT LIMITATION ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION (“TABOR”), AND SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AS WELL AS ANY OTHER PAST, PRESENT OR FUTURE LAW AS AUTHORIZED BY PRIOR BALLOT MEASURES AND THIS BALLOT MEASURE?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL COLUMBINE KNOLLS GROVE METROPOLITAN RECREATION DISTRICT TAXES BE INCREASED BY UP TO $152,000 ANNUALLY FOR COLLECTION IN CALENDAR YEAR 2027, AND BY SUCH ADDITIONAL AMOUNTS AS MAY BE GENERATED ANNUALLY THEREAFTER, THROUGH AN ADDITIONAL PROPERTY TAX MILL LEVY OF 2.6 MILLS, IN ADDITION TO THE MILL LEVY CURRENTLY IMPOSED BY THE DISTRICT, FOR THE PURPOSE OF OPERATING, MAINTAINING, REPAIRING, AND IMPROVING DISTRICT FACILITIES; AND SHALL THE REVENUES DERIVED FROM SUCH MILL LEVY INCREASE BE AN EXCEPTION TO ALL LIMITS THAT MAY OTHERWISE APPLY, INCLUDING WITHOUT LIMITATION ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION (“TABOR”), AND SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AS WELL AS ANY OTHER PAST, PRESENT OR FUTURE LAW AS AUTHORIZED BY PRIOR BALLOT MEASURES AND THIS BALLOT MEASURE?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-columbine-knolls-grove-metropolitan-recreation-district-2026-ballot-6e#question",
+          "contestId": "co-columbine-knolls-grove-metropolitan-recreation-district-2026-ballot-6e",
+          "officialNumber": "6E",
+          "questionText": "SHALL COLUMBINE KNOLLS GROVE METROPOLITAN RECREATION DISTRICT DEBT BE INCREASED BY UP TO $6,600,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $13,100,000, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $440,000 ANNUALLY FOR A PERIOD NOT TO EXCEED THIRTY (30) YEARS, FOR THE PURPOSE OF FINANCING THE COSTS OF REPAIRING, RENOVATING, REPLACING, CONSTRUCTING, EQUIPPING, PLANNING AND IMPROVING DISTRICT RECREATIONAL FACILITIES, PARKS, INFRASTRUCTURE, AND AMENITIES, INCLUDING WITHOUT LIMITATION: AQUATIC FACILITY IMPROVEMENTS; PARK, PLAYGROUND, ATHLETIC FACILITY, AND RECREATIONAL AMENITY IMPROVEMENTS; AND DISTRICT-WIDE INFRASTRUCTURE, ACCESSIBILITY, SAFETY, AND DEFERRED MAINTENANCE IMPROVEMENTS; SUCH DEBT TO CONSIST OF GENERAL OBLIGATION BONDS WHICH SHALL BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 5.25% PER ANNUM AND BE ISSUED AT SUCH TIME AND PRICES (AT, ABOVE OR BELOW PAR) AND CONTAINING SUCH TERMS CONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AN AMOUNT SUFFICIENT IN EACH YEAR TO PAY THE PRINCIPAL, PREMIUM IF ANY, AND INTEREST ON SUCH BONDS; AND SHALL ANY EARNINGS FROM THE INVESTMENT OF THE PROCEEDS OF SUCH TAXES AND BONDS CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION (“TABOR”)?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL COLUMBINE KNOLLS GROVE METROPOLITAN RECREATION DISTRICT DEBT BE INCREASED BY UP TO $6,600,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $13,100,000, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $440,000 ANNUALLY FOR A PERIOD NOT TO EXCEED THIRTY (30) YEARS, FOR THE PURPOSE OF FINANCING THE COSTS OF REPAIRING, RENOVATING, REPLACING, CONSTRUCTING, EQUIPPING, PLANNING AND IMPROVING DISTRICT RECREATIONAL FACILITIES, PARKS, INFRASTRUCTURE, AND AMENITIES, INCLUDING WITHOUT LIMITATION: AQUATIC FACILITY IMPROVEMENTS; PARK, PLAYGROUND, ATHLETIC FACILITY, AND RECREATIONAL AMENITY IMPROVEMENTS; AND DISTRICT-WIDE INFRASTRUCTURE, ACCESSIBILITY, SAFETY, AND DEFERRED MAINTENANCE IMPROVEMENTS; SUCH DEBT TO CONSIST OF GENERAL OBLIGATION BONDS WHICH SHALL BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 5.25% PER ANNUM AND BE ISSUED AT SUCH TIME AND PRICES (AT, ABOVE OR BELOW PAR) AND CONTAINING SUCH TERMS CONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AN AMOUNT SUFFICIENT IN EACH YEAR TO PAY THE PRINCIPAL, PREMIUM IF ANY, AND INTEREST ON SUCH BONDS; AND SHALL ANY EARNINGS FROM THE INVESTMENT OF THE PROCEEDS OF SUCH TAXES AND BONDS CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION (“TABOR”)?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-evergreen-fire-protection-district-2026-ballot-7b#question",
+          "contestId": "co-evergreen-fire-protection-district-2026-ballot-7b",
+          "officialNumber": "7B",
+          "questionText": "SHALL EVERGREEN FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $5,440,000 ANNUALLY COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A 0.89 PERCENT SALES TAX, FOR THE PURPOSE OF MAINTAINING HIGH LEVELS OF FIRE AND EMERGENCY SERVICES, INCLUDING RECRUITING VOLUNTEER AND PAID FIREFIGHTER AND PARAMEDIC STAFF, AND ENHANCING REVENUE SOURCES FOR WILDFIRE MITIGATION, COMMUNITY EDUCATION, AND EMERGENCY RESPONSE CAPABILITY AND NECESSARY CAPITAL UPGRADES, REPAIRS AND MAINTENANCE IMPROVEMENTS, SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND NOT TO SUPPLANT ANY FUNDING THAT THE DISTRICT VOTERS PREVIOUSLY AUTHORIZED OR WHICH IT IS ENTITLED TO RECEIVE BY LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL EVERGREEN FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $5,440,000 ANNUALLY COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A 0.89 PERCENT SALES TAX, FOR THE PURPOSE OF MAINTAINING HIGH LEVELS OF FIRE AND EMERGENCY SERVICES, INCLUDING RECRUITING VOLUNTEER AND PAID FIREFIGHTER AND PARAMEDIC STAFF, AND ENHANCING REVENUE SOURCES FOR WILDFIRE MITIGATION, COMMUNITY EDUCATION, AND EMERGENCY RESPONSE CAPABILITY AND NECESSARY CAPITAL UPGRADES, REPAIRS AND MAINTENANCE IMPROVEMENTS, SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND NOT TO SUPPLANT ANY FUNDING THAT THE DISTRICT VOTERS PREVIOUSLY AUTHORIZED OR WHICH IT IS ENTITLED TO RECEIVE BY LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-edgewater-2026-ballot-2k#question",
+          "contestId": "co-edgewater-2026-ballot-2k",
+          "officialNumber": "2K",
+          "questionText": "SHALL CITY OF EDGEWATER TAXES BE INCREASED $1,200,000 IN 2027 (THE FIRST FISCAL YEAR OF SUCH RATE INCREASE) AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY IN EACH SUBSEQUENT YEAR, THROUGH A ONE-HALF PERCENT (0.5%) INCREASE IN THE CITY SALES TAX RATE, COMMENCING ON JANUARY 1, 2027, THE REVENUES FROM SUCH ONE-HALF PERCENT (0.5%) INCREASE TO BE USED SOLELY FOR THE PURPOSES OF INCREASING AND IMPROVING ACCESSIBILITY AND MOBILITY THROUGHOUT THE CITY, INCLUDING BUT NOT LIMITED TO THE DESIGN AND CONSTRUCTION OF IMPROVEMENTS TO SIDEWALKS, BIKE LANES, STREETSCAPING, STREETS, AND ALLEYS; THE REPAIR, IMPROVEMENT AND REPLACEMENT OF SUCH FACILITIES; REDUCING OR ELIMINATING THE OBLIGATION OF PRIVATE PROPERTY OWNERS TO CONSTRUCT AND REPAIR SIDEWALKS; CONSTRUCTING ADA-REQUIRED IMPROVEMENTS TO CURBS, CROSSWALKS, SIDEWALKS AND OTHER CITY FACILITIES; EDUCATION, TRAINING AND OUTREACH CONCERNING ACCESSIBILITY AND MOBILITY; AND SHALL ALL SUCH TAX REVENUES BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL CITY OF EDGEWATER TAXES BE INCREASED $1,200,000 IN 2027 (THE FIRST FISCAL YEAR OF SUCH RATE INCREASE) AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY IN EACH SUBSEQUENT YEAR, THROUGH A ONE-HALF PERCENT (0.5%) INCREASE IN THE CITY SALES TAX RATE, COMMENCING ON JANUARY 1, 2027, THE REVENUES FROM SUCH ONE-HALF PERCENT (0.5%) INCREASE TO BE USED SOLELY FOR THE PURPOSES OF INCREASING AND IMPROVING ACCESSIBILITY AND MOBILITY THROUGHOUT THE CITY, INCLUDING BUT NOT LIMITED TO THE DESIGN AND CONSTRUCTION OF IMPROVEMENTS TO SIDEWALKS, BIKE LANES, STREETSCAPING, STREETS, AND ALLEYS; THE REPAIR, IMPROVEMENT AND REPLACEMENT OF SUCH FACILITIES; REDUCING OR ELIMINATING THE OBLIGATION OF PRIVATE PROPERTY OWNERS TO CONSTRUCT AND REPAIR SIDEWALKS; CONSTRUCTING ADA-REQUIRED IMPROVEMENTS TO CURBS, CROSSWALKS, SIDEWALKS AND OTHER CITY FACILITIES; EDUCATION, TRAINING AND OUTREACH CONCERNING ACCESSIBILITY AND MOBILITY; AND SHALL ALL SUCH TAX REVENUES BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-lakewood-2026-ballot-2g#question",
+          "contestId": "co-lakewood-2026-ballot-2g",
+          "officialNumber": "2G",
+          "questionText": "SHALL CITY OF LAKEWOOD TAXES BE INCREASED BY UP TO $17,600,000 IN THE FIRST FULL FISCAL YEAR (COMMENCING JANUARY 1, 2027) AND BY WHATEVER ADDITIONAL AMOUNTS AS ARE RAISED ANNUALLY IN EACH SUBSEQUENT YEAR, THROUGH THE IMPOSITION OF AN ADDITIONAL SALES AND USE TAX OF 0.5% (INCREASING CITY'S SALES AND USE TAX RATE FROM THREE PERCENT (3%) TO THREE AND A HALF PERCENT (3.5%)), PROVIDED THAT: FOOD, AS DEFINED IN LAKEWOOD · MUNICIPAL CODE SECTION 3.01.430 (WHICH INCLUDES GROCERIES), SHALL BE EXEMPT FROM SUCH ADDITIONAL HALF-PERCENT SALES AND USE TAX, AND SHALL THE TAX REVENUES FROM SUCH ADDITIONAL HALF PERCENT SALES TAX BE USED ONLY FOR THE FOLLOWING SPECIFIC PURPOSES: PUBLIC SAFETY PURPOSES, INCLUDING · INVESTING IN CRIME PREVENTION AND HOMELESSNESS RESPONSE; AND TRAFFIC SAFETY IMPROVEMENTS, · INCLUDING MAINTENANCE AND CONSTRUCTION OF STREETS AND SIDEWALKS, ROAD IMPROVEMENTS TO REDUCE VEHICLE SPEEDS, AND PEDESTRIAN AND BICYCLE SAFETY ENHANCEMENTS. AND SHALL SUCH ADDITIONAL HALF PERCENT SALES AND USE TAX BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMIT CONTAINED WITHIN ARTICLE X, SECTION 20, OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL CITY OF LAKEWOOD TAXES BE INCREASED BY UP TO $17,600,000 IN THE FIRST FULL FISCAL YEAR (COMMENCING JANUARY 1, 2027) AND BY WHATEVER ADDITIONAL AMOUNTS AS ARE RAISED ANNUALLY IN EACH SUBSEQUENT YEAR, THROUGH THE IMPOSITION OF AN ADDITIONAL SALES AND USE TAX OF 0.5% (INCREASING CITY'S SALES AND USE TAX RATE FROM THREE PERCENT (3%) TO THREE AND A HALF PERCENT (3.5%)), PROVIDED THAT: FOOD, AS DEFINED IN LAKEWOOD · MUNICIPAL CODE SECTION 3.01.430 (WHICH INCLUDES GROCERIES), SHALL BE EXEMPT FROM SUCH ADDITIONAL HALF-PERCENT SALES AND USE TAX, AND SHALL THE TAX REVENUES FROM SUCH ADDITIONAL HALF PERCENT SALES TAX BE USED ONLY FOR THE FOLLOWING SPECIFIC PURPOSES: PUBLIC SAFETY PURPOSES, INCLUDING · INVESTING IN CRIME PREVENTION AND HOMELESSNESS RESPONSE; AND TRAFFIC SAFETY IMPROVEMENTS, · INCLUDING MAINTENANCE AND CONSTRUCTION OF STREETS AND SIDEWALKS, ROAD IMPROVEMENTS TO REDUCE VEHICLE SPEEDS, AND PEDESTRIAN AND BICYCLE SAFETY ENHANCEMENTS. AND SHALL SUCH ADDITIONAL HALF PERCENT SALES AND USE TAX BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMIT CONTAINED WITHIN ARTICLE X, SECTION 20, OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-lakewood-2026-ballot-2h#question",
+          "contestId": "co-lakewood-2026-ballot-2h",
+          "officialNumber": "2H",
+          "questionText": "Shall Section 2.6(a) of the Lakewood Home Rule Charter regarding terms of office of the Mayor and City Councilmembers be amended to specify that the term of a newly elected Mayor or City Councilmember begins at the first regular meeting following certification of the results of the regular municipal election?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall Section 2.6(a) of the Lakewood Home Rule Charter regarding terms of office of the Mayor and City Councilmembers be amended to specify that the term of a newly elected Mayor or City Councilmember begins at the first regular meeting following certification of the results of the regular municipal election?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-lakewood-2026-ballot-2i#question",
+          "contestId": "co-lakewood-2026-ballot-2i",
+          "officialNumber": "2I",
+          "questionText": "Shall Section 12.12 of the Lakewood Home Rule Charter be repealed and replaced, to repeal obsolete language authorizing an annual property tax increase of up to 7% without voter approval, and to replace that provision with language stating that the City must comply with the Colorado Constitution and may not increase property taxes without approval of the City's electors?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall Section 12.12 of the Lakewood Home Rule Charter be repealed and replaced, to repeal obsolete language authorizing an annual property tax increase of up to 7% without voter approval, and to replace that provision with language stating that the City must comply with the Colorado Constitution and may not increase property taxes without approval of the City's electors?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-lakewood-2026-ballot-2j#question",
+          "contestId": "co-lakewood-2026-ballot-2j",
+          "officialNumber": "2J",
+          "questionText": "Shall Sections 13.1(d) and 13.2(e) of the Lakewood Home Rule Charter regarding initiative and referendum procedures be amended to extend the time frame for conducting regular or special elections on initiative ordinances and referendums to not less than sixty (60) days and not more than one hundred fifty (150) days after the final determination of petition sufficiency?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall Sections 13.1(d) and 13.2(e) of the Lakewood Home Rule Charter regarding initiative and referendum procedures be amended to extend the time frame for conducting regular or special elections on initiative ordinances and referendums to not less than sixty (60) days and not more than one hundred fifty (150) days after the final determination of petition sufficiency?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-wheat-ridge-2026-ballot-2a#question",
+          "contestId": "co-wheat-ridge-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "SHALL CITY OF WHEAT RIDGE TAXES BE INCREASED BY UP TO $11,700,000 ANNUALLY IN THE FIRST FULL FISCAL YEAR, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE CITY SALES AND USE TAX BY ONE PERCENT (1.0%) COMMENCING ON JANUARY 1, 2027, TO BE USED FOR COMMUNITY INVESTMENTS INCLUDING: PROACTIVE STREET AND INFRASTRUCTURE MAINTENANCE; BICYCLE AND PEDESTRIAN SAFETY IMPROVEMENTS; PRESERVATION OF COMMUNITY SPACES AT WILMORE DAVIS AND KULLERSTRAND ELEMENTARY SCHOOLS; REPLACEMENT OF ANDERSON PARK OUTDOOR POOL; AND MODERN POLICE AND CITY SERVICES FACILITIES, AND FOR THE OPERATIONS AND MAINTENANCE OF THE SAME; AND SHALL THE CITY BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH TAX AS A VOTER-APPROVED REVENUE CHANGE AND EXCEPTION TO ANY SPENDING OR REVENUE RESTRICTIONS OR OTHER LIMITS UNDER SECTION 20 OF ARTICLE X OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL CITY OF WHEAT RIDGE TAXES BE INCREASED BY UP TO $11,700,000 ANNUALLY IN THE FIRST FULL FISCAL YEAR, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE CITY SALES AND USE TAX BY ONE PERCENT (1.0%) COMMENCING ON JANUARY 1, 2027, TO BE USED FOR COMMUNITY INVESTMENTS INCLUDING: PROACTIVE STREET AND INFRASTRUCTURE MAINTENANCE; BICYCLE AND PEDESTRIAN SAFETY IMPROVEMENTS; PRESERVATION OF COMMUNITY SPACES AT WILMORE DAVIS AND KULLERSTRAND ELEMENTARY SCHOOLS; REPLACEMENT OF ANDERSON PARK OUTDOOR POOL; AND MODERN POLICE AND CITY SERVICES FACILITIES, AND FOR THE OPERATIONS AND MAINTENANCE OF THE SAME; AND SHALL THE CITY BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH TAX AS A VOTER-APPROVED REVENUE CHANGE AND EXCEPTION TO ANY SPENDING OR REVENUE RESTRICTIONS OR OTHER LIMITS UNDER SECTION 20 OF ARTICLE X OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-mountain-view-2026-ballot-2b#question",
+          "contestId": "co-mountain-view-2026-ballot-2b",
+          "officialNumber": "2B",
+          "questionText": "Shall the Town of Mountain Views Home Rule Charter be amended to change the governance structure of the Town from a Council-Mayor form of government to a Council-Manager form of government; this means, among other things, that a town manager, appointed by Town Council, will be responsible for the general operations of the Town including supervising all Town departments and preparing an annual budget for Town Council approval?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the Town of Mountain Views Home Rule Charter be amended to change the governance structure of the Town from a Council-Mayor form of government to a Council-Manager form of government; this means, among other things, that a town manager, appointed by Town Council, will be responsible for the general operations of the Town including supervising all Town departments and preparing an annual budget for Town Council approval?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-mountain-view-2026-ballot-2c#question",
+          "contestId": "co-mountain-view-2026-ballot-2c",
+          "officialNumber": "2C",
+          "questionText": "Shall the current Article VIII, Boards and Commissions, of the Town of Mountain View's Home Rule Charter be repealed in its entirety to allow for Town Boards and Commissions to be created by ordinance of Town Council rather than requiring a voter-approved Town Charter amendment?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the current Article VIII, Boards and Commissions, of the Town of Mountain View's Home Rule Charter be repealed in its entirety to allow for Town Boards and Commissions to be created by ordinance of Town Council rather than requiring a voter-approved Town Charter amendment?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-morrison-2026-ballot-2d#question",
+          "contestId": "co-morrison-2026-ballot-2d",
+          "officialNumber": "2D",
+          "questionText": "SHALL THE TOWN OF MORRISON'S TAXES BE INCREASED BY $125,000 IN THE FIRST FULL FISCAL YEAR, COMMENCING JANUARY 1, 2027, AND BY WHATEVER AMOUNTS RAISED ANNUALLY THEREAFTER, BY ELIMINATING AN EXISTING EXEMPTION FROM THE TOWN'S LODGING TAX AND THEREBY EXPANDING THE TAX TO APPLY TO ALL LODGING FACILITIES REGARDLESS OF THE NUMBER OF GUEST ROOMS, WITH THE REVENUES THEREFROM TO BE SPENT ON ANY LAWFUL MUNICIPAL PURPOSE; AND SHALL ALL REVENUES DERIVED FROM SUCH TAX AND ANY EARNINGS THEREON BE COLLECTED, RETAINED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMITATIONS CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF MORRISON'S TAXES BE INCREASED BY $125,000 IN THE FIRST FULL FISCAL YEAR, COMMENCING JANUARY 1, 2027, AND BY WHATEVER AMOUNTS RAISED ANNUALLY THEREAFTER, BY ELIMINATING AN EXISTING EXEMPTION FROM THE TOWN'S LODGING TAX AND THEREBY EXPANDING THE TAX TO APPLY TO ALL LODGING FACILITIES REGARDLESS OF THE NUMBER OF GUEST ROOMS, WITH THE REVENUES THEREFROM TO BE SPENT ON ANY LAWFUL MUNICIPAL PURPOSE; AND SHALL ALL REVENUES DERIVED FROM SUCH TAX AND ANY EARNINGS THEREON BE COLLECTED, RETAINED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMITATIONS CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-morrison-2026-ballot-2e#question",
+          "contestId": "co-morrison-2026-ballot-2e",
+          "officialNumber": "2E",
+          "questionText": "SHALL THE TOWN OF MORRISON'S TAXES BE INCREASED BY $500,000 IN THE FIRST FULL FISCAL YEAR, COMMENCING JANUARY 1, 2027, AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE RATE OF THE TOWN'S EXISTING LODGING TAX FROM 6% TO 8%, WITH THE REVENUES THEREFROM TO BE SPENT ON ANY LAWFUL MUNICIPAL PURPOSE; AND SHALL ALL REVENUES DERIVED FROM SUCH TAX AND ANY EARNINGS THEREON BE COLLECTED, RETAINED, AND SPENT AS A VOTER-APPROVED REVENUE CHANGE NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMITATIONS CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF MORRISON'S TAXES BE INCREASED BY $500,000 IN THE FIRST FULL FISCAL YEAR, COMMENCING JANUARY 1, 2027, AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE RATE OF THE TOWN'S EXISTING LODGING TAX FROM 6% TO 8%, WITH THE REVENUES THEREFROM TO BE SPENT ON ANY LAWFUL MUNICIPAL PURPOSE; AND SHALL ALL REVENUES DERIVED FROM SUCH TAX AND ANY EARNINGS THEREON BE COLLECTED, RETAINED, AND SPENT AS A VOTER-APPROVED REVENUE CHANGE NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMITATIONS CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        },
+        {
+          "id": "co-morrison-2026-ballot-2f#question",
+          "contestId": "co-morrison-2026-ballot-2f",
+          "officialNumber": "2F",
+          "questionText": "Shall Section 2.4 of The Town of Morrison Home Rule Charter be amended to read as follows: Section 2.4. Terms of Office Terms of office of Board members shall be four (4) years, staggered, and without term limits.",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall Section 2.4 of The Town of Morrison Home Rule Charter be amended to read as follows: Section 2.4. Terms of Office Terms of office of Board members shall be four (4) years, staggered, and without term limits.",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T03:53:10.683704+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-jefferson-county-school-district-r1-2026-ballot-5a",
+          "whatItDoes": "Increase Jeffco Public Schools property taxes by $73 million in tax year 2026, collected in 2027. In later years, the levy combined with earlier voter-approved override amounts could raise up to the district’s limit under state law. Money would go into the general fund for education, including staff compensation and career and technical education. A board-appointed citizens’ committee would review spending; annual reports would be posted publicly online. Tax revenue and investment earnings could be collected and spent outside Colorado’s constitutional revenue limits and other legal limits.",
+          "yesMeans": "Approve the additional property taxes for education, public spending reviews and the revenue-limit exception.",
+          "noMeans": "Do not approve this additional property-tax levy or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-jefferson-county-school-district-r1-2026-ballot-5b",
+          "whatItDoes": "Increase Jeffco Public Schools property taxes by $60 million in tax year 2026, collected in 2027, and annually afterward. After the first full fiscal year, revenue could increase with inflation measured by the Consumer Price Index. Money would be placed in a dedicated fund used only for school construction, technology and maintenance, including building repairs, heating and ventilation, infrastructure, and security. A board-appointed citizens’ committee would review spending; annual reports would be posted publicly online. A property-tax levy would raise the authorized amounts. Tax revenue and investment earnings could be collected and spent outside Colorado’s constitutional revenue limits and other legal limits.",
+          "yesMeans": "Approve the property taxes for school construction, technology and maintenance, with inflation adjustments, spending reviews and the revenue-limit exception.",
+          "noMeans": "Do not approve this additional property-tax levy or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-blue-mountain-water-district-2026-ballot-6a",
+          "whatItDoes": "Allow Blue Mountain Water District to borrow up to $1.2 million through a loan or other multiyear obligation with a state authority. Total repayment could not exceed $2.082 million, and the maximum effective annual interest rate would be 4%. Money would fund water-quality, regulatory-compliance and related system improvements. Repayment would come from water-system fees, charges and other legally available revenue. The measure authorizes no additional taxes.",
+          "yesMeans": "Approve the borrowing for water-system improvements within the stated debt, repayment and interest limits, without additional tax authority.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-golden-gate-fire-protection-district-2026-ballot-6b",
+          "whatItDoes": "Add a separate 4.5-mill property-tax levy for Golden Gate Fire Protection District, starting with collections in 2027. Its existing operating levy would stay unchanged. The new levy would raise about $137,376 in 2027, with later revenue varying with assessed property values. Revenue would go into a dedicated fleet fund used only to acquire, replace, restore or repair fire apparatus, fleet vehicles and their permanently installed operating equipment. The district could keep and spend the revenue and earnings outside Colorado’s constitutional revenue and spending limits and other legal limits.",
+          "yesMeans": "Approve the additional property-tax levy dedicated to fire vehicles and equipment, with the revenue-limit exception.",
+          "noMeans": "Do not approve this additional levy or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-arvada-fire-protection-district-2026-ballot-6c",
+          "whatItDoes": "Add a 1% sales tax in Arvada Fire Protection District beginning January 1, 2027. It would raise $23.1 million in the first fiscal year and whatever amounts it produces later. Exemptions include groceries for home consumption, prescription medicines, diapers, school activities and all other categories exempt from state sales taxes. Money would support fire, ambulance, rescue and emergency medical services, including staffing, vehicles, equipment, facilities and responder health programs. The tax would be added to other district taxes. Spending would appear in the annual independent audit online and receive external-auditor and audit-and-finance-committee review. Revenue and earnings would have permanent exceptions from constitutional revenue limits and statutory property-tax limits.",
+          "yesMeans": "Approve the additional sales tax for district emergency services, annual audit reporting and permanent revenue-limit exceptions.",
+          "noMeans": "Do not approve this sales tax or its proposed permanent revenue-limit exceptions.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-columbine-knolls-grove-metropolitan-recreation-district-2026-ballot-6d",
+          "whatItDoes": "Add a 2.6-mill property-tax levy to the Columbine Knolls Grove Metropolitan Recreation District’s existing levy. It would raise up to $152,000 for collection in 2027 and whatever additional amounts it produces annually afterward. Money would operate, maintain, repair and improve district facilities. Revenue would be exempt from Colorado’s constitutional revenue limits, statutory property-tax limits and other applicable past, present or future legal limits as authorized by voters.",
+          "yesMeans": "Approve the additional property-tax levy for district facilities and the exceptions to revenue limits.",
+          "noMeans": "Do not approve this additional property-tax levy or its proposed revenue-limit exceptions.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-columbine-knolls-grove-metropolitan-recreation-district-2026-ballot-6e",
+          "whatItDoes": "Authorize up to $6.6 million in recreation-district bonds, with total repayment capped at $13.1 million and an effective annual interest rate no higher than 5.25%. Authorize up to $440,000 in additional property taxes annually for no more than 30 years to repay the bonds; the property-tax rate would have no fixed cap. Projects include aquatic facilities, parks, playgrounds, athletics, accessibility, safety, infrastructure and deferred maintenance. Investment earnings from tax and bond proceeds would be exempt from Colorado’s constitutional revenue limits.",
+          "yesMeans": "Approve the bonds, property taxes to repay them and the revenue-limit exception for investment earnings.",
+          "noMeans": "Do not authorize these bonds, the additional property taxes or the related revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-evergreen-fire-protection-district-2026-ballot-7b",
+          "whatItDoes": "Add a 0.89% sales tax in Evergreen Fire Protection District beginning January 1, 2027. It would raise $5.44 million annually initially and whatever additional amounts it produces later. Money would support fire and emergency services, firefighter and paramedic recruitment, wildfire mitigation, community education, emergency response and capital repairs and improvements. The tax would be in addition to other district taxes and could not replace funding voters already authorized or funding the district is legally entitled to receive.",
+          "yesMeans": "Approve the additional sales tax for district emergency services and capital needs, without replacing existing authorized funding.",
+          "noMeans": "Do not approve this additional sales tax.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-edgewater-2026-ballot-2k",
+          "whatItDoes": "Increase Edgewater’s sales tax by 0.5 percentage points starting January 1, 2027. It would raise $1.2 million in 2027 and whatever additional amounts it produces later. Money would be used only to improve accessibility and mobility, including sidewalks, bike lanes, streets and alleys, accessible curbs and crossings, and education and outreach. It could also reduce or remove private owners’ duty to build and repair sidewalks. The city could retain and spend revenue outside Colorado’s constitutional revenue and spending limits and other legal limits.",
+          "yesMeans": "Approve the sales-tax increase for accessibility and mobility and the revenue-limit exception.",
+          "noMeans": "Do not approve this sales-tax increase or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-lakewood-2026-ballot-2g",
+          "whatItDoes": "Raise Lakewood’s sales and use tax from 3% to 3.5%, starting January 1, 2027. Food covered by the city code, including groceries, would be exempt from the added 0.5%. The tax would raise up to $17.6 million in the first full fiscal year and whatever additional amounts it produces later. Revenue could be used only for public safety, including crime prevention and homelessness response, and traffic safety, including streets, sidewalks, slower vehicle speeds, and pedestrian and bicycle improvements. The city could retain and spend revenue outside Colorado’s constitutional revenue and spending limits and other legal limits.",
+          "yesMeans": "Approve the additional sales and use tax for the listed safety purposes and the revenue-limit exception.",
+          "noMeans": "Do not approve the increase; keep the city’s existing 3% sales and use tax rate.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-lakewood-2026-ballot-2h",
+          "whatItDoes": "Change Lakewood’s charter so a newly elected mayor or city council member begins their term at the first regular meeting after the municipal election results are certified.",
+          "yesMeans": "Approve that start date for newly elected mayors and city council members.",
+          "noMeans": "Leave the charter’s existing term-start rule unchanged.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-lakewood-2026-ballot-2i",
+          "whatItDoes": "Replace an obsolete Lakewood charter provision allowing annual property-tax increases of up to 7% without a vote. The new provision would state that the city must comply with the Colorado Constitution and cannot raise property taxes without voter approval.",
+          "yesMeans": "Approve the replacement charter language requiring voter approval of property-tax increases.",
+          "noMeans": "Keep the existing charter language instead of replacing it.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-lakewood-2026-ballot-2j",
+          "whatItDoes": "Change Lakewood’s charter deadlines for elections on citizen-initiated ordinances and referendums. A regular or special election would occur between 60 and 150 days after the final decision that the petition has enough valid signatures.",
+          "yesMeans": "Approve the 60-to-150-day election window for initiatives and referendums.",
+          "noMeans": "Leave the existing charter election deadlines unchanged.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-wheat-ridge-2026-ballot-2a",
+          "whatItDoes": "Increase Wheat Ridge’s sales and use tax by 1 percentage point starting January 1, 2027. It would raise up to $11.7 million in the first full fiscal year and whatever additional amounts it produces later. Money would fund community projects and their operation and maintenance, including streets and infrastructure, bicycle and pedestrian safety, community spaces at Wilmore Davis and Kullerstrand elementary schools, replacement of Anderson Park’s outdoor pool, and police and city-service facilities. The city could retain and spend revenue outside Colorado’s constitutional revenue and spending limits and other legal limits.",
+          "yesMeans": "Approve the sales and use tax increase for community investments and the revenue-limit exception.",
+          "noMeans": "Do not approve this sales and use tax increase or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-mountain-view-2026-ballot-2b",
+          "whatItDoes": "Change Mountain View’s charter from a council-mayor government to a council-manager government. The town council would appoint a town manager to handle general operations, supervise departments and prepare an annual budget for council approval.",
+          "yesMeans": "Approve the council-manager form of town government.",
+          "noMeans": "Keep the council-mayor form of town government.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-mountain-view-2026-ballot-2c",
+          "whatItDoes": "Repeal Article VIII of Mountain View’s charter, allowing the town council to create boards and commissions by ordinance instead of requiring a charter amendment approved by voters.",
+          "yesMeans": "Allow the council to create boards and commissions by ordinance.",
+          "noMeans": "Keep Article VIII and its requirement for voter-approved charter amendments.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-morrison-2026-ballot-2d",
+          "whatItDoes": "Remove an exemption from Morrison’s lodging tax so it applies to lodging facilities of every size, regardless of guest-room count. Starting January 1, 2027, this would raise $125,000 in the first full fiscal year and whatever amounts it produces later. Revenue could fund any lawful town purpose. The town could retain and spend revenue and investment earnings outside Colorado’s constitutional revenue and spending limits.",
+          "yesMeans": "Approve applying the lodging tax to all lodging facilities and the revenue-limit exception.",
+          "noMeans": "Keep the existing lodging-tax exemption instead of extending the tax to all facilities.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-morrison-2026-ballot-2e",
+          "whatItDoes": "Increase Morrison’s lodging tax from 6% to 8%, starting January 1, 2027. It would raise $500,000 in the first full fiscal year and whatever amounts it produces later. Revenue could fund any lawful town purpose. The town could retain and spend revenue and investment earnings outside Colorado’s constitutional revenue and spending limits.",
+          "yesMeans": "Approve the 8% lodging-tax rate and the revenue-limit exception.",
+          "noMeans": "Do not approve the increase; keep the existing 6% lodging-tax rate.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-morrison-2026-ballot-2f",
+          "whatItDoes": "Change Morrison’s charter to state that town board members serve staggered four-year terms without term limits.",
+          "yesMeans": "Approve staggered four-year board terms without term limits.",
+          "noMeans": "Leave the existing charter provision for board terms unchanged.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:27:10.819328+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+        "finalUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+        "publisher": "Jefferson County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T03:44:21.182925+00:00",
+        "httpStatus": 200,
+        "rawHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+        "reviewedEvidence": "Official county2026 On-the-Ballot page includes complete local questions. Source hash identifies original captured HTML, retained privately; repository HTML is sanitized (one embedded credential), separately hash-identified in source-manifest. Draft explanations awaiting root independent review."
+      }
+    ]
+  }
+}

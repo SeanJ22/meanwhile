@@ -1,0 +1,143 @@
+[
+  {
+    "contestId": "co-eaton-2026-ballot-2a",
+    "officialTitle": "Town of Eaton Ballot Issue 2A",
+    "officialNumber": "2A",
+    "sourceBlock": 1,
+    "ocdId": "ocd-division/country:us/state:co/place:eaton",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:eaton",
+      "place",
+      "0822860",
+      "Eaton town"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-kersey-2026-ballot-2b",
+    "officialTitle": "Town of Kersey Ballot Issue 2B",
+    "officialNumber": "2B",
+    "sourceBlock": 2,
+    "ocdId": "ocd-division/country:us/state:co/place:kersey",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:kersey",
+      "place",
+      "0840515",
+      "Kersey town"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-evans-2026-ballot-2c",
+    "officialTitle": "City of Evans Ballot Issue 2C",
+    "officialNumber": "2C",
+    "sourceBlock": 3,
+    "ocdId": "ocd-division/country:us/state:co/place:evans",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:evans",
+      "place",
+      "0825280",
+      "Evans city"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-frederick-2026-ballot-2d",
+    "officialTitle": "Town of Frederick Ballot Issue 2D",
+    "officialNumber": "2D",
+    "sourceBlock": 4,
+    "ocdId": "ocd-division/country:us/state:co/place:frederick",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:frederick",
+      "place",
+      "0828360",
+      "Frederick town"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-frederick-2026-ballot-2e",
+    "officialTitle": "Town of Frederick Ballot Issue 2E",
+    "officialNumber": "2E",
+    "sourceBlock": 5,
+    "ocdId": "ocd-division/country:us/state:co/place:frederick",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:frederick",
+      "place",
+      "0828360",
+      "Frederick town"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-greeley-2026-ballot-2f",
+    "officialTitle": "City of Greeley Ballot Issue 2F",
+    "officialNumber": "2F",
+    "sourceBlock": 6,
+    "ocdId": "ocd-division/country:us/state:co/place:greeley",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:greeley",
+      "place",
+      "0832155",
+      "Greeley city"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-eaton-school-district-re2-2026-ballot-4a",
+    "officialTitle": "Weld County School District RE-2 (Eaton) Ballot Issue 4A",
+    "officialNumber": "4A",
+    "sourceBlock": 15,
+    "ocdId": "ocd-division/country:us/state:co/school_district:weld_county_school_district_no_re_2",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:weld_county_school_district_no_re_2",
+      "unsd",
+      "0803600",
+      "Weld County School District No. RE-2"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-weld-school-district-re1-2026-ballot-4b",
+    "officialTitle": "Weld County School District RE-1 Ballot Issue 4B",
+    "officialNumber": "4B",
+    "sourceBlock": 16,
+    "ocdId": "ocd-division/country:us/state:co/school_district:weld_county_school_district_re_1",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:weld_county_school_district_re_1",
+      "unsd",
+      "0804200",
+      "Weld County School District RE-1"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-prairie-school-district-re11j-2026-ballot-5b",
+    "officialTitle": "Prairie School District RE-11J Ballot Issue 5B",
+    "officialNumber": "5B",
+    "sourceBlock": 18,
+    "ocdId": "ocd-division/country:us/state:co/school_district:prairie_school_district_re_11",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:prairie_school_district_re_11",
+      "unsd",
+      "0806720",
+      "Prairie School District RE-11"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-nunn-fire-protection-district-2026-ballot-6a",
+    "officialTitle": "Nunn Fire Protection District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "sourceBlock": 20,
+    "ocdId": "ocd-division/country:us/state:co/special_district:nunn_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:nunn_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#62044",
+      "Nunn Fire Protection District",
+      "fire"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

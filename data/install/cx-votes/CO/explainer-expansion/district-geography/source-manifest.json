@@ -1,0 +1,63 @@
+[
+  {
+    "url": "https://www.jeffco.us/4652/On-the-Ballot",
+    "originalSha256": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+    "retrievedAt": "2026-11-03T03:44:21.182925+00:00",
+    "sourceOrg": "Jefferson County Clerk and Recorder",
+    "rawFormat": "HTML",
+    "hashScope": "complete original captured HTML bytes; repository copy sanitized separately",
+    "savedFile": "../jefferson/sources/jefferson-index.sanitized.html",
+    "savedSha256": "680dd10dc8c329d8937f93e95befcad31c18ac20471eaa428d029b52c4c3bf8f",
+    "sanitization": {
+      "originalSha256": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+      "savedSha256": "680dd10dc8c329d8937f93e95befcad31c18ac20471eaa428d029b52c4c3bf8f",
+      "replacements": 1,
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 397,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "preserved": []
+    },
+    "originalSavedOutsideRepository": "/workspace/work/election-day/explainers-only/CO/jefferson-index.html",
+    "linkingPage": {
+      "url": "https://www.coloradosos.gov/pubs/elections/Resources/CountyElectionOffices.html",
+      "sha256": "e3fbc830ccfa7da244a806b24bde1aeac6edd394250df7e0df0268f232de7a5d",
+      "file": "../jefferson/sources/colorado-county-directory.html",
+      "authorityLink": [
+        {
+          "text": "Jefferson",
+          "url": "https://jeffco.us/elections/"
+        }
+      ]
+    }
+  },
+  {
+    "url": "https://broomfield.org/DocumentCenter/View/69259",
+    "finalUrl": "https://broomfield.org/DocumentCenter/View/69259/2026-Broomfield-Ballot-Measures-Information-Booklet?bidId=",
+    "originalSha256": "2405b682446c6e6b04333bc62743a7f1df3fdbb226e5587c6d48562a1aa7eae9",
+    "sourceOrg": "City and County of Broomfield Attorney’s Office",
+    "retrievedAt": "2026-11-03T04:55:02.324622+00:00",
+    "httpStatus": 200,
+    "rawFormat": "DOCUMENT_BYTES",
+    "hashScope": "complete original PDF response bytes",
+    "savedFile": "sources/2405b682446c6e6b04333bc62743a7f1df3fdbb226e5587c6d48562a1aa7eae9.source",
+    "savedSha256": "2405b682446c6e6b04333bc62743a7f1df3fdbb226e5587c6d48562a1aa7eae9",
+    "linkingPage": {
+      "url": "https://www.coloradosos.gov/pubs/elections/Resources/CountyElectionOffices.html",
+      "sha256": "e3fbc830ccfa7da244a806b24bde1aeac6edd394250df7e0df0268f232de7a5d",
+      "file": "../jefferson/sources/colorado-county-directory.html",
+      "authorityLink": [
+        {
+          "text": "Broomfield",
+          "url": "https://www.broomfield.org/index.aspx?nid=191"
+        }
+      ]
+    }
+  }
+]

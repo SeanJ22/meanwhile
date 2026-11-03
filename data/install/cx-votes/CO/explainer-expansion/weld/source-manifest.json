@@ -1,0 +1,19 @@
+[
+  {
+    "requestedUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf",
+    "retrievedAt": "2026-11-03T05:07:05.194571+00:00",
+    "finalUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "a56013be6882d9ca88a68bdbbcfc74c7c31660b65077fb8c8a93c67093003428",
+    "bytes": 487810,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "weld-current-sample.pdf",
+    "sourceOrg": "Weld County Clerk and Recorder",
+    "savedFile": "sources/a56013be6882d9ca88a68bdbbcfc74c7c31660b65077fb8c8a93c67093003428.pdf.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "f9a1dc0db03f336f0d05e6850c918d0d3e0cb0cd7162673754b2b6175e9fb9ef",
+    "storedBytes": 376851,
+    "hashScope": "sha256 identifies complete original PDF response bytes after gzip decoding; storedSha256 separately identifies gzip bytes"
+  }
+]

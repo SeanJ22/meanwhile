@@ -1,0 +1,15 @@
+{
+  "county": "Weld",
+  "electionDate": "2026-11-03",
+  "officialCompositeLocalMeasureCount": 26,
+  "newPreparedCount": 10,
+  "alreadyPreparedOrPendingElsewhereCount": 16,
+  "sourceUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf",
+  "sourceSha256": "a56013be6882d9ca88a68bdbbcfc74c7c31660b65077fb8c8a93c67093003428",
+  "knownSourceCaveats": [
+    "This complete county composite establishes the Weld local denominator only; it is not a statewide local-measure denominator.",
+    "GroundwaterManagementSubdistrict7C remains pending exact territory in the separate Adams draft.",
+    "RE8designation5C is explicitly confirmed here; previously prepared BroomfieldRE8 draft had conservatively omitted the number after ambiguous OCR."
+  ],
+  "allTwentySixSourceBlocks": "official-inventory.json"
+}

@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "co-west-metro-fire-protection-district-2026-ballot-7c",
+    "ocdId": "ocd-division/country:us/state:co/special_district:west_metropolitan_fire_protection_district",
+    "governmentId": "co:special:west-metropolitan-fire-protection-district",
+    "censusPid": "143788",
+    "dolaId": "64243",
+    "identityEvidence": "Held Census government143788 has westmetrofire.org and433SAllisonPkwy,Lakewood; current DOLA64243 WestMetroFire uses the same website and address. Current county tax authority labels identify the exact WestMetroFire territory."
+  },
+  {
+    "contestId": "co-conifer-fire-protection-district-2026-ballot-7d",
+    "ocdId": "ocd-division/country:us/state:co/special_district:conifer_fire_protection_district",
+    "governmentId": "co:special:north-fork-fire-protection-district",
+    "censusPid": "204143",
+    "dolaId": "30127",
+    "identityEvidence": "Current DOLA30127 names Conifer Fire Protection District, explicitly prev_name North Fork Fire Protection District, and retains northforkfire.org andPOBox183,BuffaloCreek80425, matching held Census204143. Current county tax authority polygons explicitly name Conifer; neither ElkCreek nor the whole county is substituted."
+  },
+  {
+    "contestId": "co-17th-judicial-district-2026-ballot-7e",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:17",
+    "governmentId": null,
+    "identityEvidence": "Official Broomfield neutral7E summary states that the17thJudicialDistrict includes Adams County and Broomfield and elects one district attorney; exact current2026 county polygons define that union. This is a new source-backed place identity, without an invented government entity."
+  }
+]

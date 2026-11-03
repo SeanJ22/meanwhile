@@ -1,0 +1,28 @@
+{
+  "officialUrl": "https://broomfield.org/DocumentCenter/View/69259",
+  "captureProvider": "search_service_web_run PDF extraction",
+  "rawFormat": "CAPTURED_SOURCE_TEXT",
+  "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+  "lineCount": 263,
+  "coverage": "Every line 0 through 262 captured from official PDF view",
+  "nativeGovernmentFetch": {
+    "status": null,
+    "reason": "Native fetch not attempted during known shared runtime all-host HTTP outage"
+  },
+  "requests": [
+    {
+      "request": {
+        "open": [
+          {
+            "ref_id": "turn240401view0",
+            "lineno": 235
+          }
+        ]
+      },
+      "capturedAt": "2026-11-03T04:28:55.164Z",
+      "reference": "turn775300view0",
+      "lineCount": 263
+    }
+  ],
+  "conflicts": []
+}

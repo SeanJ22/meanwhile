@@ -1,0 +1,14 @@
+{
+  "officialDistricts": 3,
+  "completeNativeJeffersonFeatures": 44,
+  "completeNativeDouglasFeatures": 2,
+  "censusCountyFeatures": 4,
+  "selectedJudicialCountyFeatures": 2,
+  "completeOriginalCensusZctaFeatures": 152,
+  "independentCountQuery": 152,
+  "positivePolygonIntersectionRows": 69,
+  "boundedCandidatePairs": 108,
+  "zipEdges": 69,
+  "zctaEdges": 69,
+  "geometryRule": "Positive polygon intersections using the same algorithm and translation fallback as existing acquireBoundaryOverlaps; exact coordinate components remain unchanged. Shares stay null/unknown. Existing buildStatePlaceMap applies held postal ZIP links and address-required handling."
+}

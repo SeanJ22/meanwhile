@@ -1,0 +1,962 @@
+SAMPLE
+Federal Offices
+State Offices
+State Offices
+Arapahoe County Offices
+Municipal Offices
+Judicial Retention Questions
+(Vote YES or NO)
+Colorado Supreme Court Justice
+Colorado Court of Appeals Judge
+District Court Judge - 18th Judicial District
+County Court Judge - Arapahoe
+Ballot Measures
+Ballot questions referred by the general assembly or any political
+subdivision are listed by letter, and ballot questions initiated by the
+people are listed numerically. A ballot question listed as an
+"amendment" proposes a change to the Colorado constitution, and a
+ballot question listed as a "proposition" proposes a change to the
+Colorado Revised Statutes. A "yes/for" vote on any ballot question is
+a vote in favor of changing current law or existing circumstances, and
+a "no/against" vote on any ballot question is a vote against changing
+current law or existing circumstances.
+State Ballot Measures
+State Ballot Measures
+United States Senator
+(Vote for One)
+Republican Mark Baisley
+Democratic John Hickenlooper
+Forward Bob Chew
+Approval Voting Christopher Baum
+Libertarian Blake Huber
+Unity Adam Withrow
+Write-in
+Representative to the 120th United States Congress - District 1
+(Vote for One)
+Democratic Melat Kiros
+Republican Christy Peterson
+Unity Critter Milton
+Libertarian Chad Humphrey
+Unaffiliated Shimon Blau
+Write-in
+Representative to the 120th United States Congress - District 4
+(Vote for One)
+Republican Lauren Boebert
+Democratic Eileen Laubacher
+Libertarian Douglas Mangeris
+Write-in
+Representative to the 120th United States Congress - District 6
+(Vote for One)
+Democratic Jason Crow
+Republican Jason Clark
+Libertarian Patty McMahon
+Unity Meredith Ryan
+Unaffiliated Samir Witta
+Governor/Lieutenant Governor
+(Vote for One Pair)
+Republican Victor Marx /
+George Washington Markert
+Democratic Phil Weiser /
+Lesley Dahlkemper
+American
+Constitution
+Stephen T. Hamilton /
+James K Treibert
+Libertarian Eric Mulder /
+Wayne Harlos
+Unity Jeff Peckman /
+T.J. Cole
+Approval
+Voting
+Erik Underwood /
+Frank Atwood
+Unaffiliated Greg Lopez /
+Taralyn Romero
+Secretary of State
+(Vote for One)
+Democratic Amanda Gonzalez
+Republican James Wiley
+Libertarian Sean Vadney
+American Constitution Amanda Campbell
+Forward Celeste Landry
+State Treasurer
+(Vote for One)
+Democratic Jeff Bridges
+Republican Kevin Grantham
+Libertarian Jodie Barr
+Approval Voting Marilee Langner Sturgis
+Attorney General
+(Vote for One)
+Republican Michael J. Allen
+Democratic Jena Griswold
+State Board of Education Member - Congressional District 1
+(Vote for One)
+Democratic Lisa Escárcega
+Republican Frederick Espinoza
+Libertarian Clayton Casciato
+Regent of the University of Colorado - Congressional District 6
+(Vote for One)
+Republican Veanessa Burbage
+Democratic Ilana Spiegel
+Libertarian Joe Johnson
+State Senator - District 21
+(Vote for One)
+Republican Frederick Alfred Jr
+Democratic Adrienne Benavidez
+State Senator - District 27
+(Vote for One)
+Republican Danielle Lammon
+Democratic Tom Sullivan
+Libertarian Michele Poague
+State Senator - District 29
+(Vote for One)
+Democratic Iman M. Jodeh
+Republican Robert McKenna
+State Senator - District 32
+(Vote for One)
+Democratic Emily Sirota
+Republican Sydnnia Wulff
+State Representative - District 3
+(Vote for One)
+Democratic Gena Ozols
+Republican Rebecca Winegar
+State Representative - District 9
+(Vote for One)
+Republican Tom Cowhick
+Democratic Monica VanBuskirk
+State Representative - District 36
+(Vote for One)
+Democratic Michael Carter
+Republican Paul E. Nelson
+Libertarian Andrew Gibson
+State Representative - District 37
+(Vote for One)
+Republican Jill Thompson
+Democratic Chad Clifford
+State Representative - District 38
+(Vote for One)
+Democratic Gretchen Rydin
+Center Tim Martin
+Libertarian Norm Olsen
+Unaffiliated Allison Madrigal
+State Representative - District 40
+(Vote for One)
+Republican Clinton Porter
+Democratic Naquetta Ricks
+State Representative - District 41
+(Vote for One)
+Democratic Jamie Jackson
+State Representative - District 42
+(Vote for One)
+Democratic Sarah Amelia Woodson
+State Representative - District 56
+(Vote for One)
+Republican Chris Richardson
+Libertarian Amy L. Lunde
+State Representative - District 61
+(Vote for One)
+Republican Scott Shamblin
+Democratic Eliza Hamrick
+Libertarian Kevin Gulbranson
+Regional Transportation District Director - District N
+(Vote for One)
+Cindy Arcuri
+County Commissioner - District 2
+(Vote for One)
+Republican Carl Schuldies
+Democratic Jessica Campbell
+County Commissioner - District 4
+(Vote for One)
+Republican Sonda "Sunny" Banka
+Democratic Leslie Summey
+County Clerk and Recorder
+(Vote for One)
+Democratic Joan Lopez
+Republican Annette Budd
+County Treasurer
+(Vote for One)
+Democratic Michael Westerberg
+Libertarian Bennett Rutledge
+County Assessor
+(Vote for One)
+Democratic PK Kaiser
+Republican Jesse Lind
+Libertarian Lee D. Ormiston
+County Sheriff
+(Vote for One)
+Democratic Tyler Scott Brown
+Republican Kevin Scott Edling
+County Coroner
+(Vote for One)
+Democratic Casey Bitting
+City of Cherry Hills Village Mayor
+Two-year term
+(Vote for One)
+Susan Maguire
+Doug Tisdale
+Jennifer A. Miller
+City of Cherry Hills Village Councilmember
+District 2
+Four-year term
+(Vote for One)
+Bill Lucas
+City of Cherry Hills Village Councilmember
+District 4
+Four-year term
+(Vote for One)
+Doug Kelsall
+City of Cherry Hills Village Councilmember
+District 6
+Four-year term
+(Vote for One)
+Robert Eber
+Shall Justice William W. Hood, III of the Colorado
+Supreme Court be retained in office?
+YES NO
+Shall Judge Rebecca Rankin Freyre of the Colorado Court of
+Appeals be retained in office?
+YES NO
+Shall Judge Elizabeth L. Harris of the Colorado Court of
+Appeals be retained in office?
+YES NO
+Shall Judge Katharine E. Lum of the Colorado Court of
+Appeals be retained in office?
+YES NO
+Shall Judge Pax Moultrie of the Colorado Court of Appeals be
+retained in office?
+YES NO
+Shall Judge Karl L. Schock of the Colorado Court of Appeals
+be retained in office?
+YES NO
+Shall Judge Grant Sullivan of the Colorado Court of Appeals
+be retained in office?
+YES NO
+Shall Judge Michelle Ann Amico of the 18th Judicial District
+be retained in office?
+YES NO
+Shall Judge LaQunya Latrese Baker-McKay of the 18th
+Judicial District be retained in office?
+YES NO
+Shall Judge Jacob A. Edson of the 18th Judicial District be
+retained in office?
+YES NO
+Shall Judge Thomas W. Henderson of the 18th Judicial
+District be retained in office?
+YES NO
+Shall Judge Michelle Jones of the 18th Judicial District be
+retained in office?
+YES NO
+Shall Judge David N. Karpel of the 18th Judicial District be
+retained in office?
+YES NO
+Shall Judge Natalie G. Stricklin of the 18th Judicial District be
+retained in office?
+YES NO
+Shall Judge Darren L. Vahle of the 18th Judicial District be
+retained in office?
+YES NO
+Shall Judge Christine A. Washburn of the 18th Judicial District
+be retained in office?
+YES NO
+Shall Judge Christina Marie Apostoli of the Arapahoe County
+Court be retained in office?
+YES NO
+Shall Judge Colleen Clark of the Arapahoe County Court be
+retained in office?
+YES NO
+Shall Judge Cheryl Rowles-Stokes of the Arapahoe County
+Court be retained in office?
+YES NO
+Amendment 81 (CONSTITUTIONAL)
+Shall there be an amendment to the Colorado Constitution
+requiring law enforcement to notify the department of
+homeland security when a person is charged with either a
+violent crime or any crime if the person has a prior felony
+conviction if law enforcement cannot determine that the
+person is lawfully present in the United States?
+YES/FOR
+NO/AGAINST
+Amendment 82 (CONSTITUTIONAL)
+Shall there be an amendment to the Colorado Constitution
+creating new law granting the right for consumers to
+purchase natural gas for cooking or heating in homes or
+businesses and for distributors and utilities to sell natural
+gas to consumers?
+YES/FOR
+NO/AGAINST
+Amendment 83 (CONSTITUTIONAL)
+Shall there be an amendment to the Colorado Constitution
+creating a constitutional right to hunt, fish, and harvest fish
+and wildlife by traditional methods, including all species of
+fish and wildlife managed by the state except non-game
+species, endangered species, or any species that is illegal
+to hunt under federal law, and, in connection therewith,
+establishing hunting and fishing as the preferred means of
+managing fish and wildlife populations; and preserving the
+right of the state to regulate hunting, fishing, and wildlife
+management if necessary for sound scientific wildlife
+conservation and management, public safety, or to
+preserve the future of hunting and fishing opportunities for
+all species?
+YES/FOR
+NO/AGAINST
+Amendment 84 (CONSTITUTIONAL)
+Shall there be an amendment to the Colorado Constitution
+requiring a voter to sign and include the last four digits of
+their social security number or their Colorado driver’s
+license or identification card number on the outside of their
+mail ballot for any federal or state election, and, in
+connection therewith, allowing the voter to correct missing
+or incorrect information, including with alternative forms of
+identification; and prohibiting a county clerk and recorder
+from counting the mail ballot unless the problem is fixed?
+YES/FOR
+NO/AGAINST
+Amendment 85 (CONSTITUTIONAL)
+Shall there be an amendment to the Colorado Constitution
+concerning ballot question language, and, in connection
+therewith, requiring all state and local ballot questions to
+be written in plain language and at no more than an 8th
+grade reading level and prohibiting a state statute from
+requiring language that conflicts with these requirements in
+ballot questions for citizen-initiated measures?
+YES/FOR
+NO/AGAINST
+Amendment 86 (CONSTITUTIONAL)
+Shall there be an amendment to the Colorado Constitution
+concerning congressional redistricting, and, in connection
+therewith, reenacting the current process for congressional
+redistricting in the Colorado Constitution and prohibiting
+modifications to a final map unless at least three public
+meetings are held, the modifications do not have the effect
+of dividing communities of interest or purposefully favoring
+one political party, and are approved by the congressional
+redistricting commission and the Colorado Supreme Court?
+YES/FOR
+NO/AGAINST
+Amendment 87 (CONSTITUTIONAL)
+SHALL STATE TAXES BE INCREASED $2.7 BILLION
+ANNUALLY, IN ORDER TO INCREASE OR IMPROVE LEVELS
+OF PUBLIC SERVICES, INCLUDING K-12 PUBLIC SCHOOL
+EDUCATION, HEALTH CARE, AND EARLY CHILD CARE AND
+EDUCATION SERVICES, BY AN AMENDMENT TO THE
+COLORADO CONSTITUTION AND A CHANGE TO THE
+COLORADO REVISED STATUTES REPEALING EXISTING LAW
+AND CREATING NEW LAW TO REPLACE THE UNIFORM
+STATE INCOME TAX RATE WITH A GRADUATED INCOME TAX
+STRUCTURE, AND, IN CONNECTION THEREWITH,
+AMENDING THE TAXPAYER’S BILL OF RIGHTS TO ELIMINATE
+THE CONSTITUTIONAL REQUIREMENT FOR ALL TAXABLE
+NET INCOME TO BE TAXED AT ONE RATE WITH NO ADDED
+TAX ON INCOME; ESTABLISHING VARIOUS INCOME TAX
+RATES BASED ON THE AMOUNT OF TAXABLE INCOME
+EARNED BY INDIVIDUALS, ESTATES, TRUSTS, AND
+CORPORATIONS, WHILE MAINTAINING THE CURRENT 4.4%
+TAX ON INCOME FROM THE SALE OF A PRINCIPAL
+RESIDENCE, WHICH WILL RESULT IN THE ESTIMATED
+CHANGE IN INCOME TAXES OWED BY INDIVIDUALS AS
+IDENTIFIED IN THE FOLLOWING TABLE; AND AUTHORIZING
+THE STATE TO RETAIN AND SPEND ANY INCREASED
+REVENUE FROM THE NEW TAX STRUCTURE, AS A
+VOTER-APPROVED REVENUE CHANGE, TO SUPPLEMENT
+CURRENT LEVELS OF FUNDING FOR K-12 PUBLIC SCHOOL
+EDUCATION, HEALTH CARE, AND EARLY CHILD CARE AND
+EDUCATION PROGRAMS?
+Change in Income Taxes Owed by Income Category
+Income
+Categories
+Current
+Average
+Income Tax
+Owed
+Proposed
+Average
+Income Tax
+Owed
+Proposed
+Change in
+Average
+Income Tax
+Owed if
+Passed + or -
+$25,000
+or less
+$59 $50 -$9
+$25,001 -
+$50,000
+$751 $632 -$119
+$50,001 -
+$100,000
+$1,877 $1,666 -$210
+$100,001 -
+$200,000
+$4,126 $3,828 -$298
+$200,001 -
+$500,000
+$9,344 $9,019 -$325
+$500,001 -
+$1,000,000
+$19,288 $18,963 -$325
+$1,000,001 -
+$2,000,000
+$29,432 $34,196 +$4,764
+$2,000,001 -
+$5,000,000
+$41,196 $55,110 +$13,914
+Income categories use adjusted gross income reported to the federal Internal
+Revenue Service.
+YES/FOR
+NO/AGAINST
+Proposition NN (STATUTORY)
+Shall state investment in K-12 public education increase
+two percent each year for the next ten years, with
+investments used to increase teacher pay, improve
+teacher retention, lower class sizes, and increase access
+to career and technical courses, without raising taxes but
+instead funded by raising the annual limit on state fiscal
+year spending only by the amount spent on public K-12
+education as a voter-approved revenue change, and
+requiring an annual publicly released, independent audit to
+show how the new investments are spent?
+YES/FOR
+NO/AGAINST
+Proposition 132 (STATUTORY)
+Shall there be a change to the Colorado Revised Statutes
+concerning criminal penalties for fentanyl and certain
+synthetic opioids, and, in connection therewith, increasing
+the felony classifications of drug-related crimes for
+distribution, manufacturing, dispensing, sale, or
+possession of fentanyl and certain synthetic opioids;
+creating mandated treatment for certain drug felony
+violations based on possession amount; and changing
+sentencing provisions to narrow or eliminate exemptions
+for crimes related to fentanyl and certain synthetic opioids
+and drug-related deaths?
+YES/FOR
+NO/AGAINST
+Proposition 133 (STATUTORY)
+Shall there be a change to the Colorado Revised Statutes
+modifying existing law concerning human trafficking of a
+minor for sexual servitude, and, in connection therewith,
+creating new law expanding human trafficking of a minor
+for sexual servitude to include knowingly trading anything
+of monetary value to buy or sell sexual activity with a minor
+and increasing the penalty to be life in prison without
+parole or release?
+YES/FOR
+NO/AGAINST
+Proposition 134 (STATUTORY)
+Shall there be a change to the Colorado Revised Statutes
+creating new law restricting participation in all K-12 and
+collegiate school sports based on the participant’s sex as
+determined by certain aspects of their biological
+reproductive system, and, in connection therewith,
+requiring a school, institution of higher education, or
+athletic association to designate each school or intramural
+athletic team or sport as male, female, or coeducational;
+only allowing participants to compete on the team or sport
+of their designated sex or to compete on a coeducational
+team; creating an exception to allow a female to participate
+on a male-designated team or sport if there is no female
+team available; prohibiting a government entity, licensing
+or accrediting organization, or athletic association from
+entertaining a complaint, opening an investigation, or
+taking other adverse action against a school for
+maintaining separate teams or sports for females; and
+providing the commissioner of education with the authority
+to enforce the proposed initiative for K-12 school districts?
+YES/FOR
+NO/AGAINST
+Proposition 135 (STATUTORY)
+Shall there be a change to the Colorado Revised Statutes
+modifying existing law by prohibiting surgery on a minor for
+the purpose of altering the minor’s biological sex
+characteristics, and, in connection therewith, prohibiting
+any health-care professional or other person from
+knowingly performing, prescribing, administering, or
+providing any surgery to a minor for the purpose of altering
+the minor’s biological sex characteristics and prohibiting
+the use of state or federal funds, Medicaid reimbursement,
+or insurance coverage to pay for this type of surgery?
+YES/FOR
+NO/AGAINST
+Proposition 136 (STATUTORY)
+Shall there be a change to the Colorado Revised Statutes
+capping the state income tax rate at 4.4% of federal
+taxable income for individuals and corporations?
+YES/FOR
+NO/AGAINST
+Proposition 137 (STATUTORY)
+Shall there be a change to the Colorado Revised Statutes
+creating new law to increase water and land conservation
+funding without raising taxes, and, in connection therewith,
+through a voter-approved revenue change, allowing the
+state to keep and spend a portion of revenue from the
+state sales tax on sporting goods and equipment to
+conserve and protect Colorado’s water, land, and forests,
+prevent wildfires, support outdoor recreation training and
+activities, and reduce revenue spent on these conservation
+purposes if necessary to preserve funding for certain tax
+credits?
+YES/FOR
+NO/AGAINST
+SAMPLE GENERAL ELECTION BALLOT
+TUESDAY, NOVEMBER 3, 2026
+JOAN LOPEZ, ARAPAHOE COUNTY CLERK AND RECORDER
+ALL CONTESTS ARE NOT INCLUDED ON ALL BALLOTS. CHECK YOUR PRECINCT FOR SPECIFIC CONTENT.SAMPLE
+Municipal Ballot Measures Municipal Ballot Measures
+School District Ballot Measures
+Special District Ballot Measures
+Special District Ballot Measures
+City of Centennial Ballot Issue 2A
+SHALL CITY OF CENTENNIAL TAXES BE INCREASED
+$27 MILLION ANNUALLY, AND BY WHATEVER
+ADDITIONAL AMOUNT IS RAISED ANNUALLY
+THEREAFTER, BY THE IMPOSITION OF AN
+ADDITIONAL 1.00% (1 CENT ON $1) ON SALES AND
+PURCHASES OF TANGIBLE PERSONAL PROPERTY
+AND CERTAIN SERVICES (NOT APPLYING TO SALES
+OF FOOD FOR HOME CONSUMPTION, GASOLINE,
+PRESCRIPTION DRUGS, AND CERTAIN OTHER ITEMS
+AS PROVIDED IN THE CENTENNIAL MUNICIPAL
+CODE), RESULTING IN A TOTAL SALES AND USE TAX
+RATE OF 3.50%, AND SHALL SUCH INCREASED
+SALES AND USE TAX RATE COMMENCE JANUARY 1,
+2027 TO BE USED FOR PUBLIC WORKS RELATED
+SERVICES SUCH AS:
+· TRAFFIC SAFETY IMPROVEMENTS AND RELIABLE
+STREET MAINTENANCE, INCLUDING POTHOLE
+REPAIRS AND PAVEMENT PRESERVATION;
+· REPAIRING AND RECONSTRUCTING ROADWAYS
+AND AGING INFRASTRUCTURE IN NEIGHBORHOODS
+AND KEY CORRIDORS; AND
+· BRIDGE, SIDEWALK, AND PEDESTRIAN ACCESS
+REPAIRS AND IMPROVEMENTS
+WITH ALL SUCH REVENUES AND RELATED
+SPENDING REPORTED IN THE CITY'S ANNUAL
+INDEPENDENT AUDIT PUBLISHED ON THE CITY'S
+WEBSITE AND REVIEWED BY THE CENTENNIAL
+AUDIT COMMITTEE AND COUNCIL, AND SHALL THE
+REVENUES GENERATED BY SUCH SALES AND USE
+TAX INCREASE AND ANY EARNINGS FROM THE
+INVESTMENT OF SUCH REVENUES BE COLLECTED
+AND SPENT BY THE CITY AS A VOTER APPROVED
+REVENUE CHANGE PURSUANT TO ARTICLE X,
+SECTION 20 OF THE COLORADO CONSTITUTION OR
+ANY OTHER LAW?
+YES/FOR
+NO/AGAINST
+City of Glendale Ballot Question 2B
+SHALL THE CITY OF GLENDALE GRANT A FRANCHISE
+TO PUBLIC SERVICE COMPANY OF COLORADO,
+DOING BUSINESS AS XCEL ENERGY, FOR THE
+PERIOD JANUARY 1, 2028 TO DECEMBER 31, 2048 TO
+PROVIDE UTILITY SERVICE TO THE CITY OF
+GLENDALE AND TO ITS RESIDENTS; AND TO
+PROVIDE THE RIGHT TO ACQUIRE, PURCHASE,
+CONSTRUCT, INSTALL, LOCATE, MAINTAIN,
+OPERATE, AND EXTEND INTO, WITHIN AND
+THROUGH THE CITY OF GLENDALE ALL COMPANY
+FACILITIES REASONABLY NECESSARY FOR THE
+GENERATION, PRODUCTION, MANUFACTURE, SALE,
+STORAGE, PURCHASE, EXCHANGE, TRANSMISSION,
+TRANSPORTATION AND DISTRIBUTION OF UTILITY
+SERVICE WITHIN AND THROUGH THE CITY OF
+GLENDALE?
+YES/FOR
+NO/AGAINST
+City of Cherry Hills Village Ballot Question 2C
+Shall Article 1 of the City of Cherry Hills Village Home Rule
+Charter, entitled "General Provisions," be amended to add
+a new Section 1.6 entitled "Home Rule Authority to
+Regulate the Use of Land", as set forth below?
+1.6. Home Rule Authority to Regulate the Use of Land.
+The authority to plan for, zone, and regulate density, the
+uses of land, the location and character of structures, and
+the development of real property within the City are
+matters of local and municipal concern vested in the City
+by the Colorado Constitution and this Charter, and such
+matters shall be regulated only in accordance with this
+Charter and ordinances enacted pursuant to this Charter.
+The City shall not be required to adopt or implement laws,
+standards, approval processes, assessments, plans, or
+reports on such matters other than as may be enacted by
+the City Council pursuant to Section 3.1 of this Charter or
+the voters of the City pursuant to Section 13.11 of this
+Charter, irrespective of state mandates to do so.
+YES/FOR
+NO/AGAINST
+City of Sheridan Ballot Issue 2D
+SHALL SHERIDAN TAXES BE INCREASED BY $986,935
+ANNUALLY COMMENCING JANUARY 1, 2027, FOR
+PUBLIC SAFETY PURPOSES, INCLUDING BUT NOT
+LIMITED TO POLICE SERVICES, EMERGENCY
+RESPONSE, EQUIPMENT, AND RELATED
+OPERATIONS; AND BY WHATEVER ADDITIONAL
+AMOUNTS ARE RAISED ANNUALLY THEREAFTER,
+FROM A 0.50 PERCENT INCREASE IN THE CITY
+SALES AND USE TAX RATE, TO BE SPENT AS A
+VOTER-APPROVED REVENUE CHANGE AND AS AN
+EXCEPTION TO THE LIMITS WHICH WOULD
+OTHERWISE APPLY AND WITHOUT LIMITING OR
+AFFECTING THE COLLECTION OR SPENDING OF
+OTHER REVENUES?
+YES/FOR
+NO/AGAINST
+City of Aurora Ballot Issue 3A
+REFERRED MEASURE TO DEDICATE SALES TAX FOR
+COMMUNITY FACILITIES
+SHALL CITY OF AURORA TAXES BE INCREASED UP
+TO $12,640,000 AND AS MAY BE GENERATED
+ANNUALLY THEREAFTER BY THE IMPOSITION OF A
+NEW 0.129% SALES AND USE TAX (THAT EQUALS
+12.9 CENTS ON EVERY ONE HUNDRED DOLLAR
+PURCHASE) FOR A PERIOD BEGINNING ON JANUARY
+1, 2027, AND ENDING ON DECEMBER 31, 2057, TO
+PROVIDE FOR THE OPERATION OF AND REPAIRS,
+MAINTENANCE, AND IMPROVEMENTS TO
+COMMUNITY FACILITIES, INCLUDING WITHOUT
+LIMITATION LIBRARIES, RECREATION AND
+COMMUNITY CENTERS;
+AND SHALL CITY OF AURORA DEBT BE INCREASED
+BY AN AMOUNT NOT TO EXCEED $105,000,000 WITH
+A MAXIMUM REPAYMENT COST OF UP TO
+$204,870,000 TO ACCOMPLISH THE PURPOSES
+STATED ABOVE, INCLUDING BUT NOT LIMITED TO:
+PARK RENOVATIONS AND NEW PARK
+CONSTRUCTION; RECREATION CENTER
+IMPROVEMENTS AND NEW RECREATION CENTER
+CONSTRUCTION; LIBRARY BRANCH IMPROVEMENTS
+AND NEW LIBRARY CONSTRUCTION;
+SUCH DEBT TO CONSIST OF REVENUE BONDS
+WHICH SHALL BEAR INTEREST, MATURE, BE
+SUBJECT TO REDEMPTION, WITH OR WITHOUT
+PREMIUM, AND BE ISSUED, DATED AND SOLD (AT,
+ABOVE OR BELOW PAR) IN SUCH MANNER AND
+CONTAINING SUCH OTHER TERMS, NOT
+INCONSISTENT HEREWITH, AS THE CITY COUNCIL
+MAY DETERMINE; SHALL THE CITY OF AURORA BE
+AUTHORIZED TO PAY SUCH BONDS FROM, AND TO
+SECURE SUCH PAYMENT BY A PLEDGE OF, THE
+NEW 0.129% SALES AND USE TAX AND OTHER
+LEGALLY AVAILABLE FUNDS;
+AND SHALL THE CITY OF AURORA BE ENTITLED TO
+COLLECT, RETAIN, AND SPEND THE FULL REVENUES
+FROM SUCH TAX INCREASE AND THE PROCEEDS OF
+ANY INVESTMENT THEREOF NOTWITHSTANDING
+ANY LIMITATION IN THE STATE CONSTITUTION,
+STATE LAW OR THE CITY HOME RULE CHARTER?
+YES/FOR
+NO/AGAINST
+City of Aurora Ballot Issue 3B
+REFERRED MEASURE TO DEDICATE SALES TAX FOR
+PUBLIC SAFETY INFRASTRUCTURE AND FACILITIES
+SHALL CITY OF AURORA TAXES BE INCREASED UP
+TO $6,270,000 AND AS MAY BE GENERATED
+ANNUALLY THEREAFTER BY THE IMPOSITION OF A
+NEW 0.064% SALES AND USE TAX (THAT EQUALS 6.4
+CENTS ON EVERY ONE HUNDRED DOLLAR
+PURCHASE) FOR A PERIOD BEGINNING ON JANUARY
+1, 2027 AND ENDING ON DECEMBER 31, 2057, TO
+PROVIDE FOR PUBLIC SAFETY NEEDS, INCLUDING
+WITHOUT LIMITATION THE OPERATION, REPAIR,
+MAINTENANCE, AND IMPROVEMENTS TO POLICE,
+FIRE, AND OTHER PUBLIC SAFETY
+INFRASTRUCTURE AND FACILITIES;
+AND SHALL CITY OF AURORA DEBT BE INCREASED
+BY AN AMOUNT NOT TO EXCEED $53,000,000 WITH A
+MAXIMUM REPAYMENT COST OF UP TO $101,600,000
+TO ACCOMPLISH THE PURPOSES STATED ABOVE,
+INCLUDING BUT NOT LIMITED TO: FIRE STATION
+RENOVATIONS AND REMODELS; AURORA 911 AND
+POLICE FACILITIES IMPROVEMENTS;
+SUCH DEBT TO CONSIST OF REVENUE BONDS
+WHICH SHALL BEAR INTEREST, MATURE, BE
+SUBJECT TO REDEMPTION, WITH OR WITHOUT
+PREMIUM, AND BE ISSUED, DATED AND SOLD (AT,
+ABOVE OR BELOW PAR) IN SUCH MANNER AND
+CONTAINING SUCH OTHER TERMS, NOT
+INCONSISTENT HEREWITH, AS THE CITY COUNCIL
+MAY DETERMINE; SHALL THE CITY OF AURORA BE
+AUTHORIZED TO PAY SUCH BONDS FROM, AND TO
+SECURE SUCH PAYMENT BY A PLEDGE OF, THE
+NEW 0.064% SALES AND USE TAX AND OTHER
+LEGALLY AVAILABLE FUNDS;
+AND SHALL THE CITY OF AURORA BE ENTITLED TO
+COLLECT, RETAIN, AND SPEND THE FULL REVENUES
+FROM SUCH TAX INCREASE AND THE PROCEEDS OF
+ANY INVESTMENT THEREOF NOTWITHSTANDING
+ANY LIMITATION IN THE STATE CONSTITUTION,
+STATE LAW OR THE CITY HOME RULE CHARTER?
+YES/FOR
+NO/AGAINST
+City of Aurora Ballot Issue 3C
+REFERRED MEASURE TO DEDICATE SALES TAX FOR
+TRANSPORTATION INFRASTRUCTURE AND
+FACILITIES
+SHALL CITY OF AURORA TAXES BE INCREASED UP
+TO $12,940,000 AND AS MAY BE GENERATED
+ANNUALLY THEREAFTER BY THE IMPOSITION OF A
+NEW 0.132% SALES AND USE TAX (THAT EQUALS
+13.2 CENTS ON EVERY ONE HUNDRED DOLLAR
+PURCHASE) FOR A PERIOD BEGINNING ON JANUARY
+1, 2027, AND ENDING ON DECEMBER 31, 2057, TO
+PROVIDE FOR TRANSPORTATION INFRASTRUCTURE
+NEEDS, INCLUDING WITHOUT LIMITATION THE
+OPERATION OF AND REPAIRS, MAINTENANCE, AND
+IMPROVEMENTS TO CITY TRANSPORTATION
+INFRASTRUCTURE AND FACILITIES;
+AND SHALL CITY OF AURORA DEBT BE INCREASED
+BY AN AMOUNT NOT TO EXCEED $108,000,000 WITH
+A MAXIMUM REPAYMENT COST OF UP TO
+$209,733,000 TO ACCOMPLISH THE PURPOSES
+STATED ABOVE, INCLUDING BUT NOT LIMITED TO:
+TRAFFIC, INTERSECTION, AND PEDESTRIAN SAFETY
+IMPROVEMENTS; MAJOR BRIDGE REPLACEMENTS;
+ROADWAY IMPROVEMENTS AND EXPANSION;
+SUCH DEBT TO CONSIST OF REVENUE BONDS
+WHICH SHALL BEAR INTEREST, MATURE, BE
+SUBJECT TO REDEMPTION, WITH OR WITHOUT
+PREMIUM, AND BE ISSUED, DATED AND SOLD (AT,
+ABOVE OR BELOW PAR) IN SUCH MANNER AND
+CONTAINING SUCH OTHER TERMS, NOT
+INCONSISTENT HEREWITH, AS THE CITY COUNCIL
+MAY DETERMINE; SHALL THE CITY OF AURORA BE
+AUTHORIZED TO PAY SUCH BONDS FROM, AND TO
+SECURE SUCH PAYMENT BY A PLEDGE OF, THE
+NEW 0.132% SALES AND USE TAX AND OTHER
+LEGALLY AVAILABLE FUNDS;
+AND SHALL THE CITY OF AURORA BE ENTITLED TO
+COLLECT, RETAIN, AND SPEND THE FULL REVENUES
+FROM SUCH TAX INCREASE AND THE PROCEEDS OF
+ANY INVESTMENT THEREOF NOTWITHSTANDING
+ANY LIMITATION IN THE STATE CONSTITUTION,
+STATE LAW OR THE CITY HOME RULE CHARTER?
+YES/FOR
+NO/AGAINST
+City of Aurora Ballot Question 3D
+Referred Measure to Move the City of Aurora's Regular
+Municipal Elections to Even-Numbered Years
+Shall Article 2-4 of the City Charter of the City of Aurora,
+Colorado, be amended to direct that regular municipal
+elections shall be moved from odd-numbered years to
+even-numbered years with corresponding amendments to
+Article 3-5 of the Aurora City Charter to allow one-time
+shortened terms of office necessary to implement the
+transition to even-numbered year elections?
+YES/FOR
+NO/AGAINST
+Arapahoe County School District #6 Littleton Public
+Schools Ballot Issue 4A
+SHALL ARAPAHOE COUNTY SCHOOL DISTRICT
+NUMBER SIX (LITTLETON PUBLIC SCHOOLS),
+ARAPAHOE COUNTY, COLORADO TAXES BE
+INCREASED $10,289,724 IN 2026 FOR COLLECTION IN
+2027, AND BY OTHER AMOUNTS IN SUBSEQUENT
+YEARS UP TO THE LIMIT ESTABLISHED FOR THE
+DISTRICT BY SECTION 22-54-108, WITH SUCH FUNDS
+TO BE USED FOR GENERAL FUND PURPOSES SUCH
+AS:
+· ATTRACT AND RETAIN HIGHLY QUALIFIED
+TEACHERS TO CONTINUE TO PROVIDE
+EXCEPTIONAL LEARNING OPPORTUNITIES AND
+CARE FOR EVERY STUDENT;
+· MAINTAIN SAFE, SECURE SCHOOLS WHERE ALL
+STUDENTS CAN THRIVE;
+· SUSTAIN ACADEMIC EXCELLENCE AND EXPAND
+CAREER READINESS THROUGH INNOVATIVE
+PROGRAMMING TO PREPARE ALL STUDENTS FOR
+SUCCESS AFTER GRADUATION.
+FROM THE IMPOSITION OF A MILL LEVY IMPOSED AT
+A RATE WHICH WILL GENERATE REVENUES UP TO
+THE LIMIT ESTABLISHED FOR THE DISTRICT BY
+SECTION 22-54-108(3)(B)(VI), C.R.S. PROVIDED THAT
+NO MILL LEVY INCREASE FROM YEAR TO YEAR
+SHALL EXCEED ONE MILL AFTER 2026; SUCH
+ADDITIONAL REVENUES TO BE DEPOSITED IN THE
+GENERAL FUND AND USED FOR EDUCATIONAL
+PURPOSES AS PROVIDED HEREIN AND AS
+PREVIOUSLY APPROVED BY THE DISTRICT VOTERS
+PURSUANT TO SECTION 22-54-108(V), C.R.S.; AND
+SHALL THE REVENUE FROM SUCH TAXES AND ANY
+EARNINGS FROM THE INVESTMENT THEREON BE
+COLLECTED AND SPENT AS VOTER APPROVED
+REVENUE CHANGE UNDER ARTICLE X SECTION 20
+OF THE COLORADO CONSTITUTION AND ANY OTHER
+LAW?
+YES/FOR
+NO/AGAINST
+Bennett School District 29J Ballot Issue 5A
+SHALL BENNETT SCHOOL DISTRICT NO. 29J DEBT BE
+INCREASED UP TO $125 MILLION WITH A
+REPAYMENT COST OF UP TO $235 MILLION, AND
+SHALL DISTRICT TAXES BE INCREASED BY UP TO
+$11 MILLION ANNUALLY TO REPAIR AND IMPROVE
+AGING SCHOOL BUILDNGS, AND TO ADDRESS
+INCREASED ENROLLMENT AND OVERCROWDING, BY
+FINANCNG THE COSTS OF:
+- CONSTRUCTING A NEW HIGH SCHOOL ON THE
+EXISTING CAMPUS WHICH ALSO INCLUDES CAREER
+AND TECHNICAL EDUCATION AREAS AND ATHLETIC
+FACILITIES;
+- CONVERTING THE EXISTING HIGH SCHOOL
+BULDING TO A MIDDLE SCHOOL TO EXTEND ITS
+USEFUL LIFE;
+- ENHANCING SECURITY AND SAFETY
+IMPROVEMENTS AT ALL SCHOOL BUILDNGS, WHICH
+INCLUDES SECURING MAIN ENTRIES, MODERNIZING
+SAFETY AND SECURITY SYSTEMS, IMPROVING
+EXTERIOR LIGHTING, AND EXPANDING PARKING
+AND TRAFFIC FLOWS;
+AND AS FUNDS ALLOW, NEEDED REPAIR AND
+IMPROVEMENTS TO SCHOOL FACILITIES, BY THE
+ISSUANCE AND PAYMENT OF GENERAL OBLIGATION
+BONDS (I) THE EXPENDITURES FROM WHICH SHALL
+BE MONITORED BY A CITIZEN'S OVERSIGHT
+COMMITTEE AND (II) WHICH SHALL BEAR INTEREST,
+MATURE, PERMIT REDEMPTION, AND BE ISSUED AT
+SUCH TIME AND PRICES (AT, ABOVE OR BELOW
+PAR), AND CONTAINING TERMS CONSISTENT WITH
+THIS BALLOT MEASURE AS THE BOARD OF
+EDUCATION DETERMINES; AND SHALL AD VALOREM
+PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO
+THE MILL RATE TO GENERATE AMOUNTS, NOT TO
+EXCEED THE ABOVE AMOUNTS, SUFFICIENT IN
+EACH YEAR TO TIMELY PAY THE PRINCIPAL OF AND
+INTEREST ON THE BONDS?
+YES/FOR
+NO/AGAINST
+Hills at Cherry Creek Metropolitan District Ballot
+Issue 6A
+SHALL THE HILLS AT CHERRY CREEK
+METROPOLITAN DISTRICT TAXES BE INCREASED
+$105,000 ANNUALLY FOR COLLECTION BEGINNING IN
+2027, AND ANNUALLY THEREAFTER BY AN
+ADDITIONAL PERCENTAGE EQUAL TO INFLATION
+PLUS ANNUAL LOCAL GROWTH AS DEFINED IN ART.
+X, SECTION 20 OF THE COLORADO CONSTITUTION,
+TO BE USED FOR THE PURPOSE OF PAYING THE
+DISTRICT'S OPERATIONS, MAINTENANCE AND
+OTHER EXPENSES WHICH MAY INCLUDE:
+MAINTAINING AND REPAIRING VALUABLE
+COMMUNITY AMENITIES, INCLUDING THE BRICK
+PERIMETER WALL, PLAYGROUND, PARK, TENNIS,
+PICKLEBALL, AND BASKETBALL COURTS;
+CONTINUING TO PROVIDE COMMUNITY RECREATION
+SPACE;
+BEAUTIFYING THE COMMUNITY THROUGH
+PROFESSIONAL LANDSCAPE DESIGN, FENCING, AND
+MONUMENTATION;
+PRUDENT MANAGEMENT OF UNFORESEEN
+EXPENSES AND BUDGET CONTINGENCY FOR MAJOR
+INFRASTRUCTURE REPAIRS;
+AND SHALL THE DISTRICT BE AUTHORIZED TO LEVY
+A PROPERTY TAX AT A RATE SUFFICIENT TO
+PRODUCE THIS REVENUE INCREASE, COMMENCING
+WITH TAXES PAYABLE IN 2027 AND CONTINUING
+EACH YEAR THEREAFTER (EXPECTED TO BE AN
+ADDITIONAL 3.688 MILLS AND TO RESULT IN A
+MONTHLY TAX INCREASE OF $20.90 FOR A
+RESIDENCE WORTH $1,000,000 IN 2027); AND SHALL
+THE DISTRICT BE ENTITLED TO COLLECT, RETAIN
+AND SPEND THOSE REVENUES IN ADDITION TO ANY
+OTHER TAXES, FEES OR OTHER REVENUES OF THE
+DISTRICT AND NOTWITHSTANDING ANY LIMITATION
+OR RESTRICTION OF ARTICLE X, SECTION 20 OF THE
+COLORADO CONSTITUTION, OR WITHOUT REGARD
+TO THE 5.5% PROPERTY TAX REVENUE LIMITATION
+OF SECTION 29-1-301, C.R.S. OR ANY OTHER LAW?
+YES/FOR
+NO/AGAINST
+Front Range Passenger Rail District Ballot Issue 7A
+SHALL FRONT RANGE PASSENGER RAIL DISTRICT
+TAXES BE INCREASED $295,000,000 ANNUALLY AND
+BY WHATEVER AMOUNTS ARE RAISED ANNUALLY
+THEREAFTER, AND SHALL FRONT RANGE
+PASSENGER RAIL DISTRICT DEBT BE INCREASED
+$580,000,000, WITH A REPAYMENT COST OF
+$785,000,000;
+TO CONSTRUCT, OPERATE, AND MAINTAIN
+COLORADO CONNECTOR (COCO) PASSENGER RAIL
+SERVICE ON COLORADO'S FRONT RANGE AND
+CONNECT COMMUNITIES, INCLUDING PUEBLO,
+COLORADO SPRINGS, STERLING RANCH,
+LITTLETON, DENVER, WESTMINSTER, BROOMFIELD,
+LOUISVILLE, BOULDER, LONGMONT, LOVELAND, AND
+FORT COLLINS; IN ORDER TO:
+· REMOVE VEHICLES FROM HIGHWAYS AND
+INCREASE TRAVEL CAPACITY;
+· CONNECT TRAVELERS TO EMPLOYMENT CENTERS,
+COLLEGES, SPORTS ARENAS, AND ENTERTAINMENT
+HUBS ALONG THE FRONT RANGE; AND
+· INVEST IN STATION AREA IMPROVEMENTS AND
+LOCAL CONNECTIONS TO RAIL STATIONS;
+BY ESTABLISHING A 0.333% SALES AND USE TAX
+(EQUAL TO ONE THIRD OF A PENNY ON A $1
+PURCHASE), WITH EXEMPTIONS PROVIDED UNDER
+COLORADO LAW, INCLUDING THOSE FOR GASOLINE,
+FOOD, RESIDENTIAL ELECTRICITY AND GAS,
+PRESCRIPTION DRUGS, AND MEDICAL SUPPLIES;
+AND TO RETAIN ALL SUCH REVENUES, PUBLIC AND
+PRIVATE CONTRIBUTIONS, AND ANY INVESTMENT
+INCOME ON REVENUES AND DEBT PROCEEDS, AS A
+VOTER-APPROVED REVENUE CHANGE UNDER
+SECTION 20 OF ARTICLE X OF THE COLORADO
+CONSTITUTION;
+AND REQUIRING THAT ALL SUCH DEDICATED
+REVENUES BE REVIEWED ANNUALLY BY AN
+INDEPENDENT AUDITOR AND A ROTATING GROUP
+OF CITIZEN TAXPAYERS WHO LIVE IN THE DISTRICT?
+YES/FOR
+NO/AGAINST
+Bennett Fire Protection District Ballot Issue 7F
+SHALL BENNETT FIRE PROTECTION DISTRICT TAXES
+BE INCREASED $1.2 MILLION IN THE FIRST FULL
+FISCAL YEAR BEGINNING JULY 1, 2027 AND BY SUCH
+AMOUNTS RAISED ANNUALLY THEREAFTER BY A
+SALES TAX OF 0.75% (75 CENTS ON EACH $100)
+UPON EVERY TRANSACTION IN THE DISTRICT IN
+WHICH THE STATE IMPOSES A SALES TAX
+(EXCLUDING GROCERIES AND OTHER EXEMPT
+ITEMS) FOR THE PURPOSE OF PROVIDING FIRE
+PROTECTION, AMBULANCE, EMERGENCY MEDICAL
+RESPONSE, RESCUE, SAFETY, AND SUPPORT
+SERVICES, INCLUDING:
+EXPANDING, REMODELING AND/OR REPLACING
+OUTDATED AND INADEQUATE STATIONS AND
+FACILITIES
+MAINTAINING FIREFIGHTER AND PARAMEDIC
+STAFFING LEVELS
+RETAINING AND ATTRACTING HIGHLY QUALIFIED
+FIRST RESPONDERS AND OTHER ESSENTIAL
+PERSONNEL
+PROVIDING ADEQUATE STAFFING TO ADDRESS
+INCREASING EMERGENCY CALL VOLUME
+AND SHALL ALL DISTRICT REVENUES BE
+COLLECTED, RETAINED, AND SPENT
+NOTWITHSTANDING ANY REVENUE LIMITS
+PROVIDED BY LAW?
+YES/FOR
+NO/AGAINST
+Bennett Fire Protection District Ballot Issue 7G
+SHALL THE BENNETT FIRE PROTECTION DISTRICT
+WAIVE THE 5.25% PROPERTY TAX LIMIT (WITHOUT
+INCREASING PROPERTY TAXES) FOR ALL FUTURE
+PROPERTY TAX YEARS, TO MAINTAIN EMERGENCY
+RESPONSE TIMES, ENHANCE THE SAFETY OF FIRST
+RESPONDERS AND EXTEND THE USEFUL LIFE OF
+EXISTING FACILITIES, INCLUDING:  (I) ATTRACTING,
+TRAINING, AND RETAINING EXPERIENCED FIRST
+RESPONDERS, AND MITIGATING COSTLY TURNOVER
+RATES;  (II) MAINTAINING THE FIRE ENGINES AND
+OTHER APPARATUS AND IMPLEMENTING A
+REPLACEMENT SCHEDULE FOR APPARATUS TO
+REDUCE BREAKDOWNS, ACCIDENTS, AND
+DOWNTIME; AND  (III) ADDRESSING
+INFRASTRUCTURE AND DEFERRED MAINTENANCE
+FIRE STATION PROJECTS;  AND SHALL ALL DISTRICT
+REVENUES BE COLLECTED, RETAINED, AND SPENT
+NOTWITHSTANDING ANY REVENUE LIMITS
+PROVIDED BY LAW?
+YES/FOR
+NO/AGAINST

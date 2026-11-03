@@ -1,0 +1,87 @@
+[
+  {
+    "contestId": "co-centennial-2026-ballot-2a",
+    "title": "City of Centennial Ballot Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:centennial",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:centennial",
+      "place",
+      "0812815",
+      "Centennial city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230"
+  },
+  {
+    "contestId": "co-glendale-2026-ballot-2b",
+    "title": "City of Glendale Ballot Question 2B",
+    "officialNumber": "2B",
+    "ocdId": "ocd-division/country:us/state:co/place:glendale_0830340",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:glendale_0830340",
+      "place",
+      "0830340",
+      "Glendale city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230"
+  },
+  {
+    "contestId": "co-cherry-hills-village-2026-ballot-2c",
+    "title": "City of Cherry Hills Village Ballot Question 2C",
+    "officialNumber": "2C",
+    "ocdId": "ocd-division/country:us/state:co/place:cherry_hills_village",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:cherry_hills_village",
+      "place",
+      "0813845",
+      "Cherry Hills Village city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230"
+  },
+  {
+    "contestId": "co-sheridan-2026-ballot-2d",
+    "title": "City of Sheridan Ballot Issue 2D",
+    "officialNumber": "2D",
+    "ocdId": "ocd-division/country:us/state:co/place:sheridan",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:sheridan",
+      "place",
+      "0869645",
+      "Sheridan city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230"
+  },
+  {
+    "contestId": "co-littleton-school-district-6-2026-ballot-4a",
+    "title": "Littleton Public Schools Ballot Issue 4A",
+    "officialNumber": "4A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:littleton_school_district_6",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:littleton_school_district_6",
+      "unsd",
+      "0805310",
+      "Littleton School District 6"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230"
+  },
+  {
+    "contestId": "co-hills-at-cherry-creek-metropolitan-district-2026-ballot-6a",
+    "title": "Hills at Cherry Creek Metropolitan District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:hills_at_cherry_creek_metropolitan_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:hills_at_cherry_creek_metropolitan_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#65242",
+      "Hills At Cherry Creek Metropolitan District",
+      "facilities"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230"
+  }
+]

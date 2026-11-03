@@ -1,0 +1,182 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-west-metro-fire-protection-district-2026-ballot-7c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:west_metropolitan_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "West Metro Fire Protection District Ballot Issue 7C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only the exact fire tax district polygons published by Jefferson and Douglas counties; no county-wide attachment.",
+          "provenance": {
+            "quote": "SHALL WEST METRO FIRE PROTECTION DISTRICT TAXES BE INCREASED BY UP TO $36,300,000 IN FISCAL YEAR 2027 AND BY WHATEVER AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, FROM A THREE-QUARTERS OF A PERCENT (0.75%) SALES TAX, WHICH IS SEVENTY-FIVE CENTS ON EVERY $100 PURCHASE, EXCLUDING EVERYDAY NECESSITIES LIKE GROCERIES, GAS AND MEDICINE, FOR THE PURPOSES OF MAINTAINING VITAL FIREFIGHTING AND EMERGENCY MEDICAL SERVICES, INCLUDING BUT NOT LIMITED TO: CONTINUING TO PROVIDE RAPID EMERGENCY MEDICAL AND FIREFIGHTING SERVICES TO MEET INCREASED DEMAND; MAINTAINING ADEQUATE NUMBERS OF FIRST RESPONDERS; PROTECTING THE SAFETY AND HEALTH OF FIREFIGHTERS AND PARAMEDICS; UPDATING LIFE-SAVING MEDICAL AND RESCUE EQUIPMENT; AND STRENGTHENING LOCAL WILDFIRE RESPONSE. WITH SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND SPENDING OF ALL DISTRICT REVENUES SHALL BE REVIEWED MONTHLY BY A CITIZEN BOARD OF DIRECTORS AND ANNUALLY BY AN INDEPENDENT AUDIT, AND REPORTED ON THE DISTRICT WEBSITE; AND SHALL THE RESULTING SALES TAX REVENUE AND INVESTMENT EARNINGS BE TREATED AS A VOTER-APPROVED REVENUE AND SPENDING CHANGE UNDER ARTICLE X OF SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T05:00:31.780827+00:00"
+          }
+        },
+        {
+          "id": "co-conifer-fire-protection-district-2026-ballot-7d",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:conifer_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Conifer Fire Protection District Ballot Issue 7D",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only the exact fire tax district polygons published by Jefferson and Douglas counties; no county-wide attachment.",
+          "provenance": {
+            "quote": "SHALL CONIFER FIRE PROTECTION DISTRICT TAXES BE INCREASED $400,000 ANNUALLY (FIRST FULL FISCAL YEAR), OR BY SUCH AMOUNT AS MAY BE RAISED, BEGINNING JANUARY 1, 2027, BY INCREASING THE DISTRICT'S PROPERTY TAX RATE BY 4.0 MILLS (AT A COST OF APPROXIMATELY $2.00 PER MONTH PER $100,000 IN PROPERTY VALUE FOR RESIDENTIAL PROPERTIES) FOR THE PURPOSES OF PROVIDING FIRE PROTECTION, RESCUE, SAFETY, AND SUPPORT SERVICES FOR THE RESIDENTS, PROPERTY OWNERS, AND BUSINESSES SERVED BY THE DISTRICT, INCLUDING BUT NOT LIMITED TO: MAINTAINING FIREFIGHTER AND PARAMEDIC STAFFING LEVELS TO SAFELY AND EFFICIENTLY RESPOND TO EMERGENCIES; BEING PROACTIVE IN MAINTAINING EXISTING STATIONS AND FACILITIES; EXPANDING, REMODELING, AND/OR REBUILDING OUTDATED OR INADEQUATE INFRASTRUCTURE; AND REPLACING AND MAINTAINING EMERGENCY VEHICLES, ENGINES, AND AMBULANCES; AND ATTRACTING AND RETAINING HIGHLY QUALIFIED FIRST RESPONDERS AND OTHER ESSENTIAL PERSONNEL; AND SHALL THE DISTRICT'S TOTAL MILL LEVY RATE OF 16 MILLS BE ADJUSTED ANNUALLY TO OFFSET REVENUE LOSSES FROM REFUNDS, ABATEMENTS, AND SHALL THE DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE PROCEEDS OF SUCH TOTAL MILL LEVY RATE AND ALL OTHER REVENUE FROM ANY YEAR AS A VOTER-APPROVED REVENUE CHANGE, OFFSET, AND EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY UNDER TABOR (ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION) OR ANY OTHER LAW AND AS A PERMANENT WAIVER OF THE 5.5% LIMITATION UNDER SECTION 29-1-301, C.R.S.?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T05:00:31.780827+00:00"
+          }
+        },
+        {
+          "id": "co-17th-judicial-district-2026-ballot-7e",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:17",
+          "divisionVintage": "2026",
+          "title": "17th Judicial District Ballot Question 7E",
+          "type": "MEASURE",
+          "measureTextUrl": "https://broomfield.org/DocumentCenter/View/69259",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "The exact union of Adams County and the City and County of Broomfield, as stated in the official neutral information booklet.",
+          "provenance": {
+            "quote": "Shall the term limits for District Attorney of the 17th Judicial District be limited to no more than three consecutive terms of office, consistent with other county offices in Adams County and the City and County of Broomfield?",
+            "sourceOrg": "City and County of Broomfield Attorney’s Office",
+            "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+            "collectedAt": "2026-11-03T04:55:02.324622+00:00",
+            "verifiedAt": "2026-11-03T05:00:31.780827+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-west-metro-fire-protection-district-2026-ballot-7c#question",
+          "contestId": "co-west-metro-fire-protection-district-2026-ballot-7c",
+          "officialNumber": "7C",
+          "questionText": "SHALL WEST METRO FIRE PROTECTION DISTRICT TAXES BE INCREASED BY UP TO $36,300,000 IN FISCAL YEAR 2027 AND BY WHATEVER AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, FROM A THREE-QUARTERS OF A PERCENT (0.75%) SALES TAX, WHICH IS SEVENTY-FIVE CENTS ON EVERY $100 PURCHASE, EXCLUDING EVERYDAY NECESSITIES LIKE GROCERIES, GAS AND MEDICINE, FOR THE PURPOSES OF MAINTAINING VITAL FIREFIGHTING AND EMERGENCY MEDICAL SERVICES, INCLUDING BUT NOT LIMITED TO: CONTINUING TO PROVIDE RAPID EMERGENCY MEDICAL AND FIREFIGHTING SERVICES TO MEET INCREASED DEMAND; MAINTAINING ADEQUATE NUMBERS OF FIRST RESPONDERS; PROTECTING THE SAFETY AND HEALTH OF FIREFIGHTERS AND PARAMEDICS; UPDATING LIFE-SAVING MEDICAL AND RESCUE EQUIPMENT; AND STRENGTHENING LOCAL WILDFIRE RESPONSE. WITH SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND SPENDING OF ALL DISTRICT REVENUES SHALL BE REVIEWED MONTHLY BY A CITIZEN BOARD OF DIRECTORS AND ANNUALLY BY AN INDEPENDENT AUDIT, AND REPORTED ON THE DISTRICT WEBSITE; AND SHALL THE RESULTING SALES TAX REVENUE AND INVESTMENT EARNINGS BE TREATED AS A VOTER-APPROVED REVENUE AND SPENDING CHANGE UNDER ARTICLE X OF SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL WEST METRO FIRE PROTECTION DISTRICT TAXES BE INCREASED BY UP TO $36,300,000 IN FISCAL YEAR 2027 AND BY WHATEVER AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, FROM A THREE-QUARTERS OF A PERCENT (0.75%) SALES TAX, WHICH IS SEVENTY-FIVE CENTS ON EVERY $100 PURCHASE, EXCLUDING EVERYDAY NECESSITIES LIKE GROCERIES, GAS AND MEDICINE, FOR THE PURPOSES OF MAINTAINING VITAL FIREFIGHTING AND EMERGENCY MEDICAL SERVICES, INCLUDING BUT NOT LIMITED TO: CONTINUING TO PROVIDE RAPID EMERGENCY MEDICAL AND FIREFIGHTING SERVICES TO MEET INCREASED DEMAND; MAINTAINING ADEQUATE NUMBERS OF FIRST RESPONDERS; PROTECTING THE SAFETY AND HEALTH OF FIREFIGHTERS AND PARAMEDICS; UPDATING LIFE-SAVING MEDICAL AND RESCUE EQUIPMENT; AND STRENGTHENING LOCAL WILDFIRE RESPONSE. WITH SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND SPENDING OF ALL DISTRICT REVENUES SHALL BE REVIEWED MONTHLY BY A CITIZEN BOARD OF DIRECTORS AND ANNUALLY BY AN INDEPENDENT AUDIT, AND REPORTED ON THE DISTRICT WEBSITE; AND SHALL THE RESULTING SALES TAX REVENUE AND INVESTMENT EARNINGS BE TREATED AS A VOTER-APPROVED REVENUE AND SPENDING CHANGE UNDER ARTICLE X OF SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T05:00:31.780827+00:00"
+          }
+        },
+        {
+          "id": "co-conifer-fire-protection-district-2026-ballot-7d#question",
+          "contestId": "co-conifer-fire-protection-district-2026-ballot-7d",
+          "officialNumber": "7D",
+          "questionText": "SHALL CONIFER FIRE PROTECTION DISTRICT TAXES BE INCREASED $400,000 ANNUALLY (FIRST FULL FISCAL YEAR), OR BY SUCH AMOUNT AS MAY BE RAISED, BEGINNING JANUARY 1, 2027, BY INCREASING THE DISTRICT'S PROPERTY TAX RATE BY 4.0 MILLS (AT A COST OF APPROXIMATELY $2.00 PER MONTH PER $100,000 IN PROPERTY VALUE FOR RESIDENTIAL PROPERTIES) FOR THE PURPOSES OF PROVIDING FIRE PROTECTION, RESCUE, SAFETY, AND SUPPORT SERVICES FOR THE RESIDENTS, PROPERTY OWNERS, AND BUSINESSES SERVED BY THE DISTRICT, INCLUDING BUT NOT LIMITED TO: MAINTAINING FIREFIGHTER AND PARAMEDIC STAFFING LEVELS TO SAFELY AND EFFICIENTLY RESPOND TO EMERGENCIES; BEING PROACTIVE IN MAINTAINING EXISTING STATIONS AND FACILITIES; EXPANDING, REMODELING, AND/OR REBUILDING OUTDATED OR INADEQUATE INFRASTRUCTURE; AND REPLACING AND MAINTAINING EMERGENCY VEHICLES, ENGINES, AND AMBULANCES; AND ATTRACTING AND RETAINING HIGHLY QUALIFIED FIRST RESPONDERS AND OTHER ESSENTIAL PERSONNEL; AND SHALL THE DISTRICT'S TOTAL MILL LEVY RATE OF 16 MILLS BE ADJUSTED ANNUALLY TO OFFSET REVENUE LOSSES FROM REFUNDS, ABATEMENTS, AND SHALL THE DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE PROCEEDS OF SUCH TOTAL MILL LEVY RATE AND ALL OTHER REVENUE FROM ANY YEAR AS A VOTER-APPROVED REVENUE CHANGE, OFFSET, AND EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY UNDER TABOR (ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION) OR ANY OTHER LAW AND AS A PERMANENT WAIVER OF THE 5.5% LIMITATION UNDER SECTION 29-1-301, C.R.S.?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL CONIFER FIRE PROTECTION DISTRICT TAXES BE INCREASED $400,000 ANNUALLY (FIRST FULL FISCAL YEAR), OR BY SUCH AMOUNT AS MAY BE RAISED, BEGINNING JANUARY 1, 2027, BY INCREASING THE DISTRICT'S PROPERTY TAX RATE BY 4.0 MILLS (AT A COST OF APPROXIMATELY $2.00 PER MONTH PER $100,000 IN PROPERTY VALUE FOR RESIDENTIAL PROPERTIES) FOR THE PURPOSES OF PROVIDING FIRE PROTECTION, RESCUE, SAFETY, AND SUPPORT SERVICES FOR THE RESIDENTS, PROPERTY OWNERS, AND BUSINESSES SERVED BY THE DISTRICT, INCLUDING BUT NOT LIMITED TO: MAINTAINING FIREFIGHTER AND PARAMEDIC STAFFING LEVELS TO SAFELY AND EFFICIENTLY RESPOND TO EMERGENCIES; BEING PROACTIVE IN MAINTAINING EXISTING STATIONS AND FACILITIES; EXPANDING, REMODELING, AND/OR REBUILDING OUTDATED OR INADEQUATE INFRASTRUCTURE; AND REPLACING AND MAINTAINING EMERGENCY VEHICLES, ENGINES, AND AMBULANCES; AND ATTRACTING AND RETAINING HIGHLY QUALIFIED FIRST RESPONDERS AND OTHER ESSENTIAL PERSONNEL; AND SHALL THE DISTRICT'S TOTAL MILL LEVY RATE OF 16 MILLS BE ADJUSTED ANNUALLY TO OFFSET REVENUE LOSSES FROM REFUNDS, ABATEMENTS, AND SHALL THE DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE PROCEEDS OF SUCH TOTAL MILL LEVY RATE AND ALL OTHER REVENUE FROM ANY YEAR AS A VOTER-APPROVED REVENUE CHANGE, OFFSET, AND EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY UNDER TABOR (ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION) OR ANY OTHER LAW AND AS A PERMANENT WAIVER OF THE 5.5% LIMITATION UNDER SECTION 29-1-301, C.R.S.?",
+            "sourceOrg": "Jefferson County Clerk and Recorder",
+            "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+            "collectedAt": "2026-11-03T03:44:21.182925+00:00",
+            "verifiedAt": "2026-11-03T05:00:31.780827+00:00"
+          }
+        },
+        {
+          "id": "co-17th-judicial-district-2026-ballot-7e#question",
+          "contestId": "co-17th-judicial-district-2026-ballot-7e",
+          "officialNumber": "7E",
+          "questionText": "Shall the term limits for District Attorney of the 17th Judicial District be limited to no more than three consecutive terms of office, consistent with other county offices in Adams County and the City and County of Broomfield?",
+          "officialStatement": "The 17th Judicial District includes Adams County and Broomfield. It is served by one\nDistrict Attorney, who is voted in by the people of Adams County and Broomfield.\nCurrently, the District Attorney is term-limited to two consecutive terms. This\nmeasure would increase the term limits for the elected District Attorney from two\nterms to three. State law permits the residents who live in the judicial district to\nmodify those term limits. Article XVIII, Sec. 11, Colo. Const.; C.R.S. 1-4-1401, et seq.\nThe ballot question must be the same for both Broomfield and Adams County voters.",
+          "provenance": {
+            "quote": "Shall the term limits for District Attorney of the 17th Judicial District be limited to no more than three consecutive terms of office, consistent with other county offices in Adams County and the City and County of Broomfield?",
+            "sourceOrg": "City and County of Broomfield Attorney’s Office",
+            "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+            "collectedAt": "2026-11-03T04:55:02.324622+00:00",
+            "verifiedAt": "2026-11-03T05:00:31.780827+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-west-metro-fire-protection-district-2026-ballot-7c",
+          "whatItDoes": "Add a 0.75% sales tax in West Metro Fire Protection District, equal to 75 cents on a $100 taxable purchase. Groceries, gas and medicine would be exempt. The tax would raise up to $36.3 million in fiscal year 2027 and whatever amounts it produces later. Money would support fire and emergency medical response, staffing, responder health and safety, medical and rescue equipment, and wildfire response. It would be added to other district taxes. A citizen board would review district revenue monthly, an independent audit would review it annually, and reports would appear online. Sales-tax revenue and investment earnings could be kept and spent outside Colorado’s constitutional revenue and spending limits and other legal limits.",
+          "yesMeans": "Approve the additional sales tax for district emergency services, spending reviews and the revenue-limit exception.",
+          "noMeans": "Do not approve this sales tax or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-conifer-fire-protection-district-2026-ballot-7d",
+          "whatItDoes": "Increase Conifer Fire Protection District’s property-tax rate by 4 mills beginning January 1, 2027, to raise $400,000 in the first full fiscal year or the amount the levy produces. Money would support emergency services, staffing, facilities, vehicles and equipment. The resulting total 16-mill levy could be adjusted annually to offset revenue lost through refunds and tax abatements. The district could keep and spend the levy’s proceeds and other revenue from any year outside Colorado’s constitutional revenue limits and other legal limits, with a permanent waiver of the 5.5% statutory property-tax limit.",
+          "yesMeans": "Approve the additional property-tax levy, annual adjustments for refunds and abatements, and permanent revenue-limit exceptions.",
+          "noMeans": "Do not approve this property-tax increase, levy adjustments or the proposed permanent revenue-limit exceptions.",
+          "parts": [],
+          "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+          "sourceHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:10.683704+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-17th-judicial-district-2026-ballot-7e",
+          "whatItDoes": "Increase the limit for the 17th Judicial District’s elected district attorney from two to three consecutive terms. The district includes Adams County and Broomfield, which elect one district attorney together.",
+          "yesMeans": "Increase the district attorney’s limit from two to three consecutive terms.",
+          "noMeans": "Keep the current limit of two consecutive terms.",
+          "parts": [],
+          "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+          "sourceHash": "2405b682446c6e6b04333bc62743a7f1df3fdbb226e5587c6d48562a1aa7eae9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:00:31.780827+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:00:31.780827+00:00",
+    "reviewedBy": "CX-VOTES data preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+        "finalUrl": "https://www.jeffco.us/4652/On-the-Ballot",
+        "publisher": "Jefferson County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T03:44:21.182925+00:00",
+        "httpStatus": 200,
+        "rawHash": "d4dc927395e9442957d5c01a94cc1fc076d1c5d6745639fd769f490aa9f5a836",
+        "reviewedEvidence": "Official county2026 On-the-Ballot page includes complete local questions. Source hash identifies original captured HTML, retained privately; repository HTML is sanitized (one embedded credential), separately hash-identified in source-manifest. Draft explanations awaiting root independent review."
+      },
+      {
+        "requestedUrl": "https://broomfield.org/DocumentCenter/View/69259",
+        "finalUrl": "https://broomfield.org/DocumentCenter/View/69259/2026-Broomfield-Ballot-Measures-Information-Booklet?bidId=",
+        "publisher": "City and County of Broomfield Attorney’s Office",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:55:02.324622+00:00",
+        "httpStatus": 200,
+        "rawHash": "2405b682446c6e6b04333bc62743a7f1df3fdbb226e5587c6d48562a1aa7eae9",
+        "reviewedEvidence": "Official November2026 neutral booklet; bounded 7E question and neutral summary establish its exact two-county district and current two-to-three-term effect. Arguments excluded. Original PDF bytes retained."
+      }
+    ]
+  }
+}

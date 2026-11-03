@@ -1,0 +1,467 @@
+[
+  {
+    "contestId": "co-douglas-county-2026-ballot-200",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "f233897e95be0c1ff764e9b31ced0e51152127c1acb8ad68952e1249a6be9e87",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-douglas-county-2026-ballot-200.txt",
+    "subjectQuote": "At an ongoing estimated annual expense of $760,000 to $1,300,000 from County revenue that supports public",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "At an ongoing estimated annual expense of $760,000 to $1,300,000 from County revenue that supports public\nsafety, transportation, and essential county services, shall the membership of the Douglas County Board of\nCommissioners be increased from a three-member board to a five-member board?"
+      ],
+      "yesMeans": [
+        "At an ongoing estimated annual expense of $760,000 to $1,300,000 from County revenue that supports public\nsafety, transportation, and essential county services, shall the membership of the Douglas County Board of\nCommissioners be increased from a three-member board to a five-member board?"
+      ],
+      "noMeans": [
+        "At an ongoing estimated annual expense of $760,000 to $1,300,000 from County revenue that supports public\nsafety, transportation, and essential county services, shall the membership of the Douglas County Board of\nCommissioners be increased from a three-member board to a five-member board?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-douglas-county-2026-ballot-201",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "b22ca398219d914d9d27da6017e7566eb2ec5fdc9d781d0922697d9b01dd24ed",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-douglas-county-2026-ballot-201.txt",
+    "subjectQuote": "If the membership of the Douglas County Board of Commissioners is increased from a three- member board to a",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "If the membership of the Douglas County Board of Commissioners is increased from a three- member board to a\nfive-member board, by what method shall the Douglas County Board of Commissioners be elected? (Vote for\nOne)\nFive District Commissioners who reside in districts to be elected by the voters only by the voters resident in the\ndistrict; or\nThree District Commissioners who reside in districts to be elected by the voters only by the voters resident in\nthe district, and two At-Large Commissioners to be elected by the voters of the whole county."
+      ],
+      "yesMeans": [
+        "If the membership of the Douglas County Board of Commissioners is increased from a three- member board to a\nfive-member board, by what method shall the Douglas County Board of Commissioners be elected? (Vote for\nOne)\nFive District Commissioners who reside in districts to be elected by the voters only by the voters resident in the\ndistrict; or\nThree District Commissioners who reside in districts to be elected by the voters only by the voters resident in\nthe district, and two At-Large Commissioners to be elected by the voters of the whole county."
+      ],
+      "noMeans": [
+        "If the membership of the Douglas County Board of Commissioners is increased from a three- member board to a\nfive-member board, by what method shall the Douglas County Board of Commissioners be elected? (Vote for\nOne)\nFive District Commissioners who reside in districts to be elected by the voters only by the voters resident in the\ndistrict; or\nThree District Commissioners who reside in districts to be elected by the voters only by the voters resident in\nthe district, and two At-Large Commissioners to be elected by the voters of the whole county."
+      ]
+    },
+    "reviewNotes": [
+      "Question1A separately asks whether all county voters should continue electing all commissioners; the source does not state precedence if results conflict. No resolution of that legal interaction is invented."
+    ]
+  },
+  {
+    "contestId": "co-douglas-county-2026-ballot-1a",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "573460403716c3b400e645280dcc892540404164e8bcd5b185933b238e6431d7",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-douglas-county-2026-ballot-1a.txt",
+    "subjectQuote": "In the event the Douglas County Board of Commissioners is increased to five members, shall all registered",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "In the event the Douglas County Board of Commissioners is increased to five members, shall all registered\nDouglas County voters continue to elect all County Commissioners?"
+      ],
+      "yesMeans": [
+        "In the event the Douglas County Board of Commissioners is increased to five members, shall all registered\nDouglas County voters continue to elect all County Commissioners?"
+      ],
+      "noMeans": [
+        "In the event the Douglas County Board of Commissioners is increased to five members, shall all registered\nDouglas County voters continue to elect all County Commissioners?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-castle-pines-2026-ballot-300",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "f23452ba3a694237b99064566f2966dd31420632e48b390961868fb7de4e9b39",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-castle-pines-2026-ballot-300.txt",
+    "subjectQuote": "Should the City of Castle Pines Home Rule Charter be amended to include the following provision: Property in",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "Should the City of Castle Pines Home Rule Charter be amended to include the following provision: Property in\nexcess of 20 acres owned or controlled by a single owner or ownership group or that are part of a common plan\nof development or related transactions may be annexed into the City only upon approval by the voters at an\nelection of the registered electors of the City of Castle Pines, Colorado, and for purposes of this provision, any\nsingle, successive, cumulative, serial or simultaneous annexations of multiple parcels shall be aggregated and\ntreated as a single annexation as provided in C.R.S. Section 31-12-104(1)(a)?"
+      ],
+      "yesMeans": [
+        "Should the City of Castle Pines Home Rule Charter be amended to include the following provision: Property in\nexcess of 20 acres owned or controlled by a single owner or ownership group or that are part of a common plan\nof development or related transactions may be annexed into the City only upon approval by the voters at an\nelection of the registered electors of the City of Castle Pines, Colorado, and for purposes of this provision, any\nsingle, successive, cumulative, serial or simultaneous annexations of multiple parcels shall be aggregated and\ntreated as a single annexation as provided in C.R.S. Section 31-12-104(1)(a)?"
+      ],
+      "noMeans": [
+        "Should the City of Castle Pines Home Rule Charter be amended to include the following provision: Property in\nexcess of 20 acres owned or controlled by a single owner or ownership group or that are part of a common plan\nof development or related transactions may be annexed into the City only upon approval by the voters at an\nelection of the registered electors of the City of Castle Pines, Colorado, and for purposes of this provision, any\nsingle, successive, cumulative, serial or simultaneous annexations of multiple parcels shall be aggregated and\ntreated as a single annexation as provided in C.R.S. Section 31-12-104(1)(a)?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-castle-pines-2026-ballot-301",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "5c1fa929e883fbc1439f93316493fb9d707ad149daaec495e4c20f56837ac498",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-castle-pines-2026-ballot-301.txt",
+    "subjectQuote": "Should the City of Castle Pines Home Rule Charter be amended to include the following provision: Any parcel",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "Should the City of Castle Pines Home Rule Charter be amended to include the following provision: Any parcel\nover 20 acres owned or controlled by a single owner or ownership group annexed within 180 days of the\neffective date of this section shall be referred for ratification at an election of the registered electors of the City\nof Castle Pines, Colorado, and if no such annexation occurs within such 180-day period, this section may be\nrepealed by Council ordinance without a vote of the registered electors of the City of Castle Pines, Colorado?"
+      ],
+      "yesMeans": [
+        "Should the City of Castle Pines Home Rule Charter be amended to include the following provision: Any parcel\nover 20 acres owned or controlled by a single owner or ownership group annexed within 180 days of the\neffective date of this section shall be referred for ratification at an election of the registered electors of the City\nof Castle Pines, Colorado, and if no such annexation occurs within such 180-day period, this section may be\nrepealed by Council ordinance without a vote of the registered electors of the City of Castle Pines, Colorado?"
+      ],
+      "noMeans": [
+        "Should the City of Castle Pines Home Rule Charter be amended to include the following provision: Any parcel\nover 20 acres owned or controlled by a single owner or ownership group annexed within 180 days of the\neffective date of this section shall be referred for ratification at an election of the registered electors of the City\nof Castle Pines, Colorado, and if no such annexation occurs within such 180-day period, this section may be\nrepealed by Council ordinance without a vote of the registered electors of the City of Castle Pines, Colorado?"
+      ]
+    },
+    "reviewNotes": [
+      "The official question says within180days of the effective date; it does not specify beforeorafter. Draft preserves the source wording ratherthan inventing a direction."
+    ]
+  },
+  {
+    "contestId": "co-aurora-2026-ballot-3a",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "3dac9889f16d5e3431958af9119ea2f0841b8165a6fe7c292010875eeedc77bb",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-aurora-2026-ballot-3a.txt",
+    "subjectQuote": "SHALL CITY OF AURORA TAXES BE INCREASED UP TO $12,640,000 AND AS MAY BE GENERATED ANNUALLY",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "SHALL CITY OF AURORA TAXES BE INCREASED UP TO $12,640,000 AND AS MAY BE GENERATED ANNUALLY\nTHEREAFTER BY THE IMPOSITION OF A NEW 0.129% SALES AND USE TAX (THAT EQUALS 12.9 CENTS ON EVERY\nONE HUNDRED DOLLAR PURCHASE) FOR A PERIOD BEGINNING ON JANUARY 1, 2027, AND ENDING ON\nDECEMBER 31, 2057, TO PROVIDE FOR THE OPERATION OF AND REPAIRS, MAINTENANCE, AND IMPROVEMENTS\nTO COMMUNITY FACILITIES, INCLUDING WITHOUT LIMITATION LIBRARIES, RECREATION AND COMMUNITY\nCENTERS;\nAND SHALL CITY OF AURORA DEBT BE INCREASED BY AN AMOUNT NOT TO EXCEED $105,000,000 WITH A\nMAXIMUM REPAYMENT COST OF UP TO $204,870,000 TO ACCOMPLISH THE PURPOSES STATED ABOVE,\nINCLUDING BUT NOT LIMITED TO: PARK RENOVATIONS AND NEW PARK CONSTRUCTION; RECREATION CENTER\nIMPROVEMENTS AND NEW RECREATION CENTER CONSTRUCTION; LIBRARY BRANCH IMPROVEMENTS AND NEW\nLIBRARY CONSTRUCTION;\nSUCH DEBT TO CONSIST OF REVENUE BONDS WHICH SHALL BEAR INTEREST, MATURE, BE SUBJECT TO\nREDEMPTION, WITH OR WITHOUT PREMIUM, AND BE ISSUED, DATED AND SOLD (AT, ABOVE OR BELOW PAR) IN\nSUCH MANNER AND CONTAINING SUCH OTHER TERMS, NOT INCONSISTENT HEREWITH, AS THE CITY COUNCIL\nMAY DETERMINE; SHALL THE CITY OF AURORA BE AUTHORIZED TO PAY SUCH BONDS FROM, AND TO SECURE\nSUCH PAYMENT BY A PLEDGE OF, THE NEW 0.129% SALES AND USE TAX AND OTHER LEGALLY AVAILABLE FUNDS;\nAND SHALL THE CITY OF AURORA BE ENTITLED TO COLLECT, RETAIN, AND SPEND THE FULL REVENUES FROM\nSUCH TAX INCREASE AND THE PROCEEDS OF ANY INVESTMENT THEREOF NOTWITHSTANDING ANY LIMITATION\nIN THE STATE CONSTITUTION, STATE LAW OR THE CITY HOME RULE CHARTER?"
+      ],
+      "yesMeans": [
+        "SHALL CITY OF AURORA TAXES BE INCREASED UP TO $12,640,000 AND AS MAY BE GENERATED ANNUALLY\nTHEREAFTER BY THE IMPOSITION OF A NEW 0.129% SALES AND USE TAX (THAT EQUALS 12.9 CENTS ON EVERY\nONE HUNDRED DOLLAR PURCHASE) FOR A PERIOD BEGINNING ON JANUARY 1, 2027, AND ENDING ON\nDECEMBER 31, 2057, TO PROVIDE FOR THE OPERATION OF AND REPAIRS, MAINTENANCE, AND IMPROVEMENTS\nTO COMMUNITY FACILITIES, INCLUDING WITHOUT LIMITATION LIBRARIES, RECREATION AND COMMUNITY\nCENTERS;\nAND SHALL CITY OF AURORA DEBT BE INCREASED BY AN AMOUNT NOT TO EXCEED $105,000,000 WITH A\nMAXIMUM REPAYMENT COST OF UP TO $204,870,000 TO ACCOMPLISH THE PURPOSES STATED ABOVE,\nINCLUDING BUT NOT LIMITED TO: PARK RENOVATIONS AND NEW PARK CONSTRUCTION; RECREATION CENTER\nIMPROVEMENTS AND NEW RECREATION CENTER CONSTRUCTION; LIBRARY BRANCH IMPROVEMENTS AND NEW\nLIBRARY CONSTRUCTION;\nSUCH DEBT TO CONSIST OF REVENUE BONDS WHICH SHALL BEAR INTEREST, MATURE, BE SUBJECT TO\nREDEMPTION, WITH OR WITHOUT PREMIUM, AND BE ISSUED, DATED AND SOLD (AT, ABOVE OR BELOW PAR) IN\nSUCH MANNER AND CONTAINING SUCH OTHER TERMS, NOT INCONSISTENT HEREWITH, AS THE CITY COUNCIL\nMAY DETERMINE; SHALL THE CITY OF AURORA BE AUTHORIZED TO PAY SUCH BONDS FROM, AND TO SECURE\nSUCH PAYMENT BY A PLEDGE OF, THE NEW 0.129% SALES AND USE TAX AND OTHER LEGALLY AVAILABLE FUNDS;\nAND SHALL THE CITY OF AURORA BE ENTITLED TO COLLECT, RETAIN, AND SPEND THE FULL REVENUES FROM\nSUCH TAX INCREASE AND THE PROCEEDS OF ANY INVESTMENT THEREOF NOTWITHSTANDING ANY LIMITATION\nIN THE STATE CONSTITUTION, STATE LAW OR THE CITY HOME RULE CHARTER?"
+      ],
+      "noMeans": [
+        "SHALL CITY OF AURORA TAXES BE INCREASED UP TO $12,640,000 AND AS MAY BE GENERATED ANNUALLY\nTHEREAFTER BY THE IMPOSITION OF A NEW 0.129% SALES AND USE TAX (THAT EQUALS 12.9 CENTS ON EVERY\nONE HUNDRED DOLLAR PURCHASE) FOR A PERIOD BEGINNING ON JANUARY 1, 2027, AND ENDING ON\nDECEMBER 31, 2057, TO PROVIDE FOR THE OPERATION OF AND REPAIRS, MAINTENANCE, AND IMPROVEMENTS\nTO COMMUNITY FACILITIES, INCLUDING WITHOUT LIMITATION LIBRARIES, RECREATION AND COMMUNITY\nCENTERS;\nAND SHALL CITY OF AURORA DEBT BE INCREASED BY AN AMOUNT NOT TO EXCEED $105,000,000 WITH A\nMAXIMUM REPAYMENT COST OF UP TO $204,870,000 TO ACCOMPLISH THE PURPOSES STATED ABOVE,\nINCLUDING BUT NOT LIMITED TO: PARK RENOVATIONS AND NEW PARK CONSTRUCTION; RECREATION CENTER\nIMPROVEMENTS AND NEW RECREATION CENTER CONSTRUCTION; LIBRARY BRANCH IMPROVEMENTS AND NEW\nLIBRARY CONSTRUCTION;\nSUCH DEBT TO CONSIST OF REVENUE BONDS WHICH SHALL BEAR INTEREST, MATURE, BE SUBJECT TO\nREDEMPTION, WITH OR WITHOUT PREMIUM, AND BE ISSUED, DATED AND SOLD (AT, ABOVE OR BELOW PAR) IN\nSUCH MANNER AND CONTAINING SUCH OTHER TERMS, NOT INCONSISTENT HEREWITH, AS THE CITY COUNCIL\nMAY DETERMINE; SHALL THE CITY OF AURORA BE AUTHORIZED TO PAY SUCH BONDS FROM, AND TO SECURE\nSUCH PAYMENT BY A PLEDGE OF, THE NEW 0.129% SALES AND USE TAX AND OTHER LEGALLY AVAILABLE FUNDS;\nAND SHALL THE CITY OF AURORA BE ENTITLED TO COLLECT, RETAIN, AND SPEND THE FULL REVENUES FROM\nSUCH TAX INCREASE AND THE PROCEEDS OF ANY INVESTMENT THEREOF NOTWITHSTANDING ANY LIMITATION\nIN THE STATE CONSTITUTION, STATE LAW OR THE CITY HOME RULE CHARTER?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-aurora-2026-ballot-3b",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "62733e13252fe7da551b47e66a77236c378d7a32525ff5d00f3028f6a592b798",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-aurora-2026-ballot-3b.txt",
+    "subjectQuote": "SHALL CITY OF AURORA TAXES BE INCREASED UP TO $6,270,000 AND AS MAY BE GENERATED ANNUALLY",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "SHALL CITY OF AURORA TAXES BE INCREASED UP TO $6,270,000 AND AS MAY BE GENERATED ANNUALLY\nTHEREAFTER BY THE IMPOSITION OF A NEW 0.064% SALES AND USE TAX (THAT EQUALS 6.4 CENTS ON EVERY\nONE HUNDRED DOLLAR PURCHASE) FOR A PERIOD BEGINNING ON JANUARY 1, 2027 AND ENDING ON\nDECEMBER 31, 2057, TO PROVIDE FOR PUBLIC SAFETY NEEDS, INCLUDING WITHOUT LIMITATION THE\nOPERATION, REPAIR, MAINTENANCE, AND IMPROVEMENTS TO POLICE, FIRE, AND OTHER PUBLIC SAFETY\nINFRASTRUCTURE AND FACILITIES;\nAND SHALL CITY OF AURORA DEBT BE INCREASED BY AN AMOUNT NOT TO EXCEED $53,000,000 WITH A\nMAXIMUM REPAYMENT COST OF UP TO $101,600,000 TO ACCOMPLISH THE PURPOSES STATED ABOVE,\nINCLUDING BUT NOT LIMITED TO:\nFIRE STATION RENOVATIONS AND REMODELS; AURORA 911 AND POLICE FACILITIES IMPROVEMENTS;\nSUCH DEBT TO CONSIST OF REVENUE BONDS WHICH SHALL BEAR INTEREST, MATURE, BE SUBJECT TO\nREDEMPTION, WITH OR WITHOUT PREMIUM, AND BE ISSUED, DATED AND SOLD (AT, ABOVE OR BELOW PAR) IN\nSUCH MANNER AND CONTAINING SUCH OTHER TERMS, NOT INCONSISTENT HEREWITH, AS THE CITY COUNCIL\nMAY DETERMINE; SHALL THE CITY OF AURORA BE AUTHORIZED TO PAY SUCH BONDS FROM, AND TO SECURE\nSUCH PAYMENT BY A PLEDGE OF, THE NEW 0.064% SALES AND USE TAX AND OTHER LEGALLY AVAILABLE FUNDS;\nAND SHALL THE CITY OF AURORA BE ENTITLED TO COLLECT, RETAIN, AND SPEND THE FULL REVENUES FROM\nSUCH TAX INCREASE AND THE PROCEEDS OF ANY INVESTMENT THEREOF NOTWITHSTANDING ANY LIMITATION\nIN THE STATE CONSTITUTION, STATE LAW OR THE CITY HOME RULE CHARTER?"
+      ],
+      "yesMeans": [
+        "SHALL CITY OF AURORA TAXES BE INCREASED UP TO $6,270,000 AND AS MAY BE GENERATED ANNUALLY\nTHEREAFTER BY THE IMPOSITION OF A NEW 0.064% SALES AND USE TAX (THAT EQUALS 6.4 CENTS ON EVERY\nONE HUNDRED DOLLAR PURCHASE) FOR A PERIOD BEGINNING ON JANUARY 1, 2027 AND ENDING ON\nDECEMBER 31, 2057, TO PROVIDE FOR PUBLIC SAFETY NEEDS, INCLUDING WITHOUT LIMITATION THE\nOPERATION, REPAIR, MAINTENANCE, AND IMPROVEMENTS TO POLICE, FIRE, AND OTHER PUBLIC SAFETY\nINFRASTRUCTURE AND FACILITIES;\nAND SHALL CITY OF AURORA DEBT BE INCREASED BY AN AMOUNT NOT TO EXCEED $53,000,000 WITH A\nMAXIMUM REPAYMENT COST OF UP TO $101,600,000 TO ACCOMPLISH THE PURPOSES STATED ABOVE,\nINCLUDING BUT NOT LIMITED TO:\nFIRE STATION RENOVATIONS AND REMODELS; AURORA 911 AND POLICE FACILITIES IMPROVEMENTS;\nSUCH DEBT TO CONSIST OF REVENUE BONDS WHICH SHALL BEAR INTEREST, MATURE, BE SUBJECT TO\nREDEMPTION, WITH OR WITHOUT PREMIUM, AND BE ISSUED, DATED AND SOLD (AT, ABOVE OR BELOW PAR) IN\nSUCH MANNER AND CONTAINING SUCH OTHER TERMS, NOT INCONSISTENT HEREWITH, AS THE CITY COUNCIL\nMAY DETERMINE; SHALL THE CITY OF AURORA BE AUTHORIZED TO PAY SUCH BONDS FROM, AND TO SECURE\nSUCH PAYMENT BY A PLEDGE OF, THE NEW 0.064% SALES AND USE TAX AND OTHER LEGALLY AVAILABLE FUNDS;\nAND SHALL THE CITY OF AURORA BE ENTITLED TO COLLECT, RETAIN, AND SPEND THE FULL REVENUES FROM\nSUCH TAX INCREASE AND THE PROCEEDS OF ANY INVESTMENT THEREOF NOTWITHSTANDING ANY LIMITATION\nIN THE STATE CONSTITUTION, STATE LAW OR THE CITY HOME RULE CHARTER?"
+      ],
+      "noMeans": [
+        "SHALL CITY OF AURORA TAXES BE INCREASED UP TO $6,270,000 AND AS MAY BE GENERATED ANNUALLY\nTHEREAFTER BY THE IMPOSITION OF A NEW 0.064% SALES AND USE TAX (THAT EQUALS 6.4 CENTS ON EVERY\nONE HUNDRED DOLLAR PURCHASE) FOR A PERIOD BEGINNING ON JANUARY 1, 2027 AND ENDING ON\nDECEMBER 31, 2057, TO PROVIDE FOR PUBLIC SAFETY NEEDS, INCLUDING WITHOUT LIMITATION THE\nOPERATION, REPAIR, MAINTENANCE, AND IMPROVEMENTS TO POLICE, FIRE, AND OTHER PUBLIC SAFETY\nINFRASTRUCTURE AND FACILITIES;\nAND SHALL CITY OF AURORA DEBT BE INCREASED BY AN AMOUNT NOT TO EXCEED $53,000,000 WITH A\nMAXIMUM REPAYMENT COST OF UP TO $101,600,000 TO ACCOMPLISH THE PURPOSES STATED ABOVE,\nINCLUDING BUT NOT LIMITED TO:\nFIRE STATION RENOVATIONS AND REMODELS; AURORA 911 AND POLICE FACILITIES IMPROVEMENTS;\nSUCH DEBT TO CONSIST OF REVENUE BONDS WHICH SHALL BEAR INTEREST, MATURE, BE SUBJECT TO\nREDEMPTION, WITH OR WITHOUT PREMIUM, AND BE ISSUED, DATED AND SOLD (AT, ABOVE OR BELOW PAR) IN\nSUCH MANNER AND CONTAINING SUCH OTHER TERMS, NOT INCONSISTENT HEREWITH, AS THE CITY COUNCIL\nMAY DETERMINE; SHALL THE CITY OF AURORA BE AUTHORIZED TO PAY SUCH BONDS FROM, AND TO SECURE\nSUCH PAYMENT BY A PLEDGE OF, THE NEW 0.064% SALES AND USE TAX AND OTHER LEGALLY AVAILABLE FUNDS;\nAND SHALL THE CITY OF AURORA BE ENTITLED TO COLLECT, RETAIN, AND SPEND THE FULL REVENUES FROM\nSUCH TAX INCREASE AND THE PROCEEDS OF ANY INVESTMENT THEREOF NOTWITHSTANDING ANY LIMITATION\nIN THE STATE CONSTITUTION, STATE LAW OR THE CITY HOME RULE CHARTER?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-aurora-2026-ballot-3c",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "3f098927ba48bc17b561009d31c0b31f8d25c15a3fc02049066cc0fffbde870c",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-aurora-2026-ballot-3c.txt",
+    "subjectQuote": "SHALL CITY OF AURORA TAXES BE INCREASED UP TO $12,940,000 AND AS MAY BE GENERATED ANNUALLY",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "SHALL CITY OF AURORA TAXES BE INCREASED UP TO $12,940,000 AND AS MAY BE GENERATED ANNUALLY\nTHEREAFTER BY THE IMPOSITION OF A NEW 0.132% SALES AND USE TAX (THAT EQUALS 13.2 CENTS ON EVERY\nONE HUNDRED DOLLAR PURCHASE) FOR A PERIOD BEGINNING ON JANUARY 1, 2027, AND ENDING ON\nDECEMBER 31, 2057, TO PROVIDE FOR TRANSPORTATION INFRASTRUCTURE NEEDS, INCLUDING WITHOUT\nLIMITATION THE OPERATION OF AND REPAIRS, MAINTENANCE, AND IMPROVEMENTS TO CITY TRANSPORTATION\nINFRASTRUCTURE AND FACILITIES;\nAND SHALL CITY OF AURORA DEBT BE INCREASED BY AN AMOUNT NOT TO EXCEED $108,000,000 WITH A\nMAXIMUM REPAYMENT COST OF UP TO $209,733,000 TO ACCOMPLISH THE PURPOSES STATED ABOVE,\nINCLUDING BUT NOT LIMITED TO:\nTRAFFIC, INTERSECTION, AND PEDESTRIAN SAFETY IMPROVEMENTS; MAJOR BRIDGE REPLACEMENTS;\nROADWAY IMPROVEMENTS AND EXPANSION;\nSUCH DEBT TO CONSIST OF REVENUE BONDS WHICH SHALL BEAR INTEREST, MATURE, BE SUBJECT TO\nREDEMPTION, WITH OR WITHOUT PREMIUM, AND BE ISSUED, DATED AND SOLD (AT, ABOVE OR BELOW PAR) IN\nSUCH MANNER AND CONTAINING SUCH OTHER TERMS, NOT INCONSISTENT HEREWITH, AS THE CITY COUNCIL\nMAY DETERMINE; SHALL THE CITY OF AURORA BE AUTHORIZED TO PAY SUCH BONDS FROM, AND TO SECURE\nSUCH PAYMENT BY A PLEDGE OF, THE NEW 0.132% SALES AND USE TAX AND OTHER LEGALLY AVAILABLE FUNDS;\nAND SHALL THE CITY OF AURORA BE ENTITLED TO COLLECT, RETAIN, AND SPEND THE FULL REVENUES FROM\nSUCH TAX INCREASE AND THE PROCEEDS OF ANY INVESTMENT THEREOF NOTWITHSTANDING ANY LIMITATION\nIN THE STATE CONSTITUTION, STATE LAW OR THE CITY HOME RULE CHARTER?"
+      ],
+      "yesMeans": [
+        "SHALL CITY OF AURORA TAXES BE INCREASED UP TO $12,940,000 AND AS MAY BE GENERATED ANNUALLY\nTHEREAFTER BY THE IMPOSITION OF A NEW 0.132% SALES AND USE TAX (THAT EQUALS 13.2 CENTS ON EVERY\nONE HUNDRED DOLLAR PURCHASE) FOR A PERIOD BEGINNING ON JANUARY 1, 2027, AND ENDING ON\nDECEMBER 31, 2057, TO PROVIDE FOR TRANSPORTATION INFRASTRUCTURE NEEDS, INCLUDING WITHOUT\nLIMITATION THE OPERATION OF AND REPAIRS, MAINTENANCE, AND IMPROVEMENTS TO CITY TRANSPORTATION\nINFRASTRUCTURE AND FACILITIES;\nAND SHALL CITY OF AURORA DEBT BE INCREASED BY AN AMOUNT NOT TO EXCEED $108,000,000 WITH A\nMAXIMUM REPAYMENT COST OF UP TO $209,733,000 TO ACCOMPLISH THE PURPOSES STATED ABOVE,\nINCLUDING BUT NOT LIMITED TO:\nTRAFFIC, INTERSECTION, AND PEDESTRIAN SAFETY IMPROVEMENTS; MAJOR BRIDGE REPLACEMENTS;\nROADWAY IMPROVEMENTS AND EXPANSION;\nSUCH DEBT TO CONSIST OF REVENUE BONDS WHICH SHALL BEAR INTEREST, MATURE, BE SUBJECT TO\nREDEMPTION, WITH OR WITHOUT PREMIUM, AND BE ISSUED, DATED AND SOLD (AT, ABOVE OR BELOW PAR) IN\nSUCH MANNER AND CONTAINING SUCH OTHER TERMS, NOT INCONSISTENT HEREWITH, AS THE CITY COUNCIL\nMAY DETERMINE; SHALL THE CITY OF AURORA BE AUTHORIZED TO PAY SUCH BONDS FROM, AND TO SECURE\nSUCH PAYMENT BY A PLEDGE OF, THE NEW 0.132% SALES AND USE TAX AND OTHER LEGALLY AVAILABLE FUNDS;\nAND SHALL THE CITY OF AURORA BE ENTITLED TO COLLECT, RETAIN, AND SPEND THE FULL REVENUES FROM\nSUCH TAX INCREASE AND THE PROCEEDS OF ANY INVESTMENT THEREOF NOTWITHSTANDING ANY LIMITATION\nIN THE STATE CONSTITUTION, STATE LAW OR THE CITY HOME RULE CHARTER?"
+      ],
+      "noMeans": [
+        "SHALL CITY OF AURORA TAXES BE INCREASED UP TO $12,940,000 AND AS MAY BE GENERATED ANNUALLY\nTHEREAFTER BY THE IMPOSITION OF A NEW 0.132% SALES AND USE TAX (THAT EQUALS 13.2 CENTS ON EVERY\nONE HUNDRED DOLLAR PURCHASE) FOR A PERIOD BEGINNING ON JANUARY 1, 2027, AND ENDING ON\nDECEMBER 31, 2057, TO PROVIDE FOR TRANSPORTATION INFRASTRUCTURE NEEDS, INCLUDING WITHOUT\nLIMITATION THE OPERATION OF AND REPAIRS, MAINTENANCE, AND IMPROVEMENTS TO CITY TRANSPORTATION\nINFRASTRUCTURE AND FACILITIES;\nAND SHALL CITY OF AURORA DEBT BE INCREASED BY AN AMOUNT NOT TO EXCEED $108,000,000 WITH A\nMAXIMUM REPAYMENT COST OF UP TO $209,733,000 TO ACCOMPLISH THE PURPOSES STATED ABOVE,\nINCLUDING BUT NOT LIMITED TO:\nTRAFFIC, INTERSECTION, AND PEDESTRIAN SAFETY IMPROVEMENTS; MAJOR BRIDGE REPLACEMENTS;\nROADWAY IMPROVEMENTS AND EXPANSION;\nSUCH DEBT TO CONSIST OF REVENUE BONDS WHICH SHALL BEAR INTEREST, MATURE, BE SUBJECT TO\nREDEMPTION, WITH OR WITHOUT PREMIUM, AND BE ISSUED, DATED AND SOLD (AT, ABOVE OR BELOW PAR) IN\nSUCH MANNER AND CONTAINING SUCH OTHER TERMS, NOT INCONSISTENT HEREWITH, AS THE CITY COUNCIL\nMAY DETERMINE; SHALL THE CITY OF AURORA BE AUTHORIZED TO PAY SUCH BONDS FROM, AND TO SECURE\nSUCH PAYMENT BY A PLEDGE OF, THE NEW 0.132% SALES AND USE TAX AND OTHER LEGALLY AVAILABLE FUNDS;\nAND SHALL THE CITY OF AURORA BE ENTITLED TO COLLECT, RETAIN, AND SPEND THE FULL REVENUES FROM\nSUCH TAX INCREASE AND THE PROCEEDS OF ANY INVESTMENT THEREOF NOTWITHSTANDING ANY LIMITATION\nIN THE STATE CONSTITUTION, STATE LAW OR THE CITY HOME RULE CHARTER?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-aurora-2026-ballot-3d",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "560dfd31e28393739bfbb860d2242f88fe0ba41badf899f80947a7f9ef5b5a42",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-aurora-2026-ballot-3d.txt",
+    "subjectQuote": "Shall Article 2-4 of the City Charter of the City of Aurora, Colorado, be amended to direct that regular municipal",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "Shall Article 2-4 of the City Charter of the City of Aurora, Colorado, be amended to direct that regular municipal\nelections shall be moved from odd-numbered years to even-numbered years with corresponding amendments\nto Article 3-5 of the Aurora City Charter to allow one-time shortened terms of office necessary to implement the\ntransition to even-numbered year elections?"
+      ],
+      "yesMeans": [
+        "Shall Article 2-4 of the City Charter of the City of Aurora, Colorado, be amended to direct that regular municipal\nelections shall be moved from odd-numbered years to even-numbered years with corresponding amendments\nto Article 3-5 of the Aurora City Charter to allow one-time shortened terms of office necessary to implement the\ntransition to even-numbered year elections?"
+      ],
+      "noMeans": [
+        "Shall Article 2-4 of the City Charter of the City of Aurora, Colorado, be amended to direct that regular municipal\nelections shall be moved from odd-numbered years to even-numbered years with corresponding amendments\nto Article 3-5 of the Aurora City Charter to allow one-time shortened terms of office necessary to implement the\ntransition to even-numbered year elections?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-douglas-county-school-district-re-1-2026-ballot-school-tax",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "0f085c35331c0b66cf5976bededb2c8ed8447564e7bfe7ced840d6d3bc7d3711",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-douglas-county-school-district-re-1-2026-ballot-school-tax.txt",
+    "subjectQuote": "SHALL DOUGLAS COUNTY SCHOOL DISTRICT RE-1 TAXES BE INCREASED $54 MILLION COMMENCING IN 2026",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "SHALL DOUGLAS COUNTY SCHOOL DISTRICT RE-1 TAXES BE INCREASED $54 MILLION COMMENCING IN 2026\nFOR TAX COLLECTION IN YEAR 2027 TO BE USED FOR GENERAL FUND PURPOSES INCLUDING:\nRETAIN AND ATTRACT TOP QUALITY TEACHERS AND STAFF, WITH SALARIES TO BE MORE COMPETITIVE\nWITH NEIGHBORING DISTRICTS, AND TO BETTER KEEP PACE WITH INFLATION;\nSUPPORT INCREASING COSTS OF SCHOOL SECURITY, INCLUDING SCHOOL RESOURCE OFFICERS;\nREDUCE STUDENT WAITLISTS FOR CAREER AND TECHNICAL EDUCATION PROGRAMMING, INCLUDING\nTHE TRADES;\nRESTORE STUDENT PROGRAMMING, SUCH AS INSTRUMENTAL MUSIC IN ELEMENTARY SCHOOLS;\nAND BE IMPOSED ANNUALLY THEREAFTER FOR THE ABOVE PURPOSES BY WHATEVER AMOUNTS ARE RAISED BY\nTHE IMPOSITION OF A MILL LEVY WHICH, WHEN COMBINED WITH PRIOR VOTER APPROVED OVERRIDE\nQUESTIONS, SHALL PRODUCE REVENUE NOT TO EXCEED THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION\n22-54-108(3)(B) (VI), C.R.S., AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE\nINVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER\nARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW; AND SHALL THE DISTRICT'S\nEXPENDITURES BE SUBJECT TO AN ANNUAL INDEPENDENT AUDIT POSTED ON ITS WEBSITE AND BE SUBJECT TO\nOVERSIGHT BY A CITIZENS' COMMITTEE?"
+      ],
+      "yesMeans": [
+        "SHALL DOUGLAS COUNTY SCHOOL DISTRICT RE-1 TAXES BE INCREASED $54 MILLION COMMENCING IN 2026\nFOR TAX COLLECTION IN YEAR 2027 TO BE USED FOR GENERAL FUND PURPOSES INCLUDING:\nRETAIN AND ATTRACT TOP QUALITY TEACHERS AND STAFF, WITH SALARIES TO BE MORE COMPETITIVE\nWITH NEIGHBORING DISTRICTS, AND TO BETTER KEEP PACE WITH INFLATION;\nSUPPORT INCREASING COSTS OF SCHOOL SECURITY, INCLUDING SCHOOL RESOURCE OFFICERS;\nREDUCE STUDENT WAITLISTS FOR CAREER AND TECHNICAL EDUCATION PROGRAMMING, INCLUDING\nTHE TRADES;\nRESTORE STUDENT PROGRAMMING, SUCH AS INSTRUMENTAL MUSIC IN ELEMENTARY SCHOOLS;\nAND BE IMPOSED ANNUALLY THEREAFTER FOR THE ABOVE PURPOSES BY WHATEVER AMOUNTS ARE RAISED BY\nTHE IMPOSITION OF A MILL LEVY WHICH, WHEN COMBINED WITH PRIOR VOTER APPROVED OVERRIDE\nQUESTIONS, SHALL PRODUCE REVENUE NOT TO EXCEED THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION\n22-54-108(3)(B) (VI), C.R.S., AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE\nINVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER\nARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW; AND SHALL THE DISTRICT'S\nEXPENDITURES BE SUBJECT TO AN ANNUAL INDEPENDENT AUDIT POSTED ON ITS WEBSITE AND BE SUBJECT TO\nOVERSIGHT BY A CITIZENS' COMMITTEE?"
+      ],
+      "noMeans": [
+        "SHALL DOUGLAS COUNTY SCHOOL DISTRICT RE-1 TAXES BE INCREASED $54 MILLION COMMENCING IN 2026\nFOR TAX COLLECTION IN YEAR 2027 TO BE USED FOR GENERAL FUND PURPOSES INCLUDING:\nRETAIN AND ATTRACT TOP QUALITY TEACHERS AND STAFF, WITH SALARIES TO BE MORE COMPETITIVE\nWITH NEIGHBORING DISTRICTS, AND TO BETTER KEEP PACE WITH INFLATION;\nSUPPORT INCREASING COSTS OF SCHOOL SECURITY, INCLUDING SCHOOL RESOURCE OFFICERS;\nREDUCE STUDENT WAITLISTS FOR CAREER AND TECHNICAL EDUCATION PROGRAMMING, INCLUDING\nTHE TRADES;\nRESTORE STUDENT PROGRAMMING, SUCH AS INSTRUMENTAL MUSIC IN ELEMENTARY SCHOOLS;\nAND BE IMPOSED ANNUALLY THEREAFTER FOR THE ABOVE PURPOSES BY WHATEVER AMOUNTS ARE RAISED BY\nTHE IMPOSITION OF A MILL LEVY WHICH, WHEN COMBINED WITH PRIOR VOTER APPROVED OVERRIDE\nQUESTIONS, SHALL PRODUCE REVENUE NOT TO EXCEED THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION\n22-54-108(3)(B) (VI), C.R.S., AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE\nINVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER\nARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW; AND SHALL THE DISTRICT'S\nEXPENDITURES BE SUBJECT TO AN ANNUAL INDEPENDENT AUDIT POSTED ON ITS WEBSITE AND BE SUBJECT TO\nOVERSIGHT BY A CITIZENS' COMMITTEE?"
+      ]
+    },
+    "reviewNotes": [
+      "Official designation absent from accessible composite extraction; officialNumber omitted, not inferred from neighboring sources."
+    ]
+  },
+  {
+    "contestId": "co-larkspur-fire-protection-district-2026-ballot-6a",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "e7c2ac6d11b802e7d8c427e1f65f24f68254e08d601f333c553ef7fa2fd6851c",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-larkspur-fire-protection-district-2026-ballot-6a.txt",
+    "subjectQuote": "SHALL LARKSPUR FIRE PROTECTION DISTRICT (LFPD) TAXES BE INCREASED $925,225 ANNUALLY (IN THE FIRST",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "SHALL LARKSPUR FIRE PROTECTION DISTRICT (LFPD) TAXES BE INCREASED $925,225 ANNUALLY (IN THE FIRST\nFULL FISCAL YEAR), AND BY SUCH AMOUNT AS ARE RAISED THEREAFTER, BEGINNING JANUARY 1, 2027, BY\nINCREASING THE DISTRICT'S PROPERTY TAX RATE BY 3.97 MILLS FOR THE PURPOSES OF MAINTAINING AND\nENHANCING THE CURRENT OPERATIONS IN FIRE PROTECTION, EMERGENCY MEDICAL RESPONSE, PUBLIC\nSAFETY, AND RELATED SERVICES FOR THE RESIDENTS, PROPERTY OWNERS, VISITORS, AND BUSINESSES SERVED\nBY THE DISTRICT, INCLUDING BUT NOT LIMITED TO:\n• INCREASE FIREFIGHTER STAFFING TO DECREASE RESPONSE TIMES, INCREASE COVERAGE;\n• PROVIDE HIGH-QUALITY TRAINING THAT ENSURE OUR FIREFIGHTERS ARE PREPARED FOR ANY\nFORESEEABLE EMERGENCY;\n• PROVIDE COMPETITIVE WAGES AND BENEFITS COMPARED TO SIMILAR FIRE AGENCIES FOR\nRECRUITMENT AND RETENTION OF HIGHLY QUALIFIED FIREFIGHTERS AND OTHER PERSONNEL;\n• PARTICIPATE IN AN ACCREDITATION PROCESS TO HELP WITH STABILIZING THE INSURANCE OF\nPROPERTIES IN THE DISTRICT AND VALIDATING THE SERVICES PROVIDED TO THE COMMUNITY;\n• SUSTAIN FUNDING TO MAINTAIN OUR FLEET OF EMERGENCY VEHICLES, FACILITIES AND EQUIPMENT SO\nTHEY ARE OPTIMIZED TO BE INLINE WITH THE STRATEGIC PLANS AND OPERATIONAL NEEDS;\nAND IN ORDER TO FACILITATE CONTINUED FINANCIAL STABILITY, SHALL THE DISTRICT BE AUTHORIZED TO\nOFFSET THE POSSIBILITIES OF REVENUE LOSS DUE TO LEGISLATIVE CHANGES, REDUCED REVENUE DUE TO\nDECREASED PROPERTY VALUATION, OR OTHER MATTERS THAT WOULD REDUCE THE DISTRICT’S TOTAL REVENUE\nFROM CURRENT LEVELS AND ACCOUNTING FOR GROWTH WITHIN THE DISTRICT, BY PERIODICALLY ADJUSTING\nTHE MILL LEVY RATE, AS NEEDED TO REMAIN REVENUE NEUTRAL, STARTING TAX COLLECTION YEAR 2028 AND\nREVIEWED ANNUALLY THEREAFTER AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPEND\nNOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?"
+      ],
+      "yesMeans": [
+        "SHALL LARKSPUR FIRE PROTECTION DISTRICT (LFPD) TAXES BE INCREASED $925,225 ANNUALLY (IN THE FIRST\nFULL FISCAL YEAR), AND BY SUCH AMOUNT AS ARE RAISED THEREAFTER, BEGINNING JANUARY 1, 2027, BY\nINCREASING THE DISTRICT'S PROPERTY TAX RATE BY 3.97 MILLS FOR THE PURPOSES OF MAINTAINING AND\nENHANCING THE CURRENT OPERATIONS IN FIRE PROTECTION, EMERGENCY MEDICAL RESPONSE, PUBLIC\nSAFETY, AND RELATED SERVICES FOR THE RESIDENTS, PROPERTY OWNERS, VISITORS, AND BUSINESSES SERVED\nBY THE DISTRICT, INCLUDING BUT NOT LIMITED TO:\n• INCREASE FIREFIGHTER STAFFING TO DECREASE RESPONSE TIMES, INCREASE COVERAGE;\n• PROVIDE HIGH-QUALITY TRAINING THAT ENSURE OUR FIREFIGHTERS ARE PREPARED FOR ANY\nFORESEEABLE EMERGENCY;\n• PROVIDE COMPETITIVE WAGES AND BENEFITS COMPARED TO SIMILAR FIRE AGENCIES FOR\nRECRUITMENT AND RETENTION OF HIGHLY QUALIFIED FIREFIGHTERS AND OTHER PERSONNEL;\n• PARTICIPATE IN AN ACCREDITATION PROCESS TO HELP WITH STABILIZING THE INSURANCE OF\nPROPERTIES IN THE DISTRICT AND VALIDATING THE SERVICES PROVIDED TO THE COMMUNITY;\n• SUSTAIN FUNDING TO MAINTAIN OUR FLEET OF EMERGENCY VEHICLES, FACILITIES AND EQUIPMENT SO\nTHEY ARE OPTIMIZED TO BE INLINE WITH THE STRATEGIC PLANS AND OPERATIONAL NEEDS;\nAND IN ORDER TO FACILITATE CONTINUED FINANCIAL STABILITY, SHALL THE DISTRICT BE AUTHORIZED TO\nOFFSET THE POSSIBILITIES OF REVENUE LOSS DUE TO LEGISLATIVE CHANGES, REDUCED REVENUE DUE TO\nDECREASED PROPERTY VALUATION, OR OTHER MATTERS THAT WOULD REDUCE THE DISTRICT’S TOTAL REVENUE\nFROM CURRENT LEVELS AND ACCOUNTING FOR GROWTH WITHIN THE DISTRICT, BY PERIODICALLY ADJUSTING\nTHE MILL LEVY RATE, AS NEEDED TO REMAIN REVENUE NEUTRAL, STARTING TAX COLLECTION YEAR 2028 AND\nREVIEWED ANNUALLY THEREAFTER AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPEND\nNOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?"
+      ],
+      "noMeans": [
+        "SHALL LARKSPUR FIRE PROTECTION DISTRICT (LFPD) TAXES BE INCREASED $925,225 ANNUALLY (IN THE FIRST\nFULL FISCAL YEAR), AND BY SUCH AMOUNT AS ARE RAISED THEREAFTER, BEGINNING JANUARY 1, 2027, BY\nINCREASING THE DISTRICT'S PROPERTY TAX RATE BY 3.97 MILLS FOR THE PURPOSES OF MAINTAINING AND\nENHANCING THE CURRENT OPERATIONS IN FIRE PROTECTION, EMERGENCY MEDICAL RESPONSE, PUBLIC\nSAFETY, AND RELATED SERVICES FOR THE RESIDENTS, PROPERTY OWNERS, VISITORS, AND BUSINESSES SERVED\nBY THE DISTRICT, INCLUDING BUT NOT LIMITED TO:\n• INCREASE FIREFIGHTER STAFFING TO DECREASE RESPONSE TIMES, INCREASE COVERAGE;\n• PROVIDE HIGH-QUALITY TRAINING THAT ENSURE OUR FIREFIGHTERS ARE PREPARED FOR ANY\nFORESEEABLE EMERGENCY;\n• PROVIDE COMPETITIVE WAGES AND BENEFITS COMPARED TO SIMILAR FIRE AGENCIES FOR\nRECRUITMENT AND RETENTION OF HIGHLY QUALIFIED FIREFIGHTERS AND OTHER PERSONNEL;\n• PARTICIPATE IN AN ACCREDITATION PROCESS TO HELP WITH STABILIZING THE INSURANCE OF\nPROPERTIES IN THE DISTRICT AND VALIDATING THE SERVICES PROVIDED TO THE COMMUNITY;\n• SUSTAIN FUNDING TO MAINTAIN OUR FLEET OF EMERGENCY VEHICLES, FACILITIES AND EQUIPMENT SO\nTHEY ARE OPTIMIZED TO BE INLINE WITH THE STRATEGIC PLANS AND OPERATIONAL NEEDS;\nAND IN ORDER TO FACILITATE CONTINUED FINANCIAL STABILITY, SHALL THE DISTRICT BE AUTHORIZED TO\nOFFSET THE POSSIBILITIES OF REVENUE LOSS DUE TO LEGISLATIVE CHANGES, REDUCED REVENUE DUE TO\nDECREASED PROPERTY VALUATION, OR OTHER MATTERS THAT WOULD REDUCE THE DISTRICT’S TOTAL REVENUE\nFROM CURRENT LEVELS AND ACCOUNTING FOR GROWTH WITHIN THE DISTRICT, BY PERIODICALLY ADJUSTING\nTHE MILL LEVY RATE, AS NEEDED TO REMAIN REVENUE NEUTRAL, STARTING TAX COLLECTION YEAR 2028 AND\nREVIEWED ANNUALLY THEREAFTER AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPEND\nNOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-larkspur-fire-protection-district-2026-ballot-6b",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "a348ceb308281b1f9f2a00712a876c8acfaf9029ea7dff171f9a1de0b5e2acb4",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-larkspur-fire-protection-district-2026-ballot-6b.txt",
+    "subjectQuote": "SHALL LARKSPUR FIRE PROTECTION DISTRICT (LFPD) DEBT BE INCREASED $4.5 MILLION, WITH A REPAYMENT",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "SHALL LARKSPUR FIRE PROTECTION DISTRICT (LFPD) DEBT BE INCREASED $4.5 MILLION, WITH A REPAYMENT\nCOST OF UP TO $6.4 MILLION, AND SHALL DISTRICT TAXES BE INCREASED UP TO $427,333 ANNUALLY TO PAY\nSUCH DEBT, SUCH DEBT TO BE USED FOR CAPITAL IMPROVEMENTS OF THE DISTRICT, INCLUDING:\n• PURCHASE OF FIRE/EMS EQUIPMENT AND/OR APPARATUS TO REPLACE AGING AND OUTDATED\nRESPONSE VEHICLES;\n• DESIGN, ACQUISITION, AND INFRASTRUCTURE IMPROVEMENTS FOR FUTURE STATION IN THE\nSOUTHEASTERN AREA OF THE DISTRICT RESPONSE JURISDICTION;\n• DESIGN, INSTALLATION, AND CONSTRUCTION OF TRAINING GROUNDS INFRASTRUCTURE;\n• PURCHASE OF TRAINING GROUNDS SIMULATORS AND EQUIPMENT TO TRAIN FIREFIGHTERS IN\nMULTIPLE CERTIFICATION LEVELS;\n• ACQUIRING CAPITAL ASSETS BY EXERCISING THE DISTRICT'S BEST OPTIONS TO PREPAY EXISTING LEASE\nOBLIGATIONS\nSUCH DEBT TO BE EVIDENCED BY THE ISSUANCE OF GENERAL OBLIGATION BONDS OR ANY OTHER MULTIPLE\nYEAR FINANCIAL OBLIGATION OF THE DISTRICT; SUCH BONDS TO BE SOLD IN ONE SERIES OR MORE, FOR A\nPRICE ABOVE OR BELOW THE PRINCIPAL AMOUNT OF SUCH SERIES, ON TERMS AND CONDITIONS, AND WITH\nSUCH MATURITIES AS PERMITTED BY LAW AND AS THE DISTRICT MAY DETERMINE, INCLUDING PROVISIONS FOR\nREDEMPTION OF THE BONDS PRIOR TO MATURITY WITH OR WITHOUT PAYMENT OF THE PREMIUM OF NOT TO\nEXCEED THREE PERCENT; AND SHALL SUCH TAX REVENUES AND THE EARNINGS FROM THE INVESTMENT OF\nSUCH BOND PROCEEDS AND TAX REVENUES BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED\nREVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?"
+      ],
+      "yesMeans": [
+        "SHALL LARKSPUR FIRE PROTECTION DISTRICT (LFPD) DEBT BE INCREASED $4.5 MILLION, WITH A REPAYMENT\nCOST OF UP TO $6.4 MILLION, AND SHALL DISTRICT TAXES BE INCREASED UP TO $427,333 ANNUALLY TO PAY\nSUCH DEBT, SUCH DEBT TO BE USED FOR CAPITAL IMPROVEMENTS OF THE DISTRICT, INCLUDING:\n• PURCHASE OF FIRE/EMS EQUIPMENT AND/OR APPARATUS TO REPLACE AGING AND OUTDATED\nRESPONSE VEHICLES;\n• DESIGN, ACQUISITION, AND INFRASTRUCTURE IMPROVEMENTS FOR FUTURE STATION IN THE\nSOUTHEASTERN AREA OF THE DISTRICT RESPONSE JURISDICTION;\n• DESIGN, INSTALLATION, AND CONSTRUCTION OF TRAINING GROUNDS INFRASTRUCTURE;\n• PURCHASE OF TRAINING GROUNDS SIMULATORS AND EQUIPMENT TO TRAIN FIREFIGHTERS IN\nMULTIPLE CERTIFICATION LEVELS;\n• ACQUIRING CAPITAL ASSETS BY EXERCISING THE DISTRICT'S BEST OPTIONS TO PREPAY EXISTING LEASE\nOBLIGATIONS\nSUCH DEBT TO BE EVIDENCED BY THE ISSUANCE OF GENERAL OBLIGATION BONDS OR ANY OTHER MULTIPLE\nYEAR FINANCIAL OBLIGATION OF THE DISTRICT; SUCH BONDS TO BE SOLD IN ONE SERIES OR MORE, FOR A\nPRICE ABOVE OR BELOW THE PRINCIPAL AMOUNT OF SUCH SERIES, ON TERMS AND CONDITIONS, AND WITH\nSUCH MATURITIES AS PERMITTED BY LAW AND AS THE DISTRICT MAY DETERMINE, INCLUDING PROVISIONS FOR\nREDEMPTION OF THE BONDS PRIOR TO MATURITY WITH OR WITHOUT PAYMENT OF THE PREMIUM OF NOT TO\nEXCEED THREE PERCENT; AND SHALL SUCH TAX REVENUES AND THE EARNINGS FROM THE INVESTMENT OF\nSUCH BOND PROCEEDS AND TAX REVENUES BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED\nREVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?"
+      ],
+      "noMeans": [
+        "SHALL LARKSPUR FIRE PROTECTION DISTRICT (LFPD) DEBT BE INCREASED $4.5 MILLION, WITH A REPAYMENT\nCOST OF UP TO $6.4 MILLION, AND SHALL DISTRICT TAXES BE INCREASED UP TO $427,333 ANNUALLY TO PAY\nSUCH DEBT, SUCH DEBT TO BE USED FOR CAPITAL IMPROVEMENTS OF THE DISTRICT, INCLUDING:\n• PURCHASE OF FIRE/EMS EQUIPMENT AND/OR APPARATUS TO REPLACE AGING AND OUTDATED\nRESPONSE VEHICLES;\n• DESIGN, ACQUISITION, AND INFRASTRUCTURE IMPROVEMENTS FOR FUTURE STATION IN THE\nSOUTHEASTERN AREA OF THE DISTRICT RESPONSE JURISDICTION;\n• DESIGN, INSTALLATION, AND CONSTRUCTION OF TRAINING GROUNDS INFRASTRUCTURE;\n• PURCHASE OF TRAINING GROUNDS SIMULATORS AND EQUIPMENT TO TRAIN FIREFIGHTERS IN\nMULTIPLE CERTIFICATION LEVELS;\n• ACQUIRING CAPITAL ASSETS BY EXERCISING THE DISTRICT'S BEST OPTIONS TO PREPAY EXISTING LEASE\nOBLIGATIONS\nSUCH DEBT TO BE EVIDENCED BY THE ISSUANCE OF GENERAL OBLIGATION BONDS OR ANY OTHER MULTIPLE\nYEAR FINANCIAL OBLIGATION OF THE DISTRICT; SUCH BONDS TO BE SOLD IN ONE SERIES OR MORE, FOR A\nPRICE ABOVE OR BELOW THE PRINCIPAL AMOUNT OF SUCH SERIES, ON TERMS AND CONDITIONS, AND WITH\nSUCH MATURITIES AS PERMITTED BY LAW AND AS THE DISTRICT MAY DETERMINE, INCLUDING PROVISIONS FOR\nREDEMPTION OF THE BONDS PRIOR TO MATURITY WITH OR WITHOUT PAYMENT OF THE PREMIUM OF NOT TO\nEXCEED THREE PERCENT; AND SHALL SUCH TAX REVENUES AND THE EARNINGS FROM THE INVESTMENT OF\nSUCH BOND PROCEEDS AND TAX REVENUES BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED\nREVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-stone-creek-metropolitan-district-2026-ballot-6c",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "aa91b1c39f77c67fa74a251f4b2820ebc8199a1d80c96849dde4f8bf2fff4ea3",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-stone-creek-metropolitan-district-2026-ballot-6c.txt",
+    "subjectQuote": "Shall all unused debt authorization granted by the voters in all prior elections to Stone Creek Metropolitan",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "Shall all unused debt authorization granted by the voters in all prior elections to Stone Creek Metropolitan\nDistrict be forever repealed and rescinded effective immediately?"
+      ],
+      "yesMeans": [
+        "Shall all unused debt authorization granted by the voters in all prior elections to Stone Creek Metropolitan\nDistrict be forever repealed and rescinded effective immediately?"
+      ],
+      "noMeans": [
+        "Shall all unused debt authorization granted by the voters in all prior elections to Stone Creek Metropolitan\nDistrict be forever repealed and rescinded effective immediately?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-stone-creek-metropolitan-district-2026-ballot-6d",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "de7c36891f6d1885f97a40d458a80bc12b8ae240394aa1c60ef516af8404e692",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-stone-creek-metropolitan-district-2026-ballot-6d.txt",
+    "subjectQuote": "Shall Ballot Issue 5C, unanimously approved by three voters at a special election held on November 4, 2014, be",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "Shall Ballot Issue 5C, unanimously approved by three voters at a special election held on November 4, 2014, be\nforever repealed and rescinded effective immediately, which ballot issue authorizes Stone Creek Metropolitan\nDistrict to enter into one or more multiple fiscal year financial obligations evidenced by intergovernmental\nagreements or contracts and to increase ad valorem taxes up to $1 million annually to fund such agreements?"
+      ],
+      "yesMeans": [
+        "Shall Ballot Issue 5C, unanimously approved by three voters at a special election held on November 4, 2014, be\nforever repealed and rescinded effective immediately, which ballot issue authorizes Stone Creek Metropolitan\nDistrict to enter into one or more multiple fiscal year financial obligations evidenced by intergovernmental\nagreements or contracts and to increase ad valorem taxes up to $1 million annually to fund such agreements?"
+      ],
+      "noMeans": [
+        "Shall Ballot Issue 5C, unanimously approved by three voters at a special election held on November 4, 2014, be\nforever repealed and rescinded effective immediately, which ballot issue authorizes Stone Creek Metropolitan\nDistrict to enter into one or more multiple fiscal year financial obligations evidenced by intergovernmental\nagreements or contracts and to increase ad valorem taxes up to $1 million annually to fund such agreements?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-stone-creek-metropolitan-district-2026-ballot-6e",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "258f1118a923751320a911d514b30d831b9b0bb87194f6ac2f9cb24e56f7e0aa",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-stone-creek-metropolitan-district-2026-ballot-6e.txt",
+    "subjectQuote": "Shall Ballot Issue 5D, unanimously approved by three voters at a special election held on November 4, 2014, be",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "Shall Ballot Issue 5D, unanimously approved by three voters at a special election held on November 4, 2014, be\nforever repealed and rescinded effective immediately, which ballot issue authorizes Stone Creek Metropolitan\nDistrict to enter into one or more multiple fiscal year financial obligations evidenced by intergovernmental\nagreements or contracts to fund regional improvements and to increase ad valorem taxes up to $1 million per\nyear to fund such agreements?"
+      ],
+      "yesMeans": [
+        "Shall Ballot Issue 5D, unanimously approved by three voters at a special election held on November 4, 2014, be\nforever repealed and rescinded effective immediately, which ballot issue authorizes Stone Creek Metropolitan\nDistrict to enter into one or more multiple fiscal year financial obligations evidenced by intergovernmental\nagreements or contracts to fund regional improvements and to increase ad valorem taxes up to $1 million per\nyear to fund such agreements?"
+      ],
+      "noMeans": [
+        "Shall Ballot Issue 5D, unanimously approved by three voters at a special election held on November 4, 2014, be\nforever repealed and rescinded effective immediately, which ballot issue authorizes Stone Creek Metropolitan\nDistrict to enter into one or more multiple fiscal year financial obligations evidenced by intergovernmental\nagreements or contracts to fund regional improvements and to increase ad valorem taxes up to $1 million per\nyear to fund such agreements?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-stone-creek-metropolitan-district-2026-ballot-6f",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "66e6b7ab62e2de37a512a75aedb7682009acaa983b1ddd85970f5298e9a176a2",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-stone-creek-metropolitan-district-2026-ballot-6f.txt",
+    "subjectQuote": "Shall Ballot Issue 5S, unanimously approved by three voters at a special election held on November 4, 2014, be",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "Shall Ballot Issue 5S, unanimously approved by three voters at a special election held on November 4, 2014, be\nforever repealed and rescinded effective immediately, which ballot issue authorizes Stone Creek Metropolitan\nDistrict to enter into one or more intergovernmental agreements, which agreement may constitute a multiple\nfiscal year financial obligation of the District, for the purpose of jointly financing the costs of any public\nimprovements, facilities, systems, programs, or projects which the District may lawfully provide, or for the\npurpose of providing for the operations and maintenance of the District and its facilities and properties?"
+      ],
+      "yesMeans": [
+        "Shall Ballot Issue 5S, unanimously approved by three voters at a special election held on November 4, 2014, be\nforever repealed and rescinded effective immediately, which ballot issue authorizes Stone Creek Metropolitan\nDistrict to enter into one or more intergovernmental agreements, which agreement may constitute a multiple\nfiscal year financial obligation of the District, for the purpose of jointly financing the costs of any public\nimprovements, facilities, systems, programs, or projects which the District may lawfully provide, or for the\npurpose of providing for the operations and maintenance of the District and its facilities and properties?"
+      ],
+      "noMeans": [
+        "Shall Ballot Issue 5S, unanimously approved by three voters at a special election held on November 4, 2014, be\nforever repealed and rescinded effective immediately, which ballot issue authorizes Stone Creek Metropolitan\nDistrict to enter into one or more intergovernmental agreements, which agreement may constitute a multiple\nfiscal year financial obligation of the District, for the purpose of jointly financing the costs of any public\nimprovements, facilities, systems, programs, or projects which the District may lawfully provide, or for the\npurpose of providing for the operations and maintenance of the District and its facilities and properties?"
+      ]
+    },
+    "reviewNotes": []
+  },
+  {
+    "contestId": "co-stone-creek-metropolitan-district-2026-ballot-6g",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "sourceTextFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "f275065a8f5ea63f473ecbe98bdce53d0ed769aaa460743666c50e29aef02f4f",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-stone-creek-metropolitan-district-2026-ballot-6g.txt",
+    "subjectQuote": "Shall Ballot Issue 5T, unanimously approved by three voters at a special election held on November 4, 2014, be",
+    "retrievedAt": "2026-11-03T04:12:30.037Z",
+    "fields": {
+      "whatItDoes": [
+        "Shall Ballot Issue 5T, unanimously approved by three voters at a special election held on November 4, 2014, be\nforever repealed and rescinded effective immediately, which ballot issue authorizes Stone Creek Metropolitan\nDistrict to enter into one or more multiple fiscal year financial obligations evidenced by intergovernmental\nagreements concerning the provision of public improvements with a regional authority or one or more other\npolitical subdivisions or governmentally-owned enterprises, containing such terms and conditions as the District\nBoard of Directors may determine to be necessary and appropriate and providing for payments by the District in\nan aggregate amount not to exceed $82,800,000 of tax revenues derived from an ad valorem mill levy imposed\nby the District on all taxable property?"
+      ],
+      "yesMeans": [
+        "Shall Ballot Issue 5T, unanimously approved by three voters at a special election held on November 4, 2014, be\nforever repealed and rescinded effective immediately, which ballot issue authorizes Stone Creek Metropolitan\nDistrict to enter into one or more multiple fiscal year financial obligations evidenced by intergovernmental\nagreements concerning the provision of public improvements with a regional authority or one or more other\npolitical subdivisions or governmentally-owned enterprises, containing such terms and conditions as the District\nBoard of Directors may determine to be necessary and appropriate and providing for payments by the District in\nan aggregate amount not to exceed $82,800,000 of tax revenues derived from an ad valorem mill levy imposed\nby the District on all taxable property?"
+      ],
+      "noMeans": [
+        "Shall Ballot Issue 5T, unanimously approved by three voters at a special election held on November 4, 2014, be\nforever repealed and rescinded effective immediately, which ballot issue authorizes Stone Creek Metropolitan\nDistrict to enter into one or more multiple fiscal year financial obligations evidenced by intergovernmental\nagreements concerning the provision of public improvements with a regional authority or one or more other\npolitical subdivisions or governmentally-owned enterprises, containing such terms and conditions as the District\nBoard of Directors may determine to be necessary and appropriate and providing for payments by the District in\nan aggregate amount not to exceed $82,800,000 of tax revenues derived from an ad valorem mill levy imposed\nby the District on all taxable property?"
+      ]
+    },
+    "reviewNotes": []
+  }
+]

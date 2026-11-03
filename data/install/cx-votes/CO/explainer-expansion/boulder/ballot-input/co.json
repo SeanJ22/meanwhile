@@ -1,0 +1,1132 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-boulder-county-2026-ballot-1a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:boulder",
+          "divisionVintage": "2026",
+          "title": "Boulder County Ballot Issue 1A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL BOULDER COUNTY TAXES BE INCREASED $30,000,000 ANNUALLY (IN TAX COLLECTION YEAR 2027), AND BY SUCH ADDITIONAL AMOUNTS RAISED ANNUALLY THEREAFTER, BY A MILL LEVY IMPOSED AT A RATE OF 2.579 MILLS (EQUATING TO APPROXIMATELY $115 PER YEAR ON A $725,000 HOME BASED ON CURRENT RATES OF ASSESSMENT) FOR THE PURPOSE OF ADDRESSING THE SHORTAGE AND HIGH COST OF CHILD CARE AND PRESCHOOL PROGRAMS FOR BOULDER COUNTY FAMILIES WITH YOUNG CHILDREN, INCLUDING: LOWERING THE HIGH COST OF CHILD CARE AND PRESCHOOL FOR BOULDER COUNTY FAMILIES; INCREASING THE COMPENSATION OF CHILD CARE AND PRESCHOOL TEACHERS AND STAFF TO RETAIN AND ATTRACT HIGH-QUALITY EDUCATORS; AND ADDRESSING THE SHORTAGE OF CARE BY EXPANDING CAPACITY FOR MORE CHILDREN AND REDUCING WAITLISTS; AND SHALL THE REVENUES AND EARNINGS ON THE INVESTMENT OF THE PROCEEDS OF SUCH TAX CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, ALL AS MORE PARTICULARLY SET FORTH IN BOARD OF COUNTY COMMISSIONERS’ RESOLUTION NO. 2026-048?",
+            "sourceOrg": "Boulder County Board of County Commissioners",
+            "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+            "collectedAt": "2026-11-03T03:49:53.568314+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-boulder-county-2026-ballot-200",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:boulder",
+          "divisionVintage": "2026",
+          "title": "Boulder County Ballot Question 200",
+          "type": "MEASURE",
+          "measureTextUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the membership of the Boulder County Board of Commissioners be increased from a three member board to a five member board?",
+            "sourceOrg": "Boulder County Board of County Commissioners",
+            "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+            "collectedAt": "2026-11-03T03:49:53.568314+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-boulder-county-2026-ballot-201",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:boulder",
+          "divisionVintage": "2026",
+          "title": "Boulder County Ballot Question 201",
+          "type": "MEASURE",
+          "measureTextUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "If the membership of the Boulder County Board of Commissioners is increased from a three member board to a five member board, by what method shall the Boulder County Board of Commissioners be elected? (Voters can choose (1) or (2)): Five commissioners resident in districts to be elected only by voters resident in the district; or Three commissioners resident in districts to be elected only by voters resident in the district; plus two commissioners resident in any district to be elected by voters of the whole county.",
+            "sourceOrg": "Boulder County Board of County Commissioners",
+            "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+            "collectedAt": "2026-11-03T03:49:53.568314+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-boulder-2026-ballot-2k",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:boulder",
+          "divisionVintage": "2026",
+          "title": "City of Boulder Ballot Issue 2K",
+          "type": "MEASURE",
+          "measureTextUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall City of Boulder debt be increased up to $400,000,000, with a maximum repayment cost up to $650,000,000, and shall city taxes be increased up to $32,500,000 annually for the purpose of financing the construction, renovation, or replacement of community recreation, safety infrastructure, and other capital projects, such as: (I) the South Boulder Recreation Center, including a lap pool; (II) the North Boulder Recreation Center, including aquatics amenities and improvements needed to co-locate West Age Well Senior Center; (III) fire stations (to sustain emergency and wildfire response capabilities); (IV) a new Public Safety Building for police and 911 services; (V) Penfield Tate II Municipal Building; and (VI) the Municipal Service Center (to support infrastructure services, such as snow removal, utility maintenance, and city street operations); In order to support recreation, safety, and critical infrastructure needs for community members of all ages; Through the issuance and payment of general obligation debt, with such debt containing such terms, not inconsistent herewith, as the City Council may determine; and in connection therewith, Shall ad valorem property taxes be levied without limitation as to the rate, but not more than the amounts listed above, to generate an amount sufficient in each year to pay the principal of, premium, if any, and interest on such debt or any refunding debt (or to create a reserve for such payment); and Shall the proceeds of such debt and reserves and the revenues from such taxes and any investment income earned from such proceeds and revenues be collected and spent without limitation or condition as a voter-approved revenue change and an exception to the limits that would otherwise apply under article x, section 20 of the Colorado constitution or any other law?",
+            "sourceOrg": "City of Boulder",
+            "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+            "collectedAt": "2026-11-03T03:49:53.554093+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-boulder-2026-ballot-2m",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:boulder",
+          "divisionVintage": "2026",
+          "title": "City of Boulder Ballot Question 2M",
+          "type": "MEASURE",
+          "measureTextUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Section 97 of the Boulder Home Rule Charter be amended pursuant to Ordinance 8762 to modify the City’s debt limitation to be not more than three percent of the actual value of the taxable property within the City?",
+            "sourceOrg": "City of Boulder",
+            "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+            "collectedAt": "2026-11-03T03:49:53.554093+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-boulder-2026-ballot-2j",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:boulder",
+          "divisionVintage": "2026",
+          "title": "City of Boulder Ballot Issue 2J",
+          "type": "MEASURE",
+          "measureTextUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City of Boulder taxes be increased $6,000,000 annually (which amount represents estimated revenues in 2028, the first full fiscal year of collection), and by such amounts raised annually thereafter, by imposing a $4,000 tax on vacant homes that are occupied for 183 days or less per year, with such amount never falling below $4,000 but increasing annually in accordance with the Denver-Aurora-Lakewood consumer price index up to, but never exceeding $7,000, with the revenue from such tax to be used for the purpose of supporting City services, including: police and fire protection; parks and recreation; transportation and maintenance; and other general services important to the quality of life in the City; and shall the revenues from such taxes and any related earnings be collected, retained, and spent as a voter-approved revenue change without limitation and an exception to the revenue and spending limits of Article X, Section 20 of the Colorado Constitution?",
+            "sourceOrg": "City of Boulder",
+            "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+            "collectedAt": "2026-11-03T03:49:53.554093+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-boulder-2026-ballot-2l",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:boulder",
+          "divisionVintage": "2026",
+          "title": "City of Boulder Ballot Question 2L",
+          "type": "MEASURE",
+          "measureTextUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the city amend its charter by the addition of a new Sec. 73, “Collective Bargaining for Firefighters,” as described in Ordinance 8761 which provides a charter guaranteed right for full-time fire department employees to bargain collectively over matters related to safety, wages, benefits, and all other terms and conditions employment, except those certain terms that are reserved to rights of management as defined in the proposed charter amendment, with impasse to be resolved through non-binding factfinding followed, if necessary, by a vote of the qualified electors of the City?",
+            "sourceOrg": "City of Boulder",
+            "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+            "collectedAt": "2026-11-03T03:49:53.554093+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-longmont-2026-ballot-3a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:longmont",
+          "divisionVintage": "2026",
+          "title": "City of Longmont Ballot Issue 3A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL CITY OF LONGMONT TAXES BE INCREASED $19.5 MILLION ANNUALLY IN THE FIRST FULL YEAR AND BY WHATEVER ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY IN EACH SUBSEQUENT YEAR FROM THE IMPOSITION OF AN ADDITIONAL MILL LEVY OF NOT TO EXCEED 2.44 MILLS (AS ADJUSTED) BEGINNING WITH TAX COLLECTION YEAR 2027 AND AN ADDITIONAL CITY SALES AND USE TAX IMPOSED AT A RATE OF 0.33% BEGINNING JANUARY 1, 2027, WITH THE PROCEEDS OF SUCH TAXES BEING USED EXCLUSIVELY TO MAINTAIN AND INCREASE THE LEVEL OF SERVICE FOR PUBLIC SAFETY IN THE CITY OF LONGMONT, INCLUDING, BUT NOT LIMITED TO PROVIDING FUNDS FOR: POLICE OFFICERS AND PERSONNEL FOR TRAFFIC ENFORCEMENT AND CRIMINAL INVESTIGATIONS AND PREVENTION; POLICE OFFICERS TO ENSURE SAFETY OF OFFICERS AND TO IMPROVE EMERGENCY RESPONSE; EMERGENCY DISPATCHERS FOR 911 RESPONSE; FIREFIGHTERS TO ENSURE SAFE AND SUFFICIENT RESPONSE TO EMERGENCIES; PERSONNEL TO SUPPORT EMERGENCY PUBLIC SAFETY RESPONDERS; AND PUBLIC SAFETY EQUIPMENT, VEHICLES AND FACILITIES TO ENSURE SAFETY; AND SHALL ORDINANCE O-2026-53 AUTHORIZING SUCH TAX INCREASES BE APPROVED, AND SHALL THE CITY BE AUTHORIZED TO INCREASE THE MILL LEVY AUTHORIZED BY THIS QUESTION BEGINNING IN TAX COLLECTION YEAR 2028 AND ANNUALLY THEREAFTER TO OFFSET ANY REVENUE REDUCTIONS CAUSED BY ANY CONSTITUTIONALLY OR STATUTORILY REQUIRED TAX CREDITS, PROPERTY TAX REFUNDS, ABATEMENTS, REDUCTIONS IN THE PERCENTAGE OF ACTUAL VALUATION USED TO DETERMINE ASSESSED VALUATION, OR REDUCTIONS IN THE ACTUAL VALUE AGAINST WHICH THE ASSESSMENT RATE IS APPLIED THAT ARE ENACTED AFTER THE DATE OF APPROVAL OF THIS BALLOT QUESTION OR ARE OTHERWISE SET FORTH IN C.R.S. §§ 29-1-1701, ET SEQ., OR C.R.S. §§ 39-1-101, ET SEQ., AND SHALL THE PROCEEDS OF SUCH TAXES AND INVESTMENT INCOME THEREON BE COLLECTED AND SPENT WITHOUT REGARD TO ANY LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "City of Longmont",
+            "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+            "collectedAt": "2026-11-03T03:49:53.582613+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-longmont-2026-ballot-3b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:longmont",
+          "divisionVintage": "2026",
+          "title": "City of Longmont Ballot Question 3B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City of Longmont Home Rule Charter be amended by revising section 13.2 to add open space to lands that cannot be sold or conveyed without voter approval, with exceptions for public roads, utilities, life-essential infrastructure, open space operations, and the sale or conveyance of structures on such lands?",
+            "sourceOrg": "City of Longmont",
+            "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+            "collectedAt": "2026-11-03T03:49:53.582613+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-longmont-2026-ballot-3c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:longmont",
+          "divisionVintage": "2026",
+          "title": "City of Longmont Ballot Question 3C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City of Longmont Home Rule Charter be amended by adopting a new section 2.10 of the Charter to provide for the use of Ranked Choice Voting (ranked voting methods) where possible to elect future mayors and councilmembers of the City of Longmont starting in November 2029?",
+            "sourceOrg": "City of Longmont",
+            "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+            "collectedAt": "2026-11-03T03:49:53.582613+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-longmont-2026-ballot-3d",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:longmont",
+          "divisionVintage": "2026",
+          "title": "City of Longmont Ballot Question 3D",
+          "type": "MEASURE",
+          "measureTextUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City of Longmont Home Rule Charter be amended by amending section 3.6 of the Charter to realign the cycle on which members of the Longmont city council are elected so that the three councilmembers elected at-large are elected in one electoral cycle and the three councilmembers elected from wards are elected in another electoral cycle, with such electoral cycles alternating from then on, with such realignment contingent upon voter approval of the measure on the November 3, 2026 City of Longmont ballot requiring the use of ranked choice voting to elect city council members when possible?",
+            "sourceOrg": "City of Longmont",
+            "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+            "collectedAt": "2026-11-03T03:49:53.582613+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:louisville",
+          "divisionVintage": "2026",
+          "title": "City of Louisville Ballot Question 2B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL CITY OF LOUISVILLE TAXES BE INCREASED $1.5 MILLION IN 2029 AND THEN ANNUALLY THEREAFTER BY WHATEVER AMOUNTS ARE GENERATED FROM THE CONTINUATION OF THE CITY’S HISTORIC PRESERVATION SALES TAX OF 0.125% BEGINNING JANUARY 1, 2029, AND EXPIRING DECEMBER 31, 2038; WITH THE NET PROCEEDS OF SUCH SALES TAX, ALONG WITH THE CITY’S EXISTING 0.125% HISTORIC PRESERVATION USE TAX, TO BE UTILIZED FOR HISTORIC PRESERVATION PURPOSES AS ESTABLISHED BY BALLOT ISSUES APPROVED BY THE VOTERS IN 2008 AND 2017, AND, COMMENCING ON JANUARY 1, 2027, SHALL THE CITY ALSO BE AUTHORIZED TO: (1) EXPEND ANY FUNDS FROM SUCH HISTORIC PRESERVATION TAX ON CITY PROGRAMS AND CAPITAL PROJECTS THAT PROMOTE AND PRESERVE THE CITY’S HISTORY AND CULTURAL HERITAGE, AND (2) INCREASE THE PORTION OF SUCH TAX ALLOCATED TO OPERATING AND MAINTAINING THE LOUISVILLE MUSEUM CAMPUS FROM 20% TO 30% PER YEAR; AND SHALL THE CITY BE PERMITTED TO COLLECT, RETAIN AND EXPEND ALL REVENUES DERIVED FROM SUCH TAX AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO LIMITS WHICH WOULD OTHERWISE APPLY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:louisville",
+          "divisionVintage": "2026",
+          "title": "City of Louisville Ballot Question 2C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City of Louisville Home Rule Charter be amended to authorize the City Council to convene executive sessions for the purpose of considering any matter authorized by the Colorado Open Meetings Law, C.R.S. § 24-6-401, et. seq., as amended, and for boards, commissions, task forces, and committees to convene executive sessions pursuant to the Colorado Open Meetings Law in accordance with procedures and subject to limitations established by ordinance, thereby expanding the topics for executive sessions currently permitted under the Charter?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2d",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:louisville",
+          "divisionVintage": "2026",
+          "title": "City of Louisville Ballot Question 2D",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City of Louisville Home Rule Charter be amended to provide that the Mayor and each Councilmember shall take office at the first regular Council meeting following certification of the election results, as opposed to the first meeting following the election?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2e",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:louisville",
+          "divisionVintage": "2026",
+          "title": "City of Louisville Ballot Question 2E",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City of Louisville Home Rule Charter be amended to increase the number of signatures required for initiative petitions from 5 Percent to 7.5 Percent of registered electors and to increase the number of signatures required for referendum petitions from 2.5 Percent to 5 Percent of registered electors?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2f",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:louisville",
+          "divisionVintage": "2026",
+          "title": "City of Louisville Ballot Question 2F",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City of Louisville Home Rule Charter be amended to allow the City’s public bodies to hold public meetings in locations other than public buildings and public facilities, provided all meeting locations shall be accessible to all members of the public?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2g",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:louisville",
+          "divisionVintage": "2026",
+          "title": "City of Louisville Ballot Question 2G",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City of Louisville Home Rule Charter be amended to require proponents of an initiated ordinance or Charter amendment to first submit the text of the initiated measure to the City Manager for review and comment at a public meeting, subject to the limitation that City staff shall not have the authority to require any amendment, modification, or other alteration to the text of the proposed measures, or to impose additional procedural requirements of the proponent?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2h",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:louisville",
+          "divisionVintage": "2026",
+          "title": "City of Louisville Ballot Question 2H",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City of Louisville Home Rule Charter be amended to remove gendered pronouns, to replace references to “citizen” with “members of the public,” to replace references to “City offices” with “City Clerk’s office and City website,” and to replace references to “television” with “virtually”?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-lafayette-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:lafayette",
+          "divisionVintage": "2026",
+          "title": "City of Lafayette Ballot Issue 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.lafayetteco.gov/4362/2026-Ballot-Measure",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "WITHOUT IMPOSING A NEW TAX, SHALL THE CITY OF LAFAYETTE BE AUTHORIZED TO EXTEND AN EXPIRING PROPERTY TAX IN AN AMOUNT NOT TO EXCEED $713,000 ANNUALLY (TOTAL ANNUAL REVENUE COLLECTION FOR THE CITY), WHICH PROPERTY TAX INCREASE WAS APPROVED BY THE VOTERS IN 2014 AND IS SET TO EXPIRE IN DECEMBER 2026, SUCH TAX TO BE EXTENDED THROUGH DECEMBER 31, 2046, WITH SUCH REVENUE TO BE USED FOR CAPITAL IMPROVEMENTS TO, AND THE CONTINUED OPERATION AND MAINTENANCE OF, LAMONT DOES PARK AND RELATED FACILITIES, INCLUDING THE PAYMENT OF ANY ANNUALLY APPROPRIATED OBLIGATION FOR SUCH PURPOSES, AND FOR OTHER CITY PURPOSES RELATED THERETO, AND SHALL SUCH RESULTING REVENUE CONSTITUTE A VOTER APPROVED REVENUE AND/OR SPENDING CHANGE AND BE COLLECTED AND SPENT BY THE CITY WITHOUT REGARD TO ANY SPENDING, REVENUE RAISING OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, OR ANY OTHER LAW?",
+            "sourceOrg": "City of Lafayette",
+            "sourceUrl": "https://www.lafayetteco.gov/4362/2026-Ballot-Measure",
+            "collectedAt": "2026-11-03T03:49:53.615170+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-erie-2026-ballot-3e",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:erie",
+          "divisionVintage": "2026",
+          "title": "Town of Erie Ballot Issue 3E",
+          "type": "MEASURE",
+          "measureTextUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF ERIE TAXES BE INCREASED BY UP TO $150,000 COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER AMOUNTS ARE GENERATED ANNUALLY THEREAFTER THROUGH THE IMPOSITION OF A LODGING TAX AT THE RATE OF THREE AND ONE HALF PERCENT ON THE TOTAL RENTAL FEE, PRICE, OR OTHER CONSIDERATION PAID OR CHARGED FOR THE LEASING OR RENTAL OF ANY HOTEL ROOM, MOTEL ROOM, BED AND BREAKFAST, SHORT TERM RENTAL OR OTHER ACCOMMODATION WITH A STAY OF THIRTY DAYS OR LESS, AND SHALL ALL REVENUES DERIVED FROM SUCH LODGING TAX BE USED FOR GENERAL GOVERNMENTAL PURPOSES, INCLUDING, BUT NOT LIMITED TO PARK AND RECREATIONAL FACILITIES, CAPITAL INFRASTRUCTURE, AND LAW ENFORCEMENT/SAFETY AND SECURITY PURPOSES, AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER- APPROVED REVENUE CHANGE PURSUANT TO ARTICLE X, SECTION 20, OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+            "sourceOrg": "Boulder County Clerk and Recorder",
+            "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+            "collectedAt": "2026-11-03T03:45:10.269299+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-erie-2026-ballot-3f",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:erie",
+          "divisionVintage": "2026",
+          "title": "Town of Erie Ballot Issue 3F",
+          "type": "MEASURE",
+          "measureTextUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF ERIE’S DEBT BE INCREASED BY UP TO $32.5 MILLION, WITH A MAXIMUM REPAYMENT COST NOT TO EXCEED $52.6 MILLION (PRINCIPAL AND INTEREST) FOR THE PURPOSE OF UPDATING THE AGING ERIE COMMUNITY CENTER BUILDING AND FACILITIES BY ACQUIRING, DESIGNING, CONSTRUCTING, EXPANDING, RENOVATING, IMPROVING, AND EQUIPPING THE SAME AND FOR CONTINUED OPERATIONS AND MAINTENANCE, WITH SUCH IMPROVEMENTS TO INCLUDE BUT ARE NOT LIMITED TO: • CONSTRUCTING AND EQUIPPING NEW FITNESS STUDIOS AND EXPANDING EXISTING STUDIOS; • CONSTRUCTING AND EQUIPPING A NEW GYMNASIUM AND RACQUET BALL COURTS; • EXPANDING MULTIPURPOSE COMMUNITY AND RECREATION SPACE; • EQUIPPING NEW STRENGTH TRAINING AND CIRCUIT TRAINING AREAS; AND SHALL TOWN TAXES BE INCREASED BY UP TO $4,866,857 IN THE FIRST FULL FISCAL YEAR AND BY SUCH ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER BY AN INCREASE IN THE RATE OF SALES AND USETAXIMPOSEDBYTHETOWNBY.501%,COMMENCING JANUARY 1, 2027, WHICH TAX REVENUES WILL BE USED FOR THE PAYMENT OF THE DEBT AUTHORIZED BY THIS QUESTION AND FOR THE CONSTRUCTION, OPERATION AND MAINTENANCE OF THE ERIE COMMUNITY CENTER AND OTHER PARK AND RECREATION RELATED EXPENSES OF THE TOWN; AND MAY THE DEBT ISSUED PURSUANT TO THIS QUESTION BE PAID FROM SUCH LEGALLY AVAILABLE REVENUES, BEAR INTEREST, AND BE SOLD IN ONE SERIES OR MORE AT A PRICE ABOVE, BELOW OR EQUAL TO THE PRINCIPAL AMOUNT OF SUCH DEBT AND WITH SUCH TERMS AND CONDITIONS, INCLUDING PROVISIONS FOR REDEMPTION PRIOR TO MATURITY WITH OR WITHOUT PAYMENT OF PREMIUM OF NOT TO EXCEED 3%, ALL AS THE TOWN MAY DETERMINE; AND SHALL THE REVENUES RAISED BY SUCH SALES AND USE TAX RATE INCREASE AND PROCEEDS OF SUCH DEBT, ANY OTHER REVENUE USED TO PAY SUCH DEBT, AND INVESTMENT INCOME THEREON, BE COLLECTED AND SPENT BY THE TOWN AS A VOTER- APPROVED REVENUE CHANGE PURSUANT TO ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Boulder County Clerk and Recorder",
+            "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+            "collectedAt": "2026-11-03T03:45:10.269299+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-allenspark-fire-protection-district-2026-ballot-7c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:allenspark_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Allenspark Fire Protection District Ballot Issue 7C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL ALLENSPARK FIRE PROTECTION DISTRICT TAXES BE INCREASED BY UP TO $331,000 IN THE FIRST FISCAL YEAR (2027) AND BY SUCH AMOUNT AS MAY BE RAISED ANNUALLY THEREAFTER, BY INCREASING THE DISTRICT’S PROPERTY TAX RATE BY AN ADDITIONAL 5.3 MILLS, FOR THE PURPOSES OF PROVIDING FIRE PROTECTION AND EMERGENCY RESPONSE SERVICES, INCLUDING BUT NOT LIMITED TO: • REBUILDING DEPLETED RESERVES IN ORDER TO PRESERVETHECURRENTLEVELOFSERVICESFORTHE COMMUNITY, ADDRESS DEFERRED MAINTENANCE FOR OUR BUILDINGS AND GROUNDS, AND UPDATE ANDREPLACECRITICALFIREFIGHTINGANDMEDICAL EQUIPMENT (THE LAST MILL LEVY INCREASE WAS IN 2003). • EXPAND STAFFING TO IMPROVE BOTH FIRE AND MEDICAL OUTCOMES THROUGH FIRE MITIGATION, COMMUNITY OUTREACH AND EDUCATION. • IMPROVING FIREFIGHTING CAPABILITIES BY EXPANDING WATER RESOURCES TO INCREASE THE NUMBER OF DRY HYDRANTS AND INSTALLING WATER STORAGE TANKS AT KEY LOCATIONS THROUGHOUT THE DISTRICT. AND SHALL ALL REVENUE AND ANY EARNINGS ON THIS TAX CONSTITUTE A PERMANENT VOTER-APPROVED REVENUE CHANGE WITHIN THE MEANING OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN TITLE 29 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW?",
+            "sourceOrg": "Boulder County Clerk and Recorder",
+            "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+            "collectedAt": "2026-11-03T03:45:10.269299+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-timberline-fire-protection-district-2026-ballot-7b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:timberline_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Timberline Fire Protection District Ballot Issue 7B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL TIMBERLINE FIRE PROTECTION DISTRICT TAXES BE INCREASED IN THE FIRST FULL FISCAL YEAR BY $1,200,000 AND BY SUCH AMOUNTS ANNUALLY THEREAFTER AS MAY BE RAISED BY AN ADDITIONAL PROPERTY TAX LEVY OF 6.0 MILLS, THE REVENUE THEREFROM TO SUPPORT THE DISTRICT’S RESPONSE CAPABILITIES, INCLUDING BUT NOT LIMITED TO HIRING ADDITIONAL FIREFIGHTERS, MAINTAINING WILDFIRE MITIGATION SERVICES AND EMERGENCY RESERVES, AND SUPPORTING THE DISTRICT’S GENERAL OPERATIONS AND CAPITAL NEEDS?",
+            "sourceOrg": "Boulder County Clerk and Recorder",
+            "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+            "collectedAt": "2026-11-03T03:45:10.269299+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-boulder-county-2026-ballot-1a#question",
+          "contestId": "co-boulder-county-2026-ballot-1a",
+          "officialNumber": "1A",
+          "questionText": "SHALL BOULDER COUNTY TAXES BE INCREASED $30,000,000 ANNUALLY (IN TAX COLLECTION YEAR 2027), AND BY SUCH ADDITIONAL AMOUNTS RAISED ANNUALLY THEREAFTER, BY A MILL LEVY IMPOSED AT A RATE OF 2.579 MILLS (EQUATING TO APPROXIMATELY $115 PER YEAR ON A $725,000 HOME BASED ON CURRENT RATES OF ASSESSMENT) FOR THE PURPOSE OF ADDRESSING THE SHORTAGE AND HIGH COST OF CHILD CARE AND PRESCHOOL PROGRAMS FOR BOULDER COUNTY FAMILIES WITH YOUNG CHILDREN, INCLUDING: LOWERING THE HIGH COST OF CHILD CARE AND PRESCHOOL FOR BOULDER COUNTY FAMILIES; INCREASING THE COMPENSATION OF CHILD CARE AND PRESCHOOL TEACHERS AND STAFF TO RETAIN AND ATTRACT HIGH-QUALITY EDUCATORS; AND ADDRESSING THE SHORTAGE OF CARE BY EXPANDING CAPACITY FOR MORE CHILDREN AND REDUCING WAITLISTS; AND SHALL THE REVENUES AND EARNINGS ON THE INVESTMENT OF THE PROCEEDS OF SUCH TAX CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, ALL AS MORE PARTICULARLY SET FORTH IN BOARD OF COUNTY COMMISSIONERS’ RESOLUTION NO. 2026-048?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL BOULDER COUNTY TAXES BE INCREASED $30,000,000 ANNUALLY (IN TAX COLLECTION YEAR 2027), AND BY SUCH ADDITIONAL AMOUNTS RAISED ANNUALLY THEREAFTER, BY A MILL LEVY IMPOSED AT A RATE OF 2.579 MILLS (EQUATING TO APPROXIMATELY $115 PER YEAR ON A $725,000 HOME BASED ON CURRENT RATES OF ASSESSMENT) FOR THE PURPOSE OF ADDRESSING THE SHORTAGE AND HIGH COST OF CHILD CARE AND PRESCHOOL PROGRAMS FOR BOULDER COUNTY FAMILIES WITH YOUNG CHILDREN, INCLUDING: LOWERING THE HIGH COST OF CHILD CARE AND PRESCHOOL FOR BOULDER COUNTY FAMILIES; INCREASING THE COMPENSATION OF CHILD CARE AND PRESCHOOL TEACHERS AND STAFF TO RETAIN AND ATTRACT HIGH-QUALITY EDUCATORS; AND ADDRESSING THE SHORTAGE OF CARE BY EXPANDING CAPACITY FOR MORE CHILDREN AND REDUCING WAITLISTS; AND SHALL THE REVENUES AND EARNINGS ON THE INVESTMENT OF THE PROCEEDS OF SUCH TAX CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, ALL AS MORE PARTICULARLY SET FORTH IN BOARD OF COUNTY COMMISSIONERS’ RESOLUTION NO. 2026-048?",
+            "sourceOrg": "Boulder County Board of County Commissioners",
+            "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+            "collectedAt": "2026-11-03T03:49:53.568314+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-boulder-county-2026-ballot-200#question",
+          "contestId": "co-boulder-county-2026-ballot-200",
+          "officialNumber": "200",
+          "questionText": "Shall the membership of the Boulder County Board of Commissioners be increased from a three member board to a five member board?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the membership of the Boulder County Board of Commissioners be increased from a three member board to a five member board?",
+            "sourceOrg": "Boulder County Board of County Commissioners",
+            "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+            "collectedAt": "2026-11-03T03:49:53.568314+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-boulder-county-2026-ballot-201#question",
+          "contestId": "co-boulder-county-2026-ballot-201",
+          "officialNumber": "201",
+          "questionText": "If the membership of the Boulder County Board of Commissioners is increased from a three member board to a five member board, by what method shall the Boulder County Board of Commissioners be elected? (Voters can choose (1) or (2)): Five commissioners resident in districts to be elected only by voters resident in the district; or Three commissioners resident in districts to be elected only by voters resident in the district; plus two commissioners resident in any district to be elected by voters of the whole county.",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "If the membership of the Boulder County Board of Commissioners is increased from a three member board to a five member board, by what method shall the Boulder County Board of Commissioners be elected? (Voters can choose (1) or (2)): Five commissioners resident in districts to be elected only by voters resident in the district; or Three commissioners resident in districts to be elected only by voters resident in the district; plus two commissioners resident in any district to be elected by voters of the whole county.",
+            "sourceOrg": "Boulder County Board of County Commissioners",
+            "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+            "collectedAt": "2026-11-03T03:49:53.568314+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-boulder-2026-ballot-2k#question",
+          "contestId": "co-boulder-2026-ballot-2k",
+          "officialNumber": "2K",
+          "questionText": "Shall City of Boulder debt be increased up to $400,000,000, with a maximum repayment cost up to $650,000,000, and shall city taxes be increased up to $32,500,000 annually for the purpose of financing the construction, renovation, or replacement of community recreation, safety infrastructure, and other capital projects, such as: (I) the South Boulder Recreation Center, including a lap pool; (II) the North Boulder Recreation Center, including aquatics amenities and improvements needed to co-locate West Age Well Senior Center; (III) fire stations (to sustain emergency and wildfire response capabilities); (IV) a new Public Safety Building for police and 911 services; (V) Penfield Tate II Municipal Building; and (VI) the Municipal Service Center (to support infrastructure services, such as snow removal, utility maintenance, and city street operations); In order to support recreation, safety, and critical infrastructure needs for community members of all ages; Through the issuance and payment of general obligation debt, with such debt containing such terms, not inconsistent herewith, as the City Council may determine; and in connection therewith, Shall ad valorem property taxes be levied without limitation as to the rate, but not more than the amounts listed above, to generate an amount sufficient in each year to pay the principal of, premium, if any, and interest on such debt or any refunding debt (or to create a reserve for such payment); and Shall the proceeds of such debt and reserves and the revenues from such taxes and any investment income earned from such proceeds and revenues be collected and spent without limitation or condition as a voter-approved revenue change and an exception to the limits that would otherwise apply under article x, section 20 of the Colorado constitution or any other law?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall City of Boulder debt be increased up to $400,000,000, with a maximum repayment cost up to $650,000,000, and shall city taxes be increased up to $32,500,000 annually for the purpose of financing the construction, renovation, or replacement of community recreation, safety infrastructure, and other capital projects, such as: (I) the South Boulder Recreation Center, including a lap pool; (II) the North Boulder Recreation Center, including aquatics amenities and improvements needed to co-locate West Age Well Senior Center; (III) fire stations (to sustain emergency and wildfire response capabilities); (IV) a new Public Safety Building for police and 911 services; (V) Penfield Tate II Municipal Building; and (VI) the Municipal Service Center (to support infrastructure services, such as snow removal, utility maintenance, and city street operations); In order to support recreation, safety, and critical infrastructure needs for community members of all ages; Through the issuance and payment of general obligation debt, with such debt containing such terms, not inconsistent herewith, as the City Council may determine; and in connection therewith, Shall ad valorem property taxes be levied without limitation as to the rate, but not more than the amounts listed above, to generate an amount sufficient in each year to pay the principal of, premium, if any, and interest on such debt or any refunding debt (or to create a reserve for such payment); and Shall the proceeds of such debt and reserves and the revenues from such taxes and any investment income earned from such proceeds and revenues be collected and spent without limitation or condition as a voter-approved revenue change and an exception to the limits that would otherwise apply under article x, section 20 of the Colorado constitution or any other law?",
+            "sourceOrg": "City of Boulder",
+            "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+            "collectedAt": "2026-11-03T03:49:53.554093+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-boulder-2026-ballot-2m#question",
+          "contestId": "co-boulder-2026-ballot-2m",
+          "officialNumber": "2M",
+          "questionText": "Shall Section 97 of the Boulder Home Rule Charter be amended pursuant to Ordinance 8762 to modify the City’s debt limitation to be not more than three percent of the actual value of the taxable property within the City?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall Section 97 of the Boulder Home Rule Charter be amended pursuant to Ordinance 8762 to modify the City’s debt limitation to be not more than three percent of the actual value of the taxable property within the City?",
+            "sourceOrg": "City of Boulder",
+            "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+            "collectedAt": "2026-11-03T03:49:53.554093+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-boulder-2026-ballot-2j#question",
+          "contestId": "co-boulder-2026-ballot-2j",
+          "officialNumber": "2J",
+          "questionText": "Shall the City of Boulder taxes be increased $6,000,000 annually (which amount represents estimated revenues in 2028, the first full fiscal year of collection), and by such amounts raised annually thereafter, by imposing a $4,000 tax on vacant homes that are occupied for 183 days or less per year, with such amount never falling below $4,000 but increasing annually in accordance with the Denver-Aurora-Lakewood consumer price index up to, but never exceeding $7,000, with the revenue from such tax to be used for the purpose of supporting City services, including: police and fire protection; parks and recreation; transportation and maintenance; and other general services important to the quality of life in the City; and shall the revenues from such taxes and any related earnings be collected, retained, and spent as a voter-approved revenue change without limitation and an exception to the revenue and spending limits of Article X, Section 20 of the Colorado Constitution?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the City of Boulder taxes be increased $6,000,000 annually (which amount represents estimated revenues in 2028, the first full fiscal year of collection), and by such amounts raised annually thereafter, by imposing a $4,000 tax on vacant homes that are occupied for 183 days or less per year, with such amount never falling below $4,000 but increasing annually in accordance with the Denver-Aurora-Lakewood consumer price index up to, but never exceeding $7,000, with the revenue from such tax to be used for the purpose of supporting City services, including: police and fire protection; parks and recreation; transportation and maintenance; and other general services important to the quality of life in the City; and shall the revenues from such taxes and any related earnings be collected, retained, and spent as a voter-approved revenue change without limitation and an exception to the revenue and spending limits of Article X, Section 20 of the Colorado Constitution?",
+            "sourceOrg": "City of Boulder",
+            "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+            "collectedAt": "2026-11-03T03:49:53.554093+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-boulder-2026-ballot-2l#question",
+          "contestId": "co-boulder-2026-ballot-2l",
+          "officialNumber": "2L",
+          "questionText": "Shall the city amend its charter by the addition of a new Sec. 73, “Collective Bargaining for Firefighters,” as described in Ordinance 8761 which provides a charter guaranteed right for full-time fire department employees to bargain collectively over matters related to safety, wages, benefits, and all other terms and conditions employment, except those certain terms that are reserved to rights of management as defined in the proposed charter amendment, with impasse to be resolved through non-binding factfinding followed, if necessary, by a vote of the qualified electors of the City?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the city amend its charter by the addition of a new Sec. 73, “Collective Bargaining for Firefighters,” as described in Ordinance 8761 which provides a charter guaranteed right for full-time fire department employees to bargain collectively over matters related to safety, wages, benefits, and all other terms and conditions employment, except those certain terms that are reserved to rights of management as defined in the proposed charter amendment, with impasse to be resolved through non-binding factfinding followed, if necessary, by a vote of the qualified electors of the City?",
+            "sourceOrg": "City of Boulder",
+            "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+            "collectedAt": "2026-11-03T03:49:53.554093+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-longmont-2026-ballot-3a#question",
+          "contestId": "co-longmont-2026-ballot-3a",
+          "officialNumber": "3A",
+          "questionText": "SHALL CITY OF LONGMONT TAXES BE INCREASED $19.5 MILLION ANNUALLY IN THE FIRST FULL YEAR AND BY WHATEVER ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY IN EACH SUBSEQUENT YEAR FROM THE IMPOSITION OF AN ADDITIONAL MILL LEVY OF NOT TO EXCEED 2.44 MILLS (AS ADJUSTED) BEGINNING WITH TAX COLLECTION YEAR 2027 AND AN ADDITIONAL CITY SALES AND USE TAX IMPOSED AT A RATE OF 0.33% BEGINNING JANUARY 1, 2027, WITH THE PROCEEDS OF SUCH TAXES BEING USED EXCLUSIVELY TO MAINTAIN AND INCREASE THE LEVEL OF SERVICE FOR PUBLIC SAFETY IN THE CITY OF LONGMONT, INCLUDING, BUT NOT LIMITED TO PROVIDING FUNDS FOR: POLICE OFFICERS AND PERSONNEL FOR TRAFFIC ENFORCEMENT AND CRIMINAL INVESTIGATIONS AND PREVENTION; POLICE OFFICERS TO ENSURE SAFETY OF OFFICERS AND TO IMPROVE EMERGENCY RESPONSE; EMERGENCY DISPATCHERS FOR 911 RESPONSE; FIREFIGHTERS TO ENSURE SAFE AND SUFFICIENT RESPONSE TO EMERGENCIES; PERSONNEL TO SUPPORT EMERGENCY PUBLIC SAFETY RESPONDERS; AND PUBLIC SAFETY EQUIPMENT, VEHICLES AND FACILITIES TO ENSURE SAFETY; AND SHALL ORDINANCE O-2026-53 AUTHORIZING SUCH TAX INCREASES BE APPROVED, AND SHALL THE CITY BE AUTHORIZED TO INCREASE THE MILL LEVY AUTHORIZED BY THIS QUESTION BEGINNING IN TAX COLLECTION YEAR 2028 AND ANNUALLY THEREAFTER TO OFFSET ANY REVENUE REDUCTIONS CAUSED BY ANY CONSTITUTIONALLY OR STATUTORILY REQUIRED TAX CREDITS, PROPERTY TAX REFUNDS, ABATEMENTS, REDUCTIONS IN THE PERCENTAGE OF ACTUAL VALUATION USED TO DETERMINE ASSESSED VALUATION, OR REDUCTIONS IN THE ACTUAL VALUE AGAINST WHICH THE ASSESSMENT RATE IS APPLIED THAT ARE ENACTED AFTER THE DATE OF APPROVAL OF THIS BALLOT QUESTION OR ARE OTHERWISE SET FORTH IN C.R.S. §§ 29-1-1701, ET SEQ., OR C.R.S. §§ 39-1-101, ET SEQ., AND SHALL THE PROCEEDS OF SUCH TAXES AND INVESTMENT INCOME THEREON BE COLLECTED AND SPENT WITHOUT REGARD TO ANY LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL CITY OF LONGMONT TAXES BE INCREASED $19.5 MILLION ANNUALLY IN THE FIRST FULL YEAR AND BY WHATEVER ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY IN EACH SUBSEQUENT YEAR FROM THE IMPOSITION OF AN ADDITIONAL MILL LEVY OF NOT TO EXCEED 2.44 MILLS (AS ADJUSTED) BEGINNING WITH TAX COLLECTION YEAR 2027 AND AN ADDITIONAL CITY SALES AND USE TAX IMPOSED AT A RATE OF 0.33% BEGINNING JANUARY 1, 2027, WITH THE PROCEEDS OF SUCH TAXES BEING USED EXCLUSIVELY TO MAINTAIN AND INCREASE THE LEVEL OF SERVICE FOR PUBLIC SAFETY IN THE CITY OF LONGMONT, INCLUDING, BUT NOT LIMITED TO PROVIDING FUNDS FOR: POLICE OFFICERS AND PERSONNEL FOR TRAFFIC ENFORCEMENT AND CRIMINAL INVESTIGATIONS AND PREVENTION; POLICE OFFICERS TO ENSURE SAFETY OF OFFICERS AND TO IMPROVE EMERGENCY RESPONSE; EMERGENCY DISPATCHERS FOR 911 RESPONSE; FIREFIGHTERS TO ENSURE SAFE AND SUFFICIENT RESPONSE TO EMERGENCIES; PERSONNEL TO SUPPORT EMERGENCY PUBLIC SAFETY RESPONDERS; AND PUBLIC SAFETY EQUIPMENT, VEHICLES AND FACILITIES TO ENSURE SAFETY; AND SHALL ORDINANCE O-2026-53 AUTHORIZING SUCH TAX INCREASES BE APPROVED, AND SHALL THE CITY BE AUTHORIZED TO INCREASE THE MILL LEVY AUTHORIZED BY THIS QUESTION BEGINNING IN TAX COLLECTION YEAR 2028 AND ANNUALLY THEREAFTER TO OFFSET ANY REVENUE REDUCTIONS CAUSED BY ANY CONSTITUTIONALLY OR STATUTORILY REQUIRED TAX CREDITS, PROPERTY TAX REFUNDS, ABATEMENTS, REDUCTIONS IN THE PERCENTAGE OF ACTUAL VALUATION USED TO DETERMINE ASSESSED VALUATION, OR REDUCTIONS IN THE ACTUAL VALUE AGAINST WHICH THE ASSESSMENT RATE IS APPLIED THAT ARE ENACTED AFTER THE DATE OF APPROVAL OF THIS BALLOT QUESTION OR ARE OTHERWISE SET FORTH IN C.R.S. §§ 29-1-1701, ET SEQ., OR C.R.S. §§ 39-1-101, ET SEQ., AND SHALL THE PROCEEDS OF SUCH TAXES AND INVESTMENT INCOME THEREON BE COLLECTED AND SPENT WITHOUT REGARD TO ANY LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "City of Longmont",
+            "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+            "collectedAt": "2026-11-03T03:49:53.582613+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-longmont-2026-ballot-3b#question",
+          "contestId": "co-longmont-2026-ballot-3b",
+          "officialNumber": "3B",
+          "questionText": "Shall the City of Longmont Home Rule Charter be amended by revising section 13.2 to add open space to lands that cannot be sold or conveyed without voter approval, with exceptions for public roads, utilities, life-essential infrastructure, open space operations, and the sale or conveyance of structures on such lands?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the City of Longmont Home Rule Charter be amended by revising section 13.2 to add open space to lands that cannot be sold or conveyed without voter approval, with exceptions for public roads, utilities, life-essential infrastructure, open space operations, and the sale or conveyance of structures on such lands?",
+            "sourceOrg": "City of Longmont",
+            "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+            "collectedAt": "2026-11-03T03:49:53.582613+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-longmont-2026-ballot-3c#question",
+          "contestId": "co-longmont-2026-ballot-3c",
+          "officialNumber": "3C",
+          "questionText": "Shall the City of Longmont Home Rule Charter be amended by adopting a new section 2.10 of the Charter to provide for the use of Ranked Choice Voting (ranked voting methods) where possible to elect future mayors and councilmembers of the City of Longmont starting in November 2029?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the City of Longmont Home Rule Charter be amended by adopting a new section 2.10 of the Charter to provide for the use of Ranked Choice Voting (ranked voting methods) where possible to elect future mayors and councilmembers of the City of Longmont starting in November 2029?",
+            "sourceOrg": "City of Longmont",
+            "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+            "collectedAt": "2026-11-03T03:49:53.582613+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-longmont-2026-ballot-3d#question",
+          "contestId": "co-longmont-2026-ballot-3d",
+          "officialNumber": "3D",
+          "questionText": "Shall the City of Longmont Home Rule Charter be amended by amending section 3.6 of the Charter to realign the cycle on which members of the Longmont city council are elected so that the three councilmembers elected at-large are elected in one electoral cycle and the three councilmembers elected from wards are elected in another electoral cycle, with such electoral cycles alternating from then on, with such realignment contingent upon voter approval of the measure on the November 3, 2026 City of Longmont ballot requiring the use of ranked choice voting to elect city council members when possible?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the City of Longmont Home Rule Charter be amended by amending section 3.6 of the Charter to realign the cycle on which members of the Longmont city council are elected so that the three councilmembers elected at-large are elected in one electoral cycle and the three councilmembers elected from wards are elected in another electoral cycle, with such electoral cycles alternating from then on, with such realignment contingent upon voter approval of the measure on the November 3, 2026 City of Longmont ballot requiring the use of ranked choice voting to elect city council members when possible?",
+            "sourceOrg": "City of Longmont",
+            "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+            "collectedAt": "2026-11-03T03:49:53.582613+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2b#question",
+          "contestId": "co-louisville-2026-ballot-2b",
+          "officialNumber": "2B",
+          "questionText": "SHALL CITY OF LOUISVILLE TAXES BE INCREASED $1.5 MILLION IN 2029 AND THEN ANNUALLY THEREAFTER BY WHATEVER AMOUNTS ARE GENERATED FROM THE CONTINUATION OF THE CITY’S HISTORIC PRESERVATION SALES TAX OF 0.125% BEGINNING JANUARY 1, 2029, AND EXPIRING DECEMBER 31, 2038; WITH THE NET PROCEEDS OF SUCH SALES TAX, ALONG WITH THE CITY’S EXISTING 0.125% HISTORIC PRESERVATION USE TAX, TO BE UTILIZED FOR HISTORIC PRESERVATION PURPOSES AS ESTABLISHED BY BALLOT ISSUES APPROVED BY THE VOTERS IN 2008 AND 2017, AND, COMMENCING ON JANUARY 1, 2027, SHALL THE CITY ALSO BE AUTHORIZED TO: (1) EXPEND ANY FUNDS FROM SUCH HISTORIC PRESERVATION TAX ON CITY PROGRAMS AND CAPITAL PROJECTS THAT PROMOTE AND PRESERVE THE CITY’S HISTORY AND CULTURAL HERITAGE, AND (2) INCREASE THE PORTION OF SUCH TAX ALLOCATED TO OPERATING AND MAINTAINING THE LOUISVILLE MUSEUM CAMPUS FROM 20% TO 30% PER YEAR; AND SHALL THE CITY BE PERMITTED TO COLLECT, RETAIN AND EXPEND ALL REVENUES DERIVED FROM SUCH TAX AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO LIMITS WHICH WOULD OTHERWISE APPLY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL CITY OF LOUISVILLE TAXES BE INCREASED $1.5 MILLION IN 2029 AND THEN ANNUALLY THEREAFTER BY WHATEVER AMOUNTS ARE GENERATED FROM THE CONTINUATION OF THE CITY’S HISTORIC PRESERVATION SALES TAX OF 0.125% BEGINNING JANUARY 1, 2029, AND EXPIRING DECEMBER 31, 2038; WITH THE NET PROCEEDS OF SUCH SALES TAX, ALONG WITH THE CITY’S EXISTING 0.125% HISTORIC PRESERVATION USE TAX, TO BE UTILIZED FOR HISTORIC PRESERVATION PURPOSES AS ESTABLISHED BY BALLOT ISSUES APPROVED BY THE VOTERS IN 2008 AND 2017, AND, COMMENCING ON JANUARY 1, 2027, SHALL THE CITY ALSO BE AUTHORIZED TO: (1) EXPEND ANY FUNDS FROM SUCH HISTORIC PRESERVATION TAX ON CITY PROGRAMS AND CAPITAL PROJECTS THAT PROMOTE AND PRESERVE THE CITY’S HISTORY AND CULTURAL HERITAGE, AND (2) INCREASE THE PORTION OF SUCH TAX ALLOCATED TO OPERATING AND MAINTAINING THE LOUISVILLE MUSEUM CAMPUS FROM 20% TO 30% PER YEAR; AND SHALL THE CITY BE PERMITTED TO COLLECT, RETAIN AND EXPEND ALL REVENUES DERIVED FROM SUCH TAX AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO LIMITS WHICH WOULD OTHERWISE APPLY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2c#question",
+          "contestId": "co-louisville-2026-ballot-2c",
+          "officialNumber": "2C",
+          "questionText": "Shall the City of Louisville Home Rule Charter be amended to authorize the City Council to convene executive sessions for the purpose of considering any matter authorized by the Colorado Open Meetings Law, C.R.S. § 24-6-401, et. seq., as amended, and for boards, commissions, task forces, and committees to convene executive sessions pursuant to the Colorado Open Meetings Law in accordance with procedures and subject to limitations established by ordinance, thereby expanding the topics for executive sessions currently permitted under the Charter?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the City of Louisville Home Rule Charter be amended to authorize the City Council to convene executive sessions for the purpose of considering any matter authorized by the Colorado Open Meetings Law, C.R.S. § 24-6-401, et. seq., as amended, and for boards, commissions, task forces, and committees to convene executive sessions pursuant to the Colorado Open Meetings Law in accordance with procedures and subject to limitations established by ordinance, thereby expanding the topics for executive sessions currently permitted under the Charter?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2d#question",
+          "contestId": "co-louisville-2026-ballot-2d",
+          "officialNumber": "2D",
+          "questionText": "Shall the City of Louisville Home Rule Charter be amended to provide that the Mayor and each Councilmember shall take office at the first regular Council meeting following certification of the election results, as opposed to the first meeting following the election?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the City of Louisville Home Rule Charter be amended to provide that the Mayor and each Councilmember shall take office at the first regular Council meeting following certification of the election results, as opposed to the first meeting following the election?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2e#question",
+          "contestId": "co-louisville-2026-ballot-2e",
+          "officialNumber": "2E",
+          "questionText": "Shall the City of Louisville Home Rule Charter be amended to increase the number of signatures required for initiative petitions from 5 Percent to 7.5 Percent of registered electors and to increase the number of signatures required for referendum petitions from 2.5 Percent to 5 Percent of registered electors?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the City of Louisville Home Rule Charter be amended to increase the number of signatures required for initiative petitions from 5 Percent to 7.5 Percent of registered electors and to increase the number of signatures required for referendum petitions from 2.5 Percent to 5 Percent of registered electors?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2f#question",
+          "contestId": "co-louisville-2026-ballot-2f",
+          "officialNumber": "2F",
+          "questionText": "Shall the City of Louisville Home Rule Charter be amended to allow the City’s public bodies to hold public meetings in locations other than public buildings and public facilities, provided all meeting locations shall be accessible to all members of the public?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the City of Louisville Home Rule Charter be amended to allow the City’s public bodies to hold public meetings in locations other than public buildings and public facilities, provided all meeting locations shall be accessible to all members of the public?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2g#question",
+          "contestId": "co-louisville-2026-ballot-2g",
+          "officialNumber": "2G",
+          "questionText": "Shall the City of Louisville Home Rule Charter be amended to require proponents of an initiated ordinance or Charter amendment to first submit the text of the initiated measure to the City Manager for review and comment at a public meeting, subject to the limitation that City staff shall not have the authority to require any amendment, modification, or other alteration to the text of the proposed measures, or to impose additional procedural requirements of the proponent?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the City of Louisville Home Rule Charter be amended to require proponents of an initiated ordinance or Charter amendment to first submit the text of the initiated measure to the City Manager for review and comment at a public meeting, subject to the limitation that City staff shall not have the authority to require any amendment, modification, or other alteration to the text of the proposed measures, or to impose additional procedural requirements of the proponent?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-louisville-2026-ballot-2h#question",
+          "contestId": "co-louisville-2026-ballot-2h",
+          "officialNumber": "2H",
+          "questionText": "Shall the City of Louisville Home Rule Charter be amended to remove gendered pronouns, to replace references to “citizen” with “members of the public,” to replace references to “City offices” with “City Clerk’s office and City website,” and to replace references to “television” with “virtually”?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the City of Louisville Home Rule Charter be amended to remove gendered pronouns, to replace references to “citizen” with “members of the public,” to replace references to “City offices” with “City Clerk’s office and City website,” and to replace references to “television” with “virtually”?",
+            "sourceOrg": "City of Louisville",
+            "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+            "collectedAt": "2026-11-03T03:49:53.600522+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-lafayette-2026-ballot-2a#question",
+          "contestId": "co-lafayette-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "WITHOUT IMPOSING A NEW TAX, SHALL THE CITY OF LAFAYETTE BE AUTHORIZED TO EXTEND AN EXPIRING PROPERTY TAX IN AN AMOUNT NOT TO EXCEED $713,000 ANNUALLY (TOTAL ANNUAL REVENUE COLLECTION FOR THE CITY), WHICH PROPERTY TAX INCREASE WAS APPROVED BY THE VOTERS IN 2014 AND IS SET TO EXPIRE IN DECEMBER 2026, SUCH TAX TO BE EXTENDED THROUGH DECEMBER 31, 2046, WITH SUCH REVENUE TO BE USED FOR CAPITAL IMPROVEMENTS TO, AND THE CONTINUED OPERATION AND MAINTENANCE OF, LAMONT DOES PARK AND RELATED FACILITIES, INCLUDING THE PAYMENT OF ANY ANNUALLY APPROPRIATED OBLIGATION FOR SUCH PURPOSES, AND FOR OTHER CITY PURPOSES RELATED THERETO, AND SHALL SUCH RESULTING REVENUE CONSTITUTE A VOTER APPROVED REVENUE AND/OR SPENDING CHANGE AND BE COLLECTED AND SPENT BY THE CITY WITHOUT REGARD TO ANY SPENDING, REVENUE RAISING OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "WITHOUT IMPOSING A NEW TAX, SHALL THE CITY OF LAFAYETTE BE AUTHORIZED TO EXTEND AN EXPIRING PROPERTY TAX IN AN AMOUNT NOT TO EXCEED $713,000 ANNUALLY (TOTAL ANNUAL REVENUE COLLECTION FOR THE CITY), WHICH PROPERTY TAX INCREASE WAS APPROVED BY THE VOTERS IN 2014 AND IS SET TO EXPIRE IN DECEMBER 2026, SUCH TAX TO BE EXTENDED THROUGH DECEMBER 31, 2046, WITH SUCH REVENUE TO BE USED FOR CAPITAL IMPROVEMENTS TO, AND THE CONTINUED OPERATION AND MAINTENANCE OF, LAMONT DOES PARK AND RELATED FACILITIES, INCLUDING THE PAYMENT OF ANY ANNUALLY APPROPRIATED OBLIGATION FOR SUCH PURPOSES, AND FOR OTHER CITY PURPOSES RELATED THERETO, AND SHALL SUCH RESULTING REVENUE CONSTITUTE A VOTER APPROVED REVENUE AND/OR SPENDING CHANGE AND BE COLLECTED AND SPENT BY THE CITY WITHOUT REGARD TO ANY SPENDING, REVENUE RAISING OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, OR ANY OTHER LAW?",
+            "sourceOrg": "City of Lafayette",
+            "sourceUrl": "https://www.lafayetteco.gov/4362/2026-Ballot-Measure",
+            "collectedAt": "2026-11-03T03:49:53.615170+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-erie-2026-ballot-3e#question",
+          "contestId": "co-erie-2026-ballot-3e",
+          "officialNumber": "3E",
+          "questionText": "SHALL THE TOWN OF ERIE TAXES BE INCREASED BY UP TO $150,000 COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER AMOUNTS ARE GENERATED ANNUALLY THEREAFTER THROUGH THE IMPOSITION OF A LODGING TAX AT THE RATE OF THREE AND ONE HALF PERCENT ON THE TOTAL RENTAL FEE, PRICE, OR OTHER CONSIDERATION PAID OR CHARGED FOR THE LEASING OR RENTAL OF ANY HOTEL ROOM, MOTEL ROOM, BED AND BREAKFAST, SHORT TERM RENTAL OR OTHER ACCOMMODATION WITH A STAY OF THIRTY DAYS OR LESS, AND SHALL ALL REVENUES DERIVED FROM SUCH LODGING TAX BE USED FOR GENERAL GOVERNMENTAL PURPOSES, INCLUDING, BUT NOT LIMITED TO PARK AND RECREATIONAL FACILITIES, CAPITAL INFRASTRUCTURE, AND LAW ENFORCEMENT/SAFETY AND SECURITY PURPOSES, AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER- APPROVED REVENUE CHANGE PURSUANT TO ARTICLE X, SECTION 20, OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF ERIE TAXES BE INCREASED BY UP TO $150,000 COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER AMOUNTS ARE GENERATED ANNUALLY THEREAFTER THROUGH THE IMPOSITION OF A LODGING TAX AT THE RATE OF THREE AND ONE HALF PERCENT ON THE TOTAL RENTAL FEE, PRICE, OR OTHER CONSIDERATION PAID OR CHARGED FOR THE LEASING OR RENTAL OF ANY HOTEL ROOM, MOTEL ROOM, BED AND BREAKFAST, SHORT TERM RENTAL OR OTHER ACCOMMODATION WITH A STAY OF THIRTY DAYS OR LESS, AND SHALL ALL REVENUES DERIVED FROM SUCH LODGING TAX BE USED FOR GENERAL GOVERNMENTAL PURPOSES, INCLUDING, BUT NOT LIMITED TO PARK AND RECREATIONAL FACILITIES, CAPITAL INFRASTRUCTURE, AND LAW ENFORCEMENT/SAFETY AND SECURITY PURPOSES, AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER- APPROVED REVENUE CHANGE PURSUANT TO ARTICLE X, SECTION 20, OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+            "sourceOrg": "Boulder County Clerk and Recorder",
+            "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+            "collectedAt": "2026-11-03T03:45:10.269299+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-erie-2026-ballot-3f#question",
+          "contestId": "co-erie-2026-ballot-3f",
+          "officialNumber": "3F",
+          "questionText": "SHALL THE TOWN OF ERIE’S DEBT BE INCREASED BY UP TO $32.5 MILLION, WITH A MAXIMUM REPAYMENT COST NOT TO EXCEED $52.6 MILLION (PRINCIPAL AND INTEREST) FOR THE PURPOSE OF UPDATING THE AGING ERIE COMMUNITY CENTER BUILDING AND FACILITIES BY ACQUIRING, DESIGNING, CONSTRUCTING, EXPANDING, RENOVATING, IMPROVING, AND EQUIPPING THE SAME AND FOR CONTINUED OPERATIONS AND MAINTENANCE, WITH SUCH IMPROVEMENTS TO INCLUDE BUT ARE NOT LIMITED TO: • CONSTRUCTING AND EQUIPPING NEW FITNESS STUDIOS AND EXPANDING EXISTING STUDIOS; • CONSTRUCTING AND EQUIPPING A NEW GYMNASIUM AND RACQUET BALL COURTS; • EXPANDING MULTIPURPOSE COMMUNITY AND RECREATION SPACE; • EQUIPPING NEW STRENGTH TRAINING AND CIRCUIT TRAINING AREAS; AND SHALL TOWN TAXES BE INCREASED BY UP TO $4,866,857 IN THE FIRST FULL FISCAL YEAR AND BY SUCH ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER BY AN INCREASE IN THE RATE OF SALES AND USETAXIMPOSEDBYTHETOWNBY.501%,COMMENCING JANUARY 1, 2027, WHICH TAX REVENUES WILL BE USED FOR THE PAYMENT OF THE DEBT AUTHORIZED BY THIS QUESTION AND FOR THE CONSTRUCTION, OPERATION AND MAINTENANCE OF THE ERIE COMMUNITY CENTER AND OTHER PARK AND RECREATION RELATED EXPENSES OF THE TOWN; AND MAY THE DEBT ISSUED PURSUANT TO THIS QUESTION BE PAID FROM SUCH LEGALLY AVAILABLE REVENUES, BEAR INTEREST, AND BE SOLD IN ONE SERIES OR MORE AT A PRICE ABOVE, BELOW OR EQUAL TO THE PRINCIPAL AMOUNT OF SUCH DEBT AND WITH SUCH TERMS AND CONDITIONS, INCLUDING PROVISIONS FOR REDEMPTION PRIOR TO MATURITY WITH OR WITHOUT PAYMENT OF PREMIUM OF NOT TO EXCEED 3%, ALL AS THE TOWN MAY DETERMINE; AND SHALL THE REVENUES RAISED BY SUCH SALES AND USE TAX RATE INCREASE AND PROCEEDS OF SUCH DEBT, ANY OTHER REVENUE USED TO PAY SUCH DEBT, AND INVESTMENT INCOME THEREON, BE COLLECTED AND SPENT BY THE TOWN AS A VOTER- APPROVED REVENUE CHANGE PURSUANT TO ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF ERIE’S DEBT BE INCREASED BY UP TO $32.5 MILLION, WITH A MAXIMUM REPAYMENT COST NOT TO EXCEED $52.6 MILLION (PRINCIPAL AND INTEREST) FOR THE PURPOSE OF UPDATING THE AGING ERIE COMMUNITY CENTER BUILDING AND FACILITIES BY ACQUIRING, DESIGNING, CONSTRUCTING, EXPANDING, RENOVATING, IMPROVING, AND EQUIPPING THE SAME AND FOR CONTINUED OPERATIONS AND MAINTENANCE, WITH SUCH IMPROVEMENTS TO INCLUDE BUT ARE NOT LIMITED TO: • CONSTRUCTING AND EQUIPPING NEW FITNESS STUDIOS AND EXPANDING EXISTING STUDIOS; • CONSTRUCTING AND EQUIPPING A NEW GYMNASIUM AND RACQUET BALL COURTS; • EXPANDING MULTIPURPOSE COMMUNITY AND RECREATION SPACE; • EQUIPPING NEW STRENGTH TRAINING AND CIRCUIT TRAINING AREAS; AND SHALL TOWN TAXES BE INCREASED BY UP TO $4,866,857 IN THE FIRST FULL FISCAL YEAR AND BY SUCH ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER BY AN INCREASE IN THE RATE OF SALES AND USETAXIMPOSEDBYTHETOWNBY.501%,COMMENCING JANUARY 1, 2027, WHICH TAX REVENUES WILL BE USED FOR THE PAYMENT OF THE DEBT AUTHORIZED BY THIS QUESTION AND FOR THE CONSTRUCTION, OPERATION AND MAINTENANCE OF THE ERIE COMMUNITY CENTER AND OTHER PARK AND RECREATION RELATED EXPENSES OF THE TOWN; AND MAY THE DEBT ISSUED PURSUANT TO THIS QUESTION BE PAID FROM SUCH LEGALLY AVAILABLE REVENUES, BEAR INTEREST, AND BE SOLD IN ONE SERIES OR MORE AT A PRICE ABOVE, BELOW OR EQUAL TO THE PRINCIPAL AMOUNT OF SUCH DEBT AND WITH SUCH TERMS AND CONDITIONS, INCLUDING PROVISIONS FOR REDEMPTION PRIOR TO MATURITY WITH OR WITHOUT PAYMENT OF PREMIUM OF NOT TO EXCEED 3%, ALL AS THE TOWN MAY DETERMINE; AND SHALL THE REVENUES RAISED BY SUCH SALES AND USE TAX RATE INCREASE AND PROCEEDS OF SUCH DEBT, ANY OTHER REVENUE USED TO PAY SUCH DEBT, AND INVESTMENT INCOME THEREON, BE COLLECTED AND SPENT BY THE TOWN AS A VOTER- APPROVED REVENUE CHANGE PURSUANT TO ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Boulder County Clerk and Recorder",
+            "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+            "collectedAt": "2026-11-03T03:45:10.269299+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-allenspark-fire-protection-district-2026-ballot-7c#question",
+          "contestId": "co-allenspark-fire-protection-district-2026-ballot-7c",
+          "officialNumber": "7C",
+          "questionText": "SHALL ALLENSPARK FIRE PROTECTION DISTRICT TAXES BE INCREASED BY UP TO $331,000 IN THE FIRST FISCAL YEAR (2027) AND BY SUCH AMOUNT AS MAY BE RAISED ANNUALLY THEREAFTER, BY INCREASING THE DISTRICT’S PROPERTY TAX RATE BY AN ADDITIONAL 5.3 MILLS, FOR THE PURPOSES OF PROVIDING FIRE PROTECTION AND EMERGENCY RESPONSE SERVICES, INCLUDING BUT NOT LIMITED TO: • REBUILDING DEPLETED RESERVES IN ORDER TO PRESERVETHECURRENTLEVELOFSERVICESFORTHE COMMUNITY, ADDRESS DEFERRED MAINTENANCE FOR OUR BUILDINGS AND GROUNDS, AND UPDATE ANDREPLACECRITICALFIREFIGHTINGANDMEDICAL EQUIPMENT (THE LAST MILL LEVY INCREASE WAS IN 2003). • EXPAND STAFFING TO IMPROVE BOTH FIRE AND MEDICAL OUTCOMES THROUGH FIRE MITIGATION, COMMUNITY OUTREACH AND EDUCATION. • IMPROVING FIREFIGHTING CAPABILITIES BY EXPANDING WATER RESOURCES TO INCREASE THE NUMBER OF DRY HYDRANTS AND INSTALLING WATER STORAGE TANKS AT KEY LOCATIONS THROUGHOUT THE DISTRICT. AND SHALL ALL REVENUE AND ANY EARNINGS ON THIS TAX CONSTITUTE A PERMANENT VOTER-APPROVED REVENUE CHANGE WITHIN THE MEANING OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN TITLE 29 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL ALLENSPARK FIRE PROTECTION DISTRICT TAXES BE INCREASED BY UP TO $331,000 IN THE FIRST FISCAL YEAR (2027) AND BY SUCH AMOUNT AS MAY BE RAISED ANNUALLY THEREAFTER, BY INCREASING THE DISTRICT’S PROPERTY TAX RATE BY AN ADDITIONAL 5.3 MILLS, FOR THE PURPOSES OF PROVIDING FIRE PROTECTION AND EMERGENCY RESPONSE SERVICES, INCLUDING BUT NOT LIMITED TO: • REBUILDING DEPLETED RESERVES IN ORDER TO PRESERVETHECURRENTLEVELOFSERVICESFORTHE COMMUNITY, ADDRESS DEFERRED MAINTENANCE FOR OUR BUILDINGS AND GROUNDS, AND UPDATE ANDREPLACECRITICALFIREFIGHTINGANDMEDICAL EQUIPMENT (THE LAST MILL LEVY INCREASE WAS IN 2003). • EXPAND STAFFING TO IMPROVE BOTH FIRE AND MEDICAL OUTCOMES THROUGH FIRE MITIGATION, COMMUNITY OUTREACH AND EDUCATION. • IMPROVING FIREFIGHTING CAPABILITIES BY EXPANDING WATER RESOURCES TO INCREASE THE NUMBER OF DRY HYDRANTS AND INSTALLING WATER STORAGE TANKS AT KEY LOCATIONS THROUGHOUT THE DISTRICT. AND SHALL ALL REVENUE AND ANY EARNINGS ON THIS TAX CONSTITUTE A PERMANENT VOTER-APPROVED REVENUE CHANGE WITHIN THE MEANING OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN TITLE 29 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW?",
+            "sourceOrg": "Boulder County Clerk and Recorder",
+            "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+            "collectedAt": "2026-11-03T03:45:10.269299+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        },
+        {
+          "id": "co-timberline-fire-protection-district-2026-ballot-7b#question",
+          "contestId": "co-timberline-fire-protection-district-2026-ballot-7b",
+          "officialNumber": "7B",
+          "questionText": "SHALL TIMBERLINE FIRE PROTECTION DISTRICT TAXES BE INCREASED IN THE FIRST FULL FISCAL YEAR BY $1,200,000 AND BY SUCH AMOUNTS ANNUALLY THEREAFTER AS MAY BE RAISED BY AN ADDITIONAL PROPERTY TAX LEVY OF 6.0 MILLS, THE REVENUE THEREFROM TO SUPPORT THE DISTRICT’S RESPONSE CAPABILITIES, INCLUDING BUT NOT LIMITED TO HIRING ADDITIONAL FIREFIGHTERS, MAINTAINING WILDFIRE MITIGATION SERVICES AND EMERGENCY RESERVES, AND SUPPORTING THE DISTRICT’S GENERAL OPERATIONS AND CAPITAL NEEDS?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL TIMBERLINE FIRE PROTECTION DISTRICT TAXES BE INCREASED IN THE FIRST FULL FISCAL YEAR BY $1,200,000 AND BY SUCH AMOUNTS ANNUALLY THEREAFTER AS MAY BE RAISED BY AN ADDITIONAL PROPERTY TAX LEVY OF 6.0 MILLS, THE REVENUE THEREFROM TO SUPPORT THE DISTRICT’S RESPONSE CAPABILITIES, INCLUDING BUT NOT LIMITED TO HIRING ADDITIONAL FIREFIGHTERS, MAINTAINING WILDFIRE MITIGATION SERVICES AND EMERGENCY RESERVES, AND SUPPORTING THE DISTRICT’S GENERAL OPERATIONS AND CAPITAL NEEDS?",
+            "sourceOrg": "Boulder County Clerk and Recorder",
+            "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+            "collectedAt": "2026-11-03T03:45:10.269299+00:00",
+            "verifiedAt": "2026-11-03T03:59:55.383914+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-boulder-county-2026-ballot-1a",
+          "whatItDoes": "Add a 2.579-mill property-tax levy in Boulder County for child care and preschool. It would raise $30 million in tax collection year 2027, with later revenue based on collections. Money would lower families’ costs, raise pay for child-care and preschool teachers and staff, and expand capacity to serve more children. Tax revenue and investment earnings would be exempt from Colorado’s constitutional revenue limits and statutory property-tax limits.",
+          "yesMeans": "Approve the ongoing property-tax levy for child care and preschool and its revenue-limit exceptions.",
+          "noMeans": "Do not approve this property-tax increase or its proposed revenue-limit exceptions.",
+          "parts": [],
+          "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+          "sourceHash": "7eaafa7cc075e32ad8a15027ac3e082ddd555bd4673d869ab2d73a42b1347079",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-boulder-county-2026-ballot-200",
+          "whatItDoes": "Increase the Boulder County Board of Commissioners from three members to five. If approved, five commissioners would take office in January 2029 after the November 2028 election. Question 201 separately asks how the expanded board would be elected.",
+          "yesMeans": "Expand the board to five commissioners beginning in January 2029.",
+          "noMeans": "Keep the board at three commissioners.",
+          "parts": [],
+          "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+          "sourceHash": "7eaafa7cc075e32ad8a15027ac3e082ddd555bd4673d869ab2d73a42b1347079",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-boulder-county-2026-ballot-201",
+          "whatItDoes": "Choose how Boulder County’s five-member commission would be elected if voters approve expansion under Question 200. Option 1 elects all five commissioners by district: each must live in the district and only its voters elect that seat. Option 2 elects three commissioners by district and two commissioners countywide, with the two countywide members allowed to live in any district. This is a choice between two methods, rather than a yes-or-no question. The selected method takes effect only if the board expands.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+          "sourceHash": "7eaafa7cc075e32ad8a15027ac3e082ddd555bd4673d869ab2d73a42b1347079",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-boulder-2026-ballot-2k",
+          "whatItDoes": "Authorize up to $400 million in Boulder general-obligation debt, with total repayment capped at $650 million, and up to $32.5 million in additional property taxes annually to repay it. Projects include recreation centers, senior-center space, fire stations, police and 911 facilities, the municipal building and the municipal service center. The property-tax rate would have no fixed cap, but annual collections could not exceed the stated limit and could only cover debt payments or repayment reserves. Debt proceeds, reserves, taxes and investment income could be kept and spent outside Colorado’s constitutional revenue limits and other legal limits.",
+          "yesMeans": "Approve the debt and property taxes for city capital projects and the revenue-limit exception.",
+          "noMeans": "Do not authorize this borrowing, the additional property taxes or the related revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+          "sourceHash": "f034212d2c2f6ad7df623475985afe28f1adb502e1fac86b1a0d20a46f66e5d5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-boulder-2026-ballot-2m",
+          "whatItDoes": "Change Boulder’s charter to limit city debt to 3% of the actual value of taxable property, instead of calculating the limit using assessed value. The city’s factual explanation says this would allow more borrowing than the current calculation.",
+          "yesMeans": "Approve calculating the debt limit from actual property value.",
+          "noMeans": "Keep the existing debt-limit calculation.",
+          "parts": [],
+          "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+          "sourceHash": "f034212d2c2f6ad7df623475985afe28f1adb502e1fac86b1a0d20a46f66e5d5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-boulder-2026-ballot-2j",
+          "whatItDoes": "Create an annual $4,000 tax on Boulder homes occupied for 183 days or less per year. The amount would increase with the Denver-Aurora-Lakewood Consumer Price Index, never falling below $4,000 or exceeding $7,000. Estimated revenue is $6 million in 2028, the first full fiscal year of collection, with later revenue based on collections. Money would support city services, including police, fire, parks, recreation, transportation and maintenance. Tax revenue and related earnings could be retained and spent outside Colorado’s constitutional revenue and spending limits.",
+          "yesMeans": "Approve the vacancy tax and its revenue-limit exception.",
+          "noMeans": "Do not approve this vacancy tax or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+          "sourceHash": "f034212d2c2f6ad7df623475985afe28f1adb502e1fac86b1a0d20a46f66e5d5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-boulder-2026-ballot-2l",
+          "whatItDoes": "Add a charter-guaranteed right for full-time Boulder fire-department employees to bargain collectively over safety, wages, benefits and other employment terms, except matters reserved to management. If negotiations reach an impasse, the process would use nonbinding fact-finding and, if needed, a citywide vote. The city’s explanation says bargaining rights already exist in contract; the measure would put them in the charter.",
+          "yesMeans": "Put the specified firefighter collective-bargaining rights and impasse process into the charter.",
+          "noMeans": "Do not add these rights and procedures to the charter.",
+          "parts": [],
+          "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+          "sourceHash": "f034212d2c2f6ad7df623475985afe28f1adb502e1fac86b1a0d20a46f66e5d5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-longmont-2026-ballot-3a",
+          "whatItDoes": "Raise $19.5 million in the first full year for Longmont police, fire, 911 dispatch, emergency-support staff, equipment, vehicles and facilities. Add a property-tax levy initially capped at 2.44 mills for collection in 2027, and add 0.33 percentage points to the sales and use tax beginning January 1, 2027. Later revenue could vary with collections. Starting in tax collection year 2028, the property-tax levy could rise to offset specified revenue losses from tax credits, refunds, abatements and changes to property-assessment rates or values. Revenue and investment income could be collected and spent outside Colorado’s constitutional revenue limits and other legal limits.",
+          "yesMeans": "Approve the public-safety taxes, the specified future levy adjustments and the revenue-limit exception.",
+          "noMeans": "Do not approve these tax increases, levy adjustments or the related revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+          "sourceHash": "d246980aa91fc804815b283c5af56d77a1f453e53c2a34f5d44db803b414c3d7",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-longmont-2026-ballot-3b",
+          "whatItDoes": "Add open-space land to the Longmont charter’s list of land that cannot be sold or transferred without voter approval. Exceptions would cover public roads, utilities, life-essential infrastructure, open-space operations, and sales or transfers of structures on the land.",
+          "yesMeans": "Require voter approval for open-space land sales or transfers, subject to the listed exceptions.",
+          "noMeans": "Leave the charter’s existing land-transfer rules unchanged.",
+          "parts": [],
+          "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+          "sourceHash": "d246980aa91fc804815b283c5af56d77a1f453e53c2a34f5d44db803b414c3d7",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-longmont-2026-ballot-3c",
+          "whatItDoes": "Add a Longmont charter provision to use ranked-choice voting methods where possible to elect future mayors and city council members, starting in November 2029.",
+          "yesMeans": "Approve using ranked-choice voting where possible beginning in November 2029.",
+          "noMeans": "Do not add this ranked-choice-voting requirement to the charter.",
+          "parts": [],
+          "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+          "sourceHash": "d246980aa91fc804815b283c5af56d77a1f453e53c2a34f5d44db803b414c3d7",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-longmont-2026-ballot-3d",
+          "whatItDoes": "If voters also approve ranked-choice voting under Question 3C, realign Longmont council elections so the three at-large seats are elected together in one cycle and the three ward seats together in the next, alternating afterward. During the transition, the at-large seat elected in 2027 and Ward 2 seat elected in 2029 would have two-year terms instead of four-year terms. If Question 3C fails, this realignment would not occur.",
+          "yesMeans": "Approve the election-cycle change, including the two shortened transition terms, if ranked-choice voting also passes.",
+          "noMeans": "Do not approve this council-election realignment.",
+          "parts": [],
+          "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+          "sourceHash": "d246980aa91fc804815b283c5af56d77a1f453e53c2a34f5d44db803b414c3d7",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-louisville-2026-ballot-2b",
+          "whatItDoes": "Extend Louisville’s existing 0.125% historic-preservation sales tax from January 1, 2029 through December 31, 2038. It would raise $1.5 million in 2029 and whatever amounts it produces later. Proceeds, together with the existing 0.125% historic-preservation use tax, would serve historic-preservation purposes previously approved by voters. Starting January 1, 2027, funds could also support city programs and capital projects preserving local history and cultural heritage, and the share for operating and maintaining the museum campus could rise from 20% to 30%. Revenue could be kept and spent outside Colorado’s constitutional revenue limits and other legal limits.",
+          "yesMeans": "Continue the sales tax through 2038, expand its permitted uses and museum allocation, and approve the revenue-limit exception.",
+          "noMeans": "Let the historic-preservation sales tax expire at the end of 2028 and do not approve the proposed changes in uses and allocation.",
+          "parts": [],
+          "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "sourceHash": "c1e12be5ca52ad7f835aa38f56db22e926bf51bfa879fc78e0f6188d6e5b54ee",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-louisville-2026-ballot-2c",
+          "whatItDoes": "Expand the Louisville charter’s permitted reasons for closed executive sessions to cover any matter allowed by Colorado’s Open Meetings Law. Allow boards, commissions, task forces and committees to hold such sessions under that law, subject to procedures and limits set by city ordinance. The state law’s restrictions would still apply.",
+          "yesMeans": "Allow the broader set of legally permitted executive-session topics and procedures.",
+          "noMeans": "Keep the charter’s existing, narrower executive-session rules.",
+          "parts": [],
+          "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "sourceHash": "c1e12be5ca52ad7f835aa38f56db22e926bf51bfa879fc78e0f6188d6e5b54ee",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-louisville-2026-ballot-2d",
+          "whatItDoes": "Change Louisville’s charter so the mayor and council members take office at the first regular council meeting after election results are certified, instead of the first meeting after the election.",
+          "yesMeans": "Begin elected officials’ terms after results are certified.",
+          "noMeans": "Keep the current rule beginning terms at the first meeting after the election.",
+          "parts": [],
+          "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "sourceHash": "c1e12be5ca52ad7f835aa38f56db22e926bf51bfa879fc78e0f6188d6e5b54ee",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-louisville-2026-ballot-2e",
+          "whatItDoes": "Raise the Louisville charter’s signature requirements for citizen petitions. Initiative petitions would need signatures from 7.5% of registered voters instead of 5%; referendum petitions would need 5% instead of 2.5%.",
+          "yesMeans": "Approve the higher signature thresholds for initiatives and referendums.",
+          "noMeans": "Keep the existing 5% initiative and 2.5% referendum thresholds.",
+          "parts": [],
+          "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "sourceHash": "c1e12be5ca52ad7f835aa38f56db22e926bf51bfa879fc78e0f6188d6e5b54ee",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-louisville-2026-ballot-2f",
+          "whatItDoes": "Allow Louisville’s public bodies to hold public meetings outside public buildings and facilities, provided every meeting location is accessible to all members of the public.",
+          "yesMeans": "Allow additional meeting locations that meet the public-access requirement.",
+          "noMeans": "Keep the current charter limits on meeting locations.",
+          "parts": [],
+          "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "sourceHash": "c1e12be5ca52ad7f835aa38f56db22e926bf51bfa879fc78e0f6188d6e5b54ee",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-louisville-2026-ballot-2g",
+          "whatItDoes": "Require proponents of a citizen-initiated ordinance or charter amendment in Louisville to submit its text to the city manager for review and comment at a public meeting first. City staff could not require changes to the text or impose additional procedural requirements.",
+          "yesMeans": "Add the public review-and-comment step, with the limits on staff authority.",
+          "noMeans": "Do not add this review-and-comment requirement.",
+          "parts": [],
+          "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "sourceHash": "c1e12be5ca52ad7f835aa38f56db22e926bf51bfa879fc78e0f6188d6e5b54ee",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-louisville-2026-ballot-2h",
+          "whatItDoes": "Update Louisville’s charter by removing gendered pronouns, replacing references to citizens with members of the public, replacing City offices with the City Clerk’s office and city website, and replacing television with virtually.",
+          "yesMeans": "Approve these wording changes in the charter.",
+          "noMeans": "Keep the existing charter wording.",
+          "parts": [],
+          "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+          "sourceHash": "c1e12be5ca52ad7f835aa38f56db22e926bf51bfa879fc78e0f6188d6e5b54ee",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-lafayette-2026-ballot-2a",
+          "whatItDoes": "Continue Lafayette’s existing property tax for Lamont Does Park, which expires in December 2026, through December 31, 2046. It could raise no more than $713,000 annually. Money would fund park and related-facility improvements, operation and maintenance, annually appropriated obligations for those purposes, and related city purposes. Revenue could be collected and spent outside Colorado’s constitutional revenue and spending limits and other legal limits.",
+          "yesMeans": "Extend the existing park tax through 2046 and approve the revenue-limit exception.",
+          "noMeans": "Do not extend this tax beyond its existing December 2026 expiration.",
+          "parts": [],
+          "sourceUrl": "https://www.lafayetteco.gov/4362/2026-Ballot-Measure",
+          "sourceHash": "dd817d7c456452b3b744e2c13423acfa7753461891e60d62c1be997b32023acc",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-erie-2026-ballot-3e",
+          "whatItDoes": "Create a 3.5% lodging tax in Erie starting January 1, 2027. It would apply to hotel and motel rooms, bed-and-breakfasts, short-term rentals and other accommodations for stays of 30 days or less. The tax would raise up to $150,000 initially and whatever it produces annually afterward. Revenue could fund general town purposes, including parks and recreation, infrastructure, and public safety. Tax revenue and investment earnings could be kept and spent outside Colorado’s constitutional revenue limits and other legal limits.",
+          "yesMeans": "Approve the lodging tax and its revenue-limit exception.",
+          "noMeans": "Do not approve this lodging tax or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+          "sourceHash": "3fb6bba68e66635f6233a9200597174279f911f41a721cbef4fc44383332e0f5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-erie-2026-ballot-3f",
+          "whatItDoes": "Authorize up to $32.5 million in Erie debt, with total repayment capped at $52.6 million, to expand, renovate, equip and maintain the community center. Projects include fitness studios, a gymnasium, racquetball courts, multipurpose space and strength-training areas. Add 0.501 percentage points to the town’s sales and use tax beginning January 1, 2027, raising up to $4,866,857 in the first full fiscal year and amounts based on collections later. Revenue would repay debt and fund community-center construction, operation and maintenance and other town parks and recreation expenses. Bonds could be repaid early with a premium of up to 3%. Revenue, debt proceeds and investment income could be spent outside Colorado’s constitutional revenue limits.",
+          "yesMeans": "Approve the community-center debt, additional sales and use tax and revenue-limit exception.",
+          "noMeans": "Do not authorize this debt, additional tax or related revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+          "sourceHash": "3fb6bba68e66635f6233a9200597174279f911f41a721cbef4fc44383332e0f5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-allenspark-fire-protection-district-2026-ballot-7c",
+          "whatItDoes": "Add 5.3 mills to Allenspark Fire Protection District’s property-tax rate. It would raise up to $331,000 in fiscal year 2027 and amounts based on collections annually afterward. Money would support fire and emergency response, rebuild reserves, maintain buildings and grounds, replace fire and medical equipment, expand staffing and fire mitigation, provide community outreach and education, and add water storage and dry hydrants. Revenue and earnings would have a permanent exception from Colorado’s constitutional revenue limits and applicable statutory limits.",
+          "yesMeans": "Approve the additional property taxes for district emergency services and the permanent revenue-limit exceptions.",
+          "noMeans": "Do not approve this property-tax increase or its proposed permanent revenue-limit exceptions.",
+          "parts": [],
+          "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+          "sourceHash": "3fb6bba68e66635f6233a9200597174279f911f41a721cbef4fc44383332e0f5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-timberline-fire-protection-district-2026-ballot-7b",
+          "whatItDoes": "Add a 6-mill property-tax levy in Timberline Fire Protection District, raising $1.2 million in the first full fiscal year and amounts based on the levy annually afterward. Money would support emergency response, including additional firefighters, wildfire mitigation, emergency reserves, general operations and capital needs.",
+          "yesMeans": "Approve the additional property-tax levy for the district’s response, operations and capital needs.",
+          "noMeans": "Do not approve this additional property-tax levy.",
+          "parts": [],
+          "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+          "sourceHash": "3fb6bba68e66635f6233a9200597174279f911f41a721cbef4fc44383332e0f5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:59:55.383914+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:27:10.821328+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+        "finalUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+        "publisher": "Boulder County Board of County Commissioners",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T03:49:53.568314+00:00",
+        "httpStatus": 200,
+        "rawHash": "7eaafa7cc075e32ad8a15027ac3e082ddd555bd4673d869ab2d73a42b1347079",
+        "reviewedEvidence": "Official current2026 source question captured in full. SHA identifies original capture bytes; any repository credential sanitization is separately hash-identified in source-manifest. Draft explanation awaiting root independent review."
+      },
+      {
+        "requestedUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+        "finalUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+        "publisher": "City of Boulder",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T03:49:53.554093+00:00",
+        "httpStatus": 200,
+        "rawHash": "f034212d2c2f6ad7df623475985afe28f1adb502e1fac86b1a0d20a46f66e5d5",
+        "reviewedEvidence": "Official current2026 source question captured in full. SHA identifies original capture bytes; any repository credential sanitization is separately hash-identified in source-manifest. Draft explanation awaiting root independent review."
+      },
+      {
+        "requestedUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+        "finalUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+        "publisher": "City of Longmont",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T03:49:53.582613+00:00",
+        "httpStatus": 200,
+        "rawHash": "d246980aa91fc804815b283c5af56d77a1f453e53c2a34f5d44db803b414c3d7",
+        "reviewedEvidence": "Official current2026 source question captured in full. SHA identifies original capture bytes; any repository credential sanitization is separately hash-identified in source-manifest. Draft explanation awaiting root independent review."
+      },
+      {
+        "requestedUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+        "finalUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+        "publisher": "City of Louisville",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T03:49:53.600522+00:00",
+        "httpStatus": 200,
+        "rawHash": "c1e12be5ca52ad7f835aa38f56db22e926bf51bfa879fc78e0f6188d6e5b54ee",
+        "reviewedEvidence": "Official current2026 source question captured in full. SHA identifies original capture bytes; any repository credential sanitization is separately hash-identified in source-manifest. Draft explanation awaiting root independent review."
+      },
+      {
+        "requestedUrl": "https://www.lafayetteco.gov/4362/2026-Ballot-Measure",
+        "finalUrl": "https://www.lafayetteco.gov/4362/2026-Ballot-Measure",
+        "publisher": "City of Lafayette",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T03:49:53.615170+00:00",
+        "httpStatus": 200,
+        "rawHash": "dd817d7c456452b3b744e2c13423acfa7753461891e60d62c1be997b32023acc",
+        "reviewedEvidence": "Official current2026 source question captured in full. SHA identifies original capture bytes; any repository credential sanitization is separately hash-identified in source-manifest. Draft explanation awaiting root independent review."
+      },
+      {
+        "requestedUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+        "finalUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+        "publisher": "Boulder County Clerk and Recorder",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T03:45:10.269299+00:00",
+        "httpStatus": 200,
+        "rawHash": "3fb6bba68e66635f6233a9200597174279f911f41a721cbef4fc44383332e0f5",
+        "reviewedEvidence": "Official current2026 source question captured in full. SHA identifies original capture bytes; any repository credential sanitization is separately hash-identified in source-manifest. Draft explanation awaiting root independent review."
+      },
+      {
+        "requestedUrl": "https://niwotelection.org/ballot",
+        "finalUrl": "https://niwotelection.org/ballot",
+        "publisher": "Niwot Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T03:55:47.383419+00:00",
+        "httpStatus": 200,
+        "rawHash": "19d8bd24c355732b31d2bfff3d8f0d2c5ba994b0ff7a5409a5497890b8f9aa69",
+        "reviewedEvidence": "Official current2026 source question captured in full. SHA identifies original capture bytes; any repository credential sanitization is separately hash-identified in source-manifest. Draft explanation awaiting root independent review."
+      }
+    ]
+  }
+}

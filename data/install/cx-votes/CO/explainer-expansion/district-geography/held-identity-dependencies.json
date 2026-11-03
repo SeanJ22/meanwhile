@@ -1,0 +1,14 @@
+[
+  {
+    "heldRepoFile": "data/derived/registration/co.json",
+    "sha256": "0648d8844cec154f838605de6e2e63faa7fc3c02d3ed4ad7bdd7ea63d8b8854e"
+  },
+  {
+    "heldRepoFile": "data/reference/census_govt_units_2022.csv",
+    "sha256": "7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097"
+  },
+  {
+    "heldRepoFile": "data/reference/district-boundary-sources.json",
+    "sha256": "4c029192a44affbec2e825167d9054ba25fb6575a3bc63ae3501045e877b4601"
+  }
+]

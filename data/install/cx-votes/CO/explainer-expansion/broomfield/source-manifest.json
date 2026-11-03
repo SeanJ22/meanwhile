@@ -1,0 +1,22 @@
+[
+  {
+    "url": "https://broomfield.org/DocumentCenter/View/69259",
+    "sourceOrg": "City and County of Broomfield Attorney\u2019s Office",
+    "rawHash": "4f4713bffbdd2c1dfffa9210d8faa923f68f15aafbe40de57770c232c14a63b2",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "savedFile": "sources/4f4713bffbdd2c1dfffa9210d8faa923f68f15aafbe40de57770c232c14a63b2.capture.txt",
+    "savedSha256": "4f4713bffbdd2c1dfffa9210d8faa923f68f15aafbe40de57770c232c14a63b2",
+    "originalPdfHash": null,
+    "captureMetadataFile": "sources/capture-metadata.json",
+    "linkingPage": {
+      "url": "https://www.coloradosos.gov/pubs/elections/Resources/CountyElectionOffices.html",
+      "file": "sources/colorado-county-directory.html",
+      "sha256": "e3fbc830ccfa7da244a806b24bde1aeac6edd394250df7e0df0268f232de7a5d",
+      "authorityLink": {
+        "text": "Broomfield",
+        "url": "https://www.broomfield.org/index.aspx?nid=191"
+      }
+    }
+  }
+]

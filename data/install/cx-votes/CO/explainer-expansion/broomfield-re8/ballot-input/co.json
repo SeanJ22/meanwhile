@@ -1,0 +1,116 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-weld-county-school-district-re-8-2026-ballot-school-tax",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:weld_county_school_district_re_8",
+          "divisionVintage": "2026",
+          "title": "Weld County School District RE-8 — Operating Tax Question",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.broomfield.org/DocumentCenter/View/69245",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL WELD COUNTY SCHOOL DISTRICT NO. RE-8 TAXES BE INCREASED UP TO $4,900,000 ANNUALLY AND SHALL $2,675,000 OF EXISTING TAXES WHICH ARE SCHEDULED TO EXPIRE BE EXTENDED TO CONTINUE TO ADDRESS OPERATIONAL NEEDS, INCLUDING • MAINTAINING COMPETITIVE SALARIES AND WAGES FOR DISTRICT TEACHERS, TEACHERS' AIDES, BUS DRIVERS, CUSTODIANS, AND OTHER SUPPORT STAFF; AND • EXPAND PROGRAMMING, INCLUDING CAREER AND TECHNICAL EDUCATION OFFERINGS, AND HIRING ADDITIONAL EDUCATORS; BY AUTHORIZING A VARIABLE MILL LEVY OVERRIDE ANNUALLY LEVIED AT RATES SUFFICIENT TO PRODUCE THE FIXED AMOUNTS SPECIFIED ABOVE, TO BE IN ADDITION TO THE TAXES THAT OTHERWISE WOULD BE LEVIED IN ACCORDANCE WITH SECTION 22-54-108 OF THE COLORADO REVISED STATUTES AND TO CONSTITUTE A VOTER-APPROVED REVENUE CHANGE?",
+            "sourceOrg": "City and County of Broomfield Clerk and Recorder",
+            "sourceUrl": "https://www.broomfield.org/DocumentCenter/View/69245",
+            "collectedAt": "2026-11-03T04:35:29.528Z",
+            "verifiedAt": "2026-11-03T04:36:08.522450+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-weld-county-school-district-re-8-2026-ballot-school-tax#question",
+          "contestId": "co-weld-county-school-district-re-8-2026-ballot-school-tax",
+          "questionText": "SHALL WELD COUNTY SCHOOL DISTRICT NO. RE-8 TAXES BE INCREASED UP TO $4,900,000 ANNUALLY AND SHALL $2,675,000 OF EXISTING TAXES WHICH ARE SCHEDULED TO EXPIRE BE EXTENDED TO CONTINUE TO ADDRESS OPERATIONAL NEEDS, INCLUDING • MAINTAINING COMPETITIVE SALARIES AND WAGES FOR DISTRICT TEACHERS, TEACHERS' AIDES, BUS DRIVERS, CUSTODIANS, AND OTHER SUPPORT STAFF; AND • EXPAND PROGRAMMING, INCLUDING CAREER AND TECHNICAL EDUCATION OFFERINGS, AND HIRING ADDITIONAL EDUCATORS; BY AUTHORIZING A VARIABLE MILL LEVY OVERRIDE ANNUALLY LEVIED AT RATES SUFFICIENT TO PRODUCE THE FIXED AMOUNTS SPECIFIED ABOVE, TO BE IN ADDITION TO THE TAXES THAT OTHERWISE WOULD BE LEVIED IN ACCORDANCE WITH SECTION 22-54-108 OF THE COLORADO REVISED STATUTES AND TO CONSTITUTE A VOTER-APPROVED REVENUE CHANGE?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL WELD COUNTY SCHOOL DISTRICT NO. RE-8 TAXES BE INCREASED UP TO $4,900,000 ANNUALLY AND SHALL $2,675,000 OF EXISTING TAXES WHICH ARE SCHEDULED TO EXPIRE BE EXTENDED TO CONTINUE TO ADDRESS OPERATIONAL NEEDS, INCLUDING • MAINTAINING COMPETITIVE SALARIES AND WAGES FOR DISTRICT TEACHERS, TEACHERS' AIDES, BUS DRIVERS, CUSTODIANS, AND OTHER SUPPORT STAFF; AND • EXPAND PROGRAMMING, INCLUDING CAREER AND TECHNICAL EDUCATION OFFERINGS, AND HIRING ADDITIONAL EDUCATORS; BY AUTHORIZING A VARIABLE MILL LEVY OVERRIDE ANNUALLY LEVIED AT RATES SUFFICIENT TO PRODUCE THE FIXED AMOUNTS SPECIFIED ABOVE, TO BE IN ADDITION TO THE TAXES THAT OTHERWISE WOULD BE LEVIED IN ACCORDANCE WITH SECTION 22-54-108 OF THE COLORADO REVISED STATUTES AND TO CONSTITUTE A VOTER-APPROVED REVENUE CHANGE?",
+            "sourceOrg": "City and County of Broomfield Clerk and Recorder",
+            "sourceUrl": "https://www.broomfield.org/DocumentCenter/View/69245",
+            "collectedAt": "2026-11-03T04:35:29.528Z",
+            "verifiedAt": "2026-11-03T04:36:08.522450+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-weld-county-school-district-re-8-2026-ballot-school-tax",
+          "whatItDoes": "Authorize up to $4.9 million in additional annual property taxes for Weld County School District RE-8 and continue $2.675 million in existing taxes scheduled to expire. Money would support school operations, including teacher and staff compensation, expanded programs and career and technical education, and additional educators. A variable property-tax levy would be set each year to raise the stated fixed amounts, in addition to other taxes under state law. The measure would approve a revenue change. The question states no end date for either authorization.",
+          "yesMeans": "Approve both the new annual tax authority and extension of the expiring taxes.",
+          "noMeans": "Reject the proposed new taxes and extension; the existing taxes would retain their current expiration schedule.",
+          "parts": [],
+          "sourceUrl": "https://www.broomfield.org/DocumentCenter/View/69245",
+          "sourceHash": "71193cdd03e01cc496e2df076d8f86eb9395780d727a76b1ac51e9b81ded5aa1",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:36:08.522450+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:36:08.522450+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.broomfield.org/DocumentCenter/View/69245",
+        "finalUrl": "https://www.broomfield.org/DocumentCenter/View/69245",
+        "publisher": "City and County of Broomfield Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:35:29.528Z",
+        "httpStatus": 200,
+        "originHttpStatus": null,
+        "rawHash": "b48f28aa784832c5f80350879ffb663728be1fab55d4480517472955025ca08f",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+        "captureMetadata": {
+          "officialUrl": "https://www.broomfield.org/DocumentCenter/View/69245",
+          "captureProvider": "search_service_web_run PDF text extraction/OCR",
+          "rawFormat": "CAPTURED_SOURCE_TEXT",
+          "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+          "lineCount": 201,
+          "coverage": "Every line0through200capturedfromofficial7pagePDFviews",
+          "nativeGovernmentFetch": {
+            "status": null,
+            "reason": "Native not attempted during shared runtime allhostHTTPoutage"
+          },
+          "requests": [
+            {
+              "request": "official7page schoolnotice",
+              "capturedAt": "2026-11-03T04:35:29.280Z",
+              "reference": "turn775300view1",
+              "lineCount": 183
+            },
+            {
+              "request": [
+                {
+                  "ref_id": "https://www.broomfield.org/DocumentCenter/View/69245",
+                  "lineno": 195
+                }
+              ],
+              "capturedAt": "2026-11-03T04:35:29.528Z",
+              "reference": "turn196719view0",
+              "lineCount": 201
+            }
+          ],
+          "conflicts": []
+        },
+        "reviewedEvidence": "Successful complete first-party government PDF text capture via independent web tool; legacyhttpStatus200 is a capture-successmarker, not a claim about originHTTPstatus. Every extracted line accounted for; originalPDFbytes and their SHA are unavailable during shared runtime networkoutage. Exact quotes and registered divisions checked; draft explanations await independent rootreview."
+      }
+    ]
+  }
+}

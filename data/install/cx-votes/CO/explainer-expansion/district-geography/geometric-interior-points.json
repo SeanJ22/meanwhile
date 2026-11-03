@@ -1,0 +1,26 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:co/special_district:west_metropolitan_fire_protection_district",
+    "point": [
+      -105.13130702796289,
+      39.600384580133735
+    ],
+    "pointBasis": "Deterministic geometric interior point; no residential address or voter data."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/special_district:conifer_fire_protection_district",
+    "point": [
+      -105.26368043193168,
+      39.369503585017966
+    ],
+    "pointBasis": "Deterministic geometric interior point; no residential address or voter data."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/judicial_district:17",
+    "point": [
+      -104.43587550036189,
+      39.89107299986567
+    ],
+    "pointBasis": "Deterministic geometric interior point; no residential address or voter data."
+  }
+]

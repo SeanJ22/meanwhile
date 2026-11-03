@@ -1,0 +1,32 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-weld-county-school-district-re-8-2026-ballot-school-tax",
+      "sourceUrl": "https://www.broomfield.org/DocumentCenter/View/69245"
+    }
+  ],
+  "operation": "Append only these measure contests, official questions and neutral explanations; preserve unrelated ballot data. Any unresolved exactdistrict attachments are excluded and saved separately. No production writes or app changes.",
+  "validation": {
+    "independentReview": "PENDING_ROOT",
+    "measureRecordIssue": "PASS",
+    "supportingQuotes": "PASS",
+    "sourceHash": "PASS",
+    "heldQuestionHash": "PASS",
+    "registeredDivision": "PASS (exactexistingRE8schooldivision)",
+    "officialDesignation": "OMITTED_UNTIL_SC_OCRARTIFACT_RESOLVED"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

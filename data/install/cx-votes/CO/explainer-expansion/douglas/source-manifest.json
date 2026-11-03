@@ -1,0 +1,13 @@
+[
+  {
+    "url": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+    "sourceOrg": "Douglas County Clerk and Recorder",
+    "rawHash": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "savedFile": "sources/1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4.capture.txt",
+    "savedSha256": "1434300adfb80b890a439864a2d1a2ab41850be705d53f9e102a7c167fda46f4",
+    "originalPdfHash": null,
+    "captureMetadataFile": "sources/capture-metadata.json"
+  }
+]

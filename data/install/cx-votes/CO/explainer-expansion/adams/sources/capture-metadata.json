@@ -1,0 +1,116 @@
+{
+  "officialUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+  "captureProvider": "search_service_web_run PDF extraction",
+  "rawFormat": "CAPTURED_SOURCE_TEXT",
+  "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+  "lineCount": 1104,
+  "coverage": "Every line 0 through 1103 captured from official PDF views",
+  "nativeGovernmentFetch": {
+    "status": 503,
+    "reason": "Shared runtime all-host HTTP outage per root; does not establish government origin failure"
+  },
+  "requests": [
+    {
+      "request": "initial PDF opens",
+      "capturedAt": "2026-11-03T04:12:29.005Z",
+      "reference": "turn887693view1",
+      "lineCount": 335
+    },
+    {
+      "request": "local-measure PDF views",
+      "capturedAt": "2026-11-03T04:12:29.006Z",
+      "reference": "turn162188view1",
+      "lineCount": 92
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+          "lineno": 242
+        },
+        {
+          "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "lineno": 370
+        }
+      ],
+      "capturedAt": "2026-11-03T04:12:29.384Z",
+      "reference": "turn510467view1",
+      "lineCount": 212
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+          "lineno": 459
+        },
+        {
+          "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "lineno": 502
+        }
+      ],
+      "capturedAt": "2026-11-03T04:12:29.713Z",
+      "reference": "turn754854view1",
+      "lineCount": 97
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+          "lineno": 585
+        },
+        {
+          "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "lineno": 502
+        }
+      ],
+      "capturedAt": "2026-11-03T04:12:30.037Z",
+      "reference": "turn659857view1",
+      "lineCount": 127
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "lineno": 624
+        }
+      ],
+      "capturedAt": "2026-11-03T04:12:54.737Z",
+      "reference": "turn264657view0",
+      "lineCount": 156
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "lineno": 769
+        }
+      ],
+      "capturedAt": "2026-11-03T04:12:55.253Z",
+      "reference": "turn654990view0",
+      "lineCount": 145
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "lineno": 904
+        }
+      ],
+      "capturedAt": "2026-11-03T04:12:55.670Z",
+      "reference": "turn468937view0",
+      "lineCount": 145
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "lineno": 1032
+        }
+      ],
+      "capturedAt": "2026-11-03T04:12:56.836Z",
+      "reference": "turn846636view0",
+      "lineCount": 143
+    }
+  ],
+  "conflicts": []
+}

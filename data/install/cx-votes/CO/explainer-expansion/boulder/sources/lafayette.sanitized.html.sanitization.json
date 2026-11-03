@@ -1,0 +1,16 @@
+{
+  "originalSha256": "dd817d7c456452b3b744e2c13423acfa7753461891e60d62c1be997b32023acc",
+  "savedSha256": "e178a476cbe7c52c93909b96ff1a0fbaace093a1176fd422d98085551a4affcf",
+  "replacements": 1,
+  "redactions": [
+    {
+      "classId": "google_api_key",
+      "fingerprint": "142ea3c41e7c",
+      "length": 39,
+      "line": 408,
+      "occurrences": 1,
+      "confirmed": true
+    }
+  ],
+  "preserved": []
+}

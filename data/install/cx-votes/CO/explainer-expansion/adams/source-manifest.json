@@ -1,0 +1,13 @@
+[
+  {
+    "url": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+    "sourceOrg": "Adams County Clerk and Recorder",
+    "rawHash": "d9dd02b5b4f90478cc6996a0d4353100923e4a153e1529ca09a5ba553e2755cd",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "savedFile": "sources/d9dd02b5b4f90478cc6996a0d4353100923e4a153e1529ca09a5ba553e2755cd.capture.txt",
+    "savedSha256": "d9dd02b5b4f90478cc6996a0d4353100923e4a153e1529ca09a5ba553e2755cd",
+    "originalPdfHash": null,
+    "captureMetadataFile": "sources/capture-metadata.json"
+  }
+]

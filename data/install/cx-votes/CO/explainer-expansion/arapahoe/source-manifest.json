@@ -1,0 +1,13 @@
+[
+  {
+    "url": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230",
+    "sourceOrg": "Arapahoe County Clerk and Recorder",
+    "rawHash": "6b1616bfce9d947b694ecefa29740dab063a53be024cab2ce5f1cdf6d5efb0a3",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "savedFile": "sources/6b1616bfce9d947b694ecefa29740dab063a53be024cab2ce5f1cdf6d5efb0a3.capture.txt",
+    "savedSha256": "6b1616bfce9d947b694ecefa29740dab063a53be024cab2ce5f1cdf6d5efb0a3",
+    "originalPdfHash": null,
+    "captureMetadataFile": "sources/capture-metadata.json"
+  }
+]

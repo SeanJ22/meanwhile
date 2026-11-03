@@ -1,0 +1,175 @@
+[
+  {
+    "id": "boulder-county",
+    "url": "https://bouldercounty.gov/government/county-ballot-measures/",
+    "originalSha256": "7eaafa7cc075e32ad8a15027ac3e082ddd555bd4673d869ab2d73a42b1347079",
+    "retrievedAt": "2026-11-03T03:49:53.568314+00:00",
+    "sourceOrg": "Boulder County Board of County Commissioners",
+    "rawFormat": "HTML",
+    "hashScope": "complete original captured HTML bytes; any repository sanitization separately identified",
+    "privateOriginalFile": "/workspace/work/election-day/explainers-only/CO/boulder-county.html",
+    "savedFile": "sources/boulder-county.sanitized.html",
+    "sanitization": {
+      "originalSha256": "7eaafa7cc075e32ad8a15027ac3e082ddd555bd4673d869ab2d73a42b1347079",
+      "savedSha256": "60d614754bb03358de9c6f6a5792985564548db69ab58970fae4c90510bf39fe",
+      "replacements": 1,
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "16e20c7a2e94",
+          "length": 39,
+          "line": 101,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "preserved": []
+    },
+    "savedSha256": "60d614754bb03358de9c6f6a5792985564548db69ab58970fae4c90510bf39fe"
+  },
+  {
+    "id": "boulder-city",
+    "url": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures",
+    "originalSha256": "f034212d2c2f6ad7df623475985afe28f1adb502e1fac86b1a0d20a46f66e5d5",
+    "retrievedAt": "2026-11-03T03:49:53.554093+00:00",
+    "sourceOrg": "City of Boulder",
+    "rawFormat": "HTML",
+    "hashScope": "complete original captured HTML bytes; any repository sanitization separately identified",
+    "privateOriginalFile": "/workspace/work/election-day/explainers-only/CO/boulder-city.html",
+    "savedFile": "sources/boulder-city.sanitized.html",
+    "sanitization": {
+      "originalSha256": "f034212d2c2f6ad7df623475985afe28f1adb502e1fac86b1a0d20a46f66e5d5",
+      "savedSha256": "f034212d2c2f6ad7df623475985afe28f1adb502e1fac86b1a0d20a46f66e5d5",
+      "replacements": 0,
+      "redactions": [],
+      "preserved": []
+    },
+    "savedSha256": "f034212d2c2f6ad7df623475985afe28f1adb502e1fac86b1a0d20a46f66e5d5"
+  },
+  {
+    "id": "longmont",
+    "url": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/",
+    "originalSha256": "d246980aa91fc804815b283c5af56d77a1f453e53c2a34f5d44db803b414c3d7",
+    "retrievedAt": "2026-11-03T03:49:53.582613+00:00",
+    "sourceOrg": "City of Longmont",
+    "rawFormat": "HTML",
+    "hashScope": "complete original captured HTML bytes; any repository sanitization separately identified",
+    "privateOriginalFile": "/workspace/work/election-day/explainers-only/CO/longmont.html",
+    "savedFile": "sources/longmont.sanitized.html",
+    "sanitization": {
+      "originalSha256": "d246980aa91fc804815b283c5af56d77a1f453e53c2a34f5d44db803b414c3d7",
+      "savedSha256": "d246980aa91fc804815b283c5af56d77a1f453e53c2a34f5d44db803b414c3d7",
+      "replacements": 0,
+      "redactions": [],
+      "preserved": []
+    },
+    "savedSha256": "d246980aa91fc804815b283c5af56d77a1f453e53c2a34f5d44db803b414c3d7"
+  },
+  {
+    "id": "louisville",
+    "url": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/",
+    "originalSha256": "c1e12be5ca52ad7f835aa38f56db22e926bf51bfa879fc78e0f6188d6e5b54ee",
+    "retrievedAt": "2026-11-03T03:49:53.600522+00:00",
+    "sourceOrg": "City of Louisville",
+    "rawFormat": "HTML",
+    "hashScope": "complete original captured HTML bytes; any repository sanitization separately identified",
+    "privateOriginalFile": "/workspace/work/election-day/explainers-only/CO/louisville.html",
+    "savedFile": "sources/louisville.sanitized.html",
+    "sanitization": {
+      "originalSha256": "c1e12be5ca52ad7f835aa38f56db22e926bf51bfa879fc78e0f6188d6e5b54ee",
+      "savedSha256": "c1e12be5ca52ad7f835aa38f56db22e926bf51bfa879fc78e0f6188d6e5b54ee",
+      "replacements": 0,
+      "redactions": [],
+      "preserved": []
+    },
+    "savedSha256": "c1e12be5ca52ad7f835aa38f56db22e926bf51bfa879fc78e0f6188d6e5b54ee"
+  },
+  {
+    "id": "lafayette",
+    "url": "https://www.lafayetteco.gov/4362/2026-Ballot-Measure",
+    "originalSha256": "dd817d7c456452b3b744e2c13423acfa7753461891e60d62c1be997b32023acc",
+    "retrievedAt": "2026-11-03T03:49:53.615170+00:00",
+    "sourceOrg": "City of Lafayette",
+    "rawFormat": "HTML",
+    "hashScope": "complete original captured HTML bytes; any repository sanitization separately identified",
+    "privateOriginalFile": "/workspace/work/election-day/explainers-only/CO/lafayette.html",
+    "savedFile": "sources/lafayette.sanitized.html",
+    "sanitization": {
+      "originalSha256": "dd817d7c456452b3b744e2c13423acfa7753461891e60d62c1be997b32023acc",
+      "savedSha256": "e178a476cbe7c52c93909b96ff1a0fbaace093a1176fd422d98085551a4affcf",
+      "replacements": 1,
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 408,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "preserved": []
+    },
+    "savedSha256": "e178a476cbe7c52c93909b96ff1a0fbaace093a1176fd422d98085551a4affcf"
+  },
+  {
+    "id": "boulder-tabor",
+    "url": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf",
+    "originalSha256": "3fb6bba68e66635f6233a9200597174279f911f41a721cbef4fc44383332e0f5",
+    "retrievedAt": "2026-11-03T03:45:10.269299+00:00",
+    "sourceOrg": "Boulder County Clerk and Recorder",
+    "rawFormat": "PDF",
+    "hashScope": "complete original captured PDF bytes; any repository sanitization separately identified",
+    "privateOriginalFile": "/workspace/work/election-day/explainers-only/CO/boulder-tabor.pdf",
+    "savedFile": "sources/boulder-tabor.pdf",
+    "savedSha256": "3fb6bba68e66635f6233a9200597174279f911f41a721cbef4fc44383332e0f5",
+    "sanitization": {
+      "replacements": 0
+    }
+  },
+  {
+    "id": "niwot",
+    "url": "https://niwotelection.org/ballot",
+    "originalSha256": "19d8bd24c355732b31d2bfff3d8f0d2c5ba994b0ff7a5409a5497890b8f9aa69",
+    "retrievedAt": "2026-11-03T03:55:47.383419+00:00",
+    "sourceOrg": "Niwot Election Commission",
+    "rawFormat": "HTML",
+    "hashScope": "complete original captured HTML bytes; any repository sanitization separately identified",
+    "privateOriginalFile": "/workspace/work/election-day/explainers-only/CO/niwot.html",
+    "savedFile": "sources/niwot.sanitized.html",
+    "sanitization": {
+      "originalSha256": "19d8bd24c355732b31d2bfff3d8f0d2c5ba994b0ff7a5409a5497890b8f9aa69",
+      "savedSha256": "19d8bd24c355732b31d2bfff3d8f0d2c5ba994b0ff7a5409a5497890b8f9aa69",
+      "replacements": 0,
+      "redactions": [],
+      "preserved": []
+    },
+    "savedSha256": "19d8bd24c355732b31d2bfff3d8f0d2c5ba994b0ff7a5409a5497890b8f9aa69",
+    "linkingPage": {
+      "url": "https://bouldercounty.gov/elections/information/2026-general-election-candidates-and-ballot-measures/",
+      "originalSha256": "0663bc93bb7f5c7116b94c93fedbe5c7133ed9318f0a16cf340c7d217b58f885",
+      "savedFile": "sources/boulder-index.sanitized.html",
+      "savedSha256": "4f6219da86d81a2562bd5fa4174cf2d1f79ccd19a0d3279d3440b6dea6c7da79",
+      "authorityLink": {
+        "text": "2026 Proposed Municipality of Niwot Ballot Measures",
+        "url": "https://niwotelection.org/ballot"
+      },
+      "sanitization": {
+        "originalSha256": "0663bc93bb7f5c7116b94c93fedbe5c7133ed9318f0a16cf340c7d217b58f885",
+        "savedSha256": "4f6219da86d81a2562bd5fa4174cf2d1f79ccd19a0d3279d3440b6dea6c7da79",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "16e20c7a2e94",
+            "length": 39,
+            "line": 103,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    }
+  }
+]

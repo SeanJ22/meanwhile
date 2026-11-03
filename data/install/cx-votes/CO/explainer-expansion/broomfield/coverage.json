@@ -1,0 +1,15 @@
+{
+  "county": "broomfield",
+  "officialCurrentLocalMeasureCount": null,
+  "newDraftCount": 3,
+  "exactRegisteredAttachmentCount": 3,
+  "pendingAttachmentCount": 0,
+  "alreadyPreparedElsewhere": [
+    "17thJudicialDistrictQuestion7E:alreadydraftedinAdamspendingexactdistrictattachment"
+  ],
+  "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+  "sourceCapture": "Every line 0 through 262 captured from official PDF view",
+  "claimLimit": "This attorney booklet certifiesfourcouncil-referredquestionsonly;threeare newhere,17thJudicial7Eisalreadydraftedelsewhere. Noall-localcountycompletenessclaim.",
+  "officialCouncilReferredMeasureCount": 4,
+  "otherLocalDistrictCompleteness": "NOT_CERTIFIED:sourceexplicitlyexcludesschoolquestions;regionalFRPRalsoseparate"
+}

@@ -1,0 +1,2921 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+<!-- Google Tag Manager for GA4 -->
+				<script>(function(w,d,s,l,i){w.GAMeasurementID='G-V67BCVC3C7';w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','cpDataLayerGA4','GTM-K73C5PS');</script>
+				<!-- End Google Tag Manager for GA4 -->
+				<script type='text/javascript'>
+					var enableTelemetry = 'false'
+					var aiConfig = {
+					instrumentationKey: '1cde048e-3185-4906-aa46-c92a7312b60f'						
+					}
+					var appInsights = window.appInsights || function (a) { function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement('script'); b.src = a.url || 'https://js.monitor.azure.com/scripts/a/ai.0.js', d.getElementsByTagName('script')[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ['Event', 'Exception', 'Metric', 'PageView', 'Trace', 'Dependency']; f.length;)b('track' + f.pop()); if (b('setAuthenticatedUserContext'), b('clearAuthenticatedUserContext'), b('startTrackEvent'), b('stopTrackEvent'), b('startTrackPage'), b('stopTrackPage'), b('flush'), !a.disableExceptionTracking) { f = 'onerror', b('_' + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c['_' + f](a, b, d, e, h), i } } return c }(aiConfig);
+					window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length;
+					// Add telemetry initializer
+					appInsights.queue.push(function() {
+						appInsights.context.addTelemetryInitializer(function(envelope) {
+							var telemetryItem = envelope.data.baseData;
+							// To check the telemetry item’s type:
+							if (!false)
+							{
+								//If the telemetry is not enabled, we still want to capture Google map custom event, so only allow that
+								if (envelope.name.indexOf('.Event') == -1)
+									return false;
+							}
+						});
+					});						
+					appInsights.trackPageView();
+				</script>
+	<script>
+		function populateAntiForgery(token) {
+			var input = document.createElement("input");
+			input.name = "__RequestVerificationToken";
+			input.type = "hidden";
+			input.value = token;
+			var absPat = /^https?:\/\/|^\/\//i;
+			var forms = document.getElementsByTagName("form");
+			for (var i = 0; i < forms.length; i++) {
+				if (forms[i].method == "post" &&
+					!forms[i].querySelector('[name="__RequestVerificationToken"]') &&
+					!absPat.test(forms[i].getAttribute("action"))) {
+					forms[i].appendChild(input.cloneNode());
+				}
+			}
+		}
+
+		function getAntiForgeryToken(callback, error) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/antiforgery");
+			xhr.addEventListener("load", function() {
+				try {
+					if (this.status !== 200) {
+						throw Error("Invalid status. Could not retrieve antiforgery token.");
+					}
+					var obj = JSON.parse(this.responseText);
+					callback(obj.token);
+				} catch (e) {
+					typeof error === "function" && error(e);
+				}
+			});
+			xhr.send();
+		}
+
+		getAntiForgeryToken(function(token) {
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded" 
+				|| document.readyState === "interactive") {
+				populateAntiForgery(token);
+				return;
+			}
+			document.addEventListener("DOMContentLoaded", function() {
+				populateAntiForgery(token);
+			}, false);
+		}, console.error);
+	</script>
+			
+
+	<script type="text/javascript">
+		window.departmentHeader = {};
+		window.pageSectionTracker = {};
+		window.isResponsiveEnabled = true;
+		window.isRemoveSetHeights= true;
+		if (window.isRemoveSetHeights) {
+			document.documentElement.className += ' removeSetHeights';
+		}
+		window.mainMenuMediaQuery = 'screen and (max-width: 40em)';
+		window.isMobileBrowserIncludingTablets = false;
+		window.fixedResponsiveMenu = false;
+		window.fullWidthResponsiveMenu = false;
+		window.responsiveMenuHeight = '';
+		window.responsiveMenuFontSize = '';
+		window.isContentAdvisor = false;
+		(function () {
+			window.setSizeCookie = function () {
+				document.cookie = "dpi=" + window.devicePixelRatio + "; path=/";
+				document.cookie = "viewportWidth=" + window.innerWidth + "; path=/";
+				document.cookie = "viewportHeight=" + window.innerHeight + "; path=/";
+				if (screen && screen.width && screen.height) {
+					document.cookie = "screenWidth=" + screen.width + "; path=/";
+					document.cookie = "screenHeight=" + screen.height + "; path=/";
+				}
+				document.cookie = "responsiveGhost=1; path=/";
+			};
+
+			setSizeCookie();
+		}());
+	</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script async src="https://docaccess.com/docbox.js"></script>
+	<meta name="google-site-verification" content="Fv_TcQVlf83ymrqsSgGsEzyWjLseCeiAa93p3eDcIeU" />
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-53BWNW7');</script>
+<!-- End Google Tag Manager -->
+
+	<meta name="category0" content="Elections" />
+<meta name="category1" content="Election Information" />
+<meta name="category2" content="Upcoming Election" />
+<meta name="category3" content="On the Ballot" />
+
+	
+	<meta name="theme-color" content="rgb(186, 86, 36)">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+		<title>On the Ballot | Jefferson County, CO</title>
+
+		<meta name="description" content="Information about candidate races and ballot initiatives for the upcoming election">
+		<meta name="keywords" content="ballot,candidates,blue book,TABOR">
+			<script src="/Assets/Scripts/jQuery/jquery-3.7.1.min.js"></script>
+	<script src="/Assets/Scripts/jQuery/jquery-migrate-3.6.0.min.js" type="text/javascript"></script>
+	
+
+	<!--[if IE 6]><script language="JavaScript" type="text/javascript"> var isie6 = true; </script><![endif]-->
+	<!--[if IE 7]><script language="JavaScript" type="text/javascript"> var isie7 = true; </script><![endif]-->
+	<!--[if IE 8]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<!--[if IE 9]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<script type="text/javascript"><!--
+	var intCountryCode = 840;
+	var order = '';
+//--></script>
+	
+<link href="/-880373222.css" rel="stylesheet" type="text/css" />	<link href="/828027460.css" rel="stylesheet" type="text/css" />	<link href="/-1534821332.css" rel="stylesheet" type="text/css" />
+
+	<link rel="stylesheet" type="text/css" href="/Assets/Styles/Print.css" media="print">
+	<script type="text/javascript">
+		window.Pages = window.Pages || {};
+		// FrontEnd RWD initialization
+		window.Pages.rwdReady = $.Deferred();
+		window.Pages.toolBarDeferred = $.Deferred();
+		window.Pages.rwdSetupComplete = $.Deferred();
+		window.Pages.megaMenuLoaded = $.Deferred();
+		window.Pages.angularToolbarComplete = $.Deferred();
+		window.Pages.frontEndToolbarComplete = $.Deferred();
+	</script>
+	<!--CPHeadContent-->
+	<script src="/636175734.js" type="text/javascript"></script>
+	
+	
+	
+	
+
+
+
+
+	<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="/App_Themes/ie8.css"><![endif]-->
+	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/App_Themes/ie7.css"><![endif]-->
+	<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="/App_Themes/ie6.css"><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="/Scripts/html5.js"></script><![endif]-->
+
+	<script type="text/javascript">
+		setEditorVariables(false, 840);
+		function getPrintPreviewType() { return 0; } function printPreview() {pPreview(getPrintPreviewType()); }
+	</script>
+	<script src="/Assets/Scripts/AlpineJS/3.14.1/alpine.min.js" type="text/javascript" defer="defer"></script>
+</head>
+<body class="wide hideContent" >
+
+    <script>jQuery(document).click(function (event) {
+	var target = jQuery(event.target);
+	if (target.attr('src') && target.parents('.image').length && target.parents('.widget').length) {
+		var text = target.attr('title');
+		
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Image',
+				eventAction: 'Image - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.is('button') || target.hasClass('button') || target.parents().hasClass('button')) {
+		var text = "";
+		if (target.parents('.button')[0]) {
+			text = target.parents('.button').first().text();
+		} else if (target.text().length) {
+			text = target.text();
+		} else if (target.attr('title').length) {
+			text = target.attr('title');
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Button - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetCustomHtml').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Custom Html',
+				eventAction: 'Custom Html Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.editor').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Editor',
+				eventAction: 'Editor Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.GraphicLinks').length) {
+		var text = "";
+		var targetGraphicLink = target;
+		if (target.hasClass('widgetGraphicLinksLink')) {
+			targetGraphicLink = jQuery(target.children()[0]);
+		}
+		if (targetGraphicLink.hasClass('text')) {
+			text = targetGraphicLink.text();
+		} else if (targetGraphicLink.attr('src').length) {
+			if (targetGraphicLink.attr('alt').length) {
+				text = targetGraphicLink.attr('alt');
+			} else {
+				text = targetGraphicLink.attr('src');
+			}
+		} else {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Graphic Links',
+				eventAction: 'Graphic Link - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.InfoAdvanced').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Info Advanced',
+				eventAction: 'Info Advanced Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.list').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'List',
+				eventAction: 'List Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.megaMenuItem').length || target.parents('.topMenuItem').length) {
+		var megaMenuText = jQuery('.topMenuItem.mouseover').find('span').text();
+		var breadCrumbs = [];
+		jQuery('.breadCrumbs > li').each(function () {
+			 breadCrumbs.push(this.textContent);
+		});
+		var pageTitle = breadCrumbs.join('>');
+		var subTitleText = target.parents('.megaMenuItem').children('.widgetTitle').children().text();
+		var text = "";
+		if (pageTitle) {
+			text += pageTitle + " | ";
+		} else {
+			text += document.title + ' - ';
+		}
+		if (target.text() == "" && megaMenuText == "") {
+			text += "N/A";
+		} else if (target.text().length && megaMenuText.length) {
+			if (megaMenuText == target.text()) {
+				text += megaMenuText;
+			} else {
+				text += megaMenuText + " - " + subTitleText + " - " + target.text();
+			}
+		} else if (target.text() == "") {
+			text += megaMenuText;
+		} else {
+			text += target.text();
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Mega Menu',
+				eventAction: 'Mega Menu : ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetNewsFlash').length && target.parents('.widgetItem').length) {
+		var text = jQuery(target.parents('.widgetItem')[0]).find('.widgetTitle').children().text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'News Flash',
+				eventAction: 'News Flash - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.hasClass('widgetQuickLinksLink') || target.find('.widgetQuickLinksLink').length) {
+		var text = target.text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Quick Links',
+				eventAction: 'Quick Links - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.attr('src') && target.parents('.cpSlideshow').length) {
+		var text = target.attr('title');
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Slideshow',
+				eventAction: 'Slideshow - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetText').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Text',
+				eventAction: 'Text Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+});</script>
+	<div id="popoverModal" class="cp-PopOver cp-PopOver--modal cp-AdminWrap" style="position: fixed; display: none;">
+	<div class="cp-PopOver-header">
+		<h3 class="cp-PopOver-title"></h3>
+		<button class="cp-Btn cp-PopOver-close" onclick="closePopOverModal(event)">
+			<svg class="cp-Icon--close" alt="close" title="close">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconClose"></use>
+			</svg>
+		</button>
+	</div>
+	<div id="cpPopOverBody" class="cp-PopOver-body">
+		<form id="cpPopOverForm" name="cpPopOverForm" novalidate></form>
+	</div>
+	<div id="cpPopOverFooter" class="cp-PopOver-footer">
+		<div class="cp-BtnGroup" id="actionButtons">
+			<!-- Action buttons will be dynamically added here -->
+		</div>
+	</div>
+</div>
+    <div id="fb-root"></div>
+<div id=skipToContentLinks>
+<a href="#cc4a61ef01-7f4b-463c-b15d-d78c950fb4b6" target="_self" class="skipToContentLink">Skip to Main Content</a>
+</div>
+    <form id="frmReferenceFormForTelerikEditorDialogs"></form>
+
+        <input type="hidden" id="GoogleMapsKey" value="__SOURCE_CREDENTIAL_REDACTED__" />
+
+
+
+    <input type="hidden" id="cpcDomain" value="https://cp-civicplusuniversity2.civicplus.com">
+    <input type="hidden" id="hdnStructureID" value="9" />
+    <input type="hidden" id="hdnContentCollectionID" value="a38503d9-997e-4327-95ad-5bae0f8dea25" />
+    <input type="hidden" id="hdnWorkingCopyID" value="00000000-0000-0000-0000-000000000000" />
+    <input type="hidden" id="hdnThemeID" value="128" />
+    <input type="hidden" id="pageIsFrontEnd" value="true" />
+    <input type="hidden" id="pageModuleID" />
+    <input type="hidden" id="pagePageID" value="4652" />
+
+    <div id="stickyPlaceholder"></div>
+    <div id="outer-wrap" class="outer-wrap">
+        <div id="inner-wrap" class="inner-wrap">
+                <div id="divToolbars" class="cpToolbars newCP mui-fixed" style="">
+                    
+
+
+
+                </div>
+            <div id="bodyWrapper">
+                <div id="mainNavHolderMobile" class="mainNavHolderMobile"></div>
+                
+<div data-cpRole="structuralContainer" id="bodyContainerTS">
+<!-- Header Container --><header data-cpRole="structuralContainer" id="headerContainerTS" class="fixedTopTS">
+<div class="siteWrap"><div data-cpRole="banner" id="bannerLogoTS" class="bannerLogoTS empty">
+
+
+
+
+				<a id="bannerLogoTS-507" style="			display: block; text-align: center;
+" class="bannerObject" href="/4947" target="_self"><img alt="Jefferson County Colorado Elections Home Page" class="bannerObject" height="294" src="/ImageRepository/Document?documentID=51509" width="1202" /></a>
+</div><nav data-cpRole="nav" id="mainNav" class="siteNav mainNav" role="navigation">
+<ol id="mainNavMenu" data-parent="4947" class="rootNavMenu" role="menu"><!--
+--><li id="MainItem5044" class="topMenuItem" role="none" data-pageid="5044" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu5044" id = "mainNavVoters" class="navMainItem mainNavItem mainNavItem1 " href="/5044/Voters" target = "_self" >   Voters  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem3901" class="topMenuItem" role="none" data-pageid="3901" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu3901" id = "mainNavElectionInformation" class="navMainItem mainNavItem mainNavItem2 " href="/3901/Election-Information" target = "_self" >   Election Information  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem5028" class="topMenuItem" role="none" data-pageid="5028" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu5028" id = "mainNavCandidatesJurisdictions" class="navMainItem mainNavItem mainNavItem3 " href="/5028/Candidates-Jurisdictions" target = "_self" >   Candidates &amp; Jurisdictions  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem4687" class="topMenuItem" role="none" data-pageid="4687" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu4687" id = "mainNavGetInvolved" class="navMainItem mainNavItem mainNavItem4 " href="/4687/Get-Involved" target = "_self" >   Get Involved  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem5052" class="topMenuItem" role="none" data-pageid="5052" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu5052" id = "mainNavAboutUs" class="navMainItem mainNavItem mainNavItem5 " href="/358/About-Us" target = "_self" >   About Us  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem3896" class="topMenuItem" role="none" data-pageid="3896" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu3896" id = "mainNavContactUs" class="navMainItem mainNavItem mainNavItem6 " href="/3896/Contact-Us" target = "_self" >   Contact Us  </a>			<!--
+			--><!--
+			--></li><!---->
+</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupMenu() {
+				const menuID = 'mainNavMenu';
+				const menuType = MAIN_MENU;
+
+				//setup menu manager properties for main menu
+				if (!menuManager.mobileMainNav && true)
+					menuManager.adjustMainItemsWidth('#' + menuID);
+				menuManager.isMainMenuEditable = false;
+				menuManager.mainMenuMaxSubMenuLevels = 4;
+				menuManager.setMOMMode(2, menuType);
+
+				//Init main menu
+				const setupDraggable = menuManager.isMainMenuEditable;
+				const urlToGetHiddenMenus = '/Pages/MenuMain/HiddenMainSubMenus?pageID=4947&moduleID=&themeID=128&menuContainerID=mainNav';
+
+				menuManager.setupMenu(menuID, 'mainNav', menuType, setupDraggable, urlToGetHiddenMenus);
+				menuManager.mainMenuInit = true;
+				menuManager.mainMenuTextResizer = false;
+				if (1.00 > 0)
+					menuManager.mainMenuTextResizerRatio = 1.00;
+				if (window.isResponsiveEnabled)
+					menuManager.mainMenuReady.resolve();
+
+			}
+
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded"
+				|| document.readyState === "interactive") {
+				setupMenu();
+				return;
+			}
+
+			document.addEventListener("DOMContentLoaded", setupMenu);
+		})();
+	</script>
+
+
+<aside data-cpRole="megaMenu" id="megaMenu" class="megaMenu" style="display: none;"><input type="hidden" id="megaMenuPopupDirection" value="0"><input type="hidden" id="megaMenuWidthReference" value="0"><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu5044" class="contentTop mainNavMegaMenu megaMenuContainer pageID_5044 hidden" data-orientation="horizontal">	<div id="cce0bac51d-2c64-4b76-baea-f536ea0d99bc" data-containerid="e0bac51d-2c64-4b76-baea-f536ea0d99bc" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu3901" class="contentTop mainNavMegaMenu megaMenuContainer pageID_3901 hidden" data-orientation="horizontal">	<div id="cc52076ec7-2c64-4fd6-af9b-63e01ee9a687" data-containerid="52076ec7-2c64-4fd6-af9b-63e01ee9a687" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu5028" class="contentTop mainNavMegaMenu megaMenuContainer pageID_5028 hidden" data-orientation="horizontal">	<div id="ccf8a3a5c7-c6be-4c56-b121-1e66ccce6a01" data-containerid="f8a3a5c7-c6be-4c56-b121-1e66ccce6a01" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu4687" class="contentTop mainNavMegaMenu megaMenuContainer pageID_4687 hidden" data-orientation="horizontal">	<div id="cc57d88d90-a57a-4347-bdae-a83828baa9cd" data-containerid="57d88d90-a57a-4347-bdae-a83828baa9cd" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu5052" class="contentTop mainNavMegaMenu megaMenuContainer pageID_5052 hidden" data-orientation="horizontal">	<div id="cca684ccca-c6a5-4974-82ca-1adf53843c8b" data-containerid="a684ccca-c6a5-4974-82ca-1adf53843c8b" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu3896" class="contentTop mainNavMegaMenu megaMenuContainer pageID_3896 hidden" data-orientation="horizontal">	<div id="cc04f51bf1-0154-4955-9d6b-a456b0d77405" data-containerid="04f51bf1-0154-4955-9d6b-a456b0d77405" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside></aside></nav></div>
+</header><!-- County Home --><div data-cpRole="structuralContainer" id="homeContainerTS" class="fixedLeftTS">
+<div class="siteWrap4"><div data-cpRole="contentContainer" id="homeTS">	<div id="cc9851e082-1daf-41b3-bbb9-c57670730474" data-containerid="9851e082-1daf-41b3-bbb9-c57670730474" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="985aef2d-bcac-466f-8259-4fc5d45a64dc">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idb9be25dd-d40b-4b27-8dba-4f47ef9e716e" style="" data-widgetcontainerid="b9be25dd-d40b-4b27-8dba-4f47ef9e716e">	
+<div data-widget-id="fe25a491-2520-4749-aa7b-6b26d30384ec" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetfe25a491-2520-4749-aa7b-6b26d30384ec" class="widget widgetGraphicLinks skin136 widgetOptionSet24 wide" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid1 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<ul class="semanticList">
+					<!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/" target="_self" class="fancyButton fancyButton2354 " >
+		<span>
+			<span><span class="text">County Home</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2354.fancyButton:link,.fancyButton2354.fancyButton:visited, .fancyButton2354div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=51527');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 40px;
+}
+.fancyButton2354.fancyButton:hover,.fancyButton2354.fancyButton:focus,.fancyButton2354.fancyButton:active,.fancyButton2354.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+.fancyButton2354.fancyButton:link > span,.fancyButton2354.fancyButton:visited > span, .fancyButton2354div.fancyButton > span{
+}
+.fancyButton2354.fancyButton:hover > span,.fancyButton2354.fancyButton:focus > span,.fancyButton2354.fancyButton:active > span,.fancyButton2354.fancyButton.hover > span{
+}
+.fancyButton2354.fancyButton .text{
+	color: rgb(0, 0, 0);
+	font-size: .9em;
+	font-family: "Aleo";
+	padding-top: 3em;
+	font-style: normal;
+	text-decoration: underline;
+	padding-top: 3em;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+line-height: 1.1;}
+.fancyButton2354.fancyButton:hover .text,.fancyButton2354.fancyButton:focus .text,.fancyButton2354.fancyButton:active .text,.fancyButton2354.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+</style>
+
+ </li><!--
+				-->
+				</ul>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- Banner --><div data-cpRole="structuralContainer" id="bannerContainerTS" class="noOverflowTS">
+<div data-cpRole="banner" id="banner1"><div data-cpRole="structuralContainer" id="bannerSizingTS">
+<div class="siteWrap"><div data-cpRole="structuralContainer" id="bannerContentTS">
+<div data-cpRole="contentContainer" id="searchTS">	<div id="cca30fb351-da4d-413b-95bc-32126aeebf01" data-containerid="a30fb351-da4d-413b-95bc-32126aeebf01" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="99f69729-f4ab-4c42-9419-3bf44ca6d9bc">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idc8536ee2-ea6c-4438-ab95-61875a7d7d73" style="" data-widgetcontainerid="c8536ee2-ea6c-4438-ab95-61875a7d7d73">	
+<div data-widget-id="9f50ea1f-0433-431f-bb71-9ed89590a89a" data-widget-controller-path="/Layout/WidgetSearch">
+	
+	<script defer type="text/javascript" src="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.js"></script>
+	<script defer src="/Areas/Layout/Assets/Scripts/Search.js" type="text/javascript"></script>
+	<script defer type="text/javascript">
+
+		$(document).ready(function () {
+			try {
+				// Minimum characters required before performing a search/autocomplete
+				var minPrefixLength = 3;
+				var autoCompleteDebounceDelay = 500;
+				var searchFieldSelector = "#searchField" + '9f50ea1f-0433-431f-bb71-9ed89590a89a';
+				var checkboxSelector = "#ysnSearchOnlyDept" + '9f50ea1f-0433-431f-bb71-9ed89590a89a';
+				var buttonSelector = ".widgetSearchButton" + '9f50ea1f-0433-431f-bb71-9ed89590a89a';
+				var autoCompleteCache = {};
+				var autoCompleteCacheKeys = [];
+				var autoCompleteCacheLimit = 25;
+				var currentAutoCompleteRequest = null;
+				var currentAutoCompleteRequestKey = null;
+				var autoCompleteDebounceTimer = null;
+				var autoCompleteDebounceKey = null;
+				var pendingAutoCompleteResponses = [];
+
+				function normalizeAutoCompleteTerm(term) {
+					return $.trim((term || "") + "").replace(/\s+/g, " ");
+				}
+
+				function shouldSearch(term) {
+					return normalizeAutoCompleteTerm(term).length >= minPrefixLength;
+				}
+
+				function getAutoCompleteUrl() {
+					return '/Search/AutoComplete' + ($(checkboxSelector).is(':checked') || false? '?departmentId=0' : '');
+				}
+
+				function getAutoCompleteCacheKey(requestUrl, term) {
+					return requestUrl + "|" + term.toLowerCase();
+				}
+
+				function cacheAutoCompleteResult(cacheKey, data) {
+					if (!Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+						autoCompleteCacheKeys.push(cacheKey);
+						if (autoCompleteCacheKeys.length > autoCompleteCacheLimit) {
+							delete autoCompleteCache[autoCompleteCacheKeys.shift()];
+						}
+					}
+					autoCompleteCache[cacheKey] = data;
+				}
+
+				function respondToPendingAutoComplete(data) {
+					var responses = pendingAutoCompleteResponses;
+					pendingAutoCompleteResponses = [];
+					for (var i = 0; i < responses.length; i++) {
+						responses[i](data);
+					}
+				}
+
+				function cancelPendingAutoComplete() {
+					clearTimeout(autoCompleteDebounceTimer);
+					autoCompleteDebounceKey = null;
+					if (currentAutoCompleteRequest != null) {
+						currentAutoCompleteRequest.abort();
+						currentAutoCompleteRequest = null;
+					}
+					currentAutoCompleteRequestKey = null;
+					respondToPendingAutoComplete([]);
+				}
+
+				function createWidgetAutoCompleteSource(options) {
+					return function (request, response) {
+						var term = normalizeAutoCompleteTerm(request.term);
+						if (!options.shouldSearch(term)) {
+							response([]);
+							return;
+						}
+
+						var requestUrl = options.url();
+						var cacheKey = getAutoCompleteCacheKey(requestUrl, term);
+						if (Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+							response(autoCompleteCache[cacheKey]);
+							if (options.success) {
+								options.success(autoCompleteCache[cacheKey]);
+							}
+							return;
+						}
+
+						if (currentAutoCompleteRequestKey === cacheKey || autoCompleteDebounceKey === cacheKey) {
+							pendingAutoCompleteResponses.push(response);
+							return;
+						}
+
+						cancelPendingAutoComplete();
+						autoCompleteDebounceKey = cacheKey;
+						pendingAutoCompleteResponses.push(response);
+						autoCompleteDebounceTimer = setTimeout(function () {
+							autoCompleteDebounceKey = null;
+							currentAutoCompleteRequestKey = cacheKey;
+							currentAutoCompleteRequest = $.ajax({
+								url: requestUrl,
+								dataType: "json",
+								timeout: options.timeout,
+								data: {
+									term: term,
+								},
+								success: function (data) {
+									if (currentAutoCompleteRequestKey === cacheKey) {
+										cacheAutoCompleteResult(cacheKey, data);
+										respondToPendingAutoComplete(data);
+										if (options.success) {
+											options.success(data);
+										}
+									}
+								},
+								error: function (xmlhttprequest, textstatus, message) {
+									if (textstatus === "abort") {
+										return;
+									}
+
+									if (options.error) {
+										options.error(xmlhttprequest, textstatus, message);
+									}
+
+									respondToPendingAutoComplete([]);
+								},
+								complete: function (xmlhttprequest) {
+									if (currentAutoCompleteRequest === xmlhttprequest) {
+										currentAutoCompleteRequest = null;
+										currentAutoCompleteRequestKey = null;
+									}
+								}
+							});
+						}, options.delay);
+					};
+				}
+
+				// click handler for search buttons
+				$(buttonSelector).click(function (e) {
+					e.preventDefault();
+					var $btn = $(this);
+					var $field = $btn.siblings(".widgetSearchBox");
+					var term = $field.val() + "";
+					if (!shouldSearch(term)) {
+						// do nothing until user types enough characters
+						$field.focus();
+						return;
+					}
+
+					if ($(checkboxSelector).is(':checked') || false)
+					{
+						doWidgetSearch($.trim(term), Number(0));
+					}
+					else {
+						doWidgetSearch($.trim(term), 0);
+					}
+				});
+
+				// enter key handler for the search field
+				$(searchFieldSelector).keypress(function (e) {
+					var code = e.which || e.keyCode;
+					if (code === 13) {
+						e.preventDefault();
+						var $this = $(this);
+						var term = $this.val() + "";
+						if (!shouldSearch(term)) {
+							// do nothing until user types enough characters
+							$this.focus();
+							return false;
+						}
+
+						if ($(checkboxSelector).is(':checked') || false) {
+							doWidgetSearch($.trim(term), Number(0));
+						} else {
+							doWidgetSearch($.trim(term), 0);
+						}
+						return false;
+					}
+					return true;
+				});
+
+				// autocomplete: set minLength and guard source
+				if (true) {
+					var $searchField = $(searchFieldSelector).autocomplete({
+						minLength: minPrefixLength,
+						source: createWidgetAutoCompleteSource({
+							delay: autoCompleteDebounceDelay,
+							timeout: 10000,
+							shouldSearch: shouldSearch,
+							url: getAutoCompleteUrl,
+							success: function () {
+								$('.autoCompleteError').remove();
+							},
+							error: function (xmlhttprequest, textstatus, message) {
+								if (textstatus === "timeout") {
+									if ($(searchFieldSelector).siblings('.autoCompleteError').length == 0)
+										$('<span class="autoCompleteError"><p class="alert error">Search autocomplete is currently not responding. Please try again later.</p></span>').insertAfter($(searchFieldSelector));
+								}
+							}
+						}),
+						html: true,
+						delay: 0,
+						select: function (event, ui) {
+							$(this).val(ui.item.value);
+							$(this).next().click();
+						}
+					});
+
+					$searchField.data("ui-autocomplete")._renderItem = function (ul, item) {
+						return $("<li class=\"itemList\"></li>")
+							.data("ui-autocomplete-item", item)
+							.append("<a>" + item.label + "</a>")
+							.appendTo(ul);
+					};
+				}
+
+				// keep searchBtnApplyQuery consistent with prefix rule
+				window.searchBtnApplyQuery = function() {
+					var $field = $(searchFieldSelector);
+					var term = $field.val() + "";
+					if (shouldSearch(term)) {
+						// update href for the icon/button (if present)
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "/Search?searchPhrase=" + encodeURIComponent($.trim(term));
+					} else {
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "#";
+					}
+				};
+			}
+			catch(e) {} //we're going to eat this error. Autocomplete won't work but we dont wan't to break anything else on the page.
+		});
+	</script>
+
+	<section id="widgetPreviewSearch" class="widget widgetSearch skin136 widgetOptionSet94" style="display: block;" aria-label="Search">
+				<!-- For the button right and inside -->
+		<div class="widgetBody buttonRightInside">
+			<input class="widgetSearchBox widgetSearchBox9f50ea1f-0433-431f-bb71-9ed89590a89a" cp5ph="true" id="searchField9f50ea1f-0433-431f-bb71-9ed89590a89a" name="searchField" onchange="searchBtnApplyQuery();" placeholder="Search our site..." type="text" value="" />
+						<a href="/Search/Results" id="btnSearchIcon" class="widgetSearchButton widgetSearchButton9f50ea1f-0433-431f-bb71-9ed89590a89a" role="button"><img alt="Search" class="imageHover" data-hover="/ImageRepository/Document?documentID=51520" data-image="/ImageRepository/Document?documentID=51519" src="/ImageRepository/Document?documentID=51519" /></a>
+
+			<label class="searchLabel" aria-hidden="true" for="searchField9f50ea1f-0433-431f-bb71-9ed89590a89a">Search</label>
+		</div>
+
+	</section>
+
+
+<style scoped>
+	  
+		.widgetSearch ::-webkit-input-placeholder {
+		color: #163A64;
+	  }
+		.widgetSearch :-moz-placeholder { /* Firefox 18- */
+	   color: #163A64;
+	}
+		.widgetSearch ::-moz-placeholder {  /* Firefox 19+ */
+	   color: #163A64;
+	}
+	.widgetSearch :-ms-input-placeholder {
+	   color: #163A64;
+	}
+	
+
+	.widgetSearch .widgetBody .widgetSearchBox9f50ea1f-0433-431f-bb71-9ed89590a89a
+	{
+		color: #163A64;
+		font-family: Open Sans;
+height: 60px;
+border: none;
+background: #fff;
+border-radius: 10px;
+box-shadow: 0 3px 10px #02304733;
+padding: 0 80px 0 20px;
+	}
+	.widgetSearch .widgetBody .widgetSearchButton9f50ea1f-0433-431f-bb71-9ed89590a89a
+	{
+		width: 45px;
+margin: 7px;
+	}
+	.widgetSearch .widgetSearch-onlyDept9f50ea1f-0433-431f-bb71-9ed89590a89a
+	{
+		display: inline-block;
+		color: #333;
+		
+		
+		 padding-top: 10px;
+	}
+	#ysnSearchOnlyDept9f50ea1f-0433-431f-bb71-9ed89590a89a
+	{
+		position: relative;
+		top: .125em;
+	}
+
+</style>
+
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.css">
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.theme.min.css">
+
+
+
+<script type="text/javascript">
+	//Updates search icons href to have the correct queryString
+	function searchBtnApplyQuery() {
+		document.getElementById("btnSearchIcon").href = "/Search?searchPhrase=" + document.getElementById("searchField9f50ea1f-0433-431f-bb71-9ed89590a89a").value;
+	}
+</script>
+
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div>
+</div></div>
+</div>
+
+
+
+
+		<div id="bannerImagesJSON506" class="hidden"></div>
+		<div id="bannerSlideshowControls_banner1" class="bannerSlideshowControlsNew none " style="display:none">
+			<a id="arrowPrev_banner1" tabindex="0" class="arrowNew prev" aria-label="Banner Arrow Previous"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowLeft"></use></svg></a>
+			<a id="arrowNext_banner1" tabindex="0" class="arrowNew next" aria-label="Banner Arrow Next"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowRight"></use></svg></a>
+		</div>
+			<script type="text/javascript">
+				$(window).on("load", function () {
+					$.when(window.Pages.rwdSetupComplete)
+						.done(function () {
+							renderExternalBannerSlideshow('banner1',
+								{"BannerOptionID":506,"ThemeID":128,"SlotName":"banner1","Name":"Default","IsDefault":true,"BannerMode":2,"SlideShowSlideTiming":"5","SlideshowTransition":0,"SlideShowTransitionTiming":"1","ImageScale":true,"ImageAlignment":1,"ImageScroll":true,"MuteSound":true,"VideoType":0,"Status":40,"SlideshowControlsPosition":0,"SlideshowControlsAlignment":0,"SlideshowBannerControlsColorScheme":0,"DisplayVideoPauseButton":false,"VideoPauseButtonAlignment":1,"VideoPauseButtonControlsAlignment":0,"VideoPauseButtonStyle":"#FFFFFF","VideoPauseButtonBackgroundStyle":"#000000","VideoPauseButtonAlignmentClass":"alignRight viewport","DisplaySlideshowPauseButton":false,"SlideshowControlsColor":"#FFFFFF","SlideshowControlsBackgroundColor":"#000000","SlideshowPauseButtonClass":"isHidden","BannerImages":[{"BannerImageID":1575,"BannerOptionID":506,"FileName":"/ImageRepository/Document?documentID=52889","Height":700,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":1,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/","AltText":""},{"BannerImageID":1541,"BannerOptionID":506,"FileName":"/ImageRepository/Document?documentID=51513","Height":700,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":2,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/","AltText":""},{"BannerImageID":1542,"BannerOptionID":506,"FileName":"/ImageRepository/Document?documentID=51512","Height":700,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":3,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/","AltText":""}],"BannerVideos":[],"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/"},
+								'/App_Themes/2024 - Interior/Images/',
+								'Rotating');
+						});
+				});
+			</script>
+
+</div>
+</div><!-- Content container --><div data-cpRole="structuralContainer" id="mainContainerTS">
+<div class="siteWrap2"><div data-cpRole="structuralContainer" id="mainWrapTS" class="mainWrap" role="main">
+<div data-cpRole="structuralContainer" id="siteSidebarTS" class="siteSidebar">
+<aside data-cpRole="contentContainer" id="sidebarContainer1TS">	<div id="cc3a7be7f3-f415-43cd-965a-6276fee4de4c" data-containerid="3a7be7f3-f415-43cd-965a-6276fee4de4c" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><nav data-cpRole="nav" id="secondaryNav" class="siteNav secondaryNav">
+
+
+
+
+
+	<ol role="menu" id="secondaryMenusecondaryNav" data-parent="5015" class="rootNavMenu accordionNav">
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem3907" data-pageid="3907">
+		<div class="accordionNavItem">
+			<a href="/3907/Find-a-Voting-Location" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Find a Voting Location</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem4652" data-pageid="4652">
+		<div class="accordionNavItem">
+			<a href="/4652/On-the-Ballot" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">On the Ballot</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem578" data-pageid="578">
+		<div class="accordionNavItem">
+			<a href="/578/Voter-Turnout-Election-Results" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Voter Turnout &amp; Election Results</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="Voter Turnout &amp; Election Results Submenu" aria-expanded="false" aria-controls="submenu-lvl1-578"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-578" style="display: none;" data-parent="578">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem4734" data-pageid="4734">
+			<div class="accordionNavItem">
+				<a href="/4734/Election-Night-Beyond" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Election Night &amp; Beyond</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+
+	</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupSecondaryMenuProperties() {
+				//setup menu manager properties for secondary menu
+				menuManager.isSideMenuEditable = false;
+				menuManager.sideMenuMaxSubMenuLevels = 4;
+				menuManager.sideMenuHasCustomLinks = true;
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupSecondaryMenuProperties, { once: true });
+				return;
+			}
+
+			setupSecondaryMenuProperties();
+		})();
+	</script>
+
+	<script type="text/javascript">
+		(function () {
+			function setupAccordionSecondaryNav() {
+				var $menuContainer = $('#secondaryNav');
+
+				$menuContainer.find('*[id^="SideItem"]').each(function () {
+					var ids = $('[id="' + this.id + '"]');
+					if (ids.length > 1)
+						$.each(ids, function (index, value) {
+							value.id = value.id + '_' + index;
+						});
+				});
+
+				$menuContainer.find('.hasAccordionChildren .openAccordionNav').off('click.secondaryNav').on('click.secondaryNav', function (e) {
+					e.preventDefault();
+					showHideAccordionMenuForSecondaryNav($(this));
+				});
+
+				$menuContainer.find(".grippy").each(function () {
+					menuManager.setupDraggableElement($(this), SIDE_MENU, '#secondaryNav');
+				});
+
+				$menuContainer.find("li").each(function () {
+					menuManager.setupDroppableAccordionElement($(this), SIDE_MENU);
+				});
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupAccordionSecondaryNav, { once: true });
+				return;
+			}
+
+			setupAccordionSecondaryNav();
+		})();
+	</script>
+
+
+
+</nav><aside data-cpRole="contentContainer" id="sidebarContainer2TS">	<div id="ccf9205a4f-f357-41ff-8f3d-132dc00a638b" data-containerid="f9205a4f-f357-41ff-8f3d-132dc00a638b" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div><div data-cpRole="structuralContainer" id="outerContentWrapTS" class="outerContentWrap">
+<div data-cpRole="structuralContainer" id="contentWrapTS" class="contentWrap">
+<div data-cpRole="breadCrumbs" id="breadCrumbs" class="breadCrumbContainer">		<ol class="semanticList breadCrumbs">
+			<li><a class="breadCrumb" href="/4947/Elections">Elections</a></li><li><a class="breadCrumb" href="/3901/Election-Information">Election Information</a></li><li><a class="breadCrumb" href="/5015/Upcoming-Election">Upcoming Election</a></li><li id="currentBCPage" data-pageid="4652"><a href class="breadCrumb" aria-current="page">On the Ballot</a></li>
+		</ol>
+
+	   
+    
+</div><div data-cpRole="mainContentContainer" id="moduleContent">
+	
+	<div id="page" class="moduleContentNew">
+		
+
+	<input id="hdnPageID" name="hdnPageID" type="hidden" value="4652" />
+	<input id="hdnParentID" name="hdnParentID" type="hidden" value="5015" />
+	<input id="hdnVersionID" name="hdnVersionID" type="hidden" value="66048" />
+	<input id="pageMenuTitle" name="pageMenuTitle" type="hidden" value="On the Ballot" />
+	<input id="pageShowFeatureColumn" name="pageShowFeatureColumn" type="hidden" value="False" />
+	<input id="hdnIsLayoutPage" name="hdnIsLayoutPage" type="hidden" value="False" />
+	<input id="hdnPageStatus" name="hdnPageStatus" type="hidden" value="Published" />
+
+				<h1 id="versionHeadLine" class="headline">
+
+On the Ballot		</h1>
+			<p class="breadCrumbContainer">
+			Last Content Update:
+			<time title="10/29/2026 11:55:35 AM"> 4 days ago</time>
+		</p>
+
+		<div id="cc4a61ef01-7f4b-463c-b15d-d78c950fb4b6" data-containerid="4a61ef01-7f4b-463c-b15d-d78c950fb4b6" class="pageContent cpGrid cpGrid24"  >
+			
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="df7abf41-78ef-4771-9a2d-38dc14bdfc27">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col24 first last id5927650c-076a-47bb-9944-bf43853d4710" style="" data-widgetcontainerid="5927650c-076a-47bb-9944-bf43853d4710">	
+<div class="widget editor pageStyles narrow" id="divEditor2161de60-e204-4f06-a3c2-d0165679ea4d" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p>Elections are held every November, every other June, and every fourth March. Odd-numbered years, when there is only one election, that November contest is known as a Coordinated Election, and is reserved for local races, such as city council, school district, and fire protection district. The State of Colorado holds a Primary in June and a General Election in November in even-numbered years. In presidential election years, there is also a Presidential Primary in March.</p><h2 class="subhead1">2026 General Election</h2><p>Information about this election&apos;s ballot is provided as a service to voters and is not an endorsement of any candidate or issue. Jeffco&apos;s Clerk and Recorder Office is not responsible for the content of any candidate or ballot issue website.</p><p>Although each voter will only receive a ballot with the candidate races and issue questions for the jurisdictions they live in, the sample ballot includes every possible candidate race and issue question for all jurisdictions participating in the current election.</p><h3 class="subhead2">Sample ballot</h3><ul><li><a href="/DocumentCenter/View/59222" target="_blank" rel="noopener">2026 General Election Sample Ballot (PDF) (English/Espa&ntilde;ol)</a></li></ul>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '2161de60-e204-4f06-a3c2-d0165679ea4d'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest wide">
+	
+	<div class="inner col col24 first last id59eeaa0b-ad81-4a9f-b672-8ab2e74b6c7e" style="" data-widgetcontainerid="59eeaa0b-ad81-4a9f-b672-8ab2e74b6c7e">	
+
+	<div id="divTabbedee978041-bbf6-47ba-94ac-ffeb2b46fd01" class="widget widgetTabbed wide skin231" data-widgetid="ee978041-bbf6-47ba-94ac-ffeb2b46fd01">
+		<ol class="tabbedWidget cpTabs  " role="tablist" aria-hidden=".ToString().ToLowerInvariant()" style=" ">
+			<!--
+					--><li class="active" role="presentation">	<a href="#tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_0" class="tabButton" id="tabBtnee978041-bbf6-47ba-94ac-ffeb2b46fd01_0" role="tab" aria-controls="tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_0" aria-selected="true" tabindex="0"><span class="tabName editable" data-sequence="0" data-tabname="Statewide Ballot Measures" contenteditable="false">Statewide Ballot Measures</span></a>
+</li><!--
+					--><li class="" role="presentation">	<a href="#tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_1" class="tabButton" id="tabBtnee978041-bbf6-47ba-94ac-ffeb2b46fd01_1" role="tab" aria-controls="tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_1" aria-selected="false" tabindex="-1"><span class="tabName editable" data-sequence="1" data-tabname="Candidate Races" contenteditable="false">Candidate Races</span></a>
+</li><!--
+					--><li class="" role="presentation">	<a href="#tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_2" class="tabButton" id="tabBtnee978041-bbf6-47ba-94ac-ffeb2b46fd01_2" role="tab" aria-controls="tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_2" aria-selected="false" tabindex="-1"><span class="tabName editable" data-sequence="2" data-tabname="Local Ballot Measures" contenteditable="false">Local Ballot Measures</span></a>
+</li><!--
+					-->
+		</ol>
+
+		<div class="cpTabPanels">
+					<ol class="tabbedWidgetNarrow cpTabs " role="tablist" aria-hidden="True.ToString().ToLowerInvariant()" style='display: none;'>
+						<li class="active" role="presentation">	<a href="#tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_0" class="tabButton" id="tabBtnNarrowee978041-bbf6-47ba-94ac-ffeb2b46fd01_0" role="tab" aria-controls="tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_0" aria-selected="true" tabindex="0"><span class="tabName editable" data-sequence="0" data-tabname="Statewide Ballot Measures" contenteditable="false">Statewide Ballot Measures</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel showing" style="" id="tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_0" role="tabpanel" aria-labelledby="tabBtnee978041-bbf6-47ba-94ac-ffeb2b46fd01_0" tabindex="-1">
+
+<div class="widget editor pageStyles narrow" id="divEditor968c6c61-c5a4-46d7-99a8-608d5a415e2a" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p>The 2026 Blue Book provides information on the 14 statewide measures on the November 3, 2026 ballot: Amendments 81, 82, 83, 84, 85, 86, and 87; and Propositions NN, 132, 133, 134, 135, 136, and 137.</p><ul><li><a href="https://content.leg.colorado.gov/publications/2026-statewide-ballot-information-booklet?_gl=1%2Abcrr50%2A_ga%2AMjM5ODMyODg1LjE3ODgzNzg2MjQ.%2A_ga_V0L3NG2C4C%2AczE3OTAxMDg2ODUkbzQkZzAkdDE3OTAxMDg2ODUkajYwJGwwJGgw" target="_blank" rel="noopener" class="external_link">2026 Blue Book &mdash; English</a></li><li><a href="https://content.leg.colorado.gov/publications/folleto-de-informacion-de-boleta-estatal-2026?_gl=1%2A9zvpa1%2A_ga%2AMjM5ODMyODg1LjE3ODgzNzg2MjQ.%2A_ga_V0L3NG2C4C%2AczE3OTAxMDg2ODUkbzQkZzEkdDE3OTAxMDg3ODUkajQxJGwwJGgw" target="_blank" rel="noopener" class="external_link">Folleto informativo sobre la boleta &mdash; Espa&ntilde;ol</a></li><li><a href="https://myctbl.cde.state.co.us/legislative-blue-book" target="_blank" rel="noopener" class="external_link">Audio Blue Book &mdash; English</a></li></ul><p>Ballot questions referred by the General Assembly or any political subdivision are listed by letter, and ballot questions initiated by the people are listed numerically. A ballot question listed as an &quot;Amendment&quot; proposes a change to the Colorado constitution, and a ballot question listed as a &quot;Proposition&quot; proposes a change to the Colorado Revised Statutes. A &quot;YES/FOR&quot; vote on any ballot question is a vote in favor of changing current law or existing circumstances, and a &quot;NO/AGAINST&quot; vote on any ballot question is a vote against changing current law or existing circumstances.</p><h2 class="subhead1">Amendments on the Ballot</h2><h3 class="subhead2">Amendment 81: Law Enforcement Communication with Federal Immigration Authorities&nbsp;</h3><p><strong>Requires 55% approval to pass because it adds language to the state constitution</strong></p><p>Shall there be an amendment to the Colorado Constitution requiring law enforcement to notify the department of homeland security when a person is charged with either a violent crime or any crime if the person has a prior felony conviction if law enforcement cannot determine that the person is lawfully present in the United States?</p><h3 class="subhead2">Amendment 82: Constitutional Right to Purchase and Sell Natural Gas</h3><p><strong>Requires 55% approval to pass because it adds language to the state constitution</strong></p><p>Shall there be an amendment to the Colorado Constitution creating new law granting the right for consumers to purchase natural gas for cooking or heating in homes or businesses and for distributors and utilities to sell natural gas to consumers?</p><h3 class="subhead2">Amendment 83:&nbsp;Constitutional Right to Hunt and Fish</h3><p><strong>Requires 55% approval to pass because it adds language to the state constitution</strong></p><p>Shall there be an amendment to the Colorado Constitution creating a constitutional right to hunt, fish, and harvest fish and wildlife by traditional methods, including all species of fish and wildlife managed by the state except non-game species, endangered species, or any species that is illegal to hunt under federal law, and, in connection therewith, establishing hunting and fishing as the preferred means of managing fish and wildlife populations; and preserving the right of the state to regulate hunting, fishing, and wildlife management if necessary for sound scientific wildlife conservation and management, public safety, or to preserve the future of hunting and fishing opportunities for all species?</p><h3 class="subhead2">Amendment 84:&nbsp;Mail Ballot Voter Identification</h3><p><strong>Requires 55% approval to pass because it adds language to the state constitution</strong></p><p>Shall there be an amendment to the Colorado Constitution requiring a voter to sign and include the last four digits of their social security number or their Colorado driver&rsquo;s license or identification card number on the outside of their mail ballot for any federal or state election, and, in connection therewith, allowing the voter to correct missing or incorrect information, including with alternative forms of identification; and prohibiting a county clerk and recorder from counting the mail ballot unless the problem is fixed?</p><h3 class="subhead2">Amendment 85: Plain Language Ballot Titles</h3><p><strong>Requires 55% approval to pass because it adds language to the state constitution</strong></p><p>Shall there be an amendment to the Colorado Constitution concerning ballot question language, and, in connection therewith, requiring all state and local ballot questions to be written in plain language and at no more than an 8th grade reading level and prohibiting a state statute from requiring language that conflicts with these requirements in ballot questions for citizen-initiated measures?</p><h3 class="subhead2">Amendment 86: Requirements for Off‑Cycle Congressional Redistricting &nbsp;</h3><p><strong>Requires 55% approval to pass because it adds language to the state constitution</strong></p><p>Shall there be an amendment to the Colorado Constitution concerning congressional redistricting, and, in connection therewith, reenacting the current process for congressional redistricting in the Colorado Constitution and prohibiting modifications to a final map unless at least three public meetings are held, the modifications do not have the effect of dividing communities of interest or purposefully favoring one political party, and are approved by the congressional redistricting commission and the Colorado Supreme Court?</p><h3 class="subhead2">Amendment 87: Graduated Income Tax</h3><p data-pasted="true"><strong>Passes with a majority vote</strong></p><p>SHALL STATE TAXES BE INCREASED $2.7 BILLION ANNUALLY, IN ORDER TO INCREASE OR IMPROVE LEVELS OF PUBLIC SERVICES, INCLUDING K-12 PUBLIC SCHOOL EDUCATION, HEALTH CARE, AND EARLY CHILD CARE AND EDUCATION SERVICES, BY AN AMENDMENT TO THE COLORADO CONSTITUTION AND A CHANGE TO THE COLORADO REVISED STATUTES REPEALING EXISTING LAW AND CREATING NEW LAW TO REPLACE THE UNIFORM STATE INCOME TAX RATE WITH A GRADUATED INCOME TAX STRUCTURE, AND, IN CONNECTION THEREWITH, AMENDING THE TAXPAYER&rsquo;S BILL OF RIGHTS TO ELIMINATE THE CONSTITUTIONAL REQUIREMENT FOR ALL TAXABLE NET INCOME TO BE TAXED AT ONE RATE WITH NO ADDED TAX ON INCOME; ESTABLISHING VARIOUS INCOME TAX RATES BASED ON THE AMOUNT OF TAXABLE INCOME EARNED BY INDIVIDUALS, ESTATES, TRUSTS, AND CORPORATIONS, WHILE MAINTAINING THE CURRENT 4.4% TAX ON INCOME FROM THE SALE OF A PRINCIPAL RESIDENCE, WHICH WILL RESULT IN THE ESTIMATED CHANGE IN INCOME TAXES OWED BY INDIVIDUALS AS IDENTIFIED IN THE FOLLOWING TABLE; AND AUTHORIZING THE STATE TO RETAIN AND SPEND ANY INCREASED REVENUE FROM THE NEW TAX STRUCTURE, AS A VOTER-APPROVED REVENUE CHANGE, TO SUPPLEMENT CURRENT LEVELS OF FUNDING FOR K-12 PUBLIC SCHOOL EDUCATION, HEALTH CARE, AND EARLY CHILD CARE AND EDUCATION PROGRAMS?</p><p>(By state law, measures involving tax and debts must be listed on the ballot in all uppercase letters)</p><h2 class="subhead1">Propositions on the Ballot</h2><h3 class="subhead2">Proposition NN: Keep and Spend Money for Education and Other Purposes</h3><p><strong>Passes with a majority vote</strong></p><p>Shall state investment in K-12 public education increase two percent each year for the next ten years, with investments used to increase teacher pay, improve teacher retention, lower class sizes, and increase access to career and technical courses, without raising taxes but instead funded by raising the annual limit on state fiscal year spending only by the amount spent on public K-12 education as a voter-approved revenue change, and requiring an annual publicly released, independent audit to show how the new investments are spent?</p><h3 class="subhead2">Proposition 132: Increase Penalties for Fentanyl Crimes</h3><p><strong>Passes with a majority vote</strong></p><p>Shall there be a change to the Colorado Revised Statutes concerning criminal penalties for fentanyl and certain synthetic opioids, and, in connection therewith, increasing the felony classifications of drug-related crimes for distribution, manufacturing, dispensing, sale, or possession of fentanyl and certain synthetic opioids; creating mandated treatment for certain drug felony violations based on possession amount; and changing sentencing provisions to narrow or eliminate exemptions for crimes related to fentanyl and certain synthetic opioids and drug-related deaths?</p><h3 class="subhead2">Proposition 133: Penalties for Human Trafficking of a Minor</h3><p><strong>Passes with a majority vote</strong></p><p>Shall there be a change to the Colorado Revised Statutes modifying existing law concerning human trafficking of a minor for sexual servitude, and, in connection therewith, creating new law expanding human trafficking of a minor for sexual servitude to include knowingly trading anything of monetary value to buy or sell sexual activity with a minor and increasing the penalty to be life in prison without parole or release?</p><h3 class="subhead2">Proposition 134: Male and Female Participation in School and Collegiate Sports</h3><p><strong>Passes with a majority vote</strong></p><p>Shall there be a change to the Colorado Revised Statutes creating new law restricting participation in all K-12 and collegiate school sports based on the participant&rsquo;s sex as determined by certain aspects of their biological reproductive system, and, in connection therewith, requiring a school, institution of higher education, or athletic association to designate each school or intramural athletic team or sport as male, female, or coeducational; only allowing participants to compete on the team or sport of their designated sex or to compete on a coeducational team; creating an exception to allow a female to participate on a male-designated team or sport if there is no female team available; prohibiting a government entity, licensing or accrediting organization, or athletic association from entertaining a complaint, opening an investigation, or taking other adverse action against a school for maintaining separate teams or sports for females; and providing the commissioner of education with the authority to enforce the proposed initiative for K-12 school districts?</p><h3 class="subhead2">Proposition 135: &nbsp;Prohibit Surgery on Minors in Response to Perception of Sex or Gender</h3><p><strong>Passes with a majority vote</strong></p><p>Shall there be a change to the Colorado Revised Statutes modifying existing law by prohibiting surgery on a minor for the purpose of altering the minor&rsquo;s biological sex characteristics, and, in connection therewith, prohibiting any health-care professional or other person from knowingly performing, prescribing, administering, or providing any surgery to a minor for the purpose of altering the minor&rsquo;s biological sex characteristics and prohibiting the use of state or federal funds, Medicaid reimbursement, or insurance coverage to pay for this type of surgery?</p><h3 class="subhead2">Proposition 136: Income Tax Rate Limit</h3><p><strong>Passes with a majority vote</strong></p><p>Shall there be a change to the Colorado Revised Statutes capping the state income tax rate at 4.4% of federal taxable income for individuals and corporations?</p><h3 class="subhead2">Proposition 137: Direct Sporting Goods Sales Tax Revenue for Conservation&nbsp;</h3><p><strong>Passes with a majority vote</strong></p><p>Shall there be a change to the Colorado Revised Statutes creating new law to increase water and land conservation funding without raising taxes, and, in connection therewith, through a voter-approved revenue change, allowing the state to keep and spend a portion of revenue from the state sales tax on sporting goods and equipment to conserve and protect Colorado&rsquo;s water, land, and forests, prevent wildfires, support outdoor recreation training and activities, and reduce revenue spent on these conservation purposes if necessary to preserve funding for certain tax credits?</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '968c6c61-c5a4-46d7-99a8-608d5a415e2a'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs " role="tablist" aria-hidden="True.ToString().ToLowerInvariant()" style='display: none;'>
+						<li class="" role="presentation">	<a href="#tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_1" class="tabButton" id="tabBtnNarrowee978041-bbf6-47ba-94ac-ffeb2b46fd01_1" role="tab" aria-controls="tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_1" aria-selected="false" tabindex="-1"><span class="tabName editable" data-sequence="1" data-tabname="Candidate Races" contenteditable="false">Candidate Races</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_1" role="tabpanel" aria-labelledby="tabBtnee978041-bbf6-47ba-94ac-ffeb2b46fd01_1" tabindex="-1">
+
+<div class="widget editor pageStyles narrow" id="divEditor7ae04565-fed7-44e2-a835-68b62eb67e5d" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p>There are federal, statewide, and county-level candidate races on the ballot. Races are voted on by the voters in the districts they represent. Links to candidate webpages have been provided where possible and we are adding more as they become available.</p><p>For judge retention questions, the Office of Judicial Performance Evaluation provides <a href="https://judicialperformance.colorado.gov/know-your-judges/2026-judicial-performance-evaluations" target="_blank" rel="noopener" class="external_link">reviews of each judge&apos;s performance</a>.</p><h2 class="subhead1">Federal Offices</h2><h3 class="subhead2">US Senate:</h3><ul><li><a href="https://baisleyforsenate.com/" target="_blank" rel="noopener" class="external_link">Mark Baisley</a> (Republican)</li><li><a href="https://hickenlooper.com/" target="_blank" rel="noopener" class="external_link">John Hickenlooper</a> (Democrat)</li><li><a href="https://www.coloradoforwardparty.com/2026_fwdcandidate_chew" class="external_link">Bob Chew</a> (Forward)</li><li>Christopher Baum (Approval Voting)</li><li><a href="https://lpcolorado.org/wp-content/uploads/sites/26/2026/03/Huber-US-Senate.pdf" class="external_link">Blake Huber</a> (Libertarian)</li><li><a href="https://www.senatorwithrow.com/" class="external_link">Adam Withrow</a> (Unity)</li><li>Write-In</li></ul><h3 class="subhead2">US House of Representatives District 1</h3><ul><li><a href="https://www.google.com/goto?url=CAESVgHrOzAV9tVNr6A25gLtdDgFagtkU9beFTnh9QK5o4zuW7EWtCzntPYKgAIcLPCU1MiKMEGEjp9wku6UibKOU9dKpv6xx7w9Gp8JOOfW6VcD3uUfuIv8" class="external_link">Melat Kiros</a> (Democratic)</li><li>Christy Peterson (Republican)</li><li>Critter Milton (Unity)</li><li><a href="https://liberty4the1st.com/" class="external_link">Chad Humphrey</a> (Libertarian)</li><li>Shimon Blau (Unaffiliated)</li><li>Write-In</li></ul><h3 class="subhead2">US House of Representatives District 2</h3><ul><li><a href="https://www.google.com/goto?url=CAESXwHrOzAVGww3MZRcx2321ypt6vFr46lZTAsj_zlai-8LUfWDL--G4Wmk85S3gh4TWEUjiNXJXimuCXC8wVHeDBuZulw1RK94Lmc0Ay9aaqIuA0UIiZQO2qXGhulr0Gyc" class="external_link">Joe Neguse</a> (Democratic)</li><li><a href="https://www.google.com/goto?url=CAESUwHrOzAVjgWGmx7cPSGXjnEP1bPtiMaI21gqxIK8a3mldPYqzzXt6ocfYKnRaiuwjeXpjdD8lg9J-L1pH8wBUXnLNnneEbp0zjXdWGpyfXNTIsDC" class="external_link">Kelley Anne Dennison</a> (Republican)</li><li>Gaylon Kent (Libertarian)</li></ul><h3 class="subhead2">US House of Representatives District 6</h3><ul><li>Jason Crow (Democratic)</li><li>Jason Clark (Republican)</li><li><a href="https://www.google.com/goto?url=CAESXgHrOzAVTr8AW4JktmACCF8jctlPS22Q_LlnyOHzxwoT2OnC1KJ5v1pjzstmoF2LkpwBdLtWOdCvYaCL8dhZ9FPV9mLiK4viuECLmFD5yYbbHSohSpqrYyJ_BA04oGc" class="external_link">Patty McMahon</a> (Libertarian)</li><li><a href="https://www.google.com/goto?url=CAESWAHrOzAVsGYGeGgxOG_Qh23yfmH3BcgeC4aTVjwdidsmiVk_SxLfvaYN2QeHViIPxoxPm-4jAAwb4Ttgvo5RafEaDARrWF4VSlzzF0b30bP6MMKpYgG7hbc" class="external_link">Meredith Ryan</a> (Unity)</li><li><a href="https://www.google.com/goto?url=CAESXAHrOzAVlRr1cf9uMU2pkEDKFCFFhkEJxc0CuI_XcgjXLllVXtKIb3ICov1A2IIsqvK2yZRZGjrOEq21TrTzTnL6_rsmjx846K4rmzh6sQoFrbw_upYFl1XoqCom" class="external_link">Samir Witta</a> (Unaffiliated)</li></ul><h3 class="subhead2">US House of Representatives District 7</h3><ul><li><a href="https://timbennettforcongress.com/" class="external_link">Tim Bennett</a> (Republican)</li><li><a href="https://brittanypettersen.com/" target="_blank" rel="noopener" class="external_link">Brittany Pettersen</a> (Democrat)</li><li>Susan Hall (Unity)</li><li>Lawrence Kyle Clark (American Constitution)</li><li><a href="https://dankilo.com/" class="external_link">Dan &quot;Kilo&quot; Sallis</a> (Libertarian)</li><li><a href="https://joeforco.com/" class="external_link">Joe Krzeczkowski</a> (Unaffiliated)</li></ul><h2 class="subhead1">Statewide Offices</h2><h3 class="subhead2">Governor/Lieutenant Governor</h3><ul><li><a href="https://www.victor2026.com/" class="external_link">Victor Marx/George Washington Markert</a> (Republican)</li><li><a href="https://philforcolorado.com/" class="external_link">Phil Weiser/Lesley Dahlkemper</a> (Democrat)</li><li>Stephen T. Hamilton/James K Treibert (American Constitution)</li><li><a href="https://www.mulderforgovernor.org/" class="external_link">Eric Mulder/Wayne Harlos</a> (Libertarian)</li><li><a href="https://jeffpeckman.com/" class="external_link">Jeff Peckman/T.J. Cole</a>&nbsp; (Unity)</li><li>Erik Underwood/Frank Atwood (Approval Voting)</li><li>Greg Lopez/Taralyn Romero (Unaffiliated)</li></ul><h3 class="subhead2">Secretary of State</h3><ul><li><a href="https://www.amandaforcolorado.com/" target="_blank" rel="noopener" class="external_link">Amanda Gonzalez</a> (Democrat)</li><li><a href="https://libertysos.co/" target="_blank" rel="noopener" class="external_link">James Wiley</a> (Republican)&nbsp;</li><li><a href="https://seanvadneyforsos.org/" target="_blank" rel="noopener" class="external_link">Sean Vadney</a> (Libertarian)</li><li><a href="http://www.campbellgoodforcolorado.com/" class="external_link">Amanda Campbell</a> (American Constitution)</li><li><a href="https://www.coloradoforwardparty.com/2026_fwdcandidate_landry" class="external_link">Celeste Landry</a> (Forward)</li></ul><h3 class="subhead2">State Treasurer</h3><ul><li><a href="https://bridgesforcolorado.com/" target="_blank" rel="noopener" class="external_link">Jeff Bridges</a> (Democrat)</li><li><a href="https://citizensforkevingrantham.com/" target="_blank" rel="noopener" class="external_link">Kevin Grantham</a> (Republican)&nbsp;</li><li>Jodie Barr (Libertarian)</li><li>Marilee Langner Sturgis (Approval Voting)</li></ul><h3 class="subhead2">Attorney General</h3><ul><li><a href="https://michaelallenforcolorado.com/" target="_blank" rel="noopener" class="external_link">Michael J. Allen</a> (Republican)</li><li><a href="https://www.jenaforcolorado.com/" target="_blank" rel="noopener" class="external_link">Jena Griswold</a> (Democrat)</li></ul><h3 class="subhead2">State Board of Education District 1</h3><ul><li><a href="https://lisaescarcega.com/" class="external_link">Lisa Esc&aacute;rcega</a> (Democratic)</li><li><a href="https://www.unbrokenschoolsco.com/" class="external_link">Frederick Espinoza</a> (Republican)</li><li>Clayton Casciato (Libertarian)</li></ul><h3 class="subhead2">State Board of Education District 7</h3><ul><li><a href="https://www.karlaesser.com/" target="_blank" rel="noopener" class="external_link">Karla Esser</a> (Democrat)</li><li><a href="https://www.stevebartoncampaignforcd7statesboardofeducation.com/" target="_blank" rel="noopener" class="external_link">Steve Barton</a> (Republican)</li><li><a href="https://www.populist.us/politicians/ross-klopf" class="external_link">Ross Klopf</a> (Libertarian)</li></ul><h3 class="subhead2">University of Colorado Board of Regents District 2</h3><ul><li>Marty Neilson (Republican)</li><li><a href="https://www.edieforcu.com/" class="external_link">Edie Hooton</a> (Democrat)</li><li>Richard Friend (Libertarian)</li></ul><h3 class="subhead2">University of Colorado Board of Regents District 6</h3><ul><li>Veanessa Burbage (Republican)</li><li><a href="https://ilana4regent.com/" class="external_link">Ilana Spiegel</a> (Democratic)</li><li>Joe Johnson (Libertarian)</li></ul><h3 class="subhead2">University of Colorado Board of Regents District 7</h3><ul><li><a href="https://paulmuellerforco.com/" class="external_link">Paul Mueller</a> (Republican)</li><li><a href="https://www.chavezforcu.com/about-nolbert" target="_blank" rel="noopener" class="external_link">Nolbert Chavez</a> (Democrat)</li><li>BetteRose Ryan (Libertarian)</li></ul><h3 class="subhead2">State Senator District 4</h3><ul><li>Justin Kurth (Democratic)</li><li><a href="https://www.collinsforcolorado.com/" class="external_link">Teddy Collins</a> (Republican)</li></ul><h3 class="subhead2">State Senator District 20</h3><ul><li><a href="https://www.mancusoforcolorado.com/" class="external_link">Richard (Rich) Mancuso</a> (Republican)</li><li><a href="https://www.liederforcolorado.com/" class="external_link">Sheila Lieder</a> (Democratic)</li></ul><h3 class="subhead2">State Senator District 22</h3><ul><li><a href="https://steve4colorado.us/" class="external_link">Steve Harkess</a> (Republican)</li><li><a href="https://www.monicaduran.com/" class="external_link">Monica Irasema Duran</a> (Democratic)</li></ul><h3 class="subhead2">State Senator District 32</h3><ul><li><a href="https://emilyforcolorado.com/" class="external_link">Emily Sirota</a> (Democratic)</li><li><a href="https://wulff4colorado.com/" class="external_link">Sydnnia Wulff</a> (Republican)</li></ul><h3 class="subhead2">State House of Representatives District 1</h3><ul><li><a href="https://javierforcolorado.com/" class="external_link">Javier Mabrey</a> (Democratic)</li><li><a href="https://southwest-denver-house-of-representatives.b12sites.com/" class="external_link">Joseph Montoya</a> (Republican)</li></ul><h3 class="subhead2">State House of Representatives District 23</h3><ul><li><a href="https://www.alexisforcolorado.com/" class="external_link">Alexis Hoffkling</a> (Democratic)</li><li><a href="https://ross4co.com/" class="external_link">Ross Metler</a> (Libertarian)</li></ul><h3 class="subhead2">State House of Representatives District 24</h3><ul><li><a href="https://www.lisaforcolorado.com/" class="external_link">Lisa Feret</a> (Democratic)</li><li><a href="https://johnson4colorado.org/" class="external_link">Kristopher Johnson</a> (Republican)</li></ul><h3 class="subhead2">State House of Representatives District 25</h3><ul><li><a href="https://www.herzfeldforcolorado.com/" class="external_link">Mark Herzfeld</a> (Republican)</li><li><a href="https://www.story4co.com/" class="external_link">Tammy Story</a> (Democratic)</li></ul><h3 class="subhead2">State House of Representatives District 27</h3><ul><li><a href="https://www.vardaforcolorado.com/" target="_blank" rel="noopener" class="external_link">Danielle Varda</a> (Democrat)</li><li>Eric Bodenstab (Republican)</li></ul><h3 class="subhead2">State House of Representatives District 28</h3><ul><li><a href="https://www.reinforcolorado.com/" class="external_link">David Rein</a> (Democratic)</li></ul><h3 class="subhead2">State House of Representatives District 29</h3><ul><li><a href="https://kristineireland.com/" class="external_link">Kristine Ireland</a> (Republican)</li><li><a href="https://www.loriforcolorado.com/" class="external_link">Lori Goldstein</a> (Democratic)</li></ul><h3 class="subhead2">State House of Representatives District 30</h3><ul><li><a href="https://www.rebekahforcolorado.com/" class="external_link">Rebekah Stewart</a> (Democratic)</li><li><a href="https://www.williamswitzerforcolorado.com/" class="external_link">William Tyler Switzer</a> (Republican)</li></ul><h3 class="subhead2">State House of Representatives District 35</h3><ul><li><a href="https://lorenaforsenate.com/" class="external_link">Lorena Garcia</a> (Democratic)</li></ul><h3 class="subhead2">State House of Representatives District 38</h3><ul><li><a href="https://www.gretchenforcolorado.com/" class="external_link">Gretchen Rydin</a> (Democratic)</li><li>Tim Martin (Center)</li><li><a href="https://norm4liberty.org/" class="external_link">Norm Olsen</a> (Libertarian)</li><li><a href="https://standwithallison.com/" class="external_link">Allison Madrigal</a> (Unaffiliated)</li></ul><h3 class="subhead2">Regional Transportation Board of Directors District J</h3><ul><li><a href="https://www.colemanforrtd.com/" class="external_link">Coleman Erickson</a></li></ul><h3 class="subhead2">Regional Transportation Board of Directors District L</h3><ul><li><a href="https://www.ianforrtd.com/" class="external_link">Ian Harwick</a></li></ul><h3 class="subhead2">Regional Transportation Board of Directors District N</h3><ul><li><a href="https://www.cindyforrtd.com/" class="external_link">Cindy Arcuri</a></li></ul><h2 class="subhead1">County Offices</h2><h3 class="subhead2">Commissioner District 3</h3><ul><li><a href="https://vandenbergforcolorado.com/" target="_blank" rel="noopener" class="external_link">Stephanie VandenBerg</a> (Republican)</li><li><a href="https://www.cutterforcolorado.com/" class="external_link">Lisa A. Cutter (Democrat)</a></li></ul><h3 class="subhead2">Clerk and Recorder</h3><ul><li>Paul Poston (Republican)</li><li><a href="https://www.nicoleforjeffco.com/" target="_blank" rel="noopener" class="external_link">Nicole Hensel</a> (Democrat)</li></ul><h3 class="subhead2">Treasurer</h3><ul><li><a href="https://www.ericproctor.com/" target="_blank" rel="noopener" class="external_link">Eric Proctor</a> (Democrat)</li><li><a href="https://murl4jeffco.com/about" class="external_link">Murl Hendrickson</a> (Libertarian)</li></ul><h3 class="subhead2">Assessor</h3><ul><li>Vera King (Republican)</li><li><a href="https://kerrforjeffco.com/" target="_blank" rel="noopener" class="external_link">Andy Kerr</a> (Democrat)</li><li><a href="https://gregforjeffco.com/" class="external_link">Greg Ketcham</a> (Unaffiliated)</li></ul><h3 class="subhead2">Sheriff</h3><ul><li><a href="https://marinelliforsheriff.com/" target="_blank" rel="noopener" class="external_link">Regina &quot;Reggie&quot; Marinelli</a> (Democrat)</li><li><a href="https://doizakiforsheriff.com/about" class="external_link">Randall Doizaki</a> (Republican)&nbsp;</li></ul><h3 class="subhead2">Surveyor&nbsp;</h3><ul><li>Robert Hennessy (Republican)</li></ul><h3 class="subhead2">Coroner</h3><ul><li><a href="https://www.nickforcoroner.com/" target="_blank" rel="noopener" class="external_link">Nick Lobello</a> (Democrat)</li><li>Allison Harmon (Republican)</li></ul><h2 class="subhead1">Local</h2><h3 class="subhead2">Town of Morrison Mayor</h3><ul><li>Jerome Neri</li><li>Katharine Gill</li></ul><h3 class="subhead2"><strong>Town of Morrison Trustee (vote for three)</strong></h3><ul><li>David Wirtz</li><li>Shea Thomas</li><li>Stacy Feehery</li><li>Erik Strait</li></ul>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '7ae04565-fed7-44e2-a835-68b62eb67e5d'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs " role="tablist" aria-hidden="True.ToString().ToLowerInvariant()" style='display: none;'>
+						<li class="" role="presentation">	<a href="#tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_2" class="tabButton" id="tabBtnNarrowee978041-bbf6-47ba-94ac-ffeb2b46fd01_2" role="tab" aria-controls="tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_2" aria-selected="false" tabindex="-1"><span class="tabName editable" data-sequence="2" data-tabname="Local Ballot Measures" contenteditable="false">Local Ballot Measures</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tabee978041-bbf6-47ba-94ac-ffeb2b46fd01_2" role="tabpanel" aria-labelledby="tabBtnee978041-bbf6-47ba-94ac-ffeb2b46fd01_2" tabindex="-1">
+
+<div class="widget editor pageStyles narrow" id="divEditor5053d8a8-663b-4c65-8ee3-d2bed9e35118" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><a href="https://www.jeffco.us/DocumentCenter/View/59081/2026-General-TABOR-Booklet-PDF"><img src="/ImageRepository/Document?documentId=59062" class="fr-fil fr-dii" alt="Screenshot of the front cover of the TABOR booklet. " style="width: 110px;"></a> Several jurisdictions (cities, towns, fire protection areas, water districts, etc) are asking tax/debt questions of voters. Every Jeffco household will be asked to weigh in on one or more of these measures. Each household will receive a TABOR (Taxpayer Bill of Rights) booklet in the mail, which contains the explanations of each of these measures and comments for and against, as filed by the jurisdiction.&nbsp;</p><p><a aria-label="Download a PDF of the TABOR booklet Opens in new window" href="/DocumentCenter/View/59081/2026-General-TABOR-Booklet-PDF" target="_blank" style="height: 40px; width: fit-content;display: flex;justify-content: center;align-items: center; background-color: #ba5624; color: #fff;font-weight: 700; letter-spacing: .2em; padding: 5px 16px; text-transform: uppercase; text-decoration: none; box-shadow: 3px 3px 4px rgba(0,0,0,.2); border-radius: 3px;" rel="noopener">Download a PDF of the TABOR book</a></p><p style="color:red;"><br></p><p style="color:red;"><strong>NOTE: Jefferson County is unable to answer questions related to the meaning or interpretation of any of these ballot questions. Please contact the appropriate jurisdiction for more information.</strong></p><h2 class="subhead1">School District Ballot Measures</h2><h3 class="subhead2">Jefferson County School District R-1 Ballot Issue 5A</h3><p>SHALL JEFFERSON COUNTY SCHOOL DISTRICT R-1 TAXES BE INCREASED $73 MILLION IN 2026 FOR COLLECTION IN 2027, AND BY SUCH AMOUNTS IN SUBSEQUENT YEARS THAT WILL PRODUCE, WHEN COMBINED WITH PRIOR MILL LEVY OVERRIDE AMOUNTS, UP TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S., WITH SUCH FUNDS TO BE USED FOR THE PURPOSES AUTHORIZED BY SECTION 22-54-108, C.R.S., SUCH AS THE FOLLOWING:&nbsp;</p><ul><li>ATTRACTING AND KEEPING &middot; HIGH-QUALITY STAFF BY RAISING COMPENSATION CLOSER TO THE MARKET AVERAGE FOR TEACHERS, EDUCATION SUPPORT PROFESSIONALS, SUPPORT STAFF AND SCHOOL LEADERS;&nbsp;</li><li>PROVIDING STUDENTS WITH THE &middot; INSTRUCTION, SKILLS, AND HANDS-ON LEARNING NECESSARY FOR SUCCESS IN COLLEGE AND THE WORKPLACE THROUGH CAREER AND TECHNICAL EDUCATION PROGRAMS; AND SHALL THE SPENDING OF SUCH TAXES BE REVIEWED BY A BOARD-APPOINTED CITIZENS&apos; COMMITTEE FOR ACCOUNTABILITY, SUMMARIZED IN ANNUAL PUBLIC REPORTS, AND POSTED PUBLICLY ON A WEBSITE FOR FULL TRANSPARENCY;</li></ul><p>AND SHALL A MILL LEVY BE IMPOSED AT A RATE WHICH WILL GENERATE REVENUES UP TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S., AND SHALL THE ADDITIONAL REVENUES BE DEPOSITED IN THE GENERAL FUND AND USED FOR EDUCATIONAL PURPOSES AS PROVIDED HEREIN, AS PREVIOUSLY APPROVED BY THE DISTRICT VOTERS PURSUANT TO SECTION 22-54-108(V), C.R.S., AND AS AUTHORIZED BY STATE LAW; AND SHALL THE REVENUE FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT THEREON BE COLLECTED AND SPENT AS VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?</p><h3 class="subhead2">Jefferson County School District R-1 Ballot Issue 5B</h3><p>SHALL JEFFERSON COUNTY SCHOOL DISTRICT R-1 TAXES BE INCREASED $60 MILLION IN 2026 FOR COLLECTION IN 2027, AND ANNUALLY THEREAFTER, AND UTILIZED FOR THE PURPOSES AUTHORIZED AND IN ACCORDANCE WITH SECTION 22-54-108.7, C.R.S., (THE DEBT FREE SCHOOLS ACT), PROVIDED THAT SUCH REVENUE MAY BE INCREASED ANNUALLY (AFTER THE FIRST FULL FISCAL YEAR) FOR INFLATION BASED ON THE ANNUAL CHANGES IN THE CONSUMER PRICE INDEX; WITH SUCH REVENUE TO BE DEPOSITED INTO A DEDICATED FUND ONLY TO BE USED FOR CAPITAL CONSTRUCTION, TECHNOLOGY, AND MAINTENANCE, AND UTILIZED FOR AUTHORIZED PURPOSES SUCH AS:&nbsp;</p><ul><li>CRITICAL UPGRADES AND &middot; MAINTENANCE OF SCHOOLS SUCH AS PLUMBING IMPROVEMENTS, PARKING LOT REPAIRS, AND REPLACING OR REPAIRING FAULTY, DANGEROUS, AND LEAKING ROOFS;&nbsp;</li><li>PROVIDING AND REPAIRING COOLING, &middot; HEATING, AND VENTILATION SYSTEMS FOR A BETTER LEARNING ENVIRONMENT;&nbsp;</li><li>REPLACING AND UPDATING AGING &middot; INFRASTRUCTURE AND TECHNOLOGY;&nbsp;</li><li>SAFETY AND SECURITY INVESTMENTS &middot; SUCH AS SECURE ACCESS AND MONITORING;&nbsp;</li></ul><p>AND SHALL THE SPENDING OF SUCH TAXES BE REVIEWED BY A BOARD-APPOINTED CITIZENS&apos; COMMITTEE FOR ACCOUNTABILITY, SUMMARIZED IN ANNUAL PUBLIC REPORTS, AND POSTED PUBLICLY ON A WEBSITE FOR FULL TRANSPARENCY; AND SHALL A MILL LEVY BE IMPOSED AT A RATE SUFFICIENT TO GENERATE REVENUES UP TO SUCH AMOUNT SPECIFIED ABOVE, AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?</p><h2 class="subhead1">Special District Ballot Measures</h2><h3 class="subhead2">Blue Mountain Water District <strong>Issue 6A</strong></h3><p>SHALL BLUE MOUNTAIN WATER DISTRICT DEBT BE INCREASED UP TO $1,200,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $2,082,000, BUT WITH NO ADDITIONAL TAX AUTHORIZATION, SUCH DEBT TO CONSIST OF A LOAN AGREEMENT OR OTHER MULTIPLE FISCAL YEAR OBLIGATION ENTERED INTO WITH A STATE AUTHORITY FOR THE PURPOSE OF PAYING OR FINANCING ALL OR A PART OF THE COSTS OF CONSTRUCTING AND COMPLETING WATER QUALITY, REGULATORY COMPLIANCE AND RELATED SYSTEM IMPROVEMENTS, WITH SUCH DEBT TO BE PAID FROM THE FEES AND CHARGES DERIVED FROM THE OPERATION OF THE DISTRICT&apos;S WATER SYSTEM AND OTHER LEGALLY AVAILABLE REVENUES, TO BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 4.0% PER ANNUM AND TO BE ISSUED AT SUCH TIME, IN SUCH MANNER AND CONTAINING SUCH TERMS, NOT INCONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE?</p><h3 class="subhead2">Golden Gate Fire Protection District Ballot Issue 6B</h3><p>WITHOUT INCREASING THE DISTRICT&apos;S EXISTING OPERATIONS MILL LEVY, SHALL THE GOLDEN GATE FIRE PROTECTION DISTRICT&apos;S TAXES BE INCREASED BY AN ADDITIONAL 4.5 MILLS ANNUALLY, COMMENCING WITH TAXES COLLECTED IN 2027, TO GENERATE APPROXIMATELY $137,376 IN THE FIRST YEAR (2027), AND BY WHATEVER ADDITIONAL AMOUNTS ARE GENERATED ANNUALLY THEREAFTER FROM CHANGES IN THE DISTRICT&apos;S ASSESSED VALUATION, FOR THE SOLE PURPOSE OF FUNDING THE ACQUISITION, REPLACEMENT, REVITALIZATION, OR REHABILITATION OF FIRE APPARATUS AND FLEET VEHICLES, INCLUDING PERMANENTLY INSTALLED EQUIPMENT INTEGRAL TO THE OPERATION OF SUCH APPARATUS AND VEHICLES; WITH ALL REVENUES DEPOSITED INTO A DEDICATED &quot;FLEET REVITALIZATION FUND&quot; TO BE USED EXCLUSIVELY FOR SUCH PURPOSES; AND SHALL ALL REVENUES FROM SUCH MILL LEVY, TOGETHER WITH ANY EARNINGS THEREON, CONSTITUTE A VOTER APPROVED REVENUE CHANGE AND BE COLLECTED, RETAINED, AND SPENT BY THE DISTRICT AS AUTHORIZED BY THE BOARD OF DIRECTORS, WITHOUT REGARD TO ANY REVENUE OR EXPENDITURE LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?</p><h3 class="subhead2">Arvada Fire Protection District Ballot Issue 6C</h3><p>SHALL ARVADA FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $23,100,000 THE FIRST FISCAL YEAR, BEGINNING JANUARY 1, 2027, AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, BY A SALES TAX OF 1.0% (ONE PERCENT) EXCLUDING ON SALES OF FOOD FOR DOMESTIC HOME CONSUMPTION, PRESCRIPTION MEDICINES, DIAPERS, SCHOOL ACTIVITIES AND ALL OTHER CATEGORIES EXEMPT FROM STATE SALES TAX COLLECTIONS, FOR THE PURPOSES OF PROVIDING FIRE PROTECTION, AMBULANCE, EMERGENCY MEDICAL RESPONSE, RESCUE, SAFETY, AND SUPPORT SERVICES FOR THE RESIDENTS, PROPERTY OWNERS, AND BUSINESSES SERVED BY THE DISTRICT, INCLUDING:</p><ul><li>MAINTAINING FIREFIGHTER AND PARAMEDIC STAFFING LEVELS TO SAFELY AND EFFICIENTLY RESPOND TO EMERGENCIES.</li><li>PROVIDE AND MAINTAIN EMERGENCY VEHICLES AND EQUIPMENT AND MODERNIZE FACILITIES TO BETTER PROTECT THE PUBLIC AND FIRST RESPONDERS.&nbsp;</li><li>THE ABILITY TO RETAIN AND ATTRACT HIGHLY QUALIFIED FIRST RESPONDERS AND OTHER ESSENTIAL PERSONNEL.</li><li>IMPROVING FIREFIGHTER HEALTH AND WELLNESS WITH PROGRAMS SUCH AS EARLY DETECTION AND TREATMENT FOR CARDIOVASCULAR CONDITIONS AND CANCER; MENTAL HEALTH SUPPORT; AND MANDATORY FITNESS TRAINING AND STANDARDS.&nbsp;</li></ul><p>WITH SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND ALL SPENDING OF SUCH REVENUES REPORTED IN THE DISTRICT&apos;S ANNUAL INDEPENDENT AUDIT PUBLISHED ON THE DISTRICT WEBSITE AND REVIEWED BY AN EXTERNAL AUDITOR, AS WELL AS THE AUDIT AND FINANCE COMMITTEE; AND SHALL ALL REVENUE AND ANY EARNINGS ON THIS TAX CONSTITUTE PERMANENT VOTER-APPROVED REVENUE CHANGE WITHIN THE MEANING OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW?</p><h3 class="subhead2">Columbine Knolls Grove Metropolitan Recreation District Ballot Issue 6D</h3><p>SHALL COLUMBINE KNOLLS GROVE METROPOLITAN RECREATION DISTRICT TAXES BE INCREASED BY UP TO $152,000 ANNUALLY FOR COLLECTION IN CALENDAR YEAR 2027, AND BY SUCH ADDITIONAL AMOUNTS AS MAY BE GENERATED ANNUALLY THEREAFTER, THROUGH AN ADDITIONAL PROPERTY TAX MILL LEVY OF 2.6 MILLS, IN ADDITION TO THE MILL LEVY CURRENTLY IMPOSED BY THE DISTRICT, FOR THE PURPOSE OF OPERATING, MAINTAINING, REPAIRING, AND IMPROVING DISTRICT FACILITIES; AND SHALL THE REVENUES DERIVED FROM SUCH MILL LEVY INCREASE BE AN EXCEPTION TO ALL LIMITS THAT MAY OTHERWISE APPLY, INCLUDING WITHOUT LIMITATION ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION (&ldquo;TABOR&rdquo;), AND SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AS WELL AS ANY OTHER PAST, PRESENT OR FUTURE LAW AS AUTHORIZED BY PRIOR BALLOT MEASURES AND THIS BALLOT MEASURE?</p><h3 class="subhead2">Columbine Knolls Grove Metropolitan Recreation District Ballot Issue 6E</h3><p>SHALL COLUMBINE KNOLLS GROVE METROPOLITAN RECREATION DISTRICT DEBT BE INCREASED BY UP TO $6,600,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $13,100,000, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $440,000 ANNUALLY FOR A PERIOD NOT TO EXCEED THIRTY (30) YEARS, FOR THE PURPOSE OF FINANCING THE COSTS OF REPAIRING, RENOVATING, REPLACING, CONSTRUCTING, EQUIPPING, PLANNING AND IMPROVING DISTRICT RECREATIONAL FACILITIES, PARKS, INFRASTRUCTURE, AND AMENITIES, INCLUDING WITHOUT LIMITATION:</p><ul><li>AQUATIC FACILITY IMPROVEMENTS;</li><li>PARK, PLAYGROUND, ATHLETIC FACILITY, AND RECREATIONAL AMENITY IMPROVEMENTS; AND</li><li>DISTRICT-WIDE INFRASTRUCTURE, ACCESSIBILITY, SAFETY, AND DEFERRED MAINTENANCE IMPROVEMENTS;</li></ul><p>SUCH DEBT TO CONSIST OF GENERAL OBLIGATION BONDS WHICH SHALL BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 5.25% PER ANNUM AND BE ISSUED AT SUCH TIME AND PRICES (AT, ABOVE OR BELOW PAR) AND CONTAINING SUCH TERMS CONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AN AMOUNT SUFFICIENT IN EACH YEAR TO PAY THE PRINCIPAL, PREMIUM IF ANY, AND INTEREST ON SUCH BONDS; AND SHALL ANY EARNINGS FROM THE INVESTMENT OF THE PROCEEDS OF SUCH TAXES AND BONDS CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION (&ldquo;TABOR&rdquo;)?</p><h3 class="subhead2">Front Range Passenger Rail District Ballot Issue 7A</h3><p>SHALL FRONT RANGE PASSENGER RAIL DISTRICT TAXES BE INCREASED $295,000,000 ANNUALLY AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER, AND SHALL FRONT RANGE PASSENGER RAIL DISTRICT DEBT BE INCREASED $580,000,000, WITH A REPAYMENT COST OF $785,000,000;</p><p>TO CONSTRUCT, OPERATE, AND MAINTAIN COLORADO CONNECTOR (COCO) PASSENGER RAIL SERVICE ON COLORADO&rsquo;S FRONT RANGE AND CONNECT COMMUNITIES, INCLUDING PUEBLO, COLORADO SPRINGS, STERLING RANCH, LITTLETON, DENVER, WESTMINSTER, BROOMFIELD, LOUISVILLE, BOULDER, LONGMONT, LOVELAND, AND FORT COLLINS; IN ORDER TO:</p><ul><li>REMOVE VEHICLES FROM HIGHWAYS AND INCREASE TRAVEL CAPACITY;</li><li>CONNECT TRAVELERS TO EMPLOYMENT CENTERS, COLLEGES, SPORTS ARENAS, AND ENTERTAINMENT HUBS ALONG THE FRONT RANGE; AND</li><li>INVEST IN STATION AREA IMPROVEMENTS AND LOCAL CONNECTIONS TO RAIL STATIONS;</li></ul><p>BY ESTABLISHING A 0.333% SALES AND USE TAX (EQUAL TO ONE THIRD OF A PENNY ON A $1 PURCHASE), WITH EXEMPTIONS PROVIDED UNDER COLORADO LAW, INCLUDING THOSE FOR GASOLINE, FOOD, RESIDENTIAL ELECTRICITY AND GAS, PRESCRIPTION DRUGS, AND MEDICAL SUPPLIES;</p><p>AND TO RETAIN ALL SUCH REVENUES, PUBLIC AND PRIVATE CONTRIBUTIONS, AND ANY INVESTMENT INCOME ON REVENUES AND DEBT PROCEEDS, AS A VOTER-APPROVED REVENUE CHANGE UNDER SECTION 20 OF ARTICLE X OF THE COLORADO CONSTITUTION;</p><p>AND REQUIRING THAT ALL SUCH DEDICATED REVENUES BE REVIEWED ANNUALLY BY AN INDEPENDENT AUDITOR AND A ROTATING GROUP OF CITIZEN TAXPAYERS WHO LIVE IN THE DISTRICT?</p><h3 class="subhead2">Evergreen Fire Protection District Ballot Issue 7B</h3><p>SHALL EVERGREEN FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $5,440,000 ANNUALLY COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A 0.89 PERCENT SALES TAX, FOR THE PURPOSE OF MAINTAINING HIGH LEVELS OF FIRE AND EMERGENCY SERVICES, INCLUDING RECRUITING VOLUNTEER AND PAID FIREFIGHTER AND PARAMEDIC STAFF, AND ENHANCING REVENUE SOURCES FOR WILDFIRE MITIGATION, COMMUNITY EDUCATION, AND EMERGENCY RESPONSE CAPABILITY AND NECESSARY CAPITAL UPGRADES, REPAIRS AND MAINTENANCE IMPROVEMENTS, SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND NOT TO SUPPLANT ANY FUNDING THAT THE DISTRICT VOTERS PREVIOUSLY AUTHORIZED OR WHICH IT IS ENTITLED TO RECEIVE BY LAW?</p><h3 class="subhead2">West Metro Fire Protection District Ballot Issue 7C</h3><p>SHALL WEST METRO FIRE PROTECTION DISTRICT TAXES BE INCREASED BY UP TO $36,300,000 IN FISCAL YEAR 2027 AND BY WHATEVER AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, FROM A THREE-QUARTERS OF A PERCENT (0.75%) SALES TAX, WHICH IS SEVENTY-FIVE CENTS ON EVERY $100 PURCHASE, EXCLUDING EVERYDAY NECESSITIES LIKE GROCERIES, GAS AND MEDICINE, FOR THE PURPOSES OF MAINTAINING VITAL FIREFIGHTING AND EMERGENCY MEDICAL SERVICES, INCLUDING BUT NOT LIMITED TO:</p><ul><li>CONTINUING TO PROVIDE RAPID EMERGENCY MEDICAL AND FIREFIGHTING SERVICES TO MEET INCREASED DEMAND;&nbsp;</li><li>MAINTAINING ADEQUATE NUMBERS OF FIRST RESPONDERS;&nbsp;</li><li>PROTECTING THE SAFETY AND HEALTH OF FIREFIGHTERS AND PARAMEDICS;&nbsp;</li><li>UPDATING LIFE-SAVING MEDICAL AND RESCUE EQUIPMENT; AND&nbsp;</li><li>STRENGTHENING LOCAL WILDFIRE RESPONSE.&nbsp;</li></ul><p>WITH SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND SPENDING OF ALL DISTRICT REVENUES SHALL BE REVIEWED MONTHLY BY A CITIZEN BOARD OF DIRECTORS AND ANNUALLY BY AN INDEPENDENT AUDIT, AND REPORTED ON THE DISTRICT WEBSITE; AND SHALL THE RESULTING SALES TAX REVENUE AND INVESTMENT EARNINGS BE TREATED AS A VOTER-APPROVED REVENUE AND SPENDING CHANGE UNDER ARTICLE X OF SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?</p><h3 class="subhead2">Conifer Fire Protection District Ballot Issue 7D</h3><p>SHALL CONIFER FIRE PROTECTION DISTRICT TAXES BE INCREASED $400,000 ANNUALLY (FIRST FULL FISCAL YEAR), OR BY SUCH AMOUNT AS MAY BE RAISED, BEGINNING JANUARY 1, 2027, BY INCREASING THE DISTRICT&apos;S PROPERTY TAX RATE BY 4.0 MILLS (AT A COST OF APPROXIMATELY $2.00 PER MONTH PER $100,000 IN PROPERTY VALUE FOR RESIDENTIAL PROPERTIES) FOR THE PURPOSES OF PROVIDING FIRE PROTECTION, RESCUE, SAFETY, AND SUPPORT SERVICES FOR THE RESIDENTS, PROPERTY OWNERS, AND BUSINESSES SERVED BY THE DISTRICT, INCLUDING BUT NOT LIMITED TO:</p><ul><li>MAINTAINING FIREFIGHTER AND PARAMEDIC STAFFING LEVELS TO SAFELY AND EFFICIENTLY RESPOND TO EMERGENCIES;</li><li>BEING PROACTIVE IN MAINTAINING EXISTING STATIONS AND FACILITIES; EXPANDING, REMODELING, AND/OR REBUILDING OUTDATED OR INADEQUATE INFRASTRUCTURE; AND REPLACING AND MAINTAINING EMERGENCY VEHICLES, ENGINES, AND AMBULANCES; AND&nbsp;</li><li>ATTRACTING AND RETAINING HIGHLY QUALIFIED FIRST RESPONDERS AND OTHER ESSENTIAL PERSONNEL;&nbsp;</li></ul><p>AND SHALL THE DISTRICT&apos;S TOTAL MILL LEVY RATE OF 16 MILLS BE ADJUSTED ANNUALLY TO OFFSET REVENUE LOSSES FROM REFUNDS, ABATEMENTS, AND SHALL THE DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE PROCEEDS OF SUCH TOTAL MILL LEVY RATE AND ALL OTHER REVENUE FROM ANY YEAR AS A VOTER-APPROVED REVENUE CHANGE, OFFSET, AND EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY UNDER TABOR (ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION) OR ANY OTHER LAW AND AS A PERMANENT WAIVER OF THE 5.5% LIMITATION UNDER SECTION 29-1-301, C.R.S.?</p><h2 class="subhead1">Municipal Ballot Measures</h2><h3 class="subhead2">City of Edgewater</h3><p><strong>Issue 2K:&nbsp;</strong>SHALL CITY OF EDGEWATER TAXES BE INCREASED $1,200,000 IN 2027 (THE FIRST FISCAL YEAR OF SUCH RATE INCREASE) AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY IN EACH SUBSEQUENT YEAR, THROUGH A ONE-HALF PERCENT (0.5%) INCREASE IN THE CITY SALES TAX RATE, COMMENCING ON JANUARY 1, 2027, THE REVENUES FROM SUCH ONE-HALF PERCENT (0.5%) INCREASE TO BE USED SOLELY FOR THE PURPOSES OF INCREASING AND IMPROVING ACCESSIBILITY AND MOBILITY THROUGHOUT THE CITY, INCLUDING BUT NOT LIMITED TO THE DESIGN AND CONSTRUCTION OF IMPROVEMENTS TO SIDEWALKS, BIKE LANES, STREETSCAPING, STREETS, AND ALLEYS; THE REPAIR, IMPROVEMENT AND REPLACEMENT OF SUCH FACILITIES; REDUCING OR ELIMINATING THE OBLIGATION OF PRIVATE PROPERTY OWNERS TO CONSTRUCT AND REPAIR SIDEWALKS; CONSTRUCTING ADA-REQUIRED IMPROVEMENTS TO CURBS, CROSSWALKS, SIDEWALKS AND OTHER CITY FACILITIES; EDUCATION, TRAINING AND OUTREACH CONCERNING ACCESSIBILITY AND MOBILITY; AND SHALL ALL SUCH TAX REVENUES BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN THE COLORADO CONSTITUTION OR ANY OTHER LAW?</p><h3 class="subhead2">City of Lakewood</h3><p><strong>Issue 2G:</strong> SHALL CITY OF LAKEWOOD TAXES BE INCREASED BY UP TO $17,600,000 IN THE FIRST FULL FISCAL YEAR (COMMENCING JANUARY 1, 2027) AND BY WHATEVER ADDITIONAL AMOUNTS AS ARE RAISED ANNUALLY IN EACH SUBSEQUENT YEAR, THROUGH THE IMPOSITION OF AN ADDITIONAL SALES AND USE TAX OF 0.5% (INCREASING CITY&apos;S SALES AND USE TAX RATE FROM THREE PERCENT (3%) TO THREE AND A HALF PERCENT (3.5%)), PROVIDED THAT:&nbsp;</p><ul><li>FOOD, AS DEFINED IN LAKEWOOD &middot; MUNICIPAL CODE SECTION 3.01.430 (WHICH INCLUDES GROCERIES), SHALL BE EXEMPT FROM SUCH ADDITIONAL HALF-PERCENT SALES AND USE TAX,&nbsp;</li></ul><p>AND SHALL THE TAX REVENUES FROM SUCH ADDITIONAL HALF PERCENT SALES TAX BE USED ONLY FOR THE FOLLOWING SPECIFIC PURPOSES:&nbsp;</p><ul><li>PUBLIC SAFETY PURPOSES, INCLUDING &middot; INVESTING IN CRIME PREVENTION AND HOMELESSNESS RESPONSE; AND&nbsp;</li><li>TRAFFIC SAFETY IMPROVEMENTS, &middot; INCLUDING MAINTENANCE AND CONSTRUCTION OF STREETS AND SIDEWALKS, ROAD IMPROVEMENTS TO REDUCE VEHICLE SPEEDS, AND PEDESTRIAN AND BICYCLE SAFETY ENHANCEMENTS.&nbsp;</li></ul><p>AND SHALL SUCH ADDITIONAL HALF PERCENT SALES AND USE TAX BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMIT CONTAINED WITHIN ARTICLE X, SECTION 20, OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?</p><p><strong>Question 2H:&nbsp;</strong>Establishing when the term of a newly elected Mayor and City Councilmember begins&nbsp;</p><p>Shall Section 2.6(a) of the Lakewood Home Rule Charter regarding terms of office of the Mayor and City Councilmembers be amended to specify that the term of a newly elected Mayor or City Councilmember begins at the first regular meeting following certification of the results of the regular municipal election?</p><p><strong>Question 2I:&nbsp;</strong>Repealing and replacing Charter 12.12 to prohibit property tax increases without a vote of the electorate&nbsp;</p><p>Shall Section 12.12 of the Lakewood Home Rule Charter be repealed and replaced, to repeal obsolete language authorizing an annual property tax increase of up to 7% without voter approval, and to replace that provision with language stating that the City must comply with the Colorado Constitution and may not increase property taxes without approval of the City&apos;s electors?<strong><br></strong></p><p><strong>Question 2J:&nbsp;</strong>Establishing time frames for holding regular or special elections for initiative ordinances and referendums&nbsp;</p><p>Shall Sections 13.1(d) and 13.2(e) of the Lakewood Home Rule Charter regarding initiative and referendum procedures be amended to extend the time frame for conducting regular or special elections on initiative ordinances and referendums to not less than sixty (60) days and not more than one hundred fifty (150) days after the final determination of petition sufficiency?<strong><br></strong></p><h3 class="subhead2">City of Wheat Ridge</h3><p><strong>Issue 2A:&nbsp;</strong>SHALL CITY OF WHEAT RIDGE TAXES BE INCREASED BY UP TO $11,700,000 ANNUALLY IN THE FIRST FULL FISCAL YEAR, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE CITY SALES AND USE TAX BY ONE PERCENT (1.0%) COMMENCING ON JANUARY 1, 2027, TO BE USED FOR COMMUNITY INVESTMENTS INCLUDING:&nbsp;</p><ul><li>PROACTIVE STREET AND INFRASTRUCTURE MAINTENANCE;&nbsp;</li><li>BICYCLE AND PEDESTRIAN SAFETY IMPROVEMENTS;&nbsp;</li><li>PRESERVATION OF COMMUNITY SPACES AT WILMORE DAVIS AND KULLERSTRAND ELEMENTARY SCHOOLS;&nbsp;</li><li>REPLACEMENT OF ANDERSON PARK OUTDOOR POOL; AND&nbsp;</li><li>MODERN POLICE AND CITY SERVICES FACILITIES,&nbsp;</li></ul><p>AND FOR THE OPERATIONS AND MAINTENANCE OF THE SAME; AND SHALL THE CITY BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH TAX AS A VOTER-APPROVED REVENUE CHANGE AND EXCEPTION TO ANY SPENDING OR REVENUE RESTRICTIONS OR OTHER LIMITS UNDER SECTION 20 OF ARTICLE X OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?</p><h3 class="subhead2">Town of Mountain View</h3><p><strong>Question 2B:&nbsp;</strong>Shall the Town of Mountain Views Home Rule Charter be amended to change the governance structure of the Town from a Council-Mayor form of government to a Council-Manager form of government; this means, among other things, that a town manager, appointed by Town Council, will be responsible for the general operations of the Town including supervising all Town departments and preparing an annual budget for Town Council approval?</p><p><strong>Question 2C:&nbsp;</strong>Shall the current Article VIII, Boards and Commissions, of the Town of Mountain View&apos;s Home Rule Charter be repealed in its entirety to allow for Town Boards and Commissions to be created by ordinance of Town Council rather than requiring a voter-approved Town Charter amendment?</p><h3 class="subhead2">Town of Morrison</h3><p><strong>Issue 2D:&nbsp;</strong>SHALL THE TOWN OF MORRISON&apos;S TAXES BE INCREASED BY $125,000 IN THE FIRST FULL FISCAL YEAR, COMMENCING JANUARY 1, 2027, AND BY WHATEVER AMOUNTS RAISED ANNUALLY THEREAFTER, BY ELIMINATING AN EXISTING EXEMPTION FROM THE TOWN&apos;S LODGING TAX AND THEREBY EXPANDING THE TAX TO APPLY TO ALL LODGING FACILITIES REGARDLESS OF THE NUMBER OF GUEST ROOMS, WITH THE REVENUES THEREFROM TO BE SPENT ON ANY LAWFUL MUNICIPAL PURPOSE; AND SHALL ALL REVENUES DERIVED FROM SUCH TAX AND ANY EARNINGS THEREON BE COLLECTED, RETAINED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMITATIONS CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?</p><p><strong>Issue 2E:&nbsp;</strong>SHALL THE TOWN OF MORRISON&apos;S TAXES BE INCREASED BY $500,000 IN THE FIRST FULL FISCAL YEAR, COMMENCING JANUARY 1, 2027, AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE RATE OF THE TOWN&apos;S EXISTING LODGING TAX FROM 6% TO 8%, WITH THE REVENUES THEREFROM TO BE SPENT ON ANY LAWFUL MUNICIPAL PURPOSE; AND SHALL ALL REVENUES DERIVED FROM SUCH TAX AND ANY EARNINGS THEREON BE COLLECTED, RETAINED, AND SPENT AS A VOTER-APPROVED REVENUE CHANGE NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMITATIONS CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?</p><p><strong>Question 2F:&nbsp;</strong>Shall Section 2.4 of The Town of Morrison Home Rule Charter be amended to read as follows: Section 2.4. &nbsp; &nbsp; Terms of Office&nbsp;</p><p>Terms of office of Board members shall be four (4) years, staggered, and without term limits.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '5053d8a8-663b-4c65-8ee3-d2bed9e35118'));
+	});
+</script>
+</div>
+
+				</div>
+					</div>
+	</div>
+	<script type="text/javascript">
+		
+		$.when(window.Pages.rwdReady).done(function () {
+			var tabbedWidgetID = 'divTabbedee978041-bbf6-47ba-94ac-ffeb2b46fd01';
+			var mediaQuerySize = 25;
+			if (mediaQuerySize > 0) {
+				var mediaElementQuery = '#' + tabbedWidgetID + ':media(this-min-width:' + mediaQuerySize + 'em)';
+				var $tabbedWidget = $('#' + tabbedWidgetID);
+				
+                // Update child widget classes based on parent state
+                var updateChildWidgetClasses = function (isParentWide) {
+                    var liveEditEnabled = getCookieValue("enableLiveEdit") === "true";
+                    if (liveEditEnabled)
+                        return;
+
+                    var $childWidgets = $tabbedWidget.find('.widget').not('[data-elementqueryclasses]');
+
+                    if (isParentWide) {
+                        $childWidgets.addClass('wide').removeClass('narrow');
+                        $tabbedWidget.find('[data-event-list-row="true"]').addClass('wide').removeClass('narrow');
+                    } else {
+                        $childWidgets.addClass('narrow').removeClass('wide');
+                        $tabbedWidget.find('[data-event-list-row="true"]').addClass('narrow').removeClass('wide');
+                    }
+                };
+				
+				window.cpMedia.unregister(mediaElementQuery).register(mediaElementQuery, {
+					deferSetup: false,
+					setup: function () {
+						var liveEditEnabled = $.cookie("enableLiveEdit") === "true";
+						if (!liveEditEnabled) {
+							$tabbedWidget.addClass('narrow').removeClass('wide');
+							cpMedia.diag('$(element).addClass("narrow"), mediaQuery: ' + mediaElementQuery);
+							$tabbedWidget.find('.tabbedWidget.cpTabs').hide().attr('aria-hidden', 'true');
+							$tabbedWidget.find('.tabbedWidgetNarrow.cpTabs').show().attr('aria-hidden', 'false');
+							$tabbedWidget.data("tabHeightSet", false);
+							
+							// Update child widget classes - parent is narrow
+							updateChildWidgetClasses(false);
+						}
+					},
+					match: function () {
+						$tabbedWidget.addClass('wide').removeClass('narrow');
+						cpMedia.diag('$(element).removeClass("narrow"), mediaQuery: ' + mediaElementQuery);
+						$tabbedWidget.find('.tabbedWidget.cpTabs').show().attr('aria-hidden', 'false');
+						$tabbedWidget.find('.tabbedWidgetNarrow.cpTabs').hide().attr('aria-hidden', 'true');
+
+						if($tabbedWidget.data("tabHeightSet") == false)
+						{
+							$tabbedWidget.data("tabHeightSet", true);
+
+							var tabbedWidgetID = 'divTabbedee978041-bbf6-47ba-94ac-ffeb2b46fd01';
+							setTabbedWidgetsTabHeight(tabbedWidgetID);
+						}
+						$('.cpTabPanels').unbind('click');
+						
+						// Update child widget classes - parent is wide
+						updateChildWidgetClasses(true);
+					},
+					unmatch: function () {
+						var liveEditEnabled = $.cookie("enableLiveEdit") === "true";
+						if (!liveEditEnabled) {
+							$tabbedWidget.addClass('narrow').removeClass('wide');
+							cpMedia.diag('$(element).addClass("narrow"), mediaQuery: ' + mediaElementQuery);
+							$tabbedWidget.find('.tabbedWidget.cpTabs').hide().attr('aria-hidden', 'true');
+							$tabbedWidget.find('.tabbedWidgetNarrow.cpTabs').show().attr('aria-hidden', 'false');
+							
+							// Update child widget classes - parent is narrow
+							updateChildWidgetClasses(false);
+						}
+						$('.cpTabPanels').click(function() {
+							this.scrollIntoView();
+						});
+					}
+				});                
+            }
+        });
+		
+		//Used for when page is initially loaded
+		if($('#divTabbedee978041-bbf6-47ba-94ac-ffeb2b46fd01').hasClass('narrow'))
+		{
+			$('.cpTabPanels').click(function() {
+				this.scrollIntoView();
+			});
+		}
+		
+
+		//If responsive not enabled, execute this after a timeout
+		if(!isResponsiveEnabled)
+		{
+			window.setTimeout(function(){
+				var tabbedWidgetID = 'divTabbedee978041-bbf6-47ba-94ac-ffeb2b46fd01';
+				typeof setTabbedWidgetsTabHeight === "function" && setTabbedWidgetsTabHeight(tabbedWidgetID);
+			}, 1500);
+		}
+
+		function reinitCarousels() {
+			if (window.carouselsToInit) {
+				for (var i = 0; i < window.carouselsToInit.length; i++) {
+					carouselsToInit[i]();
+				}
+			}
+		}
+		function sizeTabbedContent(element){
+			if(window.Pages){
+				if(window.Pages.onResizeHandlers){
+					var setTabbedInterval = setInterval(function () {
+						window.Pages.onResizeHandlers.forEach(function(car){car();});
+					}, 25)
+
+
+					setTimeout(function () {
+						clearInterval(setTabbedInterval);
+						if ($.cookie("enableLiveEdit") === "true") {
+							setInterval(function () {
+								window.Pages.onResizeHandlers.forEach(function(car){car();});
+							}, 2000);
+						}
+					}, 2500);
+					element.onclick="window.setTimeout(function(){reinitCarousels();},2);"
+				}
+			}
+		}
+
+		function adjustTab(e) {
+			e.preventDefault();
+			window.setTimeout(function(){
+				reinitCarousels();
+			}, 2);
+			sizeTabbedContent(this);
+		}
+
+		var tabButtons = document.querySelectorAll("#divTabbedee978041-bbf6-47ba-94ac-ffeb2b46fd01 .tabButton");
+
+		tabButtons.forEach(function (tabButton) {
+			tabButton.addEventListener("click", adjustTab);
+		});
+
+	</script>
+
+
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col24 first last id758aa369-7e48-49ab-8b20-4d784e9cb138" style="" data-widgetcontainerid="758aa369-7e48-49ab-8b20-4d784e9cb138">	
+ 
+	<div data-widget-id='97e544b2-d36e-42e4-8fb0-18016b7bfd44' data-moduleName="customHtml" id='widgetCustomHtml97e544b2-d36e-42e4-8fb0-18016b7bfd44' class="widget widgetCustomHtml skin231 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBody97e544b2-d36e-42e4-8fb0-18016b7bfd44">
+		<div id="customHtml97e544b2-d36e-42e4-8fb0-18016b7bfd44"><div><script type="text/javascript" charset="utf-8"> 
+
+  (function (g, e, n, es, ys) { 
+
+    g['_genesysJs'] = e; 
+
+    g[e] = g[e] || function () { 
+
+      (g[e].q = g[e].q || []).push(arguments) 
+
+    }; 
+
+    g[e].t = 1 * new Date(); 
+
+    g[e].c = es; 
+
+    ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys); 
+
+  })(window, 'Genesys', 'https://apps.usw2.pure.cloud/genesys-bootstrap/genesys.min.js', { 
+
+    environment: 'prod-usw2', 
+
+    deploymentId: '95e622fa-c53a-4b67-af71-43d186fc7211' 
+
+  }); 
+
+</script> </div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+		</div>
+
+	</div>
+
+	
+	<div class="newCP">
+
+	</div>
+</div>
+</div><aside data-cpRole="contentContainer" id="featureColumn" class="secondaryContent">	<div id="ccacfef851-8196-46c1-8565-f0467c21b487" data-containerid="acfef851-8196-46c1-8565-f0467c21b487" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div>
+</div></div>
+</div><!-- GBs --><div data-cpRole="structuralContainer" id="gbsContainerTS">
+<div class="siteWrap"><div data-cpRole="contentContainer" id="gbsTS">	<div id="ccee85a4dd-bc9d-4062-baf2-8543cc4530d5" data-containerid="ee85a4dd-bc9d-4062-baf2-8543cc4530d5" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="1">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col12 first" style="" data-widgetcontainerid="17c65420-c998-4f24-86ed-e7dc99bf6d00">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last idfb2ff39b-4c4a-4224-a2e3-476c90ba32d6" style="" data-widgetcontainerid="fb2ff39b-4c4a-4224-a2e3-476c90ba32d6">	
+<div data-widget-id="98bdfc85-bc6a-436c-b7e0-9a5c25ecc722" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget98bdfc85-bc6a-436c-b7e0-9a5c25ecc722" class="widget widgetGraphicLinks skin140 widgetOptionSet24 wide" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid3 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/3907/Find-a-Voting-Site " target="_self" class="fancyButton fancyButton2362 " >
+		<span>
+			<span><span class="text">Voting Sites</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2362.fancyButton:link,.fancyButton2362.fancyButton:visited, .fancyButton2362div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46980');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;
+-webkit-transition: .4s ease-in-out;
+-moz-transition: .4s ease-in-out;
+-o-transition: .4s ease-in-out;
+transition: .4s ease-in-out;}
+.fancyButton2362.fancyButton:hover,.fancyButton2362.fancyButton:focus,.fancyButton2362.fancyButton:active,.fancyButton2362.fancyButton.hover{
+	background-image: url('/ImageRepository/Document?documentID=46972');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;}
+.fancyButton2362.fancyButton:link > span,.fancyButton2362.fancyButton:visited > span, .fancyButton2362div.fancyButton > span{
+}
+.fancyButton2362.fancyButton:hover > span,.fancyButton2362.fancyButton:focus > span,.fancyButton2362.fancyButton:active > span,.fancyButton2362.fancyButton.hover > span{
+}
+.fancyButton2362.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 130px;
+	font-weight: 500;
+	text-decoration: underline;
+	padding-top: 130px;
+	background-image: url('/ImageRepository/Document?documentID=51537');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;
+-webkit-transition: .3s ease-in-out;
+-moz-transition: .3s ease-in-out;
+-o-transition: .3s ease-in-out;
+transition: .3s ease-in-out;
+}
+.fancyButton2362.fancyButton:hover .text,.fancyButton2362.fancyButton:focus .text,.fancyButton2362.fancyButton:active .text,.fancyButton2362.fancyButton.hover .text{
+	font-family: Open Sans;
+	font-weight: 600;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 25px ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/578/Election-Results " target="_self" class="fancyButton fancyButton2363 " >
+		<span>
+			<span><span class="text">Turnout &amp; Results</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2363.fancyButton:link,.fancyButton2363.fancyButton:visited, .fancyButton2363div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46980');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;
+-webkit-transition: .4s ease-in-out;
+-moz-transition: .4s ease-in-out;
+-o-transition: .4s ease-in-out;
+transition: .4s ease-in-out;}
+.fancyButton2363.fancyButton:hover,.fancyButton2363.fancyButton:focus,.fancyButton2363.fancyButton:active,.fancyButton2363.fancyButton.hover{
+	background-image: url('/ImageRepository/Document?documentID=46972');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;}
+.fancyButton2363.fancyButton:link > span,.fancyButton2363.fancyButton:visited > span, .fancyButton2363div.fancyButton > span{
+}
+.fancyButton2363.fancyButton:hover > span,.fancyButton2363.fancyButton:focus > span,.fancyButton2363.fancyButton:active > span,.fancyButton2363.fancyButton.hover > span{
+}
+.fancyButton2363.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 130px;
+	font-weight: 500;
+	text-decoration: underline;
+	padding-top: 130px;
+	background-image: url('/ImageRepository/Document?documentID=51534');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;
+-webkit-transition: .3s ease-in-out;
+-moz-transition: .3s ease-in-out;
+-o-transition: .3s ease-in-out;
+transition: .3s ease-in-out;
+}
+.fancyButton2363.fancyButton:hover .text,.fancyButton2363.fancyButton:focus .text,.fancyButton2363.fancyButton:active .text,.fancyButton2363.fancyButton.hover .text{
+	font-family: Open Sans;
+	font-weight: 600;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 25px ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/608/Be-an-Election-Worker " target="_self" class="fancyButton fancyButton2364 " >
+		<span>
+			<span><span class="text">Election Workers</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2364.fancyButton:link,.fancyButton2364.fancyButton:visited, .fancyButton2364div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46980');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;
+-webkit-transition: .4s ease-in-out;
+-moz-transition: .4s ease-in-out;
+-o-transition: .4s ease-in-out;
+transition: .4s ease-in-out;}
+.fancyButton2364.fancyButton:hover,.fancyButton2364.fancyButton:focus,.fancyButton2364.fancyButton:active,.fancyButton2364.fancyButton.hover{
+	background-image: url('/ImageRepository/Document?documentID=46972');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;}
+.fancyButton2364.fancyButton:link > span,.fancyButton2364.fancyButton:visited > span, .fancyButton2364div.fancyButton > span{
+}
+.fancyButton2364.fancyButton:hover > span,.fancyButton2364.fancyButton:focus > span,.fancyButton2364.fancyButton:active > span,.fancyButton2364.fancyButton.hover > span{
+}
+.fancyButton2364.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 130px;
+	font-weight: 500;
+	text-decoration: underline;
+	padding-top: 130px;
+	background-image: url('/ImageRepository/Document?documentID=51529');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;
+-webkit-transition: .3s ease-in-out;
+-moz-transition: .3s ease-in-out;
+-o-transition: .3s ease-in-out;
+transition: .3s ease-in-out;
+}
+.fancyButton2364.fancyButton:hover .text,.fancyButton2364.fancyButton:focus .text,.fancyButton2364.fancyButton:active .text,.fancyButton2364.fancyButton.hover .text{
+	font-family: Open Sans;
+	font-weight: 600;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 25px ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col12 last" style="" data-widgetcontainerid="1553e3e6-a63a-4bcc-b54f-0b99f89b0043">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id0d21745b-4d59-41b2-a436-209fc02ef54c" style="" data-widgetcontainerid="0d21745b-4d59-41b2-a436-209fc02ef54c">	
+<div data-widget-id="f0c46c83-d261-46d6-8b2f-43f640a27cf3" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetf0c46c83-d261-46d6-8b2f-43f640a27cf3" class="widget widgetGraphicLinks skin140 widgetOptionSet24 wide" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid3 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/5010/Register-to-Vote" target="_self" class="fancyButton fancyButton2366 " >
+		<span>
+			<span><span class="text">Voter Registration</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2366.fancyButton:link,.fancyButton2366.fancyButton:visited, .fancyButton2366div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46980');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;
+-webkit-transition: .4s ease-in-out;
+-moz-transition: .4s ease-in-out;
+-o-transition: .4s ease-in-out;
+transition: .4s ease-in-out;}
+.fancyButton2366.fancyButton:hover,.fancyButton2366.fancyButton:focus,.fancyButton2366.fancyButton:active,.fancyButton2366.fancyButton.hover{
+	background-image: url('/ImageRepository/Document?documentID=46972');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;}
+.fancyButton2366.fancyButton:link > span,.fancyButton2366.fancyButton:visited > span, .fancyButton2366div.fancyButton > span{
+}
+.fancyButton2366.fancyButton:hover > span,.fancyButton2366.fancyButton:focus > span,.fancyButton2366.fancyButton:active > span,.fancyButton2366.fancyButton.hover > span{
+}
+.fancyButton2366.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 130px;
+	font-weight: 500;
+	text-decoration: underline;
+	padding-top: 130px;
+	background-image: url('/ImageRepository/Document?documentID=51536');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;
+-webkit-transition: .3s ease-in-out;
+-moz-transition: .3s ease-in-out;
+-o-transition: .3s ease-in-out;
+transition: .3s ease-in-out;
+}
+.fancyButton2366.fancyButton:hover .text,.fancyButton2366.fancyButton:focus .text,.fancyButton2366.fancyButton:active .text,.fancyButton2366.fancyButton.hover .text{
+	font-family: Open Sans;
+	font-weight: 600;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 25px ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/4112/Election-Security " target="_self" class="fancyButton fancyButton2365 " >
+		<span>
+			<span><span class="text">Election Security</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2365.fancyButton:link,.fancyButton2365.fancyButton:visited, .fancyButton2365div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46980');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;
+-webkit-transition: .4s ease-in-out;
+-moz-transition: .4s ease-in-out;
+-o-transition: .4s ease-in-out;
+transition: .4s ease-in-out;}
+.fancyButton2365.fancyButton:hover,.fancyButton2365.fancyButton:focus,.fancyButton2365.fancyButton:active,.fancyButton2365.fancyButton.hover{
+	background-image: url('/ImageRepository/Document?documentID=46972');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;}
+.fancyButton2365.fancyButton:link > span,.fancyButton2365.fancyButton:visited > span, .fancyButton2365div.fancyButton > span{
+}
+.fancyButton2365.fancyButton:hover > span,.fancyButton2365.fancyButton:focus > span,.fancyButton2365.fancyButton:active > span,.fancyButton2365.fancyButton.hover > span{
+}
+.fancyButton2365.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 130px;
+	font-weight: 500;
+	text-decoration: underline;
+	padding-top: 130px;
+	background-image: url('/ImageRepository/Document?documentID=51528');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;
+-webkit-transition: .3s ease-in-out;
+-moz-transition: .3s ease-in-out;
+-o-transition: .3s ease-in-out;
+transition: .3s ease-in-out;
+}
+.fancyButton2365.fancyButton:hover .text,.fancyButton2365.fancyButton:focus .text,.fancyButton2365.fancyButton:active .text,.fancyButton2365.fancyButton.hover .text{
+	font-family: Open Sans;
+	font-weight: 600;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 25px ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/5015/Upcoming-Election" target="_self" class="fancyButton fancyButton2368 " >
+		<span>
+			<span><span class="text">Upcoming Election</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2368.fancyButton:link,.fancyButton2368.fancyButton:visited, .fancyButton2368div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46980');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;
+-webkit-transition: .4s ease-in-out;
+-moz-transition: .4s ease-in-out;
+-o-transition: .4s ease-in-out;
+transition: .4s ease-in-out;}
+.fancyButton2368.fancyButton:hover,.fancyButton2368.fancyButton:focus,.fancyButton2368.fancyButton:active,.fancyButton2368.fancyButton.hover{
+	background-image: url('/ImageRepository/Document?documentID=46972');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;}
+.fancyButton2368.fancyButton:link > span,.fancyButton2368.fancyButton:visited > span, .fancyButton2368div.fancyButton > span{
+}
+.fancyButton2368.fancyButton:hover > span,.fancyButton2368.fancyButton:focus > span,.fancyButton2368.fancyButton:active > span,.fancyButton2368.fancyButton.hover > span{
+}
+.fancyButton2368.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 130px;
+	font-weight: 500;
+	text-decoration: underline;
+	padding-top: 130px;
+	background-image: url('/ImageRepository/Document?documentID=51535');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;
+-webkit-transition: .3s ease-in-out;
+-moz-transition: .3s ease-in-out;
+-o-transition: .3s ease-in-out;
+transition: .3s ease-in-out;
+}
+.fancyButton2368.fancyButton:hover .text,.fancyButton2368.fancyButton:focus .text,.fancyButton2368.fancyButton:active .text,.fancyButton2368.fancyButton.hover .text{
+	font-family: Open Sans;
+	font-weight: 600;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 25px ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- Calendar/Carousel --><!-- <div data-cpRole="structuralContainer" id="homeContainer1">
+    <div class="siteWrap">
+      <div data-cpRole="contentContainer" id="homeContent1a"></div>
+    </div>
+  </div> --><!-- Footer --><footer data-cpRole="structuralContainer" id="footerContainerTS">
+<div class="siteWrap"><div data-cpRole="contentContainer" id="footerTS">	<div id="cccf69b8b6-1392-4133-8fd6-ea55895803fc" data-containerid="cf69b8b6-1392-4133-8fd6-ea55895803fc" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="45">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col5 first" style="" data-widgetcontainerid="3b8db7d2-3b98-4524-813f-9dd6d18ec34e">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col5 first last id2ad5c76f-3aae-487e-93b1-45ae0a4a90f4" style="" data-widgetcontainerid="2ad5c76f-3aae-487e-93b1-45ae0a4a90f4">	
+    <div data-widget-id="bfe1891b-6742-4316-82dd-4c78f2d3e983" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdvbfe1891b-6742-4316-82dd-4c78f2d3e983" class="widget widgetInfoAdvanced skin138 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="headerbfe1891b-6742-4316-82dd-4c78f2d3e983">
+			<header class="widgetHeader" id="headerbfe1891b-6742-4316-82dd-4c78f2d3e983">
+		<div class="">
+					<h3 >Contact Us</h3>
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p id="isPasted">3500 Illinois Street,&nbsp;<br>Suite 1100 Golden, CO 80401&nbsp;<br><a href="https://www.jeffco.us/formcenter/Clerk-Recorder-9/Clerk-and-Recorders-Office-Administratio-151">Email us </a><br>Call us:&nbsp;<a href="tel:303-271-8111">303-271-8111 </a><br>Hours&nbsp;<br>During Elections: Monday - Friday, 8 a.m. - 5 p.m.&nbsp;<br>Election Day: Tuesday, 7 a.m. - 7 p.m.&nbsp;<br>All other times: Monday - Thursday, 7:30 a.m. - 5 p.m.&nbsp;</p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdvbfe1891b-6742-4316-82dd-4c78f2d3e983 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col2" style="" data-widgetcontainerid="f7c73bac-6c69-4993-bc60-4f3dd1a4552f">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col2 first last id8542830f-2434-4e58-a91f-c327ce401789" style="" data-widgetcontainerid="8542830f-2434-4e58-a91f-c327ce401789">	
+
+<div class="widget widgetSpacer" id="bef9885c-55c2-4ebc-9272-83915247d86e"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col3" style="" data-widgetcontainerid="44c3d4cc-7733-45a9-9e3a-b0598b6f4a4b">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col3 first last idd5170601-e00b-4cfa-97b0-eaad90bdc98f" style="" data-widgetcontainerid="d5170601-e00b-4cfa-97b0-eaad90bdc98f">	
+<div data-widget-id="aada49f6-cdc7-4e44-82cc-8d9250a3f769" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetaada49f6-cdc7-4e44-82cc-8d9250a3f769" class="widget widgetGraphicLinks skin138 widgetOptionSet24 wide" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+			<h3 id="GraphicLinkHeaderText" class="" >Social Media</h3>
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid1 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+					<ul class="semanticList">
+						<!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://www.facebook.com/Jeffcoclerk/" target="_self" class="fancyButton fancyButton2383 " >
+		<span>
+			<span><span class="text">Facebook</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2383.fancyButton:link,.fancyButton2383.fancyButton:visited, .fancyButton2383div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46991');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2383.fancyButton:hover,.fancyButton2383.fancyButton:focus,.fancyButton2383.fancyButton:active,.fancyButton2383.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2383.fancyButton:link > span,.fancyButton2383.fancyButton:visited > span, .fancyButton2383div.fancyButton > span{
+}
+.fancyButton2383.fancyButton:hover > span,.fancyButton2383.fancyButton:focus > span,.fancyButton2383.fancyButton:active > span,.fancyButton2383.fancyButton.hover > span{
+}
+.fancyButton2383.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	text-align: left;
+	padding-left: 2em;
+	font-style: normal;
+	text-decoration: underline;
+	padding-left: 2em;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+.fancyButton2383.fancyButton:hover .text,.fancyButton2383.fancyButton:focus .text,.fancyButton2383.fancyButton:active .text,.fancyButton2383.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+</style>
+
+ </li><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://www.instagram.com/jeffcoclerk/" target="_self" class="fancyButton fancyButton2385 " >
+		<span>
+			<span><span class="text">Instagram</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2385.fancyButton:link,.fancyButton2385.fancyButton:visited, .fancyButton2385div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46992');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2385.fancyButton:hover,.fancyButton2385.fancyButton:focus,.fancyButton2385.fancyButton:active,.fancyButton2385.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2385.fancyButton:link > span,.fancyButton2385.fancyButton:visited > span, .fancyButton2385div.fancyButton > span{
+}
+.fancyButton2385.fancyButton:hover > span,.fancyButton2385.fancyButton:focus > span,.fancyButton2385.fancyButton:active > span,.fancyButton2385.fancyButton.hover > span{
+}
+.fancyButton2385.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	text-align: left;
+	padding-left: 2em;
+	font-style: normal;
+	text-decoration: underline;
+	padding-left: 2em;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+.fancyButton2385.fancyButton:hover .text,.fancyButton2385.fancyButton:focus .text,.fancyButton2385.fancyButton:active .text,.fancyButton2385.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+</style>
+
+ </li><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://www.youtube.com/user/JeffCoClerk" target="_self" class="fancyButton fancyButton2386 " >
+		<span>
+			<span><span class="text">YouTube</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2386.fancyButton:link,.fancyButton2386.fancyButton:visited, .fancyButton2386div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46994');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2386.fancyButton:hover,.fancyButton2386.fancyButton:focus,.fancyButton2386.fancyButton:active,.fancyButton2386.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2386.fancyButton:link > span,.fancyButton2386.fancyButton:visited > span, .fancyButton2386div.fancyButton > span{
+}
+.fancyButton2386.fancyButton:hover > span,.fancyButton2386.fancyButton:focus > span,.fancyButton2386.fancyButton:active > span,.fancyButton2386.fancyButton.hover > span{
+}
+.fancyButton2386.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	text-align: left;
+	padding-left: 2em;
+	font-style: normal;
+	text-decoration: underline;
+	padding-left: 2em;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+.fancyButton2386.fancyButton:hover .text,.fancyButton2386.fancyButton:focus .text,.fancyButton2386.fancyButton:active .text,.fancyButton2386.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+</style>
+
+ </li><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://bsky.app/profile/jeffcoclerk.bsky.social" target="_self" class="fancyButton fancyButton2387 " >
+		<span>
+			<span><span class="text">Bluesky</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2387.fancyButton:link,.fancyButton2387.fancyButton:visited, .fancyButton2387div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=51549');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2387.fancyButton:hover,.fancyButton2387.fancyButton:focus,.fancyButton2387.fancyButton:active,.fancyButton2387.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2387.fancyButton:link > span,.fancyButton2387.fancyButton:visited > span, .fancyButton2387div.fancyButton > span{
+}
+.fancyButton2387.fancyButton:hover > span,.fancyButton2387.fancyButton:focus > span,.fancyButton2387.fancyButton:active > span,.fancyButton2387.fancyButton.hover > span{
+}
+.fancyButton2387.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	text-align: left;
+	padding-left: 2em;
+	font-style: normal;
+	text-decoration: underline;
+	padding-left: 2em;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+.fancyButton2387.fancyButton:hover .text,.fancyButton2387.fancyButton:focus .text,.fancyButton2387.fancyButton:active .text,.fancyButton2387.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+</style>
+
+ </li><!--
+					-->
+					</ul>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col3 first last id9a1f8718-6ae6-4fbf-8b22-908455cb616c" style="" data-widgetcontainerid="9a1f8718-6ae6-4fbf-8b22-908455cb616c">	
+ 
+	<div data-widget-id='5f2ef6fe-83b4-42f3-bece-e301f90ba152' data-moduleName="customHtml" id='widgetCustomHtml5f2ef6fe-83b4-42f3-bece-e301f90ba152' class="widget widgetCustomHtml skin136 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBody5f2ef6fe-83b4-42f3-bece-e301f90ba152">
+		<div id="customHtml5f2ef6fe-83b4-42f3-bece-e301f90ba152"><div><script type="text/javascript" charset="utf-8">
+ (function (g, e, n, es, ys) {
+   g['_genesysJs'] = e;
+   g[e] = g[e] || function () {
+     (g[e].q = g[e].q || []).push(arguments)
+   };
+   g[e].t = 1 * new Date();
+   g[e].c = es;
+   ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+ })(window, 'Genesys', 'https://apps.usw2.pure.cloud/genesys-bootstrap/genesys.min.js', {
+   environment: 'prod-usw2',
+   deploymentId: '95e622fa-c53a-4b67-af71-43d186fc7211'
+ });
+</script></div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col3" style="" data-widgetcontainerid="8d542c35-2e8c-4c07-a08a-9cd58e9f59db">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col3 first last id54935875-31da-4a25-9bd3-ff352893e3eb" style="" data-widgetcontainerid="54935875-31da-4a25-9bd3-ff352893e3eb">	
+
+<div class="widget widgetSpacer" id="39feb4e7-e87f-4d40-a91c-1f7ed1d5b299"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col4" style="" data-widgetcontainerid="e7f162f6-b436-433b-b021-878d2ac204be">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col4 first last ida546a976-eefb-4347-9270-95f882e21c6e" style="" data-widgetcontainerid="a546a976-eefb-4347-9270-95f882e21c6e">	
+	<div data-widget-id="922d6305-cc1e-4036-b828-580e0bd56680" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink922d6305-cc1e-4036-b828-580e0bd56680" class="widget widgetQuickLinks skin138 widgetOptionSet25 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader922d6305-cc1e-4036-b828-580e0bd56680">
+			<header class="widgetHeader" id="quickLinksHeader922d6305-cc1e-4036-b828-580e0bd56680">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=649" >Quick Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/3907/Find-a-Voting-Site" target="_self" aria-label="Voting Sites - 2024 Elections - Helpful Links" rel="">Voting Sites</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/578" target="_self" aria-label="Election Results - 2024 Elections - Helpful Links" rel="">Election Results</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/4686/Voter-Information" target="_self" aria-label="Voter Information - 2024 Elections - Helpful Links" rel="">Voter Information</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/4112" target="_self" aria-label="Election Security - 2024 Elections - Helpful Links" rel="">Election Security</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/4652" target="_self" aria-label="On the Ballot - 2024 Elections - Helpful Links" rel="">On the Ballot</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/608" target="_self" aria-label="Election Workers - 2024 Elections - Helpful Links" rel="">Election Workers</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col3" style="" data-widgetcontainerid="b77334e5-8c89-4f94-bb9d-ead2cb3f50a6">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col3 first last idb82233c5-10f5-446c-a877-827fa2b1b94c" style="" data-widgetcontainerid="b82233c5-10f5-446c-a877-827fa2b1b94c">	
+
+<div class="widget widgetSpacer" id="072a9e8a-e96a-47f9-8028-e13266f0d63d"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col4 last" style="" data-widgetcontainerid="b51ecb3f-a06b-41d5-b934-c31d7c572960">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col4 first last id5261ab7f-b65d-4420-80c0-0c50d8179886" style="" data-widgetcontainerid="5261ab7f-b65d-4420-80c0-0c50d8179886">	
+	<div data-widget-id="4736b984-a52c-4bb0-adfd-8c2a3919669d" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink4736b984-a52c-4bb0-adfd-8c2a3919669d" class="widget widgetQuickLinks skin138 widgetOptionSet25 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader4736b984-a52c-4bb0-adfd-8c2a3919669d">
+			<header class="widgetHeader" id="quickLinksHeader4736b984-a52c-4bb0-adfd-8c2a3919669d">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=14" >County Site Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/sitemap" target="_self" aria-label="Sitemap - Using This Site" rel="">Sitemap</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/5175/Contact-Us" target="_self" aria-label="Contact Us - Using This Site" rel="">Contact Us</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/3558/Accessibility" target="_self" aria-label="Accessibility - Using This Site" rel="">Accessibility</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/3557/Non-Discrimination" target="_self" aria-label="Non-Discrimination Notice - Using This Site" rel="">Non-Discrimination Notice</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/749/Website-Photography" target="_self" aria-label="Website Photography - Using This Site" rel="">Website Photography</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/2845/Privacy-and-Site-Disclaimer" target="_self" aria-label="Privacy &amp; Site Disclaimer - Using This Site" rel="">Privacy & Site Disclaimer</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://jeffersoncountyco.qscend.com/311/request/add/29bea368333e479791ea6e75d1feed02" target="_blank" aria-label="Report a website issue - Using This Site opens in new window" rel="noopener">Report a website issue</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col4 first last id2f31c008-94e8-417e-9b35-3ece802f0f3c" style="" data-widgetcontainerid="2f31c008-94e8-417e-9b35-3ece802f0f3c">	
+ 
+	<div data-widget-id='a0afa43e-4b28-496f-8341-70adc07dd966' data-moduleName="customHtml" id='widgetCustomHtmla0afa43e-4b28-496f-8341-70adc07dd966' class="widget widgetCustomHtml skin136 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBodya0afa43e-4b28-496f-8341-70adc07dd966">
+		<div id="customHtmla0afa43e-4b28-496f-8341-70adc07dd966"><div><!----------Google Translate (Mobile Friendly)--------->
+
+<style>
+  #google-translate-container a {
+color: #fff !important;
+  }
+
+  #google-translate-container {
+text-align: center;
+margin: 1em auto;
+  }
+
+@media (min-width: 1200px) {
+  #google-translate-container {
+text-align: left;
+margin: 1em auto;
+  }
+}
+  
+  .goog-te-combo, .goog-te-banner *, .goog-te-ftab *, .goog-te-menu *, .goog-te-menu2 *, .goog-te-balloon * {
+    font-family: arial;
+    font-size: 10pt;
+    background-image: url("https://www.gstatic.com/images/branding/product/2x/translate_24dp.png");
+    background-position: 5px 5px;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    text-indent: 16px;
+    background-color: #fff;
+    color: #000 !important;
+  }
+  
+  .goog-logo-link {
+    display: none !important;
+  }
+  
+  .goog-te-gadget {
+    color: transparent !important;
+  }
+  
+  .goog-te-gadget .goog-te-combo {
+    margin: 2px 0 !important;
+    border-radius: 5px !important;
+    }
+  
+  .goog-te-combo{
+    border: 1px solid !important;
+    border-color: #bcc9d7 #96a3b1 #96a3b1 #bcc9d7 !important;
+    border-radius: 50px !important;
+    height:31px !important;
+    padding: 0 1px 0 .25rem !important;
+                width: 156px;
+  }
+
+  #launcher-wrapper {
+    bottom: 50px !important;
+  }
+
+</style>
+
+<div id="google-translate-container">
+  <div id="google_translate_element">
+  </div>
+</div>
+
+<script>
+
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({ pageLanguage: "en" }, "google_translate_element");
+    // begin accessibility compliance
+    $('img.goog-te-gadget-icon').attr('alt','Google Translate');
+    $('div#goog-gt-tt div.logo img').attr('alt','translate');
+    $('div#goog-gt-tt .original-text').css('text-align','left');
+    $('.goog-te-gadget-simple .goog-te-menu-value span').css('color','#000000');
+    $('.goog-te-combo').attr('aria-label','google translate languages');
+    $('svg.goog-te-spinner').attr('title','Google Translate Spinner');
+    $('.goog-te-gadget-simple .goog-te-menu-value span').css('color','#000000');
+  }
+
+  $(function() {
+    $.getScript("//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit");
+  });
+
+</script>
+
+<!--------------End Google Translate----------------->
+</div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div><div data-cpRole="contentContainer" id="poweredByTS">	<div id="cc9f7acdb4-1bd3-4fcd-9867-85ea8e6f9b4c" data-containerid="9f7acdb4-1bd3-4fcd-9867-85ea8e6f9b4c" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="d6f921ef-2561-4604-9d70-fec9c17b6ca0">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id51ae4f45-3d33-4ac1-8522-816ae21751f9" style="" data-widgetcontainerid="51ae4f45-3d33-4ac1-8522-816ae21751f9">	
+ 
+	<div data-widget-id='5236c3ac-b123-4f8c-9e8f-1b81109dde4a' data-moduleName="customHtml" id='widgetCustomHtml5236c3ac-b123-4f8c-9e8f-1b81109dde4a' class="widget widgetCustomHtml skin138 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBody5236c3ac-b123-4f8c-9e8f-1b81109dde4a">
+		<div id="customHtml5236c3ac-b123-4f8c-9e8f-1b81109dde4a"><div><!-- CP BAR -->
+  <style>
+    /* CP icon */
+    .cpBylineIconTS {
+        color: #fff;
+    }
+    /* CP Text */
+    .cpBylineTextTS,
+    .cpBylineTextTS a:link,
+    .cpBylineTextTS a:visited,
+    .cpBylineTextTS a:hover,
+    .cpBylineTextTS a:focus,
+    .cpBylineTextTS a:active {
+        color: #fff!important;
+    }
+
+    .cpBylineTextTS a:link,
+    .cpBylineTextTS a:visited,
+    .cpBylineTextTS a:hover,
+    .cpBylineTextTS a:focus,
+    .cpBylineTextTS a:active {
+        text-decoration: underline !important;
+    }
+
+    .cpBylineTS {
+        text-align: center;
+    }
+    .cpBylineIconTS {
+        fill: currentColor;
+        width: 39px;
+        height: 26px;
+        display: inline;
+        vertical-align: middle;
+    }
+  </style>
+    
+  <div class="widgetItem cpBylineTS">
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 100 100" class="cpBylineIconTS">
+      <path class="c" d="M73.4,23.2h-19v16.7h19c2.8,0,5,2.2,5,5c0,2.8-2.2,5-5,5h-19v28.4h5.5l11.3-11.7h2.2c11.9,0,21.6-9.7,21.6-21.6C95,33,85.3,23.2,73.4,23.2"></path>
+      <path class="p" d="M45.8,66.5H26.6C14.7,66.5,5,56.8,5,44.9C5,33,14.7,23.2,26.6,23.2h19.1v16.7H26.6c-2.8,0-5,2.2-5,5c0,2.8,2.2,5,5,5h19.1V66.5z"></path>
+    </svg>
+    <span class="cpBylineTextTS">Government Websites by <a href="https://connect.civicplus.com/referral">CivicPlus&reg;</a></span>
+  </div></div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</footer>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+<link href="/2110643746.css" rel="stylesheet" type="text/css" />
+
+<div id="SplashMessageWrapper" class="cp-Splash-wrapper">
+	<div role="dialog" aria-labelledby="cp-Splash-title" aria-describedby="editorContentDesc" aria-modal="true" tabindex="-1" id="SplashMessage" class="hidden cp-Splash cp-Splash--modal is-open">
+		<div class="cp-Splash-header">
+			<h2 class="cp-Splash-title" id="cp-Splash-title">Loading</h2>
+			<button class="cp-Splash-Btn cp-Splash-close" aria-label="Close this modal" title="Close this window">
+				<svg id="iconClose" viewBox="0 0 25 25">
+					<polygon style="fill:currentcolor"
+							 points="18.806,6.98 18.075,6.248 12.532,11.792 6.989,6.248 6.257,6.98 11.786,12.508 6.212,18.084 6.943,18.815 12.532,13.224 18.12,18.815 18.851,18.084 13.277,12.508"></polygon>
+				</svg>
+			</button>
+		</div>
+		<div class="cp-Splash-body">
+			<div class="cp-Splash-Prose editorContent fr-view" id="editorContentDesc">
+				<!-- Content from the Froala Editor will go here. -->
+				Loading
+			</div>
+		</div>
+		<div class="cp-Splash-footer">
+			<button class="cp-Splash-Btn cp-Splash-Btn--NoShow">Do Not Show Again</button>
+			<button class="cp-Splash-Btn cp-Splash-Btn--Close">Close</button>
+		</div>
+	</div>
+</div>
+
+<script src="/Assets/Scripts/APIClient.js"></script>
+<script src="/Assets/Mystique/Shared/Scripts/Moment/Moment.min.js"></script>
+<script src="/Assets/Scripts/SplashModal/SplashModalRender.js"></script>
+<script>
+
+		$(document).ready(function () {
+			var filter = {
+				targetId: '4652',
+				targetType: 1
+			}
+
+			new SplashModalRender().triggerRender(filter);
+		});
+</script>
+
+
+	
+	
+	
+	
+
+
+
+	
+
+
+
+
+
+
+    <script src="/1482631785.js" type="text/javascript"></script>
+    <script type="text/javascript">
+  window.loop11_key = "a85d6ca13fabc743028745606d30daf86c1a34bb";
+</script>
+<script src="//cdn.loop11.com/my/loop11.js" type="text/javascript" async="async"></script>
+
+<script type="text/javascript">
+/*<![CDATA[*/
+(function() {
+var sz = document.createElement('script'); sz.type = 'text/javascript'; sz.async = true;
+sz.src = '//siteimproveanalytics.com/js/siteanalyze_1306761.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sz, s);
+})();
+/*]]>*/
+</script>
+
+<!-- Fixed Nav Adjustment -->
+<script>
+  function getValueTS(elem, attr) {
+    var val = elem.css(attr);
+    if (val === undefined) return undefined;
+    var num = parseInt(val, 10);
+    if (num === NaN) return undefined;
+    return num;
+  }
+
+  function clampTS(number, min, max) {
+    return Math.min(Math.max(number, min), max);
+  }
+
+  function isPageEditingTS() {
+    return (
+      $("#doneEditing").length > 0 || // In live edit
+      typeof DesignCenter !== "undefined" // In theme manager
+    );
+  }
+
+  var bgColorRegexTS = new RegExp("rgba\((\d+), (\d+), (\d+), (\d*\.?\d*)\)");
+  function isTransparentTS(elem) {
+    var bg = elem.css('background-color');
+    if (typeof bg !== "string") return false;
+    if (bg === "transparent") return true;
+    if (!bg.startsWith('rgba(')) return false;
+    var matchState = bg.match(bgColorRegexTS);
+    if (!matchState || matchState.length !== 5) return false;
+    var alpha = parseFloat(matchState[4], 10);
+    if (!(alpha >= 0 && alpha < 1)) return false;
+    return true;
+  }
+
+  function iterateLeftpads(cb) {
+    var containersTS = $("[class^='siteWrap'],[class*=' siteWrap']");
+    for (var i = 0; i < containersTS.length; i++) {
+      var containerTS = containersTS[i];
+      // Skip the body container and anything with data-skip-leftpad
+      if (
+        containerTS.id !== "bodyContainerTS" &&
+        containerTS.getAttribute('data-skip-leftpad') === null
+      ) {
+        cb(containerTS);
+      }
+    }
+  }
+
+  function iterateRightpads(cb) {
+    var containersTS = $("[class^='siteWrap'],[class*=' siteWrap']");
+    for (var i = 0; i < containersTS.length; i++) {
+      var containerTS = containersTS[i];
+      // Skip the body container and anything with data-skip-rightpad
+      if (
+        containerTS.id !== "bodyContainerTS" &&
+        containerTS.getAttribute('data-skip-rightpad') === null
+      ) {
+        cb(containerTS);
+      }
+    }
+  }
+
+  var anchor = $("#divToolbars");
+  var bodyContainerTS = $("#bodyContainerTS");
+
+  // Outer banner padding (push banner down)
+  var outerSizingTS = $("#bannerContainerTS");
+  // Inner banner padding (push banner content down) - Transparent header OR on attaching headers
+  var innerSizingTS = $("#bannerSizingTS");
+
+  var forceUnfixClassTS = "forceUnfixTS";
+
+  var fixedTopTS = $(".fixedTopTS");
+  var fixedBottomTS = $(".fixedBottomTS");
+  var fixedLeftTS = $(".fixedLeftTS");
+  var fixedRightTS = $(".fixedRightTS");
+
+  var initialTopTS;
+  var topAttachTS;
+  if (fixedTopTS && fixedTopTS.length === 1) {
+    initialTopTS = getValueTS(fixedTopTS, 'top');
+    var attachment = fixedTopTS.attr('data-attach');
+    if (attachment) topAttachTS = $("#" + attachment);
+    if (!topAttachTS || topAttachTS.length !== 1) topAttachTS = undefined;
+  }
+
+  function resizeAdjustmentTS() {
+    var editing = isPageEditingTS();
+
+    // Fixed top script
+    (function () {
+      if (!fixedTopTS || fixedTopTS.length !== 1 || initialTopTS === undefined) return;
+
+      if (editing) {
+        fixedTopTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedTopTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      var topPosition = fixedTopTS.css('position');
+      if (topPosition === 'fixed') {
+        if (topAttachTS) {
+          scrollAdjustmentTS();
+        } else {
+          var anchorHeight = anchor.outerHeight() - 1;
+          fixedTopTS.css('top', anchorHeight + initialTopTS);
+        }
+      } else {
+        fixedTopTS.css('top', initialTopTS);
+      }
+
+      if (topPosition === 'fixed' || topPosition === 'absolute') {
+        // Bump the banner content down
+        if (isTransparentTS(fixedTopTS)) {
+          innerSizingTS.css('padding-top', initialTopTS + fixedTopTS.outerHeight());
+          outerSizingTS.css('padding-top', '');
+
+          try {
+            window.Pages.onResizeHandlersExecute();
+          } catch (e) { }
+        } else {
+          outerSizingTS.css('padding-top', fixedTopTS.outerHeight() - 1);
+          innerSizingTS.css('padding-top', '');
+        }
+      } else {
+        innerSizingTS.css('padding-top', '');
+        outerSizingTS.css('padding-top', '');
+      }
+    })();
+
+    // Fixed bottom script
+    (function () {
+      if (!fixedBottomTS || fixedBottomTS.length === 0) return;
+
+      // If the widget has gone narrow, force unfix
+      if (editing || fixedBottomTS.outerHeight() > 200) {
+        fixedBottomTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedBottomTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedBottomTS.css('position') === 'fixed') {
+        bodyContainerTS.css('padding-bottom', fixedBottomTS.outerHeight());
+      } else {
+        bodyContainerTS.css('padding-bottom', '');
+      }
+    })();
+
+    // Fixed left script
+    (function () {
+      if (!fixedLeftTS || fixedLeftTS.length === 0) return;
+
+      if (editing) {
+        fixedLeftTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedLeftTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedLeftTS.css('position') === 'fixed') {
+        var anchorHeight = anchor.outerHeight() - 1;
+        fixedLeftTS.css('top', anchorHeight);
+        var leftBoundingTS = fixedLeftTS[0].getBoundingClientRect();
+        iterateLeftpads(function (containerTS) {
+          var containerBoundingTS = containerTS.getBoundingClientRect();
+          if (containerBoundingTS.left <= leftBoundingTS.right) {
+            $(containerTS).css('padding-left', leftBoundingTS.width + 16);
+          } else {
+            $(containerTS).css('padding-left', '');
+          }
+        });
+      } else {
+        fixedLeftTS.css('top', '');
+        iterateLeftpads(function (containerTS) {
+          $(containerTS).css('padding-left', '');
+        });
+      }
+    })();
+
+    // Fixed right script
+    (function () {
+      if (!fixedRightTS || fixedRightTS.length === 0) return;
+
+      if (editing) {
+        fixedRightTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedRightTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedRightTS.css('position') === 'fixed') {
+        var anchorHeight = anchor.outerHeight() - 1;
+        fixedRightTS.css('top', anchorHeight);
+        var rightBoundingTS = fixedRightTS[0].getBoundingClientRect();
+        iterateRightpads(function (containerTS) {
+          var containerBoundingTS = containerTS.getBoundingClientRect();
+          if (containerBoundingTS.right >= rightBoundingTS.left) {
+            $(containerTS).css('padding-right', rightBoundingTS.width + 16);
+          }
+        });
+      } else {
+        fixedRightTS.css('top', '');
+        iterateRightpads(function (containerTS) {
+          $(containerTS).css('padding-right', '');
+        });
+      }
+    })();
+  }
+
+  function scrollAdjustmentTS() {
+    if (!fixedTopTS || fixedTopTS.length !== 1 || !topAttachTS || topAttachTS.length !== 1) return;
+    var topPosition = fixedTopTS.css('position');
+    if (topPosition === 'fixed' || topPosition === 'absolute') {
+      var anchorBounding = anchor[0].getBoundingClientRect();
+      var attachBounding = topAttachTS[0].getBoundingClientRect();
+      var scrollTop = $(window).scrollTop();
+
+      fixedTopTS.css('top', Math.max(anchorBounding.bottom - 1, attachBounding.bottom));
+    } else {
+      fixedTopTS.css('top', initialTopTS);
+    }
+  }
+
+  $(window).load(function () {
+    setTimeout(function () {
+      try {
+        resizeAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    }, 350);
+
+    $(window).scroll(function () {
+      try {
+        scrollAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    var adjustTimeoutTS;
+    $(window).resize(function () {
+      clearTimeout(adjustTimeoutTS);
+      adjustTimeoutTS = setTimeout(function () {
+        try {
+          resizeAdjustmentTS();
+        } catch (e) {
+          console.error(e);
+        }
+      }, 350);
+    });
+
+    $.when(window.Pages.angularToolbarComplete).done(function () {
+      try {
+        resizeAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  });
+</script>
+<!-- End Fixed Nav Adjustment -->
+
+
+
+<script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/f6163dd5aa413762d38553666/7b787d9099bd92d4a2491e66d.js");</script>
+
+<script src="https://cdn-residentagent.civicplus.com/loader.js"></script>
+<script>
+    window.ResidentAgentWidget.load({
+        agentId: 'a14c3861-0d41-454e-838f-6201f4916b80',
+        apiUrl: 'https://residentagent-api-production.azurewebsites.net'
+    });
+</script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            document.cookie = "responsiveGhost=0; path=/";
+        });
+        $(window).on("load", function () {
+            $('body').addClass('doneLoading').removeClass('hideContent');
+
+            if ($('#404Content').length > 0)
+                $('div#bodyWrapper').css('padding', '0px');
+        });
+    </script>
+
+    <noscript>
+        <style>
+            body.hideContent {
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
+
+        
+<div style="display: none;">
+	<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+
+		<symbol id="iconArrow--left" viewbox="0 0 25 25">
+			<title>Arrow Left</title>
+			<polygon style="fill:currentcolor" points="18.044,25 19.498,23.545 8.409,12.454 19.408,1.455 17.954,0 5.502,12.452"></polygon>
+		</symbol>
+
+		<symbol id="iconArrow--right" viewbox="0 0 25 25">
+			<title>Arrow Right</title>
+			<polygon style="fill:currentcolor" points="6.957,0 5.502,1.455 16.591,12.546 5.592,23.545 7.047,25 19.498,12.548"></polygon>
+		</symbol>
+
+	</svg>
+</div>
+    <script type="text/javascript">loadCSS('//fonts.googleapis.com/css?family=Aleo:500,600,700,800,900,italic,regular|Bitter:700,italic|Coming+Soon:regular|Cormorant+Garamond:600|Montserrat:500,600,700,regular|Open+Sans:500,600,700,800,italic,regular|Quicksand:700,regular|Rubik:500,700,regular|Source+Sans+Pro:regular|');</script>
+    
+
+    <div class="hidden activeWidgetSkinComponentsOnPageJson">[]</div>
+        <div style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="iconSlideshowArrowLeft" viewBox="0 0 22.68 40">
+                    <title>Slideshow Left Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M20,40a2.67,2.67,0,0,1-1.9-.79L.79,21.9a2.68,2.68,0,0,1,0-3.79L18.1.79a2.68,2.68,0,1,1,3.79,3.79L6.47,20,21.89,35.42A2.68,2.68,0,0,1,20,40Z"></path>
+                    </g>
+                </symbol>
+                <symbol id="iconSlideshowArrowRight" viewBox="0 0 22.68 40">
+                    <title>Slideshow Right Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M2.68,0a2.67,2.67,0,0,1,1.9.79L21.89,18.1a2.68,2.68,0,0,1,0,3.79L4.58,39.21A2.68,2.68,0,0,1,.79,35.42L16.21,20,.79,4.58A2.68,2.68,0,0,1,2.68,0Z"></path>
+                    </g>
+                </symbol>
+            </svg>
+        </div>
+    
+	
+	
+
+    <div id="root-picker-outlet"></div>
+</body>
+</html>

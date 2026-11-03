@@ -1,0 +1,32 @@
+{
+  "officialUrl": "https://www.broomfield.org/DocumentCenter/View/69245",
+  "captureProvider": "search_service_web_run PDF text extraction/OCR",
+  "rawFormat": "CAPTURED_SOURCE_TEXT",
+  "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+  "lineCount": 201,
+  "coverage": "Every line0through200capturedfromofficial7pagePDFviews",
+  "nativeGovernmentFetch": {
+    "status": null,
+    "reason": "Native not attempted during shared runtime allhostHTTPoutage"
+  },
+  "requests": [
+    {
+      "request": "official7page schoolnotice",
+      "capturedAt": "2026-11-03T04:35:29.280Z",
+      "reference": "turn775300view1",
+      "lineCount": 183
+    },
+    {
+      "request": [
+        {
+          "ref_id": "https://www.broomfield.org/DocumentCenter/View/69245",
+          "lineno": 195
+        }
+      ],
+      "capturedAt": "2026-11-03T04:35:29.528Z",
+      "reference": "turn196719view0",
+      "lineCount": 201
+    }
+  ],
+  "conflicts": []
+}

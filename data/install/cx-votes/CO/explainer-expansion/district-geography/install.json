@@ -1,0 +1,32 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "placeMapFile": "map.json",
+  "subjects": [
+    {
+      "id": "co-west-metro-fire-protection-district-2026-ballot-7c",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-conifer-fire-protection-district-2026-ballot-7d",
+      "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+    },
+    {
+      "id": "co-17th-judicial-district-2026-ballot-7e",
+      "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259"
+    }
+  ],
+  "operation": "Load only these exact source-backed places and geometry through existing loadStatePlaceMap, then merge the three measure-only contests/questions/explainers through existing ballot publication. Preserve unrelated data. These resolve three records previously excluded for missing territory; no production write or app change here.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

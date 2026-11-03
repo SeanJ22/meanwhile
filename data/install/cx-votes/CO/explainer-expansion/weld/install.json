@@ -1,0 +1,59 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-eaton-2026-ballot-2a",
+      "sourceUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf"
+    },
+    {
+      "id": "co-kersey-2026-ballot-2b",
+      "sourceUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf"
+    },
+    {
+      "id": "co-evans-2026-ballot-2c",
+      "sourceUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf"
+    },
+    {
+      "id": "co-frederick-2026-ballot-2d",
+      "sourceUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf"
+    },
+    {
+      "id": "co-frederick-2026-ballot-2e",
+      "sourceUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf"
+    },
+    {
+      "id": "co-greeley-2026-ballot-2f",
+      "sourceUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf"
+    },
+    {
+      "id": "co-eaton-school-district-re2-2026-ballot-4a",
+      "sourceUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf"
+    },
+    {
+      "id": "co-weld-school-district-re1-2026-ballot-4b",
+      "sourceUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf"
+    },
+    {
+      "id": "co-prairie-school-district-re11j-2026-ballot-5b",
+      "sourceUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf"
+    },
+    {
+      "id": "co-nunn-fire-protection-district-2026-ballot-6a",
+      "sourceUrl": "https://www.weld.gov/files/sharedassets/public/v/1/departments/clerk-and-recorder/documents/elections/2026-general-english-sample-ballot.pdf"
+    }
+  ],
+  "operation": "Merge only these10new local measure contests, official questions and explainers into the held Colorado ballot. Preserve unrelated ballot data. No polling, candidate, app, production or external-model work.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

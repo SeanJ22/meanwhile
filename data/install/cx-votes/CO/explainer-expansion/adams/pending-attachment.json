@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "co-17th-judicial-district-2026-ballot-7e",
+    "title": "17th Judicial District Ballot Question 7E",
+    "officialNumber": "7E",
+    "ocdId": null,
+    "registrationDivision": null,
+    "attachment": "UNRESOLVED_NO_EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+    "measureRecord": {
+      "contestId": "co-17th-judicial-district-2026-ballot-7e",
+      "whatItDoes": "Set a limit of three consecutive terms for the 17th Judicial District’s district attorney.",
+      "yesMeans": "Approve the proposed limit of three consecutive terms.",
+      "noMeans": "Do not approve this proposed term limit.",
+      "parts": [],
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+      "sourceHash": "dfcb01bcc47912e8b2cadbd300841ccd07681a00d55ab1de10fbceab9ffcc6af",
+      "sourceHashKind": "HELD_TEXT",
+      "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+      "citation": "measure-source"
+    },
+    "questionText": "Shall the term limits for District Attorney of the 17th Judicial District be limited to no more than three consecutive terms of office, consistent with other county offices in Adams County and the City and County of Broomfield?"
+  },
+  {
+    "contestId": "co-groundwater-management-subdistrict-central-colorado-water-conservancy-district-2026-ballot-7c",
+    "title": "Groundwater Management Subdistrict of Central Colorado Water Conservancy District Ballot Issue 7C",
+    "officialNumber": "7C",
+    "ocdId": null,
+    "registrationDivision": null,
+    "attachment": "UNRESOLVED_NO_EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+    "measureRecord": {
+      "contestId": "co-groundwater-management-subdistrict-central-colorado-water-conservancy-district-2026-ballot-7c",
+      "whatItDoes": "Increase the Groundwater Management Subdistrict’s property taxes by $1.5 million in 2027, with annual inflation increases afterward as defined by Colorado’s constitution. A levy would raise the authorized amounts and put revenue into the subdistrict’s general fund. Money would support water supplies and rights, efficient water delivery, reservoirs and storage facilities, and infrastructure in Adams, Morgan and Weld counties. The measure would approve a revenue change and an exception to the statutory property-tax limit.",
+      "yesMeans": "Approve the subdistrict property-tax increase, annual inflation adjustments and revenue-limit exception.",
+      "noMeans": "Do not approve this tax increase or its proposed revenue-limit exception.",
+      "parts": [],
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+      "sourceHash": "4a30eb00e8fabd6b4b747308c7c8c0782452a995ef5544b8d6821562d4eb70d5",
+      "sourceHashKind": "HELD_TEXT",
+      "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+      "citation": "measure-source"
+    },
+    "questionText": "SHALL THE GROUNDWATER MANAGEMENT SUBDISTRICT OF THE CENTRAL COLORADO WATER CONSERVANCY DISTRICT TAXES BE INCREASED $1.5 MILLION IN 2027 AND ANNUALLY THEREAFTER INCREASED BY THE RATE OF INFLATION, AS DEFINED IN ARTICLE X, SECTION 20 OF THE STATE CONSTITUTION, FOR CAPITAL AND OPERATIONAL PURPOSES TO, AMONG OTHER THINGS, • PROVIDE STABLE WATER SUPPLY TO SUPPORT AND ASSIST FAMILY FARMS, RANCHES AND LOCAL COMMUNITIES INCLUDING ACQUISITIONS OF WATER RIGHTS; • IMPROVE THE SUBDISTRICT'S ABILITY TO PROVIDE ADEQUATE, SAFE WATER AS EFFICIENTLY AS POSSIBLE; • OPERATE AND MAINTAIN RESERVOIRS, WATER STORAGE SITES AND WATER DELIVERY FACILITIES IN ADAMS, MORGAN AND WELD COUNTIES; AND • INCREASE WATER YIELD BY MAINTAINING INFRASTRUCTURE THAT CAN EFFECTIVELY CAPTURE WATER FOR STORAGE; THROUGH A PROPERTY TAX MILL LEVY ANNUALLY IMPOSED AT A RATE SUFFICIENT TO PRODUCE THE AMOUNTS SET FORTH ABOVE, WHICH TAXES SHALL BE DEPOSITED INTO THE GENERAL FUND OF THE SUBDISTRICT, AND SHALL CONSTITUTE A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES?"
+  }
+]

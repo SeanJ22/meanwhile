@@ -1,0 +1,58 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-larimer-county-2026-ballot-1a",
+      "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+    },
+    {
+      "id": "co-wellington-2026-ballot-2a",
+      "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+    },
+    {
+      "id": "co-berthoud-2026-ballot-3g",
+      "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+    },
+    {
+      "id": "co-johnstown-milliken-school-district-re-5j-2026-ballot-5a",
+      "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+    },
+    {
+      "id": "co-estes-valley-fire-protection-district-2026-ballot-6d",
+      "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+    },
+    {
+      "id": "co-thompson-crossing-metropolitan-district-2-2026-ballot-6e",
+      "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+    },
+    {
+      "id": "co-poudre-valley-fire-protection-district-2026-ballot-7e",
+      "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+    },
+    {
+      "id": "co-windsor-severance-fire-protection-district-2026-ballot-7f",
+      "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+    }
+  ],
+  "operation": "Append only these8 new measure contests, questions and explanations. Preserve unrelated ballot data. Three proposed PID explanations are pending attachment and excluded from input. FRPR7A/Allenspark7C already prepared once elsewhere. No production writes or app changes.",
+  "validation": {
+    "independentReview": "PENDING_ROOT",
+    "measureRecordIssue": "PASS (11records;8attached and3pending)",
+    "supportingQuotes": "PASS",
+    "sourceHashes": "PASS",
+    "registrationDivisions": "PASS (8exactIDs;3proposedPIDsexcluded)"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

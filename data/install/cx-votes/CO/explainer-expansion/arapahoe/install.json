@@ -1,0 +1,51 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-centennial-2026-ballot-2a",
+      "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230"
+    },
+    {
+      "id": "co-glendale-2026-ballot-2b",
+      "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230"
+    },
+    {
+      "id": "co-cherry-hills-village-2026-ballot-2c",
+      "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230"
+    },
+    {
+      "id": "co-sheridan-2026-ballot-2d",
+      "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230"
+    },
+    {
+      "id": "co-littleton-school-district-6-2026-ballot-4a",
+      "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230"
+    },
+    {
+      "id": "co-hills-at-cherry-creek-metropolitan-district-2026-ballot-6a",
+      "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230"
+    }
+  ],
+  "operation": "Append only these measure contests, official questions and neutral explanations; preserve unrelated ballot data. Any unresolved exactdistrict attachments are excluded and saved separately. No production writes or app changes.",
+  "validation": {
+    "independentReview": "PENDING_ROOT",
+    "measureRecordIssue": "PASS (6records)",
+    "supportingQuotes": "PASS (verbatimfullcapture and excerpts)",
+    "fullCaptureHash": "PASS",
+    "heldQuestionHashes": "PASS",
+    "registeredDivisions": "PASS (6exact IDs;GlendaleCITY0830340,notCDP0830350)"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

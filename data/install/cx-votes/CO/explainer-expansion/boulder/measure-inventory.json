@@ -1,0 +1,501 @@
+[
+  {
+    "contestId": "co-boulder-county-2026-ballot-1a",
+    "title": "Boulder County Ballot Issue 1A",
+    "officialNumber": "1A",
+    "ocdId": "ocd-division/country:us/state:co/county:boulder",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:boulder",
+      "county",
+      "08013",
+      "Boulder County"
+    ],
+    "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/"
+  },
+  {
+    "contestId": "co-eldorado-springs-public-improvement-district-2026-ballot-6a",
+    "title": "Eldorado Springs Public Improvement District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": null,
+    "scopeNote": "Only electors within Eldorado Springs Public Improvement District; do not substitute Eldorado Springs CDP or Boulder County boundaries.",
+    "sourceNumberAliases": null,
+    "attachment": "UNRESOLVED_EXACT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/"
+  },
+  {
+    "contestId": "co-sombrero-ranch-public-improvement-district-2026-ballot-6b",
+    "title": "Sombrero Ranch Public Improvement District Ballot Issue 6B",
+    "officialNumber": "6B",
+    "ocdId": null,
+    "scopeNote": "Only electors within the proposed Sombrero Ranch Public Improvement District; precise territory is unresolved in existing registration. Do not attach countywide.",
+    "sourceNumberAliases": null,
+    "attachment": "UNRESOLVED_EXACT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/"
+  },
+  {
+    "contestId": "co-summerlin-public-improvement-district-2026-ballot-6c",
+    "title": "Summerlin Public Improvement District Ballot Issue 6C",
+    "officialNumber": "6C",
+    "ocdId": null,
+    "scopeNote": "Only electors within the proposed Summerlin Public Improvement District; precise territory is unresolved in existing registration. Do not attach countywide.",
+    "sourceNumberAliases": null,
+    "attachment": "UNRESOLVED_EXACT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/"
+  },
+  {
+    "contestId": "co-boulder-county-2026-ballot-200",
+    "title": "Boulder County Ballot Question 200",
+    "officialNumber": "200",
+    "ocdId": "ocd-division/country:us/state:co/county:boulder",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:boulder",
+      "county",
+      "08013",
+      "Boulder County"
+    ],
+    "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/"
+  },
+  {
+    "contestId": "co-boulder-county-2026-ballot-201",
+    "title": "Boulder County Ballot Question 201",
+    "officialNumber": "201",
+    "ocdId": "ocd-division/country:us/state:co/county:boulder",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:boulder",
+      "county",
+      "08013",
+      "Boulder County"
+    ],
+    "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/"
+  },
+  {
+    "contestId": "co-boulder-2026-ballot-2k",
+    "title": "City of Boulder Ballot Issue 2K",
+    "officialNumber": "2K",
+    "ocdId": "ocd-division/country:us/state:co/place:boulder",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:boulder",
+      "place",
+      "0807850",
+      "Boulder city"
+    ],
+    "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures"
+  },
+  {
+    "contestId": "co-boulder-2026-ballot-2m",
+    "title": "City of Boulder Ballot Question 2M",
+    "officialNumber": "2M",
+    "ocdId": "ocd-division/country:us/state:co/place:boulder",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:boulder",
+      "place",
+      "0807850",
+      "Boulder city"
+    ],
+    "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures"
+  },
+  {
+    "contestId": "co-boulder-2026-ballot-2j",
+    "title": "City of Boulder Ballot Issue 2J",
+    "officialNumber": "2J",
+    "ocdId": "ocd-division/country:us/state:co/place:boulder",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:boulder",
+      "place",
+      "0807850",
+      "Boulder city"
+    ],
+    "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures"
+  },
+  {
+    "contestId": "co-boulder-2026-ballot-2l",
+    "title": "City of Boulder Ballot Question 2L",
+    "officialNumber": "2L",
+    "ocdId": "ocd-division/country:us/state:co/place:boulder",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:boulder",
+      "place",
+      "0807850",
+      "Boulder city"
+    ],
+    "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures"
+  },
+  {
+    "contestId": "co-longmont-2026-ballot-3a",
+    "title": "City of Longmont Ballot Issue 3A",
+    "officialNumber": "3A",
+    "ocdId": "ocd-division/country:us/state:co/place:longmont",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:longmont",
+      "place",
+      "0845970",
+      "Longmont city"
+    ],
+    "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/"
+  },
+  {
+    "contestId": "co-longmont-2026-ballot-3b",
+    "title": "City of Longmont Ballot Question 3B",
+    "officialNumber": "3B",
+    "ocdId": "ocd-division/country:us/state:co/place:longmont",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:longmont",
+      "place",
+      "0845970",
+      "Longmont city"
+    ],
+    "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/"
+  },
+  {
+    "contestId": "co-longmont-2026-ballot-3c",
+    "title": "City of Longmont Ballot Question 3C",
+    "officialNumber": "3C",
+    "ocdId": "ocd-division/country:us/state:co/place:longmont",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:longmont",
+      "place",
+      "0845970",
+      "Longmont city"
+    ],
+    "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/"
+  },
+  {
+    "contestId": "co-longmont-2026-ballot-3d",
+    "title": "City of Longmont Ballot Question 3D",
+    "officialNumber": "3D",
+    "ocdId": "ocd-division/country:us/state:co/place:longmont",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:longmont",
+      "place",
+      "0845970",
+      "Longmont city"
+    ],
+    "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/"
+  },
+  {
+    "contestId": "co-louisville-2026-ballot-2b",
+    "title": "City of Louisville Ballot Question 2B",
+    "officialNumber": "2B",
+    "ocdId": "ocd-division/country:us/state:co/place:louisville",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:louisville",
+      "place",
+      "0846355",
+      "Louisville city"
+    ],
+    "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+  },
+  {
+    "contestId": "co-louisville-2026-ballot-2c",
+    "title": "City of Louisville Ballot Question 2C",
+    "officialNumber": "2C",
+    "ocdId": "ocd-division/country:us/state:co/place:louisville",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:louisville",
+      "place",
+      "0846355",
+      "Louisville city"
+    ],
+    "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+  },
+  {
+    "contestId": "co-louisville-2026-ballot-2d",
+    "title": "City of Louisville Ballot Question 2D",
+    "officialNumber": "2D",
+    "ocdId": "ocd-division/country:us/state:co/place:louisville",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:louisville",
+      "place",
+      "0846355",
+      "Louisville city"
+    ],
+    "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+  },
+  {
+    "contestId": "co-louisville-2026-ballot-2e",
+    "title": "City of Louisville Ballot Question 2E",
+    "officialNumber": "2E",
+    "ocdId": "ocd-division/country:us/state:co/place:louisville",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:louisville",
+      "place",
+      "0846355",
+      "Louisville city"
+    ],
+    "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+  },
+  {
+    "contestId": "co-louisville-2026-ballot-2f",
+    "title": "City of Louisville Ballot Question 2F",
+    "officialNumber": "2F",
+    "ocdId": "ocd-division/country:us/state:co/place:louisville",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:louisville",
+      "place",
+      "0846355",
+      "Louisville city"
+    ],
+    "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+  },
+  {
+    "contestId": "co-louisville-2026-ballot-2g",
+    "title": "City of Louisville Ballot Question 2G",
+    "officialNumber": "2G",
+    "ocdId": "ocd-division/country:us/state:co/place:louisville",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:louisville",
+      "place",
+      "0846355",
+      "Louisville city"
+    ],
+    "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+  },
+  {
+    "contestId": "co-louisville-2026-ballot-2h",
+    "title": "City of Louisville Ballot Question 2H",
+    "officialNumber": "2H",
+    "ocdId": "ocd-division/country:us/state:co/place:louisville",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:louisville",
+      "place",
+      "0846355",
+      "Louisville city"
+    ],
+    "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+  },
+  {
+    "contestId": "co-lafayette-2026-ballot-2a",
+    "title": "City of Lafayette Ballot Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:lafayette",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:lafayette",
+      "place",
+      "0841835",
+      "Lafayette city"
+    ],
+    "sourceUrl": "https://www.lafayetteco.gov/4362/2026-Ballot-Measure"
+  },
+  {
+    "contestId": "co-erie-2026-ballot-3e",
+    "title": "Town of Erie Ballot Issue 3E",
+    "officialNumber": "3E",
+    "ocdId": "ocd-division/country:us/state:co/place:erie",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:erie",
+      "place",
+      "0824950",
+      "Erie town"
+    ],
+    "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf"
+  },
+  {
+    "contestId": "co-erie-2026-ballot-3f",
+    "title": "Town of Erie Ballot Issue 3F",
+    "officialNumber": "3F",
+    "ocdId": "ocd-division/country:us/state:co/place:erie",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:erie",
+      "place",
+      "0824950",
+      "Erie town"
+    ],
+    "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf"
+  },
+  {
+    "contestId": "co-allenspark-fire-protection-district-2026-ballot-7c",
+    "title": "Allenspark Fire Protection District Ballot Issue 7C",
+    "officialNumber": "7C",
+    "ocdId": "ocd-division/country:us/state:co/special_district:allenspark_fire_protection_district",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:allenspark_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64004",
+      "Allenspark Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf"
+  },
+  {
+    "contestId": "co-timberline-fire-protection-district-2026-ballot-7b",
+    "title": "Timberline Fire Protection District Ballot Issue 7B",
+    "officialNumber": "7B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:timberline_fire_protection_district",
+    "scopeNote": null,
+    "sourceNumberAliases": null,
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:timberline_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64075",
+      "Timberline Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf"
+  },
+  {
+    "contestId": "co-proposed-niwot-2026-ballot-question-incorporation",
+    "title": "Proposed Niwot Municipality — Incorporation",
+    "officialNumber": "question-incorporation",
+    "ocdId": null,
+    "scopeNote": null,
+    "sourceNumberAliases": [
+      "Commission Question 1"
+    ],
+    "attachment": "UNRESOLVED_EXACT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://niwotelection.org/ballot"
+  },
+  {
+    "contestId": "co-proposed-niwot-2026-ballot-question-charter-commission",
+    "title": "Proposed Niwot Municipality — Home Rule Charter Commission",
+    "officialNumber": "question-charter-commission",
+    "ocdId": null,
+    "scopeNote": null,
+    "sourceNumberAliases": [
+      "Commission Question 2"
+    ],
+    "attachment": "UNRESOLVED_EXACT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://niwotelection.org/ballot"
+  },
+  {
+    "contestId": "co-proposed-niwot-2026-ballot-issue-sales-use-tax",
+    "title": "Proposed Niwot Municipality — Sales and Use Tax",
+    "officialNumber": "Commission Issue1 / County TABOR 302",
+    "ocdId": null,
+    "scopeNote": "Proposed municipality territory, unresolved exact attachment. Do not substitute Niwot CDP.",
+    "sourceNumberAliases": [
+      "Commission Issue 1",
+      "County TABOR Ballot Issue 302"
+    ],
+    "attachment": "UNRESOLVED_EXACT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://niwotelection.org/ballot"
+  },
+  {
+    "contestId": "co-proposed-niwot-2026-ballot-issue-property-tax",
+    "title": "Proposed Niwot Municipality — Property Tax",
+    "officialNumber": "Commission Issue2 / County TABOR 303",
+    "ocdId": null,
+    "scopeNote": "Proposed municipality territory, unresolved exact attachment. Do not substitute Niwot CDP.",
+    "sourceNumberAliases": [
+      "Commission Issue 2",
+      "County TABOR Ballot Issue 303"
+    ],
+    "attachment": "UNRESOLVED_EXACT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://niwotelection.org/ballot"
+  },
+  {
+    "contestId": "co-proposed-niwot-2026-ballot-issue-marijuana-sales-tax",
+    "title": "Proposed Niwot Municipality — Marijuana Special Sales Tax",
+    "officialNumber": "Commission Issue3 / County TABOR 304",
+    "ocdId": null,
+    "scopeNote": "Proposed municipality territory, unresolved exact attachment. Do not substitute Niwot CDP.",
+    "sourceNumberAliases": [
+      "Commission Issue 3",
+      "County TABOR Ballot Issue 304"
+    ],
+    "attachment": "UNRESOLVED_EXACT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://niwotelection.org/ballot"
+  },
+  {
+    "contestId": "co-proposed-niwot-2026-ballot-issue-retain-revenue",
+    "title": "Proposed Niwot Municipality — Retain and Spend Revenue",
+    "officialNumber": "Commission Issue4 / County TABOR 305",
+    "ocdId": null,
+    "scopeNote": "Proposed municipality territory, unresolved exact attachment. Do not substitute Niwot CDP.",
+    "sourceNumberAliases": [
+      "Commission Issue 4",
+      "County TABOR Ballot Issue 305"
+    ],
+    "attachment": "UNRESOLVED_EXACT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://niwotelection.org/ballot"
+  },
+  {
+    "contestId": "co-proposed-niwot-2026-ballot-issue-transportation-debt",
+    "title": "Proposed Niwot Municipality — Transportation Debt",
+    "officialNumber": "Commission Issue5 / County TABOR 306",
+    "ocdId": null,
+    "scopeNote": "Proposed municipality territory, unresolved exact attachment. Do not substitute Niwot CDP.",
+    "sourceNumberAliases": [
+      "Commission Issue 5",
+      "County TABOR Ballot Issue 306"
+    ],
+    "attachment": "UNRESOLVED_EXACT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://niwotelection.org/ballot"
+  }
+]

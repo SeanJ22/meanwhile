@@ -1,0 +1,313 @@
+[
+  {
+    "contestId": "co-jefferson-county-school-district-r1-2026-ballot-5a",
+    "title": "Jefferson County School District R-1 Ballot Issue 5A",
+    "officialNumber": "5A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:jefferson_county_school_district_r_1",
+    "officialJurisdiction": "Jefferson County School District R-1",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:jefferson_county_school_district_r_1",
+      "unsd",
+      "0804800",
+      "Jefferson County School District R-1"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-jefferson-county-school-district-r1-2026-ballot-5b",
+    "title": "Jefferson County School District R-1 Ballot Issue 5B",
+    "officialNumber": "5B",
+    "ocdId": "ocd-division/country:us/state:co/school_district:jefferson_county_school_district_r_1",
+    "officialJurisdiction": "Jefferson County School District R-1",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:jefferson_county_school_district_r_1",
+      "unsd",
+      "0804800",
+      "Jefferson County School District R-1"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-blue-mountain-water-district-2026-ballot-6a",
+    "title": "Blue Mountain Water District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:blue_mountain_water_district",
+    "officialJurisdiction": "Blue Mountain Water District",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:blue_mountain_water_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#30010",
+      "Blue Mountain Water District",
+      "water"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-golden-gate-fire-protection-district-2026-ballot-6b",
+    "title": "Golden Gate Fire Protection District Ballot Issue 6B",
+    "officialNumber": "6B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:golden_gate_fire_protection_district",
+    "officialJurisdiction": "Golden Gate Fire Protection District",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:golden_gate_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#30115",
+      "Golden Gate Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-arvada-fire-protection-district-2026-ballot-6c",
+    "title": "Arvada Fire Protection District Ballot Issue 6C",
+    "officialNumber": "6C",
+    "ocdId": "ocd-division/country:us/state:co/special_district:arvada_fire_protection_district",
+    "officialJurisdiction": "Arvada Fire Protection District",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:arvada_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#30003",
+      "Arvada Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-columbine-knolls-grove-metropolitan-recreation-district-2026-ballot-6d",
+    "title": "Columbine Knolls Grove Metropolitan Recreation District Ballot Issue 6D",
+    "officialNumber": "6D",
+    "ocdId": "ocd-division/country:us/state:co/special_district:columbine_knolls_grove_metropolitan_recreation_district",
+    "officialJurisdiction": "Columbine Knolls Grove Metropolitan Recreation District",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:columbine_knolls_grove_metropolitan_recreation_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#30016",
+      "Columbine Knolls-Grove Metropolitan Recreation District",
+      "park"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-columbine-knolls-grove-metropolitan-recreation-district-2026-ballot-6e",
+    "title": "Columbine Knolls Grove Metropolitan Recreation District Ballot Issue 6E",
+    "officialNumber": "6E",
+    "ocdId": "ocd-division/country:us/state:co/special_district:columbine_knolls_grove_metropolitan_recreation_district",
+    "officialJurisdiction": "Columbine Knolls Grove Metropolitan Recreation District",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:columbine_knolls_grove_metropolitan_recreation_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#30016",
+      "Columbine Knolls-Grove Metropolitan Recreation District",
+      "park"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-evergreen-fire-protection-district-2026-ballot-7b",
+    "title": "Evergreen Fire Protection District Ballot Issue 7B",
+    "officialNumber": "7B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:evergreen_fire_protection_district",
+    "officialJurisdiction": "Evergreen Fire Protection District",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:evergreen_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64061",
+      "Evergreen Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-west-metro-fire-protection-district-2026-ballot-7c",
+    "title": "West Metro Fire Protection District Ballot Issue 7C",
+    "officialNumber": "7C",
+    "ocdId": null,
+    "officialJurisdiction": "West Metro Fire Protection District",
+    "attachment": "UNRESOLVED_NO_EXACT_REGISTERED_DIVISION",
+    "registrationDivision": null,
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-conifer-fire-protection-district-2026-ballot-7d",
+    "title": "Conifer Fire Protection District Ballot Issue 7D",
+    "officialNumber": "7D",
+    "ocdId": null,
+    "officialJurisdiction": "Conifer Fire Protection District",
+    "attachment": "UNRESOLVED_NO_EXACT_REGISTERED_DIVISION",
+    "registrationDivision": null,
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-edgewater-2026-ballot-2k",
+    "title": "City of Edgewater Ballot Issue 2K",
+    "officialNumber": "2K",
+    "ocdId": "ocd-division/country:us/state:co/place:edgewater",
+    "officialJurisdiction": "City of Edgewater",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:edgewater",
+      "place",
+      "0823135",
+      "Edgewater city"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-lakewood-2026-ballot-2g",
+    "title": "City of Lakewood Ballot Issue 2G",
+    "officialNumber": "2G",
+    "ocdId": "ocd-division/country:us/state:co/place:lakewood",
+    "officialJurisdiction": "City of Lakewood",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:lakewood",
+      "place",
+      "0843000",
+      "Lakewood city"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-lakewood-2026-ballot-2h",
+    "title": "City of Lakewood Ballot Question 2H",
+    "officialNumber": "2H",
+    "ocdId": "ocd-division/country:us/state:co/place:lakewood",
+    "officialJurisdiction": "City of Lakewood",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:lakewood",
+      "place",
+      "0843000",
+      "Lakewood city"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-lakewood-2026-ballot-2i",
+    "title": "City of Lakewood Ballot Question 2I",
+    "officialNumber": "2I",
+    "ocdId": "ocd-division/country:us/state:co/place:lakewood",
+    "officialJurisdiction": "City of Lakewood",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:lakewood",
+      "place",
+      "0843000",
+      "Lakewood city"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-lakewood-2026-ballot-2j",
+    "title": "City of Lakewood Ballot Question 2J",
+    "officialNumber": "2J",
+    "ocdId": "ocd-division/country:us/state:co/place:lakewood",
+    "officialJurisdiction": "City of Lakewood",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:lakewood",
+      "place",
+      "0843000",
+      "Lakewood city"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-wheat-ridge-2026-ballot-2a",
+    "title": "City of Wheat Ridge Ballot Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:wheat_ridge",
+    "officialJurisdiction": "City of Wheat Ridge",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:wheat_ridge",
+      "place",
+      "0884440",
+      "Wheat Ridge city"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-mountain-view-2026-ballot-2b",
+    "title": "Town of Mountain View Ballot Question 2B",
+    "officialNumber": "2B",
+    "ocdId": "ocd-division/country:us/state:co/place:mountain_view",
+    "officialJurisdiction": "Town of Mountain View",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:mountain_view",
+      "place",
+      "0852350",
+      "Mountain View town"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-mountain-view-2026-ballot-2c",
+    "title": "Town of Mountain View Ballot Question 2C",
+    "officialNumber": "2C",
+    "ocdId": "ocd-division/country:us/state:co/place:mountain_view",
+    "officialJurisdiction": "Town of Mountain View",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:mountain_view",
+      "place",
+      "0852350",
+      "Mountain View town"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-morrison-2026-ballot-2d",
+    "title": "Town of Morrison Ballot Issue 2D",
+    "officialNumber": "2D",
+    "ocdId": "ocd-division/country:us/state:co/place:morrison",
+    "officialJurisdiction": "Town of Morrison",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:morrison",
+      "place",
+      "0852075",
+      "Morrison town"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-morrison-2026-ballot-2e",
+    "title": "Town of Morrison Ballot Issue 2E",
+    "officialNumber": "2E",
+    "ocdId": "ocd-division/country:us/state:co/place:morrison",
+    "officialJurisdiction": "Town of Morrison",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:morrison",
+      "place",
+      "0852075",
+      "Morrison town"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  },
+  {
+    "contestId": "co-morrison-2026-ballot-2f",
+    "title": "Town of Morrison Ballot Question 2F",
+    "officialNumber": "2F",
+    "ocdId": "ocd-division/country:us/state:co/place:morrison",
+    "officialJurisdiction": "Town of Morrison",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:morrison",
+      "place",
+      "0852075",
+      "Morrison town"
+    ],
+    "sourceUrl": "https://www.jeffco.us/4652/On-the-Ballot"
+  }
+]

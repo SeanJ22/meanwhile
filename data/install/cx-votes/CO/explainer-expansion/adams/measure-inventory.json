@@ -1,0 +1,211 @@
+[
+  {
+    "contestId": "co-17th-judicial-district-2026-ballot-7e",
+    "title": "17th Judicial District Ballot Question 7E",
+    "officialNumber": "7E",
+    "ocdId": null,
+    "registrationDivision": null,
+    "attachment": "UNRESOLVED_NO_EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-thornton-2026-ballot-2a",
+    "title": "City of Thornton Ballot Question 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:thornton",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:thornton",
+      "place",
+      "0877290",
+      "Thornton city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-northglenn-2026-ballot-3h",
+    "title": "City of Northglenn Ballot Issue 3H",
+    "officialNumber": "3H",
+    "ocdId": "ocd-division/country:us/state:co/place:northglenn",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:northglenn",
+      "place",
+      "0854330",
+      "Northglenn city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-westminster-public-school-district-2026-ballot-4a",
+    "title": "Westminster Public Schools Ballot Issue 4A",
+    "officialNumber": "4A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:westminster_public_school_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:westminster_public_school_district",
+      "unsd",
+      "0807230",
+      "Westminster Public School District"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-bennett-school-district-29j-2026-ballot-5a",
+    "title": "Bennett School District No. 29J Ballot Issue 5A",
+    "officialNumber": "5A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:bennett_school_district_29_j",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:bennett_school_district_29_j",
+      "unsd",
+      "0802430",
+      "Bennett School District 29-J"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-north-range-metropolitan-district-3-2026-ballot-6a",
+    "title": "North Range Metropolitan District No. 3 Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:north_range_metropolitan_district_3",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:north_range_metropolitan_district_3",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#65026",
+      "North Range Metropolitan District 3",
+      "facilities"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-north-range-metropolitan-district-3-2026-ballot-6b",
+    "title": "North Range Metropolitan District No. 3 Ballot Issue 6B",
+    "officialNumber": "6B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:north_range_metropolitan_district_3",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:north_range_metropolitan_district_3",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#65026",
+      "North Range Metropolitan District 3",
+      "facilities"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-north-range-metropolitan-district-3-2026-ballot-6c",
+    "title": "North Range Metropolitan District No. 3 Ballot Issue 6C",
+    "officialNumber": "6C",
+    "ocdId": "ocd-division/country:us/state:co/special_district:north_range_metropolitan_district_3",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:north_range_metropolitan_district_3",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#65026",
+      "North Range Metropolitan District 3",
+      "facilities"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-north-range-metropolitan-district-3-2026-ballot-6d",
+    "title": "North Range Metropolitan District No. 3 Ballot Issue 6D",
+    "officialNumber": "6D",
+    "ocdId": "ocd-division/country:us/state:co/special_district:north_range_metropolitan_district_3",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:north_range_metropolitan_district_3",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#65026",
+      "North Range Metropolitan District 3",
+      "facilities"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-adams-county-fire-protection-district-2026-ballot-6e",
+    "title": "Adams County Fire Protection District Ballot Issue 6E",
+    "officialNumber": "6E",
+    "ocdId": "ocd-division/country:us/state:co/special_district:adams_county_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:adams_county_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64101",
+      "Adams County Fire Protection District",
+      "fire"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-central-colorado-water-conservancy-district-2026-ballot-7b",
+    "title": "Central Colorado Water Conservancy District Ballot Issue 7B",
+    "officialNumber": "7B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:central_colorado_water_conservancy_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:central_colorado_water_conservancy_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64041",
+      "Central Colorado Water Conservancy District",
+      "other"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-groundwater-management-subdistrict-central-colorado-water-conservancy-district-2026-ballot-7c",
+    "title": "Groundwater Management Subdistrict of Central Colorado Water Conservancy District Ballot Issue 7C",
+    "officialNumber": "7C",
+    "ocdId": null,
+    "registrationDivision": null,
+    "attachment": "UNRESOLVED_NO_EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-greater-brighton-fire-protection-district-2026-ballot-7d",
+    "title": "Greater Brighton Fire Protection District Ballot Issue 7D",
+    "officialNumber": "7D",
+    "ocdId": "ocd-division/country:us/state:co/special_district:greater_brighton_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:greater_brighton_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64028",
+      "Greater Brighton Fire Protection District",
+      "fire"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-bennett-fire-protection-district-2026-ballot-7f",
+    "title": "Bennett Fire Protection District Ballot Issue 7F",
+    "officialNumber": "7F",
+    "ocdId": "ocd-division/country:us/state:co/special_district:bennett_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:bennett_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64018",
+      "Bennett Fire Protection District",
+      "fire"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  },
+  {
+    "contestId": "co-bennett-fire-protection-district-2026-ballot-7g",
+    "title": "Bennett Fire Protection District Ballot Issue 7G",
+    "officialNumber": "7G",
+    "ocdId": "ocd-division/country:us/state:co/special_district:bennett_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:bennett_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64018",
+      "Bennett Fire Protection District",
+      "fire"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+  }
+]

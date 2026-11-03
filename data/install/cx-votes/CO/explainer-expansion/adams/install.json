@@ -1,0 +1,79 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-thornton-2026-ballot-2a",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    },
+    {
+      "id": "co-northglenn-2026-ballot-3h",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    },
+    {
+      "id": "co-westminster-public-school-district-2026-ballot-4a",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    },
+    {
+      "id": "co-bennett-school-district-29j-2026-ballot-5a",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    },
+    {
+      "id": "co-north-range-metropolitan-district-3-2026-ballot-6a",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    },
+    {
+      "id": "co-north-range-metropolitan-district-3-2026-ballot-6b",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    },
+    {
+      "id": "co-north-range-metropolitan-district-3-2026-ballot-6c",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    },
+    {
+      "id": "co-north-range-metropolitan-district-3-2026-ballot-6d",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    },
+    {
+      "id": "co-adams-county-fire-protection-district-2026-ballot-6e",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    },
+    {
+      "id": "co-central-colorado-water-conservancy-district-2026-ballot-7b",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    },
+    {
+      "id": "co-greater-brighton-fire-protection-district-2026-ballot-7d",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    },
+    {
+      "id": "co-bennett-fire-protection-district-2026-ballot-7f",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    },
+    {
+      "id": "co-bennett-fire-protection-district-2026-ballot-7g",
+      "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf"
+    }
+  ],
+  "operation": "Append only these measure contests, official questions and neutral explanations; preserve unrelated ballot data. Any unresolved exactdistrict attachments are excluded and saved separately. No production writes or app changes.",
+  "validation": {
+    "independentReview": "PENDING_ROOT",
+    "measureRecordIssue": "PASS (15records;13exactattachments and2pending)",
+    "supportingQuotes": "PASS (literal in fulltextcapture and excerpts)",
+    "sourceHash": "PASS",
+    "heldQuestionHashes": "PASS",
+    "registrationDivisions": "PASS (13exactIDs,2unresolvedexcluded)"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

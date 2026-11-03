@@ -1,0 +1,118 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-boulder-county-2026-ballot-1a",
+      "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/"
+    },
+    {
+      "id": "co-boulder-county-2026-ballot-200",
+      "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/"
+    },
+    {
+      "id": "co-boulder-county-2026-ballot-201",
+      "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/"
+    },
+    {
+      "id": "co-boulder-2026-ballot-2k",
+      "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures"
+    },
+    {
+      "id": "co-boulder-2026-ballot-2m",
+      "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures"
+    },
+    {
+      "id": "co-boulder-2026-ballot-2j",
+      "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures"
+    },
+    {
+      "id": "co-boulder-2026-ballot-2l",
+      "sourceUrl": "https://bouldercolorado.gov/2026-city-boulder-ballot-measures"
+    },
+    {
+      "id": "co-longmont-2026-ballot-3a",
+      "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/"
+    },
+    {
+      "id": "co-longmont-2026-ballot-3b",
+      "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/"
+    },
+    {
+      "id": "co-longmont-2026-ballot-3c",
+      "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/"
+    },
+    {
+      "id": "co-longmont-2026-ballot-3d",
+      "sourceUrl": "https://longmontcolorado.gov/information/ballot-information-november-3-2026-election/"
+    },
+    {
+      "id": "co-louisville-2026-ballot-2b",
+      "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+    },
+    {
+      "id": "co-louisville-2026-ballot-2c",
+      "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+    },
+    {
+      "id": "co-louisville-2026-ballot-2d",
+      "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+    },
+    {
+      "id": "co-louisville-2026-ballot-2e",
+      "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+    },
+    {
+      "id": "co-louisville-2026-ballot-2f",
+      "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+    },
+    {
+      "id": "co-louisville-2026-ballot-2g",
+      "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+    },
+    {
+      "id": "co-louisville-2026-ballot-2h",
+      "sourceUrl": "https://www.louisvilleco.gov/departments/city-clerks-office/find-elections-information/2026-ballot-questions/"
+    },
+    {
+      "id": "co-lafayette-2026-ballot-2a",
+      "sourceUrl": "https://www.lafayetteco.gov/4362/2026-Ballot-Measure"
+    },
+    {
+      "id": "co-erie-2026-ballot-3e",
+      "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf"
+    },
+    {
+      "id": "co-erie-2026-ballot-3f",
+      "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf"
+    },
+    {
+      "id": "co-allenspark-fire-protection-district-2026-ballot-7c",
+      "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf"
+    },
+    {
+      "id": "co-timberline-fire-protection-district-2026-ballot-7b",
+      "sourceUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/2026-TABOR-Notice.pdf"
+    }
+  ],
+  "operation": "Append only these23 measure contests, official questions and explanations; preserve unrelated ballot data. Ten further explanations in pending-attachment.json are excluded because precise districts are unregistered or proposed; Niwot has a source numbering conflict. No production writes or app changes.",
+  "validation": {
+    "measureRecordIssue": "PASS (33 records:23 attached and10pending)",
+    "independentReview": "PENDING_ROOT",
+    "supportingQuotes": "PASS (literal exact quotes)",
+    "sourceHashes": "PASS (original private and saved artifacts separately checked)",
+    "registrationDivisions": "PASS (23exact existing IDs;10pending excluded)"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

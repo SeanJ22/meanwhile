@@ -1,0 +1,741 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-thornton-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:thornton",
+          "divisionVintage": "2026",
+          "title": "City of Thornton Ballot Question 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Section 4.5 of the Thornton City Charter be amended to require that any member of the Thornton City Council, including the Mayor, shall be deemed to have resigned and vacated the member's office upon formally declaring candidacy for any elected office other than Thornton City Council member or Mayor, including by filing a candidate affidavit, petition, or other official candidacy document required by law?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        },
+        {
+          "id": "co-northglenn-2026-ballot-3h",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:northglenn",
+          "divisionVintage": "2026",
+          "title": "City of Northglenn Ballot Issue 3H",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL CITY OF NORTHGLENN TAXES BE INCREASED BY $450,000 ANNUALLY COMMENCING IN 2027 AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE CITY SALES TAX RATE ON ACCOMMODATION SERVICES FROM FIVE PERCENT (5%) TO EIGHT PERCENT (8%), WITH PROCEEDS TO BE USED FOR GENERAL GOVERNMENTAL PURPOSES, INCLUDING, BUT NOT LIMITED TO, PUBLIC SAFETY, STREET MAINTENANCE, PARKS, RECREATION, AND CULTURE, AND ADMINISTRATIVE FUNCTIONS OF THE CITY, TO BE COLLECTED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        },
+        {
+          "id": "co-westminster-public-school-district-2026-ballot-4a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:westminster_public_school_district",
+          "divisionVintage": "2026",
+          "title": "Westminster Public Schools Ballot Issue 4A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "WITHOUT IMPOSING A NEW TAX, SHALL WESTMINSTER PUBLIC SCHOOLS BE AUTHORIZED TO COLLECT THE FULL AMOUNT OF REVENUES PREVIOUSLY APPROVED BY THE VOTERS IN 1988, 2002 AND 2018 PURSUANT TO SECTION 22-54-108, C.R.S. SUBJECT TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S., TO FUND EDUCATIONAL PURPOSES OF THE DISTRICT AS AUTHORIZED AT THE PRIOR ELECTIONS, INCLUDING: • IMPROVING SAFETY AND SECURITY; • EXPANDING CAREER AND TECHNICAL EDUCATION (CTE) PROGRAMS; • ATTRACTING AND RETAINING EFFECTIVE TEACHERS; AND • IMPROVING ACADEMIC ACHIEVEMENT OF ALL STUDENTS; WHICH TAXES SHALL BE DEPOSITED INTO THE GENERAL FUND AND SHALL BE IN ADDITION TO THE PROPERTY TAXES THAT OTHERWISE WOULD BE LEVIED FOR THE GENERAL FUND; AND SHALL INVESTMENT EARNINGS ON THE PROCEEDS OF SUCH TAXES BE COLLECTED, RETAINED AND EXPENDED BY THE DISTRICT WITHOUT LIMITATION UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        },
+        {
+          "id": "co-bennett-school-district-29j-2026-ballot-5a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:bennett_school_district_29_j",
+          "divisionVintage": "2026",
+          "title": "Bennett School District No. 29J Ballot Issue 5A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL BENNETT SCHOOL DISTRICT NO. 29J DEBT BE INCREASED UP TO $125 MILLION WITH A REPAYMENT COST OF UP TO $235 MILLION, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $11 MILLION ANNUALLY TO REPAIR AND IMPROVE AGING SCHOOL BUILDINGS, AND TO ADDRESS INCREASED ENROLLMENT AND OVERCROWDING, BY FINANCING THE COSTS OF: • CONSTRUCTING A NEW HIGH SCHOOL ON THE EXISTING CAMPUS WHICH ALSO INCLUDES CAREER AND TECHNICAL EDUCATION AREAS AND ATHLETIC FACILITIES; • CONVERTING THE EXISTING HIGH SCHOOL BUILDING TO A MIDDLE SCHOOL TO EXTEND ITS USEFUL LIFE; • ENHANCING SECURITY AND SAFETY IMPROVEMENTS AT ALL SCHOOL BUILDINGS, WHICH INCLUDES SECURING MAIN ENTRIES, MODERNIZING SAFETY AND SECURITY SYSTEMS, IMPROVING EXTERIOR LIGHTING, AND EXPANDING PARKING AND TRAFFIC FLOWS; AND AS FUNDS ALLOW, NEEDED REPAIR AND IMPROVEMENTS TO SCHOOL FACILITIES, BY THE ISSUANCE AND PAYMENT OF GENERAL OBLIGATION BONDS (I) THE EXPENDITURES FROM WHICH SHALL BE MONITORED BY A CITIZEN'S OVERSIGHT COMMITTEE AND (II) WHICH SHALL BEAR INTEREST, MATURE, PERMIT REDEMPTION, AND BE ISSUED AT SUCH TIME AND PRICES (AT, ABOVE OR BELOW PAR), AND CONTAINING TERMS CONSISTENT WITH THIS BALLOT MEASURE AS THE BOARD OF EDUCATION DETERMINES; AND SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AMOUNTS, NOT TO EXCEED THE ABOVE AMOUNTS, SUFFICIENT IN EACH YEAR TO TIMELY PAY THE PRINCIPAL OF AND INTEREST ON THE BONDS?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        },
+        {
+          "id": "co-north-range-metropolitan-district-3-2026-ballot-6a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:north_range_metropolitan_district_3",
+          "divisionVintage": "2026",
+          "title": "North Range Metropolitan District No. 3 Ballot Issue 6A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL ALL UNUSED DEBT AUTHORIZATION GRANTED BY THE VOTERS IN ALL PRIOR ELECTIONS TO NORTH RANGE METROPOLITAN DISTRICT NO. 3 BE FOREVER REPEALED AND RESCINDED EFFECTIVE IMMEDIATELY?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        },
+        {
+          "id": "co-north-range-metropolitan-district-3-2026-ballot-6b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:north_range_metropolitan_district_3",
+          "divisionVintage": "2026",
+          "title": "North Range Metropolitan District No. 3 Ballot Issue 6B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL BALLOT ISSUE 5D, UNANIMOUSLY APPROVED BY SEVEN VOTERS AT A SPECIAL ELECTION HELD ON NOVEMBER 04, 2014, BE FOREVER REPEALED AND RESCINDED EFFECTIVE IMMEDIATELY, WHICH BALLOT ISSUE CURRENTLY AUTHORIZES NORTH RANGE METROPOLITAN DISTRICT NO. 3 TO ENTER INTO ONE OR MORE MULTIPLE FISCAL YEAR FINANCIAL OBLIGATIONS EVIDENCED BY CONTRACTS, AGREEMENTS OR INTERGOVERNMENTAL AGREEMENTS AND TO FUND SUCH AGREEMENTS FROM AD VALOREM TAX LEVIES OF UP TO $280,000,000 ANNUALLY; SUCH REPEAL AND RESCISSION SHALL NOT IMPAIR OR ADVERSELY IMPACT PERFORMANCE UNDER ANY EXISTING VALID AND LAWFUL CONTRACTS, AGREEMENTS OR INTERGOVERNMENTAL AGREEMENTS, BUT SHALL PREVENT ENTERING INTO ANY FUTURE MULTIPLE FISCAL YEAR FINANCIAL OBLIGATIONS NOT SUBJECT TO ANNUAL APPROPRIATION OR TO ANY FUNDING LEVIES WITHOUT SPECIFIC VOTER AUTHORIZATION?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        },
+        {
+          "id": "co-north-range-metropolitan-district-3-2026-ballot-6c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:north_range_metropolitan_district_3",
+          "divisionVintage": "2026",
+          "title": "North Range Metropolitan District No. 3 Ballot Issue 6C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL BALLOT ISSUE 5B, UNANIMOUSLY APPROVED BY SEVEN VOTERS AT A SPECIAL ELECTION HELD ON NOVEMBER 04, 2014, BE FOREVER REPEALED AND RESCINDED EFFECTIVE IMMEDIATELY, WHICH BALLOT ISSUE CURRENTLY AUTHORIZES NORTH RANGE METROPOLITAN DISTRICT NO. 3 TO LEVY UP TO $20,000,000 ANNUALLY IN AD VALOREM TAXES FOR THE PURPOSE OF FUNDING THE CAPITAL COSTS OF PUBLIC IMPROVEMENTS; SUCH REPEAL AND RESCISSION SHALL NOT IMPAIR OR ADVERSELY IMPACT PERFORMANCE UNDER ANY EXISTING VALID AND LAWFUL CONTRACTS, AGREEMENTS OR INTERGOVERNMENTAL AGREEMENTS, BUT SHALL PREVENT ENTERING INTO ANY FUTURE MULTIPLE FISCAL YEAR FINANCIAL OBLIGATIONS TO FUND CAPITAL COSTS THAT ARE NOT SUBJECT TO ANNUAL APPROPRIATION OR ANY FUTURE TAXES FOR NEW CAPITAL PUBLIC IMPROVEMENTS WITHOUT SPECIFIC VOTER AUTHORIZATION?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        },
+        {
+          "id": "co-north-range-metropolitan-district-3-2026-ballot-6d",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:north_range_metropolitan_district_3",
+          "divisionVintage": "2026",
+          "title": "North Range Metropolitan District No. 3 Ballot Issue 6D",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL NORTH RANGE METROPOLITAN DISTRICT NO 3 TAXES BE DECREASED FROM A MAXIMUM LIMIT OF $20,000,000 ANNUALLY DOWN TO A MAXIMUM LIMIT OF $9,000,000 ANNUALLY FOR THE PURPOSE OF FUNDING THE MAINTENANCE OF PARKS AND OPEN SPACES, GENERAL OPERATIONS OF THE DISTRICT AND ANY OR ALL PUBLIC SERVICES PROVIDED BY THE DISTRICT; SUCH ANNUAL TAX LIMIT TO BE ADJUSTED ANNUALLY FOR INFLATION PER THE COLORADO CONSUMER PRICE INDEX AS TRACKED BY THE UNITED STATES BUREAU OF LABOR STATISTICS; SUCH TAXES TO CONSIST OF AN AD VALOREM MILL LEVY IMPOSED WITHOUT LIMITATION OF RATE OR WITH SUCH LIMITATIONS AS MAY BE DETERMINED BY THE BOARD, AND IN AMOUNTS SUFFICIENT TO PRODUCE PROPERTY TAX REVENUE THAT DOES NOT EXCEED $9,000,000 ANNUALLY (AS ADJUSTED FOR INFLATION); AND SHALL THE PROCEEDS OF SUCH TAXES AND INVESTMENT INCOME THEREON BE COLLECTED AND SPENT BY THE DISTRICT AS A VOTER-APPROVED REVENUE CHANGE IN 2026 AND IN EACH YEAR THEREAFTER, WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, OR SECTION 29-1-301, COLORADO REVISED STATUTES?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        },
+        {
+          "id": "co-adams-county-fire-protection-district-2026-ballot-6e",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:adams_county_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Adams County Fire Protection District Ballot Issue 6E",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL ADAMS COUNTY FIRE PROTECTION DISTRICT TAXES BE INCREASED $11,732,488 (FIRST FULL FISCAL YEAR DOLLAR INCREASE) AND BY WHATEVER AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, FROM A 1.0% SALES TAX, WHICH IS ONE DOLLAR ON EVERY $100 PURCHASE, EXCLUDING EVERYDAY NECESSITIES LIKE GROCERIES, GAS, PRESCRIPTIONS, AND DIAPERS, FOR THE PURPOSES OF MAINTAINING VITAL EMERGENCY SERVICES, INCLUDING BUT NOT LIMITED TO: • REDUCING EMERGENCY RESPONSE TIMES; • MAINTAINING ADEQUATE NUMBERS OF FIRST RESPONDERS AND FIREFIGHTERS; • PROTECTING THE SAFETY AND HEALTH OF FIREFIGHTERS AND PARAMEDICS BY REPLACING AND UPDATING ESSENTIAL EQUIPMENT; AND, • PROVIDING UPDATED TRAINING AND EQUIPMENT FOR MEDICAL EMERGENCIES, FIRES, AND RESCUES. WITH ALL REVENUES AND EXPENDITURES REPORTED IN THE DISTRICT'S ANNUAL INDEPENDENT AUDIT PUBLISHED ON THE DISTRICT'S WEBSITE AND REVIEWED BY A CITIZEN BOARD OF DIRECTORS; SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT, AND SHALL THE DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUE GENERATED BY SUCH TAX EXCEEDING THE LIMITATION IN SECTION 20 OF ARTICLE X OF THE COLORADO CONSTITUTION AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        },
+        {
+          "id": "co-central-colorado-water-conservancy-district-2026-ballot-7b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:central_colorado_water_conservancy_district",
+          "divisionVintage": "2026",
+          "title": "Central Colorado Water Conservancy District Ballot Issue 7B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE CENTRAL COLORADO WATER CONSERVANCY DISTRICT DEBT BE INCREASED UP TO $250 MILLION, WITH A MAXIMUM REPAYMENT COST OF UP TO $470 MILLION, AND SHALL DISTRICT TAXES BE INCREASED UP TO $18.7 MILLION ANNUALLY FOR THE PURPOSE OF DEVELOPING, ACQUIRING AND MANAGING RELIABLE WATER RESOURCES THROUGH DEBT FINANCING TO: • LESSEN DROUGHT IMPACT AND INCREASE WATER SUPPLIES NECESSARY TO SUPPORT AND MAINTAIN FAMILY FARMS AND AGRICULTURAL BUSINESSES THROUGH DEVELOPMENT OF WATER PROJECTS TO CAPTURE WATER DURING TIMES OF HIGH SUPPLY FOR USE DURING TIMES OF NEED; • PREVENT LOCAL FARM AND RANCH DRY-UPS AND KEEP WATER IN ADAMS, MORGAN AND WELD COUNTIES THROUGH THE ACQUISITION OF SENIOR WATER RIGHTS; AND • ACQUIRE, CONSTRUCT AND IMPROVE LONG-TERM WATER STORAGE RESERVOIRS AND OTHER FACILITIES TO MORE EFFICIENTLY STORE AND DELIVER WATER AVAILABLE TO THE DISTRICT; SUCH DEBT TO CONSIST OF THE ISSUANCE AND PAYMENT OF BONDS OR SIMILAR LIMITED TAX OBLIGATIONS, WHICH DEBT SHALL BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 6.0% PER ANNUM AND SHALL BE DATED AND SOLD AT SUCH TIME OR TIMES, AT SUCH PRICES (AT, ABOVE OR BELOW PAR) AND IN SUCH MANNER AND CONTAINING SUCH TERMS, NOT INCONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; SHALL AD VALOREM PROPERTY TAXES BE LEVIED IN ANY YEAR AT A LIMITED MILL LEVY RATE NOT TO EXCEED 3 MILLS, EXCEPT AS PERMITTED IN SECTION 37-45-126 OF THE COLORADO REVISED STATUTES, AND IN SUCH AMOUNTS AS SET FORTH ABOVE AND SHALL THE DISTRICT BE AUTHORIZED TO ENCUMBER AND PLEDGE ANY OTHER REVENUES OF THE DISTRICT TO BE USED TO PAY THE PRINCIPAL OF AND INTEREST ON SUCH BONDS AS THE SAME BECOME DUE AND TO FUND ANY RESERVES FOR THE PAYMENT THEREOF; AND SHALL ANY INVESTMENT EARNINGS (REGARDLESS OF AMOUNT) FROM SUCH TAX REVENUES AND FROM THE PROCEEDS OF SUCH BONDS CONSTITUTE A VOTER-APPROVED REVENUE CHANGE?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        },
+        {
+          "id": "co-greater-brighton-fire-protection-district-2026-ballot-7d",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:greater_brighton_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Greater Brighton Fire Protection District Ballot Issue 7D",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE GREATER BRIGHTON FIRE PROTECTION DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT FOR ALL FUTURE PROPERTY TAX YEARS TO ALLOW FOR THE DISTRICT TO RETAIN PREVIOUSLY APPROVED PROPERTY TAX REVENUES FOR THE PURPOSES OF HIRING ADDITIONAL STAFF, TRAINING AND RETAINING STAFF, PROCURING AND MAINTAINING FIRE FIGHTING AND OTHER LIFE SAVING EQUIPMENT AND APPARATUS, AND FOR OTHER OPERATIONAL AND CAPITAL NEEDS TO ENHANCE COMMUNITY SAFETY?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        },
+        {
+          "id": "co-bennett-fire-protection-district-2026-ballot-7f",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:bennett_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Bennett Fire Protection District Ballot Issue 7F",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL BENNETT FIRE PROTECTION DISTRICT TAXES BE INCREASED $1.2 MILLION IN THE FIRST FULL FISCAL YEAR BEGINNING JULY 1, 2027 AND BY SUCH AMOUNTS RAISED ANNUALLY THEREAFTER BY A SALES TAX OF 0.75% (75 CENTS ON EACH $100) UPON EVERY TRANSACTION IN THE DISTRICT IN WHICH THE STATE IMPOSES A SALES TAX (EXCLUDING GROCERIES AND OTHER EXEMPT ITEMS) FOR THE PURPOSE OF PROVIDING FIRE PROTECTION, AMBULANCE, EMERGENCY MEDICAL RESPONSE, RESCUE, SAFETY, AND SUPPORT SERVICES, INCLUDING: • EXPANDING, REMODELING AND/OR REPLACING OUTDATED AND INADEQUATE STATIONS AND FACILITIES • MAINTAINING FIREFIGHTER AND PARAMEDIC STAFFING LEVELS • RETAINING AND ATTRACTING HIGHLY QUALIFIED FIRST RESPONDERS AND OTHER ESSENTIAL PERSONNEL • PROVIDING ADEQUATE STAFFING TO ADDRESS INCREASING EMERGENCY CALL VOLUME AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        },
+        {
+          "id": "co-bennett-fire-protection-district-2026-ballot-7g",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:bennett_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Bennett Fire Protection District Ballot Issue 7G",
+          "type": "MEASURE",
+          "measureTextUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE BENNETT FIRE PROTECTION DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT (WITHOUT INCREASING PROPERTY TAXES) FOR ALL FUTURE PROPERTY TAX YEARS, TO MAINTAIN EMERGENCY RESPONSE TIMES, ENHANCE THE SAFETY OF FIRST RESPONDERS AND EXTEND THE USEFUL LIFE OF EXISTING FACILITIES, INCLUDING: (I) ATTRACTING, TRAINING, AND RETAINING EXPERIENCED FIRST RESPONDERS, AND MITIGATING COSTLY TURNOVER RATES; (II) MAINTAINING THE FIRE ENGINES AND OTHER APPARATUS AND IMPLEMENTING A REPLACEMENT SCHEDULE FOR APPARATUS TO REDUCE BREAKDOWNS, ACCIDENTS, AND DOWNTIME; AND (III) ADDRESSING INFRASTRUCTURE AND DEFERRED MAINTENANCE FIRE STATION PROJECTS; AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-thornton-2026-ballot-2a#question",
+          "contestId": "co-thornton-2026-ballot-2a",
+          "questionText": "Shall Section 4.5 of the Thornton City Charter be amended to require that any member of the Thornton City Council, including the Mayor, shall be deemed to have resigned and vacated the member's office upon formally declaring candidacy for any elected office other than Thornton City Council member or Mayor, including by filing a candidate affidavit, petition, or other official candidacy document required by law?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall Section 4.5 of the Thornton City Charter be amended to require that any member of the Thornton City Council, including the Mayor, shall be deemed to have resigned and vacated the member's office upon formally declaring candidacy for any elected office other than Thornton City Council member or Mayor, including by filing a candidate affidavit, petition, or other official candidacy document required by law?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "2A"
+        },
+        {
+          "id": "co-northglenn-2026-ballot-3h#question",
+          "contestId": "co-northglenn-2026-ballot-3h",
+          "questionText": "SHALL CITY OF NORTHGLENN TAXES BE INCREASED BY $450,000 ANNUALLY COMMENCING IN 2027 AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE CITY SALES TAX RATE ON ACCOMMODATION SERVICES FROM FIVE PERCENT (5%) TO EIGHT PERCENT (8%), WITH PROCEEDS TO BE USED FOR GENERAL GOVERNMENTAL PURPOSES, INCLUDING, BUT NOT LIMITED TO, PUBLIC SAFETY, STREET MAINTENANCE, PARKS, RECREATION, AND CULTURE, AND ADMINISTRATIVE FUNCTIONS OF THE CITY, TO BE COLLECTED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL CITY OF NORTHGLENN TAXES BE INCREASED BY $450,000 ANNUALLY COMMENCING IN 2027 AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE CITY SALES TAX RATE ON ACCOMMODATION SERVICES FROM FIVE PERCENT (5%) TO EIGHT PERCENT (8%), WITH PROCEEDS TO BE USED FOR GENERAL GOVERNMENTAL PURPOSES, INCLUDING, BUT NOT LIMITED TO, PUBLIC SAFETY, STREET MAINTENANCE, PARKS, RECREATION, AND CULTURE, AND ADMINISTRATIVE FUNCTIONS OF THE CITY, TO BE COLLECTED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "3H"
+        },
+        {
+          "id": "co-westminster-public-school-district-2026-ballot-4a#question",
+          "contestId": "co-westminster-public-school-district-2026-ballot-4a",
+          "questionText": "WITHOUT IMPOSING A NEW TAX, SHALL WESTMINSTER PUBLIC SCHOOLS BE AUTHORIZED TO COLLECT THE FULL AMOUNT OF REVENUES PREVIOUSLY APPROVED BY THE VOTERS IN 1988, 2002 AND 2018 PURSUANT TO SECTION 22-54-108, C.R.S. SUBJECT TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S., TO FUND EDUCATIONAL PURPOSES OF THE DISTRICT AS AUTHORIZED AT THE PRIOR ELECTIONS, INCLUDING: • IMPROVING SAFETY AND SECURITY; • EXPANDING CAREER AND TECHNICAL EDUCATION (CTE) PROGRAMS; • ATTRACTING AND RETAINING EFFECTIVE TEACHERS; AND • IMPROVING ACADEMIC ACHIEVEMENT OF ALL STUDENTS; WHICH TAXES SHALL BE DEPOSITED INTO THE GENERAL FUND AND SHALL BE IN ADDITION TO THE PROPERTY TAXES THAT OTHERWISE WOULD BE LEVIED FOR THE GENERAL FUND; AND SHALL INVESTMENT EARNINGS ON THE PROCEEDS OF SUCH TAXES BE COLLECTED, RETAINED AND EXPENDED BY THE DISTRICT WITHOUT LIMITATION UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "WITHOUT IMPOSING A NEW TAX, SHALL WESTMINSTER PUBLIC SCHOOLS BE AUTHORIZED TO COLLECT THE FULL AMOUNT OF REVENUES PREVIOUSLY APPROVED BY THE VOTERS IN 1988, 2002 AND 2018 PURSUANT TO SECTION 22-54-108, C.R.S. SUBJECT TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S., TO FUND EDUCATIONAL PURPOSES OF THE DISTRICT AS AUTHORIZED AT THE PRIOR ELECTIONS, INCLUDING: • IMPROVING SAFETY AND SECURITY; • EXPANDING CAREER AND TECHNICAL EDUCATION (CTE) PROGRAMS; • ATTRACTING AND RETAINING EFFECTIVE TEACHERS; AND • IMPROVING ACADEMIC ACHIEVEMENT OF ALL STUDENTS; WHICH TAXES SHALL BE DEPOSITED INTO THE GENERAL FUND AND SHALL BE IN ADDITION TO THE PROPERTY TAXES THAT OTHERWISE WOULD BE LEVIED FOR THE GENERAL FUND; AND SHALL INVESTMENT EARNINGS ON THE PROCEEDS OF SUCH TAXES BE COLLECTED, RETAINED AND EXPENDED BY THE DISTRICT WITHOUT LIMITATION UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "4A"
+        },
+        {
+          "id": "co-bennett-school-district-29j-2026-ballot-5a#question",
+          "contestId": "co-bennett-school-district-29j-2026-ballot-5a",
+          "questionText": "SHALL BENNETT SCHOOL DISTRICT NO. 29J DEBT BE INCREASED UP TO $125 MILLION WITH A REPAYMENT COST OF UP TO $235 MILLION, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $11 MILLION ANNUALLY TO REPAIR AND IMPROVE AGING SCHOOL BUILDINGS, AND TO ADDRESS INCREASED ENROLLMENT AND OVERCROWDING, BY FINANCING THE COSTS OF: • CONSTRUCTING A NEW HIGH SCHOOL ON THE EXISTING CAMPUS WHICH ALSO INCLUDES CAREER AND TECHNICAL EDUCATION AREAS AND ATHLETIC FACILITIES; • CONVERTING THE EXISTING HIGH SCHOOL BUILDING TO A MIDDLE SCHOOL TO EXTEND ITS USEFUL LIFE; • ENHANCING SECURITY AND SAFETY IMPROVEMENTS AT ALL SCHOOL BUILDINGS, WHICH INCLUDES SECURING MAIN ENTRIES, MODERNIZING SAFETY AND SECURITY SYSTEMS, IMPROVING EXTERIOR LIGHTING, AND EXPANDING PARKING AND TRAFFIC FLOWS; AND AS FUNDS ALLOW, NEEDED REPAIR AND IMPROVEMENTS TO SCHOOL FACILITIES, BY THE ISSUANCE AND PAYMENT OF GENERAL OBLIGATION BONDS (I) THE EXPENDITURES FROM WHICH SHALL BE MONITORED BY A CITIZEN'S OVERSIGHT COMMITTEE AND (II) WHICH SHALL BEAR INTEREST, MATURE, PERMIT REDEMPTION, AND BE ISSUED AT SUCH TIME AND PRICES (AT, ABOVE OR BELOW PAR), AND CONTAINING TERMS CONSISTENT WITH THIS BALLOT MEASURE AS THE BOARD OF EDUCATION DETERMINES; AND SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AMOUNTS, NOT TO EXCEED THE ABOVE AMOUNTS, SUFFICIENT IN EACH YEAR TO TIMELY PAY THE PRINCIPAL OF AND INTEREST ON THE BONDS?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL BENNETT SCHOOL DISTRICT NO. 29J DEBT BE INCREASED UP TO $125 MILLION WITH A REPAYMENT COST OF UP TO $235 MILLION, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $11 MILLION ANNUALLY TO REPAIR AND IMPROVE AGING SCHOOL BUILDINGS, AND TO ADDRESS INCREASED ENROLLMENT AND OVERCROWDING, BY FINANCING THE COSTS OF: • CONSTRUCTING A NEW HIGH SCHOOL ON THE EXISTING CAMPUS WHICH ALSO INCLUDES CAREER AND TECHNICAL EDUCATION AREAS AND ATHLETIC FACILITIES; • CONVERTING THE EXISTING HIGH SCHOOL BUILDING TO A MIDDLE SCHOOL TO EXTEND ITS USEFUL LIFE; • ENHANCING SECURITY AND SAFETY IMPROVEMENTS AT ALL SCHOOL BUILDINGS, WHICH INCLUDES SECURING MAIN ENTRIES, MODERNIZING SAFETY AND SECURITY SYSTEMS, IMPROVING EXTERIOR LIGHTING, AND EXPANDING PARKING AND TRAFFIC FLOWS; AND AS FUNDS ALLOW, NEEDED REPAIR AND IMPROVEMENTS TO SCHOOL FACILITIES, BY THE ISSUANCE AND PAYMENT OF GENERAL OBLIGATION BONDS (I) THE EXPENDITURES FROM WHICH SHALL BE MONITORED BY A CITIZEN'S OVERSIGHT COMMITTEE AND (II) WHICH SHALL BEAR INTEREST, MATURE, PERMIT REDEMPTION, AND BE ISSUED AT SUCH TIME AND PRICES (AT, ABOVE OR BELOW PAR), AND CONTAINING TERMS CONSISTENT WITH THIS BALLOT MEASURE AS THE BOARD OF EDUCATION DETERMINES; AND SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AMOUNTS, NOT TO EXCEED THE ABOVE AMOUNTS, SUFFICIENT IN EACH YEAR TO TIMELY PAY THE PRINCIPAL OF AND INTEREST ON THE BONDS?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "5A"
+        },
+        {
+          "id": "co-north-range-metropolitan-district-3-2026-ballot-6a#question",
+          "contestId": "co-north-range-metropolitan-district-3-2026-ballot-6a",
+          "questionText": "SHALL ALL UNUSED DEBT AUTHORIZATION GRANTED BY THE VOTERS IN ALL PRIOR ELECTIONS TO NORTH RANGE METROPOLITAN DISTRICT NO. 3 BE FOREVER REPEALED AND RESCINDED EFFECTIVE IMMEDIATELY?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL ALL UNUSED DEBT AUTHORIZATION GRANTED BY THE VOTERS IN ALL PRIOR ELECTIONS TO NORTH RANGE METROPOLITAN DISTRICT NO. 3 BE FOREVER REPEALED AND RESCINDED EFFECTIVE IMMEDIATELY?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "6A"
+        },
+        {
+          "id": "co-north-range-metropolitan-district-3-2026-ballot-6b#question",
+          "contestId": "co-north-range-metropolitan-district-3-2026-ballot-6b",
+          "questionText": "SHALL BALLOT ISSUE 5D, UNANIMOUSLY APPROVED BY SEVEN VOTERS AT A SPECIAL ELECTION HELD ON NOVEMBER 04, 2014, BE FOREVER REPEALED AND RESCINDED EFFECTIVE IMMEDIATELY, WHICH BALLOT ISSUE CURRENTLY AUTHORIZES NORTH RANGE METROPOLITAN DISTRICT NO. 3 TO ENTER INTO ONE OR MORE MULTIPLE FISCAL YEAR FINANCIAL OBLIGATIONS EVIDENCED BY CONTRACTS, AGREEMENTS OR INTERGOVERNMENTAL AGREEMENTS AND TO FUND SUCH AGREEMENTS FROM AD VALOREM TAX LEVIES OF UP TO $280,000,000 ANNUALLY; SUCH REPEAL AND RESCISSION SHALL NOT IMPAIR OR ADVERSELY IMPACT PERFORMANCE UNDER ANY EXISTING VALID AND LAWFUL CONTRACTS, AGREEMENTS OR INTERGOVERNMENTAL AGREEMENTS, BUT SHALL PREVENT ENTERING INTO ANY FUTURE MULTIPLE FISCAL YEAR FINANCIAL OBLIGATIONS NOT SUBJECT TO ANNUAL APPROPRIATION OR TO ANY FUNDING LEVIES WITHOUT SPECIFIC VOTER AUTHORIZATION?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL BALLOT ISSUE 5D, UNANIMOUSLY APPROVED BY SEVEN VOTERS AT A SPECIAL ELECTION HELD ON NOVEMBER 04, 2014, BE FOREVER REPEALED AND RESCINDED EFFECTIVE IMMEDIATELY, WHICH BALLOT ISSUE CURRENTLY AUTHORIZES NORTH RANGE METROPOLITAN DISTRICT NO. 3 TO ENTER INTO ONE OR MORE MULTIPLE FISCAL YEAR FINANCIAL OBLIGATIONS EVIDENCED BY CONTRACTS, AGREEMENTS OR INTERGOVERNMENTAL AGREEMENTS AND TO FUND SUCH AGREEMENTS FROM AD VALOREM TAX LEVIES OF UP TO $280,000,000 ANNUALLY; SUCH REPEAL AND RESCISSION SHALL NOT IMPAIR OR ADVERSELY IMPACT PERFORMANCE UNDER ANY EXISTING VALID AND LAWFUL CONTRACTS, AGREEMENTS OR INTERGOVERNMENTAL AGREEMENTS, BUT SHALL PREVENT ENTERING INTO ANY FUTURE MULTIPLE FISCAL YEAR FINANCIAL OBLIGATIONS NOT SUBJECT TO ANNUAL APPROPRIATION OR TO ANY FUNDING LEVIES WITHOUT SPECIFIC VOTER AUTHORIZATION?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "6B"
+        },
+        {
+          "id": "co-north-range-metropolitan-district-3-2026-ballot-6c#question",
+          "contestId": "co-north-range-metropolitan-district-3-2026-ballot-6c",
+          "questionText": "SHALL BALLOT ISSUE 5B, UNANIMOUSLY APPROVED BY SEVEN VOTERS AT A SPECIAL ELECTION HELD ON NOVEMBER 04, 2014, BE FOREVER REPEALED AND RESCINDED EFFECTIVE IMMEDIATELY, WHICH BALLOT ISSUE CURRENTLY AUTHORIZES NORTH RANGE METROPOLITAN DISTRICT NO. 3 TO LEVY UP TO $20,000,000 ANNUALLY IN AD VALOREM TAXES FOR THE PURPOSE OF FUNDING THE CAPITAL COSTS OF PUBLIC IMPROVEMENTS; SUCH REPEAL AND RESCISSION SHALL NOT IMPAIR OR ADVERSELY IMPACT PERFORMANCE UNDER ANY EXISTING VALID AND LAWFUL CONTRACTS, AGREEMENTS OR INTERGOVERNMENTAL AGREEMENTS, BUT SHALL PREVENT ENTERING INTO ANY FUTURE MULTIPLE FISCAL YEAR FINANCIAL OBLIGATIONS TO FUND CAPITAL COSTS THAT ARE NOT SUBJECT TO ANNUAL APPROPRIATION OR ANY FUTURE TAXES FOR NEW CAPITAL PUBLIC IMPROVEMENTS WITHOUT SPECIFIC VOTER AUTHORIZATION?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL BALLOT ISSUE 5B, UNANIMOUSLY APPROVED BY SEVEN VOTERS AT A SPECIAL ELECTION HELD ON NOVEMBER 04, 2014, BE FOREVER REPEALED AND RESCINDED EFFECTIVE IMMEDIATELY, WHICH BALLOT ISSUE CURRENTLY AUTHORIZES NORTH RANGE METROPOLITAN DISTRICT NO. 3 TO LEVY UP TO $20,000,000 ANNUALLY IN AD VALOREM TAXES FOR THE PURPOSE OF FUNDING THE CAPITAL COSTS OF PUBLIC IMPROVEMENTS; SUCH REPEAL AND RESCISSION SHALL NOT IMPAIR OR ADVERSELY IMPACT PERFORMANCE UNDER ANY EXISTING VALID AND LAWFUL CONTRACTS, AGREEMENTS OR INTERGOVERNMENTAL AGREEMENTS, BUT SHALL PREVENT ENTERING INTO ANY FUTURE MULTIPLE FISCAL YEAR FINANCIAL OBLIGATIONS TO FUND CAPITAL COSTS THAT ARE NOT SUBJECT TO ANNUAL APPROPRIATION OR ANY FUTURE TAXES FOR NEW CAPITAL PUBLIC IMPROVEMENTS WITHOUT SPECIFIC VOTER AUTHORIZATION?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "6C"
+        },
+        {
+          "id": "co-north-range-metropolitan-district-3-2026-ballot-6d#question",
+          "contestId": "co-north-range-metropolitan-district-3-2026-ballot-6d",
+          "questionText": "SHALL NORTH RANGE METROPOLITAN DISTRICT NO 3 TAXES BE DECREASED FROM A MAXIMUM LIMIT OF $20,000,000 ANNUALLY DOWN TO A MAXIMUM LIMIT OF $9,000,000 ANNUALLY FOR THE PURPOSE OF FUNDING THE MAINTENANCE OF PARKS AND OPEN SPACES, GENERAL OPERATIONS OF THE DISTRICT AND ANY OR ALL PUBLIC SERVICES PROVIDED BY THE DISTRICT; SUCH ANNUAL TAX LIMIT TO BE ADJUSTED ANNUALLY FOR INFLATION PER THE COLORADO CONSUMER PRICE INDEX AS TRACKED BY THE UNITED STATES BUREAU OF LABOR STATISTICS; SUCH TAXES TO CONSIST OF AN AD VALOREM MILL LEVY IMPOSED WITHOUT LIMITATION OF RATE OR WITH SUCH LIMITATIONS AS MAY BE DETERMINED BY THE BOARD, AND IN AMOUNTS SUFFICIENT TO PRODUCE PROPERTY TAX REVENUE THAT DOES NOT EXCEED $9,000,000 ANNUALLY (AS ADJUSTED FOR INFLATION); AND SHALL THE PROCEEDS OF SUCH TAXES AND INVESTMENT INCOME THEREON BE COLLECTED AND SPENT BY THE DISTRICT AS A VOTER-APPROVED REVENUE CHANGE IN 2026 AND IN EACH YEAR THEREAFTER, WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, OR SECTION 29-1-301, COLORADO REVISED STATUTES?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL NORTH RANGE METROPOLITAN DISTRICT NO 3 TAXES BE DECREASED FROM A MAXIMUM LIMIT OF $20,000,000 ANNUALLY DOWN TO A MAXIMUM LIMIT OF $9,000,000 ANNUALLY FOR THE PURPOSE OF FUNDING THE MAINTENANCE OF PARKS AND OPEN SPACES, GENERAL OPERATIONS OF THE DISTRICT AND ANY OR ALL PUBLIC SERVICES PROVIDED BY THE DISTRICT; SUCH ANNUAL TAX LIMIT TO BE ADJUSTED ANNUALLY FOR INFLATION PER THE COLORADO CONSUMER PRICE INDEX AS TRACKED BY THE UNITED STATES BUREAU OF LABOR STATISTICS; SUCH TAXES TO CONSIST OF AN AD VALOREM MILL LEVY IMPOSED WITHOUT LIMITATION OF RATE OR WITH SUCH LIMITATIONS AS MAY BE DETERMINED BY THE BOARD, AND IN AMOUNTS SUFFICIENT TO PRODUCE PROPERTY TAX REVENUE THAT DOES NOT EXCEED $9,000,000 ANNUALLY (AS ADJUSTED FOR INFLATION); AND SHALL THE PROCEEDS OF SUCH TAXES AND INVESTMENT INCOME THEREON BE COLLECTED AND SPENT BY THE DISTRICT AS A VOTER-APPROVED REVENUE CHANGE IN 2026 AND IN EACH YEAR THEREAFTER, WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, OR SECTION 29-1-301, COLORADO REVISED STATUTES?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "6D"
+        },
+        {
+          "id": "co-adams-county-fire-protection-district-2026-ballot-6e#question",
+          "contestId": "co-adams-county-fire-protection-district-2026-ballot-6e",
+          "questionText": "SHALL ADAMS COUNTY FIRE PROTECTION DISTRICT TAXES BE INCREASED $11,732,488 (FIRST FULL FISCAL YEAR DOLLAR INCREASE) AND BY WHATEVER AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, FROM A 1.0% SALES TAX, WHICH IS ONE DOLLAR ON EVERY $100 PURCHASE, EXCLUDING EVERYDAY NECESSITIES LIKE GROCERIES, GAS, PRESCRIPTIONS, AND DIAPERS, FOR THE PURPOSES OF MAINTAINING VITAL EMERGENCY SERVICES, INCLUDING BUT NOT LIMITED TO: • REDUCING EMERGENCY RESPONSE TIMES; • MAINTAINING ADEQUATE NUMBERS OF FIRST RESPONDERS AND FIREFIGHTERS; • PROTECTING THE SAFETY AND HEALTH OF FIREFIGHTERS AND PARAMEDICS BY REPLACING AND UPDATING ESSENTIAL EQUIPMENT; AND, • PROVIDING UPDATED TRAINING AND EQUIPMENT FOR MEDICAL EMERGENCIES, FIRES, AND RESCUES. WITH ALL REVENUES AND EXPENDITURES REPORTED IN THE DISTRICT'S ANNUAL INDEPENDENT AUDIT PUBLISHED ON THE DISTRICT'S WEBSITE AND REVIEWED BY A CITIZEN BOARD OF DIRECTORS; SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT, AND SHALL THE DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUE GENERATED BY SUCH TAX EXCEEDING THE LIMITATION IN SECTION 20 OF ARTICLE X OF THE COLORADO CONSTITUTION AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL ADAMS COUNTY FIRE PROTECTION DISTRICT TAXES BE INCREASED $11,732,488 (FIRST FULL FISCAL YEAR DOLLAR INCREASE) AND BY WHATEVER AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER, FROM A 1.0% SALES TAX, WHICH IS ONE DOLLAR ON EVERY $100 PURCHASE, EXCLUDING EVERYDAY NECESSITIES LIKE GROCERIES, GAS, PRESCRIPTIONS, AND DIAPERS, FOR THE PURPOSES OF MAINTAINING VITAL EMERGENCY SERVICES, INCLUDING BUT NOT LIMITED TO: • REDUCING EMERGENCY RESPONSE TIMES; • MAINTAINING ADEQUATE NUMBERS OF FIRST RESPONDERS AND FIREFIGHTERS; • PROTECTING THE SAFETY AND HEALTH OF FIREFIGHTERS AND PARAMEDICS BY REPLACING AND UPDATING ESSENTIAL EQUIPMENT; AND, • PROVIDING UPDATED TRAINING AND EQUIPMENT FOR MEDICAL EMERGENCIES, FIRES, AND RESCUES. WITH ALL REVENUES AND EXPENDITURES REPORTED IN THE DISTRICT'S ANNUAL INDEPENDENT AUDIT PUBLISHED ON THE DISTRICT'S WEBSITE AND REVIEWED BY A CITIZEN BOARD OF DIRECTORS; SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT, AND SHALL THE DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUE GENERATED BY SUCH TAX EXCEEDING THE LIMITATION IN SECTION 20 OF ARTICLE X OF THE COLORADO CONSTITUTION AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "6E"
+        },
+        {
+          "id": "co-central-colorado-water-conservancy-district-2026-ballot-7b#question",
+          "contestId": "co-central-colorado-water-conservancy-district-2026-ballot-7b",
+          "questionText": "SHALL THE CENTRAL COLORADO WATER CONSERVANCY DISTRICT DEBT BE INCREASED UP TO $250 MILLION, WITH A MAXIMUM REPAYMENT COST OF UP TO $470 MILLION, AND SHALL DISTRICT TAXES BE INCREASED UP TO $18.7 MILLION ANNUALLY FOR THE PURPOSE OF DEVELOPING, ACQUIRING AND MANAGING RELIABLE WATER RESOURCES THROUGH DEBT FINANCING TO: • LESSEN DROUGHT IMPACT AND INCREASE WATER SUPPLIES NECESSARY TO SUPPORT AND MAINTAIN FAMILY FARMS AND AGRICULTURAL BUSINESSES THROUGH DEVELOPMENT OF WATER PROJECTS TO CAPTURE WATER DURING TIMES OF HIGH SUPPLY FOR USE DURING TIMES OF NEED; • PREVENT LOCAL FARM AND RANCH DRY-UPS AND KEEP WATER IN ADAMS, MORGAN AND WELD COUNTIES THROUGH THE ACQUISITION OF SENIOR WATER RIGHTS; AND • ACQUIRE, CONSTRUCT AND IMPROVE LONG-TERM WATER STORAGE RESERVOIRS AND OTHER FACILITIES TO MORE EFFICIENTLY STORE AND DELIVER WATER AVAILABLE TO THE DISTRICT; SUCH DEBT TO CONSIST OF THE ISSUANCE AND PAYMENT OF BONDS OR SIMILAR LIMITED TAX OBLIGATIONS, WHICH DEBT SHALL BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 6.0% PER ANNUM AND SHALL BE DATED AND SOLD AT SUCH TIME OR TIMES, AT SUCH PRICES (AT, ABOVE OR BELOW PAR) AND IN SUCH MANNER AND CONTAINING SUCH TERMS, NOT INCONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; SHALL AD VALOREM PROPERTY TAXES BE LEVIED IN ANY YEAR AT A LIMITED MILL LEVY RATE NOT TO EXCEED 3 MILLS, EXCEPT AS PERMITTED IN SECTION 37-45-126 OF THE COLORADO REVISED STATUTES, AND IN SUCH AMOUNTS AS SET FORTH ABOVE AND SHALL THE DISTRICT BE AUTHORIZED TO ENCUMBER AND PLEDGE ANY OTHER REVENUES OF THE DISTRICT TO BE USED TO PAY THE PRINCIPAL OF AND INTEREST ON SUCH BONDS AS THE SAME BECOME DUE AND TO FUND ANY RESERVES FOR THE PAYMENT THEREOF; AND SHALL ANY INVESTMENT EARNINGS (REGARDLESS OF AMOUNT) FROM SUCH TAX REVENUES AND FROM THE PROCEEDS OF SUCH BONDS CONSTITUTE A VOTER-APPROVED REVENUE CHANGE?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE CENTRAL COLORADO WATER CONSERVANCY DISTRICT DEBT BE INCREASED UP TO $250 MILLION, WITH A MAXIMUM REPAYMENT COST OF UP TO $470 MILLION, AND SHALL DISTRICT TAXES BE INCREASED UP TO $18.7 MILLION ANNUALLY FOR THE PURPOSE OF DEVELOPING, ACQUIRING AND MANAGING RELIABLE WATER RESOURCES THROUGH DEBT FINANCING TO: • LESSEN DROUGHT IMPACT AND INCREASE WATER SUPPLIES NECESSARY TO SUPPORT AND MAINTAIN FAMILY FARMS AND AGRICULTURAL BUSINESSES THROUGH DEVELOPMENT OF WATER PROJECTS TO CAPTURE WATER DURING TIMES OF HIGH SUPPLY FOR USE DURING TIMES OF NEED; • PREVENT LOCAL FARM AND RANCH DRY-UPS AND KEEP WATER IN ADAMS, MORGAN AND WELD COUNTIES THROUGH THE ACQUISITION OF SENIOR WATER RIGHTS; AND • ACQUIRE, CONSTRUCT AND IMPROVE LONG-TERM WATER STORAGE RESERVOIRS AND OTHER FACILITIES TO MORE EFFICIENTLY STORE AND DELIVER WATER AVAILABLE TO THE DISTRICT; SUCH DEBT TO CONSIST OF THE ISSUANCE AND PAYMENT OF BONDS OR SIMILAR LIMITED TAX OBLIGATIONS, WHICH DEBT SHALL BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 6.0% PER ANNUM AND SHALL BE DATED AND SOLD AT SUCH TIME OR TIMES, AT SUCH PRICES (AT, ABOVE OR BELOW PAR) AND IN SUCH MANNER AND CONTAINING SUCH TERMS, NOT INCONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; SHALL AD VALOREM PROPERTY TAXES BE LEVIED IN ANY YEAR AT A LIMITED MILL LEVY RATE NOT TO EXCEED 3 MILLS, EXCEPT AS PERMITTED IN SECTION 37-45-126 OF THE COLORADO REVISED STATUTES, AND IN SUCH AMOUNTS AS SET FORTH ABOVE AND SHALL THE DISTRICT BE AUTHORIZED TO ENCUMBER AND PLEDGE ANY OTHER REVENUES OF THE DISTRICT TO BE USED TO PAY THE PRINCIPAL OF AND INTEREST ON SUCH BONDS AS THE SAME BECOME DUE AND TO FUND ANY RESERVES FOR THE PAYMENT THEREOF; AND SHALL ANY INVESTMENT EARNINGS (REGARDLESS OF AMOUNT) FROM SUCH TAX REVENUES AND FROM THE PROCEEDS OF SUCH BONDS CONSTITUTE A VOTER-APPROVED REVENUE CHANGE?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "7B"
+        },
+        {
+          "id": "co-greater-brighton-fire-protection-district-2026-ballot-7d#question",
+          "contestId": "co-greater-brighton-fire-protection-district-2026-ballot-7d",
+          "questionText": "SHALL THE GREATER BRIGHTON FIRE PROTECTION DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT FOR ALL FUTURE PROPERTY TAX YEARS TO ALLOW FOR THE DISTRICT TO RETAIN PREVIOUSLY APPROVED PROPERTY TAX REVENUES FOR THE PURPOSES OF HIRING ADDITIONAL STAFF, TRAINING AND RETAINING STAFF, PROCURING AND MAINTAINING FIRE FIGHTING AND OTHER LIFE SAVING EQUIPMENT AND APPARATUS, AND FOR OTHER OPERATIONAL AND CAPITAL NEEDS TO ENHANCE COMMUNITY SAFETY?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE GREATER BRIGHTON FIRE PROTECTION DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT FOR ALL FUTURE PROPERTY TAX YEARS TO ALLOW FOR THE DISTRICT TO RETAIN PREVIOUSLY APPROVED PROPERTY TAX REVENUES FOR THE PURPOSES OF HIRING ADDITIONAL STAFF, TRAINING AND RETAINING STAFF, PROCURING AND MAINTAINING FIRE FIGHTING AND OTHER LIFE SAVING EQUIPMENT AND APPARATUS, AND FOR OTHER OPERATIONAL AND CAPITAL NEEDS TO ENHANCE COMMUNITY SAFETY?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "7D"
+        },
+        {
+          "id": "co-bennett-fire-protection-district-2026-ballot-7f#question",
+          "contestId": "co-bennett-fire-protection-district-2026-ballot-7f",
+          "questionText": "SHALL BENNETT FIRE PROTECTION DISTRICT TAXES BE INCREASED $1.2 MILLION IN THE FIRST FULL FISCAL YEAR BEGINNING JULY 1, 2027 AND BY SUCH AMOUNTS RAISED ANNUALLY THEREAFTER BY A SALES TAX OF 0.75% (75 CENTS ON EACH $100) UPON EVERY TRANSACTION IN THE DISTRICT IN WHICH THE STATE IMPOSES A SALES TAX (EXCLUDING GROCERIES AND OTHER EXEMPT ITEMS) FOR THE PURPOSE OF PROVIDING FIRE PROTECTION, AMBULANCE, EMERGENCY MEDICAL RESPONSE, RESCUE, SAFETY, AND SUPPORT SERVICES, INCLUDING: • EXPANDING, REMODELING AND/OR REPLACING OUTDATED AND INADEQUATE STATIONS AND FACILITIES • MAINTAINING FIREFIGHTER AND PARAMEDIC STAFFING LEVELS • RETAINING AND ATTRACTING HIGHLY QUALIFIED FIRST RESPONDERS AND OTHER ESSENTIAL PERSONNEL • PROVIDING ADEQUATE STAFFING TO ADDRESS INCREASING EMERGENCY CALL VOLUME AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL BENNETT FIRE PROTECTION DISTRICT TAXES BE INCREASED $1.2 MILLION IN THE FIRST FULL FISCAL YEAR BEGINNING JULY 1, 2027 AND BY SUCH AMOUNTS RAISED ANNUALLY THEREAFTER BY A SALES TAX OF 0.75% (75 CENTS ON EACH $100) UPON EVERY TRANSACTION IN THE DISTRICT IN WHICH THE STATE IMPOSES A SALES TAX (EXCLUDING GROCERIES AND OTHER EXEMPT ITEMS) FOR THE PURPOSE OF PROVIDING FIRE PROTECTION, AMBULANCE, EMERGENCY MEDICAL RESPONSE, RESCUE, SAFETY, AND SUPPORT SERVICES, INCLUDING: • EXPANDING, REMODELING AND/OR REPLACING OUTDATED AND INADEQUATE STATIONS AND FACILITIES • MAINTAINING FIREFIGHTER AND PARAMEDIC STAFFING LEVELS • RETAINING AND ATTRACTING HIGHLY QUALIFIED FIRST RESPONDERS AND OTHER ESSENTIAL PERSONNEL • PROVIDING ADEQUATE STAFFING TO ADDRESS INCREASING EMERGENCY CALL VOLUME AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "7F"
+        },
+        {
+          "id": "co-bennett-fire-protection-district-2026-ballot-7g#question",
+          "contestId": "co-bennett-fire-protection-district-2026-ballot-7g",
+          "questionText": "SHALL THE BENNETT FIRE PROTECTION DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT (WITHOUT INCREASING PROPERTY TAXES) FOR ALL FUTURE PROPERTY TAX YEARS, TO MAINTAIN EMERGENCY RESPONSE TIMES, ENHANCE THE SAFETY OF FIRST RESPONDERS AND EXTEND THE USEFUL LIFE OF EXISTING FACILITIES, INCLUDING: (I) ATTRACTING, TRAINING, AND RETAINING EXPERIENCED FIRST RESPONDERS, AND MITIGATING COSTLY TURNOVER RATES; (II) MAINTAINING THE FIRE ENGINES AND OTHER APPARATUS AND IMPLEMENTING A REPLACEMENT SCHEDULE FOR APPARATUS TO REDUCE BREAKDOWNS, ACCIDENTS, AND DOWNTIME; AND (III) ADDRESSING INFRASTRUCTURE AND DEFERRED MAINTENANCE FIRE STATION PROJECTS; AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE BENNETT FIRE PROTECTION DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT (WITHOUT INCREASING PROPERTY TAXES) FOR ALL FUTURE PROPERTY TAX YEARS, TO MAINTAIN EMERGENCY RESPONSE TIMES, ENHANCE THE SAFETY OF FIRST RESPONDERS AND EXTEND THE USEFUL LIFE OF EXISTING FACILITIES, INCLUDING: (I) ATTRACTING, TRAINING, AND RETAINING EXPERIENCED FIRST RESPONDERS, AND MITIGATING COSTLY TURNOVER RATES; (II) MAINTAINING THE FIRE ENGINES AND OTHER APPARATUS AND IMPLEMENTING A REPLACEMENT SCHEDULE FOR APPARATUS TO REDUCE BREAKDOWNS, ACCIDENTS, AND DOWNTIME; AND (III) ADDRESSING INFRASTRUCTURE AND DEFERRED MAINTENANCE FIRE STATION PROJECTS; AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+            "sourceOrg": "Adams County Clerk and Recorder",
+            "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+            "collectedAt": "2026-11-03T04:12:56.836Z",
+            "verifiedAt": "2026-11-03T04:22:16.274866+00:00"
+          },
+          "officialNumber": "7G"
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-thornton-2026-ballot-2a",
+          "whatItDoes": "Change Thornton’s charter so a city council member, including the mayor, automatically resigns and vacates office upon formally declaring candidacy for any elected office other than Thornton council member or mayor. Formal declarations include filing a candidate affidavit, petition or other legally required candidacy document.",
+          "yesMeans": "Approve the automatic-resignation rule for running for another elected office.",
+          "noMeans": "Do not add this rule to the city charter.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "ae48f6b9721f804911dc6cfc061136e7375e1a01d6ddbc096e140cc52a6f3a8c",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-northglenn-2026-ballot-3h",
+          "whatItDoes": "Raise Northglenn’s sales tax on accommodation services from 5% to 8%, beginning in 2027. It would raise $450,000 annually initially and amounts based on collections later. Revenue could fund general city purposes, including public safety, street maintenance, parks, recreation, culture and administration. Revenue could be collected and spent outside Colorado’s constitutional revenue limits.",
+          "yesMeans": "Approve the higher accommodation-services tax and its revenue-limit exception.",
+          "noMeans": "Do not approve the increase; keep the existing 5% rate on these services.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "6f5a4a61275abd3a496fdcf86d5485222fc5e7883cc44219e82f4ba11af22e14",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-westminster-public-school-district-2026-ballot-4a",
+          "whatItDoes": "Without imposing a new tax, let Westminster Public Schools collect the full education-tax revenue voters approved in 1988, 2002 and 2018, subject to the district’s statutory limit. Money would go into the general fund, in addition to other general-fund property taxes, for previously authorized educational purposes, including safety and security, career and technical education, teachers and student achievement. Investment earnings on these taxes could be collected, kept and spent outside Colorado’s constitutional revenue limits and other legal limits.",
+          "yesMeans": "Approve full collection under the earlier tax authorizations and the revenue-limit exception for investment earnings.",
+          "noMeans": "Do not approve this collection authority or the proposed exception for investment earnings.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "b1a2925562679858f5b6b236182ddcdc02bea300a8ba5b021ce024efceb87e99",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-bennett-school-district-29j-2026-ballot-5a",
+          "whatItDoes": "Authorize up to $125 million in Bennett School District 29J bonds, with total repayment capped at $235 million, and up to $11 million in additional property taxes annually to repay them. Projects include a new high school on the existing campus with career and technical education and athletic facilities, converting the current high school to a middle school, and safety, security, lighting, parking and traffic improvements. Other school repairs and improvements could be made as funds allow. A citizens’ oversight committee would monitor spending. The property-tax rate would have no fixed cap but could collect only enough for bond principal and interest, within the stated dollar limits.",
+          "yesMeans": "Approve the school bonds, property taxes to repay them and citizen spending oversight.",
+          "noMeans": "Do not authorize these bonds or the related additional property taxes.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "e569829cdadf16f8673f3a8bd1c6e0e1e6f2a52e3ac52939441661f15e478353",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-north-range-metropolitan-district-3-2026-ballot-6a",
+          "whatItDoes": "Immediately and permanently repeal all North Range Metropolitan District No. 3 borrowing permissions from earlier voter elections that remain unused.",
+          "yesMeans": "Repeal the district’s unused debt authorizations.",
+          "noMeans": "Keep the unused debt authorizations.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "61b9abe5575a842a99808e9a8ef6767f46b8e91236001a2e67adba53d2d88500",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-north-range-metropolitan-district-3-2026-ballot-6b",
+          "whatItDoes": "Immediately and permanently repeal North Range District 3’s 2014 Ballot Issue 5D, which permits multiyear financial obligations through contracts or agreements funded by up to $280 million in annual property-tax levies. Existing valid and lawful contracts and agreements would be protected. Future multiyear obligations not subject to annual budget approval, or any future funding levies, would need specific voter authorization.",
+          "yesMeans": "Repeal the 2014 authorization while protecting existing valid agreements and requiring specific voter approval for the stated future obligations and levies.",
+          "noMeans": "Keep the 2014 authorization in place.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "a905346de0415f64823e1684c270eb06fc13cf3c44a9232e2b31db96c93cab71",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-north-range-metropolitan-district-3-2026-ballot-6c",
+          "whatItDoes": "Immediately and permanently repeal North Range District 3’s 2014 Ballot Issue 5B, which permits up to $20 million in annual property taxes for capital costs of public improvements. Existing valid and lawful contracts and agreements would be protected. Future capital-financing obligations that do not depend on annual budget approval, or future taxes for new capital improvements, would need specific voter authorization.",
+          "yesMeans": "Repeal the 2014 authorization, protect existing valid agreements and require specific voter approval for the stated future capital obligations and taxes.",
+          "noMeans": "Keep the 2014 authorization in place.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "3c104ad6af86f0fef9126a2c8ddc31b1508af7ac5d6032b2ad4da7863bda3f9f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-north-range-metropolitan-district-3-2026-ballot-6d",
+          "whatItDoes": "Reduce North Range District 3’s maximum annual operating and maintenance property-tax authority from $20 million to $9 million. The new cap would adjust annually for inflation using the Colorado Consumer Price Index tracked by the Bureau of Labor Statistics. Money would maintain parks and open space, fund district operations and support district public services. The property-tax rate itself would have no fixed cap unless the board sets one, but collections could not exceed the inflation-adjusted dollar limit. Taxes and investment income could be collected and spent in 2026 and later years outside Colorado’s constitutional revenue limits and the statutory property-tax limit.",
+          "yesMeans": "Approve the lower annual tax-dollar limit, inflation adjustments and revenue-limit exceptions.",
+          "noMeans": "Do not approve replacing the existing $20 million annual limit with the proposed inflation-adjusted $9 million limit.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "3602ee35a8ef42a06dd10c019a5c89ec76f56149f006748cc9cfd9b95595b5e0",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-adams-county-fire-protection-district-2026-ballot-6e",
+          "whatItDoes": "Add a 1% sales tax in Adams County Fire Protection District, raising $11,732,488 in the first full fiscal year and amounts based on collections annually afterward. Exemptions include groceries, gasoline, prescriptions and diapers. Money would support emergency response, staffing, responder health and safety, equipment and training. The tax would be added to other district taxes. Revenue and spending would appear in the annual independent audit online and receive citizen-board review. The district could retain and spend tax revenue above Colorado’s constitutional revenue limit, the statutory property-tax limit and other legal limits.",
+          "yesMeans": "Approve the additional sales tax, audit and citizen-board review, and revenue-limit exceptions.",
+          "noMeans": "Do not approve this sales tax or its proposed revenue-limit exceptions.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "fbb2e12dcc7e192b6ee0386392e264a576980c75d86ede5cd2d844d93320643e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-central-colorado-water-conservancy-district-2026-ballot-7b",
+          "whatItDoes": "Authorize up to $250 million in Central Colorado Water Conservancy District debt, with total repayment capped at $470 million and an effective annual interest rate no higher than 6%. Authorize up to $18.7 million in additional property taxes annually, with a levy no greater than 3 mills except where state law permits. Money would develop and manage water supplies, acquire senior water rights, and build or improve reservoirs and other facilities serving agricultural water needs. Other district revenue could also secure debt payments and reserves. Investment earnings on tax revenue and borrowed money would receive a voter-approved revenue-limit exception.",
+          "yesMeans": "Approve the water-project borrowing, additional property taxes within the stated limits and the exception for investment earnings.",
+          "noMeans": "Do not authorize this borrowing, additional taxes or related investment-earnings exception.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "25b7fcea5d78893b9739969eb50dd46b0f30c108483621020c34c4d8e03c31a3",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-greater-brighton-fire-protection-district-2026-ballot-7d",
+          "whatItDoes": "Permanently waive Greater Brighton Fire Protection District’s 5.25% property-tax limit so it can retain previously approved property-tax revenue. Uses include hiring, training and retaining staff, fire and lifesaving equipment, and other operational and capital needs.",
+          "yesMeans": "Waive the 5.25% property-tax limit for all future property-tax years.",
+          "noMeans": "Keep the 5.25% property-tax limit.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "4cd2e751fc4b9dfac9625b592314c7887f6da883deaeed8df3cbea4213c34776",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-bennett-fire-protection-district-2026-ballot-7f",
+          "whatItDoes": "Create a 0.75% sales tax in Bennett Fire Protection District, raising $1.2 million in the first full fiscal year beginning July 1, 2027, and amounts based on collections annually afterward. It would apply where the state imposes sales tax, with groceries and other exempt items excluded. Money would support fire, ambulance and emergency medical response, rescue and safety services, including facilities and staffing. The district could collect, keep and spend all district revenue despite legal revenue limits.",
+          "yesMeans": "Approve the sales tax for emergency services and permission to keep and spend district revenue beyond legal limits.",
+          "noMeans": "Do not approve this sales tax or the proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "d86ac7dc2cb9ffee19ce477adb95dc0e62de68b9b421d8e19af720ad3c7df322",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-bennett-fire-protection-district-2026-ballot-7g",
+          "whatItDoes": "Without increasing property taxes, permanently waive Bennett Fire Protection District’s 5.25% property-tax limit. The measure would support response times, responder safety and facilities through staffing, training, equipment maintenance and replacement, and fire-station infrastructure and deferred maintenance. It would also allow all district revenue to be collected, kept and spent despite legal revenue limits.",
+          "yesMeans": "Approve the permanent property-tax-limit waiver and permission to retain and spend district revenue beyond legal limits.",
+          "noMeans": "Keep the 5.25% property-tax limit and do not approve the proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "sourceHash": "34c24da6c6d3eab2d10a3e4d35984a3811f23c1efc51e185ed97e74b0bd1dc61",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:16.274866+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:27:10.824745+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+        "finalUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+        "publisher": "Adams County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:12:56.836Z",
+        "httpStatus": 200,
+        "originHttpStatus": null,
+        "rawHash": "d9dd02b5b4f90478cc6996a0d4353100923e4a153e1529ca09a5ba553e2755cd",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+        "captureMetadata": {
+          "officialUrl": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+          "captureProvider": "search_service_web_run PDF extraction",
+          "rawFormat": "CAPTURED_SOURCE_TEXT",
+          "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+          "lineCount": 1104,
+          "coverage": "Every line 0 through 1103 captured from official PDF views",
+          "nativeGovernmentFetch": {
+            "status": 503,
+            "reason": "Shared runtime all-host HTTP outage per root; does not establish government origin failure"
+          },
+          "requests": [
+            {
+              "request": "initial PDF opens",
+              "capturedAt": "2026-11-03T04:12:29.005Z",
+              "reference": "turn887693view1",
+              "lineCount": 335
+            },
+            {
+              "request": "local-measure PDF views",
+              "capturedAt": "2026-11-03T04:12:29.006Z",
+              "reference": "turn162188view1",
+              "lineCount": 92
+            },
+            {
+              "request": [
+                {
+                  "ref_id": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+                  "lineno": 242
+                },
+                {
+                  "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+                  "lineno": 370
+                }
+              ],
+              "capturedAt": "2026-11-03T04:12:29.384Z",
+              "reference": "turn510467view1",
+              "lineCount": 212
+            },
+            {
+              "request": [
+                {
+                  "ref_id": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+                  "lineno": 459
+                },
+                {
+                  "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+                  "lineno": 502
+                }
+              ],
+              "capturedAt": "2026-11-03T04:12:29.713Z",
+              "reference": "turn754854view1",
+              "lineCount": 97
+            },
+            {
+              "request": [
+                {
+                  "ref_id": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+                  "lineno": 585
+                },
+                {
+                  "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+                  "lineno": 502
+                }
+              ],
+              "capturedAt": "2026-11-03T04:12:30.037Z",
+              "reference": "turn659857view1",
+              "lineCount": 127
+            },
+            {
+              "request": [
+                {
+                  "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+                  "lineno": 624
+                }
+              ],
+              "capturedAt": "2026-11-03T04:12:54.737Z",
+              "reference": "turn264657view0",
+              "lineCount": 156
+            },
+            {
+              "request": [
+                {
+                  "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+                  "lineno": 769
+                }
+              ],
+              "capturedAt": "2026-11-03T04:12:55.253Z",
+              "reference": "turn654990view0",
+              "lineCount": 145
+            },
+            {
+              "request": [
+                {
+                  "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+                  "lineno": 904
+                }
+              ],
+              "capturedAt": "2026-11-03T04:12:55.670Z",
+              "reference": "turn468937view0",
+              "lineCount": 145
+            },
+            {
+              "request": [
+                {
+                  "ref_id": "https://adamscountyco.gov/wp-content/uploads/2026/09/CR-2026-General-Election-Sample-Ballot-092826.pdf",
+                  "lineno": 1032
+                }
+              ],
+              "capturedAt": "2026-11-03T04:12:56.836Z",
+              "reference": "turn846636view0",
+              "lineCount": 143
+            }
+          ],
+          "conflicts": []
+        },
+        "reviewedEvidence": "Successful complete first-party government PDF text capture via independent web tool; legacyhttpStatus200 is a capture-successmarker, not a claim about originHTTPstatus. Every extracted line accounted for; originalPDFbytes and their SHA are unavailable during shared runtime networkoutage. Exact quotes and registered divisions checked; draft explanations await independent rootreview."
+      }
+    ]
+  }
+}

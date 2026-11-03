@@ -1,0 +1,247 @@
+[
+  {
+    "contestId": "co-douglas-county-2026-ballot-200",
+    "title": "Douglas County Ballot Question 200",
+    "officialNumber": "200",
+    "ocdId": "ocd-division/country:us/state:co/county:douglas",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:douglas",
+      "county",
+      "08035",
+      "Douglas County"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-douglas-county-2026-ballot-201",
+    "title": "Douglas County Ballot Question 201",
+    "officialNumber": "201",
+    "ocdId": "ocd-division/country:us/state:co/county:douglas",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:douglas",
+      "county",
+      "08035",
+      "Douglas County"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-douglas-county-2026-ballot-1a",
+    "title": "Douglas County Ballot Question 1A",
+    "officialNumber": "1A",
+    "ocdId": "ocd-division/country:us/state:co/county:douglas",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:douglas",
+      "county",
+      "08035",
+      "Douglas County"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-castle-pines-2026-ballot-300",
+    "title": "City of Castle Pines Ballot Question 300",
+    "officialNumber": "300",
+    "ocdId": "ocd-division/country:us/state:co/place:castle_pines",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:castle_pines",
+      "place",
+      "0812387",
+      "Castle Pines city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-castle-pines-2026-ballot-301",
+    "title": "City of Castle Pines Ballot Question 301",
+    "officialNumber": "301",
+    "ocdId": "ocd-division/country:us/state:co/place:castle_pines",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:castle_pines",
+      "place",
+      "0812387",
+      "Castle Pines city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-aurora-2026-ballot-3a",
+    "title": "City of Aurora Ballot Issue 3A",
+    "officialNumber": "3A",
+    "ocdId": "ocd-division/country:us/state:co/place:aurora",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:aurora",
+      "place",
+      "0804000",
+      "Aurora city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-aurora-2026-ballot-3b",
+    "title": "City of Aurora Ballot Issue 3B",
+    "officialNumber": "3B",
+    "ocdId": "ocd-division/country:us/state:co/place:aurora",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:aurora",
+      "place",
+      "0804000",
+      "Aurora city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-aurora-2026-ballot-3c",
+    "title": "City of Aurora Ballot Issue 3C",
+    "officialNumber": "3C",
+    "ocdId": "ocd-division/country:us/state:co/place:aurora",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:aurora",
+      "place",
+      "0804000",
+      "Aurora city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-aurora-2026-ballot-3d",
+    "title": "City of Aurora Ballot Question 3D",
+    "officialNumber": "3D",
+    "ocdId": "ocd-division/country:us/state:co/place:aurora",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:aurora",
+      "place",
+      "0804000",
+      "Aurora city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-douglas-county-school-district-re-1-2026-ballot-school-tax",
+    "title": "Douglas County School District RE-1 — General Fund Tax Question",
+    "officialNumber": null,
+    "ocdId": "ocd-division/country:us/state:co/school_district:douglas_county_school_district_re_1",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:douglas_county_school_district_re_1",
+      "unsd",
+      "0803450",
+      "Douglas County School District RE-1"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-larkspur-fire-protection-district-2026-ballot-6a",
+    "title": "Larkspur Fire Protection District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:larkspur_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:larkspur_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#18097",
+      "Larkspur Fire Protection District",
+      "fire"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-larkspur-fire-protection-district-2026-ballot-6b",
+    "title": "Larkspur Fire Protection District Ballot Issue 6B",
+    "officialNumber": "6B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:larkspur_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:larkspur_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#18097",
+      "Larkspur Fire Protection District",
+      "fire"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-stone-creek-metropolitan-district-2026-ballot-6c",
+    "title": "Stone Creek Metropolitan District Ballot Question 6C",
+    "officialNumber": "6C",
+    "ocdId": "ocd-division/country:us/state:co/special_district:stone_creek_metropolitan_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:stone_creek_metropolitan_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#66542",
+      "Stone Creek Metropolitan District",
+      "facilities"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-stone-creek-metropolitan-district-2026-ballot-6d",
+    "title": "Stone Creek Metropolitan District Ballot Question 6D",
+    "officialNumber": "6D",
+    "ocdId": "ocd-division/country:us/state:co/special_district:stone_creek_metropolitan_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:stone_creek_metropolitan_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#66542",
+      "Stone Creek Metropolitan District",
+      "facilities"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-stone-creek-metropolitan-district-2026-ballot-6e",
+    "title": "Stone Creek Metropolitan District Ballot Question 6E",
+    "officialNumber": "6E",
+    "ocdId": "ocd-division/country:us/state:co/special_district:stone_creek_metropolitan_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:stone_creek_metropolitan_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#66542",
+      "Stone Creek Metropolitan District",
+      "facilities"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-stone-creek-metropolitan-district-2026-ballot-6f",
+    "title": "Stone Creek Metropolitan District Ballot Question 6F",
+    "officialNumber": "6F",
+    "ocdId": "ocd-division/country:us/state:co/special_district:stone_creek_metropolitan_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:stone_creek_metropolitan_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#66542",
+      "Stone Creek Metropolitan District",
+      "facilities"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  },
+  {
+    "contestId": "co-stone-creek-metropolitan-district-2026-ballot-6g",
+    "title": "Stone Creek Metropolitan District Ballot Question 6G",
+    "officialNumber": "6G",
+    "ocdId": "ocd-division/country:us/state:co/special_district:stone_creek_metropolitan_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:stone_creek_metropolitan_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#66542",
+      "Stone Creek Metropolitan District",
+      "facilities"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+  }
+]

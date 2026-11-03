@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "co-broomfield-2026-ballot-1a",
+    "whatItDoes": "Raise Broomfield’s lodging tax from 1.6% to 6%, starting January 1, 2027, for paid stays of less than 30 consecutive days. It would raise up to $3.3 million in 2027 and amounts based on collections annually afterward. All lodging-tax revenue would be dedicated to Broomfield’s housing authority to preserve and expand housing opportunities. Its council-appointed board would report spending to the council annually. Tax revenue and investment earnings could be kept and spent outside Colorado’s constitutional revenue and spending limits and other legal limits.",
+    "yesMeans": "Approve the lodging-tax increase, dedicated housing revenue and revenue-limit exception.",
+    "noMeans": "Keep the current 1.6% lodging-tax rate.",
+    "parts": [],
+    "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+    "sourceHash": "9b39ccc0a6eaa915e475c3cf9739eee84a94a27f2ae728a381891b4c4058857d",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T04:32:20.027084+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-broomfield-2026-ballot-1b",
+    "whatItDoes": "Approve a new 20-year gas and electric franchise agreement with Xcel Energy beginning January 1, 2028, after the current agreement expires December 31, 2027. It would grant nonexclusive use of public streets and property for utility infrastructure, continue moving overhead electrical lines underground, address infrastructure safety and emergency coordination, and require payments to Broomfield. The existing 3% franchise fee and 1% undergrounding contribution would stay the same. The agreement would not set utility rates.",
+    "yesMeans": "Approve the 20-year franchise agreement and its payments and programs.",
+    "noMeans": "Reject the proposed franchise agreement; the attorney’s booklet says Xcel would continue providing service under state utility rules.",
+    "parts": [],
+    "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+    "sourceHash": "843eabecea70e80882fe8bbcb654a07d441c4c98b9efb4ab5b7950f0dc3cd5e2",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T04:32:20.027084+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-broomfield-2026-ballot-1c",
+    "whatItDoes": "Change future Broomfield mayoral terms from 2 years to 4 years and change the limit from 3 consecutive terms to 2 consecutive terms. The change would begin with the 2027 municipal election and would not affect the current mayor’s term or term limits.",
+    "yesMeans": "Approve four-year mayoral terms with a two-consecutive-term limit starting in 2027.",
+    "noMeans": "Keep two-year mayoral terms and the three-consecutive-term limit.",
+    "parts": [],
+    "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+    "sourceHash": "584fd53c83581e0f91cb3c30fffcc567366fa1722493cce343738cb3972fe311",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T04:32:20.027084+00:00",
+    "citation": "measure-source"
+  }
+]

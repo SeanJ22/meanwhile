@@ -1,0 +1,15 @@
+{
+  "county": "douglas",
+  "officialCurrentLocalMeasureCount": 20,
+  "newDraftCount": 17,
+  "exactRegisteredAttachmentCount": 17,
+  "pendingAttachmentCount": 0,
+  "alreadyPreparedElsewhere": [
+    "FRPR7A",
+    "WestMetroFire7C",
+    "ConiferFire7D"
+  ],
+  "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/",
+  "sourceCapture": "Every line 0 through 592 captured from official PDF views",
+  "claimLimit": "This count describes this official current composite sample; it does not certify all Colorado local measures."
+}

@@ -1,0 +1,145 @@
+[
+  {
+    "contestId": "co-larimer-county-2026-ballot-1a",
+    "title": "Larimer County Ballot Issue 1A",
+    "officialNumber": "1A",
+    "ocdId": "ocd-division/country:us/state:co/county:larimer",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:larimer",
+      "county",
+      "08069",
+      "Larimer County"
+    ],
+    "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+  },
+  {
+    "contestId": "co-wellington-2026-ballot-2a",
+    "title": "Town of Wellington Ballot Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:wellington",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:wellington",
+      "place",
+      "0883230",
+      "Wellington town"
+    ],
+    "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+  },
+  {
+    "contestId": "co-berthoud-2026-ballot-3g",
+    "title": "Town of Berthoud Ballot Issue 3G",
+    "officialNumber": "3G",
+    "ocdId": "ocd-division/country:us/state:co/place:berthoud",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:berthoud",
+      "place",
+      "0806255",
+      "Berthoud town"
+    ],
+    "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+  },
+  {
+    "contestId": "co-johnstown-milliken-school-district-re-5j-2026-ballot-5a",
+    "title": "Weld County School District RE-5J Ballot Issue 5A",
+    "officialNumber": "5A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:johnstown_milliken_school_district_re_5j",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:johnstown_milliken_school_district_re_5j",
+      "unsd",
+      "0804830",
+      "Johnstown-Milliken School District RE-5J"
+    ],
+    "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+  },
+  {
+    "contestId": "co-stanley-heights-public-improvement-district-81-2026-ballot-6a",
+    "title": "Larimer County Stanley Heights Public Improvement District No. 81 Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": null,
+    "attachment": "UNRESOLVED_PROPOSED_DISTRICT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+  },
+  {
+    "contestId": "co-colland-center-public-improvement-district-82-2026-ballot-6b",
+    "title": "Larimer County Colland Center Public Improvement District No. 82 Ballot Issue 6B",
+    "officialNumber": "6B",
+    "ocdId": null,
+    "attachment": "UNRESOLVED_PROPOSED_DISTRICT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+  },
+  {
+    "contestId": "co-terry-point-estates-public-improvement-district-85-2026-ballot-6c",
+    "title": "Larimer County Terry Point Estates Public Improvement District No. 85 Ballot Issue 6C",
+    "officialNumber": "6C",
+    "ocdId": null,
+    "attachment": "UNRESOLVED_PROPOSED_DISTRICT_TERRITORY",
+    "registrationDivision": null,
+    "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+  },
+  {
+    "contestId": "co-estes-valley-fire-protection-district-2026-ballot-6d",
+    "title": "Estes Valley Fire Protection District Ballot Issue 6D",
+    "officialNumber": "6D",
+    "ocdId": "ocd-division/country:us/state:co/special_district:estes_valley_fire_protection_district",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:estes_valley_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#66171",
+      "Estes Valley Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+  },
+  {
+    "contestId": "co-thompson-crossing-metropolitan-district-2-2026-ballot-6e",
+    "title": "Thompson Crossing Metropolitan District No. 2 Ballot Issue 6E",
+    "officialNumber": "6E",
+    "ocdId": "ocd-division/country:us/state:co/special_district:thompson_crossing_metropolitan_district_2",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:thompson_crossing_metropolitan_district_2",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#65011",
+      "Thompson Crossing Metropolitan District 2",
+      "facilities"
+    ],
+    "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+  },
+  {
+    "contestId": "co-poudre-valley-fire-protection-district-2026-ballot-7e",
+    "title": "Poudre Valley Fire Protection District Ballot Issue 7E",
+    "officialNumber": "7E",
+    "ocdId": "ocd-division/country:us/state:co/special_district:poudre_valley_fire_protection_district",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:poudre_valley_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64113",
+      "Poudre Valley Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+  },
+  {
+    "contestId": "co-windsor-severance-fire-protection-district-2026-ballot-7f",
+    "title": "Windsor-Severance Fire Protection District Ballot Issue 7F",
+    "officialNumber": "7F",
+    "ocdId": "ocd-division/country:us/state:co/special_district:windsor_severance_fire_protection_district",
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:windsor_severance_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64156",
+      "Windsor-Severance Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://www.larimer.gov/clerk/elections/results/key"
+  }
+]

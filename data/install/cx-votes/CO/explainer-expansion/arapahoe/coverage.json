@@ -1,0 +1,20 @@
+{
+  "county": "arapahoe",
+  "officialCurrentLocalMeasureCount": 14,
+  "newDraftCount": 6,
+  "exactRegisteredAttachmentCount": 6,
+  "pendingAttachmentCount": 0,
+  "alreadyPreparedElsewhere": [
+    "Aurora3A",
+    "Aurora3B",
+    "Aurora3C",
+    "Aurora3D",
+    "BennettSchool5A",
+    "BennettFire7F",
+    "BennettFire7G",
+    "FRPR7A"
+  ],
+  "sourceUrl": "https://files.arapahoeco.gov/Clerk%20and%20Recorder/ArapahoeVotes/Documents-Articles/2026%20Sample%20Ballots/2026%20Arapahoe%20County%20General%20Election%20Sample%20Ballot%20-%20English.pdf?t=202609211726230",
+  "sourceCapture": "Every line 0 through 961 captured from official PDF views",
+  "claimLimit": "This count describes this official current composite sample; it does not certify all Colorado local measures."
+}

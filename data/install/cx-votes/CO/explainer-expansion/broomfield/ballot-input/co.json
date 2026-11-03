@@ -1,0 +1,203 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-broomfield-2026-ballot-1a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:broomfield",
+          "divisionVintage": "2026",
+          "title": "City and County of Broomfield Ballot Question 1A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://broomfield.org/DocumentCenter/View/69259",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City and County of Broomfield lodging taxes be increased up to $3,300,000.00 annually in 2027, the first full fiscal year of collection, and by whatever amount is raised annually thereafter, by increasing the lodging tax rate by four point four percent (4.4%) for a total rate of six percent (6%) on the rental fee, price, or other consideration paid or charged for the short-term rental (less than 30 consecutive days) of any room, accommodation, or space in any hotel, inn, bed and breakfast residence, or any other place that provides sleeping rooms, sleeping facilities, or accommodations for consideration located within the City and County of Broomfield, commencing on January 1, 2027, with the revenues of such lodging tax to be dedicated for use by the housing authority of the City and County of Broomfield to preserve and expand housing opportunities in Broomfield, the housing authority being governed by a board appointed by the City Council and required to provide annual expenditures reports to the City Council, and shall all revenues from such taxes and any earnings thereon be collected, retained, and spent as a voter-approved revenue change without limitation or condition, and notwithstanding any revenue or expenditure limitations contained in Article X Section 20 of the Colorado Constitution or any other law?",
+            "sourceOrg": "City and County of Broomfield Attorney’s Office",
+            "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+            "collectedAt": "2026-11-03T04:28:55.164Z",
+            "verifiedAt": "2026-11-03T04:32:20.027084+00:00"
+          }
+        },
+        {
+          "id": "co-broomfield-2026-ballot-1b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:broomfield",
+          "divisionVintage": "2026",
+          "title": "City and County of Broomfield Ballot Question 1B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://broomfield.org/DocumentCenter/View/69259",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City and County of Broomfield approve the terms of a twenty-year franchise contract, starting January 1, 2028, with Public Service Company of Colorado (Xcel Energy) to continue Xcel’s program for undergrounding overhead electrical lines, maintaining infrastructure safety and partnering with the City and County for emergency management coordination, and to require that Xcel Energy continue to pay to the City and County for reasonable use of public rights-of-way and other City and County property necessary to provide safe and reliable utility services for the benefit of the City and County, its residents and its businesses as set forth in Ordinance No. 2307?",
+            "sourceOrg": "City and County of Broomfield Attorney’s Office",
+            "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+            "collectedAt": "2026-11-03T04:28:55.164Z",
+            "verifiedAt": "2026-11-03T04:32:20.027084+00:00"
+          }
+        },
+        {
+          "id": "co-broomfield-2026-ballot-1c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:broomfield",
+          "divisionVintage": "2026",
+          "title": "City and County of Broomfield Ballot Question 1C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://broomfield.org/DocumentCenter/View/69259",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Section 4.3 of the Broomfield Home Rule Charter be amended so future mayors will serve a 4-year term and be limited to two consecutive terms starting at the general municipal election to be held in 2027?",
+            "sourceOrg": "City and County of Broomfield Attorney’s Office",
+            "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+            "collectedAt": "2026-11-03T04:28:55.164Z",
+            "verifiedAt": "2026-11-03T04:32:20.027084+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-broomfield-2026-ballot-1a#question",
+          "contestId": "co-broomfield-2026-ballot-1a",
+          "questionText": "Shall the City and County of Broomfield lodging taxes be increased up to $3,300,000.00 annually in 2027, the first full fiscal year of collection, and by whatever amount is raised annually thereafter, by increasing the lodging tax rate by four point four percent (4.4%) for a total rate of six percent (6%) on the rental fee, price, or other consideration paid or charged for the short-term rental (less than 30 consecutive days) of any room, accommodation, or space in any hotel, inn, bed and breakfast residence, or any other place that provides sleeping rooms, sleeping facilities, or accommodations for consideration located within the City and County of Broomfield, commencing on January 1, 2027, with the revenues of such lodging tax to be dedicated for use by the housing authority of the City and County of Broomfield to preserve and expand housing opportunities in Broomfield, the housing authority being governed by a board appointed by the City Council and required to provide annual expenditures reports to the City Council, and shall all revenues from such taxes and any earnings thereon be collected, retained, and spent as a voter-approved revenue change without limitation or condition, and notwithstanding any revenue or expenditure limitations contained in Article X Section 20 of the Colorado Constitution or any other law?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the City and County of Broomfield lodging taxes be increased up to $3,300,000.00 annually in 2027, the first full fiscal year of collection, and by whatever amount is raised annually thereafter, by increasing the lodging tax rate by four point four percent (4.4%) for a total rate of six percent (6%) on the rental fee, price, or other consideration paid or charged for the short-term rental (less than 30 consecutive days) of any room, accommodation, or space in any hotel, inn, bed and breakfast residence, or any other place that provides sleeping rooms, sleeping facilities, or accommodations for consideration located within the City and County of Broomfield, commencing on January 1, 2027, with the revenues of such lodging tax to be dedicated for use by the housing authority of the City and County of Broomfield to preserve and expand housing opportunities in Broomfield, the housing authority being governed by a board appointed by the City Council and required to provide annual expenditures reports to the City Council, and shall all revenues from such taxes and any earnings thereon be collected, retained, and spent as a voter-approved revenue change without limitation or condition, and notwithstanding any revenue or expenditure limitations contained in Article X Section 20 of the Colorado Constitution or any other law?",
+            "sourceOrg": "City and County of Broomfield Attorney’s Office",
+            "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+            "collectedAt": "2026-11-03T04:28:55.164Z",
+            "verifiedAt": "2026-11-03T04:32:20.027084+00:00"
+          },
+          "officialNumber": "1A"
+        },
+        {
+          "id": "co-broomfield-2026-ballot-1b#question",
+          "contestId": "co-broomfield-2026-ballot-1b",
+          "questionText": "Shall the City and County of Broomfield approve the terms of a twenty-year franchise contract, starting January 1, 2028, with Public Service Company of Colorado (Xcel Energy) to continue Xcel’s program for undergrounding overhead electrical lines, maintaining infrastructure safety and partnering with the City and County for emergency management coordination, and to require that Xcel Energy continue to pay to the City and County for reasonable use of public rights-of-way and other City and County property necessary to provide safe and reliable utility services for the benefit of the City and County, its residents and its businesses as set forth in Ordinance No. 2307?",
+          "officialStatement": "Ballot Question 1B proposes a new 20-year franchise agreement with Public Service\nCompany of Colorado (“Xcel Energy”), commencing on January 1, 2028. Xcel has a\ncurrent franchise agreement with CCOB, approved by the voters in 2007, that will\nexpire December 31, 2027.\nThe franchise agreement, attached to Ordinance 2307, sets forth the specific terms,\nfees, compensation, and other conditions of a gas and electric franchise agreement\nwith Xcel Energy. It grants the non-exclusive right to use public rights-of-way and\nproperty to install, maintain, and repair infrastructure necessary to provide gas and\nelectric service. Under the proposed agreement, the franchise fee (3%) and\nundergrounding fund contributions (1%) paid by Xcel Energy to CCOB remain identical\nto those in the current agreement.\nThe franchise agreement does not set utility rates, and it does not govern Xcel\nEnergy’s plans, designs, or builds of utility infrastructure.\n\nNO A “no” vote on Ballot Question\n1B rejects the franchise agreement.\nXcel Energy will continue to provide\nservice under state utility\nregulations, but the City and County",
+          "provenance": {
+            "quote": "Shall the City and County of Broomfield approve the terms of a twenty-year franchise contract, starting January 1, 2028, with Public Service Company of Colorado (Xcel Energy) to continue Xcel’s program for undergrounding overhead electrical lines, maintaining infrastructure safety and partnering with the City and County for emergency management coordination, and to require that Xcel Energy continue to pay to the City and County for reasonable use of public rights-of-way and other City and County property necessary to provide safe and reliable utility services for the benefit of the City and County, its residents and its businesses as set forth in Ordinance No. 2307?",
+            "sourceOrg": "City and County of Broomfield Attorney’s Office",
+            "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+            "collectedAt": "2026-11-03T04:28:55.164Z",
+            "verifiedAt": "2026-11-03T04:32:20.027084+00:00"
+          },
+          "officialNumber": "1B"
+        },
+        {
+          "id": "co-broomfield-2026-ballot-1c#question",
+          "contestId": "co-broomfield-2026-ballot-1c",
+          "questionText": "Shall Section 4.3 of the Broomfield Home Rule Charter be amended so future mayors will serve a 4-year term and be limited to two consecutive terms starting at the general municipal election to be held in 2027?",
+          "officialStatement": "Ballot Question 1C proposes amending Section 4.3 of the Broomfield Home Rule\nCharter to change the mayoral term of office from a 2-year term to a 4-year term,\nwhile also changing the term limits from three consecutive terms to two consecutive\nterms. If approved, this change would go into effect with the 2027 mayoral election.\nIt would not impact the current mayor’s term of office or term limits.",
+          "provenance": {
+            "quote": "Shall Section 4.3 of the Broomfield Home Rule Charter be amended so future mayors will serve a 4-year term and be limited to two consecutive terms starting at the general municipal election to be held in 2027?",
+            "sourceOrg": "City and County of Broomfield Attorney’s Office",
+            "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+            "collectedAt": "2026-11-03T04:28:55.164Z",
+            "verifiedAt": "2026-11-03T04:32:20.027084+00:00"
+          },
+          "officialNumber": "1C"
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-broomfield-2026-ballot-1a",
+          "whatItDoes": "Raise Broomfield’s lodging tax from 1.6% to 6%, starting January 1, 2027, for paid stays of less than 30 consecutive days. It would raise up to $3.3 million in 2027 and amounts based on collections annually afterward. All lodging-tax revenue would be dedicated to Broomfield’s housing authority to preserve and expand housing opportunities. Its council-appointed board would report spending to the council annually. Tax revenue and investment earnings could be kept and spent outside Colorado’s constitutional revenue and spending limits and other legal limits.",
+          "yesMeans": "Approve the lodging-tax increase, dedicated housing revenue and revenue-limit exception.",
+          "noMeans": "Keep the current 1.6% lodging-tax rate.",
+          "parts": [],
+          "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+          "sourceHash": "9b39ccc0a6eaa915e475c3cf9739eee84a94a27f2ae728a381891b4c4058857d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:32:20.027084+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-broomfield-2026-ballot-1b",
+          "whatItDoes": "Approve a new 20-year gas and electric franchise agreement with Xcel Energy beginning January 1, 2028, after the current agreement expires December 31, 2027. It would grant nonexclusive use of public streets and property for utility infrastructure, continue moving overhead electrical lines underground, address infrastructure safety and emergency coordination, and require payments to Broomfield. The existing 3% franchise fee and 1% undergrounding contribution would stay the same. The agreement would not set utility rates.",
+          "yesMeans": "Approve the 20-year franchise agreement and its payments and programs.",
+          "noMeans": "Reject the proposed franchise agreement; the attorney’s booklet says Xcel would continue providing service under state utility rules.",
+          "parts": [],
+          "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+          "sourceHash": "843eabecea70e80882fe8bbcb654a07d441c4c98b9efb4ab5b7950f0dc3cd5e2",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:32:20.027084+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-broomfield-2026-ballot-1c",
+          "whatItDoes": "Change future Broomfield mayoral terms from 2 years to 4 years and change the limit from 3 consecutive terms to 2 consecutive terms. The change would begin with the 2027 municipal election and would not affect the current mayor’s term or term limits.",
+          "yesMeans": "Approve four-year mayoral terms with a two-consecutive-term limit starting in 2027.",
+          "noMeans": "Keep two-year mayoral terms and the three-consecutive-term limit.",
+          "parts": [],
+          "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259",
+          "sourceHash": "584fd53c83581e0f91cb3c30fffcc567366fa1722493cce343738cb3972fe311",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:32:20.027084+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:32:20.027084+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://broomfield.org/DocumentCenter/View/69259",
+        "finalUrl": "https://broomfield.org/DocumentCenter/View/69259",
+        "publisher": "City and County of Broomfield Attorney’s Office",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:28:55.164Z",
+        "httpStatus": 200,
+        "originHttpStatus": null,
+        "rawHash": "4f4713bffbdd2c1dfffa9210d8faa923f68f15aafbe40de57770c232c14a63b2",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+        "captureMetadata": {
+          "officialUrl": "https://broomfield.org/DocumentCenter/View/69259",
+          "captureProvider": "search_service_web_run PDF extraction",
+          "rawFormat": "CAPTURED_SOURCE_TEXT",
+          "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+          "lineCount": 263,
+          "coverage": "Every line 0 through 262 captured from official PDF view",
+          "nativeGovernmentFetch": {
+            "status": null,
+            "reason": "Native fetch not attempted during known shared runtime all-host HTTP outage"
+          },
+          "requests": [
+            {
+              "request": {
+                "open": [
+                  {
+                    "ref_id": "turn240401view0",
+                    "lineno": 235
+                  }
+                ]
+              },
+              "capturedAt": "2026-11-03T04:28:55.164Z",
+              "reference": "turn775300view0",
+              "lineCount": 263
+            }
+          ],
+          "conflicts": []
+        },
+        "reviewedEvidence": "Successful complete first-party government PDF text capture via independent web tool; legacyhttpStatus200 is a capture-successmarker, not a claim about originHTTPstatus. Every extracted line accounted for; originalPDFbytes and their SHA are unavailable during shared runtime networkoutage. Exact quotes and registered divisions checked; draft explanations await independent rootreview."
+      }
+    ]
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "state": "CO",
+  "measures": 3,
+  "pointChecks": [
+    {
+      "placeId": "ocd-division/country:us/state:co/special_district:west_metropolitan_fire_protection_district",
+      "contestId": "co-west-metro-fire-protection-district-2026-ballot-7c",
+      "status": "EXACT_COMPLETE_EXPLAINER",
+      "offlineElapsedMs": 11.921407999999985
+    },
+    {
+      "placeId": "ocd-division/country:us/state:co/special_district:conifer_fire_protection_district",
+      "contestId": "co-conifer-fire-protection-district-2026-ballot-7d",
+      "status": "EXACT_COMPLETE_EXPLAINER",
+      "offlineElapsedMs": 6.17234400000001
+    },
+    {
+      "placeId": "ocd-division/country:us/state:co/judicial_district:17",
+      "contestId": "co-17th-judicial-district-2026-ballot-7e",
+      "status": "EXACT_COMPLETE_EXPLAINER",
+      "offlineElapsedMs": 6.776860999999997
+    }
+  ],
+  "judicialCountyControls": [
+    {
+      "countyGeoid": "08014",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": true
+    },
+    {
+      "countyGeoid": "08059",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": false
+    },
+    {
+      "countyGeoid": "08035",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": false
+    },
+    {
+      "countyGeoid": "08001",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": true
+    }
+  ],
+  "zipCodesChecked": 64,
+  "zipMembershipEdges": 69,
+  "zctaMembershipEdges": 69,
+  "actualExistingLoader": "PASS in isolated memory query fixture; 3entities,3exact boundaries,2existing-government links and all ZIP/ZCTA edges encoded.",
+  "originalSourceHashes": "PASS",
+  "originalCoordinateComponentsUnchanged": "PASS",
+  "measureRecordContract": "PASS",
+  "sourceGeometryPrecision": "Complete official coordinates retained; point results use exact polygon containment. ZIP matches use positive geometric intersection with unknown shares.",
+  "actualReaderQueryCounts": {
+    "point": 7,
+    "zip": 64
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline current-loader/current-reader checks only. River must install as data and verify live. This packet resolves exactly three pending jurisdictions, not all Colorado local measures."
+}

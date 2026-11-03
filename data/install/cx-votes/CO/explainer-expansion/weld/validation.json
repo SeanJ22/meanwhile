@@ -1,0 +1,18 @@
+{
+  "state": "CO",
+  "county": "Weld",
+  "measureRecords": 10,
+  "exactExistingDivisionAttachments": 10,
+  "measureRecordContract": "PASS",
+  "subjectAndFieldLiteralQuotes": "PASS",
+  "fieldQuoteCount": 31,
+  "completeOriginalPdfHash": "PASS",
+  "originalPdfSha256": "a56013be6882d9ca88a68bdbbcfc74c7c31660b65077fb8c8a93c67093003428",
+  "fullCountyLocalDenominator": 26,
+  "sourcePages": 8,
+  "sourceFormat": "Original official PDF bytes; gzip storage identified separately.",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "independentReview": "PENDING_ROOT"
+}

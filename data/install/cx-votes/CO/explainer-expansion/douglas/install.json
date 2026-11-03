@@ -1,0 +1,95 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-douglas-county-2026-ballot-200",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-douglas-county-2026-ballot-201",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-douglas-county-2026-ballot-1a",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-castle-pines-2026-ballot-300",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-castle-pines-2026-ballot-301",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-aurora-2026-ballot-3a",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-aurora-2026-ballot-3b",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-aurora-2026-ballot-3c",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-aurora-2026-ballot-3d",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-douglas-county-school-district-re-1-2026-ballot-school-tax",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-larkspur-fire-protection-district-2026-ballot-6a",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-larkspur-fire-protection-district-2026-ballot-6b",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-stone-creek-metropolitan-district-2026-ballot-6c",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-stone-creek-metropolitan-district-2026-ballot-6d",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-stone-creek-metropolitan-district-2026-ballot-6e",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-stone-creek-metropolitan-district-2026-ballot-6f",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    },
+    {
+      "id": "co-stone-creek-metropolitan-district-2026-ballot-6g",
+      "sourceUrl": "https://www.douglasco.gov/documents/accessible-version-2026-general-election-composite-sample-ballot.pdf/"
+    }
+  ],
+  "operation": "Append only these measure contests, official questions and neutral explanations; preserve unrelated ballot data. Any unresolved exactdistrict attachments are excluded and saved separately. No production writes or app changes.",
+  "validation": {
+    "independentReview": "PENDING_ROOT",
+    "measureRecordIssue": "PASS (17records)",
+    "supportingQuotes": "PASS (literal matches in original complete text capture and bounded excerpts)",
+    "savedSourceHash": "PASS",
+    "heldQuestionHashes": "PASS",
+    "registeredDivisions": "PASS (17exact IDs)"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

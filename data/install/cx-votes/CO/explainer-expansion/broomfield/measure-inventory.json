@@ -1,0 +1,44 @@
+[
+  {
+    "contestId": "co-broomfield-2026-ballot-1a",
+    "title": "City and County of Broomfield Ballot Question 1A",
+    "officialNumber": "1A",
+    "ocdId": "ocd-division/country:us/state:co/county:broomfield",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:broomfield",
+      "county",
+      "08014",
+      "Broomfield County"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259"
+  },
+  {
+    "contestId": "co-broomfield-2026-ballot-1b",
+    "title": "City and County of Broomfield Ballot Question 1B",
+    "officialNumber": "1B",
+    "ocdId": "ocd-division/country:us/state:co/county:broomfield",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:broomfield",
+      "county",
+      "08014",
+      "Broomfield County"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259"
+  },
+  {
+    "contestId": "co-broomfield-2026-ballot-1c",
+    "title": "City and County of Broomfield Ballot Question 1C",
+    "officialNumber": "1C",
+    "ocdId": "ocd-division/country:us/state:co/county:broomfield",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:broomfield",
+      "county",
+      "08014",
+      "Broomfield County"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "sourceUrl": "https://broomfield.org/DocumentCenter/View/69259"
+  }
+]

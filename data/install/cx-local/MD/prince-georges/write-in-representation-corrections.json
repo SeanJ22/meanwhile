@@ -1,0 +1,64 @@
+{
+  "kind": "PRINTED_CHOICES_VS_QUALIFIED_WRITE_IN_FILINGS",
+  "currentSource": "state-local-roster.csv",
+  "corrections": [
+    {
+      "id": "md-local-2026-c7bcaf5519b543250219:d784a94aeede0b96",
+      "contestId": "md-local-2026-c7bcaf5519b543250219",
+      "currentName": "Moisette Tonya Sweat",
+      "priorClassification": "ordinary candidacy",
+      "correctClassification": "filingCandidacies; active qualified Write-In, absent from printed named-choice field",
+      "provenance": {
+        "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+        "sourceOrg": "Maryland State Board of Elections",
+        "collectedAt": "2026-11-03T06:09:25.493006+00:00",
+        "verifiedAt": "2026-11-03T06:09:25.493006+00:00",
+        "quote": "{\n  \"Office Name\": \"County Executive\",\n  \"Contest Run By District Name and Number\": \"Prince George's\",\n  \"Candidate First Name and Middle Name\": \"Moisette Tonya\",\n  \"Candidate Ballot Last Name and Suffix\": \"Sweat\",\n  \"Office Political Party\": \"Unaffiliated\",\n  \"Candidate Residential Jurisdiction\": \"Prince George's County\",\n  \"Candidate Status\": \"Active\",\n  \"Filing Type and Date\": \"Write-In - 09/01/2026\",\n  \"Additional Information\": \"\"\n}"
+      }
+    },
+    {
+      "id": "md-local-2026-dd4eb3b0573fd9938f77:c484b11b423a9696",
+      "contestId": "md-local-2026-dd4eb3b0573fd9938f77",
+      "currentName": "Dave Grogan",
+      "priorClassification": "ordinary candidacy",
+      "correctClassification": "filingCandidacies; active qualified Write-In, absent from printed named-choice field",
+      "provenance": {
+        "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+        "sourceOrg": "Maryland State Board of Elections",
+        "collectedAt": "2026-11-03T06:09:25.493006+00:00",
+        "verifiedAt": "2026-11-03T06:09:25.493006+00:00",
+        "quote": "{\n  \"Office Name\": \"Sheriff\",\n  \"Contest Run By District Name and Number\": \"Prince George's\",\n  \"Candidate First Name and Middle Name\": \"Dave\",\n  \"Candidate Ballot Last Name and Suffix\": \"Grogan\",\n  \"Office Political Party\": \"Unaffiliated\",\n  \"Candidate Residential Jurisdiction\": \"Prince George's County\",\n  \"Candidate Status\": \"Active\",\n  \"Filing Type and Date\": \"Write-In - 06/02/2026\",\n  \"Additional Information\": \"\"\n}"
+      }
+    }
+  ],
+  "historicalGuideNameDiscrepancy": {
+    "currentStateCsvAndHeldName": "Dave Grogan",
+    "september4CountyGuideName": "David Grogan",
+    "basis": "Current active Write-In filing, same Sheriff office; preserve held stable ID, no second person, no inferred removal."
+  },
+  "nonActiveRows": [
+    {
+      "Office Name": "County Executive",
+      "Contest Run By District Name and Number": "Prince George's",
+      "Candidate First Name and Middle Name": "Krystal R.",
+      "Candidate Ballot Last Name and Suffix": "Smith",
+      "Office Political Party": "Democratic",
+      "Candidate Residential Jurisdiction": "Prince George's County",
+      "Candidate Status": "Disqualified - 10/16/2026",
+      "Filing Type and Date": "Write-In - 10/14/2026",
+      "Additional Information": ""
+    },
+    {
+      "Office Name": "County Executive",
+      "Contest Run By District Name and Number": "Prince George's",
+      "Candidate First Name and Middle Name": "Moisette Tonya",
+      "Candidate Ballot Last Name and Suffix": "Sweat",
+      "Office Political Party": "Unaffiliated",
+      "Candidate Residential Jurisdiction": "Prince George's County",
+      "Candidate Status": "Failed to Submit Required Number of Signatures - 08/18/2026",
+      "Filing Type and Date": "Petition - 03/04/2026",
+      "Additional Information": ""
+    }
+  ],
+  "notices": "No withdrawal or disappearance/removal event invented for active write-in persons. Disqualified Krystal R.Smith and failed MoisetteSweat petition are supplemental historical filing rows, not printed active choices."
+}

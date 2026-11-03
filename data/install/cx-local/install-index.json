@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:21:45.408246+00:00",
+  "preparedAt": "2026-11-03T06:21:54.960707+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1355,6 +1355,35 @@
         "Exact councilDistrict4/6 electorate keys are preserved and require reader geography matching; neither HonoluluCDP nor entireCityandCounty replaces a council district. Candidate facts are ready; reader delivery remains for parent/River to verify.",
         "Parent fresh-fetch comparison reports origin/stream/cx-votes commit c1c0d49bd0606800a6a6c38bb82fb26ebd046561 has no data/install/cx-votes/HI packet. Held data/ballot/2026-general/hi.json remains identity reference; this worker performed no git operation."
       ]
+    },
+    {
+      "state": "MD",
+      "county": "Prince George's County",
+      "populationRank": 57,
+      "manifest": "MD/prince-georges/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 22,
+      "measureContests": 0,
+      "candidacies": 39,
+      "newContests": 13,
+      "refreshedContests": 9,
+      "sourceInputSha256": "12ed5b3ee90dfc69d16756a601f88723e1a5608386e9f876ef84cbd3739450d6",
+      "coverage": {
+        "countyPublishedStyleCoverage": "COMPLETE_ALL327_PUBLISHED_COUNTY_STYLES",
+        "allPrintedLocalCandidateFields": true,
+        "allStyleChoiceAndPartyParity": true,
+        "fullCountyIncludingIndependentMunicipalBallotParity": false,
+        "municipalAudit": "OPEN: county municipal directory includes older/blank dates; state reports have NoPostingYet. No off-cycle city/town fields or municipal absence fabricated.",
+        "schoolElectorate": "DISTRICT_VOTERS:Education\u00a73-1002(d)(2),confirmed by district-specific327styledistribution. FourprecisePGschoolsystemboarddivisions2/3/6/9.",
+        "sharedStatewideAppellateRetention": "DanFriedmanprintedall327styles; exactheldstatewidecontest/candidate remainunchanged, notduplicated as county contest.",
+        "qualifiedWriteIns": "MoisetteTonyaSweat(CountyExecutive)andDaveGrogan(Sheriff)activeWrite-Infilings kept separately withheldstable IDs; blank write-in slots arenotpeople.",
+        "remaining": [
+          "Independent municipality special-election/date/sample audit remains open.",
+          "13precise countycouncil/schoolboard district reader joins require installation/verification.",
+          "Liveinstallation and exactreader applicability belongtoRiver."
+        ],
+        "boundarySupplement": "Exact adopted native official polygons supplied for 13 currently prepared district IDs. Registry joins and live reader verification remain River work; no electorate widened."
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -1380,17 +1409,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 52,
-    "packetsPrepared": 53,
-    "candidateAndRetentionContests": 2838,
+    "countiesPrepared": 53,
+    "packetsPrepared": 54,
+    "candidateAndRetentionContests": 2860,
     "measureContests": 112,
-    "candidacyEntries": 6336,
-    "newContestEntriesAgainstCheckedInBaseline": 2326,
-    "distinctPreparedContestIds": 2915,
-    "distinctPreparedCandidateIds": 6256,
-    "distinctNewContestsAgainstCheckedInBaseline": 2312,
+    "candidacyEntries": 6375,
+    "newContestEntriesAgainstCheckedInBaseline": 2339,
+    "distinctPreparedContestIds": 2937,
+    "distinctPreparedCandidateIds": 6295,
+    "distinctNewContestsAgainstCheckedInBaseline": 2325,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 53
+    "distinctCountyHandoffs": 54
   },
   "remainingWork": [
     {

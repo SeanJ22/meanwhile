@@ -1,0 +1,1541 @@
+<!doctype html>
+<html>
+<!-- InstanceBegin template="/Templates/elections.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="keywords" content="Maryland, State, Board of Elections, voting, polling place, campaigns, candidacy, voter registration, election, elections, campaign finance, register, vote, HAVA, petitions, voting system, Maryland State Board of Elections, results, overseas">
+<meta name="author" content="Maryland State Board of Elections"><meta name="description" content="The State Board of Elections provides all eligible citizens of the State convenient access to voter registration; provides all registered voters accessible locations in which they may exercise their right to vote, to ensure uniformity of election practices; to promote fair and equitable elections; and to maintain registration records, campaign fund reports, and other election-related data accurately and in a form that is accessible to the public.">  
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&family=Noto+Serif:ital,wdth,wght@0,62.5..100,100..900&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&family=Material+Icons" />
+<link rel="stylesheet" href="/css/base.css" />
+<link rel="stylesheet" href="/css/override.css" />
+<link rel="stylesheet" href="/css/print.css" media="print" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script src="/js/base.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "GovernmentOrganization",
+  "name": "Maryland State Board of Elections",
+  "url": "https://elections.maryland.gov",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "151 West Street, Suite 200",
+    "addressLocality": "Annapolis",
+    "addressRegion": "MD",
+    "postalCode": "21401"
+  },
+  "telephone": "+1-410-269-2840",
+  "areaServed": "Maryland"
+}
+</script>
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Municipal Elections</title>
+<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+</head>
+<body>
+<div id="wrapper"> 
+    <header>
+    <a href="#bodyContent" class="skip">Skip to Content</a>
+    <section id="topStrip">
+        <div id="sitesContainer">
+            <a href="https://www.facebook.com/MarylandStateBoardofElections" class="button"><img src="/img/icon-social-facebook-48.gif" alt="The Facebook logo" title="MSBE on Facebook.com" /></a>
+            <a href="https://twitter.com/md_sbe" class="button"><img src="/img/icon-social-x-48.gif" alt="The X.com logo" title="MSBE on X.com" /></a>
+            <a href="https://www.maryland.gov" id="mdGovLink" class="button"><img src="/img/mdgov_logo-crop-48.gif" alt="The Maryland.gov logo" title="Maryland.gov" /></a>
+        </div>
+        <form id="searchForm" method="GET" action="https://www.maryland.gov/pages/search.aspx">
+            <label for="searchQuery" hidden>Search</label>
+            <input id="searchQuery" name="q" type="text" placeholder="Search&hellip;" role="search" aria-label="Search" title="Type a query and press Enter." />
+            <input id="searchButton" type="submit" name="Search Submit" hidden />
+            <input type="hidden" name="site" value="tkcl0ycakyo" />
+            <input type="hidden" name="name" value="State Board of Elections" />
+        </form>
+        <div id="utilContainer">
+            <!--<a id="translateLink" class="button" href="#"><img src="/img/icon-translate-48.png" alt="Google Translate" title="Translate" /></a>-->
+            <div id="google_translate_element"></div>
+            <button id="contrastToggle" type="button" aria-label="High Contrast Mode" aria-pressed="false" title="Contrast Mode"></button>
+        </div>
+    </section>
+    <div id="siteTitleWrapper">
+        <a id="siteTitle" href="/index.html">
+            <img src="/img/SBELogo.png" id="siteLogo" alt="Maryland State Board of Elections logo" /><abbr title="Maryland State Board of Elections">SBE</abbr><span>Maryland State Board of Elections</span>
+        </a>
+        <p id="siteSubtitle">
+            <span class="glow">V</span>erified. <span class="glow">O</span>pen. <span class="glow">T</span>rusted. <span class="glow">E</span>mpowering.
+        </p>
+    </div>
+    <nav id="mainNav" aria-label="Site Navigation">
+        <div id="mainNavList1">
+            <details name="nav">
+                <summary>Voting</summary>
+                <div class="menuWrapper">
+                    <dl>
+                        <dt>General&nbsp;Info</dt>
+                        <dd>
+                            <menu>
+                                <li><a href="/voting/index.html">Introduction</a></li>
+                                <li><a href="/voting/early_voting.html">Early Voting</a></li>
+                                <li><a href="/voting/election_day_questions.html">Election Day <abbr title="Frequently Asked Question">FAQ</abbr>s</a></li>
+                                <li><a href="/voting/absentee.html">Mail-In Voting</a></li>
+                                <li><a href="/voting/primary.html">Primary Elections</a></li>
+                                <li><a href="/voting_system/index.html">Voting System</a></li>
+                                <li><a href="/overseas_voters/index.html">Overseas&nbsp;&amp;&nbsp;Military</a></li>
+                            </menu>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>Registration</dt>
+                        <dd>
+                            <menu>
+                                <li><a href="/voter_registration/index.html">Introduction</a></li>
+                                <li><a href="https://voterservices.elections.maryland.gov">Voter Services</a></li>
+                                <li><a href="/voter_registration/nvra.html"><abbr title="National Voter Registration Act">NVRA</abbr></a></li>
+                                <li><a href="/voter_registration/application.html">Application</a></li>
+                                <li><a href="/voter_registration/stats.html">Statistics</a></li>
+                            </menu>
+                        </dd>
+                    </dl>
+                </div>
+            </details>
+            <details name="nav">
+                <summary>Candidacy</summary>
+                <div class="menuWrapper">
+                    <menu>
+                        <li><a href="/candidacy/index.html">Introduction</a></li>
+                        <li><a href="/candidacy/requirements.html">Requirements for Filing</a></li>
+                        <li><a href="/candidacy/qualifications.html">Qualifications for Filing</a></li>
+                        <li><a href="/candidacy/ballot.html">Offices Up for Election</a></li>
+                    </menu>
+                </div>
+            </details>
+            <details name="nav">
+                <summary>Press Room</summary>
+                <div class="menuWrapper">
+                    <menu>
+                        <li><a href="/press_room/index.html">Press Releases &amp; Statistics</a></li>
+                        <li><a href="/press_room/reports.html">Reports</a></li>
+                        <li><a href="/press_room/rumor_control.html">Rumor Control</a></li>
+                    </menu>
+                </div>
+            </details>
+        </div>
+        <div id="mainNavList2">
+            <details name="nav">
+                <summary>Elections</summary>
+                <div class="menuWrapper">
+                    <dl>
+                        <dt>Main&nbsp;Section</dt>
+                        <dd>
+                            <menu>
+                                <li><a href="/elections/2026/index.html">Latest Election Info</a></li>
+                                <li><a href="/elections/special_elections.html">Special Elections</a></li>
+                                <li><a href="/elections/municipal.html">Municipal</a></li>
+                                <li><a href="/elections/archive/index.html">Elections Archive</a></li>
+                                <li><a href="/elections/districts.html">Districts</a></li>
+                                <li><a href="/elections/electoral_college.html">Electoral College</a></li>
+                            </menu>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>Get&nbsp;Involved</dt>
+                        <dd>
+                            <menu>
+                                <li><a href="/get_involved/index.html">Introduction</a></li>
+                                <li><a href="/get_involved/teachers.html">Teachers</a></li>
+                                <li><a href="/get_involved/students.html">Students</a></li>
+                                <li><a href="/get_involved/dis-misinformation.html">Report Dis/Misinformation</a></li>
+                                <li><a href="/get_involved/voter_education_toolkit.html">Voter Education Toolkit</a></li>
+                            </menu>
+                        </dd>
+                    </dl>
+                </div>
+            </details>
+            <details name="nav">
+                <summary>Campaign Finance</summary>
+                <div class="menuWrapper">
+                    <menu>
+                        <li><a href="/campaign_finance/index.html">Introduction</a></li>
+                        <li><a href="/campaign_finance/campaign_finance_database.html">Campaign Finance Database</a></li>
+                        <li><a href="/campaign_finance/summary_guide.html">Summary Guide</a></li>
+                        <li><a href="/campaign_finance/reporting_schedule.html">Reporting Schedule</a></li>
+                        <li><a href="/campaign_finance/guidance.html">Guidance</a></li>
+                        <li><a href="/campaign_finance/County_public.html">County Public Funding Program</a></li>
+                    </menu>
+                </div>
+            </details>
+            <details name="nav">
+                <summary>About</summary>
+                <div class="menuWrapper">
+                    <dl>
+                        <dt>Agency</dt>
+                        <dd>
+                            <menu>
+                                <li><a href="/about/index.html">About Us</a></li>
+                                <li><a href="/about/board.html">Board Meetings</a></li>
+                                <li><a href="/about/contact.html">Contact Us</a></li>
+                                <li><a href="/about/county_boards.html">County Boards</a></li>
+                                <li><a href="/forms/index.html">Forms</a></li>
+                                <li><a href="/about/election_security.html">Election Security</a></li>
+                                <li><a href="/about/pia.html">Public Information Act</a></li>
+                            </menu>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>Laws &amp; Regs</dt>
+                        <dd>
+                            <menu>
+                                <li><a href="/laws_and_regs/index.html">Introduction</a></li>
+                                <li><a href="/laws_and_regs/federal_law.html">Federal Law</a></li>
+                                <li><a href="/laws_and_regs/election_law.html">Election Law</a></li>
+                                <li><a href="/laws_and_regs/regulations.html"><abbr title="Code of Maryland Regulations">COMAR</abbr></a></li>
+                                <li><a href="/petitions/index.html">Petitions</a></li>
+                                <li><a href="/laws_and_regs/sbe_policy.html">SBE Policies</a></li>
+                            </menu>
+                        </dd>
+                    </dl>
+                </div>
+            </details>
+        </div>
+    </nav>
+</header>
+    <main id="bodyContent">
+        <div id="bodyTop"> 
+            <!--<p class="alert louder shaded">Visit the <a href="/elections/2026/2026_replacement_mib.html">Mail-In Ballot Replacement page</a> for more information.</p>--> 
+        </div>
+        
+        <details id="sectionNav" open>
+    <summary><span>Elections</span></summary>
+    <ul>
+        <li><a href="/elections/2026/index.html">General/Primary</a></li>
+        <li><a href="/elections/special_elections.html">Special</a></li>
+        <li><a href="/elections/municipal.html" data-matchPath="/elections/municipal">Municipal</a></li>
+        <li><a href="/elections/archive/index.html" data-matchPath="/elections/archive">Archive</a></li>
+        <li><a href="/elections/districts.html">Districts</a></li>
+        <li><a href="/elections/electoral_college.html">Electoral College</a></li>
+    </ul>
+
+    <!--<ul>
+        <li><a href="/elections/2026/index.html">General/Primary Elections</a></li>
+        <li><a href="/elections/archive.html">General/Primary Elections Archive</a></li>
+        <li><a href="/elections/special_elections.html">Special Elections</a></li>
+        <li><a href="/elections/special_elections_past.html">Special Elections Archive</a></li>
+        <li><a href="/elections/municipal_results.html">Municipal Election Results</a></li>
+        <li><a href="/elections/municipal_results_archive.html">Municipal Election Archive</a></li>
+        <li><a href="/elections/districts.html">Districts</a></li>
+        <li><a href="/elections/electoral_college.html">Electoral College</a></li>
+    </ul>-->
+</details>
+        <section id="bodyMain"> <!-- InstanceBeginEditable name="bodyMain" -->
+            <h1>Municipal Elections 2026</h1>
+            <p class="note">Note: The regulation to post extended election data went into effect October 1, 2026. Many municipalities held elections prior to that date, and only have results documents listed below.</p>
+            <div class="tableWrapper">
+                
+                <table>
+                    <caption>Municipalities Pending Reports</caption>
+                    <thead>
+                        <tr>
+                            <th>Election Month</th>
+                            <th>Municipality</th>
+                            <th>County</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>February</td>
+                            <td>North East</td>
+                            <td>Cecil</td>
+                        </tr>
+                        <tr>
+                            <td>February</td>
+                            <td>Friendsville</td>
+                            <td>Garrett</td>
+                        </tr>
+                        <tr>
+                            <td>March</td>
+                            <td>Oakland</td>
+                            <td>Garrett</td>
+                        </tr>
+                        <tr>
+                            <td>April</td>
+                            <td>Hillsboro</td>
+                            <td>Caroline</td>
+                        </tr>
+                        <tr>
+                            <td>April</td>
+                            <td>Henderson</td>
+                            <td>Caroline</td>
+                        </tr>
+                        <tr>
+                            <td>April</td>
+                            <td>Preston</td>
+                            <td>Caroline</td>
+                        </tr>
+                        <tr>
+                            <td>April</td>
+                            <td>Ridgely</td>
+                            <td>Caroline</td>
+                        </tr>
+                        <tr>
+                            <td>April</td>
+                            <td>Port Tobacco</td>
+                            <td>Charles</td>
+                        </tr>
+                        <tr>
+                            <td>April</td>
+                            <td>Middletown</td>
+                            <td>Frederick</td>
+                        </tr>
+                        <tr>
+                            <td>April</td>
+                            <td>Kitzmiller</td>
+                            <td>Garrett</td>
+                        </tr>
+                        <tr>
+                            <td>April</td>
+                            <td>Oakmont (STD)</td>
+                            <td>Montgomery</td>
+                        </tr>
+                        <tr>
+                            <td>April</td>
+                            <td>Queen Anne</td>
+                            <td>Queen Anne's</td>
+                        </tr>
+                        <tr>
+                            <td>April</td>
+                            <td>Pocomoke City</td>
+                            <td>Worcester</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Westernport</td>
+                            <td>Allegany</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Goldsboro</td>
+                            <td>Caroline</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Perryville</td>
+                            <td>Cecil</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Elkton</td>
+                            <td>Cecil</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Brookview</td>
+                            <td>Dorchester</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Secretary</td>
+                            <td>Dorchester</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Myersville</td>
+                            <td>Frederick</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Deer Park</td>
+                            <td>Garrett</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Somerset</td>
+                            <td>Montgomery</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Martin's Additions</td>
+                            <td>Montgomery</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Chevy Chase View</td>
+                            <td>Montgomery</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Morningside</td>
+                            <td>Prince George's</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Fairmount Heights</td>
+                            <td>Prince George's</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>District Heights</td>
+                            <td>Prince George's</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Smithsburg</td>
+                            <td>Washington</td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td>Snow Hill</td>
+                            <td>Worcester</td>
+                        </tr>
+                        <tr>
+                            <td>June</td>
+                            <td>Templeville</td>
+                            <td>Queen Anne's</td>
+                        </tr>
+                        <tr>
+                            <td>June</td>
+                            <td>Barclay</td>
+                            <td>Queen Anne's</td>
+                        </tr>
+                        <tr>
+                            <td>June</td>
+                            <td>Crisfield</td>
+                            <td>Somerset</td>
+                        </tr>
+                        <tr>
+                            <td>June</td>
+                            <td>Princess Anne</td>
+                            <td>Somerset</td>
+                        </tr>
+                        <tr>
+                            <td>June</td>
+                            <td>Oxford</td>
+                            <td>Talbot</td>
+                        </tr>
+                        <tr>
+                            <td>July</td>
+                            <td>Mountain Lake Park</td>
+                            <td>Garrett</td>
+                        </tr>
+                        <tr>
+                            <td>August</td>
+                            <td>Brunswick</td>
+                            <td>Frederick</td>
+                        </tr>
+                        <tr>
+                            <td>September</td>
+                            <td>Federalsburg</td>
+                            <td>Caroline</td>
+                        </tr>
+                        <!--<tr>
+                            <td>September</td>
+                            <td>Walkersville</td>
+                            <td>Frederick</td>
+                        </tr>-->
+                        <tr>
+                            <td>September</td>
+                            <td>Emmitsburg</td>
+                            <td>Frederick</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <details>
+                <summary>Allegany</summary>
+                <dl>
+                    <dt>Barton</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Cumberland</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Frostburg</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Frostburg_Election_Results.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Lonaconing</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Luke</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Town_of_Luke_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Midland</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Westernport</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Anne Arundel</summary>
+                <dl>
+                    <dt>Annapolis</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Highland Beach</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Baltimore City</summary>
+                <dl>
+                    <dt>Baltimore</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Calvert</summary>
+                <dl>
+                    <dt>Chesapeake Beach</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>North Beach</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_reports/2026/North Beach-2026-Regular-Notice.pdf">Regular: Notice (PDF)</a></li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Caroline</summary>
+                <dl>
+                    <dt>Denton</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Federalsburg</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Goldsboro</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Greensboro</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Henderson</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Hillsboro</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Marydel</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Preston</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Ridgely</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Templeville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Carroll</summary>
+                <dl>
+                    <dt>Hampstead</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Manchester</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Mount Airy</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_reports/2026/Mount Airy-2026-Special-Notice.pdf">Special: Notice (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>New Windsor</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Sykesville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Taneytown</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Union Bridge</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Westminster</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Cecil</summary>
+                <dl>
+                    <dt>Cecilton</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Charlestown</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Town_of_Charlestown_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Chesapeake City</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Elkton</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>North East</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Perryville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Port Deposit</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Rising Sun</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Charles</summary>
+                <dl>
+                    <dt>Indian Head</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>La Plata</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Port Tobacco</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Dorchester</summary>
+                <dl>
+                    <dt>Brookview</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Cambridge</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Church Creek</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>East New Market</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Eldorado</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Galestown</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Hurlock</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Secretary</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Vienna</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Vienna_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Frederick</summary>
+                <dl>
+                    <dt>Brunswick</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Burkittsville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Emmitsburg</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Frederick</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Middletown</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Myersville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>New Market</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Rosemont</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Thurmont</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Walkersville</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_reports/2026/Walkersville-2026-Regular-Notice.pdf">Regular: Notice (PDF)</a></li>
+                            <li><a href="municipal_reports/2026/Walkersville-2026-Regular-Result.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Woodsboro</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Garrett</summary>
+                <dl>
+                    <dt>Accident</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Deer Park</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Friendsville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Grantsville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Kitzmiller</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Loch Lynn Heights</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_reports/2026/Loch Lynn Heights-2026-Regular-Notice.pdf">Regular: Notice (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Mountain Lake Park</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Oakland</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Harford</summary>
+                <dl>
+                    <dt>Aberdeen</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Bel Air</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Havre de Grace</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Havre_de_Grace_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Kent</summary>
+                <dl>
+                    <dt>Betterton</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_reports/2026/Betterton-2026-Regular-Notice.pdf">Regular: Notice (PDF)</a></li>
+                            <li><a href="municipal_reports/2026/Betterton-2026-Regular-Voting.pdf">Regular: Voting (PDF)</a></li>
+                            <li><a href="municipal_reports/2026/Betterton-2026-Regular-Result.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Chestertown</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Galena</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Millington</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Rock Hall</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Montgomery</summary>
+                <dl>
+                    <dt>Barnesville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Brookeville</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Brookeville_Election_Results.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Chevy Chase, Town of</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Town_of_Chevy_Chase_Election_Results.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Chevy Chase View</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Chevy Chase Village</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Chevy_Chase_Election_Results-BoM.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Chevy Chase, Village of North</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Village_of_North_Chevy_Chase_Election_Certification.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Chevy Chase, Village of, Section 3</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Chevy Chase, Village of, Section 5</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Chevy_Chase_Section_5_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Drummond</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Village_of_Drummond_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Gaithersburg</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Garrett Park</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Town_of_Garrett_Park_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Glen Echo</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Kensington</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Laytonsville</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Laytonsville_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Martin's Additions</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>North Chevy Chase</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Poolesville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Rockville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Somerset</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Takoma Park</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Washington Grove</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Prince George's</summary>
+                <dl>
+                    <dt>Berwyn Heights</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Berwyn_Heights_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Bladensburg</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Bowie</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Brentwood</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Capitol Heights</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Capitol_Heights_Election_Results.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Cheverly</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>College Park</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Colmar Manor</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Town_of_Colmar_Manor_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Cottage City</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Cottage_City_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>District Heights</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Eagle Harbor</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Edmonston</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Edmonston_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Fairmount Heights</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Forest Heights</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Forest_Heights_Election_Results.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Glenarden</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Greenbelt</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Hyattsville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Landover Hills</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Laurel</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Morningside</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Mount Rainier</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>New Carrollton</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>North Brentwood</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Riverdale Park</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Seat Pleasant</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Seat_Pleasant_Special_Election_Results.xlsx">Special: Result (XLSX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>University Park</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-University_Park_Election_Results.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Upper Marlboro</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Queen Anne's</summary>
+                <dl>
+                    <dt>Barclay</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Centreville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Church Hill</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Queen Anne</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Queenstown</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Sudlersville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Somerset</summary>
+                <dl>
+                    <dt>Crisfield</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Princess Anne</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>St. Mary's</summary>
+                <dl>
+                    <dt>Leonardtown</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Leonardtown_Election_Results.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Talbot</summary>
+                <dl>
+                    <dt>Easton</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Oxford</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>St. Michaels</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Commissioners_of_St_Michaels_Election_Results.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Trappe</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Town_of_Trappe_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Washington</summary>
+                <dl>
+                    <dt>Boonsboro</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Boonsboro_Election_Results.pdf">Regular: Result (PDF)</a></li>
+                            <li><a href="municipal_results/2026/2026-Boonsboro_Election_Results-2.pdf">Regular: Runoff Results (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Clear Spring</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Funkstown</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Funkstown_Election_Results.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Hagerstown</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Hancock</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Keedysville</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Keedysville_Election_Results.pdf">Regular: Result (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Sharpsburg</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Smithsburg</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Williamsport</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Wicomico</summary>
+                <dl>
+                    <dt>Delmar</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Fruitland</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Fruitland_City_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Hebron</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Hebron_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Mardela Springs</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Pittsville</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Salisbury</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Sharptown</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_reports/2026/Sharptown-2026-Regular-Notice.pdf">Regular: Notice (PDF)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Willards</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <details>
+                <summary>Worcester</summary>
+                <dl>
+                    <dt>Berlin</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Ocean City</dt>
+                    <dd>
+                        <ul>
+                            <li><a href="municipal_results/2026/2026-Ocean_City_Election_Results.docx">Regular: Result (DOCX)</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Pocomoke City</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                    <dt>Snow Hill</dt>
+                    <dd>
+                        <ul>
+                            <li>No posting yet</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </details>
+            <!-- InstanceEndEditable --> </section>
+    </main>
+    <a id="topLink" href="#bodyMain" class="invis"><img src="/img/icon-topLink.png" alt="Back to Top" title="Back to Top" /></a>
+<footer>
+    <div id="footerTop">
+        <nav>
+            <ul class="noBullets">
+                <li><a href="/about/contact.html">Contact</a></li>
+                <li><a href="/privacy.html">Privacy</a></li>
+                <li><a href="/accessibility.html">Accessibility</a></li>
+            </ul>
+        </nav>
+        <address>
+            151 West Street, Suite 200<br />
+            Annapolis, MD 21401<br />
+            410-269-2840 | 800-222-8683<br />
+            <a href="/cdn-cgi/l/email-protection#234a4d454c0d504146634e42515a4f424d470d444c55"><span class="__cf_email__" data-cfemail="7910171f16570a1b1c3914180b001518171d571e160f">[email&#160;protected]</span></a>
+        </address>
+    </div>
+    <div id="copyright"><span>Copyright &copy;2025 Maryland State Board of Elections</span></div>
+</footer> 
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+<!-- InstanceEnd -->
+</html>

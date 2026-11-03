@@ -1,0 +1,528 @@
+{
+ "currentVersion": 11.5,
+ "cimVersion": "3.5.0",
+ "id": 9,
+ "name": "School Board Districts",
+ "type": "Feature Layer",
+ "description": "",
+ "geometryType": "esriGeometryPolygon",
+ "sourceSpatialReference": {
+  "wkid": 102685,
+  "latestWkid": 2248,
+  "xyTolerance": 0.0208333333333333,
+  "zTolerance": 1.9999999999999998E-5,
+  "mTolerance": 0.001,
+  "falseX": -120561100,
+  "falseY": -95444400,
+  "xyUnits": 1536,
+  "falseZ": 0,
+  "zUnits": 1,
+  "falseM": 0,
+  "mUnits": 1
+ },
+ "spatialReference": {
+  "wkid": 102685,
+  "latestWkid": 2248,
+  "xyTolerance": 0.003280833333333333,
+  "zTolerance": 1.9999999999999998E-5,
+  "mTolerance": 1.9999999999999998E-5,
+  "falseX": -120561100,
+  "falseY": -95444400,
+  "xyUnits": 1536,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "copyrightText": "",
+ "parentLayer": null,
+ "subLayers": [],
+ "minScale": 0,
+ "maxScale": 0,
+ "drawingInfo": {
+  "renderer": {
+   "type": "simple",
+   "symbol": {
+    "type": "esriSFS",
+    "style": "esriSFSSolid",
+    "color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "outline": {
+     "type": "esriSLS",
+     "style": "esriSLSSolid",
+     "color": [
+      255,
+      211,
+      127,
+      255
+     ],
+     "width": 3.5
+    }
+   }
+  },
+  "scaleSymbols": false,
+  "transparency": 0,
+  "labelingInfo": null
+ },
+ "defaultVisibility": true,
+ "extent": {
+  "xmin": 1290344.875,
+  "ymin": 317969.65625,
+  "xmax": 1406390,
+  "ymax": 533363.0625,
+  "spatialReference": {
+   "wkid": 102685,
+   "latestWkid": 2248,
+   "xyTolerance": 0.003280833333333333,
+   "zTolerance": 1.9999999999999998E-5,
+   "mTolerance": 1.9999999999999998E-5,
+   "falseX": -120561100,
+   "falseY": -95444400,
+   "xyUnits": 1536,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "hasAttachments": false,
+ "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+ "displayField": "NAME",
+ "typeIdField": null,
+ "subtypeFieldName": null,
+ "subtypeField": null,
+ "defaultSubtypeCode": null,
+ "fields": [
+  {
+   "name": "OBJECTID",
+   "type": "esriFieldTypeOID",
+   "alias": "OBJECTID",
+   "domain": null
+  },
+  {
+   "name": "Shape",
+   "type": "esriFieldTypeGeometry",
+   "alias": "SHAPE",
+   "domain": null
+  },
+  {
+   "name": "ELECTEDOFFICE",
+   "type": "esriFieldTypeString",
+   "alias": "Elected Office",
+   "length": 150,
+   "domain": null
+  },
+  {
+   "name": "NAME",
+   "type": "esriFieldTypeString",
+   "alias": "District Name",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "DISTRICTID",
+   "type": "esriFieldTypeString",
+   "alias": "District ID",
+   "length": 10,
+   "domain": null
+  },
+  {
+   "name": "REPNAME1",
+   "type": "esriFieldTypeString",
+   "alias": "School Board Chair",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "REPIMAGEURL1",
+   "type": "esriFieldTypeString",
+   "alias": "School Board Chair Image URL",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PARTY1",
+   "type": "esriFieldTypeString",
+   "alias": "Party",
+   "length": 50,
+   "domain": null
+  },
+  {
+   "name": "DISTRICTURL1",
+   "type": "esriFieldTypeString",
+   "alias": "Website",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PHONE1",
+   "type": "esriFieldTypeString",
+   "alias": "Phone Number",
+   "length": 12,
+   "domain": null
+  },
+  {
+   "name": "EMAIL1",
+   "type": "esriFieldTypeString",
+   "alias": "Email",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "REPNAME2",
+   "type": "esriFieldTypeString",
+   "alias": "School Board Name",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "REPIMAGEURL2",
+   "type": "esriFieldTypeString",
+   "alias": "School Board Image URL",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PARTY2",
+   "type": "esriFieldTypeString",
+   "alias": "Party",
+   "length": 50,
+   "domain": null
+  },
+  {
+   "name": "EMAIL2",
+   "type": "esriFieldTypeString",
+   "alias": "Email",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "GLOBALID",
+   "type": "esriFieldTypeGUID",
+   "alias": "GLOBALID",
+   "length": 38,
+   "domain": null
+  },
+  {
+   "name": "CREATIONDATE",
+   "type": "esriFieldTypeDate",
+   "alias": "Creation Date",
+   "length": 8,
+   "domain": null
+  },
+  {
+   "name": "CREATOR",
+   "type": "esriFieldTypeString",
+   "alias": "CREATOR",
+   "length": 128,
+   "domain": null
+  },
+  {
+   "name": "EDITDATE",
+   "type": "esriFieldTypeDate",
+   "alias": "Edit Date",
+   "length": 8,
+   "domain": null
+  },
+  {
+   "name": "EDITOR",
+   "type": "esriFieldTypeString",
+   "alias": "EDITOR",
+   "length": 128,
+   "domain": null
+  },
+  {
+   "name": "DISTRICTURL2",
+   "type": "esriFieldTypeString",
+   "alias": "Website",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PHONE2",
+   "type": "esriFieldTypeString",
+   "alias": "Phone Number",
+   "length": 12,
+   "domain": null
+  },
+  {
+   "name": "REPNAME3",
+   "type": "esriFieldTypeString",
+   "alias": "School Board Chair",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "REPIMAGEURL3",
+   "type": "esriFieldTypeString",
+   "alias": "School Board Chair Image URL",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PARTY3",
+   "type": "esriFieldTypeString",
+   "alias": "Party",
+   "length": 50,
+   "domain": null
+  },
+  {
+   "name": "DISTRICTURL3",
+   "type": "esriFieldTypeString",
+   "alias": "Website",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PHONE3",
+   "type": "esriFieldTypeString",
+   "alias": "Phone Number",
+   "length": 12,
+   "domain": null
+  },
+  {
+   "name": "EMAIL3",
+   "type": "esriFieldTypeString",
+   "alias": "Email",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "REPNAME4",
+   "type": "esriFieldTypeString",
+   "alias": "School Board Member",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "REPIMAGEURL4",
+   "type": "esriFieldTypeString",
+   "alias": "School Board Image URL",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PARTY4",
+   "type": "esriFieldTypeString",
+   "alias": "Party",
+   "length": 50,
+   "domain": null
+  },
+  {
+   "name": "EMAIL4",
+   "type": "esriFieldTypeString",
+   "alias": "Email",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "DISTRICTURL4",
+   "type": "esriFieldTypeString",
+   "alias": "Website",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PHONE4",
+   "type": "esriFieldTypeString",
+   "alias": "Phone Number",
+   "length": 12,
+   "domain": null
+  },
+  {
+   "name": "REPNAME5",
+   "type": "esriFieldTypeString",
+   "alias": "School Board Chair",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "REPIMAGEURL5",
+   "type": "esriFieldTypeString",
+   "alias": "School Board Chair Image URL",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PARTY5",
+   "type": "esriFieldTypeString",
+   "alias": "Party",
+   "length": 50,
+   "domain": null
+  },
+  {
+   "name": "DISTRICTURL5",
+   "type": "esriFieldTypeString",
+   "alias": "Website",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PHONE5",
+   "type": "esriFieldTypeString",
+   "alias": "Phone Number",
+   "length": 12,
+   "domain": null
+  },
+  {
+   "name": "EMAIL5",
+   "type": "esriFieldTypeString",
+   "alias": "Email",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "REPNAME6",
+   "type": "esriFieldTypeString",
+   "alias": "School Board Member",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "REPIMAGEURL6",
+   "type": "esriFieldTypeString",
+   "alias": "School Board Image URL",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PARTY6",
+   "type": "esriFieldTypeString",
+   "alias": "Party",
+   "length": 50,
+   "domain": null
+  },
+  {
+   "name": "EMAIL6",
+   "type": "esriFieldTypeString",
+   "alias": "Email",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "DISTRICTURL6",
+   "type": "esriFieldTypeString",
+   "alias": "Website",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PHONE6",
+   "type": "esriFieldTypeString",
+   "alias": "Phone Number",
+   "length": 12,
+   "domain": null
+  },
+  {
+   "name": "Shape.STArea()",
+   "type": "esriFieldTypeDouble",
+   "alias": "SHAPE.STArea()",
+   "domain": null
+  },
+  {
+   "name": "Shape.STLength()",
+   "type": "esriFieldTypeDouble",
+   "alias": "SHAPE.STLength()",
+   "domain": null
+  }
+ ],
+ "geometryField": {
+  "name": "Shape",
+  "type": "esriFieldTypeGeometry",
+  "alias": "SHAPE"
+ },
+ "indexes": [
+  {
+   "name": "R3344_pk",
+   "fields": "OBJECTID",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  },
+  {
+   "name": "S2849_idx",
+   "fields": "Shape",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  }
+ ],
+ "subtypes": [],
+ "relationships": [],
+ "canModifyLayer": true,
+ "canScaleSymbols": false,
+ "hasLabels": false,
+ "capabilities": "Map,Query,Data",
+ "maxRecordCount": 2000,
+ "maxSelectionCount": 2000,
+ "supportsStatistics": true,
+ "supportsExceedsLimitStatistics": true,
+ "supportsAdvancedQueries": true,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "isDataVersioned": false,
+ "ownershipBasedAccessControlForFeatures": {"allowOthersToQuery": true},
+ "useStandardizedQueries": true,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "advancedQueryCapabilities": {
+  "useStandardizedQueries": true,
+  "supportsStatistics": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true,
+  "supportsOrderBy": true,
+  "supportsDistinct": true,
+  "supportsCountDistinct": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsPagination": true,
+  "supportsLod": false,
+  "supportsQueryWithLodSR": false,
+  "supportsTrueCurve": true,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsReturningQueryExtent": true,
+  "supportsQueryWithDistance": true,
+  "supportsSqlExpression": true,
+  "supportsTimeRelation": true,
+  "supportsSqlFormat": false,
+  "supportsQueryAnalytic": true,
+  "supportsCurrentUserQueries": true
+ },
+ "supportsDatumTransformation": true,
+ "advancedQueryAnalyticCapabilities": {
+  "supportsLinearRegression": true,
+  "supportsAsync": false,
+  "supportsPercentileAnalytic": true
+ },
+ "dateFieldsTimeReference": null,
+ "preferredTimeReference": null,
+ "datesInUnknownTimezone": false,
+ "hasGeometryProperties": true,
+ "geometryProperties": {
+  "shapeAreaFieldName": "Shape.STArea()",
+  "shapeLengthFieldName": "Shape.STLength()",
+  "units": "esriFeet",
+  "mapUnits": {"uwkid": 9003}
+ },
+ "hasMetadata": true,
+ "isDataArchived": false,
+ "archivingInfo": {
+  "supportsQueryWithHistoricMoment": false,
+  "startArchivingMoment": -1
+ },
+ "supportsCoordinatesQuantization": true,
+ "supportsDynamicLegends": true,
+ "serviceItemId": "a9f1169cecab4135bae7987f98f8260d"
+}

@@ -1,0 +1,32 @@
+{
+  "latestComparison": {
+    "ref": "c1c0d49bd0606800a6a6c38bb82fb26ebd046561",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/MD/ballot-input/md.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MD-c1c0d49bd/md.json",
+        "sha256": "4f02072242449a111909cee9ba57d6ebbdc52355331f2ced65eeb5f923415885"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MD/explainer-expansion/ballot-input/md.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MD-c1c0d49bd/explainer-md.json",
+        "sha256": "7238ace20f281f6456ed887e72f5ed313a0d2c98428566555a25924c8939c78d"
+      }
+    ]
+  },
+  "latestReferencedPrinceGeorgesContests": [],
+  "heldPrinceGeorgesMeasureIds": [
+    "md-prince-georges-2026-question-a:question",
+    "md-prince-georges-2026-question-b:question",
+    "md-prince-georges-2026-question-c:question",
+    "md-prince-georges-2026-question-d:question",
+    "md-prince-georges-2026-question-e:question",
+    "md-prince-georges-2026-question-f:question",
+    "md-prince-georges-2026-question-g:question",
+    "md-prince-georges-2026-question-h:question",
+    "md-prince-georges-2026-question-i:question",
+    "md-prince-georges-2026-question-j:question"
+  ],
+  "heldPrinceGeorgesMeasureHash": "1e130cbe368e09677c1e2cdcf8c14ce582b8164788a3bbfe0f0cbdc08579a9ac",
+  "operation": "No new measure, measureRecord or explanation is imported; all held A–J and explanations remain unchanged."
+}

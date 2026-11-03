@@ -1,0 +1,26 @@
+{
+  "countySample": {
+    "url": "https://www.princegeorgescountymd.gov/sites/default/files/media-document/Updated%20Ballot%20942026.pdf",
+    "finalUrl": "https://www.princegeorgescountymd.gov/sites/default/files/media-document/Updated%20Ballot%20942026.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:07:45.001561+00:00",
+    "rawHash": "f4fe73fc932e20481b5486324203384423788894d5785dc341f84c084d758446",
+    "contentType": "application/pdf",
+    "file": "county-ballot-updated.pdf",
+    "byteLength": 16176952
+  },
+  "stateSample": {
+    "url": "https://elections.maryland.gov/elections/2026/general_ballots/PrinceGeorges.pdf",
+    "finalUrl": "https://elections.maryland.gov/elections/2026/general_ballots/PrinceGeorges.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:08:01.778287+00:00",
+    "rawHash": "0eb31c8dc7034f73caabd66f534bd19c5aaaedc4a898899eaffe9b97f97a40d3",
+    "contentType": "application/pdf",
+    "file": "state-certified.pdf",
+    "byteLength": 16176870
+  },
+  "countyAndStateNativeTextSha256": "cc0dc94312ea4ff834d0143eaa2ac0d8ef43a451626dd6bdff20e5f788f4c6a0",
+  "stateNativeTextSha256": "cc0dc94312ea4ff834d0143eaa2ac0d8ef43a451626dd6bdff20e5f788f4c6a0",
+  "nativeTextIdentical": true,
+  "portablePrimary": "County native PDF and complete exact extraction are included. State duplicate native PDF remains in acquisition scratch."
+}

@@ -1,0 +1,382 @@
+{
+ "currentVersion": 11.5,
+ "cimVersion": "3.5.0",
+ "id": 29,
+ "name": "Councilmanic Districts",
+ "type": "Feature Layer",
+ "description": "This coverage represents the Prince George's County Board of Elections approved boundaries of the Prince George's County Councilmanic Districts.  These districts were approved in March 2022 by the Prince George's County Council.",
+ "geometryType": "esriGeometryPolygon",
+ "sourceSpatialReference": {
+  "wkid": 102685,
+  "latestWkid": 2248,
+  "xyTolerance": 0.0208333333333333,
+  "zTolerance": 1.9999999999999998E-5,
+  "mTolerance": 0.001,
+  "falseX": -120561100,
+  "falseY": -95444400,
+  "xyUnits": 1536,
+  "falseZ": 0,
+  "zUnits": 1,
+  "falseM": 0,
+  "mUnits": 1
+ },
+ "spatialReference": {
+  "wkid": 102685,
+  "latestWkid": 2248,
+  "xyTolerance": 0.00328083333333333,
+  "zTolerance": 2,
+  "mTolerance": 2,
+  "falseX": -120561100,
+  "falseY": -95444400,
+  "xyUnits": 3.695308229454812E7,
+  "falseZ": 0,
+  "zUnits": 1,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "copyrightText": "",
+ "parentLayer": null,
+ "subLayers": [],
+ "minScale": 100000,
+ "maxScale": 0,
+ "referenceScale": 0.0,
+ "drawingInfo": {
+  "renderer": {
+   "type": "simple",
+   "symbol": {
+    "type": "esriSFS",
+    "style": "esriSFSSolid",
+    "color": [
+     230,
+     152,
+     0,
+     0
+    ],
+    "outline": {
+     "type": "esriSLS",
+     "style": "esriSLSSolid",
+     "color": [
+      230,
+      152,
+      0,
+      255
+     ],
+     "width": 1
+    }
+   }
+  },
+  "scaleSymbols": true,
+  "transparency": 0,
+  "labelingInfo": null
+ },
+ "defaultVisibility": false,
+ "extent": {
+  "xmin": 1290344.875,
+  "ymin": 317969.65625,
+  "xmax": 1406390,
+  "ymax": 533363.0625,
+  "spatialReference": {
+   "wkid": 102685,
+   "latestWkid": 2248,
+   "xyTolerance": 0.00328083333333333,
+   "zTolerance": 2,
+   "mTolerance": 2,
+   "falseX": -120561100,
+   "falseY": -95444400,
+   "xyUnits": 3.695308229454812E7,
+   "falseZ": 0,
+   "zUnits": 1,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "hasAttachments": false,
+ "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+ "displayField": "NAME",
+ "typeIdField": null,
+ "subtypeFieldName": null,
+ "subtypeField": null,
+ "defaultSubtypeCode": null,
+ "fields": [
+  {
+   "name": "OBJECTID",
+   "type": "esriFieldTypeOID",
+   "alias": "OBJECTID",
+   "domain": null
+  },
+  {
+   "name": "ELECTEDOFFICE",
+   "type": "esriFieldTypeString",
+   "alias": "Elected Office",
+   "length": 150,
+   "domain": null
+  },
+  {
+   "name": "NAME",
+   "type": "esriFieldTypeString",
+   "alias": "NAME",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "DISTRICTID",
+   "type": "esriFieldTypeString",
+   "alias": "District ID",
+   "length": 10,
+   "domain": null
+  },
+  {
+   "name": "REPNAME1",
+   "type": "esriFieldTypeString",
+   "alias": "Representative Name",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "REPIMAGEURL1",
+   "type": "esriFieldTypeString",
+   "alias": "Representative Image URL",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "PARTY1",
+   "type": "esriFieldTypeString",
+   "alias": "Party",
+   "length": 50,
+   "domain": null
+  },
+  {
+   "name": "PHONE1",
+   "type": "esriFieldTypeString",
+   "alias": "Phone Number",
+   "length": 12,
+   "domain": null
+  },
+  {
+   "name": "EMAIL1",
+   "type": "esriFieldTypeString",
+   "alias": "Email",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "GLOBALID",
+   "type": "esriFieldTypeGUID",
+   "alias": "GLOBALID",
+   "length": 38,
+   "domain": null
+  },
+  {
+   "name": "IMPRT_DATE",
+   "type": "esriFieldTypeDate",
+   "alias": "Import Date",
+   "length": 8,
+   "domain": null
+  },
+  {
+   "name": "Shape",
+   "type": "esriFieldTypeGeometry",
+   "alias": "SHAPE",
+   "domain": null
+  },
+  {
+   "name": "Shape.STArea()",
+   "type": "esriFieldTypeDouble",
+   "alias": "Shape.STArea()",
+   "domain": null
+  },
+  {
+   "name": "Shape.STLength()",
+   "type": "esriFieldTypeDouble",
+   "alias": "SHAPE.STLength()",
+   "domain": null
+  },
+  {
+   "name": "DISTRICTURL1",
+   "type": "esriFieldTypeString",
+   "alias": "Website",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "ATLARGENAME1",
+   "type": "esriFieldTypeString",
+   "alias": "At Large Name 1",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "ATLARGEIMAGEURL1",
+   "type": "esriFieldTypeString",
+   "alias": "At Large Image URL 1",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "ATLARGEPARTY1",
+   "type": "esriFieldTypeString",
+   "alias": "At Large Party 1",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "ATLARGEDISTURL1",
+   "type": "esriFieldTypeString",
+   "alias": "At Large URL 1",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "ATLARGEPHONE1",
+   "type": "esriFieldTypeString",
+   "alias": "At Large Phone 1",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "ATLARGEEMAIL1",
+   "type": "esriFieldTypeString",
+   "alias": "At Large Email 1",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "ATLARGENAME2",
+   "type": "esriFieldTypeString",
+   "alias": "At Large Name 2",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "ATLARGEIMAGEURL2",
+   "type": "esriFieldTypeString",
+   "alias": "At Large Image URL 2",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "ATLARGEPARTY2",
+   "type": "esriFieldTypeString",
+   "alias": "At Large Party 2",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "ATLARGEDISTURL2",
+   "type": "esriFieldTypeString",
+   "alias": "At Large URL 2",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "ATLARGEPHONE2",
+   "type": "esriFieldTypeString",
+   "alias": "At Large Phone 2",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "ATLARGEEMAIL2",
+   "type": "esriFieldTypeString",
+   "alias": "At Large Email 2",
+   "length": 255,
+   "domain": null
+  }
+ ],
+ "geometryField": {
+  "name": "Shape",
+  "type": "esriFieldTypeGeometry",
+  "alias": "SHAPE"
+ },
+ "indexes": [
+  {
+   "name": "R2633_pk",
+   "fields": "OBJECTID",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  },
+  {
+   "name": "S2226_idx",
+   "fields": "Shape",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  }
+ ],
+ "subtypes": [],
+ "relationships": [],
+ "canModifyLayer": true,
+ "canScaleSymbols": false,
+ "hasLabels": false,
+ "capabilities": "Query,Map,Data",
+ "maxRecordCount": 2000,
+ "maxSelectionCount": 2000,
+ "supportsStatistics": true,
+ "supportsExceedsLimitStatistics": true,
+ "supportsAdvancedQueries": true,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "isDataVersioned": false,
+ "ownershipBasedAccessControlForFeatures": {"allowOthersToQuery": true},
+ "useStandardizedQueries": true,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "advancedQueryCapabilities": {
+  "useStandardizedQueries": true,
+  "supportsStatistics": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true,
+  "supportsOrderBy": true,
+  "supportsDistinct": true,
+  "supportsCountDistinct": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsPagination": true,
+  "supportsLod": false,
+  "supportsQueryWithLodSR": false,
+  "supportsTrueCurve": true,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsReturningQueryExtent": true,
+  "supportsQueryWithDistance": true,
+  "supportsSqlExpression": true,
+  "supportsTimeRelation": true,
+  "supportsSqlFormat": false,
+  "supportsQueryAnalytic": true,
+  "supportsCurrentUserQueries": true
+ },
+ "supportsDatumTransformation": true,
+ "advancedQueryAnalyticCapabilities": {
+  "supportsLinearRegression": true,
+  "supportsAsync": false,
+  "supportsPercentileAnalytic": true
+ },
+ "dateFieldsTimeReference": null,
+ "preferredTimeReference": null,
+ "datesInUnknownTimezone": false,
+ "hasGeometryProperties": true,
+ "geometryProperties": {
+  "shapeAreaFieldName": "Shape.STArea()",
+  "shapeLengthFieldName": "Shape.STLength()",
+  "units": "esriFeet",
+  "mapUnits": {"uwkid": 9003}
+ },
+ "hasMetadata": true,
+ "isDataArchived": false,
+ "archivingInfo": {
+  "supportsQueryWithHistoricMoment": false,
+  "startArchivingMoment": -1
+ },
+ "supportsCoordinatesQuantization": true,
+ "supportsDynamicLegends": true,
+ "serviceItemId": "1e025debcaa747d380593d44f0b18a57"
+}

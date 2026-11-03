@@ -1,0 +1,113 @@
+{
+  "kind": "EXACT_OFFICIAL_BOUNDARY_SUPPLEMENT",
+  "status": "SOURCE_READY_REGISTRY_INSTALL_NOT_PERFORMED",
+  "districtMappings": [
+    {
+      "ocdId": "ocd-division/country:us/state:md/county:prince_george_s/council_district:1",
+      "sourceFile": "sources/70f20294e5847d24eafc8e546240f86170b9c4fae4d5347d2f66759e9c3ef3b5.source",
+      "property": "DISTRICTID",
+      "propertyValue": "1",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:md/county:prince_george_s/council_district:2",
+      "sourceFile": "sources/70f20294e5847d24eafc8e546240f86170b9c4fae4d5347d2f66759e9c3ef3b5.source",
+      "property": "DISTRICTID",
+      "propertyValue": "2",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:md/county:prince_george_s/council_district:3",
+      "sourceFile": "sources/70f20294e5847d24eafc8e546240f86170b9c4fae4d5347d2f66759e9c3ef3b5.source",
+      "property": "DISTRICTID",
+      "propertyValue": "3",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:md/county:prince_george_s/council_district:4",
+      "sourceFile": "sources/70f20294e5847d24eafc8e546240f86170b9c4fae4d5347d2f66759e9c3ef3b5.source",
+      "property": "DISTRICTID",
+      "propertyValue": "4",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:md/county:prince_george_s/council_district:5",
+      "sourceFile": "sources/70f20294e5847d24eafc8e546240f86170b9c4fae4d5347d2f66759e9c3ef3b5.source",
+      "property": "DISTRICTID",
+      "propertyValue": "5",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:md/county:prince_george_s/council_district:6",
+      "sourceFile": "sources/70f20294e5847d24eafc8e546240f86170b9c4fae4d5347d2f66759e9c3ef3b5.source",
+      "property": "DISTRICTID",
+      "propertyValue": "6",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:md/county:prince_george_s/council_district:7",
+      "sourceFile": "sources/70f20294e5847d24eafc8e546240f86170b9c4fae4d5347d2f66759e9c3ef3b5.source",
+      "property": "DISTRICTID",
+      "propertyValue": "7",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:md/county:prince_george_s/council_district:8",
+      "sourceFile": "sources/70f20294e5847d24eafc8e546240f86170b9c4fae4d5347d2f66759e9c3ef3b5.source",
+      "property": "DISTRICTID",
+      "propertyValue": "8",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:md/county:prince_george_s/council_district:9",
+      "sourceFile": "sources/70f20294e5847d24eafc8e546240f86170b9c4fae4d5347d2f66759e9c3ef3b5.source",
+      "property": "DISTRICTID",
+      "propertyValue": "9",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:md/school_district:prince_george_s_county_public_schools/board_district:2",
+      "sourceFile": "sources/750a18dcff2343be63ffc1b7dac14098f4d086caadfb6d9335c9b02c688d4a8f.source",
+      "property": "DISTRICTID",
+      "propertyValue": "2",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:md/school_district:prince_george_s_county_public_schools/board_district:3",
+      "sourceFile": "sources/750a18dcff2343be63ffc1b7dac14098f4d086caadfb6d9335c9b02c688d4a8f.source",
+      "property": "DISTRICTID",
+      "propertyValue": "3",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:md/school_district:prince_george_s_county_public_schools/board_district:6",
+      "sourceFile": "sources/750a18dcff2343be63ffc1b7dac14098f4d086caadfb6d9335c9b02c688d4a8f.source",
+      "property": "DISTRICTID",
+      "propertyValue": "6",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:md/school_district:prince_george_s_county_public_schools/board_district:9",
+      "sourceFile": "sources/750a18dcff2343be63ffc1b7dac14098f4d086caadfb6d9335c9b02c688d4a8f.source",
+      "property": "DISTRICTID",
+      "propertyValue": "9",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    }
+  ],
+  "geometryProjection": "Native output WGS84 EPSG4326, coordinates checked in legal longitude/latitude ranges",
+  "sourceCandidateProfilesImported": false,
+  "productionWrites": false
+}

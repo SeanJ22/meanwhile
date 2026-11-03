@@ -1,0 +1,77 @@
+[
+  {
+    "contestId": "ks-cx-2026-manhattan-street-maintenance-sales-tax",
+    "sourceUrl": "https://www.rileycountyks.gov/DocumentCenter/View/27512",
+    "rawHash": "e7e224eb199f3c8e6aaf57730666dc6bfcaaf51a6bc544f29884e04d629235fe",
+    "sourceFile": "sources/e7e224eb199f3c8e6aaf57730666dc6bfcaaf51a6bc544f29884e04d629235fe.source",
+    "sourceTextFile": "sources/83114869a2f87064ffa84e3c13a86c4776415446442ce8770ad2c930b1445f8f.txt",
+    "excerpt": "Shall the City of Manhattan, Kansas be authorized to levy an additional one-half percent (0.5%) citywide general retailers' sales tax for street infrastructure maintenance pursuant to K.S.A. 12-187? Such tax shall take effect April 1, 2027, the day following the expiration of the existing special purpose citywide retailers’ sales tax which took effect April 1, 2017, or as soon thereafter as permitted by law, and shall expire 10 years later.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Manhattan, Kansas be authorized to levy an additional one-half percent (0.5%) citywide general retailers' sales tax for street infrastructure maintenance pursuant to K.S.A. 12-187? Such tax shall take effect April 1, 2027, the day following the expiration of the existing special purpose citywide retailers’ sales tax which took effect April 1, 2017, or as soon thereafter as permitted by law, and shall expire 10 years later."
+      ],
+      "yesMeans": [
+        "Shall the City of Manhattan, Kansas be authorized to levy an additional one-half percent (0.5%) citywide general retailers' sales tax for street infrastructure maintenance pursuant to K.S.A. 12-187? Such tax shall take effect April 1, 2027, the day following the expiration of the existing special purpose citywide retailers’ sales tax which took effect April 1, 2017, or as soon thereafter as permitted by law, and shall expire 10 years later."
+      ],
+      "noMeans": [
+        "Shall the City of Manhattan, Kansas be authorized to levy an additional one-half percent (0.5%) citywide general retailers' sales tax for street infrastructure maintenance pursuant to K.S.A. 12-187? Such tax shall take effect April 1, 2027, the day following the expiration of the existing special purpose citywide retailers’ sales tax which took effect April 1, 2017, or as soon thereafter as permitted by law, and shall expire 10 years later."
+      ]
+    },
+    "semanticConditions": [
+      "Ballot calls the0.5%tax additional but explicitly starts it after existing2017taxexpires; no amount for the oldtax or net combined-rate change is inferred.",
+      "Native sample has diagonal70ptSAMPLEBALLOT watermark. Exact native right-column question spans extracted without that watermark; originalPDF retained."
+    ],
+    "textExtraction": {
+      "method": "PyMuPDF native page1 right-column x>=395, fontsize<20; removes diagonal70ptSAMPLEBALLOT watermark only; originalnativePDF retained"
+    },
+    "inventoryScope": "Two current official Riley County November3 sample questions for Manhattan and WabaunseeUSD329. Not an all-Kansas or independent local-election completeness claim.",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "electionAssociation": {
+      "officialIndexUrl": "https://www.rileycountyks.gov/128/Elections",
+      "section": "General Election - November3,2026",
+      "actualPublishedPdfUrls": [
+        "https://www.rileycountyks.gov/DocumentCenter/View/27512",
+        "https://www.rileycountyks.gov/DocumentCenter/View/27513"
+      ],
+      "sourceManifest": "source-manifest.json"
+    }
+  },
+  {
+    "contestId": "ks-cx-2026-wabaunsee-usd329-school-bonds",
+    "sourceUrl": "https://www.rileycountyks.gov/DocumentCenter/View/27513",
+    "rawHash": "5c6068a8743a7d38515e93a8b3a06129107a56d352197f09d82fa0ad724e9a0c",
+    "sourceFile": "sources/5c6068a8743a7d38515e93a8b3a06129107a56d352197f09d82fa0ad724e9a0c.source",
+    "sourceTextFile": "sources/86814a2e3f1cbd08d12f17046a5090c52725b5dd0e595bdfc2a932a0e6ef3ed8.txt",
+    "excerpt": "Shall Unified School District No. 329, Wabaunsee County, Kansas (Wabaunsee), issue general obligation bonds in an amount not to exceed $14,000,000, to pay the costs to: (a) construct, furnish and equip a new career and technical education facility, including related site and infrastructure improvements; (b) make improvements and renovations to Wabaunsee Elementary School, Wabaunsee Junior High School and Wabaunsee High School facilities, including interior and exterior building, HVAC, window, fire alarm, safety and security, classroom and instructional space, roof, kitchen, playground and restroom improvements; (c) renovate and repurpose existing District facilities for administrative offices and educational programs; (d) remove existing modular facilities and undertake associated site improvements; (e) undertake all other necessary improvements related to the foregoing; and (f) pay costs of issuance and interest on the bonds during construction of the project; all pursuant to the provisions of K.S.A. 10-101 et seq ., K.S.A. 25-2018(f), K.S.A. 72-5457, and K.S.A. 72-5458 et seq .?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Unified School District No. 329, Wabaunsee County, Kansas (Wabaunsee), issue general obligation bonds in an amount not to exceed $14,000,000, to pay the costs to: (a) construct, furnish and equip a new career and technical education facility, including related site and infrastructure improvements; (b) make improvements and renovations to Wabaunsee Elementary School, Wabaunsee Junior High School and Wabaunsee High School facilities, including interior and exterior building, HVAC, window, fire alarm, safety and security, classroom and instructional space, roof, kitchen, playground and restroom improvements; (c) renovate and repurpose existing District facilities for administrative offices and educational programs; (d) remove existing modular facilities and undertake associated site improvements; (e) undertake all other necessary improvements related to the foregoing; and (f) pay costs of issuance and interest on the bonds during construction of the project; all pursuant to the provisions of K.S.A. 10-101 et seq ., K.S.A. 25-2018(f), K.S.A. 72-5457, and K.S.A. 72-5458 et seq .?"
+      ],
+      "yesMeans": [
+        "Shall Unified School District No. 329, Wabaunsee County, Kansas (Wabaunsee), issue general obligation bonds in an amount not to exceed $14,000,000, to pay the costs to: (a) construct, furnish and equip a new career and technical education facility, including related site and infrastructure improvements; (b) make improvements and renovations to Wabaunsee Elementary School, Wabaunsee Junior High School and Wabaunsee High School facilities, including interior and exterior building, HVAC, window, fire alarm, safety and security, classroom and instructional space, roof, kitchen, playground and restroom improvements; (c) renovate and repurpose existing District facilities for administrative offices and educational programs; (d) remove existing modular facilities and undertake associated site improvements; (e) undertake all other necessary improvements related to the foregoing; and (f) pay costs of issuance and interest on the bonds during construction of the project; all pursuant to the provisions of K.S.A. 10-101 et seq ., K.S.A. 25-2018(f), K.S.A. 72-5457, and K.S.A. 72-5458 et seq .?"
+      ],
+      "noMeans": [
+        "Shall Unified School District No. 329, Wabaunsee County, Kansas (Wabaunsee), issue general obligation bonds in an amount not to exceed $14,000,000, to pay the costs to: (a) construct, furnish and equip a new career and technical education facility, including related site and infrastructure improvements; (b) make improvements and renovations to Wabaunsee Elementary School, Wabaunsee Junior High School and Wabaunsee High School facilities, including interior and exterior building, HVAC, window, fire alarm, safety and security, classroom and instructional space, roof, kitchen, playground and restroom improvements; (c) renovate and repurpose existing District facilities for administrative offices and educational programs; (d) remove existing modular facilities and undertake associated site improvements; (e) undertake all other necessary improvements related to the foregoing; and (f) pay costs of issuance and interest on the bonds during construction of the project; all pursuant to the provisions of K.S.A. 10-101 et seq ., K.S.A. 25-2018(f), K.S.A. 72-5457, and K.S.A. 72-5458 et seq .?"
+      ]
+    },
+    "semanticConditions": [
+      "14million is maximum borrowed principal, not a ceiling on totalrepayment includinginterest.",
+      "No loanterm, interest rate, propertytaxrate, stateaid or householdcost figure is supplied by this actualsample; none is invented.",
+      "Derived native-text extraction omits only diagonal70ptSAMPLEBALLOTwatermark; noquestionwords deleted or invented."
+    ],
+    "textExtraction": {
+      "method": "PyMuPDF native page1 right-column x>=395, fontsize<20; removes diagonal70ptSAMPLEBALLOT watermark only; originalnativePDF retained"
+    },
+    "inventoryScope": "Two current official Riley County November3 sample questions for Manhattan and WabaunseeUSD329. Not an all-Kansas or independent local-election completeness claim.",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "electionAssociation": {
+      "officialIndexUrl": "https://www.rileycountyks.gov/128/Elections",
+      "section": "General Election - November3,2026",
+      "actualPublishedPdfUrls": [
+        "https://www.rileycountyks.gov/DocumentCenter/View/27512",
+        "https://www.rileycountyks.gov/DocumentCenter/View/27513"
+      ],
+      "sourceManifest": "source-manifest.json"
+    }
+  }
+]

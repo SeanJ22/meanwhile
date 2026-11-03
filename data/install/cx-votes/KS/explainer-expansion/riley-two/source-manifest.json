@@ -1,0 +1,12 @@
+[
+  {
+    "requestedUrl": "https://www.rileycountyks.gov/128/Elections",
+    "finalUrl": "https://www.rileycountyks.gov/128/Elections",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:00:46.103654+00:00",
+    "rawHash": "3aa862bfd9407166818cb41e7d06ca782ac72ade1b417da1fd115ad4674999be",
+    "sourceTextFile": "sources/60b22293e72aaba33cf1461615ee796ba10fcb9e855812f76b869523a071a5d9.txt",
+    "extractedTextSha256": "60b22293e72aaba33cf1461615ee796ba10fcb9e855812f76b869523a071a5d9",
+    "representation": "Native governmentHTML text-node extraction; originalHTMLSHA recorded separately, extractedTXT is not claimed nativeHTML."
+  }
+]

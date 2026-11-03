@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "ks-cx-2026-manhattan-street-maintenance-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/place:manhattan",
+      "place",
+      "2044250",
+      "Manhattan city"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Current county index places this actual sample under GeneralElectionNovember3,2026. Entire City of Manhattan electorate uses existing city-place division covering county portions, not just RileyCounty or ManhattanTownship."
+  },
+  {
+    "contestId": "ks-cx-2026-wabaunsee-usd329-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/school_district:wabaunsee_unified_school_district_329",
+      "unsd",
+      "2003240",
+      "Wabaunsee Unified School District 329"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Current county index places sample under GeneralElectionNovember3,2026. Official wholeUSD329question matched to exact existing WabaunseeUnifiedSchoolDistrict329 division; notcountywide."
+  }
+]

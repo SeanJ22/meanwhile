@@ -1,0 +1,50 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "CT",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CT",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 1,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": 7
+  },
+  "subjects": [
+    {
+      "id": "ct-sots-2026:coventry-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+      "sourceUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-"
+    },
+    {
+      "id": "ct-sots-2026:coventry-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+      "sourceUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Original official three-page Coventry Town Clerk explanation and complete clean proposed-charter PDF bytes with full deterministic native text.",
+  "reviewedScratchPacketSha256": "1de6bc73da3cb2d4cc86e379cdbcde6d60d2e0cc79eefc81f597bc1dca079f73",
+  "canonicalInputSha256": "a68212fc1039a64ed7e9ea91349abd10f955cef1782eb1dc83af1526ed2253eb",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": "Install after base CT42 and Danbury, Simsbury and Enfield supplements; preserve the existing Question 1 contest bookmark while improving its explanation and adding Question 2.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

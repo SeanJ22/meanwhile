@@ -1,0 +1,48 @@
+[
+  {
+    "contestId": "ct-sots-2026:coventry-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+    "registeredDivisionIndex": 9,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+      "cousub",
+      "0911017800",
+      "Coventry town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "government": [
+      "161509",
+      "ct:city:town-of-coventry",
+      "TOWN OF COVENTRY",
+      "TOWNSHIP",
+      9,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing TOWN OF COVENTRY primary Census county-subdivision government binding; same Question 1 identity retained."
+  },
+  {
+    "contestId": "ct-sots-2026:coventry-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+    "registeredDivisionIndex": 9,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+      "cousub",
+      "0911017800",
+      "Coventry town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "government": [
+      "161509",
+      "ct:city:town-of-coventry",
+      "TOWN OF COVENTRY",
+      "TOWNSHIP",
+      9,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing TOWN OF COVENTRY primary Census county-subdivision government binding; same Question 1 identity retained."
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "scope": "One new Coventry Question 2, one improvement to existing Coventry Question 1. CT complete inventory 53 distinct; 46 now prepared/explained, 7 remain.",
+  "officialSourceUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+  "documentAuthorityQuote": "This explanatory text has been prepared by the Town Clerk pursuant to Connecticut General Statutes §9-369b(a). It is not intended to advocate for either the approval or disapproval of the referendum questions.",
+  "officialCurrentLinkingPageUrl": "https://www.coventry-ct.gov/685/Charter-Revision-Commission",
+  "cleanProposedCharterUrl": "https://www.coventry-ct.gov/DocumentCenter/View/10934",
+  "originalPdfBytesAvailable": true,
+  "improvedExistingQuestionId": "ct-sots-2026:coventry-question-1",
+  "newQuestionId": "ct-sots-2026:coventry-question-2",
+  "semanticNotes": [
+    "Question 2 excludes the Question 1 appropriation/borrowing threshold changes; summaries preserve independent votes.",
+    "Clean proposed charter includes the threshold amounts at equality; clerk prose is a summary, exact legal wording used.",
+    "Latest clerk fiscal-year examples used; old comparison examples not reused.",
+    "Three percent is a registered-voter present-and-voting threshold, not a three-percent yes vote; other majority requirements retained.",
+    "Budget amendments cannot edit individual line items or previously authorized debt payments.",
+    "Town manager personnel authority excludes school-board employees and retains charter/state-law exceptions.",
+    "Complete original clean proposal and complete official statements available; no favorable or opposing advocacy used."
+  ]
+}

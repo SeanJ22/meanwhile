@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "CT",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CT",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": 6
+  },
+  "subjects": [
+    {
+      "id": "ct-sots-2026:oxford-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:oxford_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Original official Oxford 8-page scanned legal-notice PDF bytes, with substantive pages7–8 visually verified, plus original SOTS question JSON bytes. Exact question and bounded official amendment provisions are explicitly combined in parsed text; original sources separately retained.",
+  "reviewedScratchPacketSha256": "84d8c1eef12d5840aeb98323dab5697816a7c52f1656089329646eefc04269c2",
+  "canonicalInputSha256": "31e54b256ca99609419db255fc57424a544a76b20f633690b0c17dc136faab56",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": "Merge after prior CT supplements; this adds Oxford Question1 while preserving all unrelated held data.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "packetPath": "ballot-input/ct.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+      "finalUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+      "rawPath": "sources/2225cb2f6a6303b083827526e91571712692e06f4a8ff55e6047281c540aa06a.source",
+      "rawHash": "2225cb2f6a6303b083827526e91571712692e06f4a8ff55e6047281c540aa06a",
+      "textPath": "sources/54cf8ccf3e7f072219eb3f2ddd9265f20523e701347b98be595f89032bbf4476.txt",
+      "textSha256": "54cf8ccf3e7f072219eb3f2ddd9265f20523e701347b98be595f89032bbf4476",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:coventry-question-1"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+      "finalUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+      "rawPath": "sources/2225cb2f6a6303b083827526e91571712692e06f4a8ff55e6047281c540aa06a.source",
+      "rawHash": "2225cb2f6a6303b083827526e91571712692e06f4a8ff55e6047281c540aa06a",
+      "textPath": "sources/68aa659ff1351d240c464a88b43f40fc7777147ad11c83bcbe7b33b076d7c775.txt",
+      "textSha256": "68aa659ff1351d240c464a88b43f40fc7777147ad11c83bcbe7b33b076d7c775",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:coventry-question-2"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.coventry-ct.gov/DocumentCenter/View/10934",
+      "finalUrl": "https://www.coventry-ct.gov/DocumentCenter/View/10934/Clean-Charter-Revisions-v14?bidId=",
+      "rawPath": "sources/be24c0e4e73ad4b3d487888d69484309dc21c1d69559ae403178fb029dd96c9b.source",
+      "rawHash": "be24c0e4e73ad4b3d487888d69484309dc21c1d69559ae403178fb029dd96c9b",
+      "textPath": "sources/b8a215ab4c8da914c2fbfe49df367420bc5b042225d4da916bb86b5e7422876c.txt",
+      "textSha256": "b8a215ab4c8da914c2fbfe49df367420bc5b042225d4da916bb86b5e7422876c",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:coventry-question-1",
+        "ct-sots-2026:coventry-question-2"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

@@ -1,0 +1,16 @@
+{
+  "state": "CT",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "84d8c1eef12d5840aeb98323dab5697816a7c52f1656089329646eefc04269c2",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Original8pageofficiallegalnotice retained; all substantive amendment language on pages7–8 visually checked against scanned originals.",
+    "ExactSOTSquestion and Oxfordlegalprovisions explicitly distinguished; both originalsourcebytes and receipts present. No claim that the question is printed inside the legalnotice.",
+    "Neutralwhat includes5yearplan, Februarydeadline, school/department participation, nofundingatthehearing, subsequentproposal/financing, financeboardofficeprohibitions with advisory/agencyexceptions, and noonJan1effect.",
+    "Prospectiveapprovedline inpre-electionnotice is not treated as electionresult.",
+    "All hashes/exactquotes, actualgovernmentregistry, heldelectionidentity, manualProjectionCandidate/checkAuthority/reader pass.",
+    "Initialmanualcandidatecheck identifiedmissingSOTSreceipt; exactalreadyheldSOTSreceipt added, no authority or parser bypass, finalreplayPASS."
+  ]
+}

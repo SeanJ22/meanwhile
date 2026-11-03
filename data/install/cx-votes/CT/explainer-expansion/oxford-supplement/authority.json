@@ -1,0 +1,13 @@
+{
+  "scope": "Oxford Question1 supplement. CT complete statewide inventory53distinct;47nowexplained/prepared,6remain.",
+  "officialSourceUrl": "https://www.oxford-ct.gov/DocumentCenter/View/8568/2026-Charter-Revision-Legal-Notice?bidId=",
+  "questionOfficialSourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+  "officialCurrentLinkingPageUrl": "https://oxford-ct.gov/AlertCenter.aspx?AID=2026-Charter-Revision-Question-on-the-Ba-27",
+  "actualPublishedLink": "https://ct-oxford.civicplus.com/DocumentCenter/View/8568/2026-Charter-Revision-Legal-Notice?bidId=",
+  "sameDocumentGovernmentHost": "The identical public DocumentCenter8568 document is available directly under the official .gov host, which was captured.",
+  "electionDate": "November3,2026",
+  "effectiveDate": "NoonJanuary1,2027",
+  "sourceCombination": "Exact SOTS operativequestion plus nativeOxfordlegalprovisions. Parsedcombination explicit; no falseclaimquestionprintedinthelegalPDF.",
+  "sourceAuthorityBasis": "Directofficial .govdocument; currentOxford2026ballotalertlink and SOTS2026election108association.",
+  "sotsAuthorityEvidenceExistingPath": "data/install/cx-votes/CT/explainer-expansion/authority.json"
+}

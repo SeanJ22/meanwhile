@@ -1,0 +1,17 @@
+{
+  "state": "CT",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "1de6bc73da3cb2d4cc86e379cdbcde6d60d2e0cc79eefc81f597bc1dca079f73",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Full current official clerk explanation and clean proposed charter read; Question 2 explicitly excludes Question 1 changes.",
+    "Existing Question 1 identity and exact question preserved; actual 1%/1.5% thresholds and current official $384,000/$576,000 examples supplied.",
+    "Exact clean legal text includes equality for referendum thresholds, and controls over casual summary wording; this precision is expressly documented.",
+    "Question 2 includes key charter changes omitted from the clerk’s expressly non-exhaustive list: personnel limits, acting-manager process, budget amendment restrictions, turnout thresholds, facility contracts, venue failure, financial transfers and ethics.",
+    "No inflation guarantee, automatic tax increase, guaranteed savings or favorable/negative advocacy.",
+    "All per-field quotes, source bytes/text hashes, exact government registry binding and held election identity pass. Normal manual merge/checkAuthority and actual reader retained both explanations; full candidate retention remains root-owned.",
+    "Existing Question 1 contest.measureTextUrl preserves the held Secretary of the State question bookmark; the improved MeasureRecord and its receipt cite the current Coventry explanation PDF."
+  ]
+}

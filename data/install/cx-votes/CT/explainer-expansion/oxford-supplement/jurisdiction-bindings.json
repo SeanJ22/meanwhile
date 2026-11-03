@@ -1,0 +1,25 @@
+[
+  {
+    "contestId": "ct-sots-2026:oxford-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:oxford_town",
+    "registeredDivisionIndex": 74,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:oxford_town",
+      "cousub",
+      "0914058300",
+      "Oxford town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "government": [
+      "101730",
+      "ct:city:town-of-oxford",
+      "TOWN OF OXFORD",
+      "TOWNSHIP",
+      74,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing TOWN OF OXFORD primary government county-subdivision division, not an unverified place guess."
+  }
+]

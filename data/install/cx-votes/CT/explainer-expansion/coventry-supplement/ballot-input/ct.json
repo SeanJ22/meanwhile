@@ -1,0 +1,128 @@
+{
+  "ballots": {
+    "CT:ct-2026-general": {
+      "election": {
+        "id": "ct-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CT"
+      },
+      "contests": [
+        {
+          "id": "ct-sots-2026:coventry-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+          "divisionVintage": "2023",
+          "title": "Coventry — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+            "sourceOrg": "Coventry Town Clerk — official neutral referendum explanation",
+            "collectedAt": "2026-11-03T05:57:43.906666+00:00",
+            "verifiedAt": "2026-11-03T06:14:38.552672+00:00",
+            "quote": "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:coventry-question-2",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+          "divisionVintage": "2023",
+          "title": "Coventry Question 2 — other town charter revisions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+          "provenance": {
+            "sourceUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+            "sourceOrg": "Coventry Town Clerk — official neutral referendum explanation",
+            "collectedAt": "2026-11-03T05:57:43.906666+00:00",
+            "verifiedAt": "2026-11-03T06:14:38.552672+00:00",
+            "quote": "Shall additional provisions of the Coventry Town Charter be amended other than as provided in question #1 above, all as recommended in the final report of the Charter Revision Commission dated July 29, 2026, and as on file with the Coventry Town Clerk?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ct-sots-2026:coventry-question-1#question",
+          "contestId": "ct-sots-2026:coventry-question-1",
+          "questionText": "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?",
+          "officialStatement": "On the November 3, 2026 election ballot, there will be two referendum questions\nregarding the Charter of the Town of Coventry. This explanatory text has been prepared\nby the Town Clerk pursuant to Connecticut General Statutes §9-369b(a). It is not\nintended to advocate for either the approval or disapproval of the referendum questions.\nVoters are also urged to read the proposed Charter revision as published on the town\nwebsite and in the Chronicle in full prior to casting their ballot so that they may draw\ntheir own conclusions.\n\nGeneral Explanation\n\nThe Charter of the Town of Coventry defines the form of government for the town and\nsets out the roles and responsibilities of most elected and appointed town officials. The\nCharter also governs the framework for how town government is conducted, such as the\nprocess for adopting ordinances and the town budget, and the identification and\noperation of various town agencies. Periodically, municipalities update their charters to\nreflect changes in the way the business of government is conducted, to reassign roles\nand responsibilities or to clarify certain provisions. This process, called charter revision,\nmay result in minor technical and administrative changes, as well as substantive\nchanges to the structure of local government.\n\nOn August 4, 2025, the Town Council voted to establish a Charter Revision Commission\nto consider and report on amendments to the Charter of the Town of Coventry,\naccording to the process set forth by the Connecticut General Statutes. The proposed\nCharter is the compilation of the proposed amendments to the Charter approved by the\nCharter Revision Commission and the Town Council during this process. The Town\nCouncil, on August 30, 2026, voted to have the proposed Charter submitted to the\nvoters of the Town of Coventry in two separate questions on the November 3, 2026\nballot.\n\nCurrently, Section 9-3(a) of the Charter requires approval by the Town Council\nand a Town Meeting for any appropriation outside of the approved budget of more than\n\n1% of the current tax levy but less than $100,000, or the issuance of bonds or borrowing\nof less than $100,000. In turn, Section 9-3(e) of the Charter requires approval by the\nTown Council and a Town Meeting adjourned to a referendum for any appropriation of\n$100,000 or more outside of the approved budget or the issuance of bonds or borrowing\nof $100,000 or more. As proposed to be revised, Section 7-3(a) will amend the\nthreshold for approval by a town meeting for appropriations of over 1% of the current tax\nlevy and issuance of bonds or borrowing of less than 1% of the current tax levy.\nLikewise, as proposed to be revised, Section 7-3(d) will amend the threshold for\napproval by referendum to appropriations outside of the approved budget in excess of\n1.5% of the current tax levy, and issuance of bonds or borrowing of more than 1% of the\ncurrent tax levy. For purposes of context, during fiscal year 2026-2027, 1% of the\ncurrent tax levy is an amount equal to $384,000 and 1.5% of the current tax levy is an\namount equal to $576,000. These amounts will increase over time with inflation and\nmay fluctuate as future town budgets are adopted.",
+          "officialNumber": "1",
+          "provenance": {
+            "sourceUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+            "sourceOrg": "Coventry Town Clerk — official neutral referendum explanation",
+            "collectedAt": "2026-11-03T05:57:43.906666+00:00",
+            "verifiedAt": "2026-11-03T06:14:38.552672+00:00",
+            "quote": "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:coventry-question-2#question",
+          "contestId": "ct-sots-2026:coventry-question-2",
+          "questionText": "Shall additional provisions of the Coventry Town Charter be amended other than as provided in question #1 above, all as recommended in the final report of the Charter Revision Commission dated July 29, 2026, and as on file with the Coventry Town Clerk?",
+          "officialStatement": "On the November 3, 2026 election ballot, there will be two referendum questions\nregarding the Charter of the Town of Coventry. This explanatory text has been prepared\nby the Town Clerk pursuant to Connecticut General Statutes §9-369b(a). It is not\nintended to advocate for either the approval or disapproval of the referendum questions.\nVoters are also urged to read the proposed Charter revision as published on the town\nwebsite and in the Chronicle in full prior to casting their ballot so that they may draw\ntheir own conclusions.\n\nGeneral Explanation\n\nThe Charter of the Town of Coventry defines the form of government for the town and\nsets out the roles and responsibilities of most elected and appointed town officials. The\nCharter also governs the framework for how town government is conducted, such as the\nprocess for adopting ordinances and the town budget, and the identification and\noperation of various town agencies. Periodically, municipalities update their charters to\nreflect changes in the way the business of government is conducted, to reassign roles\nand responsibilities or to clarify certain provisions. This process, called charter revision,\nmay result in minor technical and administrative changes, as well as substantive\nchanges to the structure of local government.\n\nOn August 4, 2025, the Town Council voted to establish a Charter Revision Commission\nto consider and report on amendments to the Charter of the Town of Coventry,\naccording to the process set forth by the Connecticut General Statutes. The proposed\nCharter is the compilation of the proposed amendments to the Charter approved by the\nCharter Revision Commission and the Town Council during this process. The Town\nCouncil, on August 30, 2026, voted to have the proposed Charter submitted to the\nvoters of the Town of Coventry in two separate questions on the November 3, 2026\nballot.\n\nIn addition to the revisions proposed in Question 1, the Charter Revision\nCommission has recommended a number of other changes, some of which are stylistic\nor grammatical, and others of which are substantive. In addition to making the text\ngender-neutral, Chapters 5 and 6 were switched, the existing Chapter 7 was deleted\nbecause it is no longer necessary, and Chapter 9 was renumbered as Chapter 7.\n\n       Listed below are some of the substantive revisions that are proposed. Please\nnote that this list is not exhaustive and the actual document should be consulted by the\nvoters.\n\n           o 1-4: Language has been adjusted to allow for alternate means of notice\n             should state statutes change in the future\n           o 2-1: Start of terms of municipal officers adjusted to avoid potential conflict\n           o 2-3: Number of voting districts reduced\n           o 3-2: Timeline around start of terms adjusted to avoid conflict, Council vice\n             chair position formally established\n           o 5-3: The process for the Town Manager appointing an acting Manager in\n             their absence has been clarified and streamlined\n           o 5-4: The personnel authority of the Town Manager is explicitly affirmed\n\n          o Chapter 6: Position titles updated, obsolete language removed, tree\n            warden and canine control officer removed from charter due to being\n            merged with other positions\n          o 7-1: The annual Town meeting has been moved to the first Tuesday in\n            May and the Council is authorized to add advisory questions to the budget\n            asking whether it is too high or too low\n          o 7-2: A process is established for rescheduling a special Town meeting in\n            the event there is insufficient meeting space for those in attendance\n          o 8-6: In this section, and elsewhere throughout the charter, an attendance\n            requirement based on 3% of registered voters within the Town is\n            established for action at the Town Meeting to overturn, overrule, or modify\n            the action of the Council\n          o 8-6: The budget timeline has been slightly adjusted to give Town staff and\n            boards additional time to plan and prepare budget materials\n          o 8-8: Language is updated to simplify the process for approving payments,\n            the Town Manager is authorized to make intra-departmental transfers,\n            requirement for inter-departmental transfers to only occur at the end of the\n            fiscal year is removed\n          o 9-2: Language surrounding ethics is strengthened and updated, Council is\n            mandated to have an ethics ordinance in place\n          o 9-5: Charter Review is mandated every 10 years to ensure regular reviews\n            and revisions to reflect best practices and current procedures\n\n\n\nA majority vote on each question will determine whether the proposed Charter is\napproved or not.\n\nCopies of the current Charter, the proposed Charter and a document comparing the\ncurrent Charter and the proposed Charter are available in the office of the Town Clerk\nand on the Town of Coventry website at www.coventry-ct.gov.",
+          "officialNumber": "2",
+          "provenance": {
+            "sourceUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+            "sourceOrg": "Coventry Town Clerk — official neutral referendum explanation",
+            "collectedAt": "2026-11-03T05:57:43.906666+00:00",
+            "verifiedAt": "2026-11-03T06:14:38.552672+00:00",
+            "quote": "Shall additional provisions of the Coventry Town Charter be amended other than as provided in question #1 above, all as recommended in the final report of the Charter Revision Commission dated July 29, 2026, and as on file with the Coventry Town Clerk?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ct-sots-2026:coventry-question-1",
+          "whatItDoes": "Replaces the charter’s fixed $100,000 spending and borrowing approval threshold with percentages of the town’s current tax levy—the amount raised by its property tax. For appropriations outside the annual budget, amounts over 1% of the tax levy would require Council and Town Meeting approval; appropriations at or above 1.5% would also require a public yes-or-no vote after the Town Meeting adjourns. Borrowing below 1% would require Council and Town Meeting approval; bond or note issues at or above 1% would require the adjourned public vote after Council approval. The Council could place that vote at a separate time or the next regular town election, and a majority voting on it must approve. The town’s explanation gives fiscal year 2026–2027 examples of $384,000 for 1% and $576,000 for 1.5%; the dollar thresholds would change with the tax levy. The affected sections would be renumbered from 9-3(a) and 9-3(e) to 7-3(a) and 7-3(d).",
+          "yesMeans": "Approve these percentage-based requirements for Town Meeting and public-vote approval of spending and borrowing.",
+          "noMeans": "Reject these proposed approval-threshold changes and retain the current charter requirements.",
+          "parts": [],
+          "sourceUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+          "sourceHash": "2225cb2f6a6303b083827526e91571712692e06f4a8ff55e6047281c540aa06a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:14:38.552672+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:coventry-question-2",
+          "whatItDoes": "Revises Coventry’s charter provisions other than the spending and borrowing thresholds in Question 1. The amendments take effect 30 calendar days after passage. Municipal terms and the Council’s organizational meeting would begin within 2 business days after the clerk certifies the election; the Council would formally select a vice chair. The town would have 1 voting district, with later changes allowed by Council ordinance and no boundary changes within 90 days before an election. It explicitly gives the Council power to contract for use of town facilities, modernizes election-equipment language, and follows state-law public-notice requirements. The manager could designate a town employee as acting manager during a temporary absence or disability after notifying the Council; the Council would appoint one if none was designated during incapacity. If an absence or disability is likely to exceed a month, the Council would appoint an employee for up to 180 days; two-thirds of the full Council could replace the acting manager. The manager’s personnel authority would be explicit, subject to charter and state-law exceptions and Council approval where required; the school board would retain authority over public-school employees. It updates appointive-office titles and procedures, allows joining a regional health district, and removes obsolete competitive-exam requirements and separate charter listings for duties now handled within the police and public-works departments. The annual budget Town Meeting would move to the first Tuesday in May at 7 p.m., followed by a public budget vote the second Tuesday afterward. The Council could add a nonbinding question asking whether the budget is too low, adequate, or too high. At least 3% of registered voters must be present and voting to amend the Council’s recommended budget, including increasing or decreasing its total or major categories; voters could not change individual line items or alter required payments on previously approved debt. After a failed budget vote, a special budget meeting and another vote within 14 days would repeat until adoption; the same 3% attendance requirement would apply to amendments, and the Council could set an interim tax rate under state law. A meeting exceeding its legally permitted capacity, with no reasonably available larger venue, would adjourn without action and send its matters to a referendum set by the Council. The 3% present-and-voting requirement would also apply to Town Meeting changes to nonannual appropriations, approval of proposals the Council sends to a meeting, and ordinance enactment or overrule through petitions; applicable majority-vote requirements remain. Budget deadlines would include March 12 for department estimates, March 22 for the manager’s budget, and April 21 for the Council’s public hearing; public budget copies would be available at least 5 days before the hearing and annual meeting. It simplifies payment approvals, lets the manager approve transfers within a department, and lets the Council approve transfers between departments throughout the fiscal year, including transfers from debt-service appropriations with Council approval. It broadens ethics restrictions to officials and employees, including direct or indirect financial interests in town decisions they participate in, except as law permits, and requires the Council to maintain an ethics code with disclosure and complaint procedures. A Charter Revision Commission must be established within 10 years after the previous commission expires; the package also reorganizes chapters, removes obsolete provisions, and uses gender-neutral language.",
+          "yesMeans": "Approve the additional charter revision package, separate from the spending and borrowing thresholds in Question 1.",
+          "noMeans": "Reject this additional charter revision package; Question 1 is decided separately.",
+          "parts": [],
+          "sourceUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+          "sourceHash": "2225cb2f6a6303b083827526e91571712692e06f4a8ff55e6047281c540aa06a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:14:38.552672+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:14:38.552672+00:00",
+    "reviewedBy": "CX-VOTES exact official Coventry question, full proposed charter and neutral explanation check",
+    "sources": [
+      {
+        "requestedUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+        "finalUrl": "https://www.coventry-ct.gov/DocumentCenter/View/11116/Coventry-Charter-Revision-Explanatory-text-2026-",
+        "httpStatus": 200,
+        "rawHash": "2225cb2f6a6303b083827526e91571712692e06f4a8ff55e6047281c540aa06a",
+        "retrievedAt": "2026-11-03T05:57:43.906666+00:00",
+        "publisher": "Coventry Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete official three-page neutral November 3, 2026 explanation, both questions and their full statements. Original PDF bytes retained. Complete clean proposed charter supplies the exact percentages and all material limits; original bytes and full native text retained separately."
+      }
+    ]
+  }
+}

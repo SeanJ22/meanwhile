@@ -1,0 +1,26 @@
+{
+  "held": {
+    "path": "/workspace/meanwhile/data/ballot/2026-general/ok.json",
+    "sha256": "cdf6962adb89be5b0e09e5e2ea3a7210f2eac5b1ac2f971afb70d28520f99ecb",
+    "contests": 95,
+    "candidateRows": 191,
+    "measures": 2,
+    "statewideRetentions": 9
+  },
+  "preparedLaneInputs": [
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/OK/oklahoma/ballot-input/ok.json",
+      "sha256": "6f65236324ffa20f4c828a38fee68fe2f8a42aebdc57954959e48c1a2026eb4e",
+      "contests": 3,
+      "sharedRegionalOrCityOfficeMatches": []
+    }
+  ],
+  "registry": {
+    "path": "/workspace/meanwhile/data/derived/registration/ok.json",
+    "sha256": "0ed719b6cb0f437e9872fac7d467630cd9f3e8fa0c83b22c725dcb92ba09ad6f"
+  },
+  "incomingSharedExistingOfficeIds": [],
+  "newInstallableFields": 3,
+  "newInstallablePeople": 6,
+  "newHeldOfficeFields": 1
+}

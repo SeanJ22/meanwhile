@@ -1,0 +1,856 @@
+
+<!doctype html>
+<html lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>FAQ - Election Board</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+  <link rel="stylesheet" href="/css/tcicons.css" />
+  <link rel="stylesheet" href="/css/umbraco-blockgridlayout.css" />
+
+    <!-- Bundled styles -->
+        <link rel="stylesheet" href="/Content/bootstrap.min.css" />
+        <link rel="stylesheet" href="/Content/fontawesome-all.min.css" />
+        <link rel="stylesheet" href="/Content/v4-shims.css" />
+        <link rel="stylesheet" href="/css/umbraco-starterkit-style.css" />
+        <link rel="stylesheet" href="/Content/ej2/material.css" />
+        <link rel="stylesheet" href="/Content/snackbar.min.css" />
+        <link rel="stylesheet" href="/css/county-style.css" />
+
+    <!-- Bundled scripts (jQuery and core dependencies) -->
+        <script src="/Scripts/jquery-3.5.1.js"></script>
+        <script src="/Scripts/umd/popper.min.js"></script>
+        <script src="/Scripts/bootstrap.js"></script>
+        <script src="/Scripts/ej2/ej2.min.js"></script>
+        <script src="/Scripts/snackbar.min.js"></script>
+        <script src="/Scripts/sidebar.js"></script>
+        <script src="/Scripts/vendor/counterup/counterup.min.js"></script>
+        <script src="/Scripts/vendor/superfish/superfish.min.js"></script>
+        <script src="/Scripts/vendor/venobox/venobox.min.js"></script>
+        <script src="/Scripts/umbraco-starterkit-app.js"></script>
+        <script src="/Scripts/county-main.js"></script>
+
+    
+    
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-60JK4N4CEW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-60JK4N4CEW');
+</script>
+
+<link rel="shortcut icon" href="https://www2.tulsacounty.org/favicon.ico?v=2" />
+</head>
+
+<body>
+
+    <header id="header">
+        
+
+<div class="container-fluid">
+
+    <nav class="navbar navbar-expand-xl navbar-dark fixed-top">
+        <div id="logo" class="pull-left">
+            <a title="tulsacounty.org" href="/home/"><img src="/media/4ojacfvv/county_logo.png" alt="Navigation Logo"></a> <a href="/electionboard/" title="Election Board Home"><span class="logotext">Election Board</span> </a> 
+        </div>
+        <button class="navbar-toggler" type="button" data-trigger="#main_nav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse" id="main_nav">
+            <div class="offcanvas-header mt-3">
+                <button class="btn btn-outline-danger btn-close float-right"> &times Close </button>
+                <div id="mobilelogo">
+                    <a title="tulsacounty.org" href="/home/"><img src="/media/4ojacfvv/county_logo.png" alt="Navigation Logo"></a><br />
+                </div>
+            </div>
+            <ul class="navbar-nav">
+
+
+                        <li class="nav-item dropdown top-navigation-dropdown-menu" onmouseover="dropDownOpen(this)" onclick="window.location.href = '/electionboard/elections/'"
+                            onmouseleave="dropDownClose(this)">
+                            <a class="nav-link top-navigation-dropdown-menu dropdown-toggle text-white" href="/electionboard/elections/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Elections
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="margin-top: 0">
+                                    <a href="/electionboard/elections/" class="dropdown-item"><b></b></a>
+                                        <a class="dropdown-item" href="/electionboard/elections/next-election/">Next Election</a>
+                                        <a class="dropdown-item" href="/electionboard/elections/election-calendar/">Election Calendar</a>
+                                        <a class="dropdown-item" href="/electionboard/elections/election-filings/">Election Filings</a>
+                                        <a class="dropdown-item" href="/electionboard/elections/election-results/">Election Results</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown top-navigation-dropdown-menu" onmouseover="dropDownOpen(this)" onclick="window.location.href = '/electionboard/voting/'"
+                            onmouseleave="dropDownClose(this)">
+                            <a class="nav-link top-navigation-dropdown-menu dropdown-toggle text-white" href="/electionboard/voting/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Voting
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="margin-top: 0">
+                                    <a href="/electionboard/voting/" class="dropdown-item"><b></b></a>
+                                        <a class="dropdown-item" href="/electionboard/voting/absentee-voting/">Absentee Voting</a>
+                                        <a class="dropdown-item" href="/electionboard/voting/voter-registration/">Voter Registration</a>
+                                        <a class="dropdown-item" href="/electionboard/voting/polling-locations/">Polling Locations</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown top-navigation-dropdown-menu" onmouseover="dropDownOpen(this)" onclick="window.location.href = '/electionboard/resources/'"
+                            onmouseleave="dropDownClose(this)">
+                            <a class="nav-link top-navigation-dropdown-menu dropdown-toggle text-white" href="/electionboard/resources/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Resources
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="margin-top: 0">
+                                    <a href="/electionboard/resources/" class="dropdown-item"><b></b></a>
+                                        <a class="dropdown-item" href="/electionboard/resources/poll-workers/">Poll Workers</a>
+                                        <a class="dropdown-item" href="/electionboard/resources/online-resources/">Online Resources</a>
+                                        <a class="dropdown-item" href="/electionboard/resources/faq/">FAQ</a>
+                                        <a class="dropdown-item" href="/electionboard/resources/press-releases/">Press Releases</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown top-navigation-dropdown-menu" onmouseover="dropDownOpen(this)" onclick="window.location.href = '/electionboard/about/'"
+                            onmouseleave="dropDownClose(this)">
+                            <a class="nav-link top-navigation-dropdown-menu dropdown-toggle text-white" href="/electionboard/about/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                About
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="margin-top: 0">
+                                    <a href="/electionboard/about/" class="dropdown-item"><b></b></a>
+                                        <a class="dropdown-item" href="/electionboard/about/election-board-and-staff/">Election Board and Staff</a>
+                                        <a class="dropdown-item" href="/electionboard/about/elected-officials/">Elected Officials</a>
+                            </div>
+                        </li>
+            </ul>
+            <form class="form-inline mt-3 ml-auto mr-4" action="/electionboard/election-board-search/" method="get">
+                    <div class="input-group">
+                        <input type="search" class="form-control"  placeholder="How may we help you?" aria-label="How may we help you?" aria-describedby="basic-addon" id="query" name="query">
+                         <button class="btn btn-dark btn-large" aria-label="searchBtn" name="searchBtn" id="searchBtn" type="submit" value="Search"> <i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+
+        </div> <!-- navbar-collapse.// -->
+    </nav>
+</div>
+
+<script>
+    function dropDownOpen(element) {
+        element.children[0].ariaExpanded = true;
+        element.classList.add('show');
+        element.children[1].classList.add('show')
+    }
+    function dropDownClose(element) {
+        element.children[0].ariaExpanded = false;
+        element.classList.remove('show');
+        element.children[1].classList.remove('show')
+    }
+</script>
+
+    </header>
+    <script src="/App_Plugins/UmbracoForms/assets/aspnet-client-validation/dist/aspnet-validation.min.js"></script>
+    <main>
+        <style>
+   #ContentPageHeader{
+        position: relative;
+          background-color: #fff;
+    
+    }
+
+    #ContentPageHeader.standard::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-image: url("/media/e24dwlir/hero_banner_225.png");
+        background-position: center;
+        background-color: rgba(207, 216, 220, 0.5);
+    }
+
+
+    #ContentPageHeader.nonstandard::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-image:  
+        linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+        ), url("/media/e24dwlir/hero_banner_225.png");
+        background-position: center;
+           background-color: #fff;
+  
+    }
+    @media screen and (max-width: 480px) {
+    
+        #ContentPageHeader {
+            min-height: 0;
+            height: 50px;
+        }
+        h1.no-air {
+            font-size: 1.2em;
+            margin: -30px;
+            text-align:center;
+        }
+     .section__hero-content {
+             max-width: 100vw;
+  
+        }
+    }
+</style>
+
+<section id="ContentPageHeader" class="section section--themed section--header section--content-center-bottom standard">
+    <span role="img" aria-label="Gray and white textured bar with gray Tulsa County logo on the far left side "> </span>
+    <div class="section__hero-content">
+        <h1 class="no-air" style='color: #000000; filter: brightness(100%)'>FAQ</h1>
+    </div>
+ 
+</section>
+<p>&nbsp;</p>
+
+
+
+<div id="contentPageContainer" class="container-fluid">
+    <div class="container">
+     
+          <div class="col-md-9">
+        
+
+
+<div style="width: fit-content; min-width: 280px;">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a aria-label="Election Board Home" href="/electionboard/">Election Board Home</a></li>
+                    <li class="breadcrumb-item"><a aria-label="Resources" href="/electionboard/resources/">Resources</a></li>
+                    <li class="breadcrumb-item active" aria-label="FAQ" aria-current="page"><a href="/electionboard/resources/faq/">FAQ</a></li>
+        </ol>
+    </nav>
+</div>
+</div>
+            <div class="col-md-3">
+      <p><a rel="noopener" href="https://okvoterportal.okelections.us/" target="_blank" title="OK Voter Portal" class="btn btn-info btn-lg">OK Voter Portal &raquo;</a></p></div>
+   
+    </div>
+    
+    <div class="container">
+        
+<div class="umb-block-grid"
+     data-grid-columns="12;"
+     style="--umb-block-grid--grid-columns: 12;">
+    
+<div class="umb-block-grid__layout-container">
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/e80234088487459aad324753dbfac64a"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <h3>Voter Registration FAQ</h3>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="faqPageBlock"
+            data-content-element-type-key="e5040318-edad-4e70-a670-6286a9166301"
+            data-element-udi="umb://element/e31dd0d80bc0450dba75028a42cc5df0"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div id="accordion-dcf98592-d352-4">
+        <p><i>Click Question to reveal Answer.</i></p>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading1Who_is_my_Senator_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse1Who_is_my_Senator_" aria-expanded="false" aria-controls="collapse1Who_is_my_Senator_">
+                            <h3 class="text-left m-0 p-0">Who is my Senator?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse1Who_is_my_Senator_" class="collapse" aria-labelledby="heading1Who_is_my_Senator_" data-parent="#accordion-dcf98592-d352-4">
+                        <div class="card-body bg-light p-2">
+                            <p>You can find your representatives using the <a rel="noopener" href="https://okvoterportal.okelections.us/" target="_blank" title="OK Voter Portal">OK Voter Portal</a> or you can call our office at <a href="Tel:918-596-5780">918-596-5780</a> and someone can assist you. </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading2What_Precinct_do_I_live_in_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse2What_Precinct_do_I_live_in_" aria-expanded="false" aria-controls="collapse2What_Precinct_do_I_live_in_">
+                            <h3 class="text-left m-0 p-0">What Precinct do I live in?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse2What_Precinct_do_I_live_in_" class="collapse" aria-labelledby="heading2What_Precinct_do_I_live_in_" data-parent="#accordion-dcf98592-d352-4">
+                        <div class="card-body bg-light p-2">
+                            <p>You can use the <a href="https://okvoterportal.okelections.us/" title="OK Voter Portal">OK Voter Portal</a> to find your precinct number and a map to that location. Or you can call our office at <a href="Tel:%20918-596-5780">918-596-5780</a>.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading3How_do_I_register_to_vote_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse3How_do_I_register_to_vote_" aria-expanded="false" aria-controls="collapse3How_do_I_register_to_vote_">
+                            <h3 class="text-left m-0 p-0">How do I register to vote?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse3How_do_I_register_to_vote_" class="collapse" aria-labelledby="heading3How_do_I_register_to_vote_" data-parent="#accordion-dcf98592-d352-4">
+                        <div class="card-body bg-light p-2">
+                            <p>You can register to vote in three different ways.</p>
+<p>1. You can use the <a rel="noopener" href="https://okvoterportal.okelections.us/Home/RegWizard" target="_blank" title="OK Voter Portal Voter Registration Wizard">OK Voter Portal Voter Registration Wizard</a>, but you must sign, print, and mail or deliver the application to the Tulsa County Election Board at 555 N Denver Ave, Tulsa, OK 74103. </p>
+<p>2. You can register in person at the Tulsa County Election Board office at 12000 E Skelly Dr, Tulsa, OK 74128.</p>
+<p>3. You can find a voter registration form at any Tag Agency, Post Office, or your local Library. </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading4Am_I_registered_to_vote_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse4Am_I_registered_to_vote_" aria-expanded="false" aria-controls="collapse4Am_I_registered_to_vote_">
+                            <h3 class="text-left m-0 p-0">Am I registered to vote?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse4Am_I_registered_to_vote_" class="collapse" aria-labelledby="heading4Am_I_registered_to_vote_" data-parent="#accordion-dcf98592-d352-4">
+                        <div class="card-body bg-light p-2">
+                            <p>You can call our office at <a href="tel:918-596-5771">918-596-5780</a> and someone can assist you. </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading5How_do_I_start_a_petition_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse5How_do_I_start_a_petition_" aria-expanded="false" aria-controls="collapse5How_do_I_start_a_petition_">
+                            <h3 class="text-left m-0 p-0">How do I start a petition?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse5How_do_I_start_a_petition_" class="collapse" aria-labelledby="heading5How_do_I_start_a_petition_" data-parent="#accordion-dcf98592-d352-4">
+                        <div class="card-body bg-light p-2">
+                            <p>To start a petition you must contact the Oklahoma State Election Board office at <a href="Tel:%20405-521-2391">405-521-2391.</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading6How_long_does_it_take_to_receive_my_Voter_ID_card_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse6How_long_does_it_take_to_receive_my_Voter_ID_card_" aria-expanded="false" aria-controls="collapse6How_long_does_it_take_to_receive_my_Voter_ID_card_">
+                            <h3 class="text-left m-0 p-0">How long does it take to receive my Voter ID card?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse6How_long_does_it_take_to_receive_my_Voter_ID_card_" class="collapse" aria-labelledby="heading6How_long_does_it_take_to_receive_my_Voter_ID_card_" data-parent="#accordion-dcf98592-d352-4">
+                        <div class="card-body bg-light p-2">
+                            <p>It takes about 10 business days from the date our office has received your voter registration application or the date that you requested a new Voter ID card.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading7Where_may_I_file_a_complaint_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse7Where_may_I_file_a_complaint_" aria-expanded="false" aria-controls="collapse7Where_may_I_file_a_complaint_">
+                            <h3 class="text-left m-0 p-0">Where may I file a complaint?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse7Where_may_I_file_a_complaint_" class="collapse" aria-labelledby="heading7Where_may_I_file_a_complaint_" data-parent="#accordion-dcf98592-d352-4">
+                        <div class="card-body bg-light p-2">
+                            <p>You may file a complaint with our office by calling <a href="Tel:%20918-596-5780">918-596-5780</a> or you can email us at <a href="Mailto:%20electionboard@tulsacounty.org"><span class="__cf_email__" data-cfemail="5f3a333a3c2b3630313d303e2d3b1f2b2a332c3e3c302a312b2671302d38">[email&#160;protected]</span></a>.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading8Can_I_vote_if_I_am_a_convicted_Felon_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse8Can_I_vote_if_I_am_a_convicted_Felon_" aria-expanded="false" aria-controls="collapse8Can_I_vote_if_I_am_a_convicted_Felon_">
+                            <h3 class="text-left m-0 p-0">Can I vote if I am a convicted Felon?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse8Can_I_vote_if_I_am_a_convicted_Felon_" class="collapse" aria-labelledby="heading8Can_I_vote_if_I_am_a_convicted_Felon_" data-parent="#accordion-dcf98592-d352-4">
+                        <div class="card-body bg-light p-2">
+                            <p>To find out if you are eligible to vote after being convicted of a felony call your probation officer or your local District Attorney. </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading9How_do_I_receive_a_replacement_Voter_ID_card_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse9How_do_I_receive_a_replacement_Voter_ID_card_" aria-expanded="false" aria-controls="collapse9How_do_I_receive_a_replacement_Voter_ID_card_">
+                            <h3 class="text-left m-0 p-0">How do I receive a replacement Voter ID card?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse9How_do_I_receive_a_replacement_Voter_ID_card_" class="collapse" aria-labelledby="heading9How_do_I_receive_a_replacement_Voter_ID_card_" data-parent="#accordion-dcf98592-d352-4">
+                        <div class="card-body bg-light p-2">
+                            <p>You can request a replacement Voter ID card by calling our office at <a href="Tel:%20918-596-5771">918-596-5780</a>.</p>
+                        </div>
+                    </div>
+                </div>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/0c4fa519e8dc483ebdf4f6eccf0e999b"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <h3>Absentee Voting FAQ</h3>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="faqPageBlock"
+            data-content-element-type-key="e5040318-edad-4e70-a670-6286a9166301"
+            data-element-udi="umb://element/9f9fd884bd424518b078fffd21739cfd"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div id="accordion-2a3fa6f1-4b2d-4">
+        <p><i>Click Question to reveal Answer.</i></p>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading1How_do_I_request_an_absentee_ballot_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse1How_do_I_request_an_absentee_ballot_" aria-expanded="false" aria-controls="collapse1How_do_I_request_an_absentee_ballot_">
+                            <h3 class="text-left m-0 p-0">How do I request an absentee ballot?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse1How_do_I_request_an_absentee_ballot_" class="collapse" aria-labelledby="heading1How_do_I_request_an_absentee_ballot_" data-parent="#accordion-2a3fa6f1-4b2d-4">
+                        <div class="card-body bg-light p-2">
+                            <p>To request an absentee ballot, voters should complete an absentee ballot application and return the application to the Tulsa County Election Board. </p>
+<p>Apply online through the <a rel="noopener" href="https://okvoterportal.okelections.us/" target="_blank" title="OK Voter Portal">OK Voter Portal here</a>.</p>
+<p>Download an <a rel="noopener" href="https://oklahoma.gov/content/dam/ok/en/elections/absentee-ballots/absentee-ballot-application.pdf" target="_blank" title="Absentee Ballot Request Form_2026">Absentee Ballot Request Form</a> to be completed, signed, and returned by mail fax, email (as an attachment), or in-person to the Tulsa County Election Board.</p>
+<p>Voters can also contact the Tulsa County Election Board to mail or email an application to them. </p>
+<p>Absentee Department</p>
+<p>Phone: 918-596-5767</p>
+<p>Email: <a href="/cdn-cgi/l/email-protection#01606372646f756464776e75686f664175746d7260626e746f75782f6e7366"><span class="__cf_email__" data-cfemail="14757667717a607171627b607d7a73546061786775777b617a606d3a7b6673">[email&#160;protected]</span></a></p>
+<p>Fax: 918-596-4536</p>
+<p>Mail: Tulsa County Election Board</p>
+<p style="padding-left: 40px;">12000 East Skelly Drive </p>
+<p style="padding-left: 40px;">Tulsa, OK 74128</p>
+<p> </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading2Do_I_need_an_excuse_or_special_circumstance_to_vote_by_absentee_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse2Do_I_need_an_excuse_or_special_circumstance_to_vote_by_absentee_" aria-expanded="false" aria-controls="collapse2Do_I_need_an_excuse_or_special_circumstance_to_vote_by_absentee_">
+                            <h3 class="text-left m-0 p-0">Do I need an excuse or special circumstance to vote by absentee?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse2Do_I_need_an_excuse_or_special_circumstance_to_vote_by_absentee_" class="collapse" aria-labelledby="heading2Do_I_need_an_excuse_or_special_circumstance_to_vote_by_absentee_" data-parent="#accordion-2a3fa6f1-4b2d-4">
+                        <div class="card-body bg-light p-2">
+                            <p>No, any registered voter in Oklahoma may vote by absentee ballot.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading3If_I_requested_an_absentee_ballot__can_I_still_vote_in_person_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse3If_I_requested_an_absentee_ballot__can_I_still_vote_in_person_" aria-expanded="false" aria-controls="collapse3If_I_requested_an_absentee_ballot__can_I_still_vote_in_person_">
+                            <h3 class="text-left m-0 p-0">If I requested an absentee ballot, can I still vote in person?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse3If_I_requested_an_absentee_ballot__can_I_still_vote_in_person_" class="collapse" aria-labelledby="heading3If_I_requested_an_absentee_ballot__can_I_still_vote_in_person_" data-parent="#accordion-2a3fa6f1-4b2d-4">
+                        <div class="card-body bg-light p-2">
+                            <p>When you register for absentee, your name remains on the voting registry so if you decide to vote in person you can. At the polling location, they will know you requested absentee and will have you sign an affidavit that states you did not use the ballot that was mailed to you. They will issue you a new ballot. You will need to destroy the ballot that was mailed to you.</p>
+<p>Either way is fine as long as you don’t vote both absentee and in-person. That would be a felony.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading4Do_I_have_to_have_my_absentee_ballot_notarized_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse4Do_I_have_to_have_my_absentee_ballot_notarized_" aria-expanded="false" aria-controls="collapse4Do_I_have_to_have_my_absentee_ballot_notarized_">
+                            <h3 class="text-left m-0 p-0">Do I have to have my absentee ballot notarized?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse4Do_I_have_to_have_my_absentee_ballot_notarized_" class="collapse" aria-labelledby="heading4Do_I_have_to_have_my_absentee_ballot_notarized_" data-parent="#accordion-2a3fa6f1-4b2d-4">
+                        <div class="card-body bg-light p-2">
+                            <p>By law, “standard” absentee ballot affidavits are required to be notarized.</p>
+<p>“Physically incapacitated” absentee ballots are available to those who are physically incapacitated and their caregivers. Their absentee ballot affidavit must have the voter’s signature witnessed by two people instead of a notary.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading5Can_I_hand_deliver_my_ballot_to_the_Election_Board_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse5Can_I_hand_deliver_my_ballot_to_the_Election_Board_" aria-expanded="false" aria-controls="collapse5Can_I_hand_deliver_my_ballot_to_the_Election_Board_">
+                            <h3 class="text-left m-0 p-0">Can I hand-deliver my ballot to the Election Board?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse5Can_I_hand_deliver_my_ballot_to_the_Election_Board_" class="collapse" aria-labelledby="heading5Can_I_hand_deliver_my_ballot_to_the_Election_Board_" data-parent="#accordion-2a3fa6f1-4b2d-4">
+                        <div class="card-body bg-light p-2">
+                            <p>The Election Board can accept hand-delivered ballots and you are only delivering your own ballot. You will need to come inside and show your ID to verify that it is you delivering your own. Ballots should be completely assembled as if they were to be mailed. We are open 8:00 a.m to 5:00 p.m., Monday through Friday at 12000 East Skelly Drive Tulsa, OK 74128.</p>
+                        </div>
+                    </div>
+                </div>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/413cc1d6b9754f3d893cf9a595a4153a"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <h3>Absentee Voting Guides</h3>
+<p><a href="/media/s2znajwr/absentee-ballot-instruction-graphic_s_122023.pdf">Standard Absentee Ballot Voting Guide</a></p>
+<p><a href="/media/41gnqd2t/absentee-ballot-instruction-graphic_pi_122023.pdf">Physically Incapacitated Voting Guide </a></p>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/2f691ef6f7584364928fd609dceff443"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <h3>Polling Locations FAQ</h3>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="faqPageBlock"
+            data-content-element-type-key="e5040318-edad-4e70-a670-6286a9166301"
+            data-element-udi="umb://element/9b4fbeda4f7d43fc8207f888682fb5fc"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div id="accordion-a2b66c78-9145-4">
+        <p><i>Click Question to reveal Answer.</i></p>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading1Why_do_I_have_to_drive_past_a_polling_location_to_vote_at_my_polling_location_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse1Why_do_I_have_to_drive_past_a_polling_location_to_vote_at_my_polling_location_" aria-expanded="false" aria-controls="collapse1Why_do_I_have_to_drive_past_a_polling_location_to_vote_at_my_polling_location_">
+                            <h3 class="text-left m-0 p-0">Why do I have to drive past a polling location to vote at my polling location?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse1Why_do_I_have_to_drive_past_a_polling_location_to_vote_at_my_polling_location_" class="collapse" aria-labelledby="heading1Why_do_I_have_to_drive_past_a_polling_location_to_vote_at_my_polling_location_" data-parent="#accordion-a2b66c78-9145-4">
+                        <div class="card-body bg-light p-2">
+                            <p>The residence address that you are registered under and where it is located within your precinct boundaries dictates which precinct you are allowed to vote in. The voting locations you are driving past are dedicated to another precinct, which may not have the same ballot style as your precinct.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading2Can_I_vote_at_another_polling_location_other_than_my_own_polling_location_on_election_day_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse2Can_I_vote_at_another_polling_location_other_than_my_own_polling_location_on_election_day_" aria-expanded="false" aria-controls="collapse2Can_I_vote_at_another_polling_location_other_than_my_own_polling_location_on_election_day_">
+                            <h3 class="text-left m-0 p-0">Can I vote at another polling location other than my own polling location on election day?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse2Can_I_vote_at_another_polling_location_other_than_my_own_polling_location_on_election_day_" class="collapse" aria-labelledby="heading2Can_I_vote_at_another_polling_location_other_than_my_own_polling_location_on_election_day_" data-parent="#accordion-a2b66c78-9145-4">
+                        <div class="card-body bg-light p-2">
+                            <p>No. By Oklahoma law voters must vote at their assigned polling location on election day based on which precinct boundaries your address is located within. Other precincts may have a different ballot style.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading3Why_did_my_polling_location_change_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse3Why_did_my_polling_location_change_" aria-expanded="false" aria-controls="collapse3Why_did_my_polling_location_change_">
+                            <h3 class="text-left m-0 p-0">Why did my polling location change?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse3Why_did_my_polling_location_change_" class="collapse" aria-labelledby="heading3Why_did_my_polling_location_change_" data-parent="#accordion-a2b66c78-9145-4">
+                        <div class="card-body bg-light p-2">
+                            <p>Polling locations are <strong>voluntary</strong> locations that allow the Tulsa County Election Board to use their facilities for the purpose of conducting elections. When these facilities no longer wish to be a polling location, we must find a new location within certain precinct boundaries to conduct elections.</p>
+                        </div>
+                    </div>
+                </div>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/423e707d8d4d49449fb1f03f2b650cf4"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <h3>Election Day Related FAQ</h3>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="faqPageBlock"
+            data-content-element-type-key="e5040318-edad-4e70-a670-6286a9166301"
+            data-element-udi="umb://element/a1bb30a6d0294990b12d2a0456d5f71c"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div id="accordion-78108368-7867-4">
+        <p><i>Click Question to reveal Answer.</i></p>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading1How_do_you_know_if_I_voted_twice_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse1How_do_you_know_if_I_voted_twice_" aria-expanded="false" aria-controls="collapse1How_do_you_know_if_I_voted_twice_">
+                            <h3 class="text-left m-0 p-0">How do you know if I voted twice?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse1How_do_you_know_if_I_voted_twice_" class="collapse" aria-labelledby="heading1How_do_you_know_if_I_voted_twice_" data-parent="#accordion-78108368-7867-4">
+                        <div class="card-body bg-light p-2">
+                            <p>After an election, we go through every precinct registry and enter every voter that signed the precinct registry to give everyone voter credit. We also enter in every voter who voted during early voting and who voted by absentee. After every voter is given voter credit in the system, we double-check for accuracy. For a larger election, this process could take up to a few weeks to complete.  </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading2What_is_the_difference_between_a_Democrat__Republican__Libertarian__and_Independent_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse2What_is_the_difference_between_a_Democrat__Republican__Libertarian__and_Independent_" aria-expanded="false" aria-controls="collapse2What_is_the_difference_between_a_Democrat__Republican__Libertarian__and_Independent_">
+                            <h3 class="text-left m-0 p-0">What is the difference between a Democrat, Republican, Libertarian, and Independent?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse2What_is_the_difference_between_a_Democrat__Republican__Libertarian__and_Independent_" class="collapse" aria-labelledby="heading2What_is_the_difference_between_a_Democrat__Republican__Libertarian__and_Independent_" data-parent="#accordion-78108368-7867-4">
+                        <div class="card-body bg-light p-2">
+                            <p>When you register you select which political party you want to be affiliated with. In the state of Oklahoma, there are three political parties- Democrat, Republican, and Libertarian. Independents are those who do not affiliate with a political party or who have selected “no party” on their voter registration application. To learn more about each of the political parties you can reach out to them individually.  </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading3When_will_we_know_the_results_of_the_election_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse3When_will_we_know_the_results_of_the_election_" aria-expanded="false" aria-controls="collapse3When_will_we_know_the_results_of_the_election_">
+                            <h3 class="text-left m-0 p-0">When will we know the results of the election?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse3When_will_we_know_the_results_of_the_election_" class="collapse" aria-labelledby="heading3When_will_we_know_the_results_of_the_election_" data-parent="#accordion-78108368-7867-4">
+                        <div class="card-body bg-light p-2">
+                            <p>Unofficial results are available the night of the election as they are received by each precinct. For local elections, the results are certified the Friday after the election and then are official. For state or Federal elections, they are not official until the State Election Board certifies the results the week following the election. Click <a href="https://oklahoma.gov/elections/elections-results/election-results/2022-election-results.html" title="2022 Election Results">here</a> to follow the results as they are uploaded.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading4When_will_my_voter_credit_show_up_in_the_OK_Voter_Portal_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse4When_will_my_voter_credit_show_up_in_the_OK_Voter_Portal_" aria-expanded="false" aria-controls="collapse4When_will_my_voter_credit_show_up_in_the_OK_Voter_Portal_">
+                            <h3 class="text-left m-0 p-0">When will my voter credit show up in the OK Voter Portal?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse4When_will_my_voter_credit_show_up_in_the_OK_Voter_Portal_" class="collapse" aria-labelledby="heading4When_will_my_voter_credit_show_up_in_the_OK_Voter_Portal_" data-parent="#accordion-78108368-7867-4">
+                        <div class="card-body bg-light p-2">
+                            <p>Your voter credit will show up in the OK Voter Portal after the election. It could take up to 10 business days for your voter credit to be uploaded.</p>
+                        </div>
+                    </div>
+                </div>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/52739dd1e03343559c53d51c5708a5cf"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <h3>OK Voter Portal FAQ</h3>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="faqPageBlock"
+            data-content-element-type-key="e5040318-edad-4e70-a670-6286a9166301"
+            data-element-udi="umb://element/bbe986fe0cc64d42a9d3582c6f31f4c1"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div id="accordion-117e974b-9b62-4">
+        <p><i>Click Question to reveal Answer.</i></p>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading1Why_can_I_not_find_myself_in_the_OK_Voter_Portal_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse1Why_can_I_not_find_myself_in_the_OK_Voter_Portal_" aria-expanded="false" aria-controls="collapse1Why_can_I_not_find_myself_in_the_OK_Voter_Portal_">
+                            <h3 class="text-left m-0 p-0">Why can I not find myself in the OK Voter Portal?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse1Why_can_I_not_find_myself_in_the_OK_Voter_Portal_" class="collapse" aria-labelledby="heading1Why_can_I_not_find_myself_in_the_OK_Voter_Portal_" data-parent="#accordion-117e974b-9b62-4">
+                        <div class="card-body bg-light p-2">
+                            <p>There are several possible reasons why you cannot find yourself on the OK Voter Portal. </p>
+<p>1. You entered information that is different than what is on your Voter Registration Application. </p>
+<p>2. If you just submitted a new Voter Registration Application it may not have been processed yet. </p>
+<p>3. You may not be currently registered in the State of Oklahoma and you may need to submit a new Voter Registration Application.</p>
+<p>For any of these reasons, you may call our Voter Registration Department at 918-596-5780 and someone will be able to assist you. </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading2Why_is_my_voter_credit_not_showing_in_the_OK_Voter_Portal_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse2Why_is_my_voter_credit_not_showing_in_the_OK_Voter_Portal_" aria-expanded="false" aria-controls="collapse2Why_is_my_voter_credit_not_showing_in_the_OK_Voter_Portal_">
+                            <h3 class="text-left m-0 p-0">Why is my voter credit not showing in the OK Voter Portal?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse2Why_is_my_voter_credit_not_showing_in_the_OK_Voter_Portal_" class="collapse" aria-labelledby="heading2Why_is_my_voter_credit_not_showing_in_the_OK_Voter_Portal_" data-parent="#accordion-117e974b-9b62-4">
+                        <div class="card-body bg-light p-2">
+                            <p>The reason your voter credit is not showing in the OK Voter Portal may be because we enter voter credit into our system by hand and double-check it before it is posted on the OK Voter Portal. For larger elections, it may take us a few weeks to have all of the voter credit entered and submitted due to the larger number of voters who voted in a single election. </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-header faq text-white" id="heading3Why_does_my_absentee_ballot_not_show_as_counted_">
+                        <button class="btn btn-link text-white m-1 p-1" data-toggle="collapse" data-target="#collapse3Why_does_my_absentee_ballot_not_show_as_counted_" aria-expanded="false" aria-controls="collapse3Why_does_my_absentee_ballot_not_show_as_counted_">
+                            <h3 class="text-left m-0 p-0">Why does my absentee ballot not show as counted?</h3>
+                        </button>
+                    </div>
+                    <div id="collapse3Why_does_my_absentee_ballot_not_show_as_counted_" class="collapse" aria-labelledby="heading3Why_does_my_absentee_ballot_not_show_as_counted_" data-parent="#accordion-117e974b-9b62-4">
+                        <div class="card-body bg-light p-2">
+                            <p>The Absentee Ballot tracker will not show if your absentee ballot has been counter before the day after an election. Absentee Ballots are processed up until 7:00 p.m. on election night and information about whether your ballot was counted or not won't be available until after the election. It can take a few days after the election for the OK Voter Portal to show that information. </p>
+                        </div>
+                    </div>
+                </div>
+</div>
+        </div>
+</div>
+
+</div>
+
+    </div>
+</div>
+              
+            <br/>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    var sections = document.querySelectorAll(".grid-section > div > .row");
+    sections.forEach(row => {
+        var col = [...row.querySelectorAll(".column")];
+        row.innerHTML = `<div class="container"></div>`;
+        col.forEach(node => {
+            row.querySelector(".container").innerHTML += node.outerHTML
+        })
+        
+        
+    })
+      function resizeIframe(obj){
+     obj.style.height = 0;
+     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+  }
+</script>
+
+
+    </main>
+
+
+<!-- Footer -->
+
+<footer class="page-footer font-small">
+
+  <!-- Footer Links -->
+  <div class="container text-center text-md-left mt-5">
+
+    <!-- Grid row -->
+    <div class="row mt-3">
+      <!-- Grid column -->
+      <div class="col-12-sm mx-auto mb-4">
+
+        <!-- Links -->
+       <span class="footerheader text-uppercase font-weight-bold">CONTACT US<span>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 80%;">
+        <p>
+        12000 East Skelly Drive</p>
+        <p>
+        Tulsa, OK 74128</p>
+          <p>
+        (11th & Garnett)</p>
+        <p>
+         Main Phone <i class="fas fa-phone mr-2 ml-2"></i><a class="tel" href="tel:918-596-5780">918-596-5780</a></p>
+             <p>
+         Main Fax <i class="fas fa-fax mr-2 ml-2"></i>918-596-5145</p>
+                 <p>
+        Absentee Fax <i class="fas fa-fax mr-2 ml-2"></i>918-596-4536</p>
+                        <p>
+        Email <i class="fas fa-envelope mr-2 ml-2"></i><a href="/cdn-cgi/l/email-protection#492c252c2a3d2026272b26283b2d093d3c253a282a263c273d3067263b2e"><span><span class="__cf_email__" data-cfemail="02676e6761766b6d6c606d6370664276776e7163616d776c767b2c6d7065">[email&#160;protected]</span> </a></p>
+
+
+      </div>
+      <!-- Grid column -->
+      <div class="col-12-sm col-6-md mx-auto mb-4">
+
+        <!-- Links -->
+        <span class="footerheader text-uppercase font-weight-bold">QUICK LINKS</span>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 80%;">
+            <div class="row">
+           <div class="col-6 text-left text-nowrap">
+                       <p>
+          <a href="/acceptable-use/">Acceptable Use</a>
+        </p>
+          <p>
+          <a href="/accessibility/">Accessibility</a>
+        </p>
+                <p>
+          <a href="/ada-grievance/">ADA Grievance</a>
+        </p>
+
+     
+   
+
+  </div>
+         <div class="col-6 text-left text-nowrap">
+        <p>
+          <a href="https://tulsacounty.wd1.myworkdayjobs.com/TC" title="Careers" target="_blank">Careers</a>
+        </p>
+      <p>
+          <a href="/open-records/">Open Records</a>
+        </p>
+      <p>
+          <a href="/privacy/">Privacy</a>
+        </p>
+  </div>
+    </div>
+      </div>
+      <!-- Grid column -->
+
+      <!-- Grid column -->
+        <div class="col-12-sm mx-auto mb-4">
+
+        <!-- Links -->
+        <span class="footerheader text-uppercase font-weight-bold">SHARE & CONNECT</span>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 80%;">
+        <p class="text-left">
+          <a class="fb-ic" target="_blank" href="https://www.facebook.com/TCElectionBoard">
+            <i class="fab fa-facebook-f fa-lg mr-4"></i>Facebook
+          </a>
+        </p>
+         <p class="text-left"><a class="tw-ic" target="_blank" href="https://twitter.com/TCElectionBoard">
+            <i class="fab fa-twitter fa-lg mr-3"></i>Twitter
+          </a>
+        </p>
+
+
+      </div>
+        <div class="col-12 mx-auto mb-4 text-black">
+         Our office hours are 8:00 a.m. to 5:00 p.m., Monday through Friday.
+  <div class="footer-copyright text-left text-black-20 mt-1">&copy; 2026 Tulsa County:
+    <a href="https://www.tulsacounty.org/">tulsacounty.org</a>
+  </div>
+  <!-- Copyright -->
+             </div>
+    
+    </div>
+    <!-- Grid row -->
+  </div>
+  <!-- Footer Links -->
+
+
+</footer>
+<!-- Footer -->
+
+
+
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript">
+    $("[data-trigger]").on("click", function(){
+        var trigger_id =  $(this).attr('data-trigger');
+        $(trigger_id).toggleClass("show");
+        $('body').toggleClass("offcanvas-active");
+    });
+
+// close button
+    $(".btn-close").click(function(e){
+        $(".navbar-collapse").removeClass("show");
+        $("body").removeClass("offcanvas-active");
+    });
+    
+// add aria-label    
+      for(var prop in document.getElementsByTagName('a')){
+       const title = document.getElementsByTagName('a')[prop].title;
+       if (title)
+       { document.getElementsByTagName('a')[prop].ariaLabel = title;}
+    };
+</script>
+    
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"eb130f1defe74478a4c1d734fa90dbd5","spa":2}' crossorigin="anonymous"></script>
+</body>
+
+</html>

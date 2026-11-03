@@ -1,0 +1,513 @@
+
+
+
+
+
+
+
+
+
+
+
+
+INCOG | Tulsa, OK  | Regional Partners - Regional Solutions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+      
+    
+
+    
+
+      
+
+    
+
+  
+
+  
+
+    
+
+  
+
+  
+
+    
+ 
+
+  
+
+  
+
+    
+
+  
+
+  
+
+    
+ 
+
+  
+
+  
+
+    
+
+      
+
+        
+• 
+Overview
+
+          
+
+            
+
+              
+• 
+Aerial Photography
+
+            
+
+            
+
+              
+ 
+
+            
+
+            
+
+              
+•
+ 
+Demographics
+
+            
+
+            
+
+              
+ 
+
+            
+
+            
+
+              
+•
+
+              
+Map and Data Resource Links
+
+            
+
+            
+
+              
+ 
+
+            
+
+            
+
+              
+•
+
+              
+Customer Map Request
+
+            
+
+          
+
+          
+• 
+Map Gallery
+
+          
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+          
+ 
+
+        
+ 
+
+        
+ 
+
+        
+Overview
+
+        
+
+          
+Since 1967, INCOG has been collecting and using geographic information to support the decision and policy making of elected officials and community planners.  Using geographic information systems (GIS), INCOG maintains a strong regional and local mapping program.  INCOG continues to provide a variety of mapping and data resources to support our agency programs and member governments.  GIS is a proven tool in spatial analysis and support of how local governments operate.
+
+            
+
+            In addition to providing high quality map products to our member governments and agency departments, we also offer mapping services to the public.  The list below provides an example of mapping products that are available for purchase.
+
+          
+
+          
+
+            
+Historical Aerial Photography (dating back to 1950)
+
+            
+Current Aerial Photography
+
+            
+2-foot Digital Elevation Contours
+
+            
+Regional Corporate Limits Maps
+
+          
+
+          
+As computer technology has advanced, INCOG has migrated our spatial data and aerial imagery into an Environmental Systems Research Institute (ESRI) ArcSDE Enterprise geodatabase.  This has given us the capability to migrate many of our mapping products to online web maps that remain up to date and available to the public to at no charge. 
+
+            
+
+            By optimizing the acquisition, organization, analysis, and dissemination of authoritative GIS data and aerial imagery, INCOG has become a respected and reliable regional spatial data warehouse serving the needs of its member communities.          
+
+          
+For more information, contact: 
+
+            Barbara Gibson, Manager
+
+            918-579-9428
+
+  
+bgibson@incog.org
+          
+
+          
+Aerial Photography
+
+  We contract with a reputable vender to collect, process, and deliver high quality, color aerial ortho-imagery.
+
+          
+Our coverage area is approximately 942 square miles and encompasses all the City of Tulsa and Tulsa County, as well as the City of Sapulpa in Creek County, the cities of Sand Springs and Skiatook in Osage County, the cities of Catoosa, Collinsville, Claremore, Owasso and Verdigris in Rogers County, and the city of Broken Arrow in Wagoner County.  INCOG members within the coverage area receive a set of aerial photographs either in digital format, for those with GIS, or large size paper plots for those communities not using GIS currently.          
+
+          
+Aerial photographs are  made available to the public for a fee.   
+See maps and pricing list for more details
+.
+
+
+Back to Top
+
+          
+Demographics
+
+            Demographic data is the basis behind many of our planning department efforts, transportation planning models and projections, and agency wide grant applications.  INCOG works closely with our members and departments to provide the most up to date demographic information available.  The 
+Map Gallery
+ has a host of maps displaying a variety of different data topics.  Topics include land use, zoning, school district boundaries, census boundaries, traffic counts, and floodplains, to name a few.
+
+          
+The table below shows the area communities population change over time.  Other links to data sources for demographics can be found in the 
+maps and data resources links
+.
+
+          
+
+          
+
+          
+Back to Top
+
+          
+Map and Data Resource Links
+
+          
+
+            
+Census Data
+
+            
+Bureau of Economic Analysis
+
+            
+Center for Spatial Analysis at OU
+
+            
+OK Employment Security Commission
+
+            
+OKmaps Oklahoma
+
+            
+Oklahoma Department of Commerce
+
+            
+Oklahoma Geographic Information Council 
+
+            
+Oklahoma Health Statistics
+
+            
+OSU Library’s Oklahoma Maps Digital Collection
+
+            
+On the Map
+ (employer and household mapping dataset US Bureau of the Census) 
+
+            
+State of Oklahoma
+
+            
+TIGERweb
+ (US Bureau of the Census) 
+
+            
+US Bureau of the Census
+
+            
+
+          
+
+          
+Back to Top
+
+          
+Customer Map Request
+
+            In addition to providing high quality map products to our member governments and agency departments, we also offer mapping services to the public. The list below provides an example of mapping products that are available for purchase.
+
+            •	Historical Aerial Photography (dating back to 1950)
+
+            •	Current Aerial Photography
+
+            •	2-foot Digital Elevation Contours
+
+            •	Regional Corporate Limits Maps
+
+          
+To make a map request  please fill out the 
+Customer Map Request Form
+ and submit it to 
+INCOGmaps@incog.org
+ Please allow 3 to 5 days for your map request to be completed.  If we have questions, one of our staff will contact you to confirm the details of your map request.
+
+          
+
+          
+Back to Top
+
+            
+
+          
+
+        
+ 
+
+          
+  
+
+      
+
+    
+
+  
+
+  
+
+    
+
+    
+
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+
+

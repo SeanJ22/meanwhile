@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-03T10:06:19.793927+00:00",
+  "completeNativeHashes": 45,
+  "failedPublicRoutesRetained": 7,
+  "exactSavedSourceQuotes": 31,
+  "installableOfficialNovemberListFields": 3,
+  "installableNames": 6,
+  "heldCurrentNovemberFields": 1,
+  "heldCurrentNovemberNames": 2,
+  "actualSampleVerifiedFields": 0,
+  "wholeCountyJudicialMemberships": 2,
+  "geometry": [
+    {
+      "ocdId": "ocd-division/country:us/state:ok/place:tulsa/council_district:1",
+      "geometryType": "Polygon",
+      "valid": true,
+      "coordinatesUnchanged": true,
+      "linkedActiveContestIds": [
+        "ok-cx-local-2026-tulsa-council-district-1"
+      ]
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ok/judicial_district:14/electoral_division:4",
+      "geometryType": "Polygon",
+      "valid": true,
+      "coordinatesUnchanged": true,
+      "linkedActiveContestIds": []
+    }
+  ],
+  "activeMissingReaderKeys": 2,
+  "independentHeldDivisionGeographyKeys": 1,
+  "heldStatewideAndLegislativeRowsUnchanged": true,
+  "heldNineRetentionRecordsUnchanged": true,
+  "upstreamExactInputsPreserved": 1,
+  "upstreamQuestionsAndExplanationsUnchanged": true,
+  "noOrdinaryFilingOrUnopposedStatusImports": true,
+  "readerDelivery": "NOT_CLAIMED",
+  "parentSharedModules": "PARENT_OWNS_NOT_RUN_BY_WORKER",
+  "productionWrites": "NONE"
+}

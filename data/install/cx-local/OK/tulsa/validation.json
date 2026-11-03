@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-03T10:14:11.519Z",
+  "state": "OK",
+  "sources": 45,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 11,
+  "newContests": 3,
+  "refreshedContests": 0,
+  "candidacies": 6,
+  "pdfNameWhitespaceNormalizations": 0,
+  "sourceNameCaseNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 95,
+  "unrelatedCandidateCoreFieldsPreserved": 191,
+  "unrelatedCandidateAliasEnrichments": 191,
+  "unmatchedReaderDivisionCount": 2,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ok/judicial_district:14",
+    "ocd-division/country:us/state:ok/place:tulsa/council_district:1"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ok/judicial_district:14",
+    "ocd-division/country:us/state:ok/place:tulsa/council_district:1"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

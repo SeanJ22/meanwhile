@@ -1,0 +1,507 @@
+
+<!doctype html>
+<html lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Next Election - Election Board</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+  <link rel="stylesheet" href="/css/tcicons.css" />
+  <link rel="stylesheet" href="/css/umbraco-blockgridlayout.css" />
+
+    <!-- Bundled styles -->
+        <link rel="stylesheet" href="/Content/bootstrap.min.css" />
+        <link rel="stylesheet" href="/Content/fontawesome-all.min.css" />
+        <link rel="stylesheet" href="/Content/v4-shims.css" />
+        <link rel="stylesheet" href="/css/umbraco-starterkit-style.css" />
+        <link rel="stylesheet" href="/Content/ej2/material.css" />
+        <link rel="stylesheet" href="/Content/snackbar.min.css" />
+        <link rel="stylesheet" href="/css/county-style.css" />
+
+    <!-- Bundled scripts (jQuery and core dependencies) -->
+        <script src="/Scripts/jquery-3.5.1.js"></script>
+        <script src="/Scripts/umd/popper.min.js"></script>
+        <script src="/Scripts/bootstrap.js"></script>
+        <script src="/Scripts/ej2/ej2.min.js"></script>
+        <script src="/Scripts/snackbar.min.js"></script>
+        <script src="/Scripts/sidebar.js"></script>
+        <script src="/Scripts/vendor/counterup/counterup.min.js"></script>
+        <script src="/Scripts/vendor/superfish/superfish.min.js"></script>
+        <script src="/Scripts/vendor/venobox/venobox.min.js"></script>
+        <script src="/Scripts/umbraco-starterkit-app.js"></script>
+        <script src="/Scripts/county-main.js"></script>
+
+    
+    
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-60JK4N4CEW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-60JK4N4CEW');
+</script>
+
+<link rel="shortcut icon" href="https://www2.tulsacounty.org/favicon.ico?v=2" />
+</head>
+
+<body>
+
+    <header id="header">
+        
+
+<div class="container-fluid">
+
+    <nav class="navbar navbar-expand-xl navbar-dark fixed-top">
+        <div id="logo" class="pull-left">
+            <a title="tulsacounty.org" href="/home/"><img src="/media/4ojacfvv/county_logo.png" alt="Navigation Logo"></a> <a href="/electionboard/" title="Election Board Home"><span class="logotext">Election Board</span> </a> 
+        </div>
+        <button class="navbar-toggler" type="button" data-trigger="#main_nav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse" id="main_nav">
+            <div class="offcanvas-header mt-3">
+                <button class="btn btn-outline-danger btn-close float-right"> &times Close </button>
+                <div id="mobilelogo">
+                    <a title="tulsacounty.org" href="/home/"><img src="/media/4ojacfvv/county_logo.png" alt="Navigation Logo"></a><br />
+                </div>
+            </div>
+            <ul class="navbar-nav">
+
+
+                        <li class="nav-item dropdown top-navigation-dropdown-menu" onmouseover="dropDownOpen(this)" onclick="window.location.href = '/electionboard/elections/'"
+                            onmouseleave="dropDownClose(this)">
+                            <a class="nav-link top-navigation-dropdown-menu dropdown-toggle text-white" href="/electionboard/elections/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Elections
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="margin-top: 0">
+                                    <a href="/electionboard/elections/" class="dropdown-item"><b></b></a>
+                                        <a class="dropdown-item" href="/electionboard/elections/next-election/">Next Election</a>
+                                        <a class="dropdown-item" href="/electionboard/elections/election-calendar/">Election Calendar</a>
+                                        <a class="dropdown-item" href="/electionboard/elections/election-filings/">Election Filings</a>
+                                        <a class="dropdown-item" href="/electionboard/elections/election-results/">Election Results</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown top-navigation-dropdown-menu" onmouseover="dropDownOpen(this)" onclick="window.location.href = '/electionboard/voting/'"
+                            onmouseleave="dropDownClose(this)">
+                            <a class="nav-link top-navigation-dropdown-menu dropdown-toggle text-white" href="/electionboard/voting/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Voting
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="margin-top: 0">
+                                    <a href="/electionboard/voting/" class="dropdown-item"><b></b></a>
+                                        <a class="dropdown-item" href="/electionboard/voting/absentee-voting/">Absentee Voting</a>
+                                        <a class="dropdown-item" href="/electionboard/voting/voter-registration/">Voter Registration</a>
+                                        <a class="dropdown-item" href="/electionboard/voting/polling-locations/">Polling Locations</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown top-navigation-dropdown-menu" onmouseover="dropDownOpen(this)" onclick="window.location.href = '/electionboard/resources/'"
+                            onmouseleave="dropDownClose(this)">
+                            <a class="nav-link top-navigation-dropdown-menu dropdown-toggle text-white" href="/electionboard/resources/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Resources
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="margin-top: 0">
+                                    <a href="/electionboard/resources/" class="dropdown-item"><b></b></a>
+                                        <a class="dropdown-item" href="/electionboard/resources/poll-workers/">Poll Workers</a>
+                                        <a class="dropdown-item" href="/electionboard/resources/online-resources/">Online Resources</a>
+                                        <a class="dropdown-item" href="/electionboard/resources/faq/">FAQ</a>
+                                        <a class="dropdown-item" href="/electionboard/resources/press-releases/">Press Releases</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown top-navigation-dropdown-menu" onmouseover="dropDownOpen(this)" onclick="window.location.href = '/electionboard/about/'"
+                            onmouseleave="dropDownClose(this)">
+                            <a class="nav-link top-navigation-dropdown-menu dropdown-toggle text-white" href="/electionboard/about/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                About
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="margin-top: 0">
+                                    <a href="/electionboard/about/" class="dropdown-item"><b></b></a>
+                                        <a class="dropdown-item" href="/electionboard/about/election-board-and-staff/">Election Board and Staff</a>
+                                        <a class="dropdown-item" href="/electionboard/about/elected-officials/">Elected Officials</a>
+                            </div>
+                        </li>
+            </ul>
+            <form class="form-inline mt-3 ml-auto mr-4" action="/electionboard/election-board-search/" method="get">
+                    <div class="input-group">
+                        <input type="search" class="form-control"  placeholder="How may we help you?" aria-label="How may we help you?" aria-describedby="basic-addon" id="query" name="query">
+                         <button class="btn btn-dark btn-large" aria-label="searchBtn" name="searchBtn" id="searchBtn" type="submit" value="Search"> <i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+
+        </div> <!-- navbar-collapse.// -->
+    </nav>
+</div>
+
+<script>
+    function dropDownOpen(element) {
+        element.children[0].ariaExpanded = true;
+        element.classList.add('show');
+        element.children[1].classList.add('show')
+    }
+    function dropDownClose(element) {
+        element.children[0].ariaExpanded = false;
+        element.classList.remove('show');
+        element.children[1].classList.remove('show')
+    }
+</script>
+
+    </header>
+    <script src="/App_Plugins/UmbracoForms/assets/aspnet-client-validation/dist/aspnet-validation.min.js"></script>
+    <main>
+        <style>
+   #ContentPageHeader{
+        position: relative;
+          background-color: #fff;
+    
+    }
+
+    #ContentPageHeader.standard::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-image: url("/media/e24dwlir/hero_banner_225.png");
+        background-position: center;
+        background-color: rgba(207, 216, 220, 0.5);
+    }
+
+
+    #ContentPageHeader.nonstandard::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-image:  
+        linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+        ), url("/media/e24dwlir/hero_banner_225.png");
+        background-position: center;
+           background-color: #fff;
+  
+    }
+    @media screen and (max-width: 480px) {
+    
+        #ContentPageHeader {
+            min-height: 0;
+            height: 50px;
+        }
+        h1.no-air {
+            font-size: 1.2em;
+            margin: -30px;
+            text-align:center;
+        }
+     .section__hero-content {
+             max-width: 100vw;
+  
+        }
+    }
+</style>
+
+<section id="ContentPageHeader" class="section section--themed section--header section--content-center-bottom standard">
+    <span role="img" aria-label="Gray and white textured bar with gray Tulsa County logo on the far left side "> </span>
+    <div class="section__hero-content">
+        <h1 class="no-air" style='color: #000000; filter: brightness(100%)'>Upcoming Election Information</h1>
+    </div>
+ 
+</section>
+<p>&nbsp;</p>
+
+
+
+<div id="contentPageContainer" class="container-fluid">
+    <div class="container">
+     
+          <div class="col-md-9">
+        
+
+
+<div style="width: fit-content; min-width: 280px;">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a aria-label="Election Board Home" href="/electionboard/">Election Board Home</a></li>
+                    <li class="breadcrumb-item"><a aria-label="Elections" href="/electionboard/elections/">Elections</a></li>
+                    <li class="breadcrumb-item active" aria-label="Next Election" aria-current="page"><a href="/electionboard/elections/next-election/">Next Election</a></li>
+        </ol>
+    </nav>
+</div>
+</div>
+            <div class="col-md-3">
+      <p><a rel="noopener" href="https://okvoterportal.okelections.us/" target="_blank" title="OK Voter Portal" class="btn btn-info btn-lg">OK Voter Portal &raquo;</a></p></div>
+   
+    </div>
+    
+    <div class="container">
+        
+<div class="umb-block-grid"
+     data-grid-columns="12;"
+     style="--umb-block-grid--grid-columns: 12;">
+    
+<div class="umb-block-grid__layout-container">
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/9f135025315e481e8622a795b3457f1e"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <h3>UPCOMING ELECTION: November 3
+
+Midterm General Election</h3>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/ae2c0f8a88634919818508c84ed61a79"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <h3>VOTER REGISTRATION DEADLINE: October 9</h3>
+<p style="text-align: left;">This is the last day to register to vote in time for the election. Any application postmarked by midnight on this date will be entered in time for the election.</p>
+<p><strong>Register to vote:</strong></p>
+<p>Use the <a rel="noopener" type="external" href="https://okvoterportal.okelections.us/Home/RegWizard" target="_blank" data-router-slot="disabled">OK Voter Registration Wizard</a></p>
+<p>Paper applications are available at any Tag Agency or the <a rel="noopener" type="external" href="https://www.google.com/maps/place/12000+E+Skelly+Dr,+Tulsa,+OK+74128/@36.1497413,-95.8460462,895m/data=!3m2!1e3!4b1!4m6!3m5!1s0x87b6f3111d04306f:0x5c6d9c1c70c627ef!8m2!3d36.149737!4d-95.8434713!16s%2Fg%2F11bw428vvn?entry=ttu&amp;g_ep=EgoyMDI2MDIyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" title="Skelly Location" data-router-slot="disabled" data-anchor="?entry=ttu&amp;g_ep=EgoyMDI2MDIyNC4wIKXMDSoASAFQAw%3D%3D">Election Board Office</a></p>
+<p><strong>Update voter registration:</strong></p>
+<p>Voters who are already registered can update their address using the <a rel="noopener" type="external" href="https://okvoterportal.okelections.us/" target="_blank" data-router-slot="disabled">OK Voter Portal</a></p>
+<p>More info about <a rel="noopener" type="external" href="https://oklahoma.gov/elections/voter-registration/register-to-vote.html" target="_blank" data-router-slot="disabled">Registering to vote in Oklahoma</a> </p>
+<p> </p>
+<h3>ABSENTEE BALLOT REQUEST DEADLINE: October 19</h3>
+<p>Request an Absentee Ballot:</p>
+<p>Use the <a rel="noopener" type="external" href="https://okvoterportal.okelections.us/" target="_blank" data-router-slot="disabled">OK Voter Portal</a> or</p>
+<p>Submit a <a rel="noopener" type="external" href="https://oklahoma.gov/content/dam/ok/en/elections/absentee-ballots/absentee-ballot-application.pdf" target="_blank" title="Absentee Ballot Request Form_2026" data-router-slot="disabled">paper request</a> to the <a rel="noopener" type="external" href="https://www.google.com/maps/place/12000+E+Skelly+Dr,+Tulsa,+OK+74128/@36.1497413,-95.8460462,895m/data=!3m2!1e3!4b1!4m6!3m5!1s0x87b6f3111d04306f:0x5c6d9c1c70c627ef!8m2!3d36.149737!4d-95.8434713!16s%2Fg%2F11bw428vvn?entry=ttu&amp;g_ep=EgoyMDI2MDIyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" title="Skelly Location" data-router-slot="disabled" data-anchor="?entry=ttu&amp;g_ep=EgoyMDI2MDIyNC4wIKXMDSoASAFQAw%3D%3D">Election Board Office</a></p>
+<p>More info about <a type="external" href="/electionboard/voting/absentee-voting/" data-router-slot="disabled">Absentee Voting</a></p>
+<p> </p>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/c957bc603bc54241b66b604eba68864d"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <h3>EARLY VOTING: October 28, 29, 30, 8am - 6pm; October 31, 8am - 2pm</h3>
+<p>Early Voting for the November election will be held at four locations: the Tulsa County Election Board located at 12000 East Skelly Drive, Tulsa, OK 74128 (near 11th &amp; Garnett across from East Central High School) and the Tulsa Tech Center at 4000 West Florence in Broken Arrow, Chandler Park at 6500 West 21st Street, and O'Brien Park at 6149 North Lewis Avenue.</p>
+<table border="0" style="min-width: 50px;">
+<tbody>
+<tr>
+<td class="p-3" colspan="1" rowspan="1">
+<p class="text-center"><img class="img-responsive" src="/media/qajbdio0/skelly-location-map_early-voting.jpg" alt="skelly-location-map_early-voting" width="500" height="425"><br><a rel="noopener" type="external" href="https://www.google.com/maps/place/Tulsa+County+Election+Board/@36.1496388,-95.8469327,895m/data=!3m2!1e3!4b1!4m6!3m5!1s0x87b6eb9bf7b3860b:0xce1070f3b723053b!8m2!3d36.1496345!4d-95.8443578!16s%2Fg%2F1tnplj1c?entry=ttu&amp;g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" title="Tulsa County Election Board Directions" data-router-slot="disabled" data-anchor="?entry=ttu&amp;g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"><em>Tulsa County Election Board</em></a></p>
+</td>
+<td class="p-3" colspan="1" rowspan="1">
+<p class="text-center"><img class="img-responsive" src="/media/1i5htq2g/tulsa-tech-center-map_1.jpg" alt="tulsa-tech-center-map_1" width="500" height="425"><br><a rel="noopener" type="external" href="https://www.google.com/maps/place/Tulsa+Tech+Center,+Broken+Arrow,+OK+74011/@36.0042104,-95.8399063,897m/data=!3m2!1e3!4b1!4m6!3m5!1s0x87b68ec281e2c453:0x14ffc5c90628d4b1!8m2!3d36.0042061!4d-95.8373314!16s%2Fg%2F1tgcsdcy?entry=ttu&amp;g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" title="Directions to Tulsa Tech Center BA" data-router-slot="disabled" data-anchor="?entry=ttu&amp;g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D"><em>Tulsa Tech Center, Broken Arrow</em></a></p>
+</td>
+</tr>
+<tr>
+<td class="p-3" colspan="1" rowspan="1">
+<p class="text-center"><img class="img-responsive" src="/media/jpdp1kxb/chandler-park.jpg" alt="Chandler Park" width="500" height="425"> <br><a rel="noopener" type="external" href="https://www.google.com/maps/search/chandler+park/@36.1331507,-96.0700484,895m/data=!3m2!1e3!4b1?entry=ttu&amp;g_ep=EgoyMDI2MDkyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" title="Chandler Park Directions" data-router-slot="disabled"><em>Chandler Park Community Center</em></a></p>
+</td>
+<td class="p-3" colspan="1" rowspan="1">
+<p class="text-center"><img class="img-responsive" src="/media/g02frphg/obrien-park.jpg" alt="Obrien Park" width="500" height="425"> <br><a rel="noopener" type="external" href="https://www.google.com/maps/place/O'Brien+Park/@36.2453324,-95.9570503,894m/data=!3m2!1e3!4b1!4m6!3m5!1s0x87b6ef1ea47598ed:0xf9e53ce3366261f6!8m2!3d36.2453281!4d-95.9544754!16s%2Fg%2F1tdmk_h7?entry=ttu&amp;g_ep=EgoyMDI2MDkyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" title="O’Brien Park Community Center" data-router-slot="disabled"><em>O’Brien Park Community Center</em></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/fb054d51c32243a38f89df544f505af3"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <p>Any registered voter in Tulsa County eligible to vote in the upcoming election can vote at early voting as long as they have not returned an absentee ballot. In order to vote, you must be registered in Tulsa County and have proper ID. You may show any ID issued by the United States, the State of Oklahoma, or a federally recognized tribal government if it includes your name, a photograph of you, and an expiration date that is later than the election in which you are voting. The free Voter Identification Card is also acceptable.</p>
+<p> </p>
+<h3>ABSENTEE BALLOT RETURN DEADLINES</h3>
+<p>Mailed Absentee Ballots must be received by the Tulsa County Election Board by <strong>7 p.m. on Election Day </strong>to be counted. Hand-delivered Absentee Ballots must be received by <strong>5 p.m. on the day before the Election</strong> at the Tulsa County Election Board Office to be counted. Voters can ONLY HAND DELIVER THEIR OWN BALLOT AND MUST SHOW AN ID WHEN DELIVERING THEIR BALLOT.</p>
+<p>With the passage of Senate Bill 376, as of November 1, 2023, Physically Incapacitated Absentee Ballots (Pink Affidavit Envelope) can be hand delivered.</p>
+<p>More information about <a rel="noopener" type="external" href="/electionboard/voting/absentee-voting/" target="_blank" title="TC Absentee Voting" data-router-slot="disabled">Absentee Voting</a></p>
+<p> </p>
+<h3>ELECTION DAY: November 3</h3>
+<p>On Election Day, polls are open from 7 a.m. to 7 p.m. Find your polling location and a sample ballot <a rel="noopener" type="external" href="https://oklahoma.gov/elections/ovp.html" target="_blank" title="here">here</a><a rel="noopener" type="external" href="/media/11paoll2/polling-place-list_110326.pdf" target="_blank" title="Polling Place List November 2026"></a><a rel="noopener" type="external" href="https://okvoterportal.okelections.us/" target="_blank" data-router-slot="disabled"></a>. There is no voting at the Tulsa County Election Board on Election Day. You can also find a list of polling locations for the next Election <a rel="noopener" href="/media/11paoll2/polling-place-list_110326.pdf" target="_blank" title="Polling Place List November 2026">here</a>.</p>
+</div>
+        </div>
+</div>
+
+</div>
+
+    </div>
+</div>
+              
+            <br/>
+<script>
+    var sections = document.querySelectorAll(".grid-section > div > .row");
+    sections.forEach(row => {
+        var col = [...row.querySelectorAll(".column")];
+        row.innerHTML = `<div class="container"></div>`;
+        col.forEach(node => {
+            row.querySelector(".container").innerHTML += node.outerHTML
+        })
+        
+        
+    })
+      function resizeIframe(obj){
+     obj.style.height = 0;
+     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+  }
+</script>
+
+
+    </main>
+
+
+<!-- Footer -->
+
+<footer class="page-footer font-small">
+
+  <!-- Footer Links -->
+  <div class="container text-center text-md-left mt-5">
+
+    <!-- Grid row -->
+    <div class="row mt-3">
+      <!-- Grid column -->
+      <div class="col-12-sm mx-auto mb-4">
+
+        <!-- Links -->
+       <span class="footerheader text-uppercase font-weight-bold">CONTACT US<span>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 80%;">
+        <p>
+        12000 East Skelly Drive</p>
+        <p>
+        Tulsa, OK 74128</p>
+          <p>
+        (11th & Garnett)</p>
+        <p>
+         Main Phone <i class="fas fa-phone mr-2 ml-2"></i><a class="tel" href="tel:918-596-5780">918-596-5780</a></p>
+             <p>
+         Main Fax <i class="fas fa-fax mr-2 ml-2"></i>918-596-5145</p>
+                 <p>
+        Absentee Fax <i class="fas fa-fax mr-2 ml-2"></i>918-596-4536</p>
+                        <p>
+        Email <i class="fas fa-envelope mr-2 ml-2"></i><a href="/cdn-cgi/l/email-protection#85e0e9e0e6f1eceaebe7eae4f7e1c5f1f0e9f6e4e6eaf0ebf1fcabeaf7e2"><span><span class="__cf_email__" data-cfemail="31545d545245585e5f535e5043557145445d4250525e445f45481f5e4356">[email&#160;protected]</span> </a></p>
+
+
+      </div>
+      <!-- Grid column -->
+      <div class="col-12-sm col-6-md mx-auto mb-4">
+
+        <!-- Links -->
+        <span class="footerheader text-uppercase font-weight-bold">QUICK LINKS</span>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 80%;">
+            <div class="row">
+           <div class="col-6 text-left text-nowrap">
+                       <p>
+          <a href="/acceptable-use/">Acceptable Use</a>
+        </p>
+          <p>
+          <a href="/accessibility/">Accessibility</a>
+        </p>
+                <p>
+          <a href="/ada-grievance/">ADA Grievance</a>
+        </p>
+
+     
+   
+
+  </div>
+         <div class="col-6 text-left text-nowrap">
+        <p>
+          <a href="https://tulsacounty.wd1.myworkdayjobs.com/TC" title="Careers" target="_blank">Careers</a>
+        </p>
+      <p>
+          <a href="/open-records/">Open Records</a>
+        </p>
+      <p>
+          <a href="/privacy/">Privacy</a>
+        </p>
+  </div>
+    </div>
+      </div>
+      <!-- Grid column -->
+
+      <!-- Grid column -->
+        <div class="col-12-sm mx-auto mb-4">
+
+        <!-- Links -->
+        <span class="footerheader text-uppercase font-weight-bold">SHARE & CONNECT</span>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 80%;">
+        <p class="text-left">
+          <a class="fb-ic" target="_blank" href="https://www.facebook.com/TCElectionBoard">
+            <i class="fab fa-facebook-f fa-lg mr-4"></i>Facebook
+          </a>
+        </p>
+         <p class="text-left"><a class="tw-ic" target="_blank" href="https://twitter.com/TCElectionBoard">
+            <i class="fab fa-twitter fa-lg mr-3"></i>Twitter
+          </a>
+        </p>
+
+
+      </div>
+        <div class="col-12 mx-auto mb-4 text-black">
+         Our office hours are 8:00 a.m. to 5:00 p.m., Monday through Friday.
+  <div class="footer-copyright text-left text-black-20 mt-1">&copy; 2026 Tulsa County:
+    <a href="https://www.tulsacounty.org/">tulsacounty.org</a>
+  </div>
+  <!-- Copyright -->
+             </div>
+    
+    </div>
+    <!-- Grid row -->
+  </div>
+  <!-- Footer Links -->
+
+
+</footer>
+<!-- Footer -->
+
+
+
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript">
+    $("[data-trigger]").on("click", function(){
+        var trigger_id =  $(this).attr('data-trigger');
+        $(trigger_id).toggleClass("show");
+        $('body').toggleClass("offcanvas-active");
+    });
+
+// close button
+    $(".btn-close").click(function(e){
+        $(".navbar-collapse").removeClass("show");
+        $("body").removeClass("offcanvas-active");
+    });
+    
+// add aria-label    
+      for(var prop in document.getElementsByTagName('a')){
+       const title = document.getElementsByTagName('a')[prop].title;
+       if (title)
+       { document.getElementsByTagName('a')[prop].ariaLabel = title;}
+    };
+</script>
+    
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"eb130f1defe74478a4c1d734fa90dbd5","spa":2}' crossorigin="anonymous"></script>
+</body>
+
+</html>

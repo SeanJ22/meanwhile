@@ -1,0 +1,430 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>City of Tulsa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="/css/bootstrap/bootstrap.cot.css" rel="stylesheet" media="screen" />
+    <link href="/css/cot.style.css" rel="stylesheet" />
+	 <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="/favicon.png">
+		
+    <link href="/css/cot.page.css" rel="stylesheet" />		
+	
+	
+	
+
+
+
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="/scripts/bootstrap/html5shiv.js"></script>
+      <script src="/scripts/bootstrap/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<!--<div id="LgTest" class="visible-lg-block test-block"><span class="label label-primary">Large</span></div>
+	<div id="MdTest" class="visible-md-block test-block"><span class="label label-primary">Medium</span></div>
+	<div id="SmTest" class="visible-sm-block test-block"><span class="label label-primary">Small</span></div>
+	<div id="XsTest" class="visible-xs-block test-block"><span class="label label-primary">X-Small</span></div>-->
+	<div id="GlobalMenu" class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+			<div class="navbar-header">
+			  <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-main" aria-expanded="false">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </button>
+			</div>
+            <div class="navbar-collapse collapse text-lg-center text-md-center text-sm-center text-xs-left" id="navbar-main">
+                <ul class="nav navbar-nav">
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Residents <span class="glyphicon glyphicon-chevron-down " aria-hidden="true"></span></a>
+								<ul class="dropdown-menu">
+										    <li><a href="/residents/utilities-and-e-services/">Utilities and E-Services</a></li>
+										    <li><a href="/residents/arts-recreation/">Arts &amp; Recreation</a></li>
+                                                    <li><a href="/connect/i-want-to/">Services</a></li>
+                                                    <li><a href="/government/departments/planning-and-neighborhoods/neighborhoods/">Neighborhoods</a></li>
+										    <li><a href="/residents/public-safety/">Public Safety</a></li>
+										    <li><a href="/residents/transportation/">Transportation</a></li>
+                                                    <li><a href="/path-to-home/">Path to Home</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Development/Business <span class="glyphicon glyphicon-chevron-down " aria-hidden="true"></span></a>
+								<ul class="dropdown-menu">
+                                                    <li><a href="/government/departments/finance/business-licensing/">Business Licensing</a></li>
+                                                    <li><a href="/government/departments/development-services/">Development Services</a></li>
+										    <li><a href="/developmentbusiness/economic-development/">Economic Development</a></li>
+                                                    <li><a href="/government/departments/public-works/engineering-services/">Engineering Services</a></li>
+                                                    <li><a href="/government/departments/finance/grants/">Grants</a></li>
+										    <li><a href="/developmentbusiness/housing-office/">Housing Office</a></li>
+                                                    <li><a href="/government/departments/finance/selling-to-the-city/">Selling to the City</a></li>
+										    <li><a href="/developmentbusiness/special-events-office/">Special Events Office</a></li>
+                                            <li><a href="http://tulsaplanning.org">Tulsa Planning Office</a></li>
+										    <li><a href="/developmentbusiness/small-business-enterprise-program/">Small Business Enterprise Program</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Government <span class="glyphicon glyphicon-chevron-down " aria-hidden="true"></span></a>
+								<ul class="dropdown-menu">
+										    <li><a href="/government/departments/">Departments</a></li>
+                                                    <li><a href="/mayor/">Mayor of Tulsa</a></li>
+                                            <li><a href="http://www.tulsacouncil.org/">City Council</a></li>
+                                            <li><a href="https://www.tulsacityauditor.org/">City Auditor</a></li>
+										    <li><a href="/government/authorities-boards-and-commissions/">Authorities, Boards and Commissions</a></li>
+										    <li><a href="/government/meeting-agendas/">Meeting Agendas</a></li>
+										    <li><a href="/government/city-charter-ordinances-and-executive-orders/">City Charter, Ordinances, and Executive Orders</a></li>
+										    <li><a href="/government/capital-programs/">Capital Programs</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Connect <span class="glyphicon glyphicon-chevron-down " aria-hidden="true"></span></a>
+								<ul class="dropdown-menu">
+										    <li><a href="/connect/contact-the-city/">Contact the City</a></li>
+                                                    <li><a href="/government/departments/human-resources/employment/">Careers at the City</a></li>
+                                            <li><a href="https://maps.cityoftulsa.org">Map Gallery</a></li>
+                                                    <li><a href="/government/departments/information-technology/open-tulsa/">Open Tulsa Data Portal</a></li>
+                                                    <li><a href="/government/departments/human-resources/tulsa-blue-employee-recognition-award/">Nominate and Recognize</a></li>
+                                                    <li><a href="/government/departments/finance/open-records/">Public Records</a></li>
+										    <li><a href="/connect/social-media/">Social Media</a></li>
+                                            <li><a href="http://www.tgovonline.org/">TGOV Online</a></li>
+                                            <li><a href="https://experience.arcgis.com/experience/d40d79d1d6df4c6aa89cc548913098b9">Live Traffic Map</a></li>
+										    <li><a href="/connect/i-want-to/">I Want to...</a></li>
+										    <li><a href="/connect/tulsa-traffic/">Tulsa Traffic</a></li>
+								</ul>
+							</li>
+							<li><a href="/connect/i-want-to/">I Want to...</a></li>
+							<li><a href="/connect/contact-the-city/">Contact Us - 311</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+	
+	
+	<div class="jumbotron header-jumbotron" style="background-image: url(/media/1015/cot-banner-3.jpg)">
+		<div class="container main-container">
+			<div class="row text-left">
+				<div class="col-xs-6 banner-logo">
+					<a href="/"><img src="/img/COT-banner-logo-1x.png" border="0" /></a>
+				</div>
+				<div class="col-xs-6 text-right search-mobile">
+					<form action="/search-page/" method="get">
+						<input id="SearchBar" type="text" class="form-control" name="query" placeholder="Search" />
+					</form>
+			 	</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="jumbotron social-jumbotron">
+
+        <div class="sectionContainer container">
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-3 col-md-3">
+
+                    <a href=https://www.facebook.com/cityoftulsa target="_blank"><img src="/img/facebook(8).png" border="0" alt"facebook icon" /></a>
+
+                    <a href=https://twitter.com/cityoftulsagov target="_blank"><img src="/img/twitter.png" border="0"  alt="twitter icon"/></a>
+
+                    <a href=https://www.youtube.com/user/CityofTulsa target="_blank"><img src="/img/youtube.png" border="0" alt="youtube icon" /></a>
+
+                    <a href=https://www.instagram.com/cityoftulsa/ target="_blank"><img src="/img/instagram.png" border="0"alt="instagram icon"  /></a>
+
+                </div>
+
+                                                                <div class="col-xs-3 col-sm-3 col-md-3" style="text-align: center;">
+
+                                                                                <a href=tel:311 target="_blank"><img src="/img/call.png" border="0" alt="phone icon" />
+
+                                                                                <span class="visible-xs-inline hidden-md hidden-lg">Call</span>
+
+                    <span class="hidden-xs text-primary">Call 311</span></a>                                                                                                                                                   
+
+                </div>
+
+                               
+
+                <div class="col-xs-3 col-sm-3 col-md-3 chat-box" style="text-align: center;">
+
+                                                                                <a href=https://tulsa311.com target="_blank"><img src="/img/livechat.png" border="0" alt="speech bubble" />
+
+                                                                                <span class="visible-xs-inline hidden-md hidden-lg">Chat</span>
+
+                    <span class="hidden-xs text-primary">Start Chat</span></a>                                                                        
+
+                </div>
+
+                                                               
+
+                                                                <div class="col-md-3 col-sm-3 hidden-xs" style="text-align: right;">
+
+                    <div id="google_translate_element"></div>
+
+                    <script type="text/javascript">
+
+                        function googleTranslateElementInit() {
+
+                            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+
+                        }
+
+                    </script>
+
+ 
+
+                    <script type="text/javascript"
+
+                        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+                </div>
+
+            </div>
+
+        </div>
+
+                                <div class="semi-circle hidden-sm hidden-xs">   
+
+            <a href=https://www.cityoftulsa.org/connect/contact-the-city/ >
+
+                <img class="311-sidebar" src="\img\tombstone311.png" alt="311">
+
+            </a>
+
+        </div>
+
+    </div>
+
+ 
+	
+	
+
+
+	<div class="container main-container">
+		
+
+		
+			<div class="col-lg-8 col-md-8 col-sm-7 left-content-block">
+				<div class="breadcrumbs">
+					<ol class="breadcrumb">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/government/departments/">Departments</a></li>
+                            <li><a href="/government/departments/finance/">Finance</a></li>
+                            <li><a href="/government/departments/finance/city-clerks-office/">City Clerks Office</a></li>
+						<li class="active">Elections</li>
+					</ol>
+				</div>
+				
+
+<h3>City of Tulsa Elections</h3>
+<p>The City of Tulsa election schedule for elected officials is governed by <u><a href="https://library.municode.com/ok/tulsa/codes/code_of_ordinances?nodeId=COOR_1989AMCH_ARTVIELQUOF" target="_blank" title="Article VI of the City of Tulsa Charter">Article VI</a> </u>of the City of Tulsa Charter. </p>
+<p>2026 City of Tulsa schedule for elected official elections:</p>
+<table border="0" width="541" class="table table-striped">
+<tbody>
+<tr>
+<td width="137">
+<p>Filing Period</p>
+</td>
+<td width="380">
+<p>Monday, June 8 - Wednesday, June 10, 2026</p>
+</td>
+</tr>
+<tr>
+<td width="137">
+<p>General Election</p>
+</td>
+<td width="380">
+<p>Tuesday, August 25, 2026</p>
+</td>
+</tr>
+<tr>
+<td width="137">
+<p>Run-off Election</p>
+</td>
+<td width="380">
+<p>Tuesday, November 3, 2026</p>
+</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><a data-id="46802" href="/media/30660/2026-election-packet.pdf" target="_blank" title="Download the 2026 Election Packet">Download the 2026 Election Packet</a></p>
+<hr />
+<p><a href="https://experience.arcgis.com/experience/bfe2644da8034a5abafd91d579986978" target="_blank" title="Council District Finder Map">Council District Finder Map</a></p>
+<hr />
+<p><strong>City of Tulsa Elected Official Terms:</strong></p>
+<ul>
+<li>The Mayor of Tulsa is elected for four-year terms</li>
+<li><span>City Auditor is elected for four-year terms</span></li>
+<li>City Councilors are elected for two-year terms</li>
+</ul>
+<p>As of November 1, 2025<strong>, <a data-id="11652" href="/government/departments/finance/city-clerks-office/elections/campaign-contribution-reports/" title="Campaign Contribution Reports">campaign contribution forms</a></strong> must be filed with Oklahoma Ethics Commission. Please visit oklahoma.gov/ethics for guidance on filing procedures or contact their office at <a href="mailto:ethics@ethics.ok.gov" target="_blank" title="E-mail Ethics at the State of Oklahoma Ethics Commission">ethics@ethics.ok.gov</a> or (405) 521-3451 for more information.</p>
+<hr />
+<p><strong>Helpful Resources</strong></p>
+<p><a href="https://www2.tulsacounty.org/electionboard/" target="_blank" title="Tulsa County Election Board">Tulsa County Election Board</a><br /> <a href="https://ok.gov/elections/" target="_blank" title="Oklahoma State Election Board">Oklahoma State Election Board</a><br /><a href="https://www2.tulsacounty.org/electionboard/voting/voter-registration/" target="_blank" title="Voter Registration">Voter Registration</a><br /><a href="https://www2.tulsacounty.org/electionboard/voting/absentee-voting/" target="_blank" title="Absentee Ballot">Absentee Ballot</a><br /><a href="https://www.ok.gov/ethics/Campaigns/Municipal_Campaigns.html" target="_blank" title="Oklahoma Ethics Commission Municipal Reporting">Oklahoma Ethics Commission Municipal Reporting</a></p>
+
+	
+
+			</div>
+
+			<div class="col-lg-4 col-md-4 col-sm-5">
+
+						<div class="cot-panel">
+						    <div class="sidebar-heading">
+    Government
+</div>
+
+    <ul class="side-nav-list">
+        <li>
+                    <a href="/government/departments/">Departments</a>
+            
+
+            <ul>
+        <li>
+                    <a href="/government/departments/finance/">Finance</a>
+            
+
+            <ul>
+        <li>
+                    <a href="/government/departments/finance/city-clerks-office/">City Clerks Office</a>
+            
+
+            <ul>
+        <li>
+                <div class="sidebar-nav-item-active">Elections</div>
+            
+
+            <ul>
+        <li>
+                    <a href="/government/departments/finance/city-clerks-office/elections/campaign-contribution-reports/">Campaign Contribution Reports</a>
+            
+
+            <ul>
+            </ul>
+        </li>
+            </ul>
+        </li>
+            </ul>
+        </li>
+            </ul>
+        </li>
+            </ul>
+        </li>
+    </ul>
+						</div>
+    					<div class="vertical-break">&nbsp;</div>
+						<div class="cot-panel">
+							<div class="cot-cs-links">
+		<div class="cot-cs-link"><a href="tel:311">Dial 311</a></div>
+		<div class="cot-cs-link"><a href="https://tulsa.portal.us.empro.verintcloudservices.com/site/tulsaweb/home">Report Online</a></div>
+		<div class="cot-cs-link"><a href="mailto:Tulsa311@cityoftulsa.org">Email 311</a></div>
+</div>
+						</div>
+    					<div class="vertical-break">&nbsp;</div>
+						<div class="cot-panel">
+							<h4>Share</h4>
+<div class="share-link">
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fwww.cityoftulsa.org%2fgovernment%2fdepartments%2ffinance%2fcity-clerks-office%2felections%2f"><img src="/img/icon-gray-facebook.png" /> Facebook</a>
+</div>
+<div class="share-link">
+    <a href="https://twitter.com/home?status=https%3a%2f%2fwww.cityoftulsa.org%2fgovernment%2fdepartments%2ffinance%2fcity-clerks-office%2felections%2f"><img src="/img/icon-gray-twitter.png" /> Twitter</a>
+</div>
+<div class="share-link">
+    <a href="mailto:?&subject=Check out this City of Tulsa link&body=https%3a%2f%2fwww.cityoftulsa.org%2fgovernment%2fdepartments%2ffinance%2fcity-clerks-office%2felections%2f"><img src="/img/icon-gray-mail.png" /> Mail</a>
+</div>
+						</div>
+			</div>
+	
+
+
+	</div>
+		
+
+
+					
+    <footer>
+
+        <div class="container main-container">
+            <div class="footer-title">Sitemap</div>
+            <div>
+                <div class="col-sm-3 col-xs-12 footer-section">                    
+                                    <div class="footer-link"><a href="/connect/i-want-to/">I Want to...</a></div>
+                                    <div class="footer-link"><a href="/government/departments/communications/privacy-policy/">Privacy Policy</a></div>
+                                    <div class="footer-link"><a href="/government/departments/communications/accessibility-policy/">Accessibility Policy</a></div>
+                                    <div class="footer-link"><a href="/government/departments/communications/link-policy/">Link Policy</a></div>
+                                    <div class="footer-link"><a href="/government/departments/communications/legal-disclaimer/">Legal Disclaimer</a></div>
+                </div>
+                <div class="col-sm-3 col-xs-12 footer-section">     
+                                    <div class="footer-link"><a href="/government/departments/human-resources/employment/">Employment</a></div>
+                                    <div class="footer-link"><a href=""></a></div>
+                                    <div class="footer-link"><a href="/government/departments/municipal-court/tickets/">Pay a Ticket</a></div>
+                                    <div class="footer-link"><a href="/government/departments/public-works/refuse-recycling/residential-services/trash-collection-schedule/">Trash Collection Schedule</a></div>
+                                    <div class="footer-link"><a href="/government/departments/finance/selling-to-the-city/bid-opportunities-and-results/">Bid Opportunities and Results</a></div>
+                </div>
+                <div class="col-sm-3 col-xs-12 footer-section">                    
+                                    <div class="footer-link"><a href="/government/departments/finance/open-records/">Open Records</a></div>
+							<div class="footer-link"><a href="http://www.tulsa311.com">Report a Service Issue</a></div>
+                                    <div class="footer-link"><a href="/government/departments/information-technology/report-website-problem/">Report Website Problem</a></div>
+                                    <div class="footer-link"><a href="/government/departments/resilience-and-equity/justice-and-human-rights/human-rights-discrimination-complaints/">Human Rights Discrimination Complaints</a></div>
+                </div>
+                <div class="col-sm-3 col-xs-12 footer-section">
+                    <div class="row">
+                        <form action="/search-page/" method="get">
+                            <input type="text" class="form-control" id="FooterSearchBar" name="query" placeholder="Search">
+                        </form>
+                    </div>
+                    <div id="FooterContactInformation">
+                        <div class="address-block">
+                            <small>
+                                &#169; City of Tulsa 2026 | All Rights Reserved<br />
+                                175 East 2nd Street, Suite 690<br />
+                                Tulsa, OK 74103<br />
+                                --<br />
+                            </small>
+                        </div>
+                        <div class="phone-number text-primary">
+                            <small>Customer Care #: <strong><a href="tel:311">311</a></strong></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/scripts/jquery.min.js"></script>
+    <script src="/scripts/bootstrap/bootstrap.min.js"></script>
+    <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	
+	  ga('create', 'UA-1537320-6', 'auto');
+	  ga('send', 'pageview');
+	</script>
+	<script>
+		(function(n,u){
+		window.CXoneDfo=n,
+		window[n]=window[n]||function(){(window[n].q=window[n].q||[]).push(arguments)},window[n].u=u,
+		e=document.createElement("script"),e.type="module",e.src=u+"?"+Math.round(Date.now()/1e3/3600),
+		document.head.appendChild(e)
+		})('cxone','https://web-modules-de-na1.niceincontact.com/loader/1/loader.js');
+
+		cxone('init', '2816');
+		cxone('guide','init');
+	</script>
+	
+	
+	
+	
+
+
+
+    
+</body>
+</html>

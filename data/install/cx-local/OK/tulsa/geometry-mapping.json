@@ -1,0 +1,35 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:ok/place:tulsa/council_district:1",
+    "sourceUrl": "https://services2.arcgis.com/XkZ90iCdbTJ9oNXl/arcgis/rest/services/Council_Districts/FeatureServer/0/query?where=DISTRICTID%3D%271%27&outFields=OBJECTID%2CDISTRICTID%2CNAME&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T09:49:29.158082+00:00",
+    "nativeHash": "f115dbfdd2263ba04fb2d0ecdb0a65ac558b268d16feb666b47139d2c59f9c1b",
+    "nativeFeatureProperties": {
+      "OBJECTID": 21,
+      "DISTRICTID": "1",
+      "NAME": "District 1"
+    },
+    "coordinatesUnchanged": true,
+    "linkedActiveContestIds": [
+      "ok-cx-local-2026-tulsa-council-district-1"
+    ],
+    "officeAssignmentVerified": true,
+    "readerStatus": "SOURCE_POLYGON_PREPARED_NOT_INSTALLED",
+    "note": "FullCityCouncil1 geometry; no county clipping or wholecity expansion."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ok/judicial_district:14/electoral_division:4",
+    "sourceUrl": "https://map11.incog.org/arcgis11wa/rest/services/TulsaCo_Judicial/FeatureServer/0/query?where=judicial_d%3D4&outFields=objectid%2Cjudicial_d&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T09:57:48.219215+00:00",
+    "nativeHash": "179fa835af244feadc4f0abdc5787e4e545cb76131f73b5cb1c2677d944d0902",
+    "nativeFeatureProperties": {
+      "OBJECTID": 4,
+      "judicial_d": 4
+    },
+    "coordinatesUnchanged": true,
+    "linkedActiveContestIds": [],
+    "officeAssignmentVerified": false,
+    "readerStatus": "SOURCE_POLYGON_PREPARED_NOT_INSTALLED",
+    "note": "Independent legal Division4 geometry only; held Office4 crosswalk not proven."
+  }
+]

@@ -1,0 +1,65 @@
+[
+  {
+    "contestId": "ok-cx-local-2026-district-judge-14-office-1",
+    "title": "District Judge — District 14, Office 1",
+    "names": [
+      "TOM SAWYER",
+      "CAROLINE WALL"
+    ],
+    "candidateIds": [
+      "ok-cx-local-2026-district-judge-14-office-1-tom-sawyer",
+      "ok-cx-local-2026-district-judge-14-office-1-caroline-wall"
+    ],
+    "sourceKind": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST",
+    "actualSampleVerified": false,
+    "provenance": {
+      "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+      "sourceOrg": "Oklahoma State Election Board",
+      "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+      "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+      "quote": "DISTRICT JUDGE - DISTRICT 14, OFFICE 1 TOM SAWYER CAROLINE WALL"
+    }
+  },
+  {
+    "contestId": "ok-cx-local-2026-district-judge-14-office-12",
+    "title": "District Judge — District 14, Office 12",
+    "names": [
+      "CHRISTOPHER CAMP",
+      "KEVIN GRAY"
+    ],
+    "candidateIds": [
+      "ok-cx-local-2026-district-judge-14-office-12-christopher-camp",
+      "ok-cx-local-2026-district-judge-14-office-12-kevin-gray"
+    ],
+    "sourceKind": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST",
+    "actualSampleVerified": false,
+    "provenance": {
+      "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+      "sourceOrg": "Oklahoma State Election Board",
+      "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+      "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+      "quote": "DISTRICT JUDGE - DISTRICT 14, OFFICE 12 CHRISTOPHER CAMP KEVIN GRAY"
+    }
+  },
+  {
+    "contestId": "ok-cx-local-2026-tulsa-council-district-1",
+    "title": "City of Tulsa — Councilmember, Council District 1",
+    "names": [
+      "VANESSA HALL-HARPER",
+      "CORINICE WILSON"
+    ],
+    "candidateIds": [
+      "ok-cx-local-2026-tulsa-council-district-1-vanessa-hall-harper",
+      "ok-cx-local-2026-tulsa-council-district-1-corinice-wilson"
+    ],
+    "sourceKind": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST",
+    "actualSampleVerified": false,
+    "provenance": {
+      "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+      "sourceOrg": "Oklahoma State Election Board",
+      "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+      "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+      "quote": "CITY OF TULSA COUNCILMEMBER - COUNCIL DISTRICT 1 VANESSA HALL-HARPER CORINICE WILSON"
+    }
+  }
+]

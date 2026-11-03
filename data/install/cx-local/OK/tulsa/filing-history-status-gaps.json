@@ -1,0 +1,27 @@
+[
+  {
+    "jurisdiction": "Berryhill Fire Protection District",
+    "sourceKind": "FILING_HISTORY_ONLY",
+    "officesInJulyNotice": [
+      "Office 1 expired term (2026)",
+      "Office 2 unexpired term (2030)",
+      "Office 4 unexpired term (2028)",
+      "Office 5 unexpired term (2029)"
+    ],
+    "namesInGenericFilingBlock": [
+      "DARREN THAMES",
+      "JERRY GILLEAN"
+    ],
+    "finalNovemberStatus": "UNRESOLVED_NOT_IN_CURRENT_NOVEMBER_LIST_OR_COUNTY_NOTICE",
+    "seatAssignments": "NOT_PRINTED_IN_ACQUIRED_GENERIC_FILING_BLOCK",
+    "ordinaryCandidatesAdded": 0,
+    "cancellationOrDeclaredElectedFactsInferred": false,
+    "provenance": {
+      "sourceUrl": "https://www2.tulsacounty.org/media/cbfl0qwd/fpd_berryhill_070826_500pm.pdf",
+      "sourceOrg": "Tulsa County Election Board",
+      "collectedAt": "2026-11-03T09:46:35.308296+00:00",
+      "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+      "quote": "BERRYHILL FIRE PROTECTION BOARD MEMBER - MEMBER OF THE BOARD OF DIRECTORS Non Partisan DARREN THAMES, 44, TULSA JERRY GILLEAN, 86, TULSA ****** END OF LISTING FOR BERRYHILL FIRE PROTECTION ******"
+    }
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "activeContestDivisions": [
+    "ocd-division/country:us/state:ok/judicial_district:14",
+    "ocd-division/country:us/state:ok/place:tulsa/council_district:1"
+  ],
+  "independentSourceGeographyNotAssignedToHeldOffice": [
+    "ocd-division/country:us/state:ok/judicial_district:14/electoral_division:4"
+  ],
+  "all": [
+    "ocd-division/country:us/state:ok/judicial_district:14",
+    "ocd-division/country:us/state:ok/place:tulsa/council_district:1",
+    "ocd-division/country:us/state:ok/judicial_district:14/electoral_division:4"
+  ]
+}

@@ -1,0 +1,735 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "OK:2026-11-03-general": {
+      "election": {
+        "id": "2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "OK"
+      },
+      "contests": [
+        {
+          "id": "ok-cx-local-2026-district-judge-14-office-1",
+          "electionId": "2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ok/judicial_district:14",
+          "divisionVintage": "2026",
+          "title": "District Judge — District 14, Office 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Official November2026 List of Elections supplement: complete current named office block. No actual counting sample acquired; sample coverage remains zero. One named office/seat; voteFor1 follows single-office structure, not a printed voting-method audit. District14 at-large electorate is both Tulsa and Pawnee counties; two exact whole-county membership facts prepared.",
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board",
+            "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+            "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+            "quote": "DISTRICT JUDGE - DISTRICT 14, OFFICE 1 TOM SAWYER CAROLINE WALL"
+          }
+        },
+        {
+          "id": "ok-cx-local-2026-district-judge-14-office-12",
+          "electionId": "2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ok/judicial_district:14",
+          "divisionVintage": "2026",
+          "title": "District Judge — District 14, Office 12",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Official November2026 List of Elections supplement: complete current named office block. No actual counting sample acquired; sample coverage remains zero. One named office/seat; voteFor1 follows single-office structure, not a printed voting-method audit. District14 at-large electorate is both Tulsa and Pawnee counties; two exact whole-county membership facts prepared.",
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board",
+            "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+            "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+            "quote": "DISTRICT JUDGE - DISTRICT 14, OFFICE 12 CHRISTOPHER CAMP KEVIN GRAY"
+          }
+        },
+        {
+          "id": "ok-cx-local-2026-tulsa-council-district-1",
+          "electionId": "2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ok/place:tulsa/council_district:1",
+          "divisionVintage": "2026",
+          "title": "City of Tulsa — Councilmember, Council District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "scopeNote": "Official November2026 List of Elections supplement: complete current named office block. No actual counting sample acquired; sample coverage remains zero. One named office/seat; voteFor1 follows single-office structure, not a printed voting-method audit. Nonpartisan CityCouncilDistrict1 runoff on November3,2026; exact full district polygon prepared without clipping to TulsaCounty or expanding to wholecity.",
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board",
+            "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+            "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+            "quote": "CITY OF TULSA COUNCILMEMBER - COUNCIL DISTRICT 1 VANESSA HALL-HARPER CORINICE WILSON"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ok-cx-local-2026-district-judge-14-office-1-tom-sawyer",
+          "contestId": "ok-cx-local-2026-district-judge-14-office-1",
+          "familyName": "SAWYER",
+          "givenName": "TOM",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board",
+            "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+            "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+            "quote": "DISTRICT JUDGE - DISTRICT 14, OFFICE 1 TOM SAWYER CAROLINE WALL"
+          }
+        },
+        {
+          "id": "ok-cx-local-2026-district-judge-14-office-1-caroline-wall",
+          "contestId": "ok-cx-local-2026-district-judge-14-office-1",
+          "familyName": "WALL",
+          "givenName": "CAROLINE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board",
+            "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+            "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+            "quote": "DISTRICT JUDGE - DISTRICT 14, OFFICE 1 TOM SAWYER CAROLINE WALL"
+          }
+        },
+        {
+          "id": "ok-cx-local-2026-district-judge-14-office-12-christopher-camp",
+          "contestId": "ok-cx-local-2026-district-judge-14-office-12",
+          "familyName": "CAMP",
+          "givenName": "CHRISTOPHER",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board",
+            "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+            "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+            "quote": "DISTRICT JUDGE - DISTRICT 14, OFFICE 12 CHRISTOPHER CAMP KEVIN GRAY"
+          }
+        },
+        {
+          "id": "ok-cx-local-2026-district-judge-14-office-12-kevin-gray",
+          "contestId": "ok-cx-local-2026-district-judge-14-office-12",
+          "familyName": "GRAY",
+          "givenName": "KEVIN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board",
+            "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+            "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+            "quote": "DISTRICT JUDGE - DISTRICT 14, OFFICE 12 CHRISTOPHER CAMP KEVIN GRAY"
+          }
+        },
+        {
+          "id": "ok-cx-local-2026-tulsa-council-district-1-vanessa-hall-harper",
+          "contestId": "ok-cx-local-2026-tulsa-council-district-1",
+          "familyName": "HALL-HARPER",
+          "givenName": "VANESSA",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board",
+            "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+            "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+            "quote": "CITY OF TULSA COUNCILMEMBER - COUNCIL DISTRICT 1 VANESSA HALL-HARPER CORINICE WILSON"
+          }
+        },
+        {
+          "id": "ok-cx-local-2026-tulsa-council-district-1-corinice-wilson",
+          "contestId": "ok-cx-local-2026-tulsa-council-district-1",
+          "familyName": "WILSON",
+          "givenName": "CORINICE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board",
+            "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+            "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+            "quote": "CITY OF TULSA COUNCILMEMBER - COUNCIL DISTRICT 1 VANESSA HALL-HARPER CORINICE WILSON"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "cx-local-ok-2026-judicial-district-14-member-tulsa",
+          "memberOcdId": "ocd-division/country:us/state:ok/county:tulsa",
+          "districtOcdId": "ocd-division/country:us/state:ok/judicial_district:14",
+          "provenance": {
+            "sourceUrl": "https://oksenate.gov/sites/default/files/2019-12/os20.pdf",
+            "sourceOrg": "Oklahoma State Senate",
+            "collectedAt": "2026-11-03T09:48:31.219580+00:00",
+            "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+            "quote": "District No. 14. The counties of Tulsa and Pawnee. Said district shall contain five electoral divisions as hereinafter described:"
+          }
+        },
+        {
+          "id": "cx-local-ok-2026-judicial-district-14-member-pawnee",
+          "memberOcdId": "ocd-division/country:us/state:ok/county:pawnee",
+          "districtOcdId": "ocd-division/country:us/state:ok/judicial_district:14",
+          "provenance": {
+            "sourceUrl": "https://oksenate.gov/sites/default/files/2019-12/os20.pdf",
+            "sourceOrg": "Oklahoma State Senate",
+            "collectedAt": "2026-11-03T09:48:31.219580+00:00",
+            "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+            "quote": "District No. 14. The counties of Tulsa and Pawnee. Said district shall contain five electoral divisions as hereinafter described:"
+          }
+        }
+      ],
+      "scopedCoverageNotes": [
+        {
+          "text": "Accurately labeled official-list supplement, not sample data. Current official NOVEMBER / 2026 List of Elections contains four complete Tulsa local candidate blocks/eight names. Three exact-scope blocks/six names are installable now: DistrictJudge14 Offices1/12 and CityTulsaCouncilDistrict1. Office4 two current named choices remain separate/held pending a direct official office-to-numbered-division crosswalk. Actual sample-verified local fields/names: zero; complete county/precinct ballot parity is not claimed.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ok/county:tulsa"
+            ]
+          }
+        },
+        {
+          "text": "Current county public sample notice and October27 election notice identify November3 Federal/StateGeneral, StateQuestions845/847, TulsaCouncil1 runoff and HotelTax election. Their sample route points to the voter portal or physical board/polling-place copies; the notices are not samples. Official state portal information explicitly requires registered name/date of birth; public landing/directory requests returned403. No voter identity, registration search, sign-in, token or private endpoint was used. Osage current November archive says ballots/results not posted; prior samples are not imported. Pawnee public routes failed; exact request/time/status/hash evidence retained.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ok/county:tulsa"
+            ]
+          }
+        },
+        {
+          "text": "Official current Title20 law defines JudicialDistrict14 as Tulsa and Pawnee and distinguishes five division-electorate judges from remaining at-large offices. Current official2026 filing headers explicitly scope Offices1/12 to Pawnee,Tulsa. Both at-large races use one regional judicialDistrict14 ID with two wholecounty memberships, not two per-county contests. These are ordinary opposed elections, not retention questions or unopposed declarations.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ok/county:tulsa"
+            ]
+          }
+        },
+        {
+          "text": "Office4 is definitively not countywide or wholeDistrict14: official 2026 filing header says Tulsa only; official2025 signatures table identifies its own52-precinct electorate versus261 for at-large Offices1/12; county roster marks it as elected by election district. Outside leads identify ElectoralDivision4, but no acquired official source directly links that office number to numbered Division4. Do not infer equality of office and division numbers: other District14 district-elected offices have different numbers. Office4 candidate block is held; independently source-identified full Division4 polygon is prepared separately without activating or mapping that office.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ok/county:tulsa"
+            ]
+          }
+        },
+        {
+          "text": "CityTulsa official current election page and Resolution20495 confirm August25 general/November3 runoff as needed; current November list qualifies only Council1 among candidate seats. All earlier council/auditor/school/municipal filing names are excluded from ordinary incoming. Current city-linked DistrictFinder→webmap→officialfeature layer provides full Council1 polygon, including its complete legal geography across county lines, unchanged and uncut. No wholecity/county/CDP/CCD fallback.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ok/county:tulsa"
+            ]
+          }
+        },
+        {
+          "text": "July Berryhill FireProtection notice lists four offices while its final filing inventory gives two names in an unnumbered generic board block. Current November state list and county notices do not include that field. Names remain filing-history facts only, with seat assignment and final qualification/cancellation/declared-election status unresolved. No ordinary candidacy or cancellation/declared-election fact is inferred from omission, underfilling or earlier filings.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ok/county:tulsa"
+            ]
+          }
+        },
+        {
+          "text": "All95 held contests/191 held person records/two measures, nine statewide judicial retentions and the OklahomaCounty lane threefields/sixpeople remain unchanged. Fresh CX-VOTES331e9d448 contains one nested SQ845 question/explainer input; exact hash and payload preserved. No state/federal/legislative, retention or question rows incoming. HotelTax question remains ancillary evidence only; no new question/explainer installed.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ok/county:tulsa"
+            ]
+          }
+        },
+        {
+          "text": "Two active precise reader keys (JudicialDistrict14 and CityCouncil1) are missing in the checked-in registry; two wholecounty judicial memberships and one active-city polygon prepared. A third independent Division4 key/polygon is source geography only pending the held office crosswalk. Data readiness does not assert reader visibility. Separate certified status supplement remains unacquired; official FAQ generally prohibits ordinary write-in voting, with military/overseas federal-write-in exception stated separately. No git, app, production or publication operations.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ok/county:tulsa"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:05:22.280597+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/media/cbfl0qwd/fpd_berryhill_070826_500pm.pdf",
+        "finalUrl": "https://www2.tulsacounty.org/media/cbfl0qwd/fpd_berryhill_070826_500pm.pdf",
+        "rawHash": "f9472dc5b6e5e32e63e8f94439f7186b0bd0f4658de1204a51a11cba7a1bacf5",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:35.308296+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "July2026 Berryhill FireProtection filing evidence only. Notice lists four offices; final filing inventory lists DarrenThames and JerryGillean under one generic board-member block without office numbers. Current November state list and current county election notices omit this fire field. Preserve unresolved status and seat assignment separately; no ordinary candidate, cancellation or declared-election inference."
+      },
+      {
+        "requestedUrl": "https://services2.arcgis.com/XkZ90iCdbTJ9oNXl/arcgis/rest/services/Council_Districts/FeatureServer/0?f=pjson",
+        "finalUrl": "https://services2.arcgis.com/XkZ90iCdbTJ9oNXl/arcgis/rest/services/Council_Districts/FeatureServer/0?f=pjson",
+        "rawHash": "76cee5100a86758005c894a51dd0150c200d8cec1d27b14a9053bf5eb6b4f251",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:49:28.731579+00:00",
+        "publisher": "City of Tulsa",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current city election page links Council District Finder app, its webmap and official Council_Districts layer. Full District1 polygon acquired without clipping, simplification or coordinate changes. Whole City/County membership is not substituted."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/media/hpxdcsdy/council-districts_tulsa.pdf",
+        "finalUrl": "https://www2.tulsacounty.org/media/hpxdcsdy/council-districts_tulsa.pdf",
+        "rawHash": "ee01b8d74e84fc1c881eeffa9469094369a96f3636574d7554d5b8323245f78a",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:49:27.900378+00:00",
+        "publisher": "City of Tulsa",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current city election page links Council District Finder app, its webmap and official Council_Districts layer. Full District1 polygon acquired without clipping, simplification or coordinate changes. Whole City/County membership is not substituted."
+      },
+      {
+        "requestedUrl": "https://services2.arcgis.com/XkZ90iCdbTJ9oNXl/arcgis/rest/services/Council_Districts/FeatureServer/0/query?where=DISTRICTID%3D%271%27&outFields=OBJECTID%2CDISTRICTID%2CNAME&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services2.arcgis.com/XkZ90iCdbTJ9oNXl/arcgis/rest/services/Council_Districts/FeatureServer/0/query?where=DISTRICTID%3D%271%27&outFields=OBJECTID%2CDISTRICTID%2CNAME&returnGeometry=true&outSR=4326&f=geojson",
+        "rawHash": "f115dbfdd2263ba04fb2d0ecdb0a65ac558b268d16feb666b47139d2c59f9c1b",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:49:29.158082+00:00",
+        "publisher": "City of Tulsa",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current city election page links Council District Finder app, its webmap and official Council_Districts layer. Full District1 polygon acquired without clipping, simplification or coordinate changes. Whole City/County membership is not substituted."
+      },
+      {
+        "requestedUrl": "https://www.cityoftulsa.org/media/30660/2026-election-packet.pdf",
+        "finalUrl": "https://www.cityoftulsa.org/media/30660/2026-election-packet.pdf",
+        "rawHash": "582b7a2fd3c5aa2be8a8ab1d938cb58eb6769a33cac305c6a44afd8b2d9a8092",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:53:44.944246+00:00",
+        "publisher": "City of Tulsa",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official city2026 schedule and Resolution20495 establish August25 general and November3 runoff as needed, nine council districts, nonpartisan elections and two-year council terms. This schedule does not qualify all earlier municipal candidates for November."
+      },
+      {
+        "requestedUrl": "https://www.cityoftulsa.org/government/departments/finance/city-clerks-office/elections/",
+        "finalUrl": "https://www.cityoftulsa.org/government/departments/finance/city-clerks-office/elections/",
+        "rawHash": "ac65ab19742a37360020d1c9bbcf01d1b1e90f9a6a341aaa16a96763ba33c1d8",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:18.273837+00:00",
+        "publisher": "City of Tulsa",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official city2026 schedule and Resolution20495 establish August25 general and November3 runoff as needed, nine council districts, nonpartisan elections and two-year council terms. This schedule does not qualify all earlier municipal candidates for November."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/bfe2644da8034a5abafd91d579986978/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/bfe2644da8034a5abafd91d579986978/data?f=pjson",
+        "rawHash": "e18ad1d4aa14e0d047dfd56bdbe7b2e1c77af4b99deb2efde48a45caf4fc8ced",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:36.922849+00:00",
+        "publisher": "City of Tulsa",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current city election page links Council District Finder app, its webmap and official Council_Districts layer. Full District1 polygon acquired without clipping, simplification or coordinate changes. Whole City/County membership is not substituted."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/459e28605a3545e3b47ba1d832c6c503/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/459e28605a3545e3b47ba1d832c6c503/data?f=pjson",
+        "rawHash": "f9f054c9edcb74ba10b2e9ec853406d8f8a6250532f3f1b5cb36478ec298e5df",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:48:06.890045+00:00",
+        "publisher": "City of Tulsa",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current city election page links Council District Finder app, its webmap and official Council_Districts layer. Full District1 polygon acquired without clipping, simplification or coordinate changes. Whole City/County membership is not substituted."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/media/ovtj1w3t/berryhill-fire-protection-district-candidate-filing-begins-july-6th.pdf",
+        "finalUrl": "https://www2.tulsacounty.org/media/ovtj1w3t/berryhill-fire-protection-district-candidate-filing-begins-july-6th.pdf",
+        "rawHash": "c8b785f620d759f8c6a7d1b397d24e1b771c2ff1378c9cde1277e4fa441e2cfe",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:49:55.063274+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "July2026 Berryhill FireProtection filing evidence only. Notice lists four offices; final filing inventory lists DarrenThames and JerryGillean under one generic board-member block without office numbers. Current November state list and current county election notices omit this fire field. Preserve unresolved status and seat assignment separately; no ordinary candidate, cancellation or declared-election inference."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/media/b5tooba3/elected-officials-of-tulsa-county-2025.pdf",
+        "finalUrl": "https://www2.tulsacounty.org/media/b5tooba3/elected-officials-of-tulsa-county-2025.pdf",
+        "rawHash": "eeeccbfecbdafcccae4407640393ce53795ded1fa1071ef6e3d7ee1ea4d3d307",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:49:51.782500+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Prior2025 incumbent roster used only for structural footnote: starred District14 offices are elected by election district rather than at large. Not current candidate or status evidence; Office4 numbered electoral-division crosswalk remains unverified."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/electionboard/about/elected-officials/",
+        "finalUrl": "https://www2.tulsacounty.org/electionboard/about/elected-officials/",
+        "rawHash": "f7cf0b26ede4e3cd27ca6ae70b94967e91471dd001a5da6a0ed9feca9d7bbcd5",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:48:30.312713+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Verified current public county ElectionBoard authority, November election/access route, district map or filing schedule. Current school primary/general dates are February/April, not assumed November. No identity lookup or invented sample absence."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/electionboard/resources/faq/",
+        "finalUrl": "https://www2.tulsacounty.org/electionboard/resources/faq/",
+        "rawHash": "4899fa24e7d1962a147319b919cc97127dcba0a531b3057cd60a9c557ca3950c",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:47:28.920618+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Verified current public county ElectionBoard authority, November election/access route, district map or filing schedule. Current school primary/general dates are February/April, not assumed November. No identity lookup or invented sample absence."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/electionboard/elections/election-filings/",
+        "finalUrl": "https://www2.tulsacounty.org/electionboard/elections/election-filings/",
+        "rawHash": "b7efe558c2cad71a9b6f523f1b89c6c10fbb21733ffdefeab0a61bf77f8edcf2",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:55.715659+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Verified current public county ElectionBoard authority, November election/access route, district map or filing schedule. Current school primary/general dates are February/April, not assumed November. No identity lookup or invented sample absence."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/electionboard/",
+        "finalUrl": "https://www2.tulsacounty.org/electionboard/",
+        "rawHash": "bf64e2bc1ee1c19383870e0ebf9d96f082cab54124204165c76731eb53d813ab",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:17.760680+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Verified current public county ElectionBoard authority, November election/access route, district map or filing schedule. Current school primary/general dates are February/April, not assumed November. No identity lookup or invented sample absence."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/media/2z5d4pdc/tulsaco_judicial_42x54.pdf",
+        "finalUrl": "https://www2.tulsacounty.org/media/2z5d4pdc/tulsaco_judicial_42x54.pdf",
+        "rawHash": "725b084eeb064e75f45dc909fd0e4b9a7020cf4174023d1c2ca1de5c87ce8e87",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:49:28.847222+00:00",
+        "publisher": "Tulsa County Election Board / INCOG",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current county Precinct Maps by District page publishes image-only TulsaCounty JudicialDistricts withPrecincts2022 map, identifying five partial electoral divisions. Native image reviewed; no native text extraction. This does not independently crosswalk Office4 to numbered Division4."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/media/riznlr5r/election-day-reminders-and-tips-nov-3-election.pdf",
+        "finalUrl": "https://www2.tulsacounty.org/media/riznlr5r/election-day-reminders-and-tips-nov-3-election.pdf",
+        "rawHash": "720a11d3c24ef383b77d855b1b29ee67ce6d02721b11a35e12b88dda97e320ef",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:48:05.956607+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current September29/October27,2026 notice confirms November3 Federal/State General, StateQuestions845/847, TulsaCouncilDistrict1 runoff and TulsaHotelTax election. It directs sample acquisition to voter portal or physical board/polling-place copies; it is not an actual sample."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/electionboard/voting/polling-locations/",
+        "finalUrl": "https://www2.tulsacounty.org/electionboard/voting/polling-locations/",
+        "rawHash": "6523868644cc80bfe2ea7926f5bc77004513a1128e2344d79a2719a6e9124185",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:55.877843+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Verified current public county ElectionBoard authority, November election/access route, district map or filing schedule. Current school primary/general dates are February/April, not assumed November. No identity lookup or invented sample absence."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/electionboard/elections/next-election/",
+        "finalUrl": "https://www2.tulsacounty.org/electionboard/elections/next-election/",
+        "rawHash": "b3e85497368720288ed3582f420be905eca3763e64b2f164571bc1ad0c49475a",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:55.950580+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Verified current public county ElectionBoard authority, November election/access route, district map or filing schedule. Current school primary/general dates are February/April, not assumed November. No identity lookup or invented sample absence."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/electionboard/voting/polling-locations/precinct-maps-by-district/",
+        "finalUrl": "https://www2.tulsacounty.org/electionboard/voting/polling-locations/precinct-maps-by-district/",
+        "rawHash": "b52b4b8d361cd6d241db6bb17d92d897a7f40908f2f091f35e0428683c1bab1a",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:48:05.548931+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Verified current public county ElectionBoard authority, November election/access route, district map or filing schedule. Current school primary/general dates are February/April, not assumed November. No identity lookup or invented sample absence."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/electionboard/resources/press-releases/",
+        "finalUrl": "https://www2.tulsacounty.org/electionboard/resources/press-releases/",
+        "rawHash": "7e4539da60540382dbd593640244dd4951a7197481653c996e8f345288a227d5",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:56.029996+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Verified current public county ElectionBoard authority, November election/access route, district map or filing schedule. Current school primary/general dates are February/April, not assumed November. No identity lookup or invented sample absence."
+      },
+      {
+        "requestedUrl": "https://www2.tulsacounty.org/media/r2tbyimg/sample-ballots-available-for-nov-3-election.pdf",
+        "finalUrl": "https://www2.tulsacounty.org/media/r2tbyimg/sample-ballots-available-for-nov-3-election.pdf",
+        "rawHash": "2b86aa2001032055f008c99e1482f59bd8b128d2775c91f7f1d260e4b7c209cf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:35.691490+00:00",
+        "publisher": "Tulsa County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current September29/October27,2026 notice confirms November3 Federal/State General, StateQuestions845/847, TulsaCouncilDistrict1 runoff and TulsaHotelTax election. It directs sample acquisition to voter portal or physical board/polling-place copies; it is not an actual sample."
+      },
+      {
+        "requestedUrl": "https://map11.incog.org/arcgis11wa/rest/services/TulsaCo_Judicial/FeatureServer/0/query?where=judicial_d%3D4&outFields=objectid%2Cjudicial_d&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://map11.incog.org/arcgis11wa/rest/services/TulsaCo_Judicial/FeatureServer/0/query?where=judicial_d%3D4&outFields=objectid%2Cjudicial_d&returnGeometry=true&outSR=4326&f=geojson",
+        "rawHash": "179fa835af244feadc4f0abdc5787e4e545cb76131f73b5cb1c2677d944d0902",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:57:48.219215+00:00",
+        "publisher": "Indian Nations Council of Governments (INCOG)",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official INCOG root→Mapping/GIS→MapGallery→JudicialDistrict14 ElectoralDivisions app→webmap→first-party map11.incog.org layer. Native full Division4 polygon prepared as independently identified legal division geography only; no unsupported Office4 crosswalk or reader activation. Map description cites2013SB820/2010Census blocks; 2026 publication/metadata does not change legal vintage."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/8f29ce52cc554f6dabb58f2cf13a229b/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/8f29ce52cc554f6dabb58f2cf13a229b/data?f=pjson",
+        "rawHash": "6bb141764705acab08febdc015068f7e7ecb0d933d858090fba6db30db8ee981",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:55:54.860712+00:00",
+        "publisher": "Indian Nations Council of Governments (INCOG)",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official INCOG root→Mapping/GIS→MapGallery→JudicialDistrict14 ElectoralDivisions app→webmap→first-party map11.incog.org layer. Native full Division4 polygon prepared as independently identified legal division geography only; no unsupported Office4 crosswalk or reader activation. Map description cites2013SB820/2010Census blocks; 2026 publication/metadata does not change legal vintage."
+      },
+      {
+        "requestedUrl": "https://map11.incog.org/arcgis11wa/rest/services/TulsaCo_Judicial/FeatureServer/0?f=pjson",
+        "finalUrl": "https://map11.incog.org/arcgis11wa/rest/services/TulsaCo_Judicial/FeatureServer/0?f=pjson",
+        "rawHash": "79be51309b6d40644b116ad2518329333c832018cac42a8bfa07cf87015640a6",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:57:47.664419+00:00",
+        "publisher": "Indian Nations Council of Governments (INCOG)",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official INCOG root→Mapping/GIS→MapGallery→JudicialDistrict14 ElectoralDivisions app→webmap→first-party map11.incog.org layer. Native full Division4 polygon prepared as independently identified legal division geography only; no unsupported Office4 crosswalk or reader activation. Map description cites2013SB820/2010Census blocks; 2026 publication/metadata does not change legal vintage."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/c57f2358facb4f03b1329869f5bd9f5a/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/c57f2358facb4f03b1329869f5bd9f5a/data?f=pjson",
+        "rawHash": "b9651a6bea000a1935f0b3bcc74ca12eec69f4fbe83127c9a035311bb9fbca86",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:55:55.258041+00:00",
+        "publisher": "Indian Nations Council of Governments (INCOG)",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official INCOG root→Mapping/GIS→MapGallery→JudicialDistrict14 ElectoralDivisions app→webmap→first-party map11.incog.org layer. Native full Division4 polygon prepared as independently identified legal division geography only; no unsupported Office4 crosswalk or reader activation. Map description cites2013SB820/2010Census blocks; 2026 publication/metadata does not change legal vintage."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/c57f2358facb4f03b1329869f5bd9f5a?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/c57f2358facb4f03b1329869f5bd9f5a?f=pjson",
+        "rawHash": "4bd215145dcc58b7e2fb9867b66858aaed8ac963db725fdf3702ca6c18f16d09",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:55:55.068650+00:00",
+        "publisher": "Indian Nations Council of Governments (INCOG)",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official INCOG root→Mapping/GIS→MapGallery→JudicialDistrict14 ElectoralDivisions app→webmap→first-party map11.incog.org layer. Native full Division4 polygon prepared as independently identified legal division geography only; no unsupported Office4 crosswalk or reader activation. Map description cites2013SB820/2010Census blocks; 2026 publication/metadata does not change legal vintage."
+      },
+      {
+        "requestedUrl": "https://www.incog.org/Mapping_GIS_Resources/mapping_map_index.html",
+        "finalUrl": "https://www.incog.org/Mapping_GIS_Resources/mapping_map_index.html",
+        "rawHash": "320f377410c45993cd7fcbe85db5ffd97e3240516ed891491e307eef7d6651c8",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T10:00:16.036333+00:00",
+        "publisher": "Indian Nations Council of Governments (INCOG)",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official INCOG root→Mapping/GIS→MapGallery→JudicialDistrict14 ElectoralDivisions app→webmap→first-party map11.incog.org layer. Native full Division4 polygon prepared as independently identified legal division geography only; no unsupported Office4 crosswalk or reader activation. Map description cites2013SB820/2010Census blocks; 2026 publication/metadata does not change legal vintage."
+      },
+      {
+        "requestedUrl": "https://www.incog.org/Mapping_GIS_Resources/mapping_main.html",
+        "finalUrl": "https://www.incog.org/Mapping_GIS_Resources/mapping_main.html",
+        "rawHash": "d1ea63afe7c7865e0a56a40d33d50eb37b20c411ca36e4877b16a28629e9947b",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:59:11.468643+00:00",
+        "publisher": "Indian Nations Council of Governments (INCOG)",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official INCOG root→Mapping/GIS→MapGallery→JudicialDistrict14 ElectoralDivisions app→webmap→first-party map11.incog.org layer. Native full Division4 polygon prepared as independently identified legal division geography only; no unsupported Office4 crosswalk or reader activation. Map description cites2013SB820/2010Census blocks; 2026 publication/metadata does not change legal vintage."
+      },
+      {
+        "requestedUrl": "https://www.incog.org/",
+        "finalUrl": "https://www.incog.org/",
+        "rawHash": "ee155cea8a96a70793b83f8667b05958e7851a2660e2c5e9db1628ab8cc1fa46",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:57:47.235745+00:00",
+        "publisher": "Indian Nations Council of Governments (INCOG)",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official INCOG root→Mapping/GIS→MapGallery→JudicialDistrict14 ElectoralDivisions app→webmap→first-party map11.incog.org layer. Native full Division4 polygon prepared as independently identified legal division geography only; no unsupported Office4 crosswalk or reader activation. Map description cites2013SB820/2010Census blocks; 2026 publication/metadata does not change legal vintage."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/search?q=Tulsa+Judicial+Districts&f=pjson&num=50",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/search?q=Tulsa+Judicial+Districts&f=pjson&num=50",
+        "rawHash": "d72a26519a718ab93aa8fa4ee6deb51491b747aef821f4c8cf06248d04650c21",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:54:58.750511+00:00",
+        "publisher": "ArcGIS public item search",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official INCOG root→Mapping/GIS→MapGallery→JudicialDistrict14 ElectoralDivisions app→webmap→first-party map11.incog.org layer. Native full Division4 polygon prepared as independently identified legal division geography only; no unsupported Office4 crosswalk or reader activation. Map description cites2013SB820/2010Census blocks; 2026 publication/metadata does not change legal vintage."
+      },
+      {
+        "requestedUrl": "https://osage.okcounties.org/departments/election-board/elections",
+        "finalUrl": "https://osage.okcounties.org/departments/election-board/elections",
+        "rawHash": "c991e13f11109ae62f1bf35fd69f68eca9025b2249a2e5d3ea662861d88ebac1",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:47:30.045600+00:00",
+        "publisher": "Osage County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official neighboring county archive route checked for shared TulsaCouncil1 current samples. November3,2026 archive explicitly says ballots/results have not posted; old school and municipal sample files are not current November evidence."
+      },
+      {
+        "requestedUrl": "https://osage.okcounties.org/offices/election-board",
+        "finalUrl": "https://osage.okcounties.org/offices/election-board",
+        "rawHash": "1069812caf9bfb5332c5619a85550bbbf1b4beda743bbfd9810c1801430a6e82",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:35.979841+00:00",
+        "publisher": "Osage County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official neighboring county archive route checked for shared TulsaCouncil1 current samples. November3,2026 archive explicitly says ballots/results have not posted; old school and municipal sample files are not current November evidence."
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html",
+        "finalUrl": "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html",
+        "rawHash": "9c996779eb136c5e8d84bb7408409132b7fb8db5cf678a4a07a34223b188961d",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:51:06.802620+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official state public election information/access route. Portal information explicitly requires registered name and date of birth; no voter identity, registration search, login or private lookup was used. Source is not a sample; filing schedules do not establish current named qualification."
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/content/dam/ok/en/elections/candidate-filing-archives/2026-candidate-filing-archives/2026-candidate-list-book.pdf",
+        "finalUrl": "https://oklahoma.gov/content/dam/ok/en/elections/candidate-filing-archives/2026-candidate-filing-archives/2026-candidate-list-book.pdf",
+        "rawHash": "c5e56857e341527dba9535d13be7c109ccadebe575f5f71f2000d3467c8ff5fe",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:51:34.327760+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 filing book used only for safe District14 office territory headings: Offices1/12 Pawnee,Tulsa; Office4 Tulsa. Filing history does not prove November qualification, and primary candidates absent from the current November list are not imported. No residential/mailing address in reader quotes."
+      },
+      {
+        "requestedUrl": "https://oksenate.gov/sites/default/files/2019-12/os20.pdf",
+        "finalUrl": "https://oksenate.gov/sites/default/files/2019-12/os20.pdf",
+        "rawHash": "fed5ca36bcb75e6de29d7a35f47e045dc85c32de2ed40f46b7acdde0082d158f",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:48:31.219580+00:00",
+        "publisher": "Oklahoma State Senate",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current Title20 compilation establishes JudicialDistrict14 consists of Tulsa and Pawnee, five intra-Tulsa electoral divisions, one judge nominated/elected by each division, and remaining at-large judges. Office4-to-numbered-Division4 crosswalk is not directly established by this source alone."
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/about-us/county-election-boards.html",
+        "finalUrl": "https://oklahoma.gov/elections/about-us/county-election-boards.html",
+        "rawHash": "6210799ef58f00882e9385a024a4919ac94eea749e8dddcbb0d8526857da8cd1",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:18.746985+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official state public election information/access route. Portal information explicitly requires registered name and date of birth; no voter identity, registration search, login or private lookup was used. Source is not a sample; filing schedules do not establish current named qualification."
+      },
+      {
+        "requestedUrl": "https://hosting.okelections.gov/electionlist.html",
+        "finalUrl": "https://hosting.okelections.gov/electionlist.html",
+        "rawHash": "4a14125fdf01fb40462424429758c0d40d892a77babd7c9fe48680a4b45955bf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:19.376195+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current native NOVEMBER / 2026 List of Elections, generated September 24, 2026. Tulsa section contains three complete opposed District14 judge blocks and one CityCouncil1 runoff block, eight names. Official-list supplement only; this source is not a sample ballot. Statewide/legislative/retention/question entries remain outside incoming. No ordinary county or school candidate office is listed in the Tulsa section; no countywide absence claim is made."
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/faqs.html",
+        "finalUrl": "https://oklahoma.gov/elections/faqs.html",
+        "rawHash": "07cc848f214ce07f5abf94ea3461a3b1547bbb23a886af4d3812c8e7ff54c880",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:54:58.293217+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official FAQ states write-in voting is generally not permitted in Oklahoma, separately describing military/overseas special federal write-in ballots. This is a rule source, not a certified local named-write-in roster."
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/candidates/candidate-filing.html",
+        "finalUrl": "https://oklahoma.gov/elections/candidates/candidate-filing.html",
+        "rawHash": "7736157681fc7d2a061573aded7d2308bdf349422b8d699771a37b058017d166",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:51:06.632790+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official state public election information/access route. Portal information explicitly requires registered name and date of birth; no voter identity, registration search, login or private lookup was used. Source is not a sample; filing schedules do not establish current named qualification."
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+        "finalUrl": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+        "rawHash": "aee814120fd21ab433d124ab1a8742f8f8e476068e1317ea1378ca797a781fe5",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:47:29.953465+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official state public election information/access route. Portal information explicitly requires registered name and date of birth; no voter identity, registration search, login or private lookup was used. Source is not a sample; filing schedules do not establish current named qualification."
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/content/dam/ok/en/elections/candidate-filing-archives/candidate-filing-packets/2026-candidate-filing-packets/2026-district-judge-filing-packet.pdf",
+        "finalUrl": "https://oklahoma.gov/content/dam/ok/en/elections/candidate-filing-archives/candidate-filing-packets/2026-candidate-filing-packets/2026-district-judge-filing-packet.pdf",
+        "rawHash": "0150e158a513973babce7a5965b2a8a9b1d646e2bac7ca97bc32a2cd97f91f28",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:52:49.202387+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official state public election information/access route. Portal information explicitly requires registered name and date of birth; no voter identity, registration search, login or private lookup was used. Source is not a sample; filing schedules do not establish current named qualification."
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/candidates/district-and-precinct-maps.html",
+        "finalUrl": "https://oklahoma.gov/elections/candidates/district-and-precinct-maps.html",
+        "rawHash": "c1c3ab558482979c4eedd14e6349ec2f87338538fcc8bc54fed5f8f6879cb48d",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:52:47.207074+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official state public election information/access route. Portal information explicitly requires registered name and date of birth; no voter identity, registration search, login or private lookup was used. Source is not a sample; filing schedules do not establish current named qualification."
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/ovp.html",
+        "finalUrl": "https://oklahoma.gov/elections/ovp.html",
+        "rawHash": "b9dfa9bd657c3c48de318edec22578b4ff5eca7c93bd0693644a8c56afb880b7",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:49:52.878933+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official state public election information/access route. Portal information explicitly requires registered name and date of birth; no voter identity, registration search, login or private lookup was used. Source is not a sample; filing schedules do not establish current named qualification."
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/content/dam/ok/en/elections/signatures-required/20251101_state-federal-offices-signatures-required.pdf",
+        "finalUrl": "https://oklahoma.gov/content/dam/ok/en/elections/signatures-required/20251101_state-federal-offices-signatures-required.pdf",
+        "rawHash": "968b2f456d235f675f135de8aba5ee48c688d0ce9f63ed68dc947c5975afc3a7",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:53:43.610329+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November1,2025 state-office signatures table used only as electorate corroboration: DistrictJudge14-4 has52precincts/76999 registered voters; Offices1/12 have261precincts/403939. Confirms Office4 is a distinct partial electorate, but not by itself a numbered electoral-division crosswalk or current candidate qualification."
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/content/dam/ok/en/elections/terms-of-office/2025-terms-of-office.pdf",
+        "finalUrl": "https://oklahoma.gov/content/dam/ok/en/elections/terms-of-office/2025-terms-of-office.pdf",
+        "rawHash": "b1f30ede52214458fbf41fbff5dfd3f802df6ebe0c55381b4419f52c7efc8244",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:52:47.176169+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official state public election information/access route. Portal information explicitly requires registered name and date of birth; no voter identity, registration search, login or private lookup was used. Source is not a sample; filing schedules do not establish current named qualification."
+      }
+    ]
+  }
+}

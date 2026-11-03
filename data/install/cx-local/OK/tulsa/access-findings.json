@@ -1,0 +1,78 @@
+[
+  {
+    "url": "https://www.incog.org/Mapping_GIS/mapping_index.html",
+    "httpStatus": 404,
+    "retrievedAt": "2026-11-03T09:55:54.142231+00:00",
+    "rawHash": "dc1d54dab6ec8c00f70137927504e4f222c8395f10760b6beecfcfa94e08249f",
+    "file": "incog-gis.html",
+    "error": "HTTP Error 404: Not Found",
+    "captureLabel": "incog-gis.html",
+    "sampleAccessUse": "PUBLIC_ROUTE_ONLY_NO_VOTER_IDENTITY_OR_LOGIN",
+    "isSample": false,
+    "sourceFile": "sources/dc1d54dab6ec8c00f70137927504e4f222c8395f10760b6beecfcfa94e08249f.source"
+  },
+  {
+    "url": "https://pawnee.okcounties.org/offices/election-board",
+    "retrievedAt": "2026-11-03T09:46:35.133315+00:00",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+    "captureLabel": "pawnee-home.html",
+    "sampleAccessUse": "PUBLIC_ROUTE_ONLY_NO_VOTER_IDENTITY_OR_LOGIN",
+    "isSample": false
+  },
+  {
+    "url": "https://www.pawneecounty.org/election-board",
+    "retrievedAt": "2026-11-03T09:48:29.871883+00:00",
+    "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+    "captureLabel": "pawnee-official.html",
+    "sampleAccessUse": "PUBLIC_ROUTE_ONLY_NO_VOTER_IDENTITY_OR_LOGIN",
+    "isSample": false
+  },
+  {
+    "url": "https://okvoterportal.okelections.us/",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T09:48:06.363982+00:00",
+    "rawHash": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+    "file": "portal-public.html",
+    "error": "HTTP Error 403: Forbidden",
+    "captureLabel": "portal-public.html",
+    "sampleAccessUse": "PUBLIC_ROUTE_ONLY_NO_VOTER_IDENTITY_OR_LOGIN",
+    "isSample": false,
+    "sourceFile": "sources/58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4.source"
+  },
+  {
+    "url": "https://okvoterportal.okelections.gov/cebinfo",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T09:49:27.824752+00:00",
+    "rawHash": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+    "file": "public-board-directory.html",
+    "error": "HTTP Error 403: Forbidden",
+    "captureLabel": "public-board-directory.html",
+    "sampleAccessUse": "PUBLIC_ROUTE_ONLY_NO_VOTER_IDENTITY_OR_LOGIN",
+    "isSample": false,
+    "sourceFile": "sources/58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4.source"
+  },
+  {
+    "url": "https://oklahoma.gov/content/dam/ok/en/elections/county-election-boards/county-election-board-information.pdf",
+    "httpStatus": 404,
+    "retrievedAt": "2026-11-03T09:47:29.458976+00:00",
+    "rawHash": "319f683bdf945461b7d9a59ae8dfc064f81f4dadb2358008fb5328c9204c4ee6",
+    "file": "state-board-directory.pdf",
+    "error": "HTTP Error 404: Not Found",
+    "captureLabel": "state-board-directory.pdf",
+    "sampleAccessUse": "PUBLIC_ROUTE_ONLY_NO_VOTER_IDENTITY_OR_LOGIN",
+    "isSample": false,
+    "sourceFile": "sources/319f683bdf945461b7d9a59ae8dfc064f81f4dadb2358008fb5328c9204c4ee6.source"
+  },
+  {
+    "url": "https://filings.okelections.gov/ViewCandidates/2026040120260403/99/all",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T09:53:43.498716+00:00",
+    "rawHash": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+    "file": "state-public-filings.html",
+    "error": "HTTP Error 403: Forbidden",
+    "captureLabel": "state-public-filings.html",
+    "sampleAccessUse": "PUBLIC_ROUTE_ONLY_NO_VOTER_IDENTITY_OR_LOGIN",
+    "isSample": false,
+    "sourceFile": "sources/58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4.source"
+  }
+]

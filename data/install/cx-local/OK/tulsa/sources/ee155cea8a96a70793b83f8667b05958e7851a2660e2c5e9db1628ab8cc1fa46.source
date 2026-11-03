@@ -1,0 +1,340 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8TDMQYJ73W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8TDMQYJ73W');
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>INCOG | Tulsa, OK  | Regional Partners - Regional Solutions</title>
+<style type="text/css">
+<!--
+body {
+    background-image: url(Images/background_2023.png);
+    color: #000;
+    background-color: #FFF;
+    font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+}
+.heaDLINE_TEXT1 {color: #043464;
+	font-size: 24px;
+	font-family: "Times New Roman", Times, serif;
+}
+.heaDLINE_TEXT1 {	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+}
+.heaDLINE_TEXT1 {
+	color: #000066;
+}
+descriptiontext2 {
+	font-size: 16px;
+}
+#descriptiontext {
+	font-size: 18px;
+	font-weight: bold;
+}
+.QUICKLINKS {color: #020262;
+}
+.QUICKLINKS {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	color: #000;
+}
+.dark {
+	color: #000;
+}
+.heaDLINE_TEXT11 {color: #043464;
+	font-size: 24px;
+	font-family: "Times New Roman", Times, serif;
+}
+.heaDLINE_TEXT11 {
+    font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, sans-serif;
+    font-size: 12px;
+    color: #000000;
+    font-weight: bold;
+}
+#news_headlines {	font-size: 12px;
+}
+.heaDLINE_TEXT11 .dark #news_headlines .QUICKLINKS {
+	font-size: 18px;
+}
+#news {
+	font-size: 18px;
+	color: #000;
+}
+.a {
+	font-style: italic;
+}
+.heaDLINE_TEXT11 .dark #news_headlines .QUICKLINKS {
+	color: #000;
+}
+.QUICKLINKS .dark #headline_text2 {
+	color: #000;
+}
+.QUICKLINKS .dark #headline_text {
+	color: #000;
+}
+.QUICKLINKS .QUICKLINKS {
+	color: #000;
+}
+.w {
+	font-style: normal;
+}
+.heaDLINE_TEXT1 .heaDLINE_TEXT1 {
+	color: #000;
+}
+#homepagetext {
+	font-size: 18px;
+}
+.heaDLINE_TEXT1 #homepagetext {
+	font-size: 18px;
+}
+.heaDLINE_TEXT1 #homepagetext {
+	font-size: 20px;
+	color: #000066;
+}
+.heaDLINE_TEXT11 .dark #news_headlines .QUICKLINKS {
+	color: #000;
+}
+a:link {
+	color: #000066;
+}
+a:visited {
+	color: #06F;
+}
+a:hover {
+    color: #ffcc33;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: left;
+}
+#news_headlines0 {	font-size: 12px;
+}
+.homepage_maintext {
+	font-family: Verdana, Geneva, sans-serif;
+}
+.heaDLINE_TEXT1 {
+	font-weight: normal;
+}
+.heaDLINE_TEXT1 .heaDLINE_TEXT1 .homepage_maintext .dark .heaDLINE_TEXT1 {
+	font-size: 16px;
+}
+-->
+</style>
+<script type="text/javascript">
+<!--
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+//-->
+</script>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1458948-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+</script>
+<link rel="shortcut icon" href="/favicon.ico" />
+<style type="text/css">
+<!--
+.heaDLINE_TEXT12 {
+    color: #043464;
+    font-size: 20px;
+    font-family: "Times New Roman", Times, serif;
+}
+.heaDLINE_TEXT12 {font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+}
+.heaDLINE_TEXT12 {	color: #000;
+}
+.announcement {
+    font-size: 35px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.BlockLinks {	font-size: 12px;
+	color: #000;
+}
+.Page_Headline {font-size: 24px;
+	font-weight: bold;
+	color: #000066;
+	font-family: "Arial Black", Gadget, sans-serif;
+}
+.headline {
+	font-size: 24px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.announcement1 {font-size: 13px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.articles {	font-family: "Times New Roman", Times, serif;
+	font-size: 16px;
+	color: #000;
+}
+.homepagewhitetype {
+	color: #FFF;
+}
+.Homepage_Headline {
+	font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.homepage_headline2 {
+	font-size: 18px;
+}
+.homepage_text {
+    font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, sans-serif;
+    font-size: 16px;
+}
+.heaDLINE_TEXT111 {color: #043464;
+	font-size: 24px;
+	font-family: "Times New Roman", Times, serif;
+}
+.heaDLINE_TEXT111 {
+    font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, sans-serif;
+    font-size: 16px;
+    color: #050404;
+    font-weight: bold;
+}
+.heaDLINE_TEXT112 {color: #043464;
+	font-size: 24px;
+	font-family: "Times New Roman", Times, serif;
+}
+.heaDLINE_TEXT112 {    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #050404;
+    font-weight: bold;
+}
+.ed {
+    font-family: Segoe, 'Segoe UI', 'DejaVu Sans', 'Trebuchet MS', Verdana, sans-serif;
+    font-size: 20px;
+}
+a {
+    font-size: 12px;
+}
+.announcement13 {font-size: 13px;
+    font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, sans-serif;
+}
+.announcement14 {font-size: 13px;
+    font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, sans-serif;
+    color: hsla(0,0%,4%,1);
+}
+-->
+</style>
+</head>
+
+<body onload="MM_preloadImages('Images/land_over.png','Images/transportation_over.png','Images/environmental_over.png','Images/comdev_over.png','Images/aging_over.png','Images/publicsafety_over.png','Images/mapping_over.png','Images/legislative_over.png')">
+<table width="969" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="93" colspan="7" align="left" valign="top"><img src="Images/logo.png" width="223" height="85" /><img src="Images/partners-solutions.png" width="223" height="85" /><br /></td>
+    <td width="129" align="right" valign="top"><a href="http://tulsacleancities.com/first-responder-appreciation-luncheon-afv-safety-training-course-premiere/"><em><strong>
+      <iframe src="http://free.timeanddate.com/clock/i2hbeah1/fs10/fc006/tct/pct/ahl/avb/ftb/tt1/tw0" frameborder="0" width="94" height="14" allowtransparency="true"></iframe>
+    </strong></em></a></td>
+  </tr>
+  <tr>
+    <td height="46" colspan="8" bgcolor="#003466" style="color: #FFF; font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 18px;"><img src="Images/homepage navigation.png" width="598" height="31" usemap="#Map" border="0" /></td>
+  </tr>
+  <tr>
+    <td colspan="8" bgcolor="#336799">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="120" align="center" valign="top" bgcolor="#336799"><a href="Land_Development/land_main.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image7','','Images/land_over.png',1)"><img src="Images/land_up.png" alt="" width="150" height="90" id="Image7" /></a></td>
+    <td width="120" align="center" valign="top" bgcolor="#336799"><a href="Transportation/transportation_main.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image8','','Images/transportation_over.png',1)"><img src="Images/transportation_up.png" alt="" width="150" height="90" id="Image8" /></a></td>
+    <td width="120" align="center" valign="top" bgcolor="#336799"><a href="Environmental_Planning/environment_main.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image9','','Images/environmental_over.png',1)"><img src="Images/environmental_up.png" alt="" width="150" height="90" id="Image9" /></a></td>
+    <td width="120" align="center" valign="top" bgcolor="#336799"><a href="Community_Economic_Development/commdev_main.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image10','','Images/comdev_over.png',1)"><img src="Images/comdev_up.png" alt="" width="150" height="90" id="Image10" /></a></td>
+    <td width="120" align="center" valign="top" bgcolor="#336799"><a href="Agency_on_Aging/aaa_main.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image11','','Images/aging_over.png',1)"><img src="Images/aging_up.png" alt="" width="150" height="90" id="Image11" /></a></td>
+    <td width="120" align="center" valign="top" bgcolor="#336799"><a href="Public_Safety/safety_main.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image12','','Images/publicsafety_over.png',1)"><img src="Images/publicsafety_up.png" alt="" width="150" height="90" id="Image12" /></a></td>
+    <td width="120" align="center" valign="top" bgcolor="#336799"><a href="Mapping_GIS_Resources/mapping_main.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image13','','Images/mapping_over.png',1)"><img src="Images/mapping_up.png" alt="" width="150" height="90" id="Image13" /></a></td>
+    <td align="center" valign="top" bgcolor="#336799"><a href="Legislative_Program/legislative_main.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image14','','Images/legislative_over.png',1)"><img src="Images/legislative_up.png" alt="" width="150" height="90" id="Image14" /></a></td>
+  </tr>
+  <tr>
+    <td colspan="8" align="center" valign="top" bgcolor="#336799">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="325" colspan="8" align="center" valign="top"><img src="Images/homepagepicture2021 copy.png" width="1200" height="325" alt=""/><br /></td>
+  </tr>
+  <tr>
+    <td colspan="8" bgcolor="#FFFFFF">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="8" align="center" valign="top" bgcolor="#FFFFFF"><table width="99%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%">&nbsp;</td>
+        <td width="78%" align="left" valign="top"><table width="99%" border="0">
+          <tbody>
+            <tr>
+              <td bgcolor="#003466"><img src="Images/news_header.png" width="400" height="25" alt=""/></td>
+              </tr>
+            </tbody>
+        </table>
+          <p><strong style="font-size: 25px"><font face="Arial, sans-serif"><b style="font-size: 26px"><span style="color: #010101">The INCOG offices will be<br />
+              <span style="color: #F50408">CLOSED on Wednesday, November 11, 2026</span><br />
+            in observance of Veterans Day
+            <br />
+          </span></b></font></strong></p>
+          <hr />
+          <p><span style="font-size: 25px"><strong style="font-size: 25px"><font face="Arial, sans-serif"><b style="font-size: 26px"><span style="color: #000000">            Want to help make traveling easier <br />
+            in the Tulsa region? </span></b></font> </strong></span><br />
+            <br />
+            <span style="font-size: 14px">Please review and comment on the draft INCOG Congestion Management Process Plan at <em><a href="http://incogcmp2026.com/" target="_blank"><strong>www.incogcmp2026.com</strong></a></em>. <br />
+              The plan identifies where congestion occurs, what causes it, and strategies to improve travel reliability, safety, freight movement, and transportation choices throughout the Tulsa Transportation Management Area.  Let us know if we got it right! </span><br />
+            <br />
+            <br />
+          </p></td>
+        <td width="1%" align="left" valign="top"><p class="heaDLINE_TEXT11"><br />
+          </p></td>
+        <td width="17%" align="left" valign="top"><p class="heaDLINE_TEXT11"><a href="https://icont.ac/51mWb" target="_blank"><strong><em>INSIGHT</em><br />
+          the INCOG </strong>Newsletter</a></p>
+          <p class="heaDLINE_TEXT11"><strong><a href="AboutUs/icontact_signup_revised - Copy.html" target="_blank">Sign up for the <em><br />
+            INSIGHT</em> Mailing List</a></strong></p>
+          <p style="color: #363"><strong style="font-family: Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif"><a href="Documents/ParkingMap.pdf" target="_blank">Parking Map</a></strong>          </p>
+          <p style="color: #363">&nbsp;</p>
+          <p style="color: #363"><br />
+      </p></td>
+      </tr>
+      <tr>
+        <td height="41">&nbsp;</td>
+        <td align="left" valign="middle"><hr />
+          <img src="Images/home_footer_blue.png" width="1000" height="25" alt=""/></td>
+        <td align="left" valign="top">&nbsp;</td>
+        <td align="left" valign="top">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td colspan="8" align="center" valign="top"><p>&nbsp;</p></td>
+  </tr>
+</table>
+<p>
+  <map name="Map" id="Map">
+    <area shape="rect" coords="3,3,109,31" href="AboutUs/about.html" />
+    <area shape="rect" coords="240,5,377,27" href="AboutUs/contact_us.html" />
+    <area shape="rect" coords="144,3,210,28" href="AboutUs/links.html" />
+  </map>
+</p>
+</body>
+</html>

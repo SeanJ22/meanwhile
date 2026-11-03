@@ -1,0 +1,19 @@
+{
+  "sourceCount": 45,
+  "failedRequests": 7,
+  "actualSamplePdfs": 0,
+  "officialNovemberListNativeCaptures": 1,
+  "sourceKindsDistinct": true,
+  "completeNamedBlocksInTulsaNovemberList": 4,
+  "namedPeopleInThoseBlocks": 8,
+  "installableExactScopeBlocks": 3,
+  "heldScopeCrosswalkBlocks": 1,
+  "completeCountyBallotCoverage": false,
+  "completePrecinctStyleCensus": false,
+  "fullGeometryFeaturesPrepared": 2,
+  "geometryLinkedActiveFields": 1,
+  "geometryIndependentHeldCrosswalkUnproven": 1,
+  "voterIdentityLookup": false,
+  "networkProxyPreserved": true,
+  "dataOnly": true
+}

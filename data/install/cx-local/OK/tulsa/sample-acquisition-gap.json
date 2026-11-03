@@ -1,0 +1,30 @@
+{
+  "actualSamplesAcquired": 0,
+  "currentCountyNoticeIsSample": false,
+  "officialNovemberListIsSample": false,
+  "status": "OPEN_CURRENT_COUNTY_OR_CITY_SAMPLE_REQUIRED_FOR_PRINTED_BALLOT_PARITY",
+  "currentCountyNotice": {
+    "sourceUrl": "https://www2.tulsacounty.org/media/r2tbyimg/sample-ballots-available-for-nov-3-election.pdf",
+    "sourceOrg": "Tulsa County Election Board",
+    "collectedAt": "2026-11-03T09:46:35.691490+00:00",
+    "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+    "quote": "SAMPLE BALLOTS AVAILABLE FOR NOVEMBER 3 ELECTION"
+  },
+  "portalRequirement": {
+    "sourceUrl": "https://oklahoma.gov/elections/ovp.html",
+    "sourceOrg": "Oklahoma State Election Board",
+    "collectedAt": "2026-11-03T09:49:52.878933+00:00",
+    "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+    "quote": "To access the OK Voter Portal, you will need your name (as it appears on your registration) and your date of birth."
+  },
+  "neighborOsageNovemberArchive": {
+    "sourceUrl": "https://osage.okcounties.org/departments/election-board/elections",
+    "sourceOrg": "Osage County Election Board",
+    "collectedAt": "2026-11-03T09:47:30.045600+00:00",
+    "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+    "quote": "General Election - November 3rd, 2026 Statewide General Election Registration Deadline October 9th, 2026 Ballots or results haven't posted yet."
+  },
+  "failedPublicRequestsFile": "access-findings.json",
+  "privateIdentityLookups": false,
+  "sampleStyleCensusComplete": false
+}

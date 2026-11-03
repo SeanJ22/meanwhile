@@ -1,0 +1,57 @@
+{
+  "sourceUrl": "https://www2.tulsacounty.org/electionboard/resources/press-releases/",
+  "nativeHash": "7e4539da60540382dbd593640244dd4951a7197481653c996e8f345288a227d5",
+  "collectedAt": "2026-11-03T09:45:56.029996+00:00",
+  "captureFormat": "EXACT_PUBLIC_MEDIA_RECORDS_PARSED_FROM_NATIVE_HTML_SCRIPT_JSON",
+  "records": [
+    {
+      "name": "Election Day Reminders And Tips Nov 3 Election",
+      "url": "/media/riznlr5r/election-day-reminders-and-tips-nov-3-election.pdf",
+      "date": "2026-10-27T14:07:25.307Z",
+      "folderId": 11722,
+      "folderName": "2026"
+    },
+    {
+      "name": "Request An Emergency Ballot For The Nov 3 Election",
+      "url": "/media/1gnnu5c2/request-and-emergency-ballot-for-the-nov-3-election.pdf",
+      "date": "2026-10-20T12:56:26.473Z",
+      "folderId": 11722,
+      "folderName": "2026"
+    },
+    {
+      "name": "Last Week To Request Absentee Ballots For November 3Rd Election",
+      "url": "/media/c1nm2ksq/last-week-to-request-absentee-ballots-for-november-3rd-election.pdf",
+      "date": "2026-10-12T13:17:16.707Z",
+      "folderId": 11722,
+      "folderName": "2026"
+    },
+    {
+      "name": "Sample Ballots Available For Nov 3 Election",
+      "url": "/media/r2tbyimg/sample-ballots-available-for-nov-3-election.pdf",
+      "date": "2026-09-29T15:41:14.753Z",
+      "folderId": 11722,
+      "folderName": "2026"
+    },
+    {
+      "name": "Deadline To Request Absentee Ballot For Nov 3 Election Approaches",
+      "url": "/media/1h0c1a2v/deadline-to-request-absentee-ballot-for-nov-3-election-approaches.pdf",
+      "date": "2026-09-29T15:40:01.457Z",
+      "folderId": 11722,
+      "folderName": "2026"
+    },
+    {
+      "name": "Voter Registration Deadline Approaches Nov 3rd Election",
+      "url": "/media/gzyfpleb/voter-registration-deadline-approaches-nov-3rd-election.pdf",
+      "date": "2026-09-18T13:28:54.763Z",
+      "folderId": 11722,
+      "folderName": "2026"
+    },
+    {
+      "name": "Berryhill Fire Protection District Candidate Filing Begins July 6Th",
+      "url": "/media/ovtj1w3t/berryhill-fire-protection-district-candidate-filing-begins-july-6th.pdf",
+      "date": "2026-07-01T14:39:53.523Z",
+      "folderId": 11722,
+      "folderName": "2026"
+    }
+  ]
+}

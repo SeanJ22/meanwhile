@@ -1,0 +1,12 @@
+{
+  "status": "NO_CERTIFIED_LOCAL_NAME_INVENTORY_ACQUIRED",
+  "records": [],
+  "generalStateRule": {
+    "sourceUrl": "https://oklahoma.gov/elections/faqs.html",
+    "sourceOrg": "Oklahoma State Election Board",
+    "collectedAt": "2026-11-03T09:54:58.293217+00:00",
+    "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+    "quote": "No. Generally speaking, write-in voting is not permitted in Oklahoma."
+  },
+  "exceptionNote": "Official FAQ separately describes military/overseas special federal write-in absentee ballots; no generic write-in person or ordinary local candidate invented."
+}

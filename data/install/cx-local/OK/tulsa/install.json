@@ -1,0 +1,97 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "OK",
+  "county": "Tulsa",
+  "countyFips": "40143",
+  "populationRank": 100,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:OK",
+  "inputDirectory": "ballot-input",
+  "sourceKind": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST_SUPPLEMENT",
+  "sourcePublicationLabel": "NOVEMBER / 2026 LIST OF ELECTIONS",
+  "operation": "Data-only partial official-list supplement: three complete exact-scope local fields/six names. One current local field/two names held pending official numbered electoral crosswalk. Zero actual current samples acquired; preserve all held/upstream data.",
+  "subjects": [
+    {
+      "id": "ok-cx-local-2026-district-judge-14-office-1",
+      "title": "District Judge \u2014 District 14, Office 1",
+      "ocdId": "ocd-division/country:us/state:ok/judicial_district:14",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleVerified": false
+    },
+    {
+      "id": "ok-cx-local-2026-district-judge-14-office-12",
+      "title": "District Judge \u2014 District 14, Office 12",
+      "ocdId": "ocd-division/country:us/state:ok/judicial_district:14",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleVerified": false
+    },
+    {
+      "id": "ok-cx-local-2026-tulsa-council-district-1",
+      "title": "City of Tulsa \u2014 Councilmember, Council District 1",
+      "ocdId": "ocd-division/country:us/state:ok/place:tulsa/council_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleVerified": false
+    }
+  ],
+  "coverage": [
+    "Accurately labeled official-list supplement, not sample data. Current official NOVEMBER / 2026 List of Elections contains four complete Tulsa local candidate blocks/eight names. Three exact-scope blocks/six names are installable now: DistrictJudge14 Offices1/12 and CityTulsaCouncilDistrict1. Office4 two current named choices remain separate/held pending a direct official office-to-numbered-division crosswalk. Actual sample-verified local fields/names: zero; complete county/precinct ballot parity is not claimed.",
+    "Current county public sample notice and October27 election notice identify November3 Federal/StateGeneral, StateQuestions845/847, TulsaCouncil1 runoff and HotelTax election. Their sample route points to the voter portal or physical board/polling-place copies; the notices are not samples. Official state portal information explicitly requires registered name/date of birth; public landing/directory requests returned403. No voter identity, registration search, sign-in, token or private endpoint was used. Osage current November archive says ballots/results not posted; prior samples are not imported. Pawnee public routes failed; exact request/time/status/hash evidence retained.",
+    "Official current Title20 law defines JudicialDistrict14 as Tulsa and Pawnee and distinguishes five division-electorate judges from remaining at-large offices. Current official2026 filing headers explicitly scope Offices1/12 to Pawnee,Tulsa. Both at-large races use one regional judicialDistrict14 ID with two wholecounty memberships, not two per-county contests. These are ordinary opposed elections, not retention questions or unopposed declarations.",
+    "Office4 is definitively not countywide or wholeDistrict14: official 2026 filing header says Tulsa only; official2025 signatures table identifies its own52-precinct electorate versus261 for at-large Offices1/12; county roster marks it as elected by election district. Outside leads identify ElectoralDivision4, but no acquired official source directly links that office number to numbered Division4. Do not infer equality of office and division numbers: other District14 district-elected offices have different numbers. Office4 candidate block is held; independently source-identified full Division4 polygon is prepared separately without activating or mapping that office.",
+    "CityTulsa official current election page and Resolution20495 confirm August25 general/November3 runoff as needed; current November list qualifies only Council1 among candidate seats. All earlier council/auditor/school/municipal filing names are excluded from ordinary incoming. Current city-linked DistrictFinder\u2192webmap\u2192officialfeature layer provides full Council1 polygon, including its complete legal geography across county lines, unchanged and uncut. No wholecity/county/CDP/CCD fallback.",
+    "July Berryhill FireProtection notice lists four offices while its final filing inventory gives two names in an unnumbered generic board block. Current November state list and county notices do not include that field. Names remain filing-history facts only, with seat assignment and final qualification/cancellation/declared-election status unresolved. No ordinary candidacy or cancellation/declared-election fact is inferred from omission, underfilling or earlier filings.",
+    "All95 held contests/191 held person records/two measures, nine statewide judicial retentions and the OklahomaCounty lane threefields/sixpeople remain unchanged. Fresh CX-VOTES331e9d448 contains one nested SQ845 question/explainer input; exact hash and payload preserved. No state/federal/legislative, retention or question rows incoming. HotelTax question remains ancillary evidence only; no new question/explainer installed.",
+    "Two active precise reader keys (JudicialDistrict14 and CityCouncil1) are missing in the checked-in registry; two wholecounty judicial memberships and one active-city polygon prepared. A third independent Division4 key/polygon is source geography only pending the held office crosswalk. Data readiness does not assert reader visibility. Separate certified status supplement remains unacquired; official FAQ generally prohibits ordinary write-in voting, with military/overseas federal-write-in exception stated separately. No git, app, production or publication operations."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:ok/judicial_district:14",
+    "ocd-division/country:us/state:ok/place:tulsa/council_district:1"
+  ],
+  "independentSourceDivisionsNotAttachedToHeldOffice": [
+    "ocd-division/country:us/state:ok/judicial_district:14/electoral_division:4"
+  ],
+  "counts": {
+    "candidateContests": 3,
+    "candidateRows": 6,
+    "officialNovemberListedLocalBlocks": 4,
+    "officialNovemberListedNames": 8,
+    "heldLocalBlocks": 1,
+    "heldNamedChoices": 2,
+    "actualSampleVerifiedFields": 0,
+    "actualSampleVerifiedNames": 0,
+    "wholeCountyJudicialMembershipsPrepared": 2,
+    "activeReaderDivisionGaps": 2,
+    "independentHeldDivisionGeographyGaps": 1,
+    "sourceGeometryFeatures": 2,
+    "geometryLinkedActiveFields": 1,
+    "sourceCaptures": 45,
+    "failedPublicRequests": 7,
+    "upstreamReferenceInputsCompared": 1,
+    "heldStatewideRetentionsPreserved": 9,
+    "measuresAdded": 0,
+    "legislativeContestsAdded": 0,
+    "retentionContestsAddedOrChanged": 0
+  },
+  "validation": {
+    "localSourceReplay": "PASS: 45 complete native hashes, 31 exact saved-source quotes; seven failed public routes retained",
+    "parentSharedMergeModules": "PARENT_OWNS_NOT_RUN_BY_WORKER",
+    "actualPrintedBallotParity": "NOT_VERIFIED_NO_SAMPLES_ACQUIRED",
+    "productionWrites": "NONE",
+    "sourceClassification": "PASS: zero sample-verified fields; three current official-list fields/six names; Office4 two names separately held",
+    "exactScope": "PASS: at-large judicial14 two wholecounty members; fullCouncil1 polygon; no Office4-numberedDivision4 assignment inferred",
+    "geometry": "PASS: two valid full native polygons, coordinates unchanged; Division4 has no linked active contest",
+    "preservation": "PASS: held95offices/191people/2measures, nine retentions, OklahomaCounty lane and fresh SQ845 input unchanged",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 45 captured sources and 11 exact saved-source quotes"
+  },
+  "nextOwner": "Main/River: run shared merge/manual receipt checks for accurately labeled three-field supplement; apply regional14 memberships and fullCouncil1 polygon with exact joins. Keep Office4 held until direct official office-to-electoralDivision crosswalk, even though independentDivision4 native polygon is provided. Continue actual sample acquisition and Berryhill final-status/seat resolution; preserve all state/legislative/retention/questions/explanations.",
+  "preparedAt": "2026-11-03T10:05:22.280597+00:00",
+  "ballotInputSha256": "48956426cd446012f7b5d4556efc3ce5734e4ea1d7390c5fc127d2954ee9f438",
+  "frozenAt": "2026-11-03T10:06:19.793927+00:00"
+}

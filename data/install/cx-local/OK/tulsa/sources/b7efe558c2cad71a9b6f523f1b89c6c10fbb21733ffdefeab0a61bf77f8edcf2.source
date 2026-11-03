@@ -1,0 +1,597 @@
+
+<!doctype html>
+<html lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Election Filings - Election Board</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+  <link rel="stylesheet" href="/css/tcicons.css" />
+  <link rel="stylesheet" href="/css/umbraco-blockgridlayout.css" />
+
+    <!-- Bundled styles -->
+        <link rel="stylesheet" href="/Content/bootstrap.min.css" />
+        <link rel="stylesheet" href="/Content/fontawesome-all.min.css" />
+        <link rel="stylesheet" href="/Content/v4-shims.css" />
+        <link rel="stylesheet" href="/css/umbraco-starterkit-style.css" />
+        <link rel="stylesheet" href="/Content/ej2/material.css" />
+        <link rel="stylesheet" href="/Content/snackbar.min.css" />
+        <link rel="stylesheet" href="/css/county-style.css" />
+
+    <!-- Bundled scripts (jQuery and core dependencies) -->
+        <script src="/Scripts/jquery-3.5.1.js"></script>
+        <script src="/Scripts/umd/popper.min.js"></script>
+        <script src="/Scripts/bootstrap.js"></script>
+        <script src="/Scripts/ej2/ej2.min.js"></script>
+        <script src="/Scripts/snackbar.min.js"></script>
+        <script src="/Scripts/sidebar.js"></script>
+        <script src="/Scripts/vendor/counterup/counterup.min.js"></script>
+        <script src="/Scripts/vendor/superfish/superfish.min.js"></script>
+        <script src="/Scripts/vendor/venobox/venobox.min.js"></script>
+        <script src="/Scripts/umbraco-starterkit-app.js"></script>
+        <script src="/Scripts/county-main.js"></script>
+
+    
+    
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-60JK4N4CEW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-60JK4N4CEW');
+</script>
+
+<link rel="shortcut icon" href="https://www2.tulsacounty.org/favicon.ico?v=2" />
+</head>
+
+<body>
+
+    <header id="header">
+        
+
+<div class="container-fluid">
+
+    <nav class="navbar navbar-expand-xl navbar-dark fixed-top">
+        <div id="logo" class="pull-left">
+            <a title="tulsacounty.org" href="/home/"><img src="/media/4ojacfvv/county_logo.png" alt="Navigation Logo"></a> <a href="/electionboard/" title="Election Board Home"><span class="logotext">Election Board</span> </a> 
+        </div>
+        <button class="navbar-toggler" type="button" data-trigger="#main_nav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse" id="main_nav">
+            <div class="offcanvas-header mt-3">
+                <button class="btn btn-outline-danger btn-close float-right"> &times Close </button>
+                <div id="mobilelogo">
+                    <a title="tulsacounty.org" href="/home/"><img src="/media/4ojacfvv/county_logo.png" alt="Navigation Logo"></a><br />
+                </div>
+            </div>
+            <ul class="navbar-nav">
+
+
+                        <li class="nav-item dropdown top-navigation-dropdown-menu" onmouseover="dropDownOpen(this)" onclick="window.location.href = '/electionboard/elections/'"
+                            onmouseleave="dropDownClose(this)">
+                            <a class="nav-link top-navigation-dropdown-menu dropdown-toggle text-white" href="/electionboard/elections/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Elections
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="margin-top: 0">
+                                    <a href="/electionboard/elections/" class="dropdown-item"><b></b></a>
+                                        <a class="dropdown-item" href="/electionboard/elections/next-election/">Next Election</a>
+                                        <a class="dropdown-item" href="/electionboard/elections/election-calendar/">Election Calendar</a>
+                                        <a class="dropdown-item" href="/electionboard/elections/election-filings/">Election Filings</a>
+                                        <a class="dropdown-item" href="/electionboard/elections/election-results/">Election Results</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown top-navigation-dropdown-menu" onmouseover="dropDownOpen(this)" onclick="window.location.href = '/electionboard/voting/'"
+                            onmouseleave="dropDownClose(this)">
+                            <a class="nav-link top-navigation-dropdown-menu dropdown-toggle text-white" href="/electionboard/voting/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Voting
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="margin-top: 0">
+                                    <a href="/electionboard/voting/" class="dropdown-item"><b></b></a>
+                                        <a class="dropdown-item" href="/electionboard/voting/absentee-voting/">Absentee Voting</a>
+                                        <a class="dropdown-item" href="/electionboard/voting/voter-registration/">Voter Registration</a>
+                                        <a class="dropdown-item" href="/electionboard/voting/polling-locations/">Polling Locations</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown top-navigation-dropdown-menu" onmouseover="dropDownOpen(this)" onclick="window.location.href = '/electionboard/resources/'"
+                            onmouseleave="dropDownClose(this)">
+                            <a class="nav-link top-navigation-dropdown-menu dropdown-toggle text-white" href="/electionboard/resources/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Resources
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="margin-top: 0">
+                                    <a href="/electionboard/resources/" class="dropdown-item"><b></b></a>
+                                        <a class="dropdown-item" href="/electionboard/resources/poll-workers/">Poll Workers</a>
+                                        <a class="dropdown-item" href="/electionboard/resources/online-resources/">Online Resources</a>
+                                        <a class="dropdown-item" href="/electionboard/resources/faq/">FAQ</a>
+                                        <a class="dropdown-item" href="/electionboard/resources/press-releases/">Press Releases</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown top-navigation-dropdown-menu" onmouseover="dropDownOpen(this)" onclick="window.location.href = '/electionboard/about/'"
+                            onmouseleave="dropDownClose(this)">
+                            <a class="nav-link top-navigation-dropdown-menu dropdown-toggle text-white" href="/electionboard/about/" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                About
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="margin-top: 0">
+                                    <a href="/electionboard/about/" class="dropdown-item"><b></b></a>
+                                        <a class="dropdown-item" href="/electionboard/about/election-board-and-staff/">Election Board and Staff</a>
+                                        <a class="dropdown-item" href="/electionboard/about/elected-officials/">Elected Officials</a>
+                            </div>
+                        </li>
+            </ul>
+            <form class="form-inline mt-3 ml-auto mr-4" action="/electionboard/election-board-search/" method="get">
+                    <div class="input-group">
+                        <input type="search" class="form-control"  placeholder="How may we help you?" aria-label="How may we help you?" aria-describedby="basic-addon" id="query" name="query">
+                         <button class="btn btn-dark btn-large" aria-label="searchBtn" name="searchBtn" id="searchBtn" type="submit" value="Search"> <i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+
+        </div> <!-- navbar-collapse.// -->
+    </nav>
+</div>
+
+<script>
+    function dropDownOpen(element) {
+        element.children[0].ariaExpanded = true;
+        element.classList.add('show');
+        element.children[1].classList.add('show')
+    }
+    function dropDownClose(element) {
+        element.children[0].ariaExpanded = false;
+        element.classList.remove('show');
+        element.children[1].classList.remove('show')
+    }
+</script>
+
+    </header>
+    <script src="/App_Plugins/UmbracoForms/assets/aspnet-client-validation/dist/aspnet-validation.min.js"></script>
+    <main>
+        <style>
+   #ContentPageHeader{
+        position: relative;
+          background-color: #fff;
+    
+    }
+
+    #ContentPageHeader.standard::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-image: url("/media/e24dwlir/hero_banner_225.png");
+        background-position: center;
+        background-color: rgba(207, 216, 220, 0.5);
+    }
+
+
+    #ContentPageHeader.nonstandard::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-image:  
+        linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+        ), url("/media/e24dwlir/hero_banner_225.png");
+        background-position: center;
+           background-color: #fff;
+  
+    }
+    @media screen and (max-width: 480px) {
+    
+        #ContentPageHeader {
+            min-height: 0;
+            height: 50px;
+        }
+        h1.no-air {
+            font-size: 1.2em;
+            margin: -30px;
+            text-align:center;
+        }
+     .section__hero-content {
+             max-width: 100vw;
+  
+        }
+    }
+</style>
+
+<section id="ContentPageHeader" class="section section--themed section--header section--content-center-bottom standard">
+    <span role="img" aria-label="Gray and white textured bar with gray Tulsa County logo on the far left side "> </span>
+    <div class="section__hero-content">
+        <h1 class="no-air" style='color: #000000; filter: brightness(100%)'>Election Filings</h1>
+    </div>
+ 
+</section>
+<p>&nbsp;</p>
+
+
+
+<div id="contentPageContainer" class="container-fluid">
+    <div class="container">
+     
+          <div class="col-md-9">
+        
+
+
+<div style="width: fit-content; min-width: 280px;">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a aria-label="Election Board Home" href="/electionboard/">Election Board Home</a></li>
+                    <li class="breadcrumb-item"><a aria-label="Elections" href="/electionboard/elections/">Elections</a></li>
+                    <li class="breadcrumb-item active" aria-label="Election Filings" aria-current="page"><a href="/electionboard/elections/election-filings/">Election Filings</a></li>
+        </ol>
+    </nav>
+</div>
+</div>
+            <div class="col-md-3">
+      <p><a rel="noopener" href="https://okvoterportal.okelections.us/" target="_blank" title="OK Voter Portal" class="btn btn-info btn-lg">OK Voter Portal &raquo;</a></p></div>
+   
+    </div>
+    
+    <div class="container">
+        
+<div class="umb-block-grid"
+     data-grid-columns="12;"
+     style="--umb-block-grid--grid-columns: 12;">
+    
+<div class="umb-block-grid__layout-container">
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/95fdc878464b4019b3f72e376e5ab91a"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <h3>2026 Election Filings & Filing Packets</h3>
+<p>Candidates filing for federal, state, legislative or judicial offices file with the Secretary of the State Election Board at the State Capitol. Candidates filing for county offices file with the secretary of the appropriate <a rel="noopener" href="https://oklahoma.gov/elections/about-us/county-election-boards.html" target="_blank" title="County Election Boards Directory">county election board</a>.</p>
+<p> </p>
+<p><strong>2026 Tulsa Municipal Candidate Filing</strong></p>
+<p><a rel="noopener" href="/media/k2gjthd2/2026-election-packet_tulsa.pdf" target="_blank" title="2026 Tulsa Municipal Filing Packet">Tulsa Municipal Candidate Filing Packet</a></p>
+<p>Candidate Filing: June 8 - 10, 2026, 8am - 5pm</p>
+<p><a rel="noopener" href="/media/jl2h1u2h/tulsa-municipal-filings_061026_5pm.pdf" target="_blank" title="TulMunFil_061026_5pm">List of Candidates - 061026 5pm</a></p>
+<p> </p>
+<p><strong>2026 Board of Education Filings</strong></p>
+<p>Candidate Filing: December 1 - 3, 2025, 8am - 5pm; Primary: February 10, 2026; General: April 7, 2026</p>
+<p><a rel="noopener" href="https://oklahoma.gov/content/dam/ok/en/elections/candidate-filing-archives/2026-candidate-filing-archives/2026-education-board-candidate-filing-packet.pdf" target="_blank" title="2026 Bd of Ed Filing Packet">Board of Education Filing Packet</a></p>
+<p><a rel="noopener" href="https://filings.okelections.gov/ViewCandidates/2025120120251203/72/all" target="_blank" title="Tulsa Co Filings_Bd of Ed Election 2026">List of Candidates - Candidate Filing Portal</a></p>
+<p> </p>
+<p><strong>Municipal Candidate Filings</strong></p>
+<p><a rel="noopener" href="https://oklahoma.gov/content/dam/ok/en/elections/candidate-filing-archives/candidate-filing-packets/2025-candidate-filing-packets/2025-municipal-candidate-filing-packet.pdf" target="_blank" title="Municipal Candidate Filing Packet">Municipal Candidate Filing Information &amp; Filing Packet</a></p>
+<p> </p>
+<p><strong>Municipal Candidate Filing (Charter Municipality)</strong></p>
+<p><a rel="noopener" href="https://oklahoma.gov/content/dam/ok/en/elections/candidate-filing-archives/candidate-filing-packets/charter-municipality-filing-packet.pdf" target="_blank" title="Municipal Candidate Filing Information &amp; Packet (Charter)">Municipal Candidate Filing Information &amp; Packet (Charter)</a></p>
+<p>Candidate Filing: February 2 - 4, 2026, 8am - 5pm; City of Bixby: General: April 7, 2026</p>
+<p><a rel="noopener" href="/media/r5ypkwes/020426_city-of-bixby_5pm.pdf" target="_blank" title="City of Bixby Filings 020426">List of Candidates 020426 5:00pm</a></p>
+<p> </p>
+<p><strong>2026 County Candidate Filings</strong></p>
+<p>Candidate filing will be held April 1-3, 2026 (8 a.m. - 5 p.m.). County candidates will file at the Tulsa County Election Board. Federal, State, Legislative, and Judicial candidates will file at the State Election Board in Oklahoma City.</p>
+<p><a rel="noopener" href="https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html" target="_blank" title="2026 County Candidate Filing Information">Candidate Filing Information for Federal, State, County, and Judicial Candidates</a></p>
+<p><a rel="noopener" href="/media/0eri4nea/county-filings_04032026_500.pdf" target="_blank" title="County Filings Final">List of Candidates 04/03/2026 Final</a></p>
+<p><strong>County Commissioner Filing</strong></p>
+<p><a rel="noopener" href="https://oklahoma.gov/content/dam/ok/en/elections/candidate-filing-archives/2024-special-county-elections/county-commissioner-filing-packet.pdf" target="_blank" title="Co Comm Filing Packet">County Commissioner Candidate Filing Information &amp; Packet</a></p>
+<p><a rel="noopener" href="https://oklahoma.gov/content/dam/ok/en/elections/signatures-required/20251101_county-offices-signatures-required.pdf" target="_blank" title="Sig Required by Petition_2026">Signatures Required (if filing by petition)</a></p>
+<p> </p>
+<p><strong>2026 Fire Protection District Candidate Filing</strong></p>
+<p><a rel="noopener" href="/media/dakf1hir/2026-fire-protection-district-candidate-filing-packet.pdf" target="_blank" title="2026 FireProtectionDistrict">Fire Protection District Candidate Filing Packet</a></p>
+<p>Candidate Filing: July 6 - 8, 2026, 8am - 5pm; General: November 3, 2026</p>
+<p><a rel="noopener" href="/media/cbfl0qwd/fpd_berryhill_070826_500pm.pdf" target="_blank" title="FPD_Berryhill_070826_5pm">List of Candidates for Berryhill 07/08/2026 5:00pm</a></p>
+<p> </p>
+<p><a rel="noopener" href="https://oklahoma.gov/content/dam/ok/en/elections/forms/withdrawal-of-candidate-ceb.docx" target="_blank">County Candidate Withdrawal Form</a></p>
+<p> </p>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/b9f358be56e54812b9cf144a538349af"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <h3>Scheduled Filing Periods</h3>
+<table border="0" width="869" class="table table-bordered" style="height: 453px; width: 1240px;">
+<thead>
+<tr style="height: 18px;">
+<td width="397" style="width: 529px; height: 18px; text-align: center;"><strong>2026 Election Entity, Type, &amp; Date</strong></td>
+<th style="height: 18px; width: 416px; text-align: center;" scope="col"><strong>Filing</strong></th>
+<th style="width: 295px; height: 18px; text-align: center;"><strong>Resolutions Due</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;">February 10</td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;"> </td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;">  Board of Education Primary Elections</td>
+<td style="width: 416px; height: 18px;">December 1-3, 2025</td>
+<td style="width: 295px; height: 18px;">November 14, 2025</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;">  Special Elections</td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;">December 11, 2025</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;"> </td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;"> </td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;">April 7</td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;"> </td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 15px;">  Board of Education General Elections</td>
+<td style="width: 416px; height: 15px;"> </td>
+<td style="width: 295px; height: 15px;"> </td>
+</tr>
+<tr style="height: 19px;">
+<td style="width: 529px; height: 19px;">  Special Elections</td>
+<td style="width: 416px; height: 19px;"> </td>
+<td style="width: 295px; height: 19px;">February 5, 2026</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;"> </td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;"> </td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;">June 16</td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;"> </td>
+</tr>
+<tr style="height: 27px;">
+<td style="width: 529px; height: 23px;">  Primary Elections</td>
+<td style="width: 416px; height: 23px;">April 1-3, 2026</td>
+<td style="width: 295px; height: 23px;"> </td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;">  Special Elections</td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;">April 1, 2026 </td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;"> </td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;"> </td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;">August 25</td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;"> </td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;">  Runoff Primary Elections</td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;"> </td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;">  Special Elections</td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;">June 10, 2026</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;"> </td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;"> </td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;">November 3</td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;"> </td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;">  General Election</td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;">August 19, 2026</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 529px; height: 18px;">  Special Elections</td>
+<td style="width: 416px; height: 18px;"> </td>
+<td style="width: 295px; height: 18px;"> </td>
+</tr>
+</tbody>
+</table>
+<p><em>Candidates for County Offices file at the Tulsa County Election Board. Federal and State Candidates file at the State Election Board office in Oklahoma City.</em></p>
+</div>
+        </div>
+        <div
+            class="umb-block-grid__layout-item"
+            data-content-element-type-alias="richTextBlock"
+            data-content-element-type-key="19516f22-0158-4aa2-99ea-1dba12af3446"
+            data-element-udi="umb://element/819e323c2e59405bb3907becfa9da1bf"
+            data-col-span="12"
+            data-row-span="1"
+            style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+<div class="rte-content">
+    <h3>Contact Us</h3>
+<ul class="contactinfo mb-3 mt-3">
+<li>Election Filings</li>
+<li>Shelley Burd</li>
+<li><span class="fa fa-phone"></span> <a href="tel:918-596-5780" class="tel">918-596-5780 </a> | <span class="fa fa-envelope mr-1"></span><a href="/cdn-cgi/l/email-protection#196a7b6c6b7d596d6c756a787a766c776d6037766b7e"><span><span class="__cf_email__" data-cfemail="1c6f7e696e785c6869706f7d7f736972686532736e7b">[email&#160;protected]</span></span></a></li>
+</ul>
+</div>
+        </div>
+</div>
+
+</div>
+
+    </div>
+</div>
+              
+            <br/>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    var sections = document.querySelectorAll(".grid-section > div > .row");
+    sections.forEach(row => {
+        var col = [...row.querySelectorAll(".column")];
+        row.innerHTML = `<div class="container"></div>`;
+        col.forEach(node => {
+            row.querySelector(".container").innerHTML += node.outerHTML
+        })
+        
+        
+    })
+      function resizeIframe(obj){
+     obj.style.height = 0;
+     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+  }
+</script>
+
+
+    </main>
+
+
+<!-- Footer -->
+
+<footer class="page-footer font-small">
+
+  <!-- Footer Links -->
+  <div class="container text-center text-md-left mt-5">
+
+    <!-- Grid row -->
+    <div class="row mt-3">
+      <!-- Grid column -->
+      <div class="col-12-sm mx-auto mb-4">
+
+        <!-- Links -->
+       <span class="footerheader text-uppercase font-weight-bold">CONTACT US<span>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 80%;">
+        <p>
+        12000 East Skelly Drive</p>
+        <p>
+        Tulsa, OK 74128</p>
+          <p>
+        (11th & Garnett)</p>
+        <p>
+         Main Phone <i class="fas fa-phone mr-2 ml-2"></i><a class="tel" href="tel:918-596-5780">918-596-5780</a></p>
+             <p>
+         Main Fax <i class="fas fa-fax mr-2 ml-2"></i>918-596-5145</p>
+                 <p>
+        Absentee Fax <i class="fas fa-fax mr-2 ml-2"></i>918-596-4536</p>
+                        <p>
+        Email <i class="fas fa-envelope mr-2 ml-2"></i><a href="/cdn-cgi/l/email-protection#22474e4741564b4d4c404d4350466256574e5143414d574c565b0c4d5045"><span><span class="__cf_email__" data-cfemail="c0a5aca5a3b4a9afaea2afa1b2a480b4b5acb3a1a3afb5aeb4b9eeafb2a7">[email&#160;protected]</span> </a></p>
+
+
+      </div>
+      <!-- Grid column -->
+      <div class="col-12-sm col-6-md mx-auto mb-4">
+
+        <!-- Links -->
+        <span class="footerheader text-uppercase font-weight-bold">QUICK LINKS</span>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 80%;">
+            <div class="row">
+           <div class="col-6 text-left text-nowrap">
+                       <p>
+          <a href="/acceptable-use/">Acceptable Use</a>
+        </p>
+          <p>
+          <a href="/accessibility/">Accessibility</a>
+        </p>
+                <p>
+          <a href="/ada-grievance/">ADA Grievance</a>
+        </p>
+
+     
+   
+
+  </div>
+         <div class="col-6 text-left text-nowrap">
+        <p>
+          <a href="https://tulsacounty.wd1.myworkdayjobs.com/TC" title="Careers" target="_blank">Careers</a>
+        </p>
+      <p>
+          <a href="/open-records/">Open Records</a>
+        </p>
+      <p>
+          <a href="/privacy/">Privacy</a>
+        </p>
+  </div>
+    </div>
+      </div>
+      <!-- Grid column -->
+
+      <!-- Grid column -->
+        <div class="col-12-sm mx-auto mb-4">
+
+        <!-- Links -->
+        <span class="footerheader text-uppercase font-weight-bold">SHARE & CONNECT</span>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 80%;">
+        <p class="text-left">
+          <a class="fb-ic" target="_blank" href="https://www.facebook.com/TCElectionBoard">
+            <i class="fab fa-facebook-f fa-lg mr-4"></i>Facebook
+          </a>
+        </p>
+         <p class="text-left"><a class="tw-ic" target="_blank" href="https://twitter.com/TCElectionBoard">
+            <i class="fab fa-twitter fa-lg mr-3"></i>Twitter
+          </a>
+        </p>
+
+
+      </div>
+        <div class="col-12 mx-auto mb-4 text-black">
+         Our office hours are 8:00 a.m. to 5:00 p.m., Monday through Friday.
+  <div class="footer-copyright text-left text-black-20 mt-1">&copy; 2026 Tulsa County:
+    <a href="https://www.tulsacounty.org/">tulsacounty.org</a>
+  </div>
+  <!-- Copyright -->
+             </div>
+    
+    </div>
+    <!-- Grid row -->
+  </div>
+  <!-- Footer Links -->
+
+
+</footer>
+<!-- Footer -->
+
+
+
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript">
+    $("[data-trigger]").on("click", function(){
+        var trigger_id =  $(this).attr('data-trigger');
+        $(trigger_id).toggleClass("show");
+        $('body').toggleClass("offcanvas-active");
+    });
+
+// close button
+    $(".btn-close").click(function(e){
+        $(".navbar-collapse").removeClass("show");
+        $("body").removeClass("offcanvas-active");
+    });
+    
+// add aria-label    
+      for(var prop in document.getElementsByTagName('a')){
+       const title = document.getElementsByTagName('a')[prop].title;
+       if (title)
+       { document.getElementsByTagName('a')[prop].ariaLabel = title;}
+    };
+</script>
+    
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"eb130f1defe74478a4c1d734fa90dbd5","spa":2}' crossorigin="anonymous"></script>
+</body>
+
+</html>

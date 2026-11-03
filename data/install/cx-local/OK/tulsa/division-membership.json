@@ -1,0 +1,26 @@
+[
+  {
+    "id": "cx-local-ok-2026-judicial-district-14-member-tulsa",
+    "memberOcdId": "ocd-division/country:us/state:ok/county:tulsa",
+    "districtOcdId": "ocd-division/country:us/state:ok/judicial_district:14",
+    "provenance": {
+      "sourceUrl": "https://oksenate.gov/sites/default/files/2019-12/os20.pdf",
+      "sourceOrg": "Oklahoma State Senate",
+      "collectedAt": "2026-11-03T09:48:31.219580+00:00",
+      "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+      "quote": "District No. 14. The counties of Tulsa and Pawnee. Said district shall contain five electoral divisions as hereinafter described:"
+    }
+  },
+  {
+    "id": "cx-local-ok-2026-judicial-district-14-member-pawnee",
+    "memberOcdId": "ocd-division/country:us/state:ok/county:pawnee",
+    "districtOcdId": "ocd-division/country:us/state:ok/judicial_district:14",
+    "provenance": {
+      "sourceUrl": "https://oksenate.gov/sites/default/files/2019-12/os20.pdf",
+      "sourceOrg": "Oklahoma State Senate",
+      "collectedAt": "2026-11-03T09:48:31.219580+00:00",
+      "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+      "quote": "District No. 14. The counties of Tulsa and Pawnee. Said district shall contain five electoral divisions as hereinafter described:"
+    }
+  }
+]

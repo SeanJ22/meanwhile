@@ -1,0 +1,660 @@
+{
+  "currentVersion" : 12, 
+  "id" : 0, 
+  "name" : "Council Districts", 
+  "type" : "Feature Layer", 
+  "serviceItemId" : "a475c4126f01471c84e948648f64bbc8", 
+  "cacheMaxAge" : 30, 
+  "displayField" : "NAME", 
+  "description" : "\u003cDIV STYLE=\"text-align:Left;\"\u003e\u003cDIV\u003e\u003cDIV\u003e\u003cP\u003e\u003cSPAN\u003eCITY OF TULSA ELECTION DISTRICT NO. 1Election District No. 1 being described by metes and bounds as follows, to wit:Beginning at the centerline of South Lewis Avenue and the centerline of East 6thStreet in Section 6, Township 19 North, Range 13 East, Tulsa County, Oklahoma, which is the Point of Beginning; thence west along the centerline of East 6thStreet to the centerline of South Peoria Avenue; thence north along the centerline of South Peoria Avenue to the centerline of East 6thStreet; thence west along the centerline of East 6thStreet to the northbound lanes of the east leg of the Inner Dispersal Loop (U.S. Highway 75); thence north along the centerline of the northbound lanes of U.S. Highway 75 to the centerline of East 3rdStreet; thence westerly along the centerline of East 3rdStreet to the centerline of the southbound lanes of the west leg of the Inner Dispersal Loop (Interstate 244); thence northly along the centerline of the southbound lanes of Interstate 244 to the centerline of North Denver Avenue; thence north along the centerline of North Denver Avenue to the centerline of West Edison Street; thence west along the centerline of West Edison Street to a point 60.00 feet west of the East Line of Section 5, Township 19 North, Range 12 East, Tulsa County, Oklahoma; thence west and parallel with the South Line of Sections 32 and 31 Township 20 North Range 12 East, Osage County, Oklahoma to a point 16.5 feet east of the West Line of said Section 31, Township 20 North, Range 12 East, Osage County, Oklahoma; thence north parallel with and 16.5 feet east of the West Line of Sections 31, 30 and 19 to a point 16.5 feet east of the Northwest Corner of the SW/4 of said Section 19; thence east to the Northeast Corner of the SE/4 of Section 19; thence continuing east to the Southeast Corner of the SW/4 NW/4 of Section 20, Township 20 North, Range 12 East; thence north along the East Line of said SW/4 NW/4 to the Northeast Corner thereof; thence west along the North Line of said SW/4 NW/4 to the Northwest Corner thereof; thence north to the North Line of said Section 20; thence east along the North Line of Section 20, Township 20 North, Range 12 East, Osage County, Oklahoma, to a point 16.5 feet east of the Northeast Corner thereof; thence south parallel with the West Line of said Section 21 to a point on the South Line of the N/2 NW/4; thence east along said South Line a distance of 2,623.50 feet to the Southeast Corner of said N/2 NW/4; thence north along the East Line of said N/2 NW/4 a distance of 1,320.00 feet to the Northeast Corner of said N/2 NW/4 of Section 21; thence east along the North Line of Sections 21 and 22, Township 20 North, Range 12 East, Osage County, Oklahoma, to a point, said point being the Northwest Corner of the NE/4 of said Section 22; thence north along the West Line of the SE/4 of Section 15, Township 20 North, Range 12 East, Osage County, Oklahoma, a distance of 200.00 feet to a point; thence east parallel with the South Line of said Section 15 to a point 1,000.00 feet west of the East Line of said Section 15; thence northeast along a straight line to a point on the East Line of said Section 15, 660.00 feet north of the Southeast Corner thereof; thence north along the East Line of Section 15 to a point , said point being 100.00 feet north of the Westerly projection of the South Line of Lot 8 of Section 14; thence east parallel with said Westerly projection of the South Line of Lot 8 to a point on the West Line of said Lot 8, said point being the 96thMeridian and also being the Osage-Tulsa County boundary; thence north along the 96 Meridian to a point 300.00 feet north of the Southwest Corner of Lot 6, Section 14; thence southeast along a straight line to a point 600.00 feet north and 623.00 feet west of the Southeast Corner of said Section 14; thence east and parallel with the South Line of said Section 14 a distance of 573.00 feet to a point 50.00 feet west of the East Line of said Section 14; thence north parallel with the East Line of said Section 14 a distance of 603.00 feet; thence north parallel with the centerline of North Martin Luther King Jr Boulevard and 50.00 feet parallel to said centerline to its intersection with the easterly projection of the South Line of Lot 1, Block 30, Valley View Acres Addition to Tulsa County, Oklahoma; thence west along the South Line of Blocks 30 and 28 of said Addition to the Southwest Corner of said Block 28; thence north along the West Line of Block 28 to a point 30.00 feet north of the North Line of said Section 14; thence west and parallel to the North Line of said Section 14 to a point on the West Line of Section 11, Township 20 North Range 12 East said point also being the 96thMeridian; thence north along the 96thMeridian also being the West Line of Valley View Acres Addition to Tulsa County, Oklahoma, to a point 25.00 feet west of the Northwest Corner of Lot 13, Block 12 of said Addition; thence east along the North Line of Lots 13 through 9, Block 12 of said Addition to the Northeast Corner of said Lot 9; thence north along the West Line of Blocks 12 and 7 of said Addition to the Northwest Corner of said Block 7; thence east along the North Line of Blocks 7 and 2 of said Valley View Acres Addition to a point 40.00 feet west of the East Line of said Section 11; thence north parallel with and 40.00 feet west of the East Line of said Section 11, a distance of 724.71 feet; thence west a distance of 710.0 feet; thence north a distance of 1,908.00 feet to the North Line thereof; thence east along said North Line a distance of 700.00 feet to a point 50.00 feet west of the East Line of Section 11; thence continuing north parallel with and 50.00 feet west of the East Line of Section 2, Township 20 North, Range 12 East, Tulsa County, Oklahoma, to the Southeast Corner of Block 1, Northgate Center Addition to Tulsa County, Oklahoma; thence west along the South Line of said Block 1, and continuing west along the South Line of Block 1, Northgate Addition to the County of Tulsa and the South Line of Blocks 6 and 8, Northgate Third Addition to Tulsa County, Oklahoma, to a point 5.00 feet east of the West Line of said Block 8; thence north parallel with and 5.00 feet east of the West Line of Blocks 8, 5 and 4 of said Northgate Third Addition to a point 16.5 feet south of the North Line of said Block 4; thence east parallel with and 16.5 feet south of the North Line of Blocks 4 and 1, and continuing east parallel with and 16.5 feet south of the North Line of Blocks 2 and 1 of Northgate Second Addition to the County of Tulsa, Oklahoma, to the East Line of said Block 1; thence south along the East line of Blocks 1 and 3 of said Northgate Second Addition to the Northeast Corner of Lot 1, Block 4 of said Addition; thence east to a point on the West Line of Section 1, Township 20 North, Range 12 East, said point being 627.59 feet south of the Northwest Corner of said Section 1; thence continuing east a distance of 40.00 feet; thence south and parallel with and 40.00 feet east of the West Line of said Section 1, to a point 30.00 feet south of the North Line of the SW/4 of said Section 1; thence east parallel with and 30.00 feet south of the North Line of said SW/4 to the East Line thereof; thence continuing east 70.00 feet to a point; thence south parallel with and 70.00 feet east of the West Line of the SE/4 of said Section 1 to a point 16.5 feet north of the South Line of said Section 1; thence east parallel with and 16.5 feet north of the South Line of said Section 1 to its intersection with the West Line of the right of way of the Midland Valley Railroad; thence southwest along said right of way to a point 50.00 feet perpendicular distance from the North Line of Section 12, Township 20 North, Range 12 East, Tulsa County, Oklahoma; thence east parallel with and 50.00 feet south of the North Line of said Section 12 to the East Section Line thereof; thence continuing east and parallel with and 50.00 feet south of the North Lines of Sections 7, 8, 9, 10 and 11, Township 20 North, Range 13 East, Tulsa County, Oklahoma, to a point being the East Line of Section 11, Township 20 North, Range 13 East; thence south along the East Line of said Section 11; thence continuing south along the East Line of Section 14, Township 20 North, Range 13 East to the centerline of the South Kansas and Oklahoma Railroad; thence southwesterly along the centerline of said Railroad to the centerline of North Yale Avenue; thence south along the centerline of North Yale Avenue to the centerline of East Apache Street; thence west along the centerline of East Apache Street to the centerline of North Harvard Avenue; thence south along the centerline of North Harvard Avenue to the centerline of East Pine Street; thence west along the centerline of East Pine Street to the centerline of North Lewis Avenue; thence South along the centerline of North Lewis Avenue to the centerline of East 6thStreet, that being the Point of Beginning.FENCE LINETogether with the east 70.00 feet of the west 86.50 feet of the North half of Section 19, Township 20 North, Range 12 East in Osage County, Oklahoma; and together with the east 70.00 feet of the west 86.5 feet of Sections 18, 7 and 6, Township 20 North, Range 12 East, Osage County, Oklahoma; together with the south 70.00 feet of the north 86.50 feet of Section 6 less the west 16.5 feet thereof; together with the south 70.00 feet of the north 86.50 feet of Sections 5,4,3, and 2, Township 20 North, Range 12 East, Osage County, Oklahoma; together with the south 70.00 feet of the north 86.5 feet of Section 2, Township 20 North, Range 12 East, Tulsa County, Oklahoma, beginning at the East Line of Northgate Second Addition and continuing to the East Line of said Section 2; together with the south 70.00 feet of the north 86.5 feet of Section 1; Township 20 North, Range 12 East; together with the south 70.00 feet of the north 86.5 feet of Sections 6 and 5, Township 20 North, Range 13 East , Tulsa County, Oklahoma; together with the south 70.00 feet of the north 86.5 feet of the west 904.9 feet of Section 4, Township 20 North , Range 13 East , Tulsa County, Oklahoma: together with the east 70.00 feet of the west 86.5 feet of Sections 33,28,21,16,9, and 4, Township 21 North , Range 13 East , Tulsa County , Oklahoma; together with the south 70.00 feet of the north 86.5 feet, less the west 16.5 feet thereof, of said Section 4 lying west of the centerline of U.S. Highway 75 (Cherokee Expressway); CITY OF TULSA ELECTION DISTRICT NO. 2Election District No. 2 being described by metes and bounds as follows, to wit:Beginning at a point on the centerline of West 21stStreet Bridge (also known as 23rdStreet Bridge) and the center of the Arkansas River, which is the Point of Beginning; thence south along the center of the Arkansas River to the centerline of East 61stStreet South; thence east along the centerline of East 61stStreet South to the centerline of South Utica Avenue; thence south along the centerline of South Utica Avenue to the centerline of East 63rdStreet South; thence east along the centerline of East 63rdStreet South; to the centerline of South Yorktown Avenue; thence south along the centerline of South Yorktown Avenue to the centerline of East 66thStreet South; thence west along the centerline of East 66thStreet South to the centerline of South Utica Place; thence south along the centerline of South Utica Place to the centerline of East 67thStreet South; thence southwesterly along the centerline of East 67thStreet South to the centerline of South Utica Avenue; thence southerly along the centerline of South Utica Avenue to the centerline of South Trenton Avenue; thence continuing south along the centerline of South Trenton Ave to the centerline of East 71stStreet South; thence east long the centerline of East 71stStreet south to the centerline of South Harvard Avenue; thence south along the centerline of South Harvard Avenue to the centerline of the Creek Turnpike, also being the Senate District Boundary between districts 37 and 39; thence southerly along the Senate District boundary to the centerline of East 101stStreet South; thence continuing southerly and westerly from the centerline of East 101stStreet south along the west boundary line of Census Block 401430076381000 and Census Block 401430076381029 to the meander line of the east bank of the Arkansas River, also being the Tulsa Corporate Limit boundary; thence northwesterly along said Meander Line across Sections 32, 29, 20, and 17, Township 18 North, Range 13 East, to a point 24.75 feet north of the South Line of said Section 17; thence west and parallel with and 24.75 feet north of the South Line of said Sections 17 and 18 to the Meander Line on the West bank of the Arkansas River; thence north and west along said Meander Line to its intersection with the North Line of the S/2 NW/4 of said Section 18; thence west along said North Line and continuing west along the North Line of the S/2 NE/4 of Section 13, Township 18 North, Range 12 East, a distance of 24.75 feet to a point; thence south parallel with and 24.75 feet west of the East Line of Section 13, Township 18 North, Range 12 East, to a point 24.75 feet north of the South Line of said Section 13; thence west parallel with and 24.75 feet north of the South Line of Sections 13, 14 and 15 to a point 24.75 feet east of the West Line of said Section 15; thence north parallel with and 24.75 feet east of the West Line of Sections 15, 10 and 3, Township 18 North, Range 12 East, to a point on the North Line of said Section 3; thence west 24.75 feet to the Southeast Corner of Section 33, Township 19 North, Range 12 East; thence west along the South Line of Section 33, also being the centerline of West 61st Street South, a distance of 222.50 feet to a point; thence north 35.00 feet; thence east parallel with the centerline of West 61st Street South a distance of 62.50 feet; thence north parallel with the East Line of said Section 33 a distance of 670.00 feet to a point; thence west 210.00 feet to a point; thence north parallel with the East Line of said Section 33 a distance of 568.50 feet to a point; thence east 34.20 feet to a point; thence north 25.00 feet to the Southwest corner of 33rdSelf Storage, a re-subdivision of Campbell Hills Addition; thence north along the West Line of AREAS ”B “AND ”C”, BLOCK 1 of said 33rdSelf Storage and continuing north along the northerly projection of the West Line of said AREA “B” a distance of 50.00 feet to a point on the South Line of Country Oaks, a re-subdivision of said Campbell Hills; thence west 25.00 feet to the Southwest Corner of Lot 1, Block 1, Country Oaks; thence north along the West Line of Lot 1, Block 1, Country Oaks to the Northwest corner thereof; thence west along the North Line of said Campbell Hills Addition to the Northwest Corner of Lot 1; thence south along the West Line of Lots 1 and 8 to the Southwest Corner of Lot 8 of said Addition; thence continuing South a distance of 25.00 feet; thence west a distance of 25.00 feet to the Southeast Corner of the N/2 NW/4 SE/4 of said Section 33; thence west along the South Line of said N/2 NW/4 SE/4 to a point 40.00 feet west of the East Line of the NE/4 SW/4; thence south a distance of 25.00 feet to the Northeast Corner of Block 7, Doctor Carver Addition; thence south along the East Line of Blocks 7 and 12 of said Addition to the Southeast Corner of Block 12; thence west along the South Line of Blocks 12, 11, and 10 of said Addition to the Southwest Corner of Block 10; thence north along the West Line of said Block 10 a distance of 227.15 feet to the East Line of the right of way of the Oklahoma Union Railway; thence northeast along said right of way to its intersection with the North Line of Block 16 of the Amended Plat of South Haven Addition; thence east along the North Line of Blocks 16 and 3 of said Addition to the Northeast Corner of Block 3, thence east 25.00 feet to the West Line of the E/2 NE/4 of Section 33, Township 19 North, Range 12 East; thence north along said West Line of the E/2 NE/4 of said Section 33 to a point on the South Line of Section 28, Township 19 North, Range 12 East, said point being the southwest corner of the E/2 SE/4 of said section; thence north along the West Line of the E/2 SE/4 of said Section 28 a distance of 24.75 feet; thence west and parallel to the South Lines of Sections 28 and 29 of Township 19 North Range 12 East to a point approximately 739 feet east of the West Line of the SE/4 of Section 29; thence northwesterly following the current Tulsa Corporate limit to the North Line of the Bridges Heights addition, a subdivision in Tulsa County, Oklahoma; thence west to the West Line of the SE/4 of Section 29, Township 19 North, Range 12 East; thence north along said West Line of the SE/4 and the West Line of the NE/4 to the northwest corner of the NE/4 of Section 29 thence north along the East Line of the W/2 of Section 20, Township 19 North, Range 12 East a distance of 50 feet; thence west and parallel to the South Line of Said Section 20 to the West Line of census block 401430066002002; thence northerly along West Line of census block 401430066002002 to the northwest corner of said block, said point also being the centerline of West 31stStreet South; thence east to the southwest corner of census block 401430066001025; thence north along the West Line of census block 401430066001025 to the northwest corner of said block, said point being the centerline of West 26thStreet South; thence west to the southwest corner of lot 5 block 4 Second West Tulsa View Acres, an addition to Tulsa County, Oklahoma; thence north along the West Line of blocks 1-4 to the northwest corner of lot 3 block 1; thence east to a point 300 feet west of the East Line of the NW/4 of Section 17; thence north parallel to and 300 feet west of the East Line of the NW/4 of Section 17 to a point on the South Line of Section 8, Township 19 North, Range 12 East, said point being 300 feet west of the southeast corner of the SW/4 of said Section 8; thence north parallel to and 300 feet west of the East Line of the SW/4 Section 8 to the centerline of the Arkansas River; thence east along the centerline of the Arkansas River to the West Line of the SE/4 of Section 8; thence south along said West Line of the SE/4 to a point 50 feet north of the southwest corner of the SE/4 Section 8; thence east parallel to and 50 feet north of the South Line Section 8 to the East Line of the SW/4 SE/4 Section 8; thence south 50 feet to the southeast corner of said SW/4 SE/4; thence south along the East Line of the W/2 NE/4 Section 17, Township 19 North, Range 12 East to the southeast corner thereof; thence continuing south along the East Line of the W/2 SE/4 Section 17 a distance of 1,108.36 feet; thence west a distance of 289.45 feet; thence south a distance of 78.68 feet; thence west a distance of 135.55 feet; thence south a distance of 522 feet; thence west a distance of 56.26 feet; thence southerly a distance of 925.79 feet to the North Line of Section 20, Township 19 North, Range 12 East; thence west along the North Line of Section 20 to the northeast corner of the NW/4 NW/4 NE/4 Section 20; thence south to the southeast corner of said NW/4 NW/4 NE/4; thence east to the southeast corner of the NE/4 NW/4 NE/4 Section 20; thence north to the centerline of West 31stStreet South; thence southeasterly along the centerline of West 31stStreet South, and continuing along the centerline of West 35thSt South to a point that is 551.8 feet west of the East Line of Section 20; thence south 808.38 feet; thence east 551.8 feet; thence south a distance of 659.6 feet to the southeast corner of the NE/4 of said Section 20; thence west along the South Line of the NE/4 to a point 630 feet east of the southwest corner of said NE/4; thence south a distance of 1,319 feet to a point on the North Line of Walker Heights, and addition to Tulsa County, Oklahoma; thence south along the East Lines of lots 1-4 and 8 block 1 to the southeast corner of lot 8 block 1; thence south to the South Line of Section 20, said point being 630 feet east of the southwest corner of the SE/4 of said Section 20; thence east along the North Line of the NE/4 of Section 29, Township 19 North, Range 12 East a distance of 27.85 feet; thence south a distance of 460.02 feet; thence southwesterly a distance of 880.41 feet; thence south a distance of 1382.71 feet to a point on the South Line of the NE/4 of Section 29; thence south a distance of 684.04 feet; thence southeasterly a distance of 647.25 feet to the South Line of the NE/4 SE/4 of Section 29, said point also being the North Line of Bridges Heights, an addition to Tulsa County, Oklahoma; thence east along the North Line of Bridges Heights to the northeast corner of lot 1 block 1 Bridges Heights; thence south a distance of 495.8 feet; thence east a distance of 812.72 feet; thence south 300.54 feet to the northwest corner of lot 3 block 2 Austin’s Subdivision, an addition Tulsa County, Oklahoma; thence east 537 feet to a point on the East Line of the SE/4 of Section 29 Township 19 North Range 12 East; thence south 130 feet to the northwest corner of census block 401430047001068; thence east to the northeast corner of census block 401430047001068 and continuing to the West Line of lot 11 block 2 Greater Tulsa Industrial District, an addition to Tulsa County, Oklahoma; thence north along the West Line of block 2 to the northwest corner of lot 11 block 2; thence east to the northeast corner of lot 12 block 1; thence southwest along the East Line of said lot 12 a distance of 193.76 feet, thence southeast a distance of 75.50 feet; thence southwest a distance of 71.45 feet; thence due east parallel to and 324.75 feet north of the South Line of Section 28, Township 19 North, Range 12 East to a point on the West Line of the E/2 SE/4 of Section 28, Township 19 North, Range 12 East; thence north along said West Line of the E/2 SE/4 to the southeast corner of the W/2 NE/4 of said Section 28; thence west to the southwest corner of the NE/4, said point also being the southwest corner of Vera Faye Addition, a subdivision of Tulsa County, Oklahoma; thence north along the West Line of said NE/4 to the northwest corner of the NE/4 of Section 28; thence continuing north 24.75 feet to a point, said point being 24.75 feet north and 25.00 feet west of the Southeast Corner of the SW/4 of Section 21, Township 19 North, Range 12 East; thence east parallel with the South Line of said Section 21 to the West Line of the E/2 W/2 SW/4 SE/4 of said Section 21; thence north along said West Line to the Northwest Corner of said E/2 W/2 SW/4 SE/4; thence east along the North Line of the SW/4 SE/4 a distance of 660.00 feet; thence south to a point 24.75 feet north of the South Line of said Section 21; thence east parallel and 24.75 feet north of said South Line of Section 21 a distance of 330.00 feet; thence north to the Northwest Corner of Block 3 of the Yargee Addition; thence continuing east along the North Line of Blocks 3, 2 and 1 of said Addition to the Northeast Corner of Block 1 of said Addition; thence north parallel to and 30.00 feet west of the East Line of said Section 21 to a point 900.00 feet south and 30.00 feet west of the Northeast Corner of the SE/4 of said section; thence west parallel to the North boundary of said SE/4 a distance of 940.00 feet; thence north parallel with the East Line of said Section 21 a distance of 600.00 feet; thence east parallel with the North boundary of said SE/4 a distance of 303.47 feet to a point on the West Line of NE/4 NE/4 SE/4; thence north along the West Line of said NE/4 NE/4 SE/4 a distance of 300.00 feet to the Northwest Corner thereof; thence east along the North Line of the SE/4 a distance of 666.53 feet to the Northeast Corner of the SE/4; thence continuing east along the North Line of the original Townsite of Red Fork Addition to the Northeast Corner thereof; thence south along the East Line of said Addition to its intersection with the North Line of the right of way to the St. Louis and San Francisco Railroad; thence northeast along said Railroad right of way to its intersection with the West Line of Interurban Addition; thence north along said Addition line to the Northwest Corner of said Addition; thence east along the North Line of said Interurban Addition to its intersection with the East Line of the right of way of the St. Louis and San Francisco Railroad; thence north along said right of way to its intersection with the North Line of Section 22, Township 19 North, Range 12 East; thence east along said North Line to the Northeast Corner of said Section 22; thence continuing east along the South Line of Section 14, Township 19 North, Range 12 East, to the West Line of the right of way of the Red Fork Expressway; thence north along said West right of way to its intersection with the North Line of the SW/4 of said Section 14; thence west along said North Line to its intersection with the East Line of the right of way of the St. Louis and San Francisco Railroad; thence north along said right of way to a point 25.00 feet south of the North Line of said Section 14; thence west parallel with and 25.00 feet south of the North Line of said Section 14 to a point 50.00 feet west of the East Line of the NW/4 NE/4 of Section 15, Township 19 North, Range 12 East; thence south parallel with said East Line 875.00 feet; thence west parallel with the North Line of said Section 15 a distance of 1,035.00 feet; thence north parallel with the East Line of said Section 15 a distance of 900.00 feet to a point on the North Line of said Section 15; thence continuing north to a point 25.00 feet north of the South Line of Section 10, Township 19 North, Range 12 East; thence east parallel with and 25.00 feet north of said South Line a distance of 2,410.21 feet to a point on the East Line of said Section 10; thence north along the East Line of said Section 10 to a point 220.00 feet north of the Southeast Corner of the NE/4 SE/4 of said Section 10; thence east along the North Line of the right of way of West 17thStreet South 635.00 feet; thence north 300.00 feet; thence east 25.00 feet; thence north 30.00 feet; thence east 150.50 feet to the West right of way line of the St. Louis and San Francisco Railroad; thence northeast along said Railroad right of way approximately 714.91 feet to a point, said point being 1,000.00 feet east and 81.00 feet south of the Northwest Corner of the SW/4 of said Section 11; thence west 60.00 feet; thence northeast and parallel to said Railroad right of way approximately 438.00 feet to a point, said point being 100.00 feet southwest and perpendicular to the Meander Line of the Arkansas River; thence northwest and parallel with said Meander Line a distance of 125.00 feet; thence northeast and perpendicular to the last described course 100.00 feet; thence north 57E-0'-00\" west along said Meander Line a distance of 494.50 feet; thence north 80E-0'-00\" west along said Meander Line approximately 693.00 feet to the intersection of the West Line of said Section 11, Township 19 North, Range 12 East; thence north along the West Line of said Section 11, Township 19 North, Range 12 East, to the centerline of the Arkansas River and the House District boundary between Districts 68 and 72; thence southeast along the centerline of said Arkansas River and House District boundary to a point on the centerline of the westbound lanes of Interstate 244, said point being where the house District boundary changes from district 68/72 to 68/71; thence continuing in a southeasterly direction following said House District boundary and centerline of the Arkansas River to the centerline of the West 21stStreet Bridge (also known as 23rdStreet Bridge), which is the Point of Beginning. Less and except the following described parcel of land, to wit:Beginning at the Northwest Corner of the E/2 SW/4 of Section 14, Township 19 North, Range 12 East, which is the Point of Beginning; thence south along the West Line of the E/2 SW/4 and continuing south along the West Line of the E/2 NW/4 of Section 23, Township 19 North, Range 12 East, to a point on the South Line of the NW/4 of Section 23; thence east along the South Line of the NE/4 of said Section 23 to the East Line thereof; thence south along the East Line of the SE/4 of Section 23 to the Southeast Corner of the NE/4, SE/4; thence east along the South Line of the NW/4, SW/4 to the Meander Line on the West bank of the Arkansas River; thence northwest along said Meander Line across said Sections 24 and 13 to the North Line of the SW/4 of Section 13, Township 19 North, Range 12 East; thence west along the North Line of the S/2 of said Sections 13 and 14 to the Northwest Corner of the E/2 SW/4 of Section 14, which is the Point of Beginning.CITY OF TULSA ELECTION DISTRICT NO. 3Election District No. 3 being described by metes and bounds as follows, to wit:Beginning at the intersection of the centerlines of North Lewis Avenue and East Pine Street, which is the Point of Beginning; thence east along the centerline of East Pine Street to the centerline of North Harvard Avenue; thence north along the centerline of North Harvard Avenue to the centerline of East Apache Street; thence east along the centerline of East Apache Street to the centerline of North Yale Avenue; thence north along the centerline of North Yale Avenue to the centerline of the South Kansas and Oklahoma Railroad; thence in a northeasterly direction following the centerline of the South Kansas and Oklahoma Railroad to the centerline of North Memorial Drive also being the West Boundary of Section 13, Township 20 North, Range 13 East; thence north along the West Boundary of Sections 13 and 12, Township 20 North, Range 13 East to a point being 24.75 feet south of the northwest corner of Section 12, Township 20 North, Range 13 East; thence east and parallel to the North Lines of said Section 12 and Sections 7, 8 and 9 Township 20 North Range 14 East to a point 24.75 feet south and west of the northeast corner of said Section 9; thence south and parallel to the East Line of said Section 9 and Sections 16, 21, 28, 33 Township 20 North Range 14 East and Section 4 Township 19 North Range 14 East to the centerline of East 11thStreet South; thence west along the centerline of East 11thStreet South to the centerline of the westbound lanes of Interstate 44; thence southwest along the centerline of the westbound lanes of Interstate 44 to the centerline of the northbound lanes of U.S. Highway 169 (Mingo Valley Expressway); thence north along the centerline of the northbound lanes of U.S. Highway 169 (Mingo Valley Expressway) to the centerline of East 11thStreet South; thence west along the centerline of East 11thStreet South to the centerline of South Yale Avenue; thence north along the centerline of South Yale Avenue to the centerline of the eastbound lanes of Interstate 244; thence west along the centerline of the eastbound lanes of Interstate 244 to the centerline of South Harvard Avenue; thence north along the centerline of South Harvard Avenue to the centerline of the westbound lanes of Interstate 244; thence west along the centerline of the westbound lanes of Interstate 244 to the centerline of North Lewis Avenue; thence north along the centerline of North Lewis Avenue to centerline of East Pine Street which is the Point of Beginning.Less the following areas outside the corporate limit boundary being more particularly described as follows, to wit: 1. The South ½ of Section 13, less the west 660 feet and the east 50 feet thereof; together with all of Section 24, less the north 1,320 feet of the west 660 feet and the east 50 feet thereof; together with all of Section 25 lying north of the north right-of-way line of the Burlington Northern Satna Fe Railroad, all being in Township 20 North, Range 13 East. And beginning at the northwest corner of Section 25; thence southerly along the West Line thereof a distance of 2,642.08 feet; thence east 1,648 feet; thence north 1,315.56 feet; thence east 55 feet; thence north 1,900 feet; thence northeast 610 feet; thence east 1,253 feet; thence north 100 feet; thence west 3,355 feet; thence south approximately 1,190 feet to the point of beginning.2. Beginning at a point 50.00 feet west and 35.00 feet north of the Southeast Corner of Section 28, Township 20 North, Range 13 East; thence north parallel with the East Line of said Section 28 to a point on the North Line of the SE/4 NE/4 of said Section 28; thence west along said North Line to the Northeast Corner of Lot 1, Block 13, Amended Plat of BLOCKS 10 THRU 16 Oak Ridge Addition; thence south along the East Line of said Block 13 and continuing south along the East Line of Blocks 15 and 16 of said Addition to the Southeast Corner of said Block 16; thence west along the South Line of Block 16 of the Oak Ridge Addition continuing west along the South Line of Blocks 14, 7, and 8 of said Addition to a point on the East Line of the SW/4 SW/4 NE/4 of said Section 28; thence south along said East Line and continuing south along the East Line of the NW/4 NW/4 SE/4 to the Southeast Corner thereof; thence west along the South Line of said NW/4 NW/4 SE/4 to the West Line of the SE/4 of said Section 28; thence south along said West Line to the Southeast Corner of Lot 2, Block 28, Louisville Heights Addition; thence west along the South Line of Lot 2, Block 28 of said Addition to the Northeast Corner of Lot 3 of said Block 28; thence south along the East Line of Lot 3 of said Block 28, to the Southeast Corner thereof; thence west along the South Line of Lots 4 and 5 of said Block 28, to its intersection with the East Line of Lot 8 of said Block 28; thence south along the East Line of Lots 8 through 17, both inclusive, to the Southeast Corner of Lot 17 of said Block 28; thence continuing south along the southerly projection of the East Line of Lots 8 through 17, both inclusive, of said Block 28, of said Addition to a point 35.00 feet north of the South Line of said Section 28; thence east parallel with and 35.00 feet north of the South Line of said Section 28 to a point on the intersection with the centerline of North Vandalia Avenue; thence north along the centerline of North Vandalia Avenue to a point of intersection with the westerly projection of the North Line of Lot 3, Block 3 of Wee Rancho Addition; thence east along the North Line of Lot 3 to the Northeast Corner thereof; thence south along the East Line of said Lot 3 to the Northwest Corner of Lot 2 of said Addition; thence east along the North Line of Lots 2 and 1 of said Block 3 a distance of 310.00 feet to a point; thence south along the East Line of Wee Rancho Addition to a point 35.00 feet north of the South Line of Section 28; thence east parallel with the South Line of said Section 28 a distance of 293.16 feet to the Point of Beginning.FENCE LINETogether with a 70.00 feet Fence Line in Tulsa and Rogers Counties and being more particularly described as follows to wit: Tulsa County, Oklahoma only; The south 70.00 feet of the north 86.5 feet of Section 4, Township 21 North, Range 13 East, lying east of the centerline of the Cherokee Expressway (U.S. Hwy. 75); and the south 70.00 feet of the north 86.5 feet of Sections 2 and 3, Township 21 North, Range 13 East, less the east 50.00 feet of said Section 2; the west 70.00 feet of the east 120.00 feet of Sections 2, 11, 14 and 23, Township 21 North, Range 13 East, less the north 50.00 feet of said Section 2, and less the south 50.00 feet of said Section 23; the north 70.00 feet of the south 120.00 feet, less the east 50.00 feet of said Section 23; the north 70.00 feet of the south 120.00 feet of the east 120.00 feet of Section 22, Township 21 North, Range 13 East, and the south 50.00 feet of the west 70.00 feet of the east 120.00 feet of said Section 22; the west 70.00 feet of the east 120.00 feet of Section 27; the west 70.00 feet of the east 120.00 feet of the north 50.00 feet of Section 34, Township 21 North, Range 13 East, and the south 70.00 feet of the north 120.00 feet of the east 120.00 feet of said Section 34; the south 70.00 feet of the north 120.00 feet of Section 35, Township 21 North, Range 13 East; and the East 70.00 feet of the West 662.26 feet of said Section 36, Township 21 North , Range 13 East; the south 70.00 feet of the north 120.00 feet of Section 1, Township 20 North, Range 13 East, less the west 592.26 feet thereof; Tulsa County, Oklahoma only to wit: Together with the south 70.00 feet of the north 120.00 feet of Section 6, Township 20 North, Range 14 East; the south 70.00 feet of the north 120.00 feet of the NW/4 NW/4 of Section 5, Township 20 North, Range 14 East; and the east 70.00 feet of said NW/4 NW/4, less the north 50.00 feet thereof; the north 70.00 feet of the east 70.00 feet of the SW/4 NW/4 of said Section 5; the north 70.00 feet of the SE/4 NW/4 and the north 70.00 feet of the west 70.00 feet of the SW/4 NE/4 and the west 70.00 feet of the NW/4 NE/4, less the north 50.00 feet thereof; and the south 70.00 feet of the north 120.00 feet of the NE/4, all being a part of said Section 5; the west 70.00 feet of the N/2 NW/4 of Section 4, Township 20 North, Range 14 East, less the north 50.00 feet thereof; the south 70.00 feet of the N/2 NW/4 of said Section 4; the east 70.00 feet of the N/2 NW/4 of said Section 4, less the north 50.00 feet thereof; the south 70.00 feet of the north 120.00 feet of the NE/4 of said Section 4; and the east 24.75 feet of Sections 4 &amp;amp; 9, Township 20 North, Range 14 East; Tulsa County, Oklahoma or Rogers County, Oklahoma, as indicated: the north 70.00 feet of the north 245.00 feet of the W/2 SW/4 of Section 10 lying parallel with and on the north side of the centerline of the right of way of the Port Road in Township 20 North, Range 14 East , Rogers County, Oklahoma; together with the west 70.00 feet of the E/2 SW/4 of said Section 10, lying between a line 245.00 feet north and 245.00 feet south of the centerline of the right of way of the Port Road; together with the south 70.00 feet of a strip of land 245.00 feet in width being adjacent to and on the south side of the centerline of the right of way of the Port Road in and across Sections 10, 11 and 12, Township 20 North, Range 14 East, Rogers County, Oklahoma, to a point on the East Line of the W/2 E/2 NE/4 of said Section 12; together with the east 70.00 feet of the said W/2 E/2 NE/4, lying between a line 175.00 feet south a perpendicular distance from the centerline of the right of way of the Port Road and the North Line of said Section 12; together with the south 70.00 feet of the east 70.00 feet of the W/2 E/2 SE/4 of Section 1, Township 20 North, Range 14 East, Rogers County, Oklahoma; together with the south 70.00 feet of the E/2 E/2 SE/4 of said Section 1; together with the south 70.00 feet of Section 6, Township 20 North, Range 15 East, Rogers County, Oklahoma, lying west of a line 70.00 feet east of the East right of way of the County Road; together with the west 70.00 feet of the Port of Catoosa Industrial Park lying in the W/2 of Section 7, Township 20 North, Range 15 East, Rogers County, Oklahoma; together with the east 70.00 feet of the west 620.20 feet of the north 171.1 feet of the NW/4 of Section 18, Township 20 North, Range 15 East, Rogers County, Oklahoma, and the south 70.00 feet of the north 171.l feet of the east 200.00 feet of the west 752.2 feet of said Section 18, and the east 70.00 feet of the south 170.00 feet of the north 271.1 feet of the west 752.2 feet of said Section 18, and the south 70.00 feet of the north 441.10 feet of the east 130.00 feet of the west 682.20 feet in said Section 18; together with the west 70.00 feet of the east 330.00 feet of Lot 1, lying East of the County Road in Said Section 18, less the north 341.10 feet thereof; together with the west 70.00 feet of the east 330.00 feet of Lots 2 and 3, lying East of the County Road in said Section 18; together with the south 70.00 feet of the East 330.00 feet of said Lot 3 of said Section 18; together with the south 70.00 feet of the west 79.92 feet of the NE/4 SW/4 of said Section 18; together with the west 70.00 feet lying adjacent to the East right of way of the Port Road in the SE/4, SW/4 of said Section 18, less the south 16.5 feet thereof; together with the north 70.00 feet of the south 86.5 feet of the said SE/4 SW/4 lying east of the East right of way of the Port Road; together with the north 70.00 feet of the south 86.5 feet of the SW/4 SE/4,of said Section 18;and the north 70.00 feet of the south 86.5 feet of the SW/4 SE/4 SE/4 of said Section 18, less the south 16.5 feet thereof; together with the south 70.00 feet of the east 70.00 feet of the NW/4 SE/4 SE/4 of said Section 18; together with the south 70.00 feet of the NE/4 SE/4 SE/4 of said Section 18, lying west of the center of Bird Creek; together with the east 70.00 feet of that part of the said NE/4 SE/4 SE/4 lying west of the center of Bird Creek in said Section 18; together with the south 70.00 feet of the east 70.00 feet of the NE/4 SE/4 of said Section 18 lying west of the center of Bird Creek; together with the south 70.00 feet of that part of the NE/4, SE/4 lying east of the center of Bird Creek in said Section 18; together with the south 70.00 feet of the west 70.00 feet of the NW/4 SW/4 of Section 17, Township 20 North, Range 15 East, Rogers County, Oklahoma; together with the west 70.00 feet of the SW/4 of said Section 17, less the south 16.5 feet thereof; together with the north 70.00 feet of the south 86.5 feet of the SW/4 SW/4 SW/4 of said Section 17; together with the east 70.00 feet of said SW/4 SW/4 SW/4, less the south 16.5 feet thereof; together with the south 70.00 feet of the east 70.00 feet of the NW/4 SW/4 SW/4 of said Section 17; together with the south 70.00 feet of the NE/4 SW/4 SW/4 of said Section 17; together with the south 70.00 feet of the west 70.00 feet of the NW/4 SE/4 SW/4 of said Section 17; together with the west 70.00 feet of the SW/4 SE/4 SW/4, less the south l6.5 feet thereof of said Section 17; together with the north 70.00 feet of the south 86.5 feet of the SE/4 SW/4 of said Section 17; together with the west 70.00 feet of the said SE/4 SW/4, less the south l6.5 feet thereof; together with the east 70.00 feet of the said SE/4 SW/4, less the south l6.5 feet thereof; together with the east 70.00 feet of the SE/4 NE/4 SW/4, and the south 70.00 feet of the east 70.00 feet of the NE/4 NE/4 SW/4 of said Section 17; together with the south and east 70.00 feet of the N/2 NW/4 SE/4 of said Section 17; together with the south 70.00 feet of the east 70.00 feet of the SW/4 NE/4 of said Section 17; together with the south 70.00 feet of Lot 3 lying west of the East bank of the Verdigris River in said Section 17; together with the east 70.00 feet of Lots 3 and 2 lying adjacent to the East bank of the Verdigris River in Said Section 17; together with the 70.00 feet lying adjacent to the East bank of the Verdigris River located in Sections 8, 9, 4 and 5, Township 20 North, Range 15 East, Rogers County, Oklahoma, , less the north 50.00 feet of lying adjacent to the said Section 5; together with the south 70.00 feet of the north 120.00 feet of said Section 5 lying west of the East bank of the Verdigris River; together with the south 70.00 feet of the north 120.00 feet of Section 6, Township 20 North, Range 15 East, Rogers County, Oklahoma, lying east of the East right of way line of the Port Road; together with a strip of land 70.00 feet in width lying adjacent to the East right of way line of said Port Road, and between a line 50.00 feet south of the North Line of said Section 6, and a point 70.00 feet south of the North Line of the SW/4 NE/4 of said Section 6, together with the north 70.00 feet of said SW/4 NE/4 lying west of the East right of way of said Port Road; together with the west 70.00 feet of the N/2 NW/4, SW/4 NE/4, and the north 70.00 feet of the west 70.00 feet of the S/2 NW/4 SW/4 NE/4 of said Section 6; together with the north 70.00 feet of the S/2 NE/4 SE/4 NW/4 of said Section 6; together with the north 70.00 feet of the east 70.00 feet of the S/2 NW/4 SE/4 NW/4 of said Section 6; together with the east 70.00 feet of the N/2 NW/4 SE/4 NW/4 of said Section 6; together with the north 70.00 feet of the NW/4 SE/4 NW/4 and the north 70.00 feet of the E/2 NE/4 SW/4 NW/4 of said Section 6; together with the north 70.00 feet of the east 70.00 feet of the W/2, NE/4, SW/4, NW/4 of said Section 6, together with the east 70.00 feet of the W/2 E/2 NW/4 NW/4 of said Section 6, less the north 50.00 feet thereof; together with the south 70.00 feet of the north 120.00 feet of the W/2 E/2 NW/4 NW/4, and the south 70.00 feet of the north 120.00 feet of the W/2 NW/4 NW/4 of said Section 6; together with the west 70.00 feet of the south l00.00 feet of the north 220.00 feet of said Section 6; together with the south 70.00 feet of the north 220.00 feet of Sections 1, 2 and 3, Township 20 North, Range 14 East, Rogers County, Oklahoma; together with the south 100 feet of the north 220.00 feet of the west 70.00 feet of said Section 3.CITY OF TULSA ELECTION DISTRICT NO. 4Election District No. 4 being described by metes and bounds as follows, to wit:Beginning at the Southeast Corner of Section 4, Township 19 North, Range 13 East, also being the intersection of the centerlines of East 11th Street South and South Yale Avenue which is the Point of Beginning; thence south along the centerline of South Yale Avenue to the centerline of East 31stStreet South; thence west along the centerline of East 31stStreet South to the centerline of the Arkansas River and the House District boundary between Districts 68 and 71; thence north/northwesterly following the centerline of the Arkansas River and House District boundary to a point on the centerline of the westbound lanes of Interstate 244 said point being where the House District boundary changes from districts 68/71 to 68/72; thence continue northwesterly along the Arkansas River centerline and the house district boundary to the West Line of Section 11 Township 19 North Range 12 East also being the Tulsa Corporate Limit boundary; thence north along the West Lines of said Section 11 and Section 2 Township 19 North Range 12 East to the north meander line of the Arkansas River and corporate limit boundary; thence westerly following the North meander line of the Arkansas River and corporate limit boundary to a point on the east line of Section 8, Township 19 North, Range 12 East, Tulsa County, Oklahoma; thence south along said East Line of Section 8 and continuing south along the East Line of Vern Subdivision No. 2 to the Southeast Corner of said Addition; thence west along the South Line of said Addition to the Southwest Corner thereof; thence north along the West Line of said Vern Subdivision No. 2 to its intersection with the South Line of Cunningham Addition to the County of Tulsa, Oklahoma; thence southwest along the South Line of said Cunningham Addition to the Southwest Corner of Block 2, of said Addition, thence south along the projected West Line of Blocks 5 and 2 of said Cunningham Addition to a point on the centerline of the Arkansas River; thence west along the centerline of the Arkansas River to the present City of Tulsa corporate limit boundary; thence north along the corporate limit boundary to the North Meander line of the Arkansas River; thence southwest along said North Meander Line to the Southeast Corner of Government Lot 3 in Section 8, Township 19 North, Range 12 East; thence north along the East Line of said Government Lot 3 to the Northeast Corner thereof; thence west along the North Line of said Government Lot 3 to a point on the West Line of said Section 8; thence north along the West Line of said Section 8 to a point 340.00 feet south of the North Line of said Section 8; thence east parallel with the North Line of said Section 8 to the Southwest Corner of Lot 12, Block 2, Lawnwood Addition to Tulsa, Oklahoma; thence north along the West Line of lots 12 and 11 of said Block 2 to a point on the North Line of said Section 8; thence east along the North Line of said Section 8 to a point 325.00 feet west of the East Line of the SW/4, SW/4 of Section 5, Township 19 North, Range 12 East, Tulsa County, Oklahoma; thence north parallel to the East Line of the said SW/4 SW/4 to its intersection with the South right of way Line of the Old M.K.&amp;amp;T. Railroad; thence northeast along said right of way to its intersection with the West Line of Ownwell Addition to Tulsa County, Oklahoma; thence north along the northerly projection of the West Line of said Ownwell Addition to the north right of way of the Old M.K.&amp;amp;T. Railroad; thence northeast along said right of way Line to a point on the South Line of Mayfair Addition to Tulsa County, Oklahoma, said point being a point of curvature of a curve located 18.2 feet easterly of the Southwest Corner of Lot 3, Block 3 of said Mayfair Addition; thence northwesterly along the South and West Lines of said Mayfair Addition and continuing north along the West Line of Lot 19, Block 2, Orf's Tracts Addition to Tulsa County, Oklahoma, to the North Line of said Orf's Tracts Addition; thence east along the said North Line of Orf's Tracts Addition to a point 60.00 feet west of the East Line of Section 5, Township 19 North, Range 12 East, Tulsa County, Oklahoma; thence north parallel with and 60.00 feet west of the East Line of said Section 5 to the centerline of West Edison Street thence east along the centerline of West Edison Street to the centerline of North Denver Avenue; thence southeasterly along the centerline of North Denver Avenue to the centerline of the westbound lanes of Interstate 244; thence west along the centerline of the westbound lanes of Interstate 244 to the centerline of the southbound lanes of Interstate 244; thence south along the centerline of the southbound lanes of Interstate 244 to the centerline of West 3rdStreet; thence easterly along the centerline of West 3rdStreet to the northbound lanes of the east leg of the Inner Dispersal Loop/U.S. Highway 75; thence south along the northbound lanes of U.S. Highway 75 to the centerline of East 6thStreet; thence east along the centerline of East 6thStreet to the centerline of South Peoria Avenue; thence south along the centerline of South Peoria Avenue to the centerline of East 6thStreet; thence east along the centerline of East 6thStreet to the centerline of South Lewis Avenue; thence north along the centerline of South Lewis Avenue to centerline of the westbound lanes of Interstate 244; thence east along the centerline of the westbound lanes of Interstate 244 to the centerline of South Harvard Avenue; thence south along the centerline of South Harvard Avenue to the centerline of the eastbound lanes of Interstate 244; thence east along the centerline of the eastbound lanes of Interstate 244 to the centerline of South Yale Avenue, thence south along the centerline of South Yale Avenue to the centerline of East 11thStreet South also being the southeast corner of Section 4 Township 19 North Range 13 East, which is the Point of Beginning. Less and except the following four (4) described parcels of land, to wit: Beginning at a point on the North Line of Hale Subdivision in the S/2 of Section 3, Township 19 North, Range 12 East to the City of Tulsa, Tulsa County, Oklahoma according to the official recorded plat thereof, said Point of Beginning being 25 feet east of the Northwest Corner of said Hale Subdivision; thence east along the North Line of said Subdivision a distance of 2,609.20 feet to a point marking the Northeast Corner of said Subdivision; thence south along the East Line of said Subdivision a distance of 970.80 feet to a point marking the intersection of the northeasterly prolongation of the North Line of the alley in Block 13, of said Subdivision, with the East Line of said Subdivision; thence southwesterly along a line coincident with the North Line of alley in Blocks 13, 12 and 11, a distance of 2,191.40 feet to a point marking the Southeasterly Corner of Lot 9, Block 11 in said Subdivision; thence northwesterly along a line coincident with the East Lines of Lot 9, Block 11, Lots 23 and 9, Block 10 and Lot 21, Block 5, all in said Subdivision, a distance of 700.00 feet to a point marking the Southeasterly Corner of Lot 9, Block 5, of said Subdivision; thence southwesterly along the North Line of the alley in Block 5, of said Subdivision, a distance of 330.00 feet to a point on the East Line of South 33rdWest Avenue in the City of Tulsa; thence north along the East Line of said South 33rdWest Avenue a distance of 744.50 feet to the point of beginning, andBeginning at a point marking the intersection of the West Line of South 33rdWest Avenue in the City of Tulsa, with the South Line of West 5thStreet, which is the Point of Beginning; thence south along said West Line of South 33rdWest Avenue to a point on the North Line of the Sand Springs Railroad; thence southwesterly along said North Line to the East Line of Shell Place, a subdivision in the SW/4 SE/4 of Section 4,Township 19 North, Range 12 East, Tulsa County, Oklahoma; thence north along said East Line to a point on South Line of West 5thStreet ; thence along said South Line of West 5th Street northeasterly to the Point of Beginning. Beginning at a point 177.50 feet south and 335.00 feet S 79º 08’ 00” W of the Northeast Corner of Lot 6, Section 3, Township 19 North, Range 12 East, Tulsa County, Oklahoma, said point being a point on the Southerly right of way line of the Sand Springs Railway Company, which is the Point of Beginning; thence S 79º 08’ 00” W on said southerly right of way line a distance of 781.00 feet; thence southeasterly at right angles to said southerly right of way line a distance of 115.40 feet to a point on a line parallel with and 8.5 feet perpendicularly distant in a northerly direction from the centerline of Tulsa Sand Company Track of Sand Springs Railway Company; thence northeasterly on a line parallel to the centerline of said Tulsa Sand Company Track a distance of 786.70 feet; thence northwesterly on a line perpendicular to the southerly right of way line of said Railway Company a distance of 98.30 feet to the Point of Beginning, andBeginning at a point 567.60 feet north and 418.18 feet N 79º 10’ 00”E of the Meander Corner of the Left bank of the Arkansas River between Sections 3 and 4, Township 19 North, Range 12 East, Tulsa County, Oklahoma, which is the Point of Beginning; thence N 79º 10’ 00” E along the Southerly Line of Charles Page Boulevard a distance of 870.50 feet; thence south a distance 216.00 feet to a point on the Northerly right of way line of Sand Springs Railway Company; thence southwesterly along said Northerly right of way line a distance of 871.36 feet; thence north a distance 223.20 feet to the Point of Beginning.FENCE LINETogether with the south 70.00 feet of the north 86.50 feet of the east half of Section 7, Township 19, Range 12 East, and the west 70.00 feet of the north 16.5 feet of the east half of said Section 7; the west 70.00 feet of the east half of Section 6, Township 19, Range 12 East; and the north 70.00 feet of the west 254.14 feet of the east half of said Section 6.CITY OF TULSA ELECTION DISTRICT NO. 5Election District No. 5 being described by metes and bounds as follows, to wit:Beginning at the Southeast Corner of Section 26, Township 19 North, Range 13 East, said point also being the intersection of the centerlines of East 51stStreet South and South Memorial Drive which is the Point of Beginning; thence west along the centerline of East 51stStreet South to the centerline of South Yale Avenue; thence north along the centerline of South Yale Avenue to the centerline of East 11thStreet South; thence east along the centerline of East 11thStreet South to the northbound lane of U.S. Highway 169 (Mingo Valley Expressway); thence south along the northbound lane of U.S. Highway 169 (Mingo Valley Expressway) to the westbound lane of Interstate 44; thence northeasterly along the westbound lane of Interstate 44 to the centerline of South Garnett Road;thence south along the centerline of South Garnett Road to the centerline of East 31stStreet South; thence west along the centerline of East 31stStreet South to the centerline of the northbound lanes of U.S. Highway 169 (Mingo Valley Expressway); thence south along the centerline of the northbound lanes of U.S. Highway 169 to the centerline of East 41stStreet South; thence west along the centerline of East 41stStreet Southto the centerline of South Memorial Drive; thence south along the centerline of South Memorial Drive to the centerline of East 51stStreet South, also being the southeast corner of Section 26 Township 19 North Range 13 East which is the Point of Beginning. CITY OF TULSA ELECTION DISTRICT NO. 6Election District No. 6 being described by metes and bounds as follows, to wit:Beginning at the intersection of East 41stStreet South and the centerline of the northbound lanes of U.S. Highway 169 (Mingo Valley Expressway) which is the Point of Beginning; thence north along the centerline the northbound lanes of U.S. Highway 169 to the centerline of East 31stStreet South; thence east along the centerline of East 31stStreet South; to the centerline of South Garnett Road; thence north along the centerline of South Garnett Road to the centerline of westbound lanes Interstate 44; thence northeasterly along the centerline of the westbound lanes of Interstate 44 to the centerline of East 11thStreet South; thence east along the centerline of East 11thStreet South to the centerline of South 145thEast Avenue; thence north along the centerline of South 145thEast Avenue to the South right of way of Interstate 44; thence east along the South right of way of Interstate 44 to a point 100 feet west of the East Line of Section 1, Township 19 North Range 14 East; thence south parallel with the East Line of said Section 1 to the South Line of the NE/4 NE/4 SE/4 of said Section 1; thence east along said South Line across the Tulsa County – Wagoner County Line and continuing east along the South Line of the N/2 N/2 SW/4 of Section 6, Township 19 North, Range 15 East, Wagoner County, Oklahoma, to the East Line of the SW/4 of said Section 6; thence north along said East Line of the SW/4 to the Northeast Corner of the SW/4 of said Section 6; thence east along the South Line of the NE/4 of said Section 6 to the Southeast Corner of the NE/4 of said Section 6; thence north along the East Line of the NE/4 of said Section 6 to the Southeast Corner of the NE/4 NE/4 NE/4 of said Section 6; thence east along the South Line of the N/2 N/2 NW/4 of Section 5, Township 19 North, Range 15 East, Wagoner County, Oklahoma, and continuing east along said South Line of the N/2 N/2 NE/4 to the Southwest Corner of the NE/4 NW/4 NE/4 of said Section 5; thence north along the West Line of said NE/4 NW/4 NE/4 to the North Line of Section 5, said Section line also being the Wagoner County – Rogers County Line; thence east along said North Section Line and continuing east along the North Section Line of Sections 5, 4 and 3, Township 19 North, Range 15 East, Wagoner County, Oklahoma, to a point 70 feet west of the Northeast Corner of said Section 3; thence south and parallel with the East Line of said Section 3 to a point on the South Line of the N/2 of said Section 3; thence east along the South Line of the N/2 of said Section 3 to the East Line of said Section 3; thence south along the East Line of said Section 3 to a point 70 feet north of the Southeast Corner of said Section 3; thence west and parallel with the South Line of said Section 3 to a point 70 feet west and 70 feet north of Southeast Corner of the SW/4 of said Section 3; thence south and parallel with the East Line of the SW/4 of said Section 3 and continuing south and parallel with the East Line of the NW/4 of Section 10, Township 19 North, Range 15 East, Wagoner County, Oklahoma, to a point 70 feet south and 70 feet west of the Northeast Corner of the SW/4 of said Section 10; thence east and parallel with the North Line of the said SW/4 and continuing east and parallel with the North Line of the SE/4 of said Section 10 to a point 70 feet west of the East Line of said Section 10; thence south and parallel with the East Line of said Section 10 to the South Line of said Section 10 and continuing south and parallel with the East Line of Section 15, Township 19 North, Range 15 East, Wagoner County, Oklahoma, to a point 70 feet west and 70 feet south of the Northeast Corner of the SE/4 of said Section 15; thence east and parallel with the North Line of the SE/4 of said Section 15 and continuing east and parallel with the North Line of the SW/4 of Section 14, Township 19 North, Range 15 East, Wagoner County, Oklahoma, to a point 70 feet west and 70 feet south of the Northeast Corner of the SW/4 of said Section 14; thence south and parallel with the East Line of the SW/4 of said Section 14 to the South Line of said Section 14 and continuing south and parallel with the East Line of the NW/4 of Section 23, Township 19 North, Range 15 East, Wagoner County, Oklahoma, to a point 50 feet north and 70 feet west of the Southeast Corner of the NW/4 of said Section 23; thence west and parallel with the South Line of the NW/4 of said Section 23 a distance of 55 feet; thence south and parallel with the East Line of the SW/4 of said Section 23 to a point 125 feet north of the South Line of said Section 23; thence west and parallel with the South Line of Section 23 to the West Line of Section 23 and continuing west and parallel with the South Line of Section 22, Township 19 North, Range 15 East, Wagoner County, Oklahoma, to a point 125 feet west and 125 feet north of the Southeast Corner of said Section 22; thence south and parallel with the East Line of said Section 22 to the South Line of said Section 22; thence west along the South Line of said Section 22 and continuing west along the South Line of Section 21, Township 19 North, Range 15 East, Wagoner County, Oklahoma, to the Southwest Corner of said Section 21; thence north along the West Line of said Section 21 to the Southeast Corner of the N/2 SE/4 of Section 20, Township 19 North, Range 15 East, Wagoner County, Oklahoma; thence west along the South Line of the N/2 SE/4 of said Section 20 to the Southwest Corner of the N/2 SE/4 of said Section 20; thence north along the West Line of the N/2 SE/4 of said Section 20; thence north along the West Line of the NE/4 of said Section 20 to the North Line of said Section 20; thence west along the North Line of said Section 20 to the Northwest Corner of said Section 20 and continuing west along the North Line of Section 19, Township 19 North, Range 15 East, Wagoner County, Oklahoma, and continuing west along the North Line of Section 24, Township 19 North, Range 14 East, Tulsa County, Oklahoma to a point 100 feet west of the East Line of said Section 24; thence south parallel with the East Line of Sections 24 and 25, Township 19 North, Range 14 East, Tulsa County, Oklahoma, to a point 24.75 feet north of the South Line of said Section 25; thence west parallel with the South Line of Section 25 and 26, to a point on the East Line of Section 27; thence north along the East Line of Section 27 to the Northeast Corner of the S/2 of said section 27; thence west along the North Line of the S/2 of said section 27 to the Southeast Corner of the NW/4 thereof; thence north along the East Line of the NW/4 of said section 27 to the Northeast Corner thereof, said point also being the centerline of East 41stStreet South; thence west along the centerline of East 41stStreet South to the centerline of northbound lanes of U.S. Highway 169 (Mingo Valley Expressway), which is the point of beginning. Less and except the following described four (4) tracts, to-wit:The N/2 SW/4 and the SE/4 SW/4 of Section 5, Township 19 North, Range 15 East, Wagoner County, Oklahoma.The North 10 feet of the S/2 and the South 10 feet of the N/2 and the North 70 feet of the East 70 feet of the NE/4 SE/4 and the East 70 feet of the NE/4 of Section 15, Township 19 North, Range 15 East, Wagoner County, Oklahoma.The South 10 feet of the NE/4 and the North 10 feet of the SE/4 and the West 10 feet of the NW/4, SE/4 and the West 10 feet of the NW/4, SW/4, SE/4 and the East 10 feet of the NE/4, SW/4 and the East 10 feet of the NE/4, SE/4, SW/4 and the South 10 feet of the East 10 feet of the NW/4 and the S/2 of the SW/4, SE/4 and the S/2 of the SE/4, SW/4 of Section 16, Township 19 North, Range 15 East, Wagoner County, Oklahoma.The N/2, NE/4, NW/4 and the N/2, NW/4, NE/4 of Section 21, Township 19 North, Range 15 East, Wagoner County, Oklahoma.CITY OF TULSA ELECTION DISTRICT NO. 7Election District No. 7 being described by metes and bounds as follows, to wit:Beginning at a point 24.75 feet north of the Southeast Corner of Section 32, Township 19 North, Range 14 East, said point also being the Point of Beginning; thence west parallel with and 24.75 feet north of the centerline of East 61stStreet South to the centerline of South Garnett Road; thence continuing west 24.75 feet; thence south parallel with and 24.75 feet west of the centerline of South Garnett Road, to a point 24.75 feet north of the centerline of East 101stStreet South; thence west parallel with and 24.75 feet north of the centerline of East 101stStreet South to the centerline of South Memorial Drive; thence north along the centerline of South Memorial Drive to the centerline of East 71stStreet South; thence west along the centerline of East 71stStreet South to the centerline of South Sheridan Road; thence north along the centerline of South Sheridan Road to the centerline of East 51stStreet South; thence east along the centerline of East 51st Street South to the centerline of South Memorial Drive; thence north along the centerline of South Memorial Drive to the centerline of East 41stStreet South; thence east along the centerline of East 41stStreet South to the centerline of South 145thEast Avenue; thence south along the centerline of South 145thEast Avenue to the a point 24.75 feet north of the southeast corner of Section 28 Township 19 North Range 14 East; thence west 24.75 feet; thence south 24.75 feet to centerline of East 51stStreet South; thence west along the North Line of Section 33 a distance of 1,320 feet; thence south along the East Line of the W/2 NE/4 of Section 33 a distance of 2640 feet to the southeast corner of said W/2 NE/4; thence west along the South Line of the W/2 NE/4 of Section 33 to the west ROW line of the Broken Arrow Expressway; thence northwesterly along said ROW line to the East Line of the W/2 of Section 33; thence south along said East Line of the W/2 to the South Line of Section 33; thence west along the South Line of Section 33 to the southwest corner of Section 33; thence north 24.75 feet to the point of beginning. CITY OF TULSA ELECTION DISTRICT NO. 8Election District No. 8 being described by metes and bounds as follows, to wit:Beginning at a point being the intersection of the centerlines of East 61stStreet South and South Yale Avenue which is the Point of Beginning; thence west along the centerline of East 61stStreet South to the centerline of South Harvard Avenue; thence south along the centerline of South Harvard Avenue to the centerline of the Creek Turnpike also being the Senate District Boundary between districts 37 and 39; thence southwesterly along the Senate District boundary to the centerline of East 101stStreet South; thence continuing southerly and westerly from the centerline of East 101stStreet South along the west boundary line of Census Block 401430076381000 and Census Block 401430076381029 to the meander line of the east bank of the Arkansas River, also being the Tulsa Corporate Limit boundary thence southeasterly along the Tulsa Corporate Limit boundary to a point that is 24.75 feet west of the East section line of Section 10 Township 17 North Range 13 East; thence north and parallel to the East Line of said Section 10 and Section 3 Township 17 North Range 13 East and Sections 34 and 27 Township 18 North Range 13 East to a point 24.75 west and north of the Southeast corner of said Section 27; thence east and parallel to the South Line of Sections 27 and 26 of Township 18 North Range 13 East to the centerline of South Memorial Drive; thence north along the centerline of South Memorial Drive to the centerline of East 71stStreet South; thence west along the centerline of East 71stStreet South to the centerline of South Yale Avenue; thence north along the centerline of South Yale Avenue to the centerline of East 61stStreet South said point also being the Point of Beginning.CITY OF TULSA ELECTION DISTRICT NO. 9Election District No. 9 being described by metes and bounds as follows, to wit:Beginning at the Southeast Corner of Section 3, Township 18 North, Range 13 East, said corner also being the intersection of the centerlines of South Sheridan Road and East 71st Street South which is the Point of Beginning;thence north along the centerline of South Sheridan Road to the centerline of East 51stStreet South; thence west along the centerline of East 51stStreet South to the centerline of South Yale Avenue; thence north along the centerline of South Yale Avenue to the centerline of East 31stStreet South; thence west along the centerline of East 31stStreet South to the center of the Arkansas River; thence south along the center of the Arkansas River to the South Line of Section 36 Township 19 North, Range 12 East; thence east along the South Line of said Section 36 and along the centerline of East 61stStreet South to the centerline of South Utica Avenue; thence south along the centerline of South Utica Avenue to the centerline of East 63rdStreet South; thence east along the centerline of East 63rdStreet South to the centerline of South Yorktown Avenue; thence south along the centerline of South Yorktown Avenue to the centerline of East 66thStreet South; thence west along the centerline of East 66thStreet South to the centerline of South Utica Place; thence south along the centerline of South Utica Place to the centerline of East 67thStreet South; thence southwesterly along the centerline of East 67thStreet South to the centerline of South Utica Avenue; thence south along the centerline of South Utica Avenue to the centerline of South Trenton Avenue; thence south along the centerline of South Trenton avenue to the centerline of East 71stStreet South; thence east along the centerline of East 71stStreet South to the centerline of South Harvard Avenue; thence north along the centerline of South Harvard Avenue to the centerline of East 61stStreet South; thence east long the centerline of East 61stStreet South to the centerline of South Yale Avenue; thence south along the centerline of South Yale Avenue to the centerline of East 71stStreet South; thence east along the centerline of East 71stStreet South to the point of beginning.\u003c/SPAN\u003e\u003c/P\u003e\u003c/DIV\u003e\u003c/DIV\u003e\u003c/DIV\u003e", 
+  "copyrightText" : "INCOG\n2 West 2nd Street, Suite 800\nTulsa OK 74103\n918.584.7526", 
+  "defaultVisibility" : true, 
+  "editingInfo" : {
+    "lastEditDate" : 1769725822572, 
+    "schemaLastEditDate" : 1750424806658, 
+    "dataLastEditDate" : 1741620996349
+  }, 
+  "relationships" : [], 
+  "isDataVersioned" : false, 
+  "hasContingentValuesDefinition" : false, 
+  "supportsAppend" : true, 
+  "supportsCalculate" : true, 
+  "supportsASyncCalculate" : true, 
+  "supportsTruncate" : true, 
+  "supportsAttachmentsByUploadId" : true, 
+  "supportsAttachmentsResizing" : true, 
+  "supportsRollbackOnFailureParameter" : true, 
+  "supportsStatistics" : true, 
+  "supportsExceedsLimitStatistics" : true, 
+  "supportsAdvancedQueries" : true, 
+  "supportsValidateSql" : true, 
+  "supportsCoordinatesQuantization" : true, 
+  "supportsLayerOverrides" : true, 
+  "supportsTilesAndBasicQueriesMode" : true, 
+  "supportsFieldDescriptionProperty" : true, 
+  "supportsQuantizationEditMode" : true, 
+  "supportsColumnStoreIndex" : true, 
+  "supportsApplyEditsWithGlobalIds" : false, 
+  "supportsMultiScaleGeometry" : true, 
+  "supportsReturningQueryGeometry" : true, 
+  "enableNullGeometry" : false, 
+  "hasGeometryProperties" : true, 
+  "geometryProperties" : 
+  {
+    "shapeAreaFieldName" : "Shape__Area", 
+    "shapeLengthFieldName" : "Shape__Length", 
+    "units" : "esriFeet"
+  }, 
+  "advancedQueryCapabilities" : {
+    "supportsPagination" : true, 
+    "supportsPaginationOnAggregatedQueries" : true, 
+    "supportsQueryRelatedPagination" : true, 
+    "supportsQueryWithDistance" : true, 
+    "supportsOutDistance" : true, 
+    "supportsReturningQueryExtent" : true, 
+    "supportsStatistics" : true, 
+    "supportsOrderBy" : true, 
+    "supportsDistinct" : true, 
+    "supportsQueryWithResultType" : true, 
+    "supportsSqlExpression" : true, 
+    "supportsTimeRelation" : true, 
+    "supportsAdvancedQueryRelated" : true, 
+    "supportsCountDistinct" : true, 
+    "supportsPercentileStatistics" : true, 
+    "supportsApproxPercentileStatistics" : true, 
+    "supportsSpatialAggregationStatistics" : true, 
+    "supportsTrueCurve" : true, 
+    "supportedSpatialAggregationStatistics" : [
+      "EnvelopeAggregate", 
+      "CentroidAggregate", 
+      "ConvexHullAggregate"
+    ], 
+    "supportsLod" : true, 
+    "supportsQueryWithLodSR" : false, 
+    "supportedLodTypes" : [
+      "geohash"
+    ], 
+    "supportsReturningGeometryCentroid" : true, 
+    "supportsReturningGeometryEnvelope" : true, 
+    "supportsReturningGeometryProperties" : true, 
+    "supportsQueryWithDatumTransformation" : true, 
+    "supportsCurrentUserQueries" : true, 
+    "supportsHavingClause" : true, 
+    "supportsOutFieldSQLExpression" : true, 
+    "supportsMaxRecordCountFactor" : true, 
+    "supportsTopFeaturesQuery" : true, 
+    "supportsDisjointSpatialRel" : true, 
+    "supportsQueryWithCacheHint" : true, 
+    "supportedOperationsWithCacheHint" : [
+      "query", 
+      "queryTopFilter", 
+      "queryAnalytics", 
+      "queryAttachments", 
+      "queryRelated", 
+      "queryBins", 
+      "queryPivot"
+    ], 
+    "supportsQueryAnalytic" : true, 
+    "supportsQueryPivot" : true, 
+    "supportsQueryBins" : true, 
+    "supportsDefaultSR" : true, 
+    "supportsTranslations" : false, 
+    "supportsAggIds" : true, 
+    "supportsQueryWithCollation" : true, 
+    "supportsISODOW" : true, 
+    "supportsISOWeek" : true, 
+    "supportsFullTextSearch" : true, 
+    "fullTextSearchCapabilities" : {
+      "supportsAccentSensitivity" : true, 
+      "supportsStopWords" : true, 
+      "supportsSearchOperator" : true, 
+      "supportsOperator" : true
+    }, 
+    "fullTextSearchableFields" : [
+      "NAME"
+    ]
+  }, 
+  "advancedQueryAnalyticCapabilities" : {
+    "supportsLinearRegression" : true, 
+    "supportsTrendlineRegression" : true, 
+    "supportsAsync" : true, 
+    "supportsPercentileAnalytic" : true
+  }, 
+  "queryBinsCapabilities" : {
+    "supportsAsync" : true, 
+    "supportsAutoIntervalBin" : true, 
+    "supportsFixedIntervalBin" : true, 
+    "supportsFixedBoundariesBin" : true, 
+    "supportsDateBin" : true, 
+    "supportsClassificationBin" : true, 
+    "supportsStackBy" : true, 
+    "supportsSplitBy" : true, 
+    "supportsFirstDayOfWeek" : true, 
+    "supportsSnapToData" : true, 
+    "supportsReturnFullIntervalBin" : true, 
+    "supportsReturnStackValueRange" : true, 
+    "supportsNormalization" : true, 
+    "supportedStatisticTypes" : [
+      "COUNT", 
+      "SUM", 
+      "AVG", 
+      "VAR", 
+      "STDDEV", 
+      "MIN", 
+      "MAX", 
+      "PERCENTILE_CONT", 
+      "PERCENTILE_DISC", 
+      "APPROX_PERCENTILE_CONT", 
+      "APPROX_PERCENTILE_DISC", 
+      "CentroidAggregate", 
+      "EnvelopeAggregate", 
+      "ConvexHullAggregate"
+    ], 
+    "supportedNormalizationTypes" : [
+      "boxCox", 
+      "field", 
+      "inverse", 
+      "log", 
+      "naturalLog", 
+      "percentOfTotal", 
+      "squareRoot"
+    ]
+  }, 
+  "supportedOperationsWithCollation" : "query,addField,updateField", 
+  "advancedEditingCapabilities" : {
+    "supportedSqlFormatsInCalculate" : [
+      "standard"
+    ], 
+    "supportsAsyncApplyEdits" : true, 
+    "supportsReturnEditResults" : true, 
+    "supportsApplyEditsbyUploadID" : true, 
+    "supportedApplyEditsUploadIDFormats" : "JSON,PBF", 
+    "supportsTranslation" : false, 
+    "supportsMaxTranslations" : 10
+  }, 
+  "infoInEstimates" : [
+    "extent", 
+    "count"
+  ], 
+  "useStandardizedQueries" : true, 
+  "geometryType" : "esriGeometryPolygon", 
+  "minScale" : 0, 
+  "maxScale" : 0, 
+  "extent" : {
+    "xmin" : 2536954.0612205565, 
+    "ymin" : 359227.92404563725, 
+    "xmax" : 2653325.2159449756, 
+    "ymax" : 460948.856758222, 
+    "spatialReference" : {
+      "wkid" : 102724, 
+      "latestWkid" : 2267
+    }
+  }, 
+  "spatialReference" : {
+    "wkid" : 102724, 
+    "latestWkid" : 2267
+  }, 
+  "drawingInfo":{"renderer":{"type":"uniqueValue","field1":"NAME","uniqueValueInfos":[{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[222,252,202,255],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[110,110,110,255],"width":0.4}},"value":"District 1","label":"District 1"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[229,179,252,255],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[110,110,110,255],"width":0.4}},"value":"District 2","label":"District 2"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[252,193,184,255],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[110,110,110,255],"width":0.4}},"value":"District 3","label":"District 3"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[207,229,252,255],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[110,110,110,255],"width":0.4}},"value":"District 4","label":"District 4"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[179,252,239,255],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[110,110,110,255],"width":0.4}},"value":"District 5","label":"District 5"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[249,215,252,255],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[110,110,110,255],"width":0.4}},"value":"District 6","label":"District 6"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[252,226,189,255],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[110,110,110,255],"width":0.4}},"value":"District 7","label":"District 7"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[252,179,210,255],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[110,110,110,255],"width":0.4}},"value":"District 8","label":"District 8"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[187,193,252,255],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[110,110,110,255],"width":0.4}},"value":"District 9","label":"District 9"}],"fieldDelimiter":",","authoringInfo":{"colorRamp":{"type":"multipart","colorRamps":[{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[130,62,115,255],"toColor":[130,62,115,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[55,171,38,255],"toColor":[55,171,38,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[80,166,166,255],"toColor":[80,166,166,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[150,99,36,255],"toColor":[150,99,36,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[34,38,156,255],"toColor":[34,38,156,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[40,89,148,255],"toColor":[40,89,148,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[156,45,58,255],"toColor":[156,45,58,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[104,130,51,255],"toColor":[104,130,51,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[171,37,176,255],"toColor":[171,37,176,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[35,168,111,255],"toColor":[35,168,111,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[111,71,166,255],"toColor":[111,71,166,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[168,162,39,255],"toColor":[168,162,39,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[57,109,130,255],"toColor":[57,109,130,255]}]}}},"scaleSymbols":true,"transparency":0,"labelingInfo":null}, 
+  "allowGeometryUpdates" : true, 
+  "trueCurveSupportMode" : "OGC", 
+  "supportedCurveTypes" : [
+    "esriGeometryCircularArc"
+  ], 
+  "supportedTrueCurvePbfFeatureEncodings" : [
+    "esriCompressedShapeBuffer", 
+    "esriDefault"
+  ], 
+  "allowTrueCurvesUpdates" : true, 
+  "onlyAllowTrueCurveUpdatesByTrueCurveClients" : false, 
+  "hasAttachments" : false, 
+  "htmlPopupType" : "esriServerHTMLPopupTypeAsHTMLText", 
+  "hasMetadata" : true, 
+  "hasM" : false, 
+  "hasZ" : false, 
+  "objectIdField" : "OBJECTID", 
+  "uniqueIdField" : 
+  {
+    "name" : "OBJECTID", 
+    "isSystemMaintained" : true
+  }, 
+  "globalIdField" : "", 
+  "typeIdField" : "NAME", 
+  "collation" : {
+    "locale" : "neutral", 
+    "caseSensitive" : false, 
+    "accentSensitive" : true
+  }, 
+  "fields" : [
+    {
+      "name" : "OBJECTID", 
+      "type" : "esriFieldTypeOID", 
+      "alias" : "OBJECTID", 
+      "sqlType" : "sqlTypeOther", 
+      "nullable" : false, 
+      "editable" : false, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "DISTRICTID", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "District ID", 
+      "sqlType" : "sqlTypeOther", 
+      "length" : 10, 
+      "nullable" : true, 
+      "editable" : true, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "NAME", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "District Name", 
+      "sqlType" : "sqlTypeOther", 
+      "length" : 50, 
+      "nullable" : true, 
+      "editable" : true, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "REPNAME", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "Representative Name(s)", 
+      "sqlType" : "sqlTypeOther", 
+      "length" : 255, 
+      "nullable" : true, 
+      "editable" : true, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "DISTRICTURL", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "District Website", 
+      "sqlType" : "sqlTypeOther", 
+      "length" : 100, 
+      "nullable" : true, 
+      "editable" : true, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Shape__Area", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "Shape__Area", 
+      "sqlType" : "sqlTypeDouble", 
+      "nullable" : true, 
+      "editable" : false, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Shape__Length", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "Shape__Length", 
+      "sqlType" : "sqlTypeDouble", 
+      "nullable" : true, 
+      "editable" : false, 
+      "domain" : null, 
+      "defaultValue" : null
+    }
+  ], 
+  "indexes" : [
+    {
+      "name" : "PK__COUNCIL___F4B70D85A1029745", 
+      "fields" : "OBJECTID", 
+      "isAscending" : true, 
+      "isUnique" : true, 
+      "description" : "", 
+      "indexType" : "Attribute"
+    }, 
+    {
+      "name" : "COUNCIL_DISTRICTS_COUNCIL_DISTRICTS_Shape_sidx", 
+      "fields" : "SHAPE", 
+      "isAscending" : true, 
+      "isUnique" : false, 
+      "description" : "", 
+      "indexType" : "Spatial"
+    }, 
+    {
+      "name" : "Shape__Area_Index", 
+      "fields" : "Shape__Area", 
+      "isAscending" : true, 
+      "isUnique" : false, 
+      "description" : "", 
+      "indexType" : "Attribute"
+    }, 
+    {
+      "name" : "Shape__Length_Index", 
+      "fields" : "Shape__Length", 
+      "isAscending" : true, 
+      "isUnique" : false, 
+      "description" : "", 
+      "indexType" : "Attribute"
+    }, 
+    {
+      "name" : "DISTRICTID_Index", 
+      "fields" : "DISTRICTID", 
+      "isAscending" : true, 
+      "isUnique" : false, 
+      "description" : "DISTRICTID_Index", 
+      "indexType" : "Attribute"
+    }, 
+    {
+      "name" : "insights_idx_COUNCIL_DISTRICTS_COUNCIL_DISTRICTS_NAME", 
+      "fields" : "NAME", 
+      "isAscending" : true, 
+      "isUnique" : false, 
+      "description" : "Auto created by ArcGIS Insights", 
+      "indexType" : "Attribute"
+    }, 
+    {
+      "name" : "exb_NAME", 
+      "fields" : "NAME", 
+      "isAscending" : true, 
+      "isUnique" : false, 
+      "description" : "", 
+      "indexType" : "Attribute"
+    }, 
+    {
+      "name" : "exb_NAME_total", 
+      "fields" : "NAME", 
+      "description" : "", 
+      "indexType" : "FullText"
+    }
+  ], 
+  "dateFieldsTimeReference" : {
+    "timeZone" : "UTC", 
+    "timeZoneIANA" : "Etc/UTC", 
+    "respectsDaylightSaving" : false
+  }, 
+  "preferredTimeReference" : null, 
+  "types" : [
+    {
+      "id" : "District 1", 
+      "name" : "District 1", 
+      "domains" : 
+      {
+        "CD1" : {"type" : "inherited"}, 
+        "CD2" : {"type" : "inherited"}, 
+        "CD3" : {"type" : "inherited"}, 
+        "CD4" : {"type" : "inherited"}, 
+        "CD5" : {"type" : "inherited"}, 
+        "CD6" : {"type" : "inherited"}, 
+        "CD7" : {"type" : "inherited"}, 
+        "CD8" : {"type" : "inherited"}, 
+        "CD9" : {"type" : "inherited"}
+      }, 
+      "templates" : [
+        {
+          "name" : "District 1", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "NAME" : "District 1"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "District 2", 
+      "name" : "District 2", 
+      "domains" : 
+      {
+        "CD1" : {"type" : "inherited"}, 
+        "CD2" : {"type" : "inherited"}, 
+        "CD3" : {"type" : "inherited"}, 
+        "CD4" : {"type" : "inherited"}, 
+        "CD5" : {"type" : "inherited"}, 
+        "CD6" : {"type" : "inherited"}, 
+        "CD7" : {"type" : "inherited"}, 
+        "CD8" : {"type" : "inherited"}, 
+        "CD9" : {"type" : "inherited"}
+      }, 
+      "templates" : [
+        {
+          "name" : "District 2", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "NAME" : "District 2"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "District 3", 
+      "name" : "District 3", 
+      "domains" : 
+      {
+        "CD1" : {"type" : "inherited"}, 
+        "CD2" : {"type" : "inherited"}, 
+        "CD3" : {"type" : "inherited"}, 
+        "CD4" : {"type" : "inherited"}, 
+        "CD5" : {"type" : "inherited"}, 
+        "CD6" : {"type" : "inherited"}, 
+        "CD7" : {"type" : "inherited"}, 
+        "CD8" : {"type" : "inherited"}, 
+        "CD9" : {"type" : "inherited"}
+      }, 
+      "templates" : [
+        {
+          "name" : "District 3", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "NAME" : "District 3"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "District 4", 
+      "name" : "District 4", 
+      "domains" : 
+      {
+        "CD1" : {"type" : "inherited"}, 
+        "CD2" : {"type" : "inherited"}, 
+        "CD3" : {"type" : "inherited"}, 
+        "CD4" : {"type" : "inherited"}, 
+        "CD5" : {"type" : "inherited"}, 
+        "CD6" : {"type" : "inherited"}, 
+        "CD7" : {"type" : "inherited"}, 
+        "CD8" : {"type" : "inherited"}, 
+        "CD9" : {"type" : "inherited"}
+      }, 
+      "templates" : [
+        {
+          "name" : "District 4", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "NAME" : "District 4"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "District 5", 
+      "name" : "District 5", 
+      "domains" : 
+      {
+        "CD1" : {"type" : "inherited"}, 
+        "CD2" : {"type" : "inherited"}, 
+        "CD3" : {"type" : "inherited"}, 
+        "CD4" : {"type" : "inherited"}, 
+        "CD5" : {"type" : "inherited"}, 
+        "CD6" : {"type" : "inherited"}, 
+        "CD7" : {"type" : "inherited"}, 
+        "CD8" : {"type" : "inherited"}, 
+        "CD9" : {"type" : "inherited"}
+      }, 
+      "templates" : [
+        {
+          "name" : "District 5", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "NAME" : "District 5"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "District 6", 
+      "name" : "District 6", 
+      "domains" : 
+      {
+        "CD1" : {"type" : "inherited"}, 
+        "CD2" : {"type" : "inherited"}, 
+        "CD3" : {"type" : "inherited"}, 
+        "CD4" : {"type" : "inherited"}, 
+        "CD5" : {"type" : "inherited"}, 
+        "CD6" : {"type" : "inherited"}, 
+        "CD7" : {"type" : "inherited"}, 
+        "CD8" : {"type" : "inherited"}, 
+        "CD9" : {"type" : "inherited"}
+      }, 
+      "templates" : [
+        {
+          "name" : "District 6", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "NAME" : "District 6"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "District 7", 
+      "name" : "District 7", 
+      "domains" : 
+      {
+        "CD1" : {"type" : "inherited"}, 
+        "CD2" : {"type" : "inherited"}, 
+        "CD3" : {"type" : "inherited"}, 
+        "CD4" : {"type" : "inherited"}, 
+        "CD5" : {"type" : "inherited"}, 
+        "CD6" : {"type" : "inherited"}, 
+        "CD7" : {"type" : "inherited"}, 
+        "CD8" : {"type" : "inherited"}, 
+        "CD9" : {"type" : "inherited"}
+      }, 
+      "templates" : [
+        {
+          "name" : "District 7", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "NAME" : "District 7"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "District 8", 
+      "name" : "District 8", 
+      "domains" : 
+      {
+        "CD1" : {"type" : "inherited"}, 
+        "CD2" : {"type" : "inherited"}, 
+        "CD3" : {"type" : "inherited"}, 
+        "CD4" : {"type" : "inherited"}, 
+        "CD5" : {"type" : "inherited"}, 
+        "CD6" : {"type" : "inherited"}, 
+        "CD7" : {"type" : "inherited"}, 
+        "CD8" : {"type" : "inherited"}, 
+        "CD9" : {"type" : "inherited"}
+      }, 
+      "templates" : [
+        {
+          "name" : "District 8", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "NAME" : "District 8"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "District 9", 
+      "name" : "District 9", 
+      "domains" : 
+      {
+        "CD1" : {"type" : "inherited"}, 
+        "CD2" : {"type" : "inherited"}, 
+        "CD3" : {"type" : "inherited"}, 
+        "CD4" : {"type" : "inherited"}, 
+        "CD5" : {"type" : "inherited"}, 
+        "CD6" : {"type" : "inherited"}, 
+        "CD7" : {"type" : "inherited"}, 
+        "CD8" : {"type" : "inherited"}, 
+        "CD9" : {"type" : "inherited"}
+      }, 
+      "templates" : [
+        {
+          "name" : "District 9", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "NAME" : "District 9"
+            }
+          }
+        }
+      ]
+    }
+  ], 
+  "templates" : [], 
+  "supportedQueryFormats" : "JSON, geoJSON, PBF", 
+  "supportedAppendFormats" : "sqlite,geoPackage,shapefile,filegdb,featureCollection,geojson,csv,excel,jsonl,featureService,pbf", 
+  "supportedAppendSourceFilterFormats" : "sqlite,geoPackage,shapefile,filegdb,featureService", 
+  "supportedExportFormats" : "csv,shapefile,sqlite,geoPackage,filegdb,featureCollection,geojson,kml,excel,parquet", 
+  "supportedConvertFileFormats" : "JSON,PBF,Parquet", 
+  "supportedConvertContentFormats" : "LayerEditCollection,FeatureCollection", 
+  "supportedSpatialRelationships" : [
+    "esriSpatialRelIntersects", 
+    "esriSpatialRelContains", 
+    "esriSpatialRelCrosses", 
+    "esriSpatialRelEnvelopeIntersects", 
+    "esriSpatialRelIndexIntersects", 
+    "esriSpatialRelOverlaps", 
+    "esriSpatialRelTouches", 
+    "esriSpatialRelWithin", 
+    "esriSpatialRelDisjoint", 
+    "esriSpatialRelRelation"
+  ], 
+  "guidFormat" : "", 
+  "supportsContingentValues" : true, 
+  "supportsEditingContingentValues" : true, 
+  "supportedContingentValuesFormats" : "JSON, PBF", 
+  "supportsFieldGroups" : true, 
+  "supportedSyncDataOptions" : 260, 
+  "hasStaticData" : false, 
+  "maxRecordCount" : 2000, 
+  "standardMaxRecordCount" : 2000, 
+  "maxIdsCount" : 1000000, 
+  "standardMaxRecordCountNoGeometry" : 32000, 
+  "tileMaxRecordCount" : 4000, 
+  "maxRecordCountFactor" : 1, 
+  "capabilities" : "Query"
+}

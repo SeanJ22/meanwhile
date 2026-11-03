@@ -3,20 +3,12 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T10:14:00.412779+00:00",
+  "preparedAt": "2026-11-03T10:14:15.115116+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
-  "nextCounty": {
-    "rank": 100,
-    "stateName": "Oklahoma",
-    "county": "Tulsa County",
-    "fips": "40143",
-    "population": 698782,
-    "populationYear": 2025,
-    "state": "OK"
-  },
+  "nextCounty": null,
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
     {
@@ -2713,6 +2705,31 @@
       ],
       "censusCounty": "Will County",
       "countyFips": "17197"
+    },
+    {
+      "state": "OK",
+      "county": "Tulsa",
+      "populationRank": 100,
+      "manifest": "OK/tulsa/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 3,
+      "measureContests": 0,
+      "candidacies": 6,
+      "newContests": 3,
+      "refreshedContests": 0,
+      "sourceInputSha256": "48956426cd446012f7b5d4556efc3ce5734e4ea1d7390c5fc127d2954ee9f438",
+      "coverage": [
+        "Accurately labeled official-list supplement, not sample data. Current official NOVEMBER / 2026 List of Elections contains four complete Tulsa local candidate blocks/eight names. Three exact-scope blocks/six names are installable now: DistrictJudge14 Offices1/12 and CityTulsaCouncilDistrict1. Office4 two current named choices remain separate/held pending a direct official office-to-numbered-division crosswalk. Actual sample-verified local fields/names: zero; complete county/precinct ballot parity is not claimed.",
+        "Current county public sample notice and October27 election notice identify November3 Federal/StateGeneral, StateQuestions845/847, TulsaCouncil1 runoff and HotelTax election. Their sample route points to the voter portal or physical board/polling-place copies; the notices are not samples. Official state portal information explicitly requires registered name/date of birth; public landing/directory requests returned403. No voter identity, registration search, sign-in, token or private endpoint was used. Osage current November archive says ballots/results not posted; prior samples are not imported. Pawnee public routes failed; exact request/time/status/hash evidence retained.",
+        "Official current Title20 law defines JudicialDistrict14 as Tulsa and Pawnee and distinguishes five division-electorate judges from remaining at-large offices. Current official2026 filing headers explicitly scope Offices1/12 to Pawnee,Tulsa. Both at-large races use one regional judicialDistrict14 ID with two wholecounty memberships, not two per-county contests. These are ordinary opposed elections, not retention questions or unopposed declarations.",
+        "Office4 is definitively not countywide or wholeDistrict14: official 2026 filing header says Tulsa only; official2025 signatures table identifies its own52-precinct electorate versus261 for at-large Offices1/12; county roster marks it as elected by election district. Outside leads identify ElectoralDivision4, but no acquired official source directly links that office number to numbered Division4. Do not infer equality of office and division numbers: other District14 district-elected offices have different numbers. Office4 candidate block is held; independently source-identified full Division4 polygon is prepared separately without activating or mapping that office.",
+        "CityTulsa official current election page and Resolution20495 confirm August25 general/November3 runoff as needed; current November list qualifies only Council1 among candidate seats. All earlier council/auditor/school/municipal filing names are excluded from ordinary incoming. Current city-linked DistrictFinder\u2192webmap\u2192officialfeature layer provides full Council1 polygon, including its complete legal geography across county lines, unchanged and uncut. No wholecity/county/CDP/CCD fallback.",
+        "July Berryhill FireProtection notice lists four offices while its final filing inventory gives two names in an unnumbered generic board block. Current November state list and county notices do not include that field. Names remain filing-history facts only, with seat assignment and final qualification/cancellation/declared-election status unresolved. No ordinary candidacy or cancellation/declared-election fact is inferred from omission, underfilling or earlier filings.",
+        "All95 held contests/191 held person records/two measures, nine statewide judicial retentions and the OklahomaCounty lane threefields/sixpeople remain unchanged. Fresh CX-VOTES331e9d448 contains one nested SQ845 question/explainer input; exact hash and payload preserved. No state/federal/legislative, retention or question rows incoming. HotelTax question remains ancillary evidence only; no new question/explainer installed.",
+        "Two active precise reader keys (JudicialDistrict14 and CityCouncil1) are missing in the checked-in registry; two wholecounty judicial memberships and one active-city polygon prepared. A third independent Division4 key/polygon is source geography only pending the held office crosswalk. Data readiness does not assert reader visibility. Separate certified status supplement remains unacquired; official FAQ generally prohibits ordinary write-in voting, with military/overseas federal-write-in exception stated separately. No git, app, production or publication operations."
+      ],
+      "censusCounty": "Tulsa County",
+      "countyFips": "40143"
     }
   ],
   "sourceReviewCounties": [
@@ -2771,17 +2788,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 97,
-    "packetsPrepared": 98,
-    "candidateAndRetentionContests": 4580,
+    "countiesPrepared": 98,
+    "packetsPrepared": 99,
+    "candidateAndRetentionContests": 4583,
     "measureContests": 114,
-    "candidacyEntries": 10167,
-    "newContestEntriesAgainstCheckedInBaseline": 3831,
-    "distinctPreparedContestIds": 4545,
-    "distinctPreparedCandidateIds": 9894,
-    "distinctNewContestsAgainstCheckedInBaseline": 3752,
+    "candidacyEntries": 10173,
+    "newContestEntriesAgainstCheckedInBaseline": 3834,
+    "distinctPreparedContestIds": 4548,
+    "distinctPreparedCandidateIds": 9900,
+    "distinctNewContestsAgainstCheckedInBaseline": 3755,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 99
+    "distinctCountyHandoffs": 100
   },
   "remainingWork": [
     {

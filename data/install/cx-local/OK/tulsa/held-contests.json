@@ -1,0 +1,31 @@
+[
+  {
+    "office": "DISTRICT JUDGE - DISTRICT 14, OFFICE 4",
+    "proposedContestId": "ok-cx-local-2026-district-judge-14-office-4",
+    "names": [
+      "LORETTA RADFORD",
+      "DUSTIN ALLEN"
+    ],
+    "sourceKind": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST",
+    "actualSampleVerified": false,
+    "provenance": {
+      "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+      "sourceOrg": "Oklahoma State Election Board",
+      "collectedAt": "2026-11-03T09:45:19.376195+00:00",
+      "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+      "quote": "DISTRICT JUDGE - DISTRICT 14, OFFICE 4 LORETTA RADFORD DUSTIN ALLEN"
+    },
+    "scopeEvidence": [
+      {
+        "sourceUrl": "https://oklahoma.gov/content/dam/ok/en/elections/candidate-filing-archives/2026-candidate-filing-archives/2026-candidate-list-book.pdf",
+        "sourceOrg": "Oklahoma State Election Board",
+        "collectedAt": "2026-11-03T09:51:34.327760+00:00",
+        "verifiedAt": "2026-11-03T10:05:22.280597+00:00",
+        "quote": "DISTRICT 14, OFFICE 4 - Tulsa"
+      }
+    ],
+    "status": "HELD_EXACT_NUMBERED_ELECTORATE_CROSSWALK_NOT_DIRECTLY_OFFICIALLY_VERIFIED",
+    "reason": "Partial52-precinct Tulsa electorate is official. Do not substitute wholeTulsa or wholeDistrict14; no acquired official source directly assigns Office4 to numbered ElectoralDivision4. Independent Division4 polygon does not alone prove office assignment.",
+    "candidateStatuses": "CURRENT_NOVEMBER_LIST_CHOICES_NOT_INSTALLED"
+  }
+]

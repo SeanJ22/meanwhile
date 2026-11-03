@@ -1,0 +1,17 @@
+{
+  "ref": "331e9d448f05dc0fda538500fd134ff19797312a",
+  "inputs": [
+    {
+      "sourcePath": "data/install/cx-votes/OK/explainer-expansion/ballot-input/ok.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-OK-331e9d448/explainer-expansion__ballot-input__ok.json",
+      "sha256": "5db99a494d481a5b17869bc559811dfb519a62bf12f1fd75bdc06df27c2df830",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    }
+  ],
+  "candidateInputs": 0,
+  "questions": 1,
+  "measures": 1,
+  "incomingQuestionOrExplainerWrites": 0,
+  "questionPayloadSha256": "77bef455af97c2828d0d5251cfb5eeb2c60f892c90fa048e36c0a3c77799007d",
+  "measurePayloadSha256": "492b0c03f689f54cc263012a13a6e031f5b2b4893dcfc8936d0c97b0228acb4d"
+}

@@ -1,0 +1,29 @@
+{
+  "scope": "Complete current Ocean County Clerk sample-ballot directory: 34 English and 8 bilingual pages covering all 33 municipalities; four distinct questions. Separate off-cycle elections excluded.",
+  "officialCurrentIndexUrl": "https://oceancountyclerk.com/FrmElectionServices",
+  "captureMetadataPaths": {
+    "currentClerkIndex": {
+      "extractedTextPath": "sources/83c14d4e269f129dc584f6cf6e403b6aec3005240456b61946d8f71fb00a2702.txt",
+      "extractedTextSha256": "83c14d4e269f129dc584f6cf6e403b6aec3005240456b61946d8f71fb00a2702",
+      "nativeMetadataPath": "sources/04a8f2f6adbd5b1b6d0c294e0f0cb9e415ebcbeec74ccca95716f8f5525a6531.json",
+      "publishedLinksPath": "sources/c47c6139ba0b7c773a5bc6cd6e1c454f6b3382d0b9abfa5401a244c1830a9a33.json",
+      "representation": "CAPTURED_SOURCE_TEXT: complete nativeHTML text with scripts/styles/tags excluded, actual anchor links separately retained. NativeHTML hash/length are distinct in metadata, nativeHTML scratch only."
+    }
+  },
+  "stateGovernmentDirectoryNativePath": "sources/37205d5a858944c35925dfb0bd1d77380510a1987c0df7d9a51904d63db6895b.html",
+  "stateGovernmentDirectoryLinksPath": "sources/7d9a894355b134387d1c6b7bb98a64d0c9216560bbf36b8c1684d2215141477f.json",
+  "authorityChain": [
+    "NativeNJ.govdirectory identifiesOceanCountyClerk.com andCo.Ocean.NJ.US electionboardhost.",
+    "NativecurrentClerkindex directlylinks both exactcurrentCo.Ocean.NJ.US masterPDFs."
+  ],
+  "originalEnglishMasterPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+  "originalBilingualMasterPath": "sources/393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7.source",
+  "panelOcrInventoryPath": "panel-ocr-inventory.json",
+  "bilingualEnglishPanelOcrInventoryPath": "bilingual-english-panel-ocr-inventory.json",
+  "lakewoodIdentityEvidencePath": "sources/52766dc6ebe04a2f29c4529766058e8375eaaeee42dd9aceeb6aba07fd5a7d77.json",
+  "electionDate": "November3,2026",
+  "newExplanations": 4,
+  "uniqueCurrentQuestions": 4,
+  "nativeInstructionOnlyTextNotCountedAsBallotCoverage": true,
+  "officialInventoryPath": "official-inventory.json"
+}

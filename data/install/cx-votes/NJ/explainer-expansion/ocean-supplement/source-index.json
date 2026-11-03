@@ -1,0 +1,35 @@
+{
+  "packetPath": "ballot-input/nj.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "finalUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "rawHash": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-ocean-2026:county-natural-lands",
+        "nj-ocean-2026:lacey-recreation-bonds",
+        "nj-ocean-2026:point-pleasant-beach-open-space",
+        "nj-ocean-2026:lakewood-school-board-size"
+      ],
+      "textPath": "sources/8f4cad490ea46a76141f63aa93a1522db12c4280c6f21f17e3a9fcb222aa1984.txt",
+      "textSha256": "8f4cad490ea46a76141f63aa93a1522db12c4280c6f21f17e3a9fcb222aa1984",
+      "textRepresentation": "Exact bounded question and full supplied statement transcript/extraction; full originalPDF bytes retained. Method/visualproof per source-support. No claim that this is the wholePDFselectabletext."
+    },
+    {
+      "requestedUrl": "https://www.co.ocean.nj.us//WebContentFiles//4306ee12-c4c0-4de7-94f6-cc454d453913.pdf",
+      "rawPath": "sources/393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7.source",
+      "rawHash": "393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completebilingualcountycurrentinventory;duplicatecounty/Lakewoodquestions",
+      "nativeSelectableInstructionTextPath": "sources/59b1a70c667d2a189a0e0e7792e8db9dd64b808a9f5c80851f253ba8b5b09a17.txt",
+      "operativeEnglishPanelOcrInventoryPath": "bilingual-english-panel-ocr-inventory.json",
+      "textRepresentation": "NativePDFselectabletext isinstructions/header,notfulloperativequestiontext. EnglishpanelOCRdiscovery mappedseparately; exactverifiedquestions areintheprimarymasterboundedtranscripts."
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json",
+  "officialInventoryPath": "official-inventory.json"
+}

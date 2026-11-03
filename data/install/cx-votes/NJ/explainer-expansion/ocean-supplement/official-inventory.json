@@ -1,0 +1,1240 @@
+{
+  "scope": "CurrentOceanCountyClerkNov3,2026officialsamplemasters;completepublishedcountyGeneralElectionstyles,notallseparateoffcycleelections.",
+  "officialCurrentIndexUrl": "https://oceancountyclerk.com/FrmElectionServices",
+  "sourceRepresentation": "Two originalnativePDFfiles. Selectabletext largely instructions/header; actualoperativepanels embeddedimages. All42Englishpagepanels locallyOCRed (Englishmaster34 plusleftEnglishpanel8bilingualpages);fouruniquequestions fullyvisuallyverified. Largestpaneladditionalbilingualpass mayincludeSpanish;not50distinctballots.",
+  "originalPdfCount": 2,
+  "publishedSamplePages": 42,
+  "englishMasterPages": 34,
+  "bilingualMasterPages": 8,
+  "municipalityCount": 33,
+  "municipalities": [
+    "Barnegat",
+    "Barnegat Light",
+    "Bay Head",
+    "Beach Haven",
+    "Beachwood",
+    "Berkeley",
+    "Brick",
+    "Eagleswood",
+    "Harvey Cedars",
+    "Island Heights",
+    "Jackson",
+    "Lacey",
+    "Lakehurst",
+    "Lakewood",
+    "Lavallette",
+    "Little Egg Harbor",
+    "Long Beach",
+    "Manchester",
+    "Mantoloking",
+    "Ocean",
+    "Ocean Gate",
+    "Pine Beach",
+    "Plumsted",
+    "Point Pleasant",
+    "Point Pleasant Beach",
+    "Seaside Heights",
+    "Seaside Park",
+    "Ship Bottom",
+    "South Toms River",
+    "Stafford",
+    "Surf City",
+    "Toms River",
+    "Tuckerton"
+  ],
+  "uniqueQuestions": 4,
+  "questionAppearances": {
+    "county-natural-lands": "All42samplepages",
+    "lacey-recreation-bonds": "Englishmasterpages13and14",
+    "point-pleasant-beach-open-space": "Englishmasterpage26",
+    "lakewood-school-board-size": "Englishmasterpage15andbilingualpage8"
+  },
+  "pages": [
+    {
+      "page": 1,
+      "textCharacters": 5742,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Barnegat Township",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Barnegat",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 2,
+      "textCharacters": 5752,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Barnegat Light Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Barnegat Light",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 3,
+      "textCharacters": 5740,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Bay Head Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Bay Head",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 4,
+      "textCharacters": 5746,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Beach Haven Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Beach Haven",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 5,
+      "textCharacters": 5742,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Beachwood Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Beachwood",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 6,
+      "textCharacters": 5771,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Berkeley Township - 2nd Congressional District",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Berkeley",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 7,
+      "textCharacters": 5774,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Township of Berkeley - 4th Congressional District",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Berkeley",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 8,
+      "textCharacters": 5738,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Brick Township ",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Brick",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 9,
+      "textCharacters": 5746,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Eagleswood Township",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Eagleswood",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 10,
+      "textCharacters": 5751,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Harvey Cedars Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Harvey Cedars",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 11,
+      "textCharacters": 5753,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Island Heights Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Island Heights",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 12,
+      "textCharacters": 5742,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Jackson Township",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Jackson",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 13,
+      "textCharacters": 5766,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Lacey Township - 2nd Congressional District",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Lacey",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 14,
+      "textCharacters": 5766,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Lacey Township - 4th Congressional District",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Lacey",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 15,
+      "textCharacters": 5744,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Lakewood Township ",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Lakewood",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 16,
+      "textCharacters": 5745,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Lavallette Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Lavallette",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 17,
+      "textCharacters": 5761,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Little Egg Harbor Township",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Little Egg Harbor",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 18,
+      "textCharacters": 5747,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Long Beach Township",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Long Beach",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 19,
+      "textCharacters": 5748,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Manchester Township ",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Manchester",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 20,
+      "textCharacters": 5747,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Mantoloking Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Mantoloking",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 21,
+      "textCharacters": 5737,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Ocean Township",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Ocean",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 22,
+      "textCharacters": 5745,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Ocean Gate Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Ocean Gate",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 23,
+      "textCharacters": 5745,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Pine Beach Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Pine Beach",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 24,
+      "textCharacters": 5743,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Plumsted Township",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Plumsted",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 25,
+      "textCharacters": 5753,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Point Pleasant Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Point Pleasant",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 26,
+      "textCharacters": 5765,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Point Pleasant Beach Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Point Pleasant Beach",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 27,
+      "textCharacters": 5755,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Seaside Heights Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Seaside Heights",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 28,
+      "textCharacters": 5778,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Seaside Park Borough - 4th Congressional District",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Seaside Park",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 29,
+      "textCharacters": 5778,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Seaside Park Borough - 2nd Congressional District",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Seaside Park",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 30,
+      "textCharacters": 5747,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Ship Bottom Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Ship Bottom",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 31,
+      "textCharacters": 5743,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Stafford Township",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Stafford",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 32,
+      "textCharacters": 5743,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Surf City Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Surf City",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 33,
+      "textCharacters": 5748,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Toms River Township ",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Toms River",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 34,
+      "textCharacters": 5743,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE ",
+        " ",
+        " ",
+        " YOUR POLLING PLACE ",
+        "ACCESSIBLE ",
+        "POLLING PLACE",
+        "Tuckerton Borough",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER  23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not "
+      ],
+      "keywordHits": [
+        "question"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Tuckerton",
+      "rawPath": "sources/801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+      "nativeSha256": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363"
+    },
+    {
+      "page": 1,
+      "textCharacters": 9523,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE • SE DISPONE DE ASISTENCIA",
+        " ",
+        "Berkeley Township District No. 1 ",
+        "Distrito No. 1 del Municipio de Berkeley ",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER 23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not ",
+        "delivered within five days return to the Commissioner of Registration’ and in ",
+        "all other cases ‘if not delivered within two days return to the Commissioner of ",
+        "Registration.’” "
+      ],
+      "keywordHits": [
+        "question",
+        "pregunta"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Berkeley",
+      "rawPath": "sources/393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//4306ee12-c4c0-4de7-94f6-cc454d453913.pdf",
+      "nativeSha256": "393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7"
+    },
+    {
+      "page": 2,
+      "textCharacters": 9540,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE • SE DISPONE DE ASISTENCIA",
+        " ",
+        "Brick Township District No. 6,16,29,34,50,54 ",
+        "Distrito No. 6,16,29,34,50,54 del Municipio de Brick",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER 23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not ",
+        "delivered within five days return to the Commissioner of Registration’ and in ",
+        "all other cases ‘if not delivered within two days return to the Commissioner of ",
+        "Registration.’” "
+      ],
+      "keywordHits": [
+        "question",
+        "pregunta"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Brick",
+      "rawPath": "sources/393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//4306ee12-c4c0-4de7-94f6-cc454d453913.pdf",
+      "nativeSha256": "393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7"
+    },
+    {
+      "page": 3,
+      "textCharacters": 9525,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE • SE DISPONE DE ASISTENCIA",
+        " ",
+        "Jackson Township District No. 1,12 ",
+        "Distrito No. 1,12 del Municipio de Jackson ",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER 23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not ",
+        "delivered within five days return to the Commissioner of Registration’ and in ",
+        "all other cases ‘if not delivered within two days return to the Commissioner of ",
+        "Registration.’” "
+      ],
+      "keywordHits": [
+        "question",
+        "pregunta"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Jackson",
+      "rawPath": "sources/393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//4306ee12-c4c0-4de7-94f6-cc454d453913.pdf",
+      "nativeSha256": "393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7"
+    },
+    {
+      "page": 4,
+      "textCharacters": 9491,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE • SE DISPONE DE ASISTENCIA",
+        " ",
+        "Lakehurst Borough ",
+        "Municipio de Lakehurst ",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER 23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not ",
+        "delivered within five days return to the Commissioner of Registration’ and in ",
+        "all other cases ‘if not delivered within two days return to the Commissioner of ",
+        "Registration.’” "
+      ],
+      "keywordHits": [
+        "question",
+        "pregunta"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Lakehurst",
+      "rawPath": "sources/393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//4306ee12-c4c0-4de7-94f6-cc454d453913.pdf",
+      "nativeSha256": "393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7"
+    },
+    {
+      "page": 5,
+      "textCharacters": 9538,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE • SE DISPONE DE ASISTENCIA",
+        " ",
+        "Manchester Township District No. 10,33 ",
+        "Distrito No. 10,33 del Municipio de Manchester",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER 23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not ",
+        "delivered within five days return to the Commissioner of Registration’ and in ",
+        "all other cases ‘if not delivered within two days return to the Commissioner of ",
+        "Registration.’” "
+      ],
+      "keywordHits": [
+        "question",
+        "pregunta"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Manchester",
+      "rawPath": "sources/393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//4306ee12-c4c0-4de7-94f6-cc454d453913.pdf",
+      "nativeSha256": "393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7"
+    },
+    {
+      "page": 6,
+      "textCharacters": 9519,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE • SE DISPONE DE ASISTENCIA",
+        " ",
+        "South Toms River Borough  ",
+        " Municipio de South Toms River",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER 23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not ",
+        "delivered within five days return to the Commissioner of Registration’ and in ",
+        "all other cases ‘if not delivered within two days return to the Commissioner of ",
+        "Registration.’” "
+      ],
+      "keywordHits": [
+        "question",
+        "pregunta"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "South Toms River",
+      "rawPath": "sources/393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//4306ee12-c4c0-4de7-94f6-cc454d453913.pdf",
+      "nativeSha256": "393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7"
+    },
+    {
+      "page": 7,
+      "textCharacters": 9584,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE • SE DISPONE DE ASISTENCIA",
+        " ",
+        "Toms River Township District No. 1,10,14,30,32,37,40,51,60,63 ",
+        "Distrito No. 1,10,14,30,32,37,40,51,60,63 del Municipio de Toms River",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER 23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not ",
+        "delivered within five days return to the Commissioner of Registration’ and in ",
+        "all other cases ‘if not delivered within two days return to the Commissioner of ",
+        "Registration.’” "
+      ],
+      "keywordHits": [
+        "question",
+        "pregunta"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Toms River",
+      "rawPath": "sources/393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//4306ee12-c4c0-4de7-94f6-cc454d453913.pdf",
+      "nativeSha256": "393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7"
+    },
+    {
+      "page": 8,
+      "textCharacters": 9539,
+      "firstLines": [
+        "ASSISTANCE IS AVAILABLE • SE DISPONE DE ASISTENCIA",
+        " ",
+        "Lakewood Township District No. 9,20,29,43 ",
+        "Distrito No. 9,20,29,43 del Municipio de Lakewood",
+        "POSTMASTER: ",
+        "PLEASE DELIVER BY FRIDAY OCTOBER 23, 2026",
+        "Official General Election ",
+        " Sample Ballot ",
+        " ",
+        "“In cases where the sample ballot is to be sent to an addressee who does not ",
+        "receive his mail by delivery to his home or through rural free delivery ‘if not ",
+        "delivered within five days return to the Commissioner of Registration’ and in ",
+        "all other cases ‘if not delivered within two days return to the Commissioner of ",
+        "Registration.’” "
+      ],
+      "keywordHits": [
+        "question",
+        "pregunta"
+      ],
+      "currentNovember3Header": true,
+      "municipality": "Lakewood",
+      "rawPath": "sources/393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7.source",
+      "nativeSourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//4306ee12-c4c0-4de7-94f6-cc454d453913.pdf",
+      "nativeSha256": "393ae1a9f2f3da25059e13c30bf215c4aa71b29a1b055076125d86fdbbc8d5c7"
+    }
+  ],
+  "panelOcrInventoryPath": "panel-ocr-inventory.json",
+  "bilingualEnglishPanelOcrInventoryPath": "bilingual-english-panel-ocr-inventory.json"
+}

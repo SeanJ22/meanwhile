@@ -1,0 +1,96 @@
+[
+  {
+    "contestId": "nj-ocean-2026:county-natural-lands",
+    "ocdId": "ocd-division/country:us/state:nj/county:ocean",
+    "registeredDivisionIndex": 427,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:ocean",
+      "county",
+      "34029",
+      "Ocean County"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "109044",
+      "nj:county:county-of-ocean",
+      "COUNTY OF OCEAN",
+      "COUNTY",
+      427,
+      "COUNTY_FIPS",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-ocean-2026:lacey-recreation-bonds",
+    "ocdId": "ocd-division/country:us/state:nj/county:ocean/place:lacey_township",
+    "registeredDivisionIndex": 439,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:ocean/place:lacey_township",
+      "cousub",
+      "3402937380",
+      "Lacey township"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "204936",
+      "nj:city:township-of-lacey",
+      "TOWNSHIP OF LACEY",
+      "TOWNSHIP",
+      439,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-ocean-2026:point-pleasant-beach-open-space",
+    "ocdId": "ocd-division/country:us/state:nj/county:ocean/place:point_pleasant_beach_borough",
+    "registeredDivisionIndex": 451,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:ocean/place:point_pleasant_beach_borough",
+      "cousub",
+      "3402959910",
+      "Point Pleasant Beach borough"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "130864",
+      "nj:city:borough-of-point-pleasant-beach",
+      "BOROUGH OF POINT PLEASANT BEACH",
+      "MUNICIPAL",
+      451,
+      "COUSUB_FIPS",
+      1076
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-ocean-2026:lakewood-school-board-size",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:lakewood_township_school_district",
+    "registeredDivisionIndex": 1526,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:lakewood_township_school_district",
+      "unsd",
+      "3408220",
+      "Lakewood Township School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "210631",
+      "nj:school:lakewood-public-sch-dist",
+      "LAKEWOOD PUBLIC SCH DIST",
+      "SCHOOL DISTRICT",
+      -1,
+      "SCHOOL_NAME_NOT_FOUND",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government.",
+    "identityEvidencePath": "sources/52766dc6ebe04a2f29c4529766058e8375eaaeee42dd9aceeb6aba07fd5a7d77.json",
+    "governmentPrimaryDivisionBindingUnchanged": -1
+  }
+]

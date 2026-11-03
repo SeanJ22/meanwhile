@@ -1,0 +1,60 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 4,
+    "newPlainLanguageExplanations": 4,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": "OTHER_NJ_COUNTIES_LOCAL_INVENTORIES_OPEN",
+    "officialInventoryScope": "Complete current Ocean County Clerk sample-ballot directory: 34 English and 8 bilingual pages covering all 33 municipalities; four distinct questions. Separate off-cycle elections excluded."
+  },
+  "subjects": [
+    {
+      "id": "nj-ocean-2026:county-natural-lands",
+      "ocdId": "ocd-division/country:us/state:nj/county:ocean",
+      "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf"
+    },
+    {
+      "id": "nj-ocean-2026:lacey-recreation-bonds",
+      "ocdId": "ocd-division/country:us/state:nj/county:ocean/place:lacey_township",
+      "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf"
+    },
+    {
+      "id": "nj-ocean-2026:point-pleasant-beach-open-space",
+      "ocdId": "ocd-division/country:us/state:nj/county:ocean/place:point_pleasant_beach_borough",
+      "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf"
+    },
+    {
+      "id": "nj-ocean-2026:lakewood-school-board-size",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:lakewood_township_school_district",
+      "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Complete original official PDFs; operative panels are embedded images. Full questions, official statements and Yes/No verified visually; exact bounded transcripts retained. All 42 English operative page panels covered by local OCR discovery and all four distinct questions visually checked. Native instruction-only selectable text is not treated as ballot coverage.",
+  "reviewedScratchPacketSha256": "25aa44cf4cbb8ad8a268b4cd16b29f7d2832f50bb16d66a82ba3cf5583dcb624",
+  "canonicalInputSha256": "6e54392af28342e0456a7bb6034c7cb2346557012a8f1c1bb2538624e1125513",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

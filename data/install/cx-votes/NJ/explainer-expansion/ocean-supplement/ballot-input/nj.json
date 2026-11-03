@@ -1,0 +1,215 @@
+{
+  "ballots": {
+    "NJ:nj-2026-11-03": {
+      "election": {
+        "id": "nj-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NJ"
+      },
+      "contests": [
+        {
+          "id": "nj-ocean-2026:county-natural-lands",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:ocean",
+          "divisionVintage": "2023",
+          "title": "Ocean County Question 1 — Natural Lands Trust Fund tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+            "sourceOrg": "Ocean County Clerk — complete official2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:44:22.451985+00:00",
+            "verifiedAt": "2026-11-03T10:12:15.943020+00:00",
+            "quote": "Shall the Ocean County Natural Lands Trust Fund, which was approved and established by referendum in 1997, and amended by referendum in 2019 to allow for the acquisition, development and maintenance of lands for recreational and historical preservation purposes, increase its funded rate from 1.2 cents per $100 of total County equalized real property valuation, to 2.2 cents per $100 of total County equalized real property valuation?"
+          }
+        },
+        {
+          "id": "nj-ocean-2026:lacey-recreation-bonds",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:ocean/place:lacey_township",
+          "divisionVintage": "2023",
+          "title": "Lacey Township — YMCA recreation facility bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+            "sourceOrg": "Ocean County Clerk — complete official2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:44:22.451985+00:00",
+            "verifiedAt": "2026-11-03T10:12:15.943020+00:00",
+            "quote": "Should the Township of Lacey be authorized to issue bonds in an amount of Forty-Five Million Dollars ($45,000,000) for the construction, furnishing and equipping of a new community recreation facility to be operated in partnership with the YMCA, providing recreational, aquatic, wellness, youth, senior and community programming to be paid through municipal debt service in the annual operating budget and the amount will be financed through local property taxes?"
+          }
+        },
+        {
+          "id": "nj-ocean-2026:point-pleasant-beach-open-space",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:ocean/place:point_pleasant_beach_borough",
+          "divisionVintage": "2023",
+          "title": "Point Pleasant Beach — open-space tax ceiling",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+            "sourceOrg": "Ocean County Clerk — complete official2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:44:22.451985+00:00",
+            "verifiedAt": "2026-11-03T10:12:15.943020+00:00",
+            "quote": "Should the Point Pleasant Beach Open Space Trust Fund, which was approved by voters in 2005 to have a collection rate of one cent per $100 in assessed valuation, have this authorization modified to a rate not to exceed one-half cent per $100 in assessed valuation, as may be determined by the governing body?"
+          }
+        },
+        {
+          "id": "nj-ocean-2026:lakewood-school-board-size",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:lakewood_township_school_district",
+          "divisionVintage": "2023",
+          "title": "Lakewood School District — school board size",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+            "sourceOrg": "Ocean County Clerk — complete official2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:44:22.451985+00:00",
+            "verifiedAt": "2026-11-03T10:12:15.943020+00:00",
+            "quote": "Shall the membership of the Board of Education of the Lakewood School District be reduced from nine (9) members to seven (7) members by filling only one (1) of the three (3) Board member seats whose terms expire on December 31, 2026, resulting in a seven-member Board of Education effective January 1, 2027?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "nj-ocean-2026:county-natural-lands#question",
+          "contestId": "nj-ocean-2026:county-natural-lands",
+          "questionText": "Shall the Ocean County Natural Lands Trust Fund, which was approved and established by referendum in 1997, and amended by referendum in 2019 to allow for the acquisition, development and maintenance of lands for recreational and historical preservation purposes, increase its funded rate from 1.2 cents per $100 of total County equalized real property valuation, to 2.2 cents per $100 of total County equalized real property valuation?",
+          "officialStatement": "This proposal shall increase the tax rate of the Ocean County Natural Lands Trust Fund by 1 cent in order to continue to appropriately support the costs of the Ocean County Natural Lands Trust Fund Program. The Trust Fund prioritizes the preservation of properties in order to preserve natural areas of open space, protect watersheds including groundwater recharge areas and drinking water sources, and the acquisition, development, and maintenance for recreational and Historical preservation purposes. A \"YES\" vote will permit the County to levy a maximum tax of 2.2 cents per $100 of total County equalized real property valuation. This will be a 1 cent increase, the first and only increase to occur since the inception of the program. As an example, at a rate of 2.2 cents, the owner of a property assessed at $100,000 would contribute a maximum of $22 per year to the Trust Fund.",
+          "provenance": {
+            "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+            "sourceOrg": "Ocean County Clerk — complete official2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:44:22.451985+00:00",
+            "verifiedAt": "2026-11-03T10:12:15.943020+00:00",
+            "quote": "Shall the Ocean County Natural Lands Trust Fund, which was approved and established by referendum in 1997, and amended by referendum in 2019 to allow for the acquisition, development and maintenance of lands for recreational and historical preservation purposes, increase its funded rate from 1.2 cents per $100 of total County equalized real property valuation, to 2.2 cents per $100 of total County equalized real property valuation?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "nj-ocean-2026:lacey-recreation-bonds#question",
+          "contestId": "nj-ocean-2026:lacey-recreation-bonds",
+          "questionText": "Should the Township of Lacey be authorized to issue bonds in an amount of Forty-Five Million Dollars ($45,000,000) for the construction, furnishing and equipping of a new community recreation facility to be operated in partnership with the YMCA, providing recreational, aquatic, wellness, youth, senior and community programming to be paid through municipal debt service in the annual operating budget and the amount will be financed through local property taxes?",
+          "officialStatement": "Currently the Township of Lacey is exploring a partnership with the YMCA of the Jersey Shore to construct an approximate 63,000 square foot recreation facility within the boundaries of Lacey Township. The project would include, but not be limited to: Indoor aquatic facilities, including competitive and recreational pools; Fitness and wellness facilities; Gymnasiums and indoor sports courts; Childcare and youth development space; Senior Citizen programming space; Multi-purpose community meeting rooms; Walking/running track and wellness areas; Administrative and support facilities; Parking, utilities, site improvements and related infrastructure. The Township’s share of the project would be financed through the issuance of general obligation bonds in an amount of $45,000,000, subject to all applicable laws and regulations. The Township and the YMCA will work cooperatively together to ascertain outside funding sources through discretionary funds, grants and benefactors to reduce the general obligation bonds. A \"YES\" vote means you favor the Township of Lacey proceeding to borrow $45 million through the issuance of general obligation bonds to construct a new community recreation facility in partnership with the YMCA. If approved and the Township Committee subsequently decides to proceed, the Township would own and participate in the development of the facility pursuant to a negotiated agreement with the YMCA, which would be responsible for operating the facility and providing recreational, aquatic, wellness, youth, senior and community programming. The ownership of the facility will be the Township of Lacey. The final operating responsibilities, membership structure, maintenance obligations and public access provisions would be established in a formal agreement approved by the Township Committee. The cost of the bonds would be repaid over time through municipal debt service in the annual operating budget and the amount will be financed through local property taxes. A \"NO\" vote means the voters are not in favor of the Township of Lacey issuing general obligations bonds in the amount of $45,000,000.",
+          "provenance": {
+            "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+            "sourceOrg": "Ocean County Clerk — complete official2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:44:22.451985+00:00",
+            "verifiedAt": "2026-11-03T10:12:15.943020+00:00",
+            "quote": "Should the Township of Lacey be authorized to issue bonds in an amount of Forty-Five Million Dollars ($45,000,000) for the construction, furnishing and equipping of a new community recreation facility to be operated in partnership with the YMCA, providing recreational, aquatic, wellness, youth, senior and community programming to be paid through municipal debt service in the annual operating budget and the amount will be financed through local property taxes?"
+          }
+        },
+        {
+          "id": "nj-ocean-2026:point-pleasant-beach-open-space#question",
+          "contestId": "nj-ocean-2026:point-pleasant-beach-open-space",
+          "questionText": "Should the Point Pleasant Beach Open Space Trust Fund, which was approved by voters in 2005 to have a collection rate of one cent per $100 in assessed valuation, have this authorization modified to a rate not to exceed one-half cent per $100 in assessed valuation, as may be determined by the governing body?",
+          "officialStatement": "In 2005, Point Pleasant Beach voters approved the establishment of an Open Space Trust Fund, with a dedicated tax levy of one cent per $100 of assessed valuation. In 2025, a revaluation was conducted and implemented for the 2026 Tax Year, which resulted in the approximate doubling of this Open Space Trust Fund tax collection imposed upon residents. If approved, this referendum would reduce the authorized collection rate to one-half cent per $100 of assessed valuation, which will result in the Open Space Trust Fund tax collection remaining at approximately the same amount before and after the 2026 revaluation. The referendum would further establish the one-half cent per $100 of assessed valuation collection rate as a ceiling, such that the governing body may reduce the rate in the future, including to offset the impact of future revaluations.",
+          "provenance": {
+            "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+            "sourceOrg": "Ocean County Clerk — complete official2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:44:22.451985+00:00",
+            "verifiedAt": "2026-11-03T10:12:15.943020+00:00",
+            "quote": "Should the Point Pleasant Beach Open Space Trust Fund, which was approved by voters in 2005 to have a collection rate of one cent per $100 in assessed valuation, have this authorization modified to a rate not to exceed one-half cent per $100 in assessed valuation, as may be determined by the governing body?"
+          }
+        },
+        {
+          "id": "nj-ocean-2026:lakewood-school-board-size#question",
+          "contestId": "nj-ocean-2026:lakewood-school-board-size",
+          "questionText": "Shall the membership of the Board of Education of the Lakewood School District be reduced from nine (9) members to seven (7) members by filling only one (1) of the three (3) Board member seats whose terms expire on December 31, 2026, resulting in a seven-member Board of Education effective January 1, 2027?",
+          "officialStatement": "The Lakewood Board of Education currently consists of nine (9) elected members. Three (3) Board member terms are scheduled to expire on December 31, 2026. If this question is approved by the voters, only one (1) of those three (3) expiring seats will be filled at the November 2026 election. The remaining two (2) seats will be eliminated, reducing the membership of the Board of Education from nine (9) members to seven (7) members effective January 1, 2027. No current Board member will be removed from office prior to the expiration of his or her elected term. The Board will thereafter consist of seven (7) elected members serving in accordance with New Jersey law. A \"No\" vote will maintain the current nine (9) member Board of Education.",
+          "provenance": {
+            "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+            "sourceOrg": "Ocean County Clerk — complete official2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:44:22.451985+00:00",
+            "verifiedAt": "2026-11-03T10:12:15.943020+00:00",
+            "quote": "Shall the membership of the Board of Education of the Lakewood School District be reduced from nine (9) members to seven (7) members by filling only one (1) of the three (3) Board member seats whose terms expire on December 31, 2026, resulting in a seven-member Board of Education effective January 1, 2027?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nj-ocean-2026:county-natural-lands",
+          "whatItDoes": "Raises the Ocean County Natural Lands Trust Fund’s tax rate from 1.2 cents to a maximum of 2.2 cents per $100 of total county equalized real-property value. The fund preserves open space, watersheds, groundwater-recharge areas and drinking-water sources, and supports acquiring, developing and maintaining land for recreation and historical preservation. The ballot’s example is a maximum annual contribution of $22 for a property assessed at $100,000 at the full 2.2-cent rate.",
+          "yesMeans": "Approve the 1-cent rate increase, allowing a maximum of 2.2 cents per $100 of total county equalized real-property value.",
+          "noMeans": "Reject the proposed increase and keep the existing 1.2-cent rate.",
+          "parts": [],
+          "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+          "sourceHash": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:12:15.943020+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-ocean-2026:lacey-recreation-bonds",
+          "whatItDoes": "Authorizes Lacey to borrow $45 million through general-obligation bonds for the township’s share of a proposed community recreation facility in partnership with the YMCA of the Jersey Shore. The proposal describes an approximately 63,000-square-foot facility in Lacey with pools, fitness and wellness areas, gyms and sports courts, childcare and youth space, senior programming, meeting rooms, a walking or running track, support facilities, parking and related site work. If voters approve and the Township Committee later decides to proceed, the township would own the facility and the YMCA would operate it under a negotiated agreement. The Committee would approve the final agreement on operations, membership, maintenance and public access. The bonds would be repaid through debt payments in the annual municipal operating budget, financed by local property taxes. The township and YMCA would seek grants and other outside funding to reduce the borrowing.",
+          "yesMeans": "Favor borrowing $45 million for the proposed recreation facility, subject to the later township decision and operating agreement described in the official statement.",
+          "noMeans": "Oppose the township issuing the proposed $45 million in bonds.",
+          "parts": [],
+          "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+          "sourceHash": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:12:15.943020+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-ocean-2026:point-pleasant-beach-open-space",
+          "whatItDoes": "Reduces Point Pleasant Beach’s authorized Open Space Trust Fund tax rate from 1 cent to a ceiling of one-half cent per $100 of assessed value. The governing body could set the rate below that ceiling in the future, including to offset later property revaluations. The official statement says the 2025 revaluation, implemented for the 2026 tax year, approximately doubled the fund’s tax collections; the proposed half-cent rate is intended to bring collections back near their previous level.",
+          "yesMeans": "Approve the half-cent ceiling and authority to set a lower rate.",
+          "noMeans": "Leave the existing 1-cent authorization unchanged.",
+          "parts": [],
+          "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+          "sourceHash": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:12:15.943020+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-ocean-2026:lakewood-school-board-size",
+          "whatItDoes": "Reduces the Lakewood school board from nine elected members to seven, effective January 1, 2027. Only one of the three seats whose terms expire December 31, 2026 would be filled at the November 2026 election; the other two seats would be eliminated. Current board members would finish their elected terms.",
+          "yesMeans": "Approve the reduction to seven members on January 1, 2027 by filling only one of the three expiring seats.",
+          "noMeans": "Keep the current nine-member school board.",
+          "parts": [],
+          "sourceUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+          "sourceHash": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:12:15.943020+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:12:15.943020+00:00",
+    "reviewedBy": "CX-VOTES exactofficial ocean current2026 questions, fullstatements, neutral effects and nativePDFvisual/sourcechecks",
+    "sources": [
+      {
+        "requestedUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+        "finalUrl": "https://www.co.ocean.nj.us//WebContentFiles//33068422-0a5a-4b66-b322-dbcff41d9320.pdf",
+        "httpStatus": 200,
+        "rawHash": "801e332b49a54eeb3556781d545eb7c777fcd5f1d5a3950f324ef13f894b4363",
+        "retrievedAt": "2026-11-03T09:44:22.451985+00:00",
+        "publisher": "Ocean County Clerk — complete official2026 General Election sample ballot master",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete nativecurrentNov3,2026Ocean sample master. FullEnglishquestion/statement/YesNo visuallychecked originalpanel; nativePDFbyteSHA retained. Full34English+8bilingualpage countyinventory usesembeddedpanelOCR/visualchecks, notinstruction-onlytext."
+      }
+    ]
+  }
+}

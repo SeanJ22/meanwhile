@@ -1,0 +1,18 @@
+{
+  "state": "NJ",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "25aa44cf4cbb8ad8a268b4cd16b29f7d2832f50bb16d66a82ba3cf5583dcb624",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Allfour completeEnglishquestions,fullofficialinterpretivestatements andYes/No choices directlyvisuallychecked against originalembeddednativePDFpanels.",
+    "County1.2to2.2cent rate uses totalcountyequalizedrealpropertyvalue;100000assessed/22annual is explicitly attributed toofficialballotexample, noinventedhouseholdformula.",
+    "Lacey45milliontownshipborrowing/share, proposed63000sqftfacility, ownership/operator, laterCommitteedecision, finalagreement/access/membershipterms andlocalproperty-taxdebtpayment retained;outsidefundingnotguaranteed.",
+    "PointPleasantBeach1to0.5centceiling, futurelower-rateauthority andrevaluationaggregatecollectionpurpose retained;noindividualbillguarantee.",
+    "Lakewood9to7Jan1,2027transition, oneofthreeexpiringseatsfilledNov2026 andcurrentmembersfinishterms accuratelyexplained.",
+    "LakewoodexistingdistrictGEOID3408220 andunboundgovernment210631 aliascorrespondence supportedbycurrentnativedistrictsite plusheldNCES/Census exactaddress/ZIP/domain;registrybinding-1unchanged.",
+    "Complete34English+8bilingualpages/all33municipalities inventoriedbyactualembeddedoperativepanels,notinstruction-onlyselectabletext.",
+    "Existingcontracts,ordinaryauthority/admission,actualreader,exactquotes/hashes/registereddivisions allPASS;rootfinalhelddatamerge requested."
+  ]
+}

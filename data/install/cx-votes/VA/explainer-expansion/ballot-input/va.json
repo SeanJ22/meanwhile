@@ -1,0 +1,277 @@
+{
+  "ballots": {
+    "VA:va-2026-11-03-general": {
+      "election": {
+        "id": "va-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "VA"
+      },
+      "contests": [
+        {
+          "id": "va-local-measure-2026-b1a916e866d47e17ee1f",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/place:iron_gate",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Town Council Seats",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Current official statewide November2026referendum workbook; exact town or county scope follows its printed question.",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-11-03T03:42:00.885214+00:00",
+            "verifiedAt": "2026-11-03T03:52:36.344582+00:00",
+            "quote": "Town Council Seats | Shall the charter of the Town of Iron Gate, Virginia be amended to reduce the number of council seats from seven (7) consisting of six (6) council members and a mayor, to five (5) consisting of four (4) council members and a mayor?"
+          }
+        },
+        {
+          "id": "va-local-measure-2026-987e1d858ef09c1f275b",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/county:king_and_queen",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Sales Tax",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Current official statewide November2026referendum workbook; exact town or county scope follows its printed question.",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-11-03T03:42:00.885214+00:00",
+            "verifiedAt": "2026-11-03T03:52:36.344582+00:00",
+            "quote": "Sales Tax | Should King and Queen County be authorized to add a 1% general retail sales tax on purchases to provide revenue solely for the construction or major renovation of schools serving King and Queen County, which general retail sales tax would expire on June 30, 2046."
+          }
+        },
+        {
+          "id": "va-local-measure-2026-1e3d98f271036a0a6cfd",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/place:pulaski",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Offtrack Pari-Mutuel Wagering",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Current official statewide November2026referendum workbook; exact town or county scope follows its printed question.",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-11-03T03:42:00.885214+00:00",
+            "verifiedAt": "2026-11-03T03:52:36.344582+00:00",
+            "quote": "Offtrack Pari-Mutuel Wagering | Shall pari-mutuel wagering be permitted in the Town of Pulaski at satellite facilities in accordance with Chapter 29 (§ 59.1-364 et seq.) of Title 59.1 of the Code of Virginia?"
+          }
+        },
+        {
+          "id": "va-sbe-2026-amendment-1",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:va",
+          "title": "Proposed Constitutional Amendment Question 1",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "va-2026-11-03-general",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-11-03T03:44:34.226612+00:00",
+            "verifiedAt": "2026-11-03T03:52:36.344582+00:00",
+            "quote": "Question: Should the Constitution of Virginia be amended to (i) protect the freedom to make personal decisions about prenatal care, childbirth, postpartum care, birth control, abortion, miscarriage management, and fertility care; (ii) protect doctors, nurses, and patients from being punished for these decisions; and (iii) allow for restrictions on access to abortion during the third trimester of pregnancy except when the patient's health is at risk or the pregnancy cannot survive?"
+          },
+          "measureTextUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "va-sbe-2026-amendment-3",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:va",
+          "title": "Proposed Constitutional Amendment Question 3",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "va-2026-11-03-general",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-11-03T03:44:34.226612+00:00",
+            "verifiedAt": "2026-11-03T03:52:36.344582+00:00",
+            "quote": "Question: Should the Constitution of Virginia be amended (i) to provide for the fundamental right to vote in the Commonwealth, (ii) to revise the qualifications of voters so that a person convicted of a felony is not entitled to vote during his period of incarceration but is automatically invested with the right to vote upon release from incarceration, and (iii) to update the existing prohibition on voting by persons found to be mentally incompetent to instead apply to persons who have been found to lack the capacity to understand the act of voting?"
+          },
+          "measureTextUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "measures": [
+        {
+          "id": "va-local-measure-2026-b1a916e866d47e17ee1f:question",
+          "contestId": "va-local-measure-2026-b1a916e866d47e17ee1f",
+          "questionText": "Shall the charter of the Town of Iron Gate, Virginia be amended to reduce the number of council seats from seven (7) consisting of six (6) council members and a mayor, to five (5) consisting of four (4) council members and a mayor?",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-11-03T03:42:00.885214+00:00",
+            "verifiedAt": "2026-11-03T03:52:36.344582+00:00",
+            "quote": "Town Council Seats | Shall the charter of the Town of Iron Gate, Virginia be amended to reduce the number of council seats from seven (7) consisting of six (6) council members and a mayor, to five (5) consisting of four (4) council members and a mayor?"
+          }
+        },
+        {
+          "id": "va-local-measure-2026-987e1d858ef09c1f275b:question",
+          "contestId": "va-local-measure-2026-987e1d858ef09c1f275b",
+          "questionText": "Should King and Queen County be authorized to add a 1% general retail sales tax on purchases to provide revenue solely for the construction or major renovation of schools serving King and Queen County, which general retail sales tax would expire on June 30, 2046.",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-11-03T03:42:00.885214+00:00",
+            "verifiedAt": "2026-11-03T03:52:36.344582+00:00",
+            "quote": "Sales Tax | Should King and Queen County be authorized to add a 1% general retail sales tax on purchases to provide revenue solely for the construction or major renovation of schools serving King and Queen County, which general retail sales tax would expire on June 30, 2046."
+          }
+        },
+        {
+          "id": "va-local-measure-2026-1e3d98f271036a0a6cfd:question",
+          "contestId": "va-local-measure-2026-1e3d98f271036a0a6cfd",
+          "questionText": "Shall pari-mutuel wagering be permitted in the Town of Pulaski at satellite facilities in accordance with Chapter 29 (§ 59.1-364 et seq.) of Title 59.1 of the Code of Virginia?",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-11-03T03:42:00.885214+00:00",
+            "verifiedAt": "2026-11-03T03:52:36.344582+00:00",
+            "quote": "Offtrack Pari-Mutuel Wagering | Shall pari-mutuel wagering be permitted in the Town of Pulaski at satellite facilities in accordance with Chapter 29 (§ 59.1-364 et seq.) of Title 59.1 of the Code of Virginia?"
+          }
+        },
+        {
+          "id": "va-sbe-2026-amendment-1:measure",
+          "contestId": "va-sbe-2026-amendment-1",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-11-03T03:44:34.226612+00:00",
+            "verifiedAt": "2026-11-03T03:52:36.344582+00:00",
+            "quote": "Question: Should the Constitution of Virginia be amended to (i) protect the freedom to make personal decisions about prenatal care, childbirth, postpartum care, birth control, abortion, miscarriage management, and fertility care; (ii) protect doctors, nurses, and patients from being punished for these decisions; and (iii) allow for restrictions on access to abortion during the third trimester of pregnancy except when the patient's health is at risk or the pregnancy cannot survive?"
+          },
+          "questionText": "Question: Should the Constitution of Virginia be amended to (i) protect the freedom to make personal decisions about prenatal care, childbirth, postpartum care, birth control, abortion, miscarriage management, and fertility care; (ii) protect doctors, nurses, and patients from being punished for these decisions; and (iii) allow for restrictions on access to abortion during the third trimester of pregnancy except when the patient's health is at risk or the pregnancy cannot survive?",
+          "officialNumber": "Question 1",
+          "officialStatement": "That every individual has the fundamental right to reproductive\nfreedom, including the ability to make and carry out decisions\nrelating to one's own prenatal care, childbirth, postpartum care,\ncontraception, abortion care, miscarriage management, and fertility\ncare.\nAn individual's right to reproductive freedom shall not be, directly\nor indirectly, denied, burdened, or infringed upon unless justified by\na compelling state interest achieved by the least restrictive means.\nNotwithstanding the above, the Commonwealth may regulate the\nprovision of abortion care in the third trimester, provided that in no\ncircumstance shall the Commonwealth prohibit an abortion (i) that\nin the professional judgment of a physician is medically indicated\nto protect the life or physical or mental health of the pregnant\nindividual or (ii) when in the professional judgment of a physician\nthe fetus is not viable.\nThe Commonwealth shall not discriminate in the protection or\nenforcement of this fundamental right.\nThe Commonwealth shall not penalize, prosecute, or otherwise take\nadverse action against an individual based on such individual's own\nexercise of this fundamental right or such individual's own actual,\npotential, perceived, or alleged pregnancy outcomes, including\nmiscarriage, stillbirth, or abortion. The Commonwealth shall not\npenalize, prosecute, or otherwise take adverse action against any\nindividual for aiding or assisting another individual in exercising\nsuch other individual's right to reproductive freedom with such other\nindividual's voluntary consent.\nFor the purposes of this section, a state interest is compelling only if\nit is for the limited purpose of maintaining or improving the health\nof an individual seeking care, consistent with accepted clinical\nstandards of care and evidence-based medicine and does not infringe\non that individual's autonomous decision making.\nThis section shall be self-executing. Any provision of this section\nheld invalid shall be severable from the remaining portions of the\nsection."
+        },
+        {
+          "id": "va-sbe-2026-amendment-3:measure",
+          "contestId": "va-sbe-2026-amendment-3",
+          "provenance": {
+            "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+            "sourceOrg": "Virginia Department of Elections",
+            "collectedAt": "2026-11-03T03:44:34.226612+00:00",
+            "verifiedAt": "2026-11-03T03:52:36.344582+00:00",
+            "quote": "Question: Should the Constitution of Virginia be amended (i) to provide for the fundamental right to vote in the Commonwealth, (ii) to revise the qualifications of voters so that a person convicted of a felony is not entitled to vote during his period of incarceration but is automatically invested with the right to vote upon release from incarceration, and (iii) to update the existing prohibition on voting by persons found to be mentally incompetent to instead apply to persons who have been found to lack the capacity to understand the act of voting?"
+          },
+          "questionText": "Question: Should the Constitution of Virginia be amended (i) to provide for the fundamental right to vote in the Commonwealth, (ii) to revise the qualifications of voters so that a person convicted of a felony is not entitled to vote during his period of incarceration but is automatically invested with the right to vote upon release from incarceration, and (iii) to update the existing prohibition on voting by persons found to be mentally incompetent to instead apply to persons who have been found to lack the capacity to understand the act of voting?",
+          "officialNumber": "Question 3",
+          "officialStatement": "EXPLANATION FOR VOTERS\nQUESTION 3\nProposed Amendment\nThe proposed amendment enshrines in the Constitution the\nfundamental right of all qualified persons in the\nCommonwealth to vote. Two exceptions to this right are for\npersons who are serving a sentence of incarceration for a felony\nconviction and persons who are determined by a court to not\nunderstand the act of voting. Such right cannot otherwise be\nrestricted by laws.\nUnder the proposed amendment, a person who is convicted of a\nfelony loses the right to vote during their period of\nincarceration. Once released from incarceration, the person gets\nback the right to vote without needing to apply for restoration\nby the Governor.\nThe proposed amendment also requires a specific finding by a\ncourt that a person does not understand the act of voting in\norder for that person’s right to vote to be taken away.\nWith the right to vote, a person also has the right to be a juror,\nthe right to be elected to an office, and the right to be a notary\npublic."
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "va-local-measure-2026-b1a916e866d47e17ee1f",
+          "whatItDoes": "Changes the Town of Iron Gate charter from six council members and a mayor to four council members and a mayor. The total number of seats would fall from seven to five.",
+          "yesMeans": "Approve the smaller council: four council members plus the mayor.",
+          "noMeans": "Keep six council members plus the mayor.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "sourceHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:52:36.344582+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-local-measure-2026-987e1d858ef09c1f275b",
+          "whatItDoes": "Authorizes King and Queen County to add a 1% general retail sales tax. The money could be used only to build or substantially renovate schools serving the county. The tax would expire June 30, 2046.",
+          "yesMeans": "Authorize this 1% school-construction sales tax, with the stated spending restriction and expiration date.",
+          "noMeans": "Do not authorize this additional school-construction sales tax through this referendum.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "sourceHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:52:36.344582+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-local-measure-2026-1e3d98f271036a0a6cfd",
+          "whatItDoes": "Allows pari-mutuel betting on horse races at satellite facilities in the Town of Pulaski under Virginia racing law. This form of betting pools wagers and shares the pool among winning bettors after deductions allowed by law; the law includes historical and simulcast horse racing.",
+          "yesMeans": "Permit this satellite-facility horse-race wagering in the town under Virginia law.",
+          "noMeans": "Do not permit this satellite-facility wagering through this referendum.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "sourceHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:52:36.344582+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-sbe-2026-amendment-1",
+          "whatItDoes": "Adds a constitutional right to make and carry out reproductive-care decisions, including prenatal care, childbirth, postpartum care, birth control, abortion, miscarriage management and fertility care. State limits would need a compelling health-related justification, follow accepted medical standards and use the least restrictive means without infringing the person’s own decision-making. Third-trimester abortion could be regulated, but could not be prohibited when a physician finds it necessary to protect the patient’s life or physical or mental health, or finds that the fetus is not viable. The state could not discriminate in enforcing the right or punish people for their own reproductive decisions or pregnancy outcomes, or for helping someone else with that person’s voluntary consent.",
+          "yesMeans": "Adopt these constitutional reproductive-care rights and limits on state action.",
+          "noMeans": "Keep the current constitutional text, which does not explicitly provide a right to reproductive freedom or explicitly protect or prohibit particular health-care procedures or decisions.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "sourceHash": "038378de9858d1711fe9b73161f4db00cd912b7154470bf98db25566cef05e29",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T03:52:36.344582+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-sbe-2026-amendment-3",
+          "whatItDoes": "Establishes a fundamental constitutional right to vote for qualified voters. A felony conviction would bar voting only during incarceration for that conviction; release would automatically restore political rights, including voting, without applying to the Governor. A court could remove voting rights for incapacity only after finding that a person cannot understand the act of voting, replacing the current broader incapacity rule. The official explanation also says restored political rights include serving on a jury, being elected to office and being a notary public.",
+          "yesMeans": "Adopt the fundamental right to vote, automatic restoration after felony incarceration and the specific court finding about understanding voting.",
+          "noMeans": "Keep the current constitutional qualifications, including the requirement for the Governor to restore voting rights after a felony conviction and the broader court-incapacity restriction.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "sourceHash": "c639a0ed6a83bac11014b33673b42130273d0fd36e57bb19454399b1ba0e78ec",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T03:52:36.344582+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:52:36.344582+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "publisher": "Virginia Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T03:42:00.885214+00:00",
+        "httpStatus": 200,
+        "rawHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact current official November2026referendum rows, full statewide amendment text and explanation, or statutory definition quoted in source-support.json. No model checker result is claimed."
+      },
+      {
+        "requestedUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+        "finalUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+        "publisher": "Virginia Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T03:44:34.226612+00:00",
+        "httpStatus": 200,
+        "rawHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact current official November2026referendum rows, full statewide amendment text and explanation, or statutory definition quoted in source-support.json. No model checker result is claimed."
+      },
+      {
+        "requestedUrl": "https://law.lis.virginia.gov/vacode/title59.1/chapter29/section59.1-365/",
+        "finalUrl": "https://law.lis.virginia.gov/vacode/title59.1/chapter29/section59.1-365/",
+        "publisher": "Virginia General Assembly",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T03:48:12.969043+00:00",
+        "httpStatus": 200,
+        "rawHash": "91e66c20bcda0637529b068088605ca4264ecdc5096c205de47d2c196463acf9",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact current official November2026referendum rows, full statewide amendment text and explanation, or statutory definition quoted in source-support.json. No model checker result is claimed."
+      }
+    ]
+  }
+}

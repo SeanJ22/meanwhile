@@ -1,0 +1,46 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "VA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:VA",
+  "inputDirectory": "ballot-input",
+  "sourceCaptures": "sources.json",
+  "sourceSupport": "source-support.json",
+  "officialInventory": "official-inventory.json",
+  "prerequisites": [
+    "../ballot-input"
+  ],
+  "coverage": {
+    "officialActiveRows": 67,
+    "newMeasures": 3,
+    "newExplainers": 3,
+    "qualityImprovedExplainers": 2,
+    "totalExplainersAfterExistingReadyAndExpansion": 67,
+    "scope": "All3statewide+64local/district questions on the current officialVirginiaNovember2026masterlist."
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "VA",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "notes": [
+    "Data only; root owns one READY per state and River installation/live verification.",
+    "Use the prior9explainer packet first; preserve all unrelated held measures, races and records.",
+    "Question1/3sourceHashKindHELD_TEXT truthfully binds the held officialquestion+officialstatement, using the exact saved brochure. This also prevents older saved translations from replacing the fuller currentrecord in the existing reader.",
+    "No paidprovider/modelchecker result is invented. Source-support.json records manual review and exact official quotes."
+  ],
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json",
+  "validation": {
+    "parentPublicationAdmission": "PASS",
+    "parentActualReaderReplay": "PASS",
+    "parentSourceArtifactHashAndCredentialChecks": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS"
+  }
+}

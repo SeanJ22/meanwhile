@@ -1,0 +1,136 @@
+[
+  {
+    "contestId": "va-local-measure-2026-b1a916e866d47e17ee1f",
+    "change": "NEW_MEASURE_AND_EXPLAINER",
+    "officialRow": {
+      "Locality": "ALLEGHANY COUNTY",
+      "Active": "Yes",
+      "Referendum Ballot Order": 32,
+      "Referendum Area": "District",
+      "Referendum Title": "Town Council Seats",
+      "Referendum Text": "Shall the charter of the Town of Iron Gate, Virginia be amended to reduce the number of council seats from seven (7) consisting of six (6) council members and a mayor, to five (5) consisting of four (4) council members and a mayor?"
+    },
+    "exactRegistryDivision": [
+      "ocd-division/country:us/state:va/place:iron_gate",
+      "place",
+      "5140024",
+      "Iron Gate town"
+    ],
+    "whatItDoesSourceQuotes": [
+      "Shall the charter of the Town of Iron Gate, Virginia be amended to reduce the number of council seats from seven (7) consisting of six (6) council members and a mayor, to five (5) consisting of four (4) council members and a mayor?"
+    ],
+    "yesNoSourceBasis": "YES approves the exact proposition; NO rejects that proposition. No separate consequence is inferred.",
+    "additionalDefinitionSource": null,
+    "boundedTextFiles": [
+      "sources/2d574d2ff02ffeb8f1f7ed129a079c4fcfbdcf57d66f7b3778f873ff21463e44.txt"
+    ]
+  },
+  {
+    "contestId": "va-local-measure-2026-987e1d858ef09c1f275b",
+    "change": "NEW_MEASURE_AND_EXPLAINER",
+    "officialRow": {
+      "Locality": "KING & QUEEN COUNTY",
+      "Active": "Yes",
+      "Referendum Ballot Order": 31,
+      "Referendum Area": "Locality",
+      "Referendum Title": "Sales Tax",
+      "Referendum Text": "Should King and Queen County be authorized to add a 1% general retail sales tax on purchases to provide revenue solely for the construction or major renovation of schools serving King and Queen County, which general retail sales tax would expire on June 30, 2046. "
+    },
+    "exactRegistryDivision": [
+      "ocd-division/country:us/state:va/county:king_and_queen",
+      "county",
+      "51097",
+      "King and Queen County"
+    ],
+    "whatItDoesSourceQuotes": [
+      "Should King and Queen County be authorized to add a 1% general retail sales tax on purchases to provide revenue solely for the construction or major renovation of schools serving King and Queen County, which general retail sales tax would expire on June 30, 2046."
+    ],
+    "yesNoSourceBasis": "YES approves the exact proposition; NO rejects that proposition. No separate consequence is inferred.",
+    "additionalDefinitionSource": null,
+    "boundedTextFiles": [
+      "sources/30054cc5c0ff04a4f7196b56e65844a9234d3dcd9468041fae3a6e2943978d20.txt"
+    ]
+  },
+  {
+    "contestId": "va-local-measure-2026-1e3d98f271036a0a6cfd",
+    "change": "NEW_MEASURE_AND_EXPLAINER",
+    "officialRow": {
+      "Locality": "PULASKI COUNTY",
+      "Active": "Yes",
+      "Referendum Ballot Order": 33,
+      "Referendum Area": "District",
+      "Referendum Title": "Offtrack Pari-Mutuel Wagering",
+      "Referendum Text": "Shall pari-mutuel wagering be permitted in the Town of Pulaski at satellite facilities in accordance with Chapter 29 (§ 59.1-364 et seq.) of Title 59.1 of the Code of Virginia?"
+    },
+    "exactRegistryDivision": [
+      "ocd-division/country:us/state:va/place:pulaski",
+      "place",
+      "5164880",
+      "Pulaski town"
+    ],
+    "whatItDoesSourceQuotes": [
+      "Shall pari-mutuel wagering be permitted in the Town of Pulaski at satellite facilities in accordance with Chapter 29 (§ 59.1-364 et seq.) of Title 59.1 of the Code of Virginia?"
+    ],
+    "yesNoSourceBasis": "YES approves the exact proposition; NO rejects that proposition. No separate consequence is inferred.",
+    "additionalDefinitionSource": "https://law.lis.virginia.gov/vacode/title59.1/chapter29/section59.1-365/",
+    "boundedTextFiles": [
+      "sources/18da92e32197677a9d3dac1c072162e27e8849ef73bec3f2204cac147ed8ba99.txt"
+    ],
+    "definitionQuotes": [
+      "\"Pari-mutuel wagering\" means the system of wagering on horse races in which those who wager on horses that finish in the position or positions for which wagers are taken share in the total amounts wagered, plus any amounts provided by a licensee, less deductions required or permitted by law and includes pari-mutuel wagering on historical horse racing and simulcast horse racing originating within the Commonwealth or from any other jurisdiction.",
+      "\"Satellite facility\" means all areas of the property at which simulcast horse racing is received for the purposes of pari-mutuel wagering, and any additional areas designated by the Commission."
+    ]
+  },
+  {
+    "contestId": "va-sbe-2026-amendment-1",
+    "change": "MATERIAL_CONDITION_CLARIFICATION",
+    "previousRecord": {
+      "parts": [],
+      "noMeans": "A NO vote would not add this amendment, and the Virginia Constitution would stay as it is now, which does not explicitly provide a right to reproductive freedom nor explicitly protect or prohibit certain kinds of health care procedures or decisions.",
+      "yesMeans": "A YES vote would amend the Constitution of Virginia to add the fundamental right to make and carry out decisions about a person's own reproductive care, with only certain, specific exceptions.",
+      "contestId": "va-sbe-2026-amendment-1",
+      "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+      "writtenAt": "2026-10-24T15:01:23.359Z",
+      "sourceHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+      "whatItDoes": "The proposed amendment would add to the Virginia Constitution's Bill of Rights the fundamental right to make and carry out decisions about a person's own reproductive care with only certain, specific exceptions. It specifically allows the state government to pass laws to regulate abortion care in the third trimester of pregnancy, but requires any such law to allow for abortion care when it is medically needed to protect the life and health of the pregnant person or because the fetus is not viable."
+    },
+    "officialQuestion": "Question: Should the Constitution of Virginia be amended to (i) protect the freedom to make personal decisions about prenatal care, childbirth, postpartum care, birth control, abortion, miscarriage management, and fertility care; (ii) protect doctors, nurses, and patients from being punished for these decisions; and (iii) allow for restrictions on access to abortion during the third trimester of pregnancy except when the patient's health is at risk or the pregnancy cannot survive?",
+    "officialStatement": "That every individual has the fundamental right to reproductive\nfreedom, including the ability to make and carry out decisions\nrelating to one's own prenatal care, childbirth, postpartum care,\ncontraception, abortion care, miscarriage management, and fertility\ncare.\nAn individual's right to reproductive freedom shall not be, directly\nor indirectly, denied, burdened, or infringed upon unless justified by\na compelling state interest achieved by the least restrictive means.\nNotwithstanding the above, the Commonwealth may regulate the\nprovision of abortion care in the third trimester, provided that in no\ncircumstance shall the Commonwealth prohibit an abortion (i) that\nin the professional judgment of a physician is medically indicated\nto protect the life or physical or mental health of the pregnant\nindividual or (ii) when in the professional judgment of a physician\nthe fetus is not viable.\nThe Commonwealth shall not discriminate in the protection or\nenforcement of this fundamental right.\nThe Commonwealth shall not penalize, prosecute, or otherwise take\nadverse action against an individual based on such individual's own\nexercise of this fundamental right or such individual's own actual,\npotential, perceived, or alleged pregnancy outcomes, including\nmiscarriage, stillbirth, or abortion. The Commonwealth shall not\npenalize, prosecute, or otherwise take adverse action against any\nindividual for aiding or assisting another individual in exercising\nsuch other individual's right to reproductive freedom with such other\nindividual's voluntary consent.\nFor the purposes of this section, a state interest is compelling only if\nit is for the limited purpose of maintaining or improving the health\nof an individual seeking care, consistent with accepted clinical\nstandards of care and evidence-based medicine and does not infringe\non that individual's autonomous decision making.\nThis section shall be self-executing. Any provision of this section\nheld invalid shall be severable from the remaining portions of the\nsection.",
+    "sourceHashKind": "HELD_TEXT",
+    "sourceHashBasis": "Exact held questionText + newline + officialStatement, both from the saved official brochure. Not a changed PDF hash.",
+    "whatItDoesSourceQuotes": [
+      "That every individual has the fundamental right to reproductive\nfreedom, including the ability to make and carry out decisions\nrelating to one's own prenatal care, childbirth, postpartum care,\ncontraception, abortion care, miscarriage management, and fertility\ncare.\nAn individual's right to reproductive freedom shall not be, directly\nor indirectly, denied, burdened, or infringed upon unless justified by\na compelling state interest achieved by the least restrictive means.\nNotwithstanding the above, the Commonwealth may regulate the\nprovision of abortion care in the third trimester, provided that in no\ncircumstance shall the Commonwealth prohibit an abortion (i) that\nin the professional judgment of a physician is medically indicated\nto protect the life or physical or mental health of the pregnant\nindividual or (ii) when in the professional judgment of a physician\nthe fetus is not viable.\nThe Commonwealth shall not discriminate in the protection or\nenforcement of this fundamental right.\nThe Commonwealth shall not penalize, prosecute, or otherwise take\nadverse action against an individual based on such individual's own\nexercise of this fundamental right or such individual's own actual,\npotential, perceived, or alleged pregnancy outcomes, including\nmiscarriage, stillbirth, or abortion. The Commonwealth shall not\npenalize, prosecute, or otherwise take adverse action against any\nindividual for aiding or assisting another individual in exercising\nsuch other individual's right to reproductive freedom with such other\nindividual's voluntary consent.\nFor the purposes of this section, a state interest is compelling only if\nit is for the limited purpose of maintaining or improving the health\nof an individual seeking care, consistent with accepted clinical\nstandards of care and evidence-based medicine and does not infringe\non that individual's autonomous decision making.\nThis section shall be self-executing. Any provision of this section\nheld invalid shall be severable from the remaining portions of the\nsection."
+    ],
+    "yesNoSourceBasis": "Approves or rejects the proposed amendment; current-law meanings follow the official voter explanation.",
+    "reason": "Question1now states the consent, physician, physical/mental health and state-restriction conditions; Question3now explains the new court-capacity test and automatic release rule.",
+    "boundedTextFiles": [
+      "sources/90eb3a4e8e4be9a3f35c445d19a3956d7c0a6b554cbd6ab01d52006b2bd6d0f8.txt"
+    ]
+  },
+  {
+    "contestId": "va-sbe-2026-amendment-3",
+    "change": "MATERIAL_CONDITION_CLARIFICATION",
+    "previousRecord": {
+      "parts": [],
+      "noMeans": "A NO vote would leave the current Constitution in place, under which a person convicted of any felony loses the right to vote unless the Governor restores that person's right.",
+      "yesMeans": "A YES vote would amend the Constitution so that a person convicted of a felony is not entitled to vote during incarceration but gets the right to vote on release without further action.",
+      "contestId": "va-sbe-2026-amendment-3",
+      "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+      "writtenAt": "2026-10-24T15:01:23.359Z",
+      "sourceHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+      "whatItDoes": "This amendment would change Article II, Section 1 of the Virginia Constitution to state a fundamental right to vote for people who meet the voter qualifications. It would end the permanent loss of voting rights for felony convictions unless the Governor restores them, and it would change the rule on voters found mentally incompetent."
+    },
+    "officialQuestion": "Question: Should the Constitution of Virginia be amended (i) to provide for the fundamental right to vote in the Commonwealth, (ii) to revise the qualifications of voters so that a person convicted of a felony is not entitled to vote during his period of incarceration but is automatically invested with the right to vote upon release from incarceration, and (iii) to update the existing prohibition on voting by persons found to be mentally incompetent to instead apply to persons who have been found to lack the capacity to understand the act of voting?",
+    "officialStatement": "EXPLANATION FOR VOTERS\nQUESTION 3\nProposed Amendment\nThe proposed amendment enshrines in the Constitution the\nfundamental right of all qualified persons in the\nCommonwealth to vote. Two exceptions to this right are for\npersons who are serving a sentence of incarceration for a felony\nconviction and persons who are determined by a court to not\nunderstand the act of voting. Such right cannot otherwise be\nrestricted by laws.\nUnder the proposed amendment, a person who is convicted of a\nfelony loses the right to vote during their period of\nincarceration. Once released from incarceration, the person gets\nback the right to vote without needing to apply for restoration\nby the Governor.\nThe proposed amendment also requires a specific finding by a\ncourt that a person does not understand the act of voting in\norder for that person’s right to vote to be taken away.\nWith the right to vote, a person also has the right to be a juror,\nthe right to be elected to an office, and the right to be a notary\npublic.",
+    "sourceHashKind": "HELD_TEXT",
+    "sourceHashBasis": "Exact held questionText + newline + officialStatement, both from the saved official brochure. Not a changed PDF hash.",
+    "whatItDoesSourceQuotes": [
+      "EXPLANATION FOR VOTERS\nQUESTION 3\nProposed Amendment\nThe proposed amendment enshrines in the Constitution the\nfundamental right of all qualified persons in the\nCommonwealth to vote. Two exceptions to this right are for\npersons who are serving a sentence of incarceration for a felony\nconviction and persons who are determined by a court to not\nunderstand the act of voting. Such right cannot otherwise be\nrestricted by laws.\nUnder the proposed amendment, a person who is convicted of a\nfelony loses the right to vote during their period of\nincarceration. Once released from incarceration, the person gets\nback the right to vote without needing to apply for restoration\nby the Governor.\nThe proposed amendment also requires a specific finding by a\ncourt that a person does not understand the act of voting in\norder for that person’s right to vote to be taken away.\nWith the right to vote, a person also has the right to be a juror,\nthe right to be elected to an office, and the right to be a notary\npublic."
+    ],
+    "yesNoSourceBasis": "Approves or rejects the proposed amendment; current-law meanings follow the official voter explanation.",
+    "reason": "Question1now states the consent, physician, physical/mental health and state-restriction conditions; Question3now explains the new court-capacity test and automatic release rule.",
+    "boundedTextFiles": [
+      "sources/b7cf81e9da80aff8f5abdba74027b5b7fbce76a32a3fa14debae53e5fa66c747.txt"
+    ]
+  }
+]

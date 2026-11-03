@@ -1,0 +1,57 @@
+[
+  {
+    "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+    "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+    "httpStatus": 200,
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "retrievedAt": "2026-11-03T03:42:00.885214+00:00",
+    "sha256": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+    "bytes": 18675,
+    "file": "sources/aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c.source",
+    "supports": "Current official November2026referendum masterlist and source texts; exact native bytes."
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+    "finalUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T03:44:34.226612+00:00",
+    "sha256": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+    "bytes": 1091676,
+    "file": "sources/a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de.source",
+    "supports": "Current official November2026referendum masterlist and source texts; exact native bytes."
+  },
+  {
+    "url": "https://law.lis.virginia.gov/vacode/title59.1/chapter29/section59.1-365/",
+    "finalUrl": "https://law.lis.virginia.gov/vacode/title59.1/chapter29/section59.1-365/",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "retrievedAt": "2026-11-03T03:48:12.969043+00:00",
+    "sha256": "91e66c20bcda0637529b068088605ca4264ecdc5096c205de47d2c196463acf9",
+    "bytes": 37920,
+    "file": "sources/91e66c20bcda0637529b068088605ca4264ecdc5096c205de47d2c196463acf9.source",
+    "supports": "Current official November2026referendum masterlist and source texts; exact native bytes."
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/candidate-list/november-2026-proposed-constitutional-amendments/",
+    "finalUrl": "https://www.elections.virginia.gov/casting-a-ballot/candidate-list/november-2026-proposed-constitutional-amendments/",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "retrievedAt": "2026-11-03T03:44:34.226183+00:00",
+    "sha256": "f3acb39890531359b8d92d4b9cae8023c6fed5d0bbb6b13d8d4f479c67b3ee13",
+    "bytes": 84473,
+    "file": "sources/f3acb39890531359b8d92d4b9cae8023c6fed5d0bbb6b13d8d4f479c67b3ee13.source",
+    "supports": "Current official November2026referendum masterlist and source texts; exact native bytes."
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/candidate-list/",
+    "finalUrl": "https://www.elections.virginia.gov/casting-a-ballot/candidate-list/",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "retrievedAt": "2026-11-03T03:42:00.883100+00:00",
+    "sha256": "866204c4ee2940cc398bff8382247404791dcfcb2f4c08d6eb6cfcdea33103be",
+    "bytes": 35879,
+    "file": "sources/866204c4ee2940cc398bff8382247404791dcfcb2f4c08d6eb6cfcdea33103be.source",
+    "supports": "Current official November2026referendum masterlist and source texts; exact native bytes."
+  }
+]

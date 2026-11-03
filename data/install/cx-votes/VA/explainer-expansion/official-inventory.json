@@ -1,0 +1,573 @@
+{
+  "state": "VA",
+  "source": {
+    "url": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+    "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+    "httpStatus": 200,
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "retrievedAt": "2026-11-03T03:42:00.885214+00:00",
+    "sha256": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+    "bytes": 18675,
+    "file": "sources/aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c.source",
+    "supports": "Current official November2026referendum masterlist and source texts; exact native bytes."
+  },
+  "officialMasterPage": {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/candidate-list/november-2026-proposed-constitutional-amendments/",
+    "finalUrl": "https://www.elections.virginia.gov/casting-a-ballot/candidate-list/november-2026-proposed-constitutional-amendments/",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "retrievedAt": "2026-11-03T03:44:34.226183+00:00",
+    "sha256": "f3acb39890531359b8d92d4b9cae8023c6fed5d0bbb6b13d8d4f479c67b3ee13",
+    "bytes": 84473,
+    "file": "sources/f3acb39890531359b8d92d4b9cae8023c6fed5d0bbb6b13d8d4f479c67b3ee13.source",
+    "supports": "Current official November2026referendum masterlist and source texts; exact native bytes."
+  },
+  "activeMeasures": 67,
+  "statewideMeasures": 3,
+  "localityMeasures": 62,
+  "districtMeasures": 2,
+  "heldMeasures": 64,
+  "newMeasures": 3,
+  "qualityUpdates": 2,
+  "rows": [
+    {
+      "contestId": "va-sbe-2026-amendment-1",
+      "officialLocality": "",
+      "officialArea": "Statewide",
+      "officialTitle": "Proposed Constitutional Amendment Question 1",
+      "officialQuestion": "Question: Should the Constitution of Virginia be amended to (i) protect the freedom to make personal decisions about prenatal care, childbirth, postpartum care, birth control, abortion, miscarriage management, and fertility care; (ii) protect doctors, nurses, and patients from being punished for these decisions; and (iii) allow for restrictions on access to abortion during the third trimester of pregnancy except when the patient's health is at risk or the pregnancy cannot survive?",
+      "status": "EXPANSION_READY"
+    },
+    {
+      "contestId": "va-sbe-2026-amendment-2",
+      "officialLocality": "",
+      "officialArea": "Statewide",
+      "officialTitle": "Proposed Constitutional Amendment Question 2",
+      "officialQuestion": "Question: Should the Constitution of Virginia be amended to (i) remove the ban on same-sex marriage; (ii) affirm that two adults may marry regardless of sex, gender, or race; and (iii) require all legally valid marriages to be treated equally under the law?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-sbe-2026-amendment-3",
+      "officialLocality": "",
+      "officialArea": "Statewide",
+      "officialTitle": "Proposed Constitutional Amendment Question 3",
+      "officialQuestion": "Question: Should the Constitution of Virginia be amended (i) to provide for the fundamental right to vote in the Commonwealth, (ii) to revise the qualifications of voters so that a person convicted of a felony is not entitled to vote during his period of incarceration but is automatically invested with the right to vote upon release from incarceration, and (iii) to update the existing prohibition on voting by persons found to be mentally incompetent to instead apply to persons who have been found to lack the capacity to understand the act of voting?",
+      "status": "EXPANSION_READY"
+    },
+    {
+      "contestId": "va-local-measure-2026-5b5c66ef599cec678f86",
+      "officialLocality": "ALBEMARLE COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall the County of Albemarle impose a one-percent (1%) sales and use tax to fund capital projects for the construction or renovation of schools, with revenues to be used solely for those purposes, and the tax to expire on June 30, 2046?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-74c36161fbc3ece9a602",
+      "officialLocality": "ALLEGHANY COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Alleghany County, Virginia be authorized to levy a general retail sales tax at a rate not to exceed one percent, with the revenues to be used solely for capital projects for new construction or major renovation of schools serving Alleghany County, Virginia, including related bond and loan financing costs, and with the tax expiring on June 30, 2046?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-b1a916e866d47e17ee1f",
+      "officialLocality": "ALLEGHANY COUNTY",
+      "officialArea": "District",
+      "officialTitle": "Town Council Seats",
+      "officialQuestion": "Shall the charter of the Town of Iron Gate, Virginia be amended to reduce the number of council seats from seven (7) consisting of six (6) council members and a mayor, to five (5) consisting of four (4) council members and a mayor?",
+      "status": "EXPANSION_READY"
+    },
+    {
+      "contestId": "va-local-measure-2026-31609c6f8c7ab3bbd380",
+      "officialLocality": "AMELIA COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall the County of Amelia, Virginia be allowed to enact a local retail sales tax of up to one percent (1%) to provide funds that can only be used for construction or major renovation of public schools in the County of Amelia for a period of not more than twenty years? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-d72c128ae6bf7d8a7140",
+      "officialLocality": "AMHERST COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "OFFTRACK PARI-MUTUEL WAGERING",
+      "officialQuestion": "Shall pari-mutuel wagering be permitted in Amherst County at satellite facilities in accordance with Chapter 29 (§ 59.1-364 et seq.) of Title 59.1 of the Code of Virginia?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-2717a98928800022e553",
+      "officialLocality": "ARLINGTON COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Metro and Transportation",
+      "officialQuestion": "QUESTION: Shall Arlington County contract a debt and issue its general obligation bonds in the maximum principal amount of $69,745,000 to finance, together with other available funds, the cost of various capital projects for the Washington Metropolitan Area Transit Authority (WMATA) and other transit, pedestrian, road or transportation projects? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-e63c0d5dc6e066fa5961",
+      "officialLocality": "ARLINGTON COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Local Parks and Recreation",
+      "officialQuestion": "QUESTION: Shall Arlington County contract a debt and issue its general obligation bonds in the maximum principal amount of $34,945,000 to finance, together with other available funds, the cost of various capital projects for local parks & recreation? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-b7320b0a755aa4a0eda5",
+      "officialLocality": "ARLINGTON COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Community Infrastructure",
+      "officialQuestion": "QUESTION: Shall Arlington County contract a debt and issue its general obligation bonds in the maximum principal amount of $58,825,000 to finance, together with other available funds, the cost of various capital projects, including but not limited to facilities maintenance capital, facilities design and construction, information technology, the Arlington Neighborhoods Program, and other County infrastructure? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-cae4dc66619250030bfe",
+      "officialLocality": "ARLINGTON COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Utilities",
+      "officialQuestion": "QUESTION: Shall Arlington County contract a debt and issue its general obligation bonds in the maximum amount of $20,745,000 to finance, together with other available funds, the cost of designing, expanding, improving, and renovating Arlington County's Water Pollution Control Plant and the water and sewer systems serving the County? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-4d8b15dc872e3229a89f",
+      "officialLocality": "ARLINGTON COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Arlington Public Schools",
+      "officialQuestion": "QUESTION: Shall Arlington County contract a debt and issue its general obligation bonds in the maximum principal amount of $80,000,000 to finance, together with other available funds, the cost of various capital projects for Arlington Public Schools?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-6c9d0571a3f7ccaed9af",
+      "officialLocality": "AUGUSTA COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Augusta County, Virginia, be authorized to levy a general retail sales tax at a rate not to exceed one percent, with the revenues to be used solely for capital projects for new construction or major renovation of schools serving Augusta County, Virginia, including related bond and loan financing costs, and with the tax expiring on August 11, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-bae7753343f17a945710",
+      "officialLocality": "BUENA VISTA CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Should the City of Buena Vista be authorized to levy a general retail sales tax at a rate not to exceed one percent (1%) provided the revenue from the sales tax shall be used solely for capital projects for the construction, renovation, and or equipping of schools in the City of Buena Vista, to finance such projects and that the sales tax shall expire by June 17, 2046?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-a9b5239a5225eb6e4568",
+      "officialLocality": "CHARLOTTESVILLE CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Additional Local Sales Tax for School Capital Projects",
+      "officialQuestion": "Shall the City of Charlottesville, Virginia be authorized to levy a local general retail sales tax at a rate not to exceed one percent (1%), the revenues of which shall be used solely for capital projects for the construction or renovation of public schools serving the City of Charlottesville, and which shall expire on June 30, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-7cd8d9f1555691d85d86",
+      "officialLocality": "CHESTERFIELD COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall the County of Chesterfield be authorized to levy a local general retail sales tax at a rate not to exceed one percent to provide revenue solely for capital projects for the construction or renovation of schools serving the County of Chesterfield and which shall expire on July 22, 2046?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-79b70ab1b31162367c66",
+      "officialLocality": "COVINGTON CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall the City of Covington, Virginia be authorized to levy a general retail sales tax at a rate not to exceed one percent, with the revenues to used solely for capital projects for new construction or major renovation of schools serving the City of Covington, Virginia, including related bond and loan financing costs, and with the tax expiring on June 30, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-6a4ad9ded3ed32a9c5a4",
+      "officialLocality": "EMPORIA CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Should City of Emporia, Virginia, be authorized to levy an additional local general retail sales tax at a rate not to exceed one percent (1%), provided that the revenues from the additional sales tax shall be used solely for capital projects for the construction or renovation of schools in the City? If the capital projects for the construction or renovation of schools in the City are to be financed by bonds or loans, the additional sales tax shall expire on the date by which such bonds or loans shall be repaid if the capital projects for the construction or renovation of schools in the City are not to be financed by bonds or loans, the additional sales tax shall expire on June 30, 2046. ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-c0d9ff9975272798fbd6",
+      "officialLocality": "ESSEX COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Retail Sales Tax",
+      "officialQuestion": "Shall Essex County, Virginia be authorized to levy a general retail sales tax at a rate not to exceed one percent, with the revenues to be used solely for capital projects for new construction or major renovation of schools serving Essex County, Virginia, including related bond and loan financing costs, and with the tax expiring on June 30, 2046?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-23371f6578ec19a9ba03",
+      "officialLocality": "FAIRFAX CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Retail Sales Tax",
+      "officialQuestion": "Should the City of Fairfax, Virginia, be authorized to levy a general retail sales tax at a rate not to exceed one percent (1%), as determined by the City Council, to provide revenue solely for: (i) capital projects for new construction or renovation of schools serving the City, including bond and loan financing costs related to such needs; or (ii) public transportation purposes serving the City, including bond and loan financing costs related to such needs; or (iii) both capital projects for new construction or renovation of schools serving the City and public transportation purposes serving the City?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-4afc12df5333b54cbc5f",
+      "officialLocality": "FAIRFAX COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Parks and Park Facilities Bonds",
+      "officialQuestion": "Shall Fairfax County, Virginia, contract a debt, borrow money, and issue bonds, in addition to the parks and park facilities bonds previously authorized, in the maximum aggregate principal amount of $180,000,000 for the purpose of providing funds, with any other available funds, to finance, including reimbursement to the County for temporary financing for, the Fairfax County Park Authority’s cost to acquire, construct, develop, and equip additional parks and  park facilities, to preserve open-space land, and to develop and improve existing parks and park facilities?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-1f48c28bfa157ba77256",
+      "officialLocality": "FAIRFAX COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Community Health and Human Services Facilities Bonds",
+      "officialQuestion": "Shall Fairfax County, Virginia, contract a debt, borrow money, and issue bonds, in addition to the community health and human services facilities bonds previously authorized, in the maximum aggregate principal amount of $75,000,000 for the purpose of providing funds, with any other available funds, to finance, including reimbursement to the County for temporary financing for, the cost to provide community health and human services facilities, including the construction, reconstruction, enlargement, and equipment of existing and additional community health and human services facilities and the acquisition of necessary land?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-c80424776026a3acdfe7",
+      "officialLocality": "FLOYD COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Should the County of Floyd, Virginia, be authorized to levy a general retail sales tax at a rate not to exceed one percent (1%), with the revenues to be used solely for capital projects for new construction or major renovation of schools serving the County of Floyd, Virginia, including related bond and loan financing costs, and with the tax expiring on June 30, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-d97e1969282d13891415",
+      "officialLocality": "FLUVANNA COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Fluvanna County be authorized to levy a general retail sales tax at a rate not to exceed 1% to provide revenue solely for capital projects for the construction or major renovation of schools serving the county? Should this referendum be approved authorizing the levy of such tax, the tax would expire no later than June 30, 2046.",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-bd370ec2eb1d836f67ef",
+      "officialLocality": "FRANKLIN COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Franklin County, Virginia be authorized to levy a general retail sales tax at a rate not to exceed one percent, with the revenues to be used solely for capital projects for new construction or major renovation of schools serving Franklin County, Virginia, including related bond and loan financing costs, and with the tax expiring on June 30, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-055d7d005a1ae537a9a4",
+      "officialLocality": "FREDERICK COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Frederick County, Virginia, be allow to enact a local retail sales tax of up to one percent (1%) to provide funds that can only be used for construction or major renovation of public schools in Frederick County for a period of not more than twenty years? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-01978ca6f116bfc32c4b",
+      "officialLocality": "GILES COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Should Giles County, Virginia, enact a local retail sales tax of up to one percent (1%) to provide funds that can only be used to pay for construction and renovation of public schools in Giles County to expire on July 1, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-19efdbb02e718847470b",
+      "officialLocality": "GRAYSON COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Should the County of Grayson, Virginia, be authorized to levy a general retail sales tax at a rate not to exceed one percent (1%), with the revenues to be used solely for capital projects for new construction or major renovation of schools serving the County of Grayson, Virginia, including related bond and loan financing costs, and with the tax expiring on June 30, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-c68c1472fa51ab26870d",
+      "officialLocality": "GREENE COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Greene County, Virginia be authorized to levy a general retail sales tax at a rate not to exceed one percent, with the revenues to be used solely for capital projects for new construction or major renovation of schools serving Greene County, Virginia, including related bond and loan financing costs, and with the tax expiring on June 30, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-f9c3fe9b8fc4f78b363e",
+      "officialLocality": "GREENSVILLE COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Should Greensville County, Virginia, be authorized to levy an additional local general retail sales tax at a rate not to exceed one percent (1%), provided that the revenues from the additional sales tax shall be used solely for capital projects for the construction or renovation of schools in the County? If the capital projects for the construction or renovation of schools in the County are to be financed by bonds or loans, the additional sales tax shall expire on the date by which such bonds or loans shall be repaid. If the capital projects for the construction or renovation of schools in the County are not to be financed by bonds or loans, the additional sales tax shall expire on June 30, 2046. ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-f790d6c721bafe46b51a",
+      "officialLocality": "ISLE OF WIGHT COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "General Retail Sales Tax for School Capital Projects",
+      "officialQuestion": "Shall Isle of Wight County, Virginia be authorized to levy a general retail sales tax at a rate not to exceed one percent (1%), with the revenues to be used solely for capital projects for new construction or major renovation of schools serving Isle of Wight County, Virginia, including related bond and loan financing costs, and that the tax shall expire on June 30, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-987e1d858ef09c1f275b",
+      "officialLocality": "KING & QUEEN COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Should King and Queen County be authorized to add a 1% general retail sales tax on purchases to provide revenue solely for the construction or major renovation of schools serving King and Queen County, which general retail sales tax would expire on June 30, 2046. ",
+      "status": "EXPANSION_READY"
+    },
+    {
+      "contestId": "va-local-measure-2026-d46f3fb09411d5bb34ca",
+      "officialLocality": "LEXINGTON CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Should the City of Lexington be authorized to levy a general retail sales tax at a rate not to exceed one percent (1%) to provide revenue that can only be used for construction or major renovation of schools serving the City of Lexington and that the sales tax shall expire on June 30, 2032?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-ae1ac47f92564caedfbf",
+      "officialLocality": "LOUDOUN COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Public School Projects",
+      "officialQuestion": "Question: Shall the County of Loudoun, Virginia contract a debt and issue its general obligation capital improvement bonds in the maximum principal amount of $40,255,000 to finance, in whole or in part, the design, construction, equipping and other costs of the LCPS Capital Renewal and Alterations and the VIEW Transition Academy; and the costs of other public school facilities as requested by the Loudoun County School Board? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-a268ec8122e3da740951",
+      "officialLocality": "LOUDOUN COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Public Safety Projects",
+      "officialQuestion": "Question: Shall the County of Loudoun, Virginia contract a debt and issue its general obligation capital improvement bonds in the maximum principal amount of $35,431,000 to finance in whole or in part, the design, construction, equipping and other costs of the Brambleton Sheriff Station, the Fire and Rescue Station #29 - Loudoun Gateway; and the costs of other public safety projects approved in the County's Capital Improvement Program? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-442b52c6dccec4309dfb",
+      "officialLocality": "LOUDOUN COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Public Transportation Projects",
+      "officialQuestion": "Question: Shall the County of Loudoun, Virginia contract a debt and issue its general obligation capital improvement bonds in the maximum principal amount of $280,848,000 to finance, in whole or in part, the design, construction and other costs of improvements for Route 15 Lucketts Bypass, Route 15 / Hogback Mountain Road Roundabout, Route 50 / Loudoun County Parkway Interchange, Route 7 / 287 Interchange, and Sidewalk and Trail Program; and the costs of other public road and transportation projects approved in the County's Capital Improvement Program? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-32515deab1623056d177",
+      "officialLocality": "MADISON COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Local Option Sales Tax",
+      "officialQuestion": "QUESTION: Should Madison County be authorized to levy a general retail sales tax at a rate not to exceed one percent (1%), provided the revenue from the sales tax authorized by Virginia Code §58.1-605.1 shall be used solely for capital projects for the construction or renovation of public schools in Madison County, with such tax to expire upon repayment of any bonds or loans issued to fund such projects by July 6, 2046, or, in the case of capital projects not financed by bonds or loans, the sales tax shall expire on July 6, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-3dcc99f43cb0c2f23137",
+      "officialLocality": "MARTINSVILLE CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "QUESTION: May the City of Martinsville levy a general retail sales tax at a rate not to exceed one percent (1%) as determined by its governing body to provide revenue solely for capital projects for the construction or renovation of schools in the City of Martinsville, such tax expiring July 14, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-03c0cb81c7c11161c9ea",
+      "officialLocality": "MATHEWS COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Mathews County enact a one percent (1%) local retail sales tax which shall expire upon repayment of all bonds or loans issued for the construction or renovation of schools, or, in the alternative, for capital projects not funded by bonds or loans, the tax shall expire no later than July 1, 2046, in order to provide funds for capital projects for the construction and renovation of Mathews Public Schools? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-8a7b33e4758c7eec93fe",
+      "officialLocality": "MIDDLESEX COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Local Sales Tax",
+      "officialQuestion": "Should Middlesex County add a 1% general retail sales tax on purchases to provide revenue solely for the construction or major renovation of Middlesex County Public Schools in Middlesex County? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-b63e0bd695004c6fde31",
+      "officialLocality": "NELSON COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Nelson County, Virginia be authorized to levy a general retail sales tax at a rate not to exceed one percent, with the revenues to be used solely for capital projects for new construction or major renovation of schools serving Nelson County, Virginia, including related bond and loan financing costs, and with the tax expiring on July 14, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-90ed087d096f9014fe12",
+      "officialLocality": "NEW KENT COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "General Retail Sales Tax for School Capital Projects",
+      "officialQuestion": "Shall New Kent County, Virginia be authorized to levy a general retail sales tax at a rate not to exceed one percent, with the revenues to be used solely for capital projects for new construction or major renovation of schools serving New Kent County, Virginia, including related bond and loan financing costs, and with the tax expiring on June 30, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-f068c76d21566afc3453",
+      "officialLocality": "NEWPORT NEWS CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall the City of Newport News, Virginia be allowed to enact an additional local retail sales tax of up to one percent (1%) to provide revenues that shall be used solely for capital projects for the construction or major renovation of schools serving the City of Newport News? This additional tax would expire on June 30, 2046. ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-b54993cd694fd6adf315",
+      "officialLocality": "NORFOLK CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Additional Local Sales Tax ",
+      "officialQuestion": "Shall the City of Norfolk, Virginia, add an additional local general retail sales tax that does not exceed one percent (1%) and that expires on June 30, 2046, in order to provide revenue that is used solely for capital projects for the new construction or major renovation of schools serving the City of Norfolk? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-dcdcd604a160540b5573",
+      "officialLocality": "NOTTOWAY COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Nottoway County be authorized to levy a general local sales tax rate at a rate of one percent (1%) with the revenues of such tax to be used solely for capital projects for the construction or renovation of schools in Nottoway County, including related bond and loan financing costs, for a period of not more than twenty (20) years. ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-bd24e2d9942a9443a0ea",
+      "officialLocality": "ORANGE COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Orange County, Virginia be authorized to levy a general retail sales tax at a rate not to exceed one percent, with the revenues to be used solely for capital projects for new construction or major renovation of schools serving Orange County, Virginia, including related bond and loan financing costs, and with the tax expiring on July 14, 2046?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-7c73e17aca961f4dcab8",
+      "officialLocality": "PORTSMOUTH CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Local Retail Sales Tax for the Construction or Major Renovation of Schools ",
+      "officialQuestion": "Shall the City of Portsmouth, Virginia be allowed to enact an additional local retail sales tax of up to one percent (1%) to provide revenues that shall be used solely for capital projects for the construction or major renovation of schools serving the City of Portsmouth? This additional tax would expire no later than June 30, 2046. ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-9bae535210c1f6e78110",
+      "officialLocality": "POWHATAN COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Should Powhatan County, Virginia, enact a local retail sales tax of up to one percent (1%) to provide funds that can only be used to pay for construction and renovation of public schools in Powhatan County for a period of not more than twenty years?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-33318ab82bd1269ddf60",
+      "officialLocality": "PRINCE EDWARD COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Prince Edward County, Virginia be authorized to levy a general retail sales tax at a rate not to exceed one percent, with the revenues to be used solely for capital projects for new construction or major renovation of schools serving Prince Edward County, Virginia, including related bond and loan financing costs, and with the tax expiring on June 30, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-6276f4e2a3404a7b3b72",
+      "officialLocality": "PULASKI COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Should Pulaski County, Virginia levy a one percent (1%) sales tax to provide revenue solely for capital projects for the construction or renovation of Pulaski County Public Schools and to expire on June 30, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-1e3d98f271036a0a6cfd",
+      "officialLocality": "PULASKI COUNTY",
+      "officialArea": "District",
+      "officialTitle": "Offtrack Pari-Mutuel Wagering",
+      "officialQuestion": "Shall pari-mutuel wagering be permitted in the Town of Pulaski at satellite facilities in accordance with Chapter 29 (§ 59.1-364 et seq.) of Title 59.1 of the Code of Virginia?",
+      "status": "EXPANSION_READY"
+    },
+    {
+      "contestId": "va-local-measure-2026-6620150a95f74eab3429",
+      "officialLocality": "RADFORD CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Should the City of Radford, Virginia, be authorized to levy a general retail sales tax at a rate not to exceed one percent (1%), with the revenues to be used solely for capital projects for new construction or major renovation of schools serving the City of Radford, Virginia, including related bond and loan financing costs, and with the tax expiring on June 30, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-a7ac508e05db385c3771",
+      "officialLocality": "RAPPAHANNOCK COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Local Option Sales Tax",
+      "officialQuestion": "Question: Should Rappahannock County be authorized to levy a general retail sales tax at a rate not to exceed one percent (1%), provided the revenue from the sales tax authorized by Virginia State Code §58.1-605.1 shall be used solely for capital projects for the construction or renovation of public schools in Rappahannock County, with such tax to expire on July 5, 2046. ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-71e59a947fa9ee553245",
+      "officialLocality": "RICHMOND CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Local Sales Tax Option",
+      "officialQuestion": "Shall the City of Richmond be authorized to levy a general retail sales tax at a rate not to exceed 1% to provide revenue solely for capital projects for the construction or major renovation of schools in the City? Should this referendum be approved authorizing the levy of such tax, the tax would expire no later than June 30, 2046. ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-3fa4fb6363a877f4610a",
+      "officialLocality": "SMYTH COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Smyth County be authorized to levy an additional local sales tax at a rate of one percent, with the revenues from such tax to be used solely for capital projects for the construction or renovation of schools in Smyth County, and with such tax to expire on July 9, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-faf583c06fecee3d069d",
+      "officialLocality": "SPOTSYLVANIA COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "PUBLIC SCHOOLS",
+      "officialQuestion": "Question 1: Shall the County of Spotsylvania, Virginia (the \"County\") contract a debt and issue its General Obligation Public Improvement Bonds in the maximum amount of Two Hundred Thirty-Seven Million Two Hundred Seventy-Eight Thousand Six Hundred Five Dollars ($237,278,605) to provide funds, together with other available funds, to undertake a program of Capital Improvement Projects for the Spotsylvania County Public Schools, including without limitation (1) the acquisition of real property for future public school sites, construction and equipping of new public schools and additions and renovations to existing public schools; (2) public school capital maintenance purposes, including HVAC and roof replacements, asphalt/sidewalk construction and replacement, and other capital maintenance projects; (3) school transportation purposes including acquisition of new and replacement school buses; (4) school technology purposes including upgrades to and replacements of existing equipment; and (5) acquisition, construction and equipping or rehabilitation of such other capital school assets as may be required to address the actual educational needs of the residents of the County? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-90a0c1c30e64523a3a87",
+      "officialLocality": "SPOTSYLVANIA COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "TRANSPORTATION",
+      "officialQuestion": "Question 2: Shall the County of Spotsylvania, Virginia (the \"County\") contract a debt and issue its General Obligation Public Improvement Bonds in the maximum amount of Sixty-Seven Million Six Hundred Twenty-Seven Thousand Dollars ($67,627,000) to provide funds, together with other available funds, to undertake a program of Capital Improvement Projects for transportation purposes, including without limitation (except as specifically provided below) (1) intersection improvements at Route 208 and Smith Station Road to alleviate traffic and improve safety; (2) extension and improvements to Germanna Point Drive to provide an alternate travel route for traffic; (3) widening of portions of Route 2 and Route 17 to four lanes; (4) widening of a portion of Harrison Road to include a shared-use path and a pedestrian sidewalk; (5) acquisition, design and construction of a roundabout at the intersection of Old Plank Road and Andora Drive; (6) a minimum of $10,018,213 of Bonds to be allocated to the acquisition, design and construction of improvements to the County's rural roads, including intersection improvements and construction of shoulders to rural roads; and (7) funding of the County's share of other pedestrian, bicycle and shared-use paths and \"Safe Routes to School\" sidewalk projects so that the County may receive matching funds under the Federal aid highway program known as the Transportation Alternatives Program, or any substantially similar or replacement federal or state highway financing program?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-96bfb3177969d956828d",
+      "officialLocality": "SPOTSYLVANIA COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "PUBLIC SAFETY",
+      "officialQuestion": "Question 3: Shall the County of Spotsylvania, Virginia (the \"County\") contract a debt and issue its General Obligation Public Improvement Bonds in the maximum amount of Sixty-One Million Nine Hundred Ninety-Three Thousand Five Hundred Ninety-Two Dollars ($61,993,592) to provide funds, together with other available funds, to undertake a program of Capital Improvement Projects for public safety purposes, including without limitation (1) the construction and equipping of (a) a fire training and logistics center, including classrooms, office and storage space and related facilities, (b) a replacement burn building for live fire training exercises, (c) a new fire station in the area of West Catharpin Road and Pamunkey Road, (d) Four Mile Fork Fire Station improvements to provide more accessible shower and locker room facilities for the projected number of station crew that will be staffing the station; and (2) replacements of fire and EMS equipment, including new fire trucks and ambulances? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-f38766675a8edf5b127a",
+      "officialLocality": "SPOTSYLVANIA COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "ENVIROMENTAL AND SOLID WASTE",
+      "officialQuestion": "Question 4: Shall the County of Spotsylvania, Virginia (the \"County\") contract a debt and issue its General Obligation Public Improvement Bonds in the maximum amount of Thirty-Three Million Six Hundred Fifty-Seven Thousand Three Hundred Fifty-Three Dollars ($33,657,353) to provide funds, together with other available funds from the County or other sources, if any, to undertake a program of capital improvement projects for environmental and solid waste management, including without limitation (1) mandated closure of Cells 3 through 6 at the Livingston Landfill including final grading, protective cover systems, and environmental controls to ensure compliance with state and federal environmental regulations; (2) construction of Cell II-C at the Livingston Landfill to provide additional mandated permitted waste disposal capacity; (3) excavation, processing and recovery of airspace at Livingston Landfill site to extend landfill service life and mitigate long-term environmental liabilities; and (4) improvements to convenience centers to improve residential access to solid waste and recycling services including enhanced safety features and upgraded site infrastructure? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-69939eeb1c344aca5ffa",
+      "officialLocality": "STAFFORD COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Local Sales Tax for Schools",
+      "officialQuestion": "Shall Stafford County, Virginia levy a local retail sales tax not to exceed one percent (1%) to provide revenue that can only be used for construction of new schools or major renovation of schools serving Stafford County, with such tax ending (1) upon repayment of any bonds or loans issued for the projects, or (2) if the projects are not funded by bonds or loans, on June 30, 2046?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-0cb97ae443b5b77542a1",
+      "officialLocality": "STAUNTON CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall the City of Staunton, Virginia, be allowed to enact a local retail sales tax of up to one percent (1%) to provide funds that can only be used for construction or major renovation of public schools in the City of Staunton and that such tax shall expire on July 23, 2046?",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-24b487ff3e5b2a43e7d1",
+      "officialLocality": "SUSSEX COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall the County of Sussex, Virginia be allowed to enact a local retail sales tax of up to one percent (1%) to provide funds that can only be used for construction or major renovation of public schools in the County of Sussex for a period of not more than twenty years? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-92bdc390f922f87ffeee",
+      "officialLocality": "WAYNESBORO CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "The revenue from the additional general sales tax not to exceed 1% shall be used solely for capital projects for the renovation or construction of City schools, financing and/or bonds, to the extent the capital projects are to be financed by bonds and/or loans, and the additional general sales tax not to exceed 1% shall expire no later than July 13, 2046.",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-b9e8ad2b473e2ec0a59b",
+      "officialLocality": "WINCHESTER CITY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Should an additional general retail sales tax not to exceed 1% be levied in the City for the payment of capital projects for the construction and/or renovation of schools serving the City in accordance with the Code of Virginia § 58.1-605.1? The revenue from the additional general sales tax not to exceed 1% shall be used solely for capital projects for the renovation or construction of City schools, financing and/or bonds, to the extent the capital projects are to be financed by bonds and/or loans, and the additional general sales tax not to exceed 1% shall expire no later than July 14, 2046.",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-60505ac65303d519a280",
+      "officialLocality": "WYTHE COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall Wythe County be authorized to levy an additional local sales tax at a rate of one percent, with the revenues from such tax to be used solely for capital projects for the construction or renovation of schools in Wythe County, including related bond and loan financing costs, and with such tax to expire on June 30, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    },
+    {
+      "contestId": "va-local-measure-2026-b0f840e5ac6934c2a18e",
+      "officialLocality": "YORK COUNTY",
+      "officialArea": "Locality",
+      "officialTitle": "Sales Tax",
+      "officialQuestion": "Shall York County, Virginia be allowed to enact a local retail sales tax of up to one percent (1%) to provide funds that shall only be used for capital projects for the construction or renovation of public schools in York County, which tax shall expire on or before July 21, 2046? ",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER_REVIEWED"
+    }
+  ],
+  "remainingAcquisitionGaps": [],
+  "completenessClaim": "Matches every active row on the current official statewide November2026masterreferendumlist. Local questions omitted from that official masterlist have not been independently excluded.",
+  "heldProseReview": "All64existing/providedrecords compared with officialquestions for rate, dollar limit, date/duration, use restrictions and YES/NO direction; no source-does-not-say placeholders found. Questions1and3receive explicit material-condition improvements."
+}

@@ -1,0 +1,23 @@
+{
+  "state": "VA",
+  "officialActiveMasterRows": 67,
+  "statewideRows": 3,
+  "localityRows": 62,
+  "districtRows": 2,
+  "newMeasures": 3,
+  "newExplainers": 3,
+  "materialConditionImprovements": 2,
+  "actualReaderCompleteWhatYesNo": 67,
+  "oldTranslationsCannotReplaceImprovements": "PASS",
+  "exactHeldTextHashes": "PASS",
+  "sourceCaptureHashesAndLengths": "PASS",
+  "manualOfficialQuoteReview": "source-support.json",
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "unrelatedPriorRowsPreserved": 1564,
+  "scope": "Every active question in the current official Virginia November2026 masterreferendum workbook; independently unlisted local questions are not ruled out.",
+  "productionWrites": 0,
+  "modelCalls": 0,
+  "appCodeChanges": 0
+}

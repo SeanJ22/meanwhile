@@ -1,0 +1,60 @@
+{
+  "unmatchedDivisions": [
+    "ocd-division/country:us/state:ca/court_of_appeals:3",
+    "ocd-division/country:us/state:ca/place:lodi/council_district:1",
+    "ocd-division/country:us/state:ca/place:lodi/council_district:2",
+    "ocd-division/country:us/state:ca/place:lodi/council_district:3",
+    "ocd-division/country:us/state:ca/place:manteca/council_district:3",
+    "ocd-division/country:us/state:ca/place:manteca/council_district:4",
+    "ocd-division/country:us/state:ca/place:stockton/council_district:1",
+    "ocd-division/country:us/state:ca/place:stockton/council_district:3",
+    "ocd-division/country:us/state:ca/place:stockton/council_district:5",
+    "ocd-division/country:us/state:ca/place:tracy/council_district:1",
+    "ocd-division/country:us/state:ca/place:tracy/council_district:3",
+    "ocd-division/country:us/state:ca/school_district:jefferson_elementary_school_district_0618840/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:lammersville_joint_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:linden_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:lodi_unified_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:lodi_unified_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:manteca_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:manteca_unified_school_district/trustee_area:6",
+    "ocd-division/country:us/state:ca/school_district:san_joaquin_delta_community_college_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:stockton_unified_school_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:stockton_unified_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:stockton_unified_school_district/trustee_area:6",
+    "ocd-division/country:us/state:ca/school_district:stockton_unified_school_district/trustee_area:7",
+    "ocd-division/country:us/state:ca/school_district:tracy_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:tracy_unified_school_district/trustee_area:6",
+    "ocd-division/country:us/state:ca/school_district:tracy_unified_school_district/trustee_area:7",
+    "ocd-division/country:us/state:ca/school_district:yosemite_community_college_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/special_district:south_san_joaquin_irrigation_district/division:2"
+  ],
+  "existingIdentityBoundaryFreshnessDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:mountain_house",
+      "sourceCurrentOffice": "City of Mountain House",
+      "heldRegistryLabel": "Mountain House CDP",
+      "dependency": "Use the current incorporated city boundary for the electorate; validate/update the older registry geometry before reader placement. Official current city-boundary GIS lead is retained in scratch."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:stockton_east_water_district",
+      "dependency": "Existing canonical registry source is a community water system layer. River must confirm that its geometry equals the whole legal voting district, or install the actual district boundary. Never substitute residency divisions or county."
+    }
+  ],
+  "heldRegionalCourtMembership": {
+    "id": "ca-ba01-county-appeal-3-san_joaquin",
+    "memberOcdId": "ocd-division/country:us/state:ca/county:san_joaquin",
+    "districtOcdId": "ocd-division/country:us/state:ca/court_of_appeals:3",
+    "statement": "Existing held whole-county membership already links San Joaquin to Third Appellate District; no new or inferred county membership added."
+  },
+  "stocktonEastElectorate": {
+    "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+    "sourceOrg": "San Joaquin County Registrar of Voters",
+    "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+    "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+    "quote": "**** Stockton East Water District has seven divisions, each with its own elected director. Candidates\nmust reside within their division, but all district voters can vote in any division's contests."
+  },
+  "jeffersonElementaryIdentity": "NCES0618840/CA-3968544/SanJoaquin06077;0618810SanBenito and0618870SanMateo excluded.",
+  "lammersville": "Source TrusteeArea4 is controlling. River must use actual trustee-area geometry including any legally included primary/secondary components; no base-school membership inferred.",
+  "readerInstallation": "Not performed. River must install precise boundaries and live-check."
+}

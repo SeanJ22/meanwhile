@@ -1,0 +1,2780 @@
+{
+  "source": {
+    "sourceUrl": "https://www.sjgov.org/department/rov/election-information/current_election",
+    "sourceOrg": "San Joaquin County Registrar of Voters",
+    "collectedAt": "2026-11-03T08:24:57.102485+00:00",
+    "verifiedAt": "2026-11-03T08:24:57.102485+00:00",
+    "quote": "County Voter Information Guide - English"
+  },
+  "nativeCompositeSha256": "fee2bd07c8c0fa6bedfd3b1b568e0d555eb06ba88c66df02d4ed7f76024b9ea1",
+  "nativeCompositePages": 602,
+  "samplePages": 524,
+  "physicalSampleRange": [
+    16,
+    539
+  ],
+  "printedGuideSampleRange": [
+    14,
+    537
+  ],
+  "ballotTypes": 131,
+  "allFourPagesOfEachType": true,
+  "precinctAssociationTypes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131
+  ],
+  "associationRows": 1180,
+  "allPublishedAssociationTypesCovered": true,
+  "pages": [
+    {
+      "physicalPage": 16,
+      "ballotType": 1,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 17,
+      "ballotType": 1,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 18,
+      "ballotType": 1,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 19,
+      "ballotType": 1,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 20,
+      "ballotType": 2,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 21,
+      "ballotType": 2,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 22,
+      "ballotType": 2,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 23,
+      "ballotType": 2,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 24,
+      "ballotType": 3,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 25,
+      "ballotType": 3,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 26,
+      "ballotType": 3,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 27,
+      "ballotType": 3,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 28,
+      "ballotType": 4,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 29,
+      "ballotType": 4,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 30,
+      "ballotType": 4,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 31,
+      "ballotType": 4,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 32,
+      "ballotType": 5,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 33,
+      "ballotType": 5,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 34,
+      "ballotType": 5,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 35,
+      "ballotType": 5,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 36,
+      "ballotType": 6,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 37,
+      "ballotType": 6,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 38,
+      "ballotType": 6,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 39,
+      "ballotType": 6,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 40,
+      "ballotType": 7,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 41,
+      "ballotType": 7,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 42,
+      "ballotType": 7,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 43,
+      "ballotType": 7,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 44,
+      "ballotType": 8,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 45,
+      "ballotType": 8,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 46,
+      "ballotType": 8,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 47,
+      "ballotType": 8,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 48,
+      "ballotType": 9,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 49,
+      "ballotType": 9,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 50,
+      "ballotType": 9,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 51,
+      "ballotType": 9,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 52,
+      "ballotType": 10,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 53,
+      "ballotType": 10,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 54,
+      "ballotType": 10,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 55,
+      "ballotType": 10,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 56,
+      "ballotType": 11,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 57,
+      "ballotType": 11,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 58,
+      "ballotType": 11,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 59,
+      "ballotType": 11,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 60,
+      "ballotType": 12,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 61,
+      "ballotType": 12,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 62,
+      "ballotType": 12,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 63,
+      "ballotType": 12,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 64,
+      "ballotType": 13,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 65,
+      "ballotType": 13,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 66,
+      "ballotType": 13,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 67,
+      "ballotType": 13,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 68,
+      "ballotType": 14,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 69,
+      "ballotType": 14,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 70,
+      "ballotType": 14,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 71,
+      "ballotType": 14,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 72,
+      "ballotType": 15,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 73,
+      "ballotType": 15,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 74,
+      "ballotType": 15,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 75,
+      "ballotType": 15,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 76,
+      "ballotType": 16,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 77,
+      "ballotType": 16,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 78,
+      "ballotType": 16,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 79,
+      "ballotType": 16,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 80,
+      "ballotType": 17,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 81,
+      "ballotType": 17,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 82,
+      "ballotType": 17,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 83,
+      "ballotType": 17,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 84,
+      "ballotType": 18,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 85,
+      "ballotType": 18,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 86,
+      "ballotType": 18,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 87,
+      "ballotType": 18,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 88,
+      "ballotType": 19,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 89,
+      "ballotType": 19,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 90,
+      "ballotType": 19,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 91,
+      "ballotType": 19,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 92,
+      "ballotType": 20,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 93,
+      "ballotType": 20,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 94,
+      "ballotType": 20,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 95,
+      "ballotType": 20,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 96,
+      "ballotType": 21,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 97,
+      "ballotType": 21,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 98,
+      "ballotType": 21,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 99,
+      "ballotType": 21,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 100,
+      "ballotType": 22,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 101,
+      "ballotType": 22,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 102,
+      "ballotType": 22,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 103,
+      "ballotType": 22,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 104,
+      "ballotType": 23,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 105,
+      "ballotType": 23,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 106,
+      "ballotType": 23,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 107,
+      "ballotType": 23,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 108,
+      "ballotType": 24,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 109,
+      "ballotType": 24,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 110,
+      "ballotType": 24,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 111,
+      "ballotType": 24,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 112,
+      "ballotType": 25,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 113,
+      "ballotType": 25,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 114,
+      "ballotType": 25,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 115,
+      "ballotType": 25,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 116,
+      "ballotType": 26,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 117,
+      "ballotType": 26,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 118,
+      "ballotType": 26,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 119,
+      "ballotType": 26,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 120,
+      "ballotType": 27,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 121,
+      "ballotType": 27,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 122,
+      "ballotType": 27,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 123,
+      "ballotType": 27,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 124,
+      "ballotType": 28,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 125,
+      "ballotType": 28,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 126,
+      "ballotType": 28,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 127,
+      "ballotType": 28,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 128,
+      "ballotType": 29,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 129,
+      "ballotType": 29,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 130,
+      "ballotType": 29,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 131,
+      "ballotType": 29,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 132,
+      "ballotType": 30,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 133,
+      "ballotType": 30,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 134,
+      "ballotType": 30,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 135,
+      "ballotType": 30,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 136,
+      "ballotType": 31,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 137,
+      "ballotType": 31,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 138,
+      "ballotType": 31,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 139,
+      "ballotType": 31,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 140,
+      "ballotType": 32,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 141,
+      "ballotType": 32,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 142,
+      "ballotType": 32,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 143,
+      "ballotType": 32,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 144,
+      "ballotType": 33,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 145,
+      "ballotType": 33,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 146,
+      "ballotType": 33,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 147,
+      "ballotType": 33,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 148,
+      "ballotType": 34,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 149,
+      "ballotType": 34,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 150,
+      "ballotType": 34,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 151,
+      "ballotType": 34,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 152,
+      "ballotType": 35,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 153,
+      "ballotType": 35,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 154,
+      "ballotType": 35,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 155,
+      "ballotType": 35,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 156,
+      "ballotType": 36,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 157,
+      "ballotType": 36,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 158,
+      "ballotType": 36,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 159,
+      "ballotType": 36,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 160,
+      "ballotType": 37,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 161,
+      "ballotType": 37,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 162,
+      "ballotType": 37,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 163,
+      "ballotType": 37,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 164,
+      "ballotType": 38,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 165,
+      "ballotType": 38,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 166,
+      "ballotType": 38,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 167,
+      "ballotType": 38,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 168,
+      "ballotType": 39,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 169,
+      "ballotType": 39,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 170,
+      "ballotType": 39,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 171,
+      "ballotType": 39,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 172,
+      "ballotType": 40,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 173,
+      "ballotType": 40,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 174,
+      "ballotType": 40,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 175,
+      "ballotType": 40,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 176,
+      "ballotType": 41,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 177,
+      "ballotType": 41,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 178,
+      "ballotType": 41,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 179,
+      "ballotType": 41,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 180,
+      "ballotType": 42,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 181,
+      "ballotType": 42,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 182,
+      "ballotType": 42,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 183,
+      "ballotType": 42,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 184,
+      "ballotType": 43,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 185,
+      "ballotType": 43,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 186,
+      "ballotType": 43,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 187,
+      "ballotType": 43,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 188,
+      "ballotType": 44,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 189,
+      "ballotType": 44,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 190,
+      "ballotType": 44,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 191,
+      "ballotType": 44,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 192,
+      "ballotType": 45,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 193,
+      "ballotType": 45,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 194,
+      "ballotType": 45,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 195,
+      "ballotType": 45,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 196,
+      "ballotType": 46,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 197,
+      "ballotType": 46,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 198,
+      "ballotType": 46,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 199,
+      "ballotType": 46,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 200,
+      "ballotType": 47,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 201,
+      "ballotType": 47,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 202,
+      "ballotType": 47,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 203,
+      "ballotType": 47,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 204,
+      "ballotType": 48,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 205,
+      "ballotType": 48,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 206,
+      "ballotType": 48,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 207,
+      "ballotType": 48,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 208,
+      "ballotType": 49,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 209,
+      "ballotType": 49,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 210,
+      "ballotType": 49,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 211,
+      "ballotType": 49,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 212,
+      "ballotType": 50,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 213,
+      "ballotType": 50,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 214,
+      "ballotType": 50,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 215,
+      "ballotType": 50,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 216,
+      "ballotType": 51,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 217,
+      "ballotType": 51,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 218,
+      "ballotType": 51,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 219,
+      "ballotType": 51,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 220,
+      "ballotType": 52,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 221,
+      "ballotType": 52,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 222,
+      "ballotType": 52,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 223,
+      "ballotType": 52,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 224,
+      "ballotType": 53,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 225,
+      "ballotType": 53,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 226,
+      "ballotType": 53,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 227,
+      "ballotType": 53,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 228,
+      "ballotType": 54,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 229,
+      "ballotType": 54,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 230,
+      "ballotType": 54,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 231,
+      "ballotType": 54,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 232,
+      "ballotType": 55,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 233,
+      "ballotType": 55,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 234,
+      "ballotType": 55,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 235,
+      "ballotType": 55,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 236,
+      "ballotType": 56,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 237,
+      "ballotType": 56,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 238,
+      "ballotType": 56,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 239,
+      "ballotType": 56,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 240,
+      "ballotType": 57,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 241,
+      "ballotType": 57,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 242,
+      "ballotType": 57,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 243,
+      "ballotType": 57,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 244,
+      "ballotType": 58,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 245,
+      "ballotType": 58,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 246,
+      "ballotType": 58,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 247,
+      "ballotType": 58,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 248,
+      "ballotType": 59,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 249,
+      "ballotType": 59,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 250,
+      "ballotType": 59,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 251,
+      "ballotType": 59,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 252,
+      "ballotType": 60,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 253,
+      "ballotType": 60,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 254,
+      "ballotType": 60,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 255,
+      "ballotType": 60,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 256,
+      "ballotType": 61,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 257,
+      "ballotType": 61,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 258,
+      "ballotType": 61,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 259,
+      "ballotType": 61,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 260,
+      "ballotType": 62,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 261,
+      "ballotType": 62,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 262,
+      "ballotType": 62,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 263,
+      "ballotType": 62,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 264,
+      "ballotType": 63,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 265,
+      "ballotType": 63,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 266,
+      "ballotType": 63,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 267,
+      "ballotType": 63,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 268,
+      "ballotType": 64,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 269,
+      "ballotType": 64,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 270,
+      "ballotType": 64,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 271,
+      "ballotType": 64,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 272,
+      "ballotType": 65,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 273,
+      "ballotType": 65,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 274,
+      "ballotType": 65,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 275,
+      "ballotType": 65,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 276,
+      "ballotType": 66,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 277,
+      "ballotType": 66,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 278,
+      "ballotType": 66,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 279,
+      "ballotType": 66,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 280,
+      "ballotType": 67,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 281,
+      "ballotType": 67,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 282,
+      "ballotType": 67,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 283,
+      "ballotType": 67,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 284,
+      "ballotType": 68,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 285,
+      "ballotType": 68,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 286,
+      "ballotType": 68,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 287,
+      "ballotType": 68,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 288,
+      "ballotType": 69,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 289,
+      "ballotType": 69,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 290,
+      "ballotType": 69,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 291,
+      "ballotType": 69,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 292,
+      "ballotType": 70,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 293,
+      "ballotType": 70,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 294,
+      "ballotType": 70,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 295,
+      "ballotType": 70,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 296,
+      "ballotType": 71,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 297,
+      "ballotType": 71,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 298,
+      "ballotType": 71,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 299,
+      "ballotType": 71,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 300,
+      "ballotType": 72,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 301,
+      "ballotType": 72,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 302,
+      "ballotType": 72,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 303,
+      "ballotType": 72,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 304,
+      "ballotType": 73,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 305,
+      "ballotType": 73,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 306,
+      "ballotType": 73,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 307,
+      "ballotType": 73,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 308,
+      "ballotType": 74,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 309,
+      "ballotType": 74,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 310,
+      "ballotType": 74,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 311,
+      "ballotType": 74,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 312,
+      "ballotType": 75,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 313,
+      "ballotType": 75,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 314,
+      "ballotType": 75,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 315,
+      "ballotType": 75,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 316,
+      "ballotType": 76,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 317,
+      "ballotType": 76,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 318,
+      "ballotType": 76,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 319,
+      "ballotType": 76,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 320,
+      "ballotType": 77,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 321,
+      "ballotType": 77,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 322,
+      "ballotType": 77,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 323,
+      "ballotType": 77,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 324,
+      "ballotType": 78,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 325,
+      "ballotType": 78,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 326,
+      "ballotType": 78,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 327,
+      "ballotType": 78,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 328,
+      "ballotType": 79,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 329,
+      "ballotType": 79,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 330,
+      "ballotType": 79,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 331,
+      "ballotType": 79,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 332,
+      "ballotType": 80,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 333,
+      "ballotType": 80,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 334,
+      "ballotType": 80,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 335,
+      "ballotType": 80,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 336,
+      "ballotType": 81,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 337,
+      "ballotType": 81,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 338,
+      "ballotType": 81,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 339,
+      "ballotType": 81,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 340,
+      "ballotType": 82,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 341,
+      "ballotType": 82,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 342,
+      "ballotType": 82,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 343,
+      "ballotType": 82,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 344,
+      "ballotType": 83,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 345,
+      "ballotType": 83,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 346,
+      "ballotType": 83,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 347,
+      "ballotType": 83,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 348,
+      "ballotType": 84,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 349,
+      "ballotType": 84,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 350,
+      "ballotType": 84,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 351,
+      "ballotType": 84,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 352,
+      "ballotType": 85,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 353,
+      "ballotType": 85,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 354,
+      "ballotType": 85,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 355,
+      "ballotType": 85,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 356,
+      "ballotType": 86,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 357,
+      "ballotType": 86,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 358,
+      "ballotType": 86,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 359,
+      "ballotType": 86,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 360,
+      "ballotType": 87,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 361,
+      "ballotType": 87,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 362,
+      "ballotType": 87,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 363,
+      "ballotType": 87,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 364,
+      "ballotType": 88,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 365,
+      "ballotType": 88,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 366,
+      "ballotType": 88,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 367,
+      "ballotType": 88,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 368,
+      "ballotType": 89,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 369,
+      "ballotType": 89,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 370,
+      "ballotType": 89,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 371,
+      "ballotType": 89,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 372,
+      "ballotType": 90,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 373,
+      "ballotType": 90,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 374,
+      "ballotType": 90,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 375,
+      "ballotType": 90,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 376,
+      "ballotType": 91,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 377,
+      "ballotType": 91,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 378,
+      "ballotType": 91,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 379,
+      "ballotType": 91,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 380,
+      "ballotType": 92,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 381,
+      "ballotType": 92,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 382,
+      "ballotType": 92,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 383,
+      "ballotType": 92,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 384,
+      "ballotType": 93,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 385,
+      "ballotType": 93,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 386,
+      "ballotType": 93,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 387,
+      "ballotType": 93,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 388,
+      "ballotType": 94,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 389,
+      "ballotType": 94,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 390,
+      "ballotType": 94,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 391,
+      "ballotType": 94,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 392,
+      "ballotType": 95,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 393,
+      "ballotType": 95,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 394,
+      "ballotType": 95,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 395,
+      "ballotType": 95,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 396,
+      "ballotType": 96,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 397,
+      "ballotType": 96,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 398,
+      "ballotType": 96,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 399,
+      "ballotType": 96,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 400,
+      "ballotType": 97,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 401,
+      "ballotType": 97,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 402,
+      "ballotType": 97,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 403,
+      "ballotType": 97,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 404,
+      "ballotType": 98,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 405,
+      "ballotType": 98,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 406,
+      "ballotType": 98,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 407,
+      "ballotType": 98,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 408,
+      "ballotType": 99,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 409,
+      "ballotType": 99,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 410,
+      "ballotType": 99,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 411,
+      "ballotType": 99,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 412,
+      "ballotType": 100,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 413,
+      "ballotType": 100,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 414,
+      "ballotType": 100,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 415,
+      "ballotType": 100,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 416,
+      "ballotType": 101,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 417,
+      "ballotType": 101,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 418,
+      "ballotType": 101,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 419,
+      "ballotType": 101,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 420,
+      "ballotType": 102,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 421,
+      "ballotType": 102,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 422,
+      "ballotType": 102,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 423,
+      "ballotType": 102,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 424,
+      "ballotType": 103,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 425,
+      "ballotType": 103,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 426,
+      "ballotType": 103,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 427,
+      "ballotType": 103,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 428,
+      "ballotType": 104,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 429,
+      "ballotType": 104,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 430,
+      "ballotType": 104,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 431,
+      "ballotType": 104,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 432,
+      "ballotType": 105,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 433,
+      "ballotType": 105,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 434,
+      "ballotType": 105,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 435,
+      "ballotType": 105,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 436,
+      "ballotType": 106,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 437,
+      "ballotType": 106,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 438,
+      "ballotType": 106,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 439,
+      "ballotType": 106,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 440,
+      "ballotType": 107,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 441,
+      "ballotType": 107,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 442,
+      "ballotType": 107,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 443,
+      "ballotType": 107,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 444,
+      "ballotType": 108,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 445,
+      "ballotType": 108,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 446,
+      "ballotType": 108,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 447,
+      "ballotType": 108,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 448,
+      "ballotType": 109,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 449,
+      "ballotType": 109,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 450,
+      "ballotType": 109,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 451,
+      "ballotType": 109,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 452,
+      "ballotType": 110,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 453,
+      "ballotType": 110,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 454,
+      "ballotType": 110,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 455,
+      "ballotType": 110,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 456,
+      "ballotType": 111,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 457,
+      "ballotType": 111,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 458,
+      "ballotType": 111,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 459,
+      "ballotType": 111,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 460,
+      "ballotType": 112,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 461,
+      "ballotType": 112,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 462,
+      "ballotType": 112,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 463,
+      "ballotType": 112,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 464,
+      "ballotType": 113,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 465,
+      "ballotType": 113,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 466,
+      "ballotType": 113,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 467,
+      "ballotType": 113,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 468,
+      "ballotType": 114,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 469,
+      "ballotType": 114,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 470,
+      "ballotType": 114,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 471,
+      "ballotType": 114,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 472,
+      "ballotType": 115,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 473,
+      "ballotType": 115,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 474,
+      "ballotType": 115,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 475,
+      "ballotType": 115,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 476,
+      "ballotType": 116,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 477,
+      "ballotType": 116,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 478,
+      "ballotType": 116,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 479,
+      "ballotType": 116,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 480,
+      "ballotType": 117,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 481,
+      "ballotType": 117,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 482,
+      "ballotType": 117,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 483,
+      "ballotType": 117,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 484,
+      "ballotType": 118,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 485,
+      "ballotType": 118,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 486,
+      "ballotType": 118,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 487,
+      "ballotType": 118,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 488,
+      "ballotType": 119,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 489,
+      "ballotType": 119,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 490,
+      "ballotType": 119,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 491,
+      "ballotType": 119,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 492,
+      "ballotType": 120,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 493,
+      "ballotType": 120,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 494,
+      "ballotType": 120,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 495,
+      "ballotType": 120,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 496,
+      "ballotType": 121,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 497,
+      "ballotType": 121,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 498,
+      "ballotType": 121,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 499,
+      "ballotType": 121,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 500,
+      "ballotType": 122,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 501,
+      "ballotType": 122,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 502,
+      "ballotType": 122,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 503,
+      "ballotType": 122,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 504,
+      "ballotType": 123,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 505,
+      "ballotType": 123,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 506,
+      "ballotType": 123,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 507,
+      "ballotType": 123,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 508,
+      "ballotType": 124,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 509,
+      "ballotType": 124,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 510,
+      "ballotType": 124,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 511,
+      "ballotType": 124,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 512,
+      "ballotType": 125,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 513,
+      "ballotType": 125,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 514,
+      "ballotType": 125,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 515,
+      "ballotType": 125,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 516,
+      "ballotType": 126,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 517,
+      "ballotType": 126,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 518,
+      "ballotType": 126,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 519,
+      "ballotType": 126,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 520,
+      "ballotType": 127,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 521,
+      "ballotType": 127,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 522,
+      "ballotType": 127,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 523,
+      "ballotType": 127,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 524,
+      "ballotType": 128,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 525,
+      "ballotType": 128,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 526,
+      "ballotType": 128,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 527,
+      "ballotType": 128,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 528,
+      "ballotType": 129,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 529,
+      "ballotType": 129,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 530,
+      "ballotType": 129,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 531,
+      "ballotType": 129,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 532,
+      "ballotType": 130,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 533,
+      "ballotType": 130,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 534,
+      "ballotType": 130,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 535,
+      "ballotType": 130,
+      "ballotPage": 4
+    },
+    {
+      "physicalPage": 536,
+      "ballotType": 131,
+      "ballotPage": 1
+    },
+    {
+      "physicalPage": 537,
+      "ballotType": 131,
+      "ballotPage": 2
+    },
+    {
+      "physicalPage": 538,
+      "ballotType": 131,
+      "ballotPage": 3
+    },
+    {
+      "physicalPage": 539,
+      "ballotType": 131,
+      "ballotPage": 4
+    }
+  ],
+  "sourceLimit": "Coverage is the complete published English composite and current precinct-to-ballot-type association. No unpublished replacement style or reader address assignment is assumed."
+}

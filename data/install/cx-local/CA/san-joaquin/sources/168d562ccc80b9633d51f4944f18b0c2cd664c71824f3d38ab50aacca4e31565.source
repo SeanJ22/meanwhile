@@ -1,0 +1,452 @@
+ <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8" /> <title>
+	Registrar of Voters | sjgov.org
+</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <link href="/ResourcePackages/sjgovOrg/assets/dist/css/bootstrap.min.css?package=sjgovOrg" rel="stylesheet" type="text/css" /><link href="/ResourcePackages/sjgovOrg/assets/dist/css/main.min.css?package=sjgovOrg" rel="stylesheet" type="text/css" /><link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet" type="text/css" /><link href="/ResourcePackages/sjgovOrg/Mvc/Views/DepartmentHeader/Css/DeptHeader.css?package=sjgovOrg" rel="stylesheet" type="text/css" /><link href="/ResourcePackages/sjgovOrg/Mvc/Views/Navigation/Css/SideBar.css?package=sjgovOrg" rel="stylesheet" type="text/css" /> <link rel="icon" href="/ResourcePackages/sjgovOrg/assets/src/project/images/sjc-favicon.png"/> <script src="https://kit.fontawesome.com/dd84da85e8.js" crossorigin="anonymous"></script> <link href="/ResourcePackages/sjgovOrg/assets/dist/css/main-overlay-rov.min.css" media="all" rel="stylesheet" type="text/css" /><style type="text/css" media="all">.goog-te-gadget, .goog-logo-link {
+            color: #ddf0ff !important;
+        }
+        .goog-te-gadget select.goog-te-combo {
+            color: rgb(0 0 0 / 77%);
+            cursor: pointer;
+            font-size: 16px !important;
+            border-color: rgb(112 112 112 / 0%);
+            border-width: 0;
+            border-style: solid;
+            border-radius: 4px;
+            padding: 6px 8px;
+            text-align: center;
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+            font-family: Roboto,sans-serif;
+            margin: 18px 0 0;
+        }
+        @media screen and (max-width: 480px) { .goog-te-gadget select.goog-te-combo { margin: 0; } }
+
+h1 em {
+	font-size:1.5rem;
+  	line-height:1.5rem;
+  	color:#aaa;
+  	border-top: solid 1px #eee;
+  	padding: 15px 0;
+  	display:block;
+
+}</style><meta property="og:title" content="Registrar of Voters" /><meta property="og:type" content="website" /><meta property="og:url" content="https://sjgov.org/department/rov/election-information/current_election" /><meta property="og:site_name" content="sjgov.org" /><style type="text/css" media="all"><style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    td {
+        text-align: left;
+        vertical-align: top;
+        margin: 2px;
+        padding: 20px;
+    }
+    tr:nth-child(odd) {
+        background-color: #f2f2f2 !important;
+    }
+    tr:nth-child(even) {
+        background-color: white !important;
+    }
+    table a {
+        color: navy !important;
+        text-decoration: underline !important;
+    }
+    table a:hover {
+        color: blue !important;
+    }
+</style>
+</style><meta name="Generator" content="Sitefinity 15.4.8637.0 DX" /><link rel="canonical" href="https://sjgov.org/department/rov/election-information/current_election" /></head> <body> <nav> <a title="SJGov.org" href="/" style="display: inline-block;"> <object class="nav__logo" data="/ResourcePackages/sjgovOrg/assets/src/project/images/SJC-Logo.svg" type="image/svg+xml">San Joaquin County Logo</object> </a> </nav> <!-- <div class="hero">
+        <div class="hero__search">
+            <input type="text" class="search">
+            <button class="icon" aria-label="Search"><i class="material-icons">search</i></button>
+        </div>
+    </div> --> <script src="/ScriptResource.axd?d=6DQe8ARl7A9TiuWej5ttCow090pHcuGs-F7qjevZlVfvBSq_xGC6BwDa5b2R9_h-6qzdfi6KbgH_l_vKtpZfbrDgmunLWZtT4fPRaCzGTwEk9y-7HAS-SAky1Xt_t-7fJMrqBvuyhGFC4Pgu4E5Hg9hy66XpM4qgGvypRYM6-rTYskpcx3yjcNyQGXsxHKXZ0&amp;t=ffffffff945ec8f8" type="text/javascript"></script><script src="/ScriptResource.axd?d=74FHISOx3fOPKwLxL0RMYtf4PfvRsn_4x7A4WKYk39WTX1FRNYlZlS_QPYWfu9nxt14jEUSAUThGnhJw_wHeBvIFL40e9H12-wNktCgHYzrEArWY2oHdYfkBLbNXRCr5H42KaTllk9X-pqeP8CVrfzdfekFPlbNqbeaLFC9diEB6J3wdF9QETZp1HwL_-FN80&amp;t=ffffffff945ec8f8" type="text/javascript"></script><script src="/Frontend-Assembly/Telerik.Sitefinity.Frontend/Mvc/Scripts/Bootstrap/js/bootstrap.min.js?package=sjgovOrg&amp;v=LTE1NDgyNzQ5Nzg%3d" type="text/javascript"></script> 
+<style>
+    .breadcrumb {
+        padding: 8px 25px;
+        background: rgba(242,242,242,0);
+        box-shadow: inset 0px 8px 20px rgba(250,250,250,0.5);
+        border-top: 1px solid rgba(238,238,238,0.6);
+        font-size: 12px
+    }
+    .breadcrumb span {
+        margin: 0 4px;
+    }
+</style>
+
+
+
+<div class="breadcrumb">
+
+            <a href="/"><i class="fas fa-home"></i><span class="sr-only">Home</span></a> <span><i class="fal fa-angle-right"></i></span>
+                <a href="/department">Department</a> <span><i class="fal fa-angle-right"></i></span>
+                <a href="/department/rov">Registrar of Voters</a> <span><i class="fal fa-angle-right"></i></span>
+                <a href="/department/rov/election-information">Election Information</a> <span><i class="fal fa-angle-right"></i></span>
+Current Election</div>
+
+<div >
+    <div class="sf-Long-text" ><div class="translate" id="google_translate_element"></div></div>    
+</div>
+
+
+
+
+<div class="dept-header dept-header--dark mw--350" style="background-image: url(&#39;https://www.sjgov.org/images/default-source/agcomm/flag-color.jpg?sfvrsn=b316b505_1&#39;);">
+    <div class="dept-header__contain">
+        <div class="dept-expanded">
+
+            <div class="logo">
+                <img src="https://www.sjgov.org/images/default-source/registrar-of-voters-images/rov-logo.svg?sfvrsn=636da7e0_8" title="rov-logo" />
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<style>
+span.dropdown-toggle {
+    vertical-align: text-bottom;
+    color: #315470;
+    line-height: 21px;
+}
+</style>
+
+<div class="navigation">
+    <label for="show-menu" class="navigation__menu-toggle" role="button">&#x2630;</label>
+    <input type="checkbox" id="show-menu" role="button">
+    <ul class="navigation__menu-list">
+        <label for="show-menu" class="navigation__menu-close" id="close">&#x2715;</label>
+        <li class=""><a class="navigation__link" href="/department/rov/home" target="_self" title="Home">Home</a></li>
+            <li>
+                <a class="navigation__link disabled" href="/department/rov/voting">Voting <span class="dropdown-toggle"><i class="material-icons">expand_more</i></span></a>
+                
+                <ul class="navigation__menu-list">
+                                <li class="">
+                <a class="navigation__link" href="/department/rov/voting/registration-info" target="_self">Registration Information</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/voting/vote-by-mail" target="_self">Vote-by-Mail</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/voting/drop-box-info" target="_blank">Drop Box Information</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/voting/drive-up-ballot-drop-off" target="_self">Drive Up Democracy</a>
+            </li>
+
+                </ul>
+            </li>
+            <li>
+                <a class="navigation__link disabled" href="/department/rov/election-information">Election Information <span class="dropdown-toggle"><i class="material-icons">expand_more</i></span></a>
+                
+                <ul class="navigation__menu-list">
+                                <li class="active">
+                <a class="navigation__link" href="/department/rov/election-information/current_election" target="_self">Current Election</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/election-information/past-election-info" target="_self">Past Election Info</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/election-information/upcoming-elections" target="_self">Upcoming Elections</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/election-information/historical-county-voter-information-guides" target="_self">Historical County Voter Information Guides</a>
+            </li>
+
+                </ul>
+            </li>
+            <li>
+                <a class="navigation__link disabled" href="/department/rov/election-officers">Election Officers <span class="dropdown-toggle"><i class="material-icons">expand_more</i></span></a>
+                
+                <ul class="navigation__menu-list">
+                                <li class="">
+                <a class="navigation__link" href="/department/rov/election-officers/election-officer-application" target="_self">Election Officer Application</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/election-officers/adopt-a-poll" target="_self">Adopt a Poll Program</a>
+            </li>
+
+                </ul>
+            </li>
+            <li>
+                <a class="navigation__link disabled" href="/department/rov/Candidate">Candidates &amp; Campaigns <span class="dropdown-toggle"><i class="material-icons">expand_more</i></span></a>
+                
+                <ul class="navigation__menu-list">
+                                <li class="">
+                <a class="navigation__link" href="/department/rov/Candidate/campaign-finance-system" target="_self">Campaign Finance</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/Candidate/running-for-office" target="_self">Running for Office</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/Candidate/find-your-elected-officials-and-districts" target="_self">Find Your Elected Officials and Districts</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/Candidate/resources-and-guides-rov" target="_self">Resources and Guides</a>
+            </li>
+
+                </ul>
+            </li>
+            <li>
+                <a class="navigation__link disabled" href="/department/rov/accessibility">Accessibility <span class="dropdown-toggle"><i class="material-icons">expand_more</i></span></a>
+                
+                <ul class="navigation__menu-list">
+                                <li class="">
+                <a class="navigation__link" href="/department/rov/accessibility/accessible-ballots-and-sample-ballots" target="_self">Accessible Ballots and Sample Ballots</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/accessibility/language-accessibility" target="_self">Language Accessibility</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/accessibility/language-assistance" target="_self">Language Assistance</a>
+            </li>
+
+                </ul>
+            </li>
+            <li>
+                <a class="navigation__link disabled" href="/department/rov/resources">Resources <span class="dropdown-toggle"><i class="material-icons">expand_more</i></span></a>
+                
+                <ul class="navigation__menu-list">
+                                <li class="">
+                <a class="navigation__link" href="/department/rov/resources/advisory-committee" target="_self">Election Advisory Committee</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/resources/contact-us" target="_self">Contact Us</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/resources/useful-links" target="_self">Useful Links</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/resources/forms-documents" target="_self">Forms, Documents, and Guides</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/office/voter-registration-privacy" target="_self">Voter Registration Privacy</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/office/registration-statistics" target="_self">Registration Statistics</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/resources/about-us" target="_self">About Us</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/resources/public-notices" target="_self">Public Notices</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/resources/observer-guidelines" target="_self">Election Observer Guidelines</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/resources/media" target="_self">Media</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/office/voter-fraud-hotline-info" target="_self">Voter Fraud Hotline Info</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/resources/faqs" target="_self">FAQs</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/resources/election-billing-information" target="_self">Election Billing Information</a>
+            </li>
+
+                </ul>
+            </li>
+            <li>
+                <a class="navigation__link disabled" href="/department/rov/results">Election Results <span class="dropdown-toggle"><i class="material-icons">expand_more</i></span></a>
+                
+                <ul class="navigation__menu-list">
+                                <li class="">
+                <a class="navigation__link" href="/department/rov/results/statements-of-votes-cast-interactive" target="_self">Statements of Votes Cast (Interactive)</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/results/statement-of-votes-cast" target="_self">Statement of Votes Cast (PDF)</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/results/unprocessed-ballot-reports" target="_self">Unprocessed Ballot Reports</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/results/past-election-results" target="_self">Past Election Results</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/results/current-election-results" target="_self">Current Election Results</a>
+            </li>
+
+                </ul>
+            </li>
+            <li>
+                <a class="navigation__link disabled" href="/department/rov/voter-outreach-events">Voter Outreach &amp; Events <span class="dropdown-toggle"><i class="material-icons">expand_more</i></span></a>
+                
+                <ul class="navigation__menu-list">
+                                <li class="">
+                <a class="navigation__link" href="/department/rov/voter-outreach-events/outreach-event-interest" target="_self">Voter Outreach Event Interest Form</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/voter-outreach-events/quarterly-newsletter" target="_self">Quarterly Newsletter</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/voter-outreach-events/student-mock-election-results" target="_self">Student Mock Election Results</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/voter-outreach-events/certified-election-observer-program" target="_self">Certified Election Observer Program</a>
+            </li>
+            <li class="">
+                <a class="navigation__link" href="/department/rov/voter-outreach-events/outreach---calendar" target="_self">Outreach Calendar</a>
+            </li>
+
+                </ul>
+            </li>
+    </ul>
+
+</div>
+
+
+
+
+
+
+<div id="Contentplaceholder1_C058_Col00" class="sf_colsIn container" data-sf-element="Container" data-placeholder-label="Container"><div class="row" data-sf-element="Row">
+    <div id="Contentplaceholder1_C014_Col00" class="sf_colsIn col-lg-12" data-sf-element="Column 1" data-placeholder-label="Column 1">
+<div >
+    <div class="sf-Long-text" ><h1>Current Election Information</h1><hr></div>    
+</div><div class="" data-sf-element="Row">
+    <div id="Contentplaceholder1_C138_Col00" class="sf_colsIn col-lg-8" data-sf-element="Column 1" data-placeholder-label="Column 1">
+<div >
+    <div class="sf-Long-text" ><h3>November 3, 2026 Gubernatorial General Election</h3><p>Updates and relevant links will be provided as information becomes available.<b></b></p></div>    
+</div>
+<div >
+    <div class="sf-Long-text" ><h3>Voter Information Tool</h3><p>Find the closest polling location and drop box to you by entering in an address below:</p></div>    
+</div>
+<link rel="stylesheet" type="text/css" href="https://votinginfotool.org/css/compiled/vit.css"/>
+<script src="https://votinginfotool.org/js/compiled/app.js"></script>
+<div id="vit-size-container" class="vit-size-container" style="width: 100%; height: 100%;">
+  <div id="_vit"></div>
+</div>
+<script>
+  var config = {
+    "logo": {"type":"default"},
+    "official-only": true
+  };
+  var loadVIT = function () {
+    if (typeof vit !== 'undefined'){
+      vit.core.init("_vit", config);
+    } else {
+      setTimeout(loadVIT, 500);
+    };
+  };
+  loadVIT();
+</script>
+<div >
+    <div class="sf-Long-text" ><p><br></p><table style="width: 730px; height: 1262.5px"><tbody><tr height="56" style="height: 72.5px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1">County Voter Information Guide - English</a><br><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-spa-(1).pdf?sfvrsn=7500237e_1">County Voter Information Guide - Spanish</a><br></td><td style="width: 478.156px">The County Voter Information Guide (CVIG) is a valuable resource that provides essential information to help voters prepare for casting their ballots.</td></tr><tr height="56" style="height: 72.5px"><td style="width: 364.844px"><a data-sf-ec-immutable="" target="_blank" href="https://voterguide.sos.ca.gov/">State Voter Guide</a><br></td><td style="width: 478.156px">The State Voter Information Guide (SVIG) is a valuable resource that provides important statewide information to assist voters in preparing to cast their ballots.</td></tr><tr height="56" style="height: 53.8281px"><td><a href="/department/rov/election-information/current_election/facsimile">Facsimile Ballots
+                </a></td><td>A facsimile ballot for the current election is available in the following languages: Burmese, Chinese, Hmong, Iu Mien, Khmer, Korean, Lao, Pashto, Punjabi, Tagalog, Thai, and Vietnamese.</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/ballot-replacement-application-november-2026_eng.pdf?sfvrsn=7027dfef_1">Replacement Ballot Application - English</a><br><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/ballot-replacement-application-november-2026_sp.pdf?sfvrsn=a4a1a41_2">Replacement Ballot Application - Spanish</a><a href="/docs/default-source/registrar-of-voters-documents/office/forms/eng_replacement-application-v2.pdf?sfvrsn=be32b9f0_9"></a></td><td style="width: 478.156px">Request form for a new ballot if yours was lost, damaged, or never arrived.</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/representative-application-november-2026_eng.pdf?sfvrsn=18d97bff_1">Representative Application - English</a><br><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/representative-application-november-2026_sp.pdf?sfvrsn=f212a996_1">Representative Application - Spanish</a></td><td style="width: 478.156px">Authorization form to allow a representative to pick up a replacement ballot on your behalf.</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/office/forms/combined-cure-letter---ccrov-24210-(online-version)-(eng).pdf?sfvrsn=df8be8f1_20">Ballot Cure Letter - English</a><br><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/office/forms/combined-cure-letter---ccrov-24210-(online-version)-(sp).pdf?sfvrsn=7ce71ba4_26">Ballot Cure Letter -&nbsp;Spanish</a><br></td><td style="width: 478.156px">Step-by-step guide to fix problems with your ballot (like a missing or mismatched signature).</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/current-election-general-2024/registration/cancellation-request-forms/cancellation-request-form-english.pdf?sfvrsn=54e16b30_3">Voter Cancellation Request - English</a><br><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/current-election-general-2024/registration/cancellation-request-forms/cancellation-request-form-spanish.pdf?sfvrsn=5b87a7b4_3">Voter Cancellation Request - Spanish</a></td><td style="width: 478.156px">Request form to cancel your California Voter Registration.</td></tr><tr height="56" style="height: 72.5px"><td style="width: 364.844px"><a data-sf-ec-immutable="" target="_blank" href="https://www.sjgov.org/department/rov/voting/registration-info/military-and-overseas-voters">UOCAVA Voters</a></td><td style="width: 478.156px">Information for military and overseas voters covered by the Uniformed and Overseas Citizens Absentee Voting Act.</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a data-sf-ec-immutable="" target="_blank" href="https://www.sjgov.org/department/rov/accessibility/accessible-ballots-and-sample-ballots">Accessible Vote by Mail</a></td><td style="width: 478.156px">Details on accessible vote-by-mail options for voters with disabilities.</td></tr><tr height="56" style="height: 53.8281px"><td style="width: 364.844px"><a data-sf-ec-immutable="" target="_blank" href="https://www.sjgov.org/department/rov/election-information/current_election/ballot-drop-box-locations">Ballot Drop Box Locations</a><br></td><td style="width: 478.156px">Location and hours of operation of Drop Boxes.</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a href="https://share.earthcam.net/public/tJ90CoLmq7TzrY396Yd88PBwq80A5D-L7dRIC31fBpw/san_joaquin_election_2026/sjc-01/live" target="_blank" data-sf-ec-immutable="">Live Drop-Box Camera Feeds</a><br></td><td style="width: 478.156px">24/7 live video feeds of official ballot drop boxes for added transparency.</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/statewide-special-election-2025/election-resources/polling_places.xls?sfvrsn=69b437eb_3"></a><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/podr091_votinglocationlist.pdf?sfvrsn=76dabe2a_2">Polling Locations</a><br></td><td style="width: 478.156px">List of in-person polling locations.&nbsp;</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/podr014_publication-10-9-2026.pdf?sfvrsn=a5ecfa46_5">Polling Places and Election Officers Publication</a></td><td style="width: 478.156px">&nbsp;</td></tr><tr height="56" style="height: 53.8281px"><td style="width: 364.844px"><a data-sf-ec-immutable="" target="_blank" href="https://sjc-gis.maps.arcgis.com/apps/instant/sidebar/index.html?appid=83ae854bca6c43749f268f8f06e811b2">Congressional District Map Look-Up Tool</a></td><td style="width: 478.156px">New California Congressional Districts passed by Prop 50, to be used from 2026 through 2030.</td></tr><tr height="56" style="height: 53.8281px"><td style="width: 364.844px"><a data-sf-ec-immutable="" target="_blank" href="https://sjc-gis.maps.arcgis.com/apps/instant/sidebar/index.html?appid=a073b0efc40d4be09a7a000ca09d143f">Interactive Voting Locations and Precinct Map</a></td><td style="width: 478.156px">Searchable Map by Address for Voting Precincts with Polling Places, and Ballot Drop Boxes</td></tr><tr height="56" style="height: 53.8281px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/2026-general-election-voting-precinct-to-regular-precinct-association-list.pdf?sfvrsn=d53c63f9_1">2026 General Election Voting Precinct to Regular Precinct Association List PDF</a></td><td style="width: 478.156px">2026 General Election Voting Precinct to Regular Precinct Association List</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a data-sf-ec-immutable="" target="_blank" href="https://sjgov.org/department/rov/voting/drive-up-ballot-drop-off">Drive-Thru Ballot Drop-Off</a><br></td><td style="width: 478.156px">Special drive-thru lane for fast, in-person ballot drop-off without leaving your car.</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a data-sf-ec-immutable="" target="_blank" href="https://california.ballottrax.net/voter/">Where’s My Ballot?</a></td><td style="width: 478.156px">Free service to track your vote-by-mail ballot and get status updates by email, text, or call.</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/san-joaquin-county-l-a-testing-2026gen.pdf?sfvrsn=96dd0b55_1">Logic &amp; Accuracy Testing</a><br></td><td style="width: 478.156px">Full Testing of the vote counting equipment before ballot processing begins for the election.</td></tr><tr height="56" style="height: 53.8281px"><td style="width: 364.844px"><p><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/upcoming-election-documents/nov-26-measure-calendar.pdf?sfvrsn=ce3c29fe_3"></a><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/upcoming-election-documents/nov-26-measure-calendar.pdf?sfvrsn=ce3c29fe_3">Measure Calendar</a></p></td><td style="width: 478.156px">Timeline for placing local measure on the ballot.</td></tr><tr height="56" style="height: 53.8281px"><td style="width: 364.844px"><a href="https://elections.saccounty.gov/us/en/election-information/current-measure-information.html#gsc.tab=0" data-sf-ec-immutable="">Measure G Information</a></td><td style="width: 478.156px">Measure submitted by Galt Joint Union High School District. Sacramento County is the lead county. Link is to their website.</td></tr><tr height="56" style="height: 117.5px"><td style="width: 364.844px"><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/notice-of-a-measure-t_eng_final.pdf?sfvrsn=e3fb14dc_9">Notice of Measure T - English</a></div><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/notice-of-a-measure-t_sp_final.pdf?sfvrsn=f862ad87_9">Notice of Measure T - Spanish</a>
+ <div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/measure-t-impartial-analysis---english.pdf?sfvrsn=3dfab80a_3">Impartial Analysis - English</a></div><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/measure-t-impartial-analysis---spanish.pdf?sfvrsn=be511be2_3">Impartial Analysis - Spanish</a></div><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/notice-of-argument-in-favor-of-measure-t---english.pdf?sfvrsn=e033b110_3">Notice of Argument In Favor - English</a></div><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/measure_t_argument_in_favor_spanish.pdf?sfvrsn=99369cfb_3">Notice of Argument In Favor - Spanish</a></div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/notice-of-a-measure-t_sp_final.pdf?sfvrsn=f862ad87_9"><br data-sf-ec-immutable=""></a><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/notice-of-a-measure-t_sp_final.pdf?sfvrsn=f862ad87_9"></a></div></td><td style="width: 478.156px">Measure submitted by Lodi Unified School District.</td></tr><tr height="56" style="height: 117.5px"><td style="width: 364.844px"><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/notice-of-a-measure-u_eng_final.pdf?sfvrsn=5600c7b7_6">Notice of Measure U - English</a></div><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/notice-of-a-measure-u_sp_final.pdf?sfvrsn=905ca536_9">Notice of Measure U - Spanish</a>
+ <div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/measure-u-impartial-analysis---english.pdf?sfvrsn=e2447b4f_3">Impartial Analysis - English</a></div><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/measure-u-impartial-analysis---spanish.pdf?sfvrsn=226febe4_3">Impartial Analysis - Spanish</a>
+ <div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/notice-of-argument-in-favor-measure-u.pdf?sfvrsn=8bc75483_3">Notice of Argument In Favor - English</a></div><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/measure-u_argument-in-favor_sp.pdf?sfvrsn=54b9913_1">Notice of Argument In Favor - Spanish</a></div></div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/notice-of-a-measure-u_sp_final.pdf?sfvrsn=905ca536_9"><br data-sf-ec-immutable=""></a><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/notice-of-a-measure-u_sp_final.pdf?sfvrsn=905ca536_9"></a></div></td><td style="width: 478.156px">Measure submitted by Escalon Unified School District.</td></tr><tr height="56" style="height: 117.5px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/legal-november-3-2026-measure-calendar.pdf?sfvrsn=c8c16801_5">Measure Calendar (Legal Deadlines)</a></td><td style="width: 478.156px">Measure Calendar with legal deadlines.</td></tr><tr height="56" style="height: 117.5px"><td style="width: 364.844px"><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/v_english-rn-44458773.pdf?sfvrsn=482878c9_3">Notice of Measure V - English</a></div><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/v_spanish-rn-44458855.pdf?sfvrsn=bf2ac621_3">Notice of Measure V - Spanish</a></div><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/measure-v-impartial-analysis---english.pdf?sfvrsn=6f2dcbe1_3">Impartial Analysis - English</a></div><div><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/measure_v_impartial_analysis_sp.pdf?sfvrsn=3b3cc438_1">Impartial Analysis - Spanish</a></div></td><td style="width: 478.156px">Measure submitted by Lincoln Unified School District</td></tr><tr height="56" style="height: 53.8281px"><td style="width: 364.844px"><a href="https://www.sos.ca.gov/elections/ballot-measures/qualified-ballot-measures" data-sf-ec-immutable="">Statewide Propositions</a></td><td style="width: 478.156px">Link to the California Secretary of State's list of statewide measure that have qualified for the ballot.</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px">ROV Open Tours<br><em>Available during all operational hours</em></td><td style="width: 478.156px">Guided tours of the elections office, including demos of how ballots are processed.</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a href="/docs/default-source/registrar-of-voters-documents/current-election/election-observer-documents/election-observer-guidelines-2024.pdf?sfvrsn=74d89f89_6">Election Observer Guidelines</a><br><br></td><td style="width: 478.156px">Rules and procedures for members of the public who wish to observe the election process.</td></tr><tr height="56" style="height: 53.8281px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/statewide-special-election-2025/general-documents/one-percent-manual-tally---2025-statewide-special.pdf?sfvrsn=171e655e_3"></a>1% Random Drawing of Precincts<br></td><td style="width: 478.156px">Random selection of precincts for the 1% Manual Tally.</td></tr><tr height="56" style="height: 53.8281px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/statewide-special-election-2025/general-documents/one-percent-manual-tally---2025-statewide-special.pdf?sfvrsn=171e655e_3"></a><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/statewide-special-election-2025/general-documents/one-percent-manual-tally---2025-statewide-special.pdf?sfvrsn=171e655e_3"></a><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/statewide-special-election-2025/general-documents/one-percent-manual-tally---2025-statewide-special.pdf?sfvrsn=171e655e_3"></a>1% Manual Tally Results<br></td><td style="width: 478.156px">Results of the 1% Manual Tally to verify election accuracy.</td></tr><tr height="56" style="height: 54.5781px"><td style="width: 364.844px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/102326_reporting-schedule_rov_final.pdf?sfvrsn=9044b4f7_1">Election Night Reporting Schedule</a><br></td><td style="width: 478.156px">Timeline of when election results will be posted, beginning at 8:00 PM on Election Night.</td></tr><tr height="56" style="height: 56.25px"><td style="width: 364.844px">Final Certification &amp; Turnout Stats<br>(Coming Soon)</td><td style="width: 478.156px">Official final results and voter turnout numbers after the election is certified.</td></tr></tbody></table><p><br></p><div contenteditable="false" data-role="draggable"><div></div></div><div contenteditable="false" data-role="draggable"><div></div></div><div contenteditable="false" data-role="draggable"><div></div></div><div contenteditable="false" data-role="draggable"><div></div></div><div contenteditable="false" data-role="draggable"><div></div></div><div contenteditable="false" data-role="draggable"><div></div></div><div contenteditable="false" data-role="draggable"><div></div></div><div contenteditable="false" data-role="draggable"><div></div></div><p>&nbsp;</p></div>    
+</div>
+<div >
+    <div class="sf-Long-text" ><h3><strong>Candidate and Election Resources</strong></h3><p>The Registrar of Voters provides comprehensive information on all aspects of candidacy for local offices, including a list of open offices for each election. These documents are available at the Registrar of Voters' Office or can be downloaded using the links below.</p></div>    
+</div>
+<div >
+    <div class="sf-Long-text" ><p>&nbsp;</p><br><table style="width: 740px; height: 921px"><tbody><tr height="56" style="height: 50px"><td style="width: 264.141px"><a href="/docs/default-source/registrar-of-voters-documents/upcoming-election-documents/nov-26-abbreviated-election-calendar.pdf?sfvrsn=9fa6462_6">Abbreviated Election Calendar</a></td><td style="width: 339.859px">Key election dates and deadlines for candidates and voters</td></tr><tr height="56" style="height: 27.5px"><td style="width: 264.141px"><a href="/docs/default-source/registrar-of-voters-documents/upcoming-election-documents/nov-26-measure-calendar.pdf?sfvrsn=ce3c29fe_3">Measure Calendar</a></td><td style="width: 339.859px">Timeline for placing local measures on the ballot.</td></tr><tr height="56" style="height: 27.5px"><td style="width: 264.141px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/candidates/measure-guide-2025.pdf?sfvrsn=ca80e9bb_8">Measure Guide</a></td><td style="width: 339.859px">Guide for those who wish to place a measure on the ballot.</td></tr><tr height="56" style="height: 117.5px"><td style="width: 264.141px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/candidates/2026-general-offices-up-for-election.pdf?sfvrsn=cc290109_38"></a><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13">Offices Up for Election</a></td><td style="width: 339.859px">List of local offices scheduled for election.<br><br><em>Note: Information in this section is subject to change without notice. Updates will be provided closer to the candidate filing period.</em></td></tr><tr height="56" style="height: 27.5px"><td style="width: 264.141px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/candidates/candidate-guide.pdf?sfvrsn=d0285d54_24">Candidate Guide</a><br></td><td style="width: 339.859px">Step-by-step filing and eligibility instructions.</td></tr><tr height="56" style="height: 72.5px"><td style="width: 264.141px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/candidates/statement-of-qualifications-(2).pdf?sfvrsn=69b36788_6">Statement of Qualifications</a><br></td><td style="width: 339.859px">Form for submitting a candidate statement of qualifications for publication in the San Joaquin County voter information guide.</td></tr><tr height="56" style="height: 252.5px"><td style="width: 264.141px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/gubernatorial-primary-election-2026/candidate-services/candidate-roster-(26).pdf?sfvrsn=d95354d6_47"></a><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100"></a><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13"></a><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100">Local Candidate Roster</a><br></td><td style="width: 339.859px"><div>This roster includes the names of local candidates who have completed and filed all required nomination documents for countywide offices.</div><div><br></div><div>The list is updated daily at 5:00 p.m. Candidates who file after 2:00 p.m. will be added on the next business day.</div><div><br></div><div>Please note:</div><div>We only post candidates for countywide offices.</div><div>For information regarding state or city candidates, please contact those offices directly.</div></td></tr><tr height="56" style="height: 72.5px"><td style="width: 264.141px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-in-extension-(1).pdf?sfvrsn=4d78bce3_1">Offices in Extension</a><br></td><td style="width: 339.859px">Extended nomination deadlines for uncontested offices. This extension applies only to candidates who are not incumbents.</td></tr><tr height="56" style="height: 72.5px"><td style="width: 264.141px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/roster-writein-10-06.pdf?sfvrsn=67e4b93f_1">List of Qualified Write-In Candidates</a><br><br></td><td style="width: 339.859px">Names of state and local write-in candidates who have qualified for the ballot.</td></tr><tr height="56" style="height: 50px"><td style="width: 264.141px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/state-random-alphabet-11.3.26.pdf?sfvrsn=beaa8e36_5">State Randomized Drawing</a><br></td><td style="width: 339.859px">Alphabetical order for candidate names, as determined by the Secretary of State.</td></tr><tr height="56" style="height: 72.5px"><td style="width: 264.141px"><a target="_blank" href="/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/county-random-alphabet-11.3.26.pdf?sfvrsn=cf3a2154_5">County Randomized Drawing</a><br></td><td style="width: 339.859px">Alphabetical order for candidate names, as determined by San Joaquin County for multi-county legislative races.<br><br></td></tr></tbody></table></div>    
+</div>
+    </div>
+    <div id="Contentplaceholder1_C138_Col01" class="sf_colsIn col-lg-4" data-sf-element="Column 2" data-placeholder-label="Column 2">
+
+
+
+
+
+
+
+
+<div class="side__navigation">
+    <ul class="side__navigation_list">
+            <li class="title ">
+                <a href="/department/rov/election-information" target="_self" title="Election Information"><i class="fas fa-home"></i> Election Information</a>
+            </li>
+    <li class="active">
+        <a href="/department/rov/election-information/current_election" target="_self">Current Election</a>
+    </li>
+    <li class="">
+        <a href="/department/rov/election-information/past-election-info" target="_self">Past Election Info</a>
+    </li>
+    <li class="">
+        <a href="/department/rov/election-information/upcoming-elections" target="_self">Upcoming Elections</a>
+    </li>
+    <li class="">
+        <a href="/department/rov/election-information/historical-county-voter-information-guides" target="_self">Historical County Voter Information Guides</a>
+    </li>
+    </ul>
+</div>
+
+
+
+
+
+
+    </div>
+</div>
+
+    </div>
+</div>
+
+</div>
+
+
+ <div class="container"> <div class="row"> <div class="col-md-8"> 
+ </div> <div class="col-md-4"> 
+ </div> </div> </div> <script src="/Frontend-Assembly/Telerik.Sitefinity.Frontend.Navigation/Mvc/Scripts/Navigation.js?package=sjgovOrg&amp;v=LTEzNjc1NzI3NzA%3d" type="text/javascript"></script><script type="application/json" id="PersonalizationTracker">
+	{"IsPagePersonalizationTarget":false,"IsUrlPersonalizationTarget":false,"PageId":"f4169f10-5eee-4597-bd79-541e4d40fcb5"}
+</script><script type="text/javascript" src="/WebResource.axd?d=NjxTqR2bqTw1rewxxlkHPnacaCEIHgVbera78q5VjIn6-a601BoquJVsBokUxzO-l38r6WntRvLqUkftmUPH6rD59NPemdyJr1qgkTUQYiKNhAp1imfTrVqxDuYbPBNA6w8XC33xuxFs0OPAaF7unYjPzxwC96B9V8ToA_7UQyoBBzpNFUrUMxkuj1HlChr32UO2XTMobd2bAVgeDZOP9qy1PpkpfUVXOZk8QQlEAdc1&amp;t=639231476620000000">
+
+</script> <footer> <div class="container"> <div class="col-md-3"> <ul class="footer-list"> <li class="title">
+            Government
+        </li> <li> <a href="/government/department-list" target="_self" title="Department List">Department List</a> </li> <li> <a href="/government/employment-opportunities" target="_blank" title="Employment&#160; Opportunities">Employment&#160; Opportunities</a> </li> <li> <a href="/government/county-services-directory" target="_blank" title="County Services Directory">County Services Directory</a> </li> </ul> </div> <div class="col-md-3"> <ul class="footer-list"> <li class="title">Residents</li> </ul> <ul class="footer-list"> <li> <a href="/residents/property-tax-information" target="_self" title="Property &amp; Tax Information">Property &amp; Tax Information</a> </li> <li> <a href="/department/pwk/roads-and-traffic/road-lane-closure-information" target="_self" title="Road &amp; Lane Closure Information">Road &amp; Lane Closure Information</a> </li> <li> <a href="http://www.sjparks.com/" target="_blank" title="Parks &amp; Recreation">Parks &amp; Recreation</a> </li> <li> <a href="/department/pwk/request" target="_blank" title="Report Illegal Dumping">Report Illegal Dumping</a> </li> </ul> </div> <div class="col-md-3"> <ul class="footer-list"> <li class="title">Help Center</li> </ul> <ul class="footer-list"> <li> <a href="/calendar" target="_self" title="Calendar">Calendar</a> </li> <li> <a href="/terms-and-conditions" target="_self" title="Terms and Conditions">Terms and Conditions</a> </li> <li> <a href="/privacy-policy" target="_self" title="Privacy Policy">Privacy Policy</a> </li> <li> <a href="/department/isd/enterprise-system-catalog" target="_self" title="Enterprise System Catalog">Enterprise System Catalog</a> </li> <li> <a href="https://sanjoaquincountyca.iqm2.com" target="_blank" title="Board Meeting Agendas">Board Meeting Agendas</a> </li> <li> <a href="https://outlook.office365.com/" target="_blank" title="Employee Email">Employee Email</a> </li> </ul> </div> <div class="col-md-3 footer__logos"><object class="footer__seal" data="/ResourcePackages/sjgovOrg/assets/src/project/images/SJC_seal_PMS_blue.svg" type="image/svg+xml" aria-label="San Joaquin County Seal">County Seal</object> <!--Google Translator --> <div id="google_translate_element"></div> <!--Ends Google Translator--> </div> </div> <div class="sub-footer"> <div class="container"> <div class="col-md-9"> <div class="copyright">&copy; Copyright  2026 San Joaquin County</div> </div> <div class="col-md-3"> <div class="social-icons"> <a target="_blank" href="https://twitter.com/sjgov" title="San Joaquin County - X formerly Twitter" class="social" id="twitter"> <object data="/ResourcePackages/sjgovOrg/assets/src/project/images/twitter.svg" type="image/svg+xml" aria-labelledby="twitter">X formerly Twitter</object> </a> <a target="_blank" href="http://www.facebook.com/sjgov" title="San Joaquin County - Facebook" class="social" id="facebook"> <object data="/ResourcePackages/sjgovOrg/assets/src/project/images/facebook-f.svg" type="image/svg+xml" aria-labelledby="facebook">Facebook</object> </a> <a target="_blank" href="https://www.youtube.com/@SanJoaquinCountyCA" title="San Joaquin County - YouTube" class="social" id="youtube"> <object data="/ResourcePackages/sjgovOrg/assets/src/project/images/youtube.svg" type="image/svg+xml" aria-labelledby="youtube">YouTube</object> </a> <a target="_blank" href="https://www.instagram.com/sanjoaquincountyca/" title="San Joaquin County - Instagram" class="social" id="instagram"> <object data="/ResourcePackages/sjgovOrg/assets/src/project/images/instagram.svg" type="image/svg+xml" aria-labelledby="instagram">Instagram</object> </a> <a target="_blank" href="https://www.linkedin.com/company/county-of-san-joaquin/" title="County of San Joaquin - Linkedin" class="social" id="linkedin"> <object data="/ResourcePackages/sjgovOrg/assets/src/project/images/linkedin-in.svg" type="image/svg+xml" aria-labelledby="linkedin">LinkedIn</object> </a> </div> </div> </div> </div> </footer> <!-- Google Analytics --> <script type="text/javascript">
+        (function() {
+            function deleteCookie(cookieName) {
+                document.cookie = cookieName + '=;expires=Mon Jan 01 1900 00:00:00 ; path=/';
+            }
+
+            function loadAndTrack(canTrack) {
+                if (!canTrack) {
+                    deleteCookie('_ga');
+                    deleteCookie('_gat');
+                    deleteCookie('_gid');
+                    return;
+                }
+
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-11961407-1', 'auto');
+                ga('send', 'pageview');
+            }
+
+            if (window.TrackingConsentManager) {
+                TrackingConsentManager.addEventListener('ConsentChanged', loadAndTrack);
+                loadAndTrack(TrackingConsentManager.canTrackCurrentUser());
+            }
+            else {
+                loadAndTrack(true);
+            }
+        })();
+    </script> <!-- Google Analytics G4 --> <script async src="https://www.googletagmanager.com/gtag/js?id=G-VK929KWVP7"></script> <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-VK929KWVP7');
+    </script> <!--Google Translate--> <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.VERTICAL, gaTrack: true, gaId: 'UA-11961407-1'}, 'google_translate_element');
+        }
+    </script> <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> <script type="text/javascript" src="/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3&ns=3&cb=1377776017" async></script></body> </html>

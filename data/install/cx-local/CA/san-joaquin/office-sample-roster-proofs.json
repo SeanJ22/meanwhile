@@ -1,0 +1,4266 @@
+[
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3505",
+    "sourceCode": "3505",
+    "sourceTitle": "City of Stockton Member, City Council District 5",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Stockton Member,\nCity Council District 5\nVote for One\nDESIREE LYNCH\nPost-Surgery Recovery Nurse\nBRANDO VILLAPUDUA\nCity Councilmember"
+    },
+    "physicalPage": 17,
+    "ballotType": 1,
+    "sampleNames": [
+      "DESIREE LYNCH",
+      "BRANDO VILLAPUDUA"
+    ],
+    "rosterNames": [
+      "BRANDO VILLAPUDUA",
+      "DESIREE LYNCH"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 17,
+        "ballotType": 1
+      },
+      {
+        "physicalPage": 21,
+        "ballotType": 2
+      },
+      {
+        "physicalPage": 29,
+        "ballotType": 4
+      },
+      {
+        "physicalPage": 41,
+        "ballotType": 7
+      },
+      {
+        "physicalPage": 89,
+        "ballotType": 19
+      },
+      {
+        "physicalPage": 93,
+        "ballotType": 20
+      },
+      {
+        "physicalPage": 101,
+        "ballotType": 22
+      },
+      {
+        "physicalPage": 129,
+        "ballotType": 29
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:stockton/council_district:5",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3505      Stockton City Council District 5                                                                                                                   On Ballot: Yes              Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Stockton\n       Member of City Council – District 1                                                        $1,340\n                                                          4 years        District\n       Member of City Council – District 3                                                        $1,120\n       Member of City Council – District 5                                                         $750\n\n                                     MUNICIPAL OFFICES\nFor information regarding qualifications and filing requirements for city offices, contact the appropriate\nCity Clerk’s Office. Candidates must meet applicable eligibility requirements under state law and local\nordinances. For these offices, all qualified candidates appear on the general election ballot, as no\nprimary election was held."
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-7022",
+    "sourceCode": "7022",
+    "sourceTitle": "Stockton East Water District Board Member Division 2",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Stockton East Water District\nBoard Member Division 2\nVote for One\nANDREW WATKINS\nIncumbent\nMATT GANDOLFO\nFarmer\nWrite-in"
+    },
+    "physicalPage": 17,
+    "ballotType": 1,
+    "sampleNames": [
+      "ANDREW WATKINS",
+      "MATT GANDOLFO"
+    ],
+    "rosterNames": [
+      "ANDREW WATKINS",
+      "MATT GANDOLFO"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 17,
+        "ballotType": 1
+      },
+      {
+        "physicalPage": 21,
+        "ballotType": 2
+      },
+      {
+        "physicalPage": 25,
+        "ballotType": 3
+      },
+      {
+        "physicalPage": 29,
+        "ballotType": 4
+      },
+      {
+        "physicalPage": 33,
+        "ballotType": 5
+      },
+      {
+        "physicalPage": 37,
+        "ballotType": 6
+      },
+      {
+        "physicalPage": 41,
+        "ballotType": 7
+      },
+      {
+        "physicalPage": 45,
+        "ballotType": 8
+      },
+      {
+        "physicalPage": 49,
+        "ballotType": 9
+      },
+      {
+        "physicalPage": 53,
+        "ballotType": 10
+      },
+      {
+        "physicalPage": 57,
+        "ballotType": 11
+      },
+      {
+        "physicalPage": 61,
+        "ballotType": 12
+      },
+      {
+        "physicalPage": 65,
+        "ballotType": 13
+      },
+      {
+        "physicalPage": 69,
+        "ballotType": 14
+      },
+      {
+        "physicalPage": 73,
+        "ballotType": 15
+      },
+      {
+        "physicalPage": 77,
+        "ballotType": 16
+      },
+      {
+        "physicalPage": 81,
+        "ballotType": 17
+      },
+      {
+        "physicalPage": 85,
+        "ballotType": 18
+      },
+      {
+        "physicalPage": 89,
+        "ballotType": 19
+      },
+      {
+        "physicalPage": 93,
+        "ballotType": 20
+      },
+      {
+        "physicalPage": 97,
+        "ballotType": 21
+      },
+      {
+        "physicalPage": 101,
+        "ballotType": 22
+      },
+      {
+        "physicalPage": 109,
+        "ballotType": 24
+      },
+      {
+        "physicalPage": 113,
+        "ballotType": 25
+      },
+      {
+        "physicalPage": 117,
+        "ballotType": 26
+      },
+      {
+        "physicalPage": 125,
+        "ballotType": 28
+      },
+      {
+        "physicalPage": 129,
+        "ballotType": 29
+      },
+      {
+        "physicalPage": 325,
+        "ballotType": 78
+      },
+      {
+        "physicalPage": 337,
+        "ballotType": 81
+      },
+      {
+        "physicalPage": 341,
+        "ballotType": 82
+      },
+      {
+        "physicalPage": 345,
+        "ballotType": 83
+      },
+      {
+        "physicalPage": 349,
+        "ballotType": 84
+      },
+      {
+        "physicalPage": 353,
+        "ballotType": 85
+      },
+      {
+        "physicalPage": 433,
+        "ballotType": 105
+      },
+      {
+        "physicalPage": 437,
+        "ballotType": 106
+      },
+      {
+        "physicalPage": 441,
+        "ballotType": 107
+      },
+      {
+        "physicalPage": 465,
+        "ballotType": 113
+      },
+      {
+        "physicalPage": 501,
+        "ballotType": 122
+      },
+      {
+        "physicalPage": 505,
+        "ballotType": 123
+      },
+      {
+        "physicalPage": 525,
+        "ballotType": 128
+      },
+      {
+        "physicalPage": 533,
+        "ballotType": 130
+      },
+      {
+        "physicalPage": 537,
+        "ballotType": 131
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/special_district:stockton_east_water_district",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "7022      Stockton East Water District, Division 2                                                                                                           On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "**** Stockton East Water District has seven divisions, each with its own elected director. Candidates\nmust reside within their division, but all district voters can vote in any division's contests."
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Stockton East Water District****\n      Board Member – Division 2                                                           $7,170\n      Board Member – Division 3 ** Unexpired                                              $7,170\n                                                         4 years     From Division\n      Board Member – Division 5                                                           $7,170\n      Board Member – Division 6                                                           $7,170\n      Board Member – Division 7                                                           $7,170\n\n                                   DRAINAGE DISTRICTS\n                   OFFICE                                 TERM      ELECTED BY       SOQ ESTIMATE\nNew Jerusalem Drainage District\n                                                         4 years        Division            $70"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-7023",
+    "sourceCode": "7023",
+    "sourceTitle": "Stockton East Water District Board Member Division 3 Short Term",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Stockton East Water District\nBoard Member Division 3\nShort Term\nVote for One\nRYAN G. HANSEN\nAppointed Incumbent\nWAYNE S. WATANABE\nFarmer\nWrite-in"
+    },
+    "physicalPage": 17,
+    "ballotType": 1,
+    "sampleNames": [
+      "RYAN G. HANSEN",
+      "WAYNE S. WATANABE"
+    ],
+    "rosterNames": [
+      "RYAN G. HANSEN",
+      "WAYNE S. WATANABE"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 17,
+        "ballotType": 1
+      },
+      {
+        "physicalPage": 21,
+        "ballotType": 2
+      },
+      {
+        "physicalPage": 25,
+        "ballotType": 3
+      },
+      {
+        "physicalPage": 29,
+        "ballotType": 4
+      },
+      {
+        "physicalPage": 33,
+        "ballotType": 5
+      },
+      {
+        "physicalPage": 37,
+        "ballotType": 6
+      },
+      {
+        "physicalPage": 41,
+        "ballotType": 7
+      },
+      {
+        "physicalPage": 45,
+        "ballotType": 8
+      },
+      {
+        "physicalPage": 49,
+        "ballotType": 9
+      },
+      {
+        "physicalPage": 53,
+        "ballotType": 10
+      },
+      {
+        "physicalPage": 57,
+        "ballotType": 11
+      },
+      {
+        "physicalPage": 61,
+        "ballotType": 12
+      },
+      {
+        "physicalPage": 65,
+        "ballotType": 13
+      },
+      {
+        "physicalPage": 69,
+        "ballotType": 14
+      },
+      {
+        "physicalPage": 73,
+        "ballotType": 15
+      },
+      {
+        "physicalPage": 77,
+        "ballotType": 16
+      },
+      {
+        "physicalPage": 81,
+        "ballotType": 17
+      },
+      {
+        "physicalPage": 85,
+        "ballotType": 18
+      },
+      {
+        "physicalPage": 89,
+        "ballotType": 19
+      },
+      {
+        "physicalPage": 93,
+        "ballotType": 20
+      },
+      {
+        "physicalPage": 97,
+        "ballotType": 21
+      },
+      {
+        "physicalPage": 101,
+        "ballotType": 22
+      },
+      {
+        "physicalPage": 109,
+        "ballotType": 24
+      },
+      {
+        "physicalPage": 113,
+        "ballotType": 25
+      },
+      {
+        "physicalPage": 117,
+        "ballotType": 26
+      },
+      {
+        "physicalPage": 125,
+        "ballotType": 28
+      },
+      {
+        "physicalPage": 129,
+        "ballotType": 29
+      },
+      {
+        "physicalPage": 325,
+        "ballotType": 78
+      },
+      {
+        "physicalPage": 337,
+        "ballotType": 81
+      },
+      {
+        "physicalPage": 341,
+        "ballotType": 82
+      },
+      {
+        "physicalPage": 345,
+        "ballotType": 83
+      },
+      {
+        "physicalPage": 349,
+        "ballotType": 84
+      },
+      {
+        "physicalPage": 353,
+        "ballotType": 85
+      },
+      {
+        "physicalPage": 433,
+        "ballotType": 105
+      },
+      {
+        "physicalPage": 437,
+        "ballotType": 106
+      },
+      {
+        "physicalPage": 441,
+        "ballotType": 107
+      },
+      {
+        "physicalPage": 465,
+        "ballotType": 113
+      },
+      {
+        "physicalPage": 501,
+        "ballotType": 122
+      },
+      {
+        "physicalPage": 505,
+        "ballotType": 123
+      },
+      {
+        "physicalPage": 525,
+        "ballotType": 128
+      },
+      {
+        "physicalPage": 533,
+        "ballotType": 130
+      },
+      {
+        "physicalPage": 537,
+        "ballotType": 131
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/special_district:stockton_east_water_district",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "7023      Stockton East Water District, Division 3 Unexpired                                                                                                 On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "**** Stockton East Water District has seven divisions, each with its own elected director. Candidates\nmust reside within their division, but all district voters can vote in any division's contests."
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Stockton East Water District****\n      Board Member – Division 2                                                           $7,170\n      Board Member – Division 3 ** Unexpired                                              $7,170\n                                                         4 years     From Division\n      Board Member – Division 5                                                           $7,170\n      Board Member – Division 6                                                           $7,170\n      Board Member – Division 7                                                           $7,170\n\n                                   DRAINAGE DISTRICTS\n                   OFFICE                                 TERM      ELECTED BY       SOQ ESTIMATE\nNew Jerusalem Drainage District\n                                                         4 years        Division            $70"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-7027",
+    "sourceCode": "7027",
+    "sourceTitle": "Stockton East Water District Board Member Division 7",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Stockton East Water District\nBoard Member Division 7\nVote for One\nMARY ELIZABETH\nScientist/R.E.H.S.\nTHOMAS MCGURK\nFarmer\nWrite-in"
+    },
+    "physicalPage": 17,
+    "ballotType": 1,
+    "sampleNames": [
+      "MARY ELIZABETH",
+      "THOMAS MCGURK"
+    ],
+    "rosterNames": [
+      "THOMAS MCGURK",
+      "MARY ELIZABETH"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 17,
+        "ballotType": 1
+      },
+      {
+        "physicalPage": 21,
+        "ballotType": 2
+      },
+      {
+        "physicalPage": 25,
+        "ballotType": 3
+      },
+      {
+        "physicalPage": 29,
+        "ballotType": 4
+      },
+      {
+        "physicalPage": 33,
+        "ballotType": 5
+      },
+      {
+        "physicalPage": 37,
+        "ballotType": 6
+      },
+      {
+        "physicalPage": 41,
+        "ballotType": 7
+      },
+      {
+        "physicalPage": 45,
+        "ballotType": 8
+      },
+      {
+        "physicalPage": 49,
+        "ballotType": 9
+      },
+      {
+        "physicalPage": 53,
+        "ballotType": 10
+      },
+      {
+        "physicalPage": 57,
+        "ballotType": 11
+      },
+      {
+        "physicalPage": 61,
+        "ballotType": 12
+      },
+      {
+        "physicalPage": 65,
+        "ballotType": 13
+      },
+      {
+        "physicalPage": 69,
+        "ballotType": 14
+      },
+      {
+        "physicalPage": 73,
+        "ballotType": 15
+      },
+      {
+        "physicalPage": 77,
+        "ballotType": 16
+      },
+      {
+        "physicalPage": 81,
+        "ballotType": 17
+      },
+      {
+        "physicalPage": 85,
+        "ballotType": 18
+      },
+      {
+        "physicalPage": 89,
+        "ballotType": 19
+      },
+      {
+        "physicalPage": 93,
+        "ballotType": 20
+      },
+      {
+        "physicalPage": 97,
+        "ballotType": 21
+      },
+      {
+        "physicalPage": 101,
+        "ballotType": 22
+      },
+      {
+        "physicalPage": 109,
+        "ballotType": 24
+      },
+      {
+        "physicalPage": 113,
+        "ballotType": 25
+      },
+      {
+        "physicalPage": 117,
+        "ballotType": 26
+      },
+      {
+        "physicalPage": 125,
+        "ballotType": 28
+      },
+      {
+        "physicalPage": 129,
+        "ballotType": 29
+      },
+      {
+        "physicalPage": 325,
+        "ballotType": 78
+      },
+      {
+        "physicalPage": 337,
+        "ballotType": 81
+      },
+      {
+        "physicalPage": 341,
+        "ballotType": 82
+      },
+      {
+        "physicalPage": 345,
+        "ballotType": 83
+      },
+      {
+        "physicalPage": 349,
+        "ballotType": 84
+      },
+      {
+        "physicalPage": 353,
+        "ballotType": 85
+      },
+      {
+        "physicalPage": 433,
+        "ballotType": 105
+      },
+      {
+        "physicalPage": 437,
+        "ballotType": 106
+      },
+      {
+        "physicalPage": 441,
+        "ballotType": 107
+      },
+      {
+        "physicalPage": 465,
+        "ballotType": 113
+      },
+      {
+        "physicalPage": 501,
+        "ballotType": 122
+      },
+      {
+        "physicalPage": 505,
+        "ballotType": 123
+      },
+      {
+        "physicalPage": 525,
+        "ballotType": 128
+      },
+      {
+        "physicalPage": 533,
+        "ballotType": 130
+      },
+      {
+        "physicalPage": 537,
+        "ballotType": 131
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/special_district:stockton_east_water_district",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "7027      Stockton East Water District, Division 7                                                                                                           On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "**** Stockton East Water District has seven divisions, each with its own elected director. Candidates\nmust reside within their division, but all district voters can vote in any division's contests."
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Stockton East Water District****\n      Board Member – Division 2                                                           $7,170\n      Board Member – Division 3 ** Unexpired                                              $7,170\n                                                         4 years     From Division\n      Board Member – Division 5                                                           $7,170\n      Board Member – Division 6                                                           $7,170\n      Board Member – Division 7                                                           $7,170\n\n                                   DRAINAGE DISTRICTS\n                   OFFICE                                 TERM      ELECTED BY       SOQ ESTIMATE\nNew Jerusalem Drainage District\n                                                         4 years        Division            $70"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2605",
+    "sourceCode": "2605",
+    "sourceTitle": "Stockton Unified School District Board Member Trustee Area 5",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Stockton Unified School District\nBoard Member Trustee Area 5\nVote for One\nDONALD DONAIRE\nSchool Board Trustee\nMALINA SANCHEZ\nStudent/Swim Teacher\nWrite-in"
+    },
+    "physicalPage": 25,
+    "ballotType": 3,
+    "sampleNames": [
+      "DONALD DONAIRE",
+      "MALINA SANCHEZ"
+    ],
+    "rosterNames": [
+      "DONALD DONAIRE",
+      "MALINA SANCHEZ"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 25,
+        "ballotType": 3
+      },
+      {
+        "physicalPage": 89,
+        "ballotType": 19
+      },
+      {
+        "physicalPage": 93,
+        "ballotType": 20
+      },
+      {
+        "physicalPage": 433,
+        "ballotType": 105
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:stockton_unified_school_district/trustee_area:5",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2605      Stockton USD Trustee Area 5                                                                                                                          On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Stockton Unified School District\n      Board Member – Trustee Area 2                                                            $490\n      Board Member – Trustee Area 5                       4 years    Trustee Area              $540\n      Board Member – Trustee Area 6                                                            $610\n      Board Member – Trustee Area 7                                                            $600\nTracy Unified School District\n      Board Member – Trustee Area 2                                                            $400\n      Board Member – Trustee Area 4                       4 years    Trustee Area              $320\n      Board Member – Trustee Area 6                                                            $410\n      Board Member – Trustee Area 7                                                            $470\nValley Home Joint School District\n(Stanislaus is the Primary County)                        4 years      At Large                $80"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2602",
+    "sourceCode": "2602",
+    "sourceTitle": "Stockton Unified School District Board Member Trustee Area 2",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Stockton Unified School District\nBoard Member Trustee Area 2\nVote for One\nALICIA HERNANDEZ\nEducator/College Student\nSAM CARPENTER\nSmall Business Owner\nPATRICK MARTIN\nAppointed Incumbent\nWrite-in"
+    },
+    "physicalPage": 29,
+    "ballotType": 4,
+    "sampleNames": [
+      "ALICIA HERNANDEZ",
+      "SAM CARPENTER",
+      "PATRICK MARTIN"
+    ],
+    "rosterNames": [
+      "ALICIA HERNANDEZ",
+      "SAM CARPENTER",
+      "PATRICK MARTIN"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 29,
+        "ballotType": 4
+      },
+      {
+        "physicalPage": 45,
+        "ballotType": 8
+      },
+      {
+        "physicalPage": 105,
+        "ballotType": 23
+      },
+      {
+        "physicalPage": 109,
+        "ballotType": 24
+      },
+      {
+        "physicalPage": 125,
+        "ballotType": 28
+      },
+      {
+        "physicalPage": 445,
+        "ballotType": 108
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:stockton_unified_school_district/trustee_area:2",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2602      Stockton USD Trustee Area 2                                                                                                                          On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Stockton Unified School District\n      Board Member – Trustee Area 2                                                            $490\n      Board Member – Trustee Area 5                       4 years    Trustee Area              $540\n      Board Member – Trustee Area 6                                                            $610\n      Board Member – Trustee Area 7                                                            $600\nTracy Unified School District\n      Board Member – Trustee Area 2                                                            $400\n      Board Member – Trustee Area 4                       4 years    Trustee Area              $320\n      Board Member – Trustee Area 6                                                            $410\n      Board Member – Trustee Area 7                                                            $470\nValley Home Joint School District\n(Stanislaus is the Primary County)                        4 years      At Large                $80"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2606",
+    "sourceCode": "2606",
+    "sourceTitle": "Stockton Unified School District Board Member Trustee Area 6",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Stockton Unified School District\nBoard Member Trustee Area 6\nVote for One\nSOFIA COLÓN\nTrustee/Healthcare Professional\nCHRISTINA BACCA\nMCBRIAN\nTeacher\nWrite-in"
+    },
+    "physicalPage": 41,
+    "ballotType": 7,
+    "sampleNames": [
+      "SOFIA COLÓN",
+      "CHRISTINA BACCA MCBRIAN"
+    ],
+    "rosterNames": [
+      "SOFIA COLÓN",
+      "CHRISTINA BACCA MCBRIAN"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 41,
+        "ballotType": 7
+      },
+      {
+        "physicalPage": 85,
+        "ballotType": 18
+      },
+      {
+        "physicalPage": 129,
+        "ballotType": 29
+      },
+      {
+        "physicalPage": 437,
+        "ballotType": 106
+      },
+      {
+        "physicalPage": 465,
+        "ballotType": 113
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:stockton_unified_school_district/trustee_area:6",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2606      Stockton USD Trustee Area 6                                                                                                                          On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Stockton Unified School District\n      Board Member – Trustee Area 2                                                            $490\n      Board Member – Trustee Area 5                       4 years    Trustee Area              $540\n      Board Member – Trustee Area 6                                                            $610\n      Board Member – Trustee Area 7                                                            $600\nTracy Unified School District\n      Board Member – Trustee Area 2                                                            $400\n      Board Member – Trustee Area 4                       4 years    Trustee Area              $320\n      Board Member – Trustee Area 6                                                            $410\n      Board Member – Trustee Area 7                                                            $470\nValley Home Joint School District\n(Stanislaus is the Primary County)                        4 years      At Large                $80"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2607",
+    "sourceCode": "2607",
+    "sourceTitle": "Stockton Unified School District Board Member Trustee Area 7",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Stockton Unified School District\nBoard Member Trustee Area 7\nVote for One\nDAVID PADILLA\nTeacher\nKENNETHA STEVENS\nTrustee/Parent Educator\nWrite-in"
+    },
+    "physicalPage": 49,
+    "ballotType": 9,
+    "sampleNames": [
+      "DAVID PADILLA",
+      "KENNETHA STEVENS"
+    ],
+    "rosterNames": [
+      "DAVID PADILLA",
+      "KENNETHA STEVENS"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 49,
+        "ballotType": 9
+      },
+      {
+        "physicalPage": 61,
+        "ballotType": 12
+      },
+      {
+        "physicalPage": 81,
+        "ballotType": 17
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:stockton_unified_school_district/trustee_area:7",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2607      Stockton USD Trustee Area 7                                                                                                                          On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Stockton Unified School District\n      Board Member – Trustee Area 2                                                            $490\n      Board Member – Trustee Area 5                       4 years    Trustee Area              $540\n      Board Member – Trustee Area 6                                                            $610\n      Board Member – Trustee Area 7                                                            $600\nTracy Unified School District\n      Board Member – Trustee Area 2                                                            $400\n      Board Member – Trustee Area 4                       4 years    Trustee Area              $320\n      Board Member – Trustee Area 6                                                            $410\n      Board Member – Trustee Area 7                                                            $470\nValley Home Joint School District\n(Stanislaus is the Primary County)                        4 years      At Large                $80"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3503",
+    "sourceCode": "3503",
+    "sourceTitle": "City of Stockton Member, City Council District 3",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Stockton Member,\nCity Council District 3\nVote for One\nMICHAEL BLOWER\nCouncilmember/Business Owner\nJESSICA TOCCOLI\nEducator"
+    },
+    "physicalPage": 49,
+    "ballotType": 9,
+    "sampleNames": [
+      "MICHAEL BLOWER",
+      "JESSICA TOCCOLI"
+    ],
+    "rosterNames": [
+      "MICHAEL BLOWER",
+      "JESSICA TOCCOLI"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 49,
+        "ballotType": 9
+      },
+      {
+        "physicalPage": 57,
+        "ballotType": 11
+      },
+      {
+        "physicalPage": 65,
+        "ballotType": 13
+      },
+      {
+        "physicalPage": 113,
+        "ballotType": 25
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:stockton/council_district:3",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3503      Stockton City Council District 3                                                                                                                    On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Stockton\n       Member of City Council – District 1                                                        $1,340\n                                                          4 years        District\n       Member of City Council – District 3                                                        $1,120\n       Member of City Council – District 5                                                         $750\n\n                                     MUNICIPAL OFFICES\nFor information regarding qualifications and filing requirements for city offices, contact the appropriate\nCity Clerk’s Office. Candidates must meet applicable eligibility requirements under state law and local\nordinances. For these offices, all qualified candidates appear on the general election ballot, as no\nprimary election was held."
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3501",
+    "sourceCode": "3501",
+    "sourceTitle": "City of Stockton Member, City Council District 1",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Stockton Member,\nCity Council District 1\nVote for One\nMICHELE PADILLA\nStockton Councilmember/Educator\nTAMICA SMALL\nRetired Law Enforcement"
+    },
+    "physicalPage": 53,
+    "ballotType": 10,
+    "sampleNames": [
+      "MICHELE PADILLA",
+      "TAMICA SMALL"
+    ],
+    "rosterNames": [
+      "TAMICA SMALL",
+      "MICHELE PADILLA"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 53,
+        "ballotType": 10
+      },
+      {
+        "physicalPage": 61,
+        "ballotType": 12
+      },
+      {
+        "physicalPage": 77,
+        "ballotType": 16
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:stockton/council_district:1",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3501      Stockton City Council District 1                                                                                                                    On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Stockton\n       Member of City Council – District 1                                                        $1,340\n                                                          4 years        District\n       Member of City Council – District 3                                                        $1,120\n       Member of City Council – District 5                                                         $750\n\n                                     MUNICIPAL OFFICES\nFor information regarding qualifications and filing requirements for city offices, contact the appropriate\nCity Clerk’s Office. Candidates must meet applicable eligibility requirements under state law and local\nordinances. For these offices, all qualified candidates appear on the general election ballot, as no\nprimary election was held."
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-sacramento-3314",
+    "sourceCode": "2534",
+    "sourceTitle": "San Joaquin Delta Community College District Board Member Trustee Area 4",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "San Joaquin Delta Community\nCollege District Board Member\nTrustee Area 4\nVote for One\nCHARLES R. JENNINGS\nDelta College Trustee\nTONY SHAH\nRetired School Administrator\nWrite-in"
+    },
+    "physicalPage": 97,
+    "ballotType": 21,
+    "sampleNames": [
+      "CHARLES R. JENNINGS",
+      "TONY SHAH"
+    ],
+    "rosterNames": [
+      "CHARLES R. JENNINGS",
+      "TONY SHAH"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 97,
+        "ballotType": 21
+      },
+      {
+        "physicalPage": 101,
+        "ballotType": 22
+      },
+      {
+        "physicalPage": 113,
+        "ballotType": 25
+      },
+      {
+        "physicalPage": 117,
+        "ballotType": 26
+      },
+      {
+        "physicalPage": 141,
+        "ballotType": 32
+      },
+      {
+        "physicalPage": 193,
+        "ballotType": 45
+      },
+      {
+        "physicalPage": 197,
+        "ballotType": 46
+      },
+      {
+        "physicalPage": 201,
+        "ballotType": 47
+      },
+      {
+        "physicalPage": 205,
+        "ballotType": 48
+      },
+      {
+        "physicalPage": 209,
+        "ballotType": 49
+      },
+      {
+        "physicalPage": 213,
+        "ballotType": 50
+      },
+      {
+        "physicalPage": 217,
+        "ballotType": 51
+      },
+      {
+        "physicalPage": 221,
+        "ballotType": 52
+      },
+      {
+        "physicalPage": 225,
+        "ballotType": 53
+      },
+      {
+        "physicalPage": 229,
+        "ballotType": 54
+      },
+      {
+        "physicalPage": 233,
+        "ballotType": 55
+      },
+      {
+        "physicalPage": 237,
+        "ballotType": 56
+      },
+      {
+        "physicalPage": 241,
+        "ballotType": 57
+      },
+      {
+        "physicalPage": 245,
+        "ballotType": 58
+      },
+      {
+        "physicalPage": 249,
+        "ballotType": 59
+      },
+      {
+        "physicalPage": 253,
+        "ballotType": 60
+      },
+      {
+        "physicalPage": 257,
+        "ballotType": 61
+      },
+      {
+        "physicalPage": 261,
+        "ballotType": 62
+      },
+      {
+        "physicalPage": 265,
+        "ballotType": 63
+      },
+      {
+        "physicalPage": 269,
+        "ballotType": 64
+      },
+      {
+        "physicalPage": 329,
+        "ballotType": 79
+      },
+      {
+        "physicalPage": 377,
+        "ballotType": 91
+      },
+      {
+        "physicalPage": 385,
+        "ballotType": 93
+      },
+      {
+        "physicalPage": 429,
+        "ballotType": 104
+      },
+      {
+        "physicalPage": 449,
+        "ballotType": 109
+      },
+      {
+        "physicalPage": 453,
+        "ballotType": 110
+      },
+      {
+        "physicalPage": 457,
+        "ballotType": 111
+      },
+      {
+        "physicalPage": 469,
+        "ballotType": 114
+      },
+      {
+        "physicalPage": 473,
+        "ballotType": 115
+      },
+      {
+        "physicalPage": 489,
+        "ballotType": 119
+      },
+      {
+        "physicalPage": 493,
+        "ballotType": 120
+      },
+      {
+        "physicalPage": 501,
+        "ballotType": 122
+      },
+      {
+        "physicalPage": 505,
+        "ballotType": 123
+      },
+      {
+        "physicalPage": 525,
+        "ballotType": 128
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:san_joaquin_delta_community_college_district/trustee_area:4",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2534      San Joaquin Delta CCD Trustee Area 4                                                                                                              On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "San Joaquin Delta Community College\n      Board Member – Trustee Area 3                                                           $2,550\n                                                          4 years    Trustee Area\n      Board Member – Trustee Area 4                                                           $1,900\n      Board Member – Trustee Area 7                                                           $2,920\nStockton Unified School District\n      Board Member – Trustee Area 2                                                            $490\n      Board Member – Trustee Area 5                       4 years    Trustee Area              $540\n      Board Member – Trustee Area 6                                                            $610\n      Board Member – Trustee Area 7                                                            $600\nTracy Unified School District\n      Board Member – Trustee Area 2                                                            $400"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-4010",
+    "sourceCode": "4010",
+    "sourceTitle": "City of Mountain House Member, City Council",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Mountain House\nMember, City Council\nVote for no more than Two\nARJUN JUTURU\nEngineer/Business Owner\nNADER SHAREGHI\nEngineer/Assistant Manager\nHAPPY GREWAL\nBusiness Owner/Farmer\nRONNA GREEN\nCity of Mountain House Council\nMember\nSURESH VUYYURU\nParent/Engineer/Farmer\nBERNICE KING TINGLE\nCity of Mountain House Council\nMember\nWrite-in\nWrite-in"
+    },
+    "physicalPage": 133,
+    "ballotType": 30,
+    "sampleNames": [
+      "ARJUN JUTURU",
+      "NADER SHAREGHI",
+      "HAPPY GREWAL",
+      "RONNA GREEN",
+      "SURESH VUYYURU",
+      "BERNICE KING TINGLE"
+    ],
+    "rosterNames": [
+      "RONNA GREEN",
+      "HAPPY GREWAL",
+      "BERNICE KING TINGLE",
+      "NADER SHAREGHI",
+      "ARJUN JUTURU",
+      "SURESH VUYYURU"
+    ],
+    "voteFor": 2,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 133,
+        "ballotType": 30
+      },
+      {
+        "physicalPage": 137,
+        "ballotType": 31
+      },
+      {
+        "physicalPage": 141,
+        "ballotType": 32
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:mountain_house",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "4010      Mountain House City Council                                                                                                                                  On Ballot: Yes              Vote For: 2"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Mountain House\n                                              4 years     At Large                20                   $510\n       Member of City Council – Vote for 2\nCity of Ripon\n                                              4 years     At Large                20                   $470\n       Member of City Council – Vote for 2\nCity of Tracy\n       Mayor                                  2 years     At Large                                   $2,060\n                                                                                  20\n       Member of City Council – District 1    4 years      District                                   $560\n       Member of City Council – District 3    4 years      District                                   $510"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2734",
+    "sourceCode": "2734",
+    "sourceTitle": "Lammersville Unified School District Board Member Trustee Area 4",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Lammersville Unified School\nDistrict Board Member Trustee\nArea 4\nVote for One\nSTEPHANIE OLSEN\nEducation Attorney/Parent\nVANITHA DANIEL\nMother/Educator/Entrepreneur\nWrite-in"
+    },
+    "physicalPage": 137,
+    "ballotType": 31,
+    "sampleNames": [
+      "STEPHANIE OLSEN",
+      "VANITHA DANIEL"
+    ],
+    "rosterNames": [
+      "VANITHA DANIEL",
+      "STEPHANIE OLSEN"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 137,
+        "ballotType": 31
+      },
+      {
+        "physicalPage": 141,
+        "ballotType": 32
+      },
+      {
+        "physicalPage": 473,
+        "ballotType": 115
+      },
+      {
+        "physicalPage": 481,
+        "ballotType": 117
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:lammersville_joint_unified_school_district/trustee_area:4",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2734      Lammersville USD Trustee Area 4                                                                                                                   On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Lammersville Unified School District\n(Shared with Alameda)\n      Board Member – Trustee Area 4                4 years   Trustee Area       $170\n      Board Member – Trustee Area 5                                             $170\nLincoln Unified School District\n      Board Member – Trustee Area 1                                             $290\n                                                   4 years   Trustee Area\n      Board Member – Trustee Area 3                                             $250\n      Board Member – Trustee Area 5                                             $300\nLinden Unified School District\n      Board Member – Trustee Area 1                                             $110\n                                                   4 years   Trustee Area"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3540",
+    "sourceCode": "3540",
+    "sourceTitle": "City of Tracy Mayor",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Tracy Mayor\nVote for One\nUYIOSA FELIX OVIAWE\nMaintenance Director/Contractor\nDAN ARRIOLA\nDeputy District Attorney\nMATEO BEDOLLA\nTeacher/Tracy Councilmember\nWrite-in"
+    },
+    "physicalPage": 145,
+    "ballotType": 33,
+    "sampleNames": [
+      "UYIOSA FELIX OVIAWE",
+      "DAN ARRIOLA",
+      "MATEO BEDOLLA"
+    ],
+    "rosterNames": [
+      "MATEO BEDOLLA",
+      "DAN ARRIOLA",
+      "UYIOSA FELIX OVIAWE"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 145,
+        "ballotType": 33
+      },
+      {
+        "physicalPage": 149,
+        "ballotType": 34
+      },
+      {
+        "physicalPage": 153,
+        "ballotType": 35
+      },
+      {
+        "physicalPage": 157,
+        "ballotType": 36
+      },
+      {
+        "physicalPage": 161,
+        "ballotType": 37
+      },
+      {
+        "physicalPage": 165,
+        "ballotType": 38
+      },
+      {
+        "physicalPage": 169,
+        "ballotType": 39
+      },
+      {
+        "physicalPage": 173,
+        "ballotType": 40
+      },
+      {
+        "physicalPage": 177,
+        "ballotType": 41
+      },
+      {
+        "physicalPage": 181,
+        "ballotType": 42
+      },
+      {
+        "physicalPage": 185,
+        "ballotType": 43
+      },
+      {
+        "physicalPage": 189,
+        "ballotType": 44
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:tracy",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3540      Tracy Mayor                                                                                                                                         On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Tracy\n       Mayor                                  2 years     At Large                                   $2,060\n                                                                                  20\n       Member of City Council – District 1    4 years      District                                   $560\n       Member of City Council – District 3    4 years      District                                   $510\n\n        COUNTY BOARD OF EDUCATION, SCHOOL DISTRICTS, AND\n                 COMMUNITY COLLEGE TRUSTEES\nThe County Board of Education serves as the governing body for the County Office of Education and\nis responsible for setting policies, adopting budgets, overseeing the County Superintendent of\nSchools, and providing support and oversight services to local school districts as required by law.\nBoard members act within their respective trustee areas and exercise authority as prescribed by the"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3541",
+    "sourceCode": "3541",
+    "sourceTitle": "City of Tracy Member, City Council District 1",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Tracy Member,\nCity Council District 1\nVote for One\nROBIN COLE\nProject Manager\nJASS SANGHA\nBusinesswoman/Mother\nWrite-in"
+    },
+    "physicalPage": 145,
+    "ballotType": 33,
+    "sampleNames": [
+      "ROBIN COLE",
+      "JASS SANGHA"
+    ],
+    "rosterNames": [
+      "JASS SANGHA",
+      "ROBIN COLE"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 145,
+        "ballotType": 33
+      },
+      {
+        "physicalPage": 149,
+        "ballotType": 34
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:tracy/council_district:1",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3541      Tracy City Council District 1                                                                                                                       On Ballot: Yes              Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Tracy\n       Mayor                                  2 years     At Large                                   $2,060\n                                                                                  20\n       Member of City Council – District 1    4 years      District                                   $560\n       Member of City Council – District 3    4 years      District                                   $510\n\n        COUNTY BOARD OF EDUCATION, SCHOOL DISTRICTS, AND\n                 COMMUNITY COLLEGE TRUSTEES\nThe County Board of Education serves as the governing body for the County Office of Education and\nis responsible for setting policies, adopting budgets, overseeing the County Superintendent of\nSchools, and providing support and oversight services to local school districts as required by law.\nBoard members act within their respective trustee areas and exercise authority as prescribed by the"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2747",
+    "sourceCode": "2747",
+    "sourceTitle": "Tracy Unified School District Board Member Trustee Area 7",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Tracy Unified School District\nBoard Member Trustee Area 7\nVote for One\nVIJAY PASAPULA\nParent/Statistical Programmer\nBARBARA \"BOBBIE\"\nETCHEVERRY\nCommunications Specialist\nWrite-in"
+    },
+    "physicalPage": 149,
+    "ballotType": 34,
+    "sampleNames": [
+      "VIJAY PASAPULA",
+      "BARBARA \"BOBBIE\" ETCHEVERRY"
+    ],
+    "rosterNames": [
+      "BARBARA \"BOBBIE\" ETCHEVERRY",
+      "VIJAY PASAPULA"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 149,
+        "ballotType": 34
+      },
+      {
+        "physicalPage": 169,
+        "ballotType": 39
+      },
+      {
+        "physicalPage": 181,
+        "ballotType": 42
+      },
+      {
+        "physicalPage": 189,
+        "ballotType": 44
+      },
+      {
+        "physicalPage": 389,
+        "ballotType": 94
+      },
+      {
+        "physicalPage": 405,
+        "ballotType": 98
+      },
+      {
+        "physicalPage": 409,
+        "ballotType": 99
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:tracy_unified_school_district/trustee_area:7",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2747      Tracy USD Trustee Area 7                                                                                                                        On Ballot: Yes              Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Tracy Unified School District\n      Board Member – Trustee Area 2                                                            $400\n      Board Member – Trustee Area 4                       4 years    Trustee Area              $320\n      Board Member – Trustee Area 6                                                            $410\n      Board Member – Trustee Area 7                                                            $470\nValley Home Joint School District\n(Stanislaus is the Primary County)                        4 years      At Large                $80\n     Board Member – Vote for 2\nYosemite Community College District\n(Stanislaus is the Primary County)\n        Board Member – Trustee Area 1                     4 years    Trustee Area              $80\n        Board Member – Trustee Area 4                                                          $70"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2744",
+    "sourceCode": "2744",
+    "sourceTitle": "Tracy Unified School District Board Member Trustee Area 4",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Tracy Unified School District\nBoard Member Trustee Area 4\nVote for One\nALICIA R. CORRALES\nMother/Nonprofit Consultant\nOLINGA YARBER-\nALEXANDER\nIncumbent\nWrite-in"
+    },
+    "physicalPage": 157,
+    "ballotType": 36,
+    "sampleNames": [
+      "ALICIA R. CORRALES",
+      "OLINGA YARBER- ALEXANDER"
+    ],
+    "rosterNames": [
+      "OLINGA YARBER-ALEXANDER",
+      "ALICIA R. CORRALES"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 157,
+        "ballotType": 36
+      },
+      {
+        "physicalPage": 177,
+        "ballotType": 41
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:tracy_unified_school_district/trustee_area:4",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2744      Tracy USD Trustee Area 4                                                                                                                        On Ballot: Yes              Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Tracy Unified School District\n      Board Member – Trustee Area 2                                                            $400\n      Board Member – Trustee Area 4                       4 years    Trustee Area              $320\n      Board Member – Trustee Area 6                                                            $410\n      Board Member – Trustee Area 7                                                            $470\nValley Home Joint School District\n(Stanislaus is the Primary County)                        4 years      At Large                $80\n     Board Member – Vote for 2\nYosemite Community College District\n(Stanislaus is the Primary County)\n        Board Member – Trustee Area 1                     4 years    Trustee Area              $80\n        Board Member – Trustee Area 4                                                          $70"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2746",
+    "sourceCode": "2746",
+    "sourceTitle": "Tracy Unified School District Board Member Trustee Area 6",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Tracy Unified School District\nBoard Member Trustee Area 6\nVote for One\nDEVAUGHN JONES\nClinical Pharmacist/Parent\nR. G. FAGIN\nIncumbent\nWrite-in"
+    },
+    "physicalPage": 161,
+    "ballotType": 37,
+    "sampleNames": [
+      "DEVAUGHN JONES",
+      "R. G. FAGIN"
+    ],
+    "rosterNames": [
+      "R. G. FAGIN",
+      "DEVAUGHN JONES"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 161,
+        "ballotType": 37
+      },
+      {
+        "physicalPage": 165,
+        "ballotType": 38
+      },
+      {
+        "physicalPage": 185,
+        "ballotType": 43
+      },
+      {
+        "physicalPage": 393,
+        "ballotType": 95
+      },
+      {
+        "physicalPage": 397,
+        "ballotType": 96
+      },
+      {
+        "physicalPage": 401,
+        "ballotType": 97
+      },
+      {
+        "physicalPage": 421,
+        "ballotType": 102
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:tracy_unified_school_district/trustee_area:6",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2746      Tracy USD Trustee Area 6                                                                                                                        On Ballot: Yes              Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Tracy Unified School District\n      Board Member – Trustee Area 2                                                            $400\n      Board Member – Trustee Area 4                       4 years    Trustee Area              $320\n      Board Member – Trustee Area 6                                                            $410\n      Board Member – Trustee Area 7                                                            $470\nValley Home Joint School District\n(Stanislaus is the Primary County)                        4 years      At Large                $80\n     Board Member – Vote for 2\nYosemite Community College District\n(Stanislaus is the Primary County)\n        Board Member – Trustee Area 1                     4 years    Trustee Area              $80\n        Board Member – Trustee Area 4                                                          $70"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3543",
+    "sourceCode": "3543",
+    "sourceTitle": "City of Tracy Member, City Council District 3",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Tracy Member,\nCity Council District 3\nVote for One\nAMENI ALEXANDER\nNonprofit Organization CFO\nAMETRIUS V. SIDNEY\nPublic Safety Executive\nDAN EVANS\nCouncil Member\nWrite-in"
+    },
+    "physicalPage": 165,
+    "ballotType": 38,
+    "sampleNames": [
+      "AMENI ALEXANDER",
+      "AMETRIUS V. SIDNEY",
+      "DAN EVANS"
+    ],
+    "rosterNames": [
+      "DAN EVANS",
+      "AMENI ALEXANDER",
+      "AMETRIUS V. SIDNEY"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 165,
+        "ballotType": 38
+      },
+      {
+        "physicalPage": 169,
+        "ballotType": 39
+      },
+      {
+        "physicalPage": 173,
+        "ballotType": 40
+      },
+      {
+        "physicalPage": 177,
+        "ballotType": 41
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:tracy/council_district:3",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3543      Tracy City Council District 3                                                                                                                       On Ballot: Yes              Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Tracy\n       Mayor                                  2 years     At Large                                   $2,060\n                                                                                  20\n       Member of City Council – District 1    4 years      District                                   $560\n       Member of City Council – District 3    4 years      District                                   $510\n\n        COUNTY BOARD OF EDUCATION, SCHOOL DISTRICTS, AND\n                 COMMUNITY COLLEGE TRUSTEES\nThe County Board of Education serves as the governing body for the County Office of Education and\nis responsible for setting policies, adopting budgets, overseeing the County Superintendent of\nSchools, and providing support and oversight services to local school districts as required by law.\nBoard members act within their respective trustee areas and exercise authority as prescribed by the"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2794",
+    "sourceCode": "2794",
+    "sourceTitle": "Jefferson Elementary School District Board Member Trustee Area 4",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Jefferson Elementary School\nDistrict Board Member Trustee\nArea 4\nVote for One\nTODD WETHERELL\nIncumbent\nLARKIN FLECKNER\nSoftware Analyst/Parent\nWrite-in"
+    },
+    "physicalPage": 185,
+    "ballotType": 43,
+    "sampleNames": [
+      "TODD WETHERELL",
+      "LARKIN FLECKNER"
+    ],
+    "rosterNames": [
+      "LARKIN FLECKNER",
+      "TODD WETHERELL"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 185,
+        "ballotType": 43
+      },
+      {
+        "physicalPage": 401,
+        "ballotType": 97
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:jefferson_elementary_school_district_0618840/trustee_area:4",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2794      Jefferson ESD Trustee Area 4                                                                                                               On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Jefferson Elementary School District\n      Board Member – Trustee Area 1                                             $200\n                                                   4 years   Trustee Area\n      Board Member – Trustee Area 4                                             $150\n      Board Member – Trustee Area 5                                             $160\nLammersville Unified School District\n(Shared with Alameda)\n      Board Member – Trustee Area 4                4 years   Trustee Area       $170\n      Board Member – Trustee Area 5                                             $170\nLincoln Unified School District\n      Board Member – Trustee Area 1                                             $290\n                                                   4 years   Trustee Area"
+      },
+      {
+        "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=0618840",
+        "sourceOrg": "National Center for Education Statistics",
+        "collectedAt": "2026-11-03T09:01:55.285665+00:00",
+        "verifiedAt": "2026-11-03T09:01:55.285665+00:00",
+        "quote": "NCES District ID:\n0618840\nState District ID:\nCA-3968544"
+      },
+      {
+        "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=0618840",
+        "sourceOrg": "National Center for Education Statistics",
+        "collectedAt": "2026-11-03T09:01:55.285665+00:00",
+        "verifiedAt": "2026-11-03T09:01:55.285665+00:00",
+        "quote": "County:\nSan Joaquin County\nCounty ID:\n06077"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3532",
+    "sourceCode": "3532",
+    "sourceTitle": "City of Lodi Member, City Council District 1",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Lodi Member,\nCity Council District 1\nVote for One\nDAWSON HAYRE\nSafety Supervisor\nMICHAEL CAROUBA\nBusiness Owner\nBRANDON SYWASSINK\nFarmer/Business Owner\nWrite-in"
+    },
+    "physicalPage": 193,
+    "ballotType": 45,
+    "sampleNames": [
+      "DAWSON HAYRE",
+      "MICHAEL CAROUBA",
+      "BRANDON SYWASSINK"
+    ],
+    "rosterNames": [
+      "BRANDON SYWASSINK",
+      "MICHAEL CAROUBA",
+      "DAWSON HAYRE"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 193,
+        "ballotType": 45
+      },
+      {
+        "physicalPage": 205,
+        "ballotType": 48
+      },
+      {
+        "physicalPage": 217,
+        "ballotType": 51
+      },
+      {
+        "physicalPage": 241,
+        "ballotType": 57
+      },
+      {
+        "physicalPage": 245,
+        "ballotType": 58
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:lodi/council_district:1",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3532      Lodi City Council District 1                                                                                                                               On Ballot: Yes              Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Lodi\n       Member of City Council – District 1                                                             $490\n                                              4 years      District               20\n       Member of City Council – District 2                                                             $340\n       Member of City Council – District 3                                                             $360\nCity of Manteca\n       Mayor                                              At Large                                   $2,040\n                                              4 years                             20\n       Member of City Council – District 3                 District                                   $460\n       Member of City Council – District 4                 District                                   $570\nCity of Mountain House\n                                              4 years     At Large                20                   $510"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2705",
+    "sourceCode": "2705",
+    "sourceTitle": "Lodi Unified School District Board Member Trustee Area 5",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Lodi Unified School District\nBoard Member Trustee Area 5\nVote for One\nRON HEBERLE\nScience Educator\nJEFF STROH\nSchool Board Trustee\nWrite-in"
+    },
+    "physicalPage": 197,
+    "ballotType": 46,
+    "sampleNames": [
+      "RON HEBERLE",
+      "JEFF STROH"
+    ],
+    "rosterNames": [
+      "RON HEBERLE",
+      "JEFF STROH"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 197,
+        "ballotType": 46
+      },
+      {
+        "physicalPage": 209,
+        "ballotType": 49
+      },
+      {
+        "physicalPage": 221,
+        "ballotType": 52
+      },
+      {
+        "physicalPage": 241,
+        "ballotType": 57
+      },
+      {
+        "physicalPage": 249,
+        "ballotType": 59
+      },
+      {
+        "physicalPage": 265,
+        "ballotType": 63
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:lodi_unified_school_district/trustee_area:5",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2705      Lodi USD Trustee Area 5                                                                                                                           On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Lodi Unified School District\n      Board Member – Trustee Area 1                                             $640\n      Board Member – Trustee Area 3                4 years   Trustee Area       $560\n      Board Member – Trustee Area 4                                             $770\n      Board Member – Trustee Area 5                                             $500\nManteca Unified School District\n      Board Member – Trustee Area 2                                             $540\n      Board Member – Trustee Area 3 ** Unexpired                                $550\n                                                   4 years   Trustee Area\n      Board Member – Trustee Area 4                                             $580\n      Board Member – Trustee Area 5                                             $420\n      Board Member – Trustee Area 6                                             $510"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3533",
+    "sourceCode": "3533",
+    "sourceTitle": "City of Lodi Member, City Council District 2",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Lodi Member,\nCity Council District 2\nVote for One\nLISA CRAIG-HENSLEY\nIncumbent\nJORDAN DUNCAN\nFather/Law Enforcement\nWrite-in"
+    },
+    "physicalPage": 197,
+    "ballotType": 46,
+    "sampleNames": [
+      "LISA CRAIG-HENSLEY",
+      "JORDAN DUNCAN"
+    ],
+    "rosterNames": [
+      "LISA CRAIG-HENSLEY",
+      "JORDAN DUNCAN"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 197,
+        "ballotType": 46
+      },
+      {
+        "physicalPage": 229,
+        "ballotType": 54
+      },
+      {
+        "physicalPage": 249,
+        "ballotType": 59
+      },
+      {
+        "physicalPage": 261,
+        "ballotType": 62
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:lodi/council_district:2",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3533      Lodi City Council District 2                                                                                                                        On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Lodi\n       Member of City Council – District 1                                                             $490\n                                              4 years      District               20\n       Member of City Council – District 2                                                             $340\n       Member of City Council – District 3                                                             $360\nCity of Manteca\n       Mayor                                              At Large                                   $2,040\n                                              4 years                             20\n       Member of City Council – District 3                 District                                   $460\n       Member of City Council – District 4                 District                                   $570\nCity of Mountain House\n                                              4 years     At Large                20                   $510"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2703",
+    "sourceCode": "2703",
+    "sourceTitle": "Lodi Unified School District Board Member Trustee Area 3",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Lodi Unified School District\nBoard Member Trustee Area 3\nVote for One\nKATHERINE KING\nParent\nSHERRY ALEXANDER\nSchool Board Trustee\nWrite-in"
+    },
+    "physicalPage": 201,
+    "ballotType": 47,
+    "sampleNames": [
+      "KATHERINE KING",
+      "SHERRY ALEXANDER"
+    ],
+    "rosterNames": [
+      "SHERRY ALEXANDER",
+      "KATHERINE KING"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 201,
+        "ballotType": 47
+      },
+      {
+        "physicalPage": 205,
+        "ballotType": 48
+      },
+      {
+        "physicalPage": 213,
+        "ballotType": 50
+      },
+      {
+        "physicalPage": 233,
+        "ballotType": 55
+      },
+      {
+        "physicalPage": 245,
+        "ballotType": 58
+      },
+      {
+        "physicalPage": 253,
+        "ballotType": 60
+      },
+      {
+        "physicalPage": 257,
+        "ballotType": 61
+      },
+      {
+        "physicalPage": 269,
+        "ballotType": 64
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:lodi_unified_school_district/trustee_area:3",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2703      Lodi USD Trustee Area 3                                                                                                                                   On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Lodi Unified School District\n      Board Member – Trustee Area 1                                             $640\n      Board Member – Trustee Area 3                4 years   Trustee Area       $560\n      Board Member – Trustee Area 4                                             $770\n      Board Member – Trustee Area 5                                             $500\nManteca Unified School District\n      Board Member – Trustee Area 2                                             $540\n      Board Member – Trustee Area 3 ** Unexpired                                $550\n                                                   4 years   Trustee Area\n      Board Member – Trustee Area 4                                             $580\n      Board Member – Trustee Area 5                                             $420\n      Board Member – Trustee Area 6                                             $510"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3534",
+    "sourceCode": "3534",
+    "sourceTitle": "City of Lodi Member, City Council District 3",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Lodi Member,\nCity Council District 3\nVote for One\nCHRISTOPHER S.\nANDERSON\nRetired Teacher\nDEANNE BARTH\nDirector of Finance\nCAMERON BREGMAN\nBusinessman/Lodi Councilman\nWrite-in"
+    },
+    "physicalPage": 209,
+    "ballotType": 49,
+    "sampleNames": [
+      "CHRISTOPHER S. ANDERSON",
+      "DEANNE BARTH",
+      "CAMERON BREGMAN"
+    ],
+    "rosterNames": [
+      "DEANNE BARTH",
+      "CHRISTOPHER S. ANDERSON",
+      "CAMERON BREGMAN"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 209,
+        "ballotType": 49
+      },
+      {
+        "physicalPage": 213,
+        "ballotType": 50
+      },
+      {
+        "physicalPage": 233,
+        "ballotType": 55
+      },
+      {
+        "physicalPage": 257,
+        "ballotType": 61
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:lodi/council_district:3",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3534      Lodi City Council District 3                                                                                                                        On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Lodi\n       Member of City Council – District 1                                                             $490\n                                              4 years      District               20\n       Member of City Council – District 2                                                             $340\n       Member of City Council – District 3                                                             $360\nCity of Manteca\n       Mayor                                              At Large                                   $2,040\n                                              4 years                             20\n       Member of City Council – District 3                 District                                   $460\n       Member of City Council – District 4                 District                                   $570\nCity of Mountain House\n                                              4 years     At Large                20                   $510"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2634",
+    "sourceCode": "2634",
+    "sourceTitle": "Manteca Unified School District Board Member Trustee Area 4",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Manteca Unified School District\nBoard Member Trustee Area 4\nVote for One\nRUPINDER SINGH JAGPAL\nProfessor\nVERONICA SALAZAR\nTeacher\nMARIE FREITAS\nTrustee\nWrite-in"
+    },
+    "physicalPage": 273,
+    "ballotType": 65,
+    "sampleNames": [
+      "RUPINDER SINGH JAGPAL",
+      "VERONICA SALAZAR",
+      "MARIE FREITAS"
+    ],
+    "rosterNames": [
+      "MARIE FREITAS",
+      "RUPINDER SINGH JAGPAL",
+      "VERONICA SALAZAR"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 273,
+        "ballotType": 65
+      },
+      {
+        "physicalPage": 289,
+        "ballotType": 69
+      },
+      {
+        "physicalPage": 477,
+        "ballotType": 116
+      },
+      {
+        "physicalPage": 497,
+        "ballotType": 121
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:manteca_unified_school_district/trustee_area:4",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2634      Manteca USD Trustee Area 4                                                                                                                                On Ballot: Yes               Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Manteca Unified School District\n      Board Member – Trustee Area 2                                             $540\n      Board Member – Trustee Area 3 ** Unexpired                                $550\n                                                   4 years   Trustee Area\n      Board Member – Trustee Area 4                                             $580\n      Board Member – Trustee Area 5                                             $420\n      Board Member – Trustee Area 6                                             $510\nNew Hope Elementary School District\n                                                   4 years     At Large         $90\n      Board Member – Vote for 2\n\nNew Jerusalem School District"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3525",
+    "sourceCode": "3525",
+    "sourceTitle": "City of Manteca Mayor",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Manteca Mayor\nVote for One\nJACOB NAVEN\nSmall Business Owner\nGARY SINGH\nManteca Businessman/Mayor\nWrite-in"
+    },
+    "physicalPage": 273,
+    "ballotType": 65,
+    "sampleNames": [
+      "JACOB NAVEN",
+      "GARY SINGH"
+    ],
+    "rosterNames": [
+      "JACOB NAVEN",
+      "GARY SINGH"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 273,
+        "ballotType": 65
+      },
+      {
+        "physicalPage": 277,
+        "ballotType": 66
+      },
+      {
+        "physicalPage": 281,
+        "ballotType": 67
+      },
+      {
+        "physicalPage": 285,
+        "ballotType": 68
+      },
+      {
+        "physicalPage": 289,
+        "ballotType": 69
+      },
+      {
+        "physicalPage": 293,
+        "ballotType": 70
+      },
+      {
+        "physicalPage": 297,
+        "ballotType": 71
+      },
+      {
+        "physicalPage": 301,
+        "ballotType": 72
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:manteca",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3525      Manteca Mayor                                                                                                                                      On Ballot: Yes              Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Manteca\n       Mayor                                              At Large                                   $2,040\n                                              4 years                             20\n       Member of City Council – District 3                 District                                   $460\n       Member of City Council – District 4                 District                                   $570\nCity of Mountain House\n                                              4 years     At Large                20                   $510\n       Member of City Council – Vote for 2\nCity of Ripon\n                                              4 years     At Large                20                   $470\n       Member of City Council – Vote for 2\nCity of Tracy"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3528",
+    "sourceCode": "3528",
+    "sourceTitle": "City of Manteca Member, City Council District 3",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Manteca Member,\nCity Council District 3\nVote for One\nLEI ANN VARLETTA\nLARSON\nHomemaker\nDAVID BREITENBUCHER\nCouncilmember/Retired Firefighter\nWrite-in"
+    },
+    "physicalPage": 273,
+    "ballotType": 65,
+    "sampleNames": [
+      "LEI ANN VARLETTA LARSON",
+      "DAVID BREITENBUCHER"
+    ],
+    "rosterNames": [
+      "DAVID BREITENBUCHER",
+      "LEI ANN VARLETTA LARSON"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 273,
+        "ballotType": 65
+      },
+      {
+        "physicalPage": 301,
+        "ballotType": 72
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:manteca/council_district:3",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3528      Manteca City Council District 3                                                                                                                            On Ballot: Yes              Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Manteca\n       Mayor                                              At Large                                   $2,040\n                                              4 years                             20\n       Member of City Council – District 3                 District                                   $460\n       Member of City Council – District 4                 District                                   $570\nCity of Mountain House\n                                              4 years     At Large                20                   $510\n       Member of City Council – Vote for 2\nCity of Ripon\n                                              4 years     At Large                20                   $470\n       Member of City Council – Vote for 2\nCity of Tracy"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-5072",
+    "sourceCode": "5072",
+    "sourceTitle": "South San Joaquin Irrigation District Board Member Division 2",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "South San Joaquin Irrigation\nDistrict Board Member\nDivision 2\nVote for One\nGLENN SPYKSMA\nSSJID Board Director\nMIKE SONKE\nFarmer/Business Owner\nWrite-in"
+    },
+    "physicalPage": 277,
+    "ballotType": 66,
+    "sampleNames": [
+      "GLENN SPYKSMA",
+      "MIKE SONKE"
+    ],
+    "rosterNames": [
+      "GLENN SPYKSMA",
+      "MIKE SONKE"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 277,
+        "ballotType": 66
+      },
+      {
+        "physicalPage": 309,
+        "ballotType": 74
+      },
+      {
+        "physicalPage": 313,
+        "ballotType": 75
+      },
+      {
+        "physicalPage": 517,
+        "ballotType": 126
+      },
+      {
+        "physicalPage": 521,
+        "ballotType": 127
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/special_district:south_san_joaquin_irrigation_district/division:2",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "5072      South San Joaquin Irrigation District, Division 2                                                                                            On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "South San Joaquin Irrigation District\n     Board Member – Division 1                              4 years     Division            $630\n     Board Member – Division 2                                                              $660\nWest Stanislaus Irrigation District\n(Stanislaus is the Primary County)                          4 years     Division             $70\n    Board Member – Division 1\nWoodbridge Irrigation District\n    Board Member – Division 1                                                                $70\n                                                            4 years     Division\n    Board Member – Division 3                                                                $70\n    Board Member – Division 4                                                               $100"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2636",
+    "sourceCode": "2636",
+    "sourceTitle": "Manteca Unified School District Board Member Trustee Area 6",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Manteca Unified School District\nBoard Member Trustee Area 6\nVote for One\nBARRY KEITH\nRetired Teacher\nSTEPHEN J. SCHLUER\nTrustee/Police Chief\nWrite-in"
+    },
+    "physicalPage": 281,
+    "ballotType": 67,
+    "sampleNames": [
+      "BARRY KEITH",
+      "STEPHEN J. SCHLUER"
+    ],
+    "rosterNames": [
+      "STEPHEN J. SCHLUER",
+      "BARRY KEITH"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 281,
+        "ballotType": 67
+      },
+      {
+        "physicalPage": 285,
+        "ballotType": 68
+      },
+      {
+        "physicalPage": 485,
+        "ballotType": 118
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:manteca_unified_school_district/trustee_area:6",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2636      Manteca USD Trustee Area 6                                                                                                                 On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Manteca Unified School District\n      Board Member – Trustee Area 2                                             $540\n      Board Member – Trustee Area 3 ** Unexpired                                $550\n                                                   4 years   Trustee Area\n      Board Member – Trustee Area 4                                             $580\n      Board Member – Trustee Area 5                                             $420\n      Board Member – Trustee Area 6                                             $510\nNew Hope Elementary School District\n                                                   4 years     At Large         $90\n      Board Member – Vote for 2\n\nNew Jerusalem School District"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3529",
+    "sourceCode": "3529",
+    "sourceTitle": "City of Manteca Member, City Council District 4",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Manteca Member,\nCity Council District 4\nVote for One\nDANI BETTENCOURT\nBusinesswoman/Sales Coach\nROGGER F. GUTIERREZ\nParent/Management Analyst\nMIKE MOROWIT\nManteca Businessman/\nCouncilmember\nWrite-in"
+    },
+    "physicalPage": 281,
+    "ballotType": 67,
+    "sampleNames": [
+      "DANI BETTENCOURT",
+      "ROGGER F. GUTIERREZ",
+      "MIKE MOROWIT"
+    ],
+    "rosterNames": [
+      "MIKE MOROWIT",
+      "DANI BETTENCOURT",
+      "ROGGER F. GUTIERREZ"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 281,
+        "ballotType": 67
+      },
+      {
+        "physicalPage": 297,
+        "ballotType": 71
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:manteca/council_district:4",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3529      Manteca City Council District 4                                                                                                                            On Ballot: Yes              Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Manteca\n       Mayor                                              At Large                                   $2,040\n                                              4 years                             20\n       Member of City Council – District 3                 District                                   $460\n       Member of City Council – District 4                 District                                   $570\nCity of Mountain House\n                                              4 years     At Large                20                   $510\n       Member of City Council – Vote for 2\nCity of Ripon\n                                              4 years     At Large                20                   $470\n       Member of City Council – Vote for 2\nCity of Tracy"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3520",
+    "sourceCode": "3520",
+    "sourceTitle": "City of Escalon Member, City Council",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Escalon Member,\nCity Council\nVote for no more than Three\nANDREW T. HAGAN\nIncumbent\nMALINDA WALKER\nIncumbent\nJASON PERRUQUET\nParent\nJEREMY ENGLE\nIncumbent\nWrite-in\nWrite-in\nWrite-in"
+    },
+    "physicalPage": 305,
+    "ballotType": 73,
+    "sampleNames": [
+      "ANDREW T. HAGAN",
+      "MALINDA WALKER",
+      "JASON PERRUQUET",
+      "JEREMY ENGLE"
+    ],
+    "rosterNames": [
+      "MALINDA WALKER",
+      "JASON PERRUQUET",
+      "JEREMY ENGLE",
+      "ANDREW T. HAGAN"
+    ],
+    "voteFor": 3,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 305,
+        "ballotType": 73
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:escalon",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3520      Escalon City Council                                                                                                                               On Ballot: Yes              Vote For: 3"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Escalon\n                                                4 years      At Large               20                  $240\n       Member of City Council – Vote for 3\n\nCity of Lathrop\n       Mayor                                  2 years     At Large                20                   $800\n       Member of City Council – Vote for 2    4 years\nCity of Lodi\n       Member of City Council – District 1                                                             $490\n                                              4 years      District               20\n       Member of City Council – District 2                                                             $340\n       Member of City Council – District 3                                                             $360"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3551",
+    "sourceCode": "3551",
+    "sourceTitle": "City of Ripon Member, City Council",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Ripon Member,\nCity Council\nVote for no more than Two\nMICHAEL RESTUCCIA\nIncumbent\nFRANK L. MADRIGAL\nCompliance Consultant\nDEAN D. UECKER\nIncumbent\nWrite-in\nWrite-in"
+    },
+    "physicalPage": 309,
+    "ballotType": 74,
+    "sampleNames": [
+      "MICHAEL RESTUCCIA",
+      "FRANK L. MADRIGAL",
+      "DEAN D. UECKER"
+    ],
+    "rosterNames": [
+      "MICHAEL RESTUCCIA",
+      "DEAN D. UECKER",
+      "FRANK L. MADRIGAL"
+    ],
+    "voteFor": 2,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 309,
+        "ballotType": 74
+      },
+      {
+        "physicalPage": 313,
+        "ballotType": 75
+      },
+      {
+        "physicalPage": 317,
+        "ballotType": 76
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:ripon",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3551      Ripon City Council                                                                                                                                  On Ballot: Yes              Vote For: 2"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Ripon\n                                              4 years     At Large                20                   $470\n       Member of City Council – Vote for 2\nCity of Tracy\n       Mayor                                  2 years     At Large                                   $2,060\n                                                                                  20\n       Member of City Council – District 1    4 years      District                                   $560\n       Member of City Council – District 3    4 years      District                                   $510\n\n        COUNTY BOARD OF EDUCATION, SCHOOL DISTRICTS, AND\n                 COMMUNITY COLLEGE TRUSTEES\nThe County Board of Education serves as the governing body for the County Office of Education and"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3570",
+    "sourceCode": "3570",
+    "sourceTitle": "City of Lathrop Mayor",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Lathrop Mayor\nVote for One\nPAUL AKINJO\nCity of Lathrop Mayor\nMINNIE \"COTTON\" DIALLO"
+    },
+    "physicalPage": 321,
+    "ballotType": 77,
+    "sampleNames": [
+      "PAUL AKINJO",
+      "MINNIE \"COTTON\" DIALLO"
+    ],
+    "rosterNames": [
+      "PAUL AKINJO",
+      "MINNIE \"COTTON\" DIALLO"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 321,
+        "ballotType": 77
+      },
+      {
+        "physicalPage": 325,
+        "ballotType": 78
+      },
+      {
+        "physicalPage": 329,
+        "ballotType": 79
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:lathrop",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3570      Lathrop Mayor                                                                                                                                    On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Lathrop\n       Mayor                                  2 years     At Large                20                   $800\n       Member of City Council – Vote for 2    4 years\nCity of Lodi\n       Member of City Council – District 1                                                             $490\n                                              4 years      District               20\n       Member of City Council – District 2                                                             $340\n       Member of City Council – District 3                                                             $360\nCity of Manteca\n       Mayor                                              At Large                                   $2,040\n                                              4 years                             20\n       Member of City Council – District 3                 District                                   $460"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-3572",
+    "sourceCode": "3572",
+    "sourceTitle": "City of Lathrop Member, City Council",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "City of Lathrop Member,\nCity Council\nVote for no more than Two\nSHELITA JEFFERSON\nRealtor/Mother\nSTEVE DRESSER\nAppointed Incumbent\nLEANDRO VICUÑA\nBank Executive/Father\nDANIEL MACNEILAGE\nConstruction Superintendent\nWrite-in\nWrite-in"
+    },
+    "physicalPage": 321,
+    "ballotType": 77,
+    "sampleNames": [
+      "SHELITA JEFFERSON",
+      "STEVE DRESSER",
+      "LEANDRO VICUÑA",
+      "DANIEL MACNEILAGE"
+    ],
+    "rosterNames": [
+      "STEVE DRESSER",
+      "LEANDRO VICUÑA",
+      "DANIEL MACNEILAGE",
+      "SHELITA JEFFERSON"
+    ],
+    "voteFor": 2,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 321,
+        "ballotType": 77
+      },
+      {
+        "physicalPage": 325,
+        "ballotType": 78
+      },
+      {
+        "physicalPage": 329,
+        "ballotType": 79
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/place:lathrop",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "3572      Lathrop City Council                                                                                                                             On Ballot: Yes             Vote For: 2"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "City of Lathrop\n       Mayor                                  2 years     At Large                20                   $800\n       Member of City Council – Vote for 2    4 years\nCity of Lodi\n       Member of City Council – District 1                                                             $490\n                                              4 years      District               20\n       Member of City Council – District 2                                                             $340\n       Member of City Council – District 3                                                             $360\nCity of Manteca\n       Mayor                                              At Large                                   $2,040\n                                              4 years                             20\n       Member of City Council – District 3                 District                                   $460"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2674",
+    "sourceCode": "2674",
+    "sourceTitle": "Linden Unified School District Board Member Trustee Area 4",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Linden Unified School District\nBoard Member Trustee Area 4\nVote for One\nKYLE BEADLES\nBusiness Owner/Father\nJENNIFER TROTTER\nIncumbent\nWrite-in"
+    },
+    "physicalPage": 333,
+    "ballotType": 80,
+    "sampleNames": [
+      "KYLE BEADLES",
+      "JENNIFER TROTTER"
+    ],
+    "rosterNames": [
+      "KYLE BEADLES",
+      "JENNIFER TROTTER"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 333,
+        "ballotType": 80
+      },
+      {
+        "physicalPage": 337,
+        "ballotType": 81
+      },
+      {
+        "physicalPage": 529,
+        "ballotType": 129
+      },
+      {
+        "physicalPage": 533,
+        "ballotType": 130
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:linden_unified_school_district/trustee_area:4",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2674      Linden USD Trustee Area 4                                                                                                                                 On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Linden Unified School District\n      Board Member – Trustee Area 1                                             $110\n                                                   4 years   Trustee Area\n      Board Member – Trustee Area 4                                             $120\n      Board Member – Trustee Area 5                                             $120\nLodi Unified School District\n      Board Member – Trustee Area 1                                             $640\n      Board Member – Trustee Area 3                4 years   Trustee Area       $560\n      Board Member – Trustee Area 4                                             $770\n      Board Member – Trustee Area 5                                             $500\nManteca Unified School District\n      Board Member – Trustee Area 2                                             $540"
+      }
+    ]
+  },
+  {
+    "id": "ca-cx-local-2026-san-joaquin-2550",
+    "sourceCode": "2550",
+    "sourceTitle": "Yosemite Community College District Board Member Trustee Area 1",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "Yosemite Community College\nDistrict Board Member Trustee\nArea 1\nVote for One\nDON DAVIS\nIncumbent\nWILLIAM ANDREW DUNN\nEducational Consultant\nWrite-in"
+    },
+    "physicalPage": 509,
+    "ballotType": 124,
+    "sampleNames": [
+      "DON DAVIS",
+      "WILLIAM ANDREW DUNN"
+    ],
+    "rosterNames": [
+      "DON DAVIS",
+      "WILLIAM ANDREW DUNN"
+    ],
+    "voteFor": 1,
+    "allPrintedNamesMatchOfficialQualifiedRoster": true,
+    "allRepeatedChoiceOrderAndVoteLimitParity": true,
+    "occurrences": [
+      {
+        "physicalPage": 509,
+        "ballotType": 124
+      }
+    ],
+    "exactElectorate": "ocd-division/country:us/state:ca/school_district:yosemite_community_college_district/trustee_area:1",
+    "termAndScopeSources": [
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/candidate-roster-(35).pdf?sfvrsn=8b61f2ae_100",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:56.258878+00:00",
+        "verifiedAt": "2026-11-03T08:45:56.258878+00:00",
+        "quote": "2550      Yosemite CCD Trustee Area 1                                                                                                                       On Ballot: Yes             Vote For: 1"
+      },
+      {
+        "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/offices-up-for-2026-general-election.pdf?sfvrsn=9d3a8055_13",
+        "sourceOrg": "San Joaquin County Registrar of Voters",
+        "collectedAt": "2026-11-03T08:45:54.241783+00:00",
+        "verifiedAt": "2026-11-03T08:45:54.241783+00:00",
+        "quote": "Yosemite Community College District\n(Stanislaus is the Primary County)\n        Board Member – Trustee Area 1                     4 years    Trustee Area              $80\n        Board Member – Trustee Area 4                                                          $70\n\n\n                                     SPECIAL DISTRICTS\nSpecial districts are local government agencies that provide specific services such as water, fire\nprotection, sanitation, and similar community services within a defined area. They are governed by\nthe Health and Safety Code, Government Code, and other applicable California statutes, which\noperate independently from cities and counties and are created under state law.\nCandidates must be registered voters living within the district or division they seek to represent and"
+      }
+    ]
+  },
+  {
+    "id": "ca-sos-2026-general-retention-joshua-groban",
+    "type": "RETENTION",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "For Associate Justice of the\nSupreme Court\nShall Associate Justice of the\nSupreme Court JOSHUA GROBAN\nbe elected to the office for the term\nprovided by law?\nYES\nNO"
+    },
+    "heldCandidateId": "ca-sos-2026-general-retention-joshua-groban-candidate",
+    "judgeName": "JOSHUA GROBAN",
+    "physicalPage": 16,
+    "all131BallotTypesIdenticalQuestion": true,
+    "ballotTypes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131
+    ],
+    "scopePreservedFromHeld": true
+  },
+  {
+    "id": "ca-sos-2026-general-retention-kelli-m-evans",
+    "type": "RETENTION",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "For Associate Justice of the\nSupreme Court\nShall Associate Justice of the\nSupreme Court KELLI M. EVANS be\nelected to the office for the term\nprovided by law?\nYES\nNO"
+    },
+    "heldCandidateId": "ca-sos-2026-general-retention-kelli-m-evans-candidate",
+    "judgeName": "KELLI M. EVANS",
+    "physicalPage": 16,
+    "all131BallotTypesIdenticalQuestion": true,
+    "ballotTypes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131
+    ],
+    "scopePreservedFromHeld": true
+  },
+  {
+    "id": "ca-sos-2026-general-retention-laurie-earl",
+    "type": "RETENTION",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "For Administrative Presiding\nJustice, Court of Appeal,\nThird District\nShall Administrative Presiding\nJustice LAURIE EARL be elected to\nthe office for the term provided by\nlaw?\nYES\nNO"
+    },
+    "heldCandidateId": "ca-sos-2026-general-retention-laurie-earl-candidate",
+    "judgeName": "LAURIE EARL",
+    "physicalPage": 16,
+    "all131BallotTypesIdenticalQuestion": true,
+    "ballotTypes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131
+    ],
+    "scopePreservedFromHeld": true
+  },
+  {
+    "id": "ca-sos-2026-general-retention-lauri-damrell",
+    "type": "RETENTION",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "For Associate Justice,\nCourt of Appeal, Third District\nShall Associate Justice LAURI\nDAMRELL be elected to the office\nfor the term provided by law?\nYES\nNO"
+    },
+    "heldCandidateId": "ca-sos-2026-general-retention-lauri-damrell-candidate",
+    "judgeName": "LAURI DAMRELL",
+    "physicalPage": 16,
+    "all131BallotTypesIdenticalQuestion": true,
+    "ballotTypes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131
+    ],
+    "scopePreservedFromHeld": true
+  },
+  {
+    "id": "ca-sos-2026-general-retention-david-b-sapp",
+    "type": "RETENTION",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "For Associate Justice,\nCourt of Appeal, Third District\nShall DAVID B. SAPP be elected to\nthe office for the term provided by\nlaw?\nYES\nNO"
+    },
+    "heldCandidateId": "ca-sos-2026-general-retention-david-b-sapp-candidate",
+    "judgeName": "DAVID B. SAPP",
+    "physicalPage": 16,
+    "all131BallotTypesIdenticalQuestion": true,
+    "ballotTypes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131
+    ],
+    "scopePreservedFromHeld": true
+  },
+  {
+    "id": "ca-sos-2026-general-retention-stacy-boulware-eurie",
+    "type": "RETENTION",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "For Associate Justice,\nCourt of Appeal, Third District\nShall Associate Justice STACY\nBOULWARE EURIE be elected to\nthe office for the term provided by\nlaw?\nYES\nNO"
+    },
+    "heldCandidateId": "ca-sos-2026-general-retention-stacy-boulware-eurie-candidate",
+    "judgeName": "STACY BOULWARE EURIE",
+    "physicalPage": 16,
+    "all131BallotTypesIdenticalQuestion": true,
+    "ballotTypes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131
+    ],
+    "scopePreservedFromHeld": true
+  },
+  {
+    "id": "ca-sos-2026-general-retention-jonathan-renner",
+    "type": "RETENTION",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "For Associate Justice,\nCourt of Appeal, Third District\nShall Associate Justice JONATHAN\nRENNER be elected to the office\nfor the term provided by law?\nYES\nNO"
+    },
+    "heldCandidateId": "ca-sos-2026-general-retention-jonathan-renner-candidate",
+    "judgeName": "JONATHAN RENNER",
+    "physicalPage": 16,
+    "all131BallotTypesIdenticalQuestion": true,
+    "ballotTypes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131
+    ],
+    "scopePreservedFromHeld": true
+  },
+  {
+    "id": "ca-sos-2026-general-retention-aimee-a-feinberg",
+    "type": "RETENTION",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "For Associate Justice,\nCourt of Appeal, Third District\nShall Associate Justice AIMEE A.\nFEINBERG be elected to the office\nfor the term provided by law?\nYES\nNO"
+    },
+    "heldCandidateId": "ca-sos-2026-general-retention-aimee-a-feinberg-candidate",
+    "judgeName": "AIMEE A. FEINBERG",
+    "physicalPage": 16,
+    "all131BallotTypesIdenticalQuestion": true,
+    "ballotTypes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131
+    ],
+    "scopePreservedFromHeld": true
+  },
+  {
+    "id": "ca-sos-2026-general-retention-shama-mesiwala",
+    "type": "RETENTION",
+    "sourceBlock": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "For Associate Justice,\nCourt of Appeal, Third District\nShall Associate Justice SHAMA\nMESIWALA be elected to the office\nfor the term provided by law?\nYES\nNO"
+    },
+    "heldCandidateId": "ca-sos-2026-general-retention-shama-mesiwala-candidate",
+    "judgeName": "SHAMA MESIWALA",
+    "physicalPage": 16,
+    "all131BallotTypesIdenticalQuestion": true,
+    "ballotTypes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131
+    ],
+    "scopePreservedFromHeld": true
+  }
+]

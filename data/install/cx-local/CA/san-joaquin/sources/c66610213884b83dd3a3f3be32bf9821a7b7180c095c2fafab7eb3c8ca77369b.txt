@@ -1,0 +1,179 @@
+Search for Public School Districts - District Detail for
+Search
+for
+Public School Districts
+District Directory Information (2025-2026 School Year)
+Modify Search
+Data Notes/Grant IDs
+Help
+District Name:
+Jefferson Elementary
+(Schools in this District)
+NCES District ID:
+0618840
+State District ID:
+CA-3968544
+Mailing Address:
+1219 Whispering Wind DR.
+Tracy CA, 95377 –8269
+Physical Address:
+1219 Whispering Wind DR.
+Tracy CA, 95377 –8269
+Phone:
+(209)836-3388
+Type:
+Regular local school district
+Status:
+Open
+Total Schools:
+5
+Supervisory Union #:
+N/A
+Grade Span:
+KG - 8
+KG
+1
+2
+3
+4
+5
+6
+7
+8
+Website:
+http://www.jeffersonschooldistrict.com
+District Demographics:
+School District Demographic Dashboard
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Characteristics
+Show Less
+County:
+San Joaquin County
+County ID:
+06077
+Locale:
+Suburban, Midsize (22)
+CSA/CBSA:
+44700
+Total Students:
+3,127
+Classroom Teachers (FTE):
+142.28
+Student/Teacher Ratio:
+21.98
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Staff
+Jefferson Elementary district has a staff count of
+277.37.
+Average Staff Comparison
+Teacher (FTE) Distribution
+Total:
+142.28
+Prekindergarten:
+†
+Kindergarten:
+22.38
+Elementary:
+119.90
+Secondary:
+0.00
+Ungraded:
+†
+Other Staff (FTE) Distribution
+Total:
+135.09
+Instructional Aides:
+46.08
+Instruc. Coordinators & Supervisors:
+0.00
+Total Guidance Counselors:
+0.00
+Elementary Guidance Counselors:
+0.00
+Secondary Guidance Counselors:
+0.00
+School Psychologists:
+5.00
+Librarians/Media Specialists:
+0.00
+Library/Media Support:
+0.00
+District Administrators:
+5.00
+District Administrative Support:
+10.00
+School Administrators:
+8.00
+School Administrative Support:
+13.34
+Student Support Services (w/o Psychology):
+3.00
+Other Support Services:
+44.67
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Fiscal
+Amount
+Amount
+per Student
+Percent
+Total Revenue:
+$42,851,000
+$16,337
+Revenue by Source
+Federal:
+$2,170,000
+$827
+5%
+Local:
+$13,159,000
+$5,017
+31%
+State:
+$27,522,000
+$10,493
+64%
+Total Expenditures:
+$64,138,000
+$24,452
+Total Current Expenditures:
+$30,297,000
+$11,551
+Instructional Expenditures:
+$19,204,000
+$7,321
+63%
+Student and Staff Support:
+$2,342,000
+$893
+8%
+Administration:
+$4,311,000
+$1,644
+14%
+Operations, Food Service, other:
+$4,440,000
+$1,693
+15%
+Total Capital Outlay:
+$32,437,000
+$12,366
+Construction:
+$31,848,000
+$12,142
+Total Non El-Sec Education & Other:
+$0
+$0
+Interest on Debt:
+$519,000
+$198
+Note: Details do not add to totals due to rounding.
+Note: Fiscal data (including per pupil count used in this table) from 2022-2023.
+Source:
+CCD public school district data for the 2024-2025, 2025-2026 school years
+Notes:
+* denotes a column with data from 2025-2026
+[ † ] indicates that the data are not applicable. For example, the enrollment and staff characteristics for districts that opened in the 2025-2026 school year will not be available until the full 2025-2026 file is released.
+[ – ] indicates that the data are missing.
+[ ‡ ] indicates that the data do not meet NCES data quality standards.
+The directory information on district name, address, and phone number are preliminary data from initial submissions of district level data for 2025-2026.
+Data provided on student membership and staffing are from the official district level data for 2024-2025.

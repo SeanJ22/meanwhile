@@ -1,0 +1,179 @@
+Search for Public School Districts - District Detail for
+Search
+for
+Public School Districts
+District Directory Information (2025-2026 School Year)
+Modify Search
+Data Notes/Grant IDs
+Help
+District Name:
+Jefferson Elementary
+(Schools in this District)
+NCES District ID:
+0618810
+State District ID:
+CA-3567488
+Mailing Address:
+221 Old Hernandez RD.
+Paicines CA, 95043 –9713
+Physical Address:
+221 Old Hernandez RD.
+Paicines CA, 95043 –9713
+Phone:
+(831)389-4593
+Type:
+Regular local school district
+Status:
+Open
+Total Schools:
+1
+Supervisory Union #:
+N/A
+Grade Span:
+KG - 8
+KG
+1
+2
+3
+4
+5
+6
+7
+8
+Website:
+http://www.sbcoe.k12.ca.us/districts/jefferson.html
+District Demographics:
+School District Demographic Dashboard
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Characteristics
+Show Less
+County:
+San Benito County
+County ID:
+06069
+Locale:
+Rural, Remote (43)
+CSA/CBSA:
+41940
+Total Students:
+4
+Classroom Teachers (FTE):
+0.80
+Student/Teacher Ratio:
+5.00
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Staff
+Jefferson Elementary district has a staff count of
+1.25.
+Average Staff Comparison
+Teacher (FTE) Distribution
+Total:
+0.80
+Prekindergarten:
+†
+Kindergarten:
+0.00
+Elementary:
+0.80
+Secondary:
+0.00
+Ungraded:
+†
+Other Staff (FTE) Distribution
+Total:
+0.45
+Instructional Aides:
+0.00
+Instruc. Coordinators & Supervisors:
+0.00
+Total Guidance Counselors:
+0.00
+Elementary Guidance Counselors:
+0.00
+Secondary Guidance Counselors:
+0.00
+School Psychologists:
+0.00
+Librarians/Media Specialists:
+0.00
+Library/Media Support:
+0.00
+District Administrators:
+0.10
+District Administrative Support:
+0.00
+School Administrators:
+0.10
+School Administrative Support:
+0.00
+Student Support Services (w/o Psychology):
+0.00
+Other Support Services:
+0.25
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Fiscal
+Amount
+Amount
+per Student
+Percent
+Total Revenue:
+$425,000
+$141,667
+Revenue by Source
+Federal:
+$23,000
+$7,667
+5%
+Local:
+$123,000
+$41,000
+29%
+State:
+$279,000
+$93,000
+66%
+Total Expenditures:
+$214,000
+$71,333
+Total Current Expenditures:
+$204,000
+$68,000
+Instructional Expenditures:
+$107,000
+$35,667
+52%
+Student and Staff Support:
+$7,000
+$2,333
+3%
+Administration:
+$55,000
+$18,333
+27%
+Operations, Food Service, other:
+$35,000
+$11,667
+17%
+Total Capital Outlay:
+$0
+$0
+Construction:
+$0
+$0
+Total Non El-Sec Education & Other:
+$0
+$0
+Interest on Debt:
+$0
+$0
+Note: Details do not add to totals due to rounding.
+Note: Fiscal data (including per pupil count used in this table) from 2022-2023.
+Source:
+CCD public school district data for the 2024-2025, 2025-2026 school years
+Notes:
+* denotes a column with data from 2025-2026
+[ † ] indicates that the data are not applicable. For example, the enrollment and staff characteristics for districts that opened in the 2025-2026 school year will not be available until the full 2025-2026 file is released.
+[ – ] indicates that the data are missing.
+[ ‡ ] indicates that the data do not meet NCES data quality standards.
+The directory information on district name, address, and phone number are preliminary data from initial submissions of district level data for 2025-2026.
+Data provided on student membership and staffing are from the official district level data for 2024-2025.

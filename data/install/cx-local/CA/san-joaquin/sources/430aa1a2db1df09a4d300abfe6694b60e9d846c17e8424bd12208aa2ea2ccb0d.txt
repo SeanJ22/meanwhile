@@ -1,0 +1,183 @@
+Search for Public School Districts - District Detail for
+Search
+for
+Public School Districts
+District Directory Information (2025-2026 School Year)
+Modify Search
+Data Notes/Grant IDs
+Help
+District Name:
+Jefferson Elementary
+(Schools in this District)
+NCES District ID:
+0618870
+State District ID:
+CA-4168916
+Mailing Address:
+101 Lincoln AVE.
+Daly City CA, 94015 –3934
+Physical Address:
+101 Lincoln AVE.
+Daly City CA, 94015 –3934
+Phone:
+(650)991-1000
+Type:
+Regular local school district
+Status:
+Open
+Total Schools:
+14
+Supervisory Union #:
+N/A
+Grade Span:
+KG - 12
+KG
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+Website:
+http://www.jsd.k12.ca.us
+District Demographics:
+School District Demographic Dashboard
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Characteristics
+Show Less
+County:
+San Mateo County
+County ID:
+06081
+Locale:
+Suburban, Large (21)
+CSA/CBSA:
+41860
+Total Students:
+4,952
+Classroom Teachers (FTE):
+232.13
+Student/Teacher Ratio:
+21.33
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Staff
+Jefferson Elementary district has a staff count of
+485.75.
+Average Staff Comparison
+Teacher (FTE) Distribution
+Total:
+232.13
+Prekindergarten:
+†
+Kindergarten:
+32.38
+Elementary:
+199.75
+Secondary:
+0.00
+Ungraded:
+†
+Other Staff (FTE) Distribution
+Total:
+253.62
+Instructional Aides:
+42.83
+Instruc. Coordinators & Supervisors:
+10.00
+Total Guidance Counselors:
+16.10
+Elementary Guidance Counselors:
+14.10
+Secondary Guidance Counselors:
+0.00
+School Psychologists:
+15.94
+Librarians/Media Specialists:
+3.00
+Library/Media Support:
+0.00
+District Administrators:
+2.00
+District Administrative Support:
+13.80
+School Administrators:
+20.00
+School Administrative Support:
+26.22
+Student Support Services (w/o Psychology):
+20.85
+Other Support Services:
+82.88
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Fiscal
+Amount
+Amount
+per Student
+Percent
+Total Revenue:
+$113,919,000
+$22,986
+Revenue by Source
+Federal:
+$9,140,000
+$1,844
+8%
+Local:
+$16,315,000
+$3,292
+14%
+State:
+$88,464,000
+$17,850
+78%
+Total Expenditures:
+$105,952,000
+$21,379
+Total Current Expenditures:
+$83,222,000
+$16,792
+Instructional Expenditures:
+$49,945,000
+$10,078
+60%
+Student and Staff Support:
+$8,506,000
+$1,716
+10%
+Administration:
+$12,960,000
+$2,615
+16%
+Operations, Food Service, other:
+$11,811,000
+$2,383
+14%
+Total Capital Outlay:
+$17,256,000
+$3,482
+Construction:
+$16,464,000
+$3,322
+Total Non El-Sec Education & Other:
+$963,000
+$194
+Interest on Debt:
+$3,816,000
+$770
+Note: Details do not add to totals due to rounding.
+Note: Fiscal data (including per pupil count used in this table) from 2022-2023.
+Source:
+CCD public school district data for the 2024-2025, 2025-2026 school years
+Notes:
+* denotes a column with data from 2025-2026
+[ † ] indicates that the data are not applicable. For example, the enrollment and staff characteristics for districts that opened in the 2025-2026 school year will not be available until the full 2025-2026 file is released.
+[ – ] indicates that the data are missing.
+[ ‡ ] indicates that the data do not meet NCES data quality standards.
+The directory information on district name, address, and phone number are preliminary data from initial submissions of district level data for 2025-2026.
+Data provided on student membership and staffing are from the official district level data for 2024-2025.

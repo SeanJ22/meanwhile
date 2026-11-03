@@ -3,19 +3,19 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T09:18:56.179949+00:00",
+  "preparedAt": "2026-11-03T09:22:17.383938+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
   "nextCounty": {
-    "rank": 80,
-    "stateName": "California",
-    "county": "San Joaquin County",
-    "fips": "06077",
-    "population": 823815,
+    "rank": 83,
+    "stateName": "Kentucky",
+    "county": "Jefferson County",
+    "fips": "21111",
+    "population": 795222,
     "populationYear": 2025,
-    "state": "CA"
+    "state": "KY"
   },
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
@@ -1956,6 +1956,42 @@
       ]
     },
     {
+      "state": "CA",
+      "county": "San Joaquin County",
+      "populationRank": 80,
+      "manifest": "CA/san-joaquin/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 46,
+      "measureContests": 0,
+      "candidacies": 99,
+      "newContests": 37,
+      "refreshedContests": 9,
+      "sourceInputSha256": "4c03b58c6775f52fbd0efde8cc2fa9c4adad58c770596943cca5dc74cd9ff462",
+      "coverage": {
+        "completePublishedCompositeAcquired": true,
+        "all131PublishedBallotTypesAndFourPagesVerified": true,
+        "allCurrentPrecinctAssociationTypesCovered": true,
+        "all37OnBallotYesRosterBlocksExactlyMatchSampleNames": true,
+        "allCurrentPublishedLocalCandidateBlocksComplete": true,
+        "allRepeatedNameOrderAndVoteLimitParity": true,
+        "allNineHeldRetentionsConfirmedInEveryType": true,
+        "wholeCountyUnpublishedReplacementStyleParity": false,
+        "addressSpecificReaderCoverageComplete": false,
+        "stocktonEastWater": "Three residency-division offices elected by ALLDISTRICTVOTERS, per explicit official footnote. Whole precise SEWD electorate, no division or county fallback.",
+        "southSanJoaquinIrrigation": "Division2 elected by that division, per official ElectedBy column.",
+        "offBallot": "75official OnBallotNo offices98qualified names retained separately; no ordinary November choices or invented cause/status.",
+        "writeIns": "Qualified AmyThompson filing preserved outside printed choices; blank Write-in lines are not people. Published qualified list is printedOct6; post-print/final-deadline completeness not assumed.",
+        "scopeIdentity": "JeffersonElementaryTracy=NCES0618840, not same-name SanBenito0618810 or SanMateo0618870. Lammersville and both CCD trustee areas use precise source divisions.",
+        "remaining": [
+          "River exact trustee-area, city-council and irrigation-division geography and live reader checks.",
+          "Current incorporated MountainHouse boundary versus older CDP registry geometry.",
+          "Verify canonical SEWD community-water-system geometry equals legal whole voting district or replace it.",
+          "Any unpublished/replacement ballot styles and qualified-write-in updates after acquiredOct6list.",
+          "Local questions remain ancillary; no79held measures or latest CX-VOTES question/explanation rows changed."
+        ]
+      }
+    },
+    {
       "state": "OK",
       "county": "Oklahoma County",
       "populationRank": 81,
@@ -2234,17 +2270,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 85,
-    "packetsPrepared": 86,
-    "candidateAndRetentionContests": 4184,
+    "countiesPrepared": 86,
+    "packetsPrepared": 87,
+    "candidateAndRetentionContests": 4230,
     "measureContests": 116,
-    "candidacyEntries": 9416,
-    "newContestEntriesAgainstCheckedInBaseline": 3499,
-    "distinctPreparedContestIds": 4206,
-    "distinctPreparedCandidateIds": 9231,
-    "distinctNewContestsAgainstCheckedInBaseline": 3453,
+    "candidacyEntries": 9515,
+    "newContestEntriesAgainstCheckedInBaseline": 3536,
+    "distinctPreparedContestIds": 4242,
+    "distinctPreparedCandidateIds": 9319,
+    "distinctNewContestsAgainstCheckedInBaseline": 3489,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 87
+    "distinctCountyHandoffs": 88
   },
   "remainingWork": [
     {

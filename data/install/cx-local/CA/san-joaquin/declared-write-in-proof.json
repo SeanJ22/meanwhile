@@ -1,0 +1,25 @@
+{
+  "candidacyId": "ca-cx-local-2026-san-joaquin-2744:amy-thompson",
+  "contestId": "ca-cx-local-2026-san-joaquin-2744",
+  "name": "AMY THOMPSON",
+  "sourceKind": "OFFICIAL_QUALIFIED_WRITE_IN_LIST_PRINTED_2026_10_06",
+  "source": {
+    "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/roster-writein-10-06.pdf?sfvrsn=67e4b93f_1",
+    "sourceOrg": "San Joaquin County Registrar of Voters",
+    "collectedAt": "2026-11-03T08:45:56.266942+00:00",
+    "verifiedAt": "2026-11-03T08:45:56.266942+00:00",
+    "quote": "Qualified Candidates with Statement of Write-In Filed"
+  },
+  "candidateSource": {
+    "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/candidate-services/roster-writein-10-06.pdf?sfvrsn=67e4b93f_1",
+    "sourceOrg": "San Joaquin County Registrar of Voters",
+    "collectedAt": "2026-11-03T08:45:56.266942+00:00",
+    "verifiedAt": "2026-11-03T08:45:56.266942+00:00",
+    "quote": "AMY THOMPSON"
+  },
+  "sourcePrintDate": "2026-10-06T13:43:21",
+  "filingDate": "Not stated; not inferred from print date",
+  "ordinaryPrintedChoice": false,
+  "latestPublishedListNames": 1,
+  "postPrintDateOrFinalDeadlineCompleteness": "Not established beyond the acquired published list."
+}

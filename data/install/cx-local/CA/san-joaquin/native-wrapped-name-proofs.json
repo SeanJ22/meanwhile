@@ -1,0 +1,67 @@
+[
+  {
+    "candidacyId": "ca-cx-local-2026-san-joaquin-2606:christina-bacca-mcbrian",
+    "sourceNameQuote": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "CHRISTINA BACCA\nMCBRIAN"
+    },
+    "projectedName": "CHRISTINA BACCA MCBRIAN",
+    "rosterName": "CHRISTINA BACCA MCBRIAN",
+    "type": "NATIVE_LINE_WRAP_ONLY"
+  },
+  {
+    "candidacyId": "ca-cx-local-2026-san-joaquin-2747:barbara-bobbie-etcheverry",
+    "sourceNameQuote": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "BARBARA \"BOBBIE\"\nETCHEVERRY"
+    },
+    "projectedName": "BARBARA \"BOBBIE\" ETCHEVERRY",
+    "rosterName": "BARBARA \"BOBBIE\" ETCHEVERRY",
+    "type": "NATIVE_LINE_WRAP_ONLY"
+  },
+  {
+    "candidacyId": "ca-cx-local-2026-san-joaquin-2744:olinga-yarber-alexander",
+    "sourceNameQuote": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "OLINGA YARBER-\nALEXANDER"
+    },
+    "projectedName": "OLINGA YARBER-ALEXANDER",
+    "rosterName": "OLINGA YARBER-ALEXANDER",
+    "type": "NATIVE_LINE_WRAP_ONLY"
+  },
+  {
+    "candidacyId": "ca-cx-local-2026-san-joaquin-3534:christopher-s-anderson",
+    "sourceNameQuote": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "CHRISTOPHER S.\nANDERSON"
+    },
+    "projectedName": "CHRISTOPHER S. ANDERSON",
+    "rosterName": "CHRISTOPHER S. ANDERSON",
+    "type": "NATIVE_LINE_WRAP_ONLY"
+  },
+  {
+    "candidacyId": "ca-cx-local-2026-san-joaquin-3528:lei-ann-varletta-larson",
+    "sourceNameQuote": {
+      "sourceUrl": "https://www.sjgov.org/docs/default-source/registrar-of-voters-documents/elections/gubernatorial-general-election-2026/current-election/sj-composite-eng-(1).pdf?sfvrsn=98168b81_1",
+      "sourceOrg": "San Joaquin County Registrar of Voters",
+      "collectedAt": "2026-11-03T08:46:31.475492+00:00",
+      "verifiedAt": "2026-11-03T08:46:31.475492+00:00",
+      "quote": "LEI ANN VARLETTA\nLARSON"
+    },
+    "projectedName": "LEI ANN VARLETTA LARSON",
+    "rosterName": "LEI ANN VARLETTA LARSON",
+    "type": "NATIVE_LINE_WRAP_ONLY"
+  }
+]

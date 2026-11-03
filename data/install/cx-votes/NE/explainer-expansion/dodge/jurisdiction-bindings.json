@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ne-cx-2026-arlington-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/school_district:arlington_public_schools",
+      "unsd",
+      "3103130",
+      "Arlington Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated place or K12school district named in operative question, matched to Census2025registry; not county or same-named city subdivision."
+  },
+  {
+    "contestId": "ne-cx-2026-fremont-sales-use-tax-increase",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:fremont",
+      "place",
+      "3117670",
+      "Fremont city"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated place or K12school district named in operative question, matched to Census2025registry; not county or same-named city subdivision."
+  },
+  {
+    "contestId": "ne-cx-2026-uehling-sales-use-tax-increase",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:uehling",
+      "place",
+      "3149425",
+      "Uehling village"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated place or K12school district named in operative question, matched to Census2025registry; not county or same-named city subdivision."
+  }
+]

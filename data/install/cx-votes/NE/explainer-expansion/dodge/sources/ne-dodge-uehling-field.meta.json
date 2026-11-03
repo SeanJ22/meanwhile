@@ -1,0 +1,12 @@
+{
+  "page1Based": 4,
+  "selectedBlockBounds": [
+    [
+      418.3199768066406,
+      112.10277557373047,
+      594.119384765625,
+      203.45953369140625
+    ]
+  ],
+  "scope": "Exact complete native source blocks within named field; separate diagonal SAMPLE watermark blocks excluded."
+}

@@ -1,0 +1,49 @@
+{
+  "listing": [
+    {
+      "sourceUrl": "https://dodgecounty.nebraska.gov/election-commission",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T08:56:25.592589+00:00",
+      "sourceFile": "sources/5f3c7276e81bf5764b605ef9d233be44121a244bfb57f9c9a2e6c507e6e9a0b1.official.html",
+      "originalSha256": "5f3c7276e81bf5764b605ef9d233be44121a244bfb57f9c9a2e6c507e6e9a0b1",
+      "archivedSha256": "5f3c7276e81bf5764b605ef9d233be44121a244bfb57f9c9a2e6c507e6e9a0b1"
+    },
+    {
+      "sourceUrl": "https://www.fremontne.gov/1064/Fire-Station-Project",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T08:48:11.610955+00:00",
+      "sourceFile": "sources/8accd95bdaf5d97d9cde29d846b5670afc91abf8c391c537de1db7d29797949c.official.html",
+      "originalSha256": "2bed794c31f63da2b2b98eda87b15d6858a10a4f67088f9233e847f21a8080cc",
+      "archivedSha256": "8accd95bdaf5d97d9cde29d846b5670afc91abf8c391c537de1db7d29797949c",
+      "representation": "SANITIZED_LINKING_HTML",
+      "sanitizer": "fx-cred-v1-2026-08-28"
+    }
+  ],
+  "companions": [
+    {
+      "sourceFile": "sources/ne-dodge-arlington-field.meta.json",
+      "sha256": "ac9c7aadfdb56bdc01c1c00a9567a01731836920059abd5810b7e5eed37f7b26"
+    },
+    {
+      "sourceFile": "sources/ne-dodge-fremont-field.meta.json",
+      "sha256": "0bd57373ad4eca5516f7a4f518b40bf2aac32e2dcc4fc87a89016b56db1bfe9d"
+    },
+    {
+      "sourceFile": "sources/ne-dodge-uehling-field.meta.json",
+      "sha256": "4572d7d7f1fc13c4f34dc583da2e125b2bc44b9785545b8d43d574cbf65e13f5"
+    },
+    {
+      "sourceFile": "sources/ne-dodge-school-page.png",
+      "sha256": "d91eea80fb93951404d31d4d93027a725967ab4f3d77c33738885f2686b6756a"
+    },
+    {
+      "sourceFile": "sources/ne-dodge-tax-page.png",
+      "sha256": "0679a410f6619a89f1d11e93216824462c914b116afaba10ff7d113c7434af33"
+    }
+  ],
+  "dateScope": "Native six-page official publication sample explicitly GeneralElectionNovember3,2026. Current government commission page directlylinks exactPDF.",
+  "inventoryScope": "All3local measure fields in this native publication sample prepared; no Nebraska local completeness claim.",
+  "canonicalSelection": "County printed ballot controls canonical questions. Fremont current government project page is companion clarification; its plannedfirestation narrative does not narrow broad ballot authority.",
+  "FremontTerm": "Question specifies20years; attachedofficialinformation says20yearsbeginning2027 andalso collectionsuntilbondspaid. Explanationstatesbothwithoutchoosingafixedfinaldate.",
+  "schoolScope": "Whole Arlington K12 SchoolDistrict0024 retained across county lines; both up10.5M borrowing and annual repayment propertytax included."
+}

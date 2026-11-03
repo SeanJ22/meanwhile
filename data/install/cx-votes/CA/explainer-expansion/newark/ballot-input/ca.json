@@ -1,0 +1,120 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-alameda-dd",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:newark",
+          "title": "City of Newark — Measure DD",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:31:12.941864+00:00",
+            "quote": "Newark Essential Services Protection Measure. To protect city services such as repairing potholes/streets; keeping neighborhoods safe/clean, and maintaining 9-1-1 emergency response/fire protection/neighborhood police patrols/parks/recreation programs, shall the measure be adopted updating Newark’s 56-year-old business license ordinance, lowering many small businesses’ taxes, with rates up to 0.3% of gross receipts (as described in the ordinance), raising $6,600,000 annually until ended by voters, with spending disclosure/independent audits?"
+          },
+          "measureTextUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_newark_business_ordinance_measure.pdf?download=1",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-alameda-dd-text",
+          "contestId": "ca-2026-alameda-dd",
+          "officialNumber": "Measure DD",
+          "questionText": "Newark Essential Services Protection Measure. To protect city services such as repairing potholes/streets; keeping neighborhoods safe/clean, and maintaining 9-1-1 emergency response/fire protection/neighborhood police patrols/parks/recreation programs, shall the measure be adopted updating Newark’s 56-year-old business license ordinance, lowering many small businesses’ taxes, with rates up to 0.3% of gross receipts (as described in the ordinance), raising $6,600,000 annually until ended by voters, with spending disclosure/independent audits?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:31:12.941864+00:00",
+            "quote": "Newark Essential Services Protection Measure. To protect city services such as repairing potholes/streets; keeping neighborhoods safe/clean, and maintaining 9-1-1 emergency response/fire protection/neighborhood police patrols/parks/recreation programs, shall the measure be adopted updating Newark’s 56-year-old business license ordinance, lowering many small businesses’ taxes, with rates up to 0.3% of gross receipts (as described in the ordinance), raising $6,600,000 annually until ended by voters, with spending disclosure/independent audits?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Replaces Newark’s business-license tax ordinance beginning January 1, 2027. Taxable businesses would pay a $25 base tax on their first $100,000 of annual gross receipts—business revenue before expenses—or any portion of that amount, plus a category rate on receipts above $100,000. Those rates range from $0.30 to $3 per $1,000 above the threshold. The measure includes qualifying exemptions, public spending disclosure and annual independent audits. Estimated revenue is $6.6 million a year for any lawful city purpose. It requires majority approval and has no fixed expiration.",
+          "yesMeans": "Adopt the replacement business-license ordinance, $25 base tax and category rates on receipts above $100,000, with eligible exemptions and accountability requirements.",
+          "noMeans": "Keep the existing business-license tax ordinance and structure.",
+          "contestId": "ca-2026-alameda-dd",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-dd#rates",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Category rates above $100,000",
+              "what": "In addition to the $25 base tax, general retail and restaurants pay $0.30 per $1,000; professional services pay $2.50; contractors and services pay $2; commercial and residential rentals, self-storage, hotels, motels and short-term rentals pay $0.75; manufacturing, wholesale and import/export businesses pay $0.75; and distribution and logistics pay $3. These rates apply only to receipts above $100,000. Businesses not clearly classified, or reasonably fitting more than one category, are classified as services. The distribution category excludes self-storage."
+            },
+            {
+              "id": "ca-2026-alameda-dd#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions",
+              "what": "Qualifying not-for-profit entities, banks, insurance companies other than brokers, agriculture except associated retail, and specified events benefiting a local church, school or benevolent purpose are exempt but generally need a free tax-exempt certificate and annual eligibility application. Other exemptions cover government-owned utilities and public districts, certain regulated transportation vehicles, and occasional deliveries by outside-city businesses; after four deliveries in twelve months, further deliveries are no longer treated as occasional. Federal and state tax exemptions remain protected."
+            },
+            {
+              "id": "ca-2026-alameda-dd#payment",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Registration, payment and adjustments",
+              "what": "Separate certificates are required for each branch or location, except incidental warehouses or distribution sites connected with a taxed business. Certificates last at most twelve months. Tax is due when issued and annually afterward, becoming delinquent after thirty days. Late tax carries a 20% initial penalty and another 20% each later calendar month, capped at 50% of the tax due. New businesses estimate receipts, then report actual receipts within thirty days after the covered period; the minimum tax is paid in advance without proration. Refund claims must be made within one year after payment."
+            },
+            {
+              "id": "ca-2026-alameda-dd#review",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Classification reviews and council authority",
+              "what": "The ordinance provides classification and reclassification reviews, with a ten-working-day request period for a council hearing on a reclassification decision and a separate fifteen-day appeal period for a classification decision to a hearing officer. Reclassification applies prospectively and no more than once a year. The collector may extend a filing deadline by up to sixty days for good cause. The council may amend or repeal the ordinance within its authority, but rate or calculation changes that increase a person’s tax require voters. It may restore a previously reduced rate up to the approved rate."
+            }
+          ],
+          "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_newark_business_ordinance_measure.pdf?download=1",
+          "sourceHash": "e5bc39cb0508bccc884518632dc52ed6487a2be46586ac9bce482359a734fa8e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:31:12.941864+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:31:12.941864+00:00",
+    "reviewedBy": "CX-VOTES official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+        "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+        "retrievedAt": "2026-11-03T06:42:46.567497+00:00",
+        "publisher": "Alameda County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November3,2026 composite VIG, native original PDF. Page921 contains the complete Newark DD question and neutral analysis. Full final legal text is retained separately from the county filing. Submitted voter arguments excluded."
+      },
+      {
+        "requestedUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_newark_business_ordinance_measure.pdf?download=1",
+        "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_newark_business_ordinance_measure.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "e5bc39cb0508bccc884518632dc52ed6487a2be46586ac9bce482359a734fa8e",
+        "retrievedAt": "2026-11-03T06:42:42.162264+00:00",
+        "publisher": "Alameda County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official county-linked NewarkDD filing, original native21-page PDF. Bounded operative pages8–21 contain the full ordinance and complete replacement business-license chapter, including exact decimal multipliers for gross receipts in excess of100000. Deterministic OCR is a separate derivative; no arguments used."
+      }
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "url": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "httpStatus": 200,
+    "sha256": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "bytes": 11727645,
+    "retrievedAt": "2026-11-03T06:42:46.567497+00:00",
+    "savedFile": "sources/5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3.pdf",
+    "sourceTextFile": "sources/5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3.selected-measures.txt",
+    "extractedTextSha256": "0577575e20639644cbdfa58656ecf4ff5f49a1a13fd899018ff232380fa76a83",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "BOUNDED_NATIVE_RENDER_TESSERACT_PSM3_AND_VISUALLY_CHECKED_QUESTION_TRANSCRIPTION",
+    "boundedPdfPages": [
+      921
+    ],
+    "publisher": "Alameda County Registrar of Voters",
+    "role": "official-question-and-neutral-analysis",
+    "note": "Original PDF includes other contests, measures and arguments. Only specified bounded measure pages support these records; submitted arguments excluded. Derived text is not claimed to be native PDF text."
+  },
+  {
+    "url": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_newark_business_ordinance_measure.pdf?download=1",
+    "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_newark_business_ordinance_measure.pdf?download=1",
+    "httpStatus": 200,
+    "sha256": "e5bc39cb0508bccc884518632dc52ed6487a2be46586ac9bce482359a734fa8e",
+    "bytes": 1183983,
+    "retrievedAt": "2026-11-03T06:42:42.162264+00:00",
+    "savedFile": "sources/e5bc39cb0508bccc884518632dc52ed6487a2be46586ac9bce482359a734fa8e.pdf",
+    "sourceTextFile": "sources/e5bc39cb0508bccc884518632dc52ed6487a2be46586ac9bce482359a734fa8e.txt",
+    "extractedTextSha256": "597fb60264e4a9449a7fbfd52e8a191e85cac0216876304b3ff4d67de127d085",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "BOUNDED_NATIVE_RENDER_TESSERACT_PSM3",
+    "boundedPdfPages": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "publisher": "Alameda County Registrar of Voters",
+    "role": "complete-Newark-final-ordinance-and-replacement-business-license-chapter"
+  }
+]

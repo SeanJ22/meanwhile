@@ -1,0 +1,3 @@
+=${t}&ballotType=${s}`):(this.ballot=this.http.get(`${this.baseUrl}/ballotStyle/${e}`),this.ballot)}getBallotStylesForElection(e,t,i=!1){return this.http.get(`${this.baseUrl}/jurisdiction/${e}/election/${t}/ballotStyles?excludeFederalOnly=${i}`)}getRandomBallotsForElection(e,t,i){var n={params:new ti().set("size",i)};return this.http.get(`${this.baseUrl}/jurisdiction/${e}/election/${
+
+IdSubject=new Et(null),this.$ballotBarcodeRandomId=this.ballotBarcodeRandomIdSubject.asObservable()}getBallotStyle(e,t=null,i=null,n=!1,s="official"){return t?i?this.http.get(`${this.baseUrl}/ballotStyle/${e}?jurisdictionId=${t}&precinctId=${i}&ballotType=${s}`):this.http.get(`${this.baseUrl}/ballotStyle/${e}?jurisdictionId=${t}&ballotType=${s}`):(this.ballot=this.http.get(

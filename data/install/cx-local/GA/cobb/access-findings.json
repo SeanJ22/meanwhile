@@ -1,0 +1,61 @@
+{
+  "findings": [
+    {
+      "label": "sample-0066-unassigned",
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-6157-3ef5-d499-08df131faf6b?jurisdictionId=c28c8cec-bc38-4b03-aaf3-7131958d35fb&ballotType=sample",
+      "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-6157-3ef5-d499-08df131faf6b?jurisdictionId=c28c8cec-bc38-4b03-aaf3-7131958d35fb&ballotType=sample",
+      "sourceCheckedAt": "2026-11-03T08:29:52.646539+00:00",
+      "httpStatus": 404,
+      "rawHash": "9883acb433571b45582ab44cce4a9ede625d39d25e50f1f37a75709bc45f4973",
+      "sourceFile": "sources/9883acb433571b45582ab44cce4a9ede625d39d25e50f1f37a75709bc45f4973.access-response",
+      "outcome": "CATALOG_ENTRY_HAS_NO_PRECINCT_ASSIGNMENT_AND_PUBLIC_STYLE_ONLY_SAMPLE_GET_RETURNS_404"
+    },
+    {
+      "label": "sample-0105-unassigned",
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-6157-3ef5-cc07-08df131fb081?jurisdictionId=c28c8cec-bc38-4b03-aaf3-7131958d35fb&ballotType=sample",
+      "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-6157-3ef5-cc07-08df131fb081?jurisdictionId=c28c8cec-bc38-4b03-aaf3-7131958d35fb&ballotType=sample",
+      "sourceCheckedAt": "2026-11-03T08:29:52.905592+00:00",
+      "httpStatus": 404,
+      "rawHash": "5ff0ccb93637b7a4e87a0f54ac443dda6ec85db9d0396201d826537dc6ca42c6",
+      "sourceFile": "sources/5ff0ccb93637b7a4e87a0f54ac443dda6ec85db9d0396201d826537dc6ca42c6.access-response",
+      "outcome": "CATALOG_ENTRY_HAS_NO_PRECINCT_ASSIGNMENT_AND_PUBLIC_STYLE_ONLY_SAMPLE_GET_RETURNS_404"
+    },
+    {
+      "label": "sample-0170-unassigned",
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-6157-3ef5-7b87-08df131fb275?jurisdictionId=c28c8cec-bc38-4b03-aaf3-7131958d35fb&ballotType=sample",
+      "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-6157-3ef5-7b87-08df131fb275?jurisdictionId=c28c8cec-bc38-4b03-aaf3-7131958d35fb&ballotType=sample",
+      "sourceCheckedAt": "2026-11-03T08:29:52.937844+00:00",
+      "httpStatus": 404,
+      "rawHash": "07353ba1e93bb05cbf79a1a0adeaaee1c22ae4803d9b27bc0781c91dc3d1e306",
+      "sourceFile": "sources/07353ba1e93bb05cbf79a1a0adeaaee1c22ae4803d9b27bc0781c91dc3d1e306.access-response",
+      "outcome": "CATALOG_ENTRY_HAS_NO_PRECINCT_ASSIGNMENT_AND_PUBLIC_STYLE_ONLY_SAMPLE_GET_RETURNS_404"
+    },
+    {
+      "label": "sample-0176-unassigned",
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-6157-3ef5-5952-08df131fb2a2?jurisdictionId=c28c8cec-bc38-4b03-aaf3-7131958d35fb&ballotType=sample",
+      "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-6157-3ef5-5952-08df131fb2a2?jurisdictionId=c28c8cec-bc38-4b03-aaf3-7131958d35fb&ballotType=sample",
+      "sourceCheckedAt": "2026-11-03T08:29:52.964019+00:00",
+      "httpStatus": 404,
+      "rawHash": "a174b5814082a4905a045cb67543f7161a09ad2652addb303d95f3733be5f5e7",
+      "sourceFile": "sources/a174b5814082a4905a045cb67543f7161a09ad2652addb303d95f3733be5f5e7.access-response",
+      "outcome": "CATALOG_ENTRY_HAS_NO_PRECINCT_ASSIGNMENT_AND_PUBLIC_STYLE_ONLY_SAMPLE_GET_RETURNS_404"
+    },
+    {
+      "label": "sample-0209-unassigned",
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-6157-3ef5-4f6e-08df131fb3da?jurisdictionId=c28c8cec-bc38-4b03-aaf3-7131958d35fb&ballotType=sample",
+      "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-6157-3ef5-4f6e-08df131fb3da?jurisdictionId=c28c8cec-bc38-4b03-aaf3-7131958d35fb&ballotType=sample",
+      "sourceCheckedAt": "2026-11-03T08:29:54.264873+00:00",
+      "httpStatus": 404,
+      "rawHash": "ba8d9a9955e6f179f397fe9f9368977d1106ee08bef84e05179a2734868eca96",
+      "sourceFile": "sources/ba8d9a9955e6f179f397fe9f9368977d1106ee08bef84e05179a2734868eca96.access-response",
+      "outcome": "CATALOG_ENTRY_HAS_NO_PRECINCT_ASSIGNMENT_AND_PUBLIC_STYLE_ONLY_SAMPLE_GET_RETURNS_404"
+    }
+  ],
+  "publishedCatalogEntries": 231,
+  "assignedCatalogStyles": 226,
+  "unassignedCatalogStyles": 5,
+  "acquiredAssignedStylePrecinctPairs": 242,
+  "noArbitraryPrecinctAssigned": true,
+  "identityUsed": false,
+  "remaining": "Do not invent precinct assignments for these five public catalog rows. Current consolidated county sample still establishes the eight named local fields."
+}

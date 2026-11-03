@@ -1,0 +1,3 @@
+()=>{class a{constructor(){}intercept(r,n){var l=r.clone({withCredentials:!0,headers:r.headers.set("X-CSRF","1")});return n.handle(l)}static{this.\u0275fac=function(n){return new(n||a)}}static{this.\u0275prov=De({token:a,factory:a.\u0275fac})}}return a})();zr();Kt();Ee();var Ty=ni(ol(),1);var tl=new ci("MESSAGE_FORMAT_CONFIG");Eu();var Dd=ni(Md());Ee();Ki.autoAddC
+
+odule)},{path:"form",loadChildren:()=>import("./chunk-MJF3JG7P.js").then(a=>a.EvFormModule)},{path:"sampleballots",loadChildren:()=>import("./chunk-JNQJMVV7.js").then(a=>a.SampleBallotsModule)},{path:"ballotproofer",canActivate:[bt],loadChildren:()=>import("./chunk-ZVT5OCRB.js").then(a=>a.BallotProoferModule)},{path:"contestproofer",canActivate:[bt],loadChildren:()=>impo

@@ -1,0 +1,23 @@
+{
+  "status": "CURRENT_PRECINCT_SAMPLE_SPELLING_RETAINED_NO_DUPLICATE_PERSON",
+  "candidateId": "ga-cx-local-2026-cobb-soil-water-supervisor:john-i-loyd",
+  "currentPrecinctName": "John I. Loyd",
+  "consolidatedName": "John I. Lloyd",
+  "currentPrecinctEvidence": {
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-6157-3ef5-c63c-08df131fad5a?jurisdictionId=c28c8cec-bc38-4b03-aaf3-7131958d35fb&precinctId=01000000-c953-da57-e08d-08dd42199cd6&ballotType=sample",
+    "sourceOrg": "Cobb County Elections & Registration — public Enhanced Voting sample service",
+    "collectedAt": "2026-11-03T08:16:15.820497+00:00",
+    "verifiedAt": "2026-11-03T08:16:15.820497+00:00",
+    "quote": "For Cobb County Soil and Water\nConservation District Supervisor\n(Vote for Two)\nJohn I. Loyd | (Incumbent)\nBrad A. Whitfield\nFrank Wigington"
+  },
+  "consolidatedEvidence": {
+    "sourceUrl": "https://assets.cobbcounty.gov/files/2026-09/SAMPLE%20BALLOT%20DRAFT%20v4%20WEB.pdf",
+    "sourceOrg": "Cobb County Government / Elections & Registration",
+    "collectedAt": "2026-11-03T08:14:09.913768+00:00",
+    "verifiedAt": "2026-11-03T08:14:09.913768+00:00",
+    "quote": "John I. Lloyd (I)"
+  },
+  "officialStateSupportingName": "John Loyd",
+  "officialStateSourceUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-i-conservation-districts",
+  "resolution": "Current complete precinct block is the primary name source. State conservation commission independently lists incumbent John Loyd. Native consolidated spelling retained as a source variant, never a second candidacy."
+}

@@ -1,0 +1,823 @@
+{
+  "latest": {
+    "ref": "66e86cf27224ccaea8336dbf35534013cbbd78e6",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__ballot-input__ga.json",
+        "sha256": "cdba923cafbe1116115430986a6a4cc392984cc47d2c87693c5c71f5abb95a59"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/bartow-homestead-increase/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__bartow-homestead-increase__ballot-input__ga.json",
+        "sha256": "571d005c0837eb5b2d0e23d47fe824ebf5f693f0df322c362644b1f86f0ee831"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/bibb-school-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__bibb-school-senior__ballot-input__ga.json",
+        "sha256": "f60a0aae3db2a65279a551cc3e26018affdb40b06b69bb040f2fefbf543b5d2b"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/bremen-school-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__bremen-school-senior__ballot-input__ga.json",
+        "sha256": "e0375dc70d485ef4f3927172af5f5e8aa656c45527fe422ec8516300af451340"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/brookhaven-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__brookhaven-homestead__ballot-input__ga.json",
+        "sha256": "cfc9f2a2bd129a23c6bc55c31288d828c2074d8c40151db7220e1e4abf490d05"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/bryan-school-value-growth/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__bryan-school-value-growth__ballot-input__ga.json",
+        "sha256": "539fc8bc487a763e2fa0d1c06a292a46b39bb760b4e48bd4891660739fb8feb4"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/cartersville-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__cartersville-homestead__ballot-input__ga.json",
+        "sha256": "797c22399f066d1c8129f472eeb14cbcd8d5bd6d070a287ae7e819042ed52865"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/cartersville-school-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__cartersville-school-senior__ballot-input__ga.json",
+        "sha256": "c52e0aee7b4eb993e0eec11565ef9961becb9893e2edc3f1b3fccf0cb68c9855"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/chatham-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__chatham-homestead__ballot-input__ga.json",
+        "sha256": "e2a490851b5aabb126af49edd28f82664be6d49ca1d59b4f11e7e9c1562986b9"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/chattooga-county-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__chattooga-county-senior__ballot-input__ga.json",
+        "sha256": "26776be77dfae8fd12c24a7dc35cf2830a1d33538213918bfbd914aabfbd1c34"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/chattooga-school-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__chattooga-school-senior__ballot-input__ga.json",
+        "sha256": "ecc766f04ae807eb7eac1f48e60e6c427d5b9c69854e4fec998f99e45cd56bb1"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/cherokee-school-value-growth/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__cherokee-school-value-growth__ballot-input__ga.json",
+        "sha256": "968751c2b840085f175b78f07e0e3344b863a643a17edad9f349f2a7e869d1ab"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/cobb-splost/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__cobb-splost__ballot-input__ga.json",
+        "sha256": "ec4a95d5458f125a57ba128a79b0066239895c4dd38bbd181609947645071235"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/covington-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__covington-homestead__ballot-input__ga.json",
+        "sha256": "55a5c01bb14bc3753b1f257c5803f73fe8ab31a006a41067d6939cd9dba3e092"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/dekalb-esplost/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__dekalb-esplost__ballot-input__ga.json",
+        "sha256": "70d8b4f88c476bae5640840e2979ed13f680740d9175f79bd99aa38d316be3f7"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/fayette-county-collection-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__fayette-county-collection-homestead__ballot-input__ga.json",
+        "sha256": "83c581e80fe1e3bf56ec62f6b83caef506773aa072d8c37464e458ae8ff54496"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/fayette-school-collection-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__fayette-school-collection-homestead__ballot-input__ga.json",
+        "sha256": "9c60885f4e450bc62a4f5b54e2b2f2e4fc65277c607d765b25c55cc1778b011a"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/fayetteville-collection-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__fayetteville-collection-homestead__ballot-input__ga.json",
+        "sha256": "d128db674da947a5b545bb940921250ebca4b3b075a066bb7aff2ab6e7c6ed02"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/franklin-springs-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__franklin-springs-senior__ballot-input__ga.json",
+        "sha256": "71055741ec5d11654bfd6a4ae997ba57fa93ec36378be59368437ebf89efe41a"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/gainesville-city-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__gainesville-city-homestead__ballot-input__ga.json",
+        "sha256": "99e36aa9d95cde730d35d0882aae91df172ba811feb741d413e0254e8a3f4ddf"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/gainesville-school-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__gainesville-school-homestead__ballot-input__ga.json",
+        "sha256": "544f8246e7f2655f49fffe0cb33cbe5e038ace0064309e8a6bfdd53d0837e1b6"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/hall-county-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__hall-county-homestead__ballot-input__ga.json",
+        "sha256": "fc919a0466e3198524af11774fc84b241d396ba9d7347594c03a058163a76c5a"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/hall-school-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__hall-school-senior__ballot-input__ga.json",
+        "sha256": "b4ebf335a7a4d5a7135b112e01af91de1c7fb0d2152f98a0b34a5cddc50ae2fb"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/hampton-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__hampton-homestead__ballot-input__ga.json",
+        "sha256": "6a2e913f28f98ac9685a38d1ee4c08b9795bc42a438a2069e506fb9022484789"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/heard-school-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__heard-school-senior__ballot-input__ga.json",
+        "sha256": "a822675e976b3a0539c8ca278a1d72351979174a3caad6c99f956647ab25bf9f"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/kingsland-senior-age/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__kingsland-senior-age__ballot-input__ga.json",
+        "sha256": "e09f7833d2e1a9c8cca60b36588e053f66450a201cc9677aa3817bb8a6c0a66f"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/kingsland-value-growth-exemption/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__kingsland-value-growth-exemption__ballot-input__ga.json",
+        "sha256": "29caf1597ec182a2f1bdd497d00a9012a6f611ed011691988cf4dbaa1b6a6eff"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/laurens-school-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__laurens-school-senior__ballot-input__ga.json",
+        "sha256": "cd5e3dad33909810509e2ff6d3ae989c73de1db223ebd14417442cd5f4d6cf2c"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/lee-school-bond-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__lee-school-bond-senior__ballot-input__ga.json",
+        "sha256": "f93e9247df8a15472aaf8db9422bbf1f92ab1fd417de26fc1f0040d0672ac8fc"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/lee-school-senior-income/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__lee-school-senior-income__ballot-input__ga.json",
+        "sha256": "fdd9a5743159ffdc7b2dbd84290987e1871e41d3f50e58d52a2112de8670e4e0"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/mableton-redevelopment/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__mableton-redevelopment__ballot-input__ga.json",
+        "sha256": "d4a305ce79fd453edd567768d360a91e29cf62ca726c1bad8752970d6a06fad5"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/macon-bibb-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__macon-bibb-senior__ballot-input__ga.json",
+        "sha256": "5548d51f6e0e9bca69f159984dad842b44af39d6984424ed1767e91e566baf94"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/madison-school-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__madison-school-senior__ballot-input__ga.json",
+        "sha256": "fb2c8bbf1c91872ac5605edf34ff56afe17a1e21513f8801ac457bcf825f9dd9"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/pickens-school-income/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__pickens-school-income__ballot-input__ga.json",
+        "sha256": "0b6e035ca0b7a24bfc6613902df540531929b7deef8375c124fbeb032143131c"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/pike-disabled-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__pike-disabled-homestead__ballot-input__ga.json",
+        "sha256": "ad8eaf8c68da4ec841aabf8e2c4f31a5b54066210926ad74b5d4e770a7424084"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/pike-senior-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__pike-senior-homestead__ballot-input__ga.json",
+        "sha256": "d1644d1305ec5210abc5081b9a555915ae20dacb4f7f4eaf8546f4081a462e56"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/springfield-redevelopment/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__springfield-redevelopment__ballot-input__ga.json",
+        "sha256": "c27c2d3048e6b18126858580c6a1952ce4e9ab7861ba1994453b9f0517dabad4"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/statham-packaged-liquor/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__statham-packaged-liquor__ballot-input__ga.json",
+        "sha256": "1bd589fcf9f25f451cd80f08079562751a2bbc4a8003002370ec2fe9d6bb995f"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/statham-senior-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__statham-senior-homestead__ballot-input__ga.json",
+        "sha256": "055b5ef8786bc7aaf50ecd920884bf0bfca6aea5c646eeb1426985d26676aa75"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/suwanee-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__suwanee-homestead__ballot-input__ga.json",
+        "sha256": "7a16a9185d63991c8f2afcb25fd0917bc10e5ff1ec6406fdc053d1f7ebeb3fbc"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/union-advisory-commission/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__union-advisory-commission__ballot-input__ga.json",
+        "sha256": "4877c20b47555d64e6d20b36a250c970c80a013699698cffbe4dd9e63ee5351f"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/walker-school-residency/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__walker-school-residency__ballot-input__ga.json",
+        "sha256": "cbae16540f53aba2e1e8ab8862f4128441a0c7c8f63ed7654020a92327010af3"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/ware-school-senior/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__ware-school-senior__ballot-input__ga.json",
+        "sha256": "5158434e7320ae937553396c2de86c328919d28ac3775c5911a8a5075066edd8"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/GA/explainer-expansion/west-point-homestead/ballot-input/ga.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__west-point-homestead__ballot-input__ga.json",
+        "sha256": "b64c169cd73961fbbe621726f15b8d3f85640445fd8df04caa1e58a2a83b0cc1"
+      }
+    ]
+  },
+  "status": "COMPLETE",
+  "identityInputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/ga.json",
+      "sha256": "2eb85dcc4ec5c16d976fe68d7cf9445885dd441b9bd36d469db361db1344a483"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/GA/fulton/ballot-input/ga.json",
+      "sha256": "4aadc6545fdc97936fa93d42d5fd532eca6fbb4f7480acc10a55978666aa74b2"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/GA/gwinnett/ballot-input/ga.json",
+      "sha256": "aa2ba46ac23281a4c7fdb44e196e4568bd505b7b08655df518b44bfcbb73956b"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__ballot-input__ga.json",
+      "sha256": "cdba923cafbe1116115430986a6a4cc392984cc47d2c87693c5c71f5abb95a59"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__bartow-homestead-increase__ballot-input__ga.json",
+      "sha256": "571d005c0837eb5b2d0e23d47fe824ebf5f693f0df322c362644b1f86f0ee831"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__bibb-school-senior__ballot-input__ga.json",
+      "sha256": "f60a0aae3db2a65279a551cc3e26018affdb40b06b69bb040f2fefbf543b5d2b"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__bremen-school-senior__ballot-input__ga.json",
+      "sha256": "e0375dc70d485ef4f3927172af5f5e8aa656c45527fe422ec8516300af451340"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__brookhaven-homestead__ballot-input__ga.json",
+      "sha256": "cfc9f2a2bd129a23c6bc55c31288d828c2074d8c40151db7220e1e4abf490d05"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__bryan-school-value-growth__ballot-input__ga.json",
+      "sha256": "539fc8bc487a763e2fa0d1c06a292a46b39bb760b4e48bd4891660739fb8feb4"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__cartersville-homestead__ballot-input__ga.json",
+      "sha256": "797c22399f066d1c8129f472eeb14cbcd8d5bd6d070a287ae7e819042ed52865"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__cartersville-school-senior__ballot-input__ga.json",
+      "sha256": "c52e0aee7b4eb993e0eec11565ef9961becb9893e2edc3f1b3fccf0cb68c9855"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__chatham-homestead__ballot-input__ga.json",
+      "sha256": "e2a490851b5aabb126af49edd28f82664be6d49ca1d59b4f11e7e9c1562986b9"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__chattooga-county-senior__ballot-input__ga.json",
+      "sha256": "26776be77dfae8fd12c24a7dc35cf2830a1d33538213918bfbd914aabfbd1c34"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__chattooga-school-senior__ballot-input__ga.json",
+      "sha256": "ecc766f04ae807eb7eac1f48e60e6c427d5b9c69854e4fec998f99e45cd56bb1"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__cherokee-school-value-growth__ballot-input__ga.json",
+      "sha256": "968751c2b840085f175b78f07e0e3344b863a643a17edad9f349f2a7e869d1ab"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__cobb-splost__ballot-input__ga.json",
+      "sha256": "ec4a95d5458f125a57ba128a79b0066239895c4dd38bbd181609947645071235"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__covington-homestead__ballot-input__ga.json",
+      "sha256": "55a5c01bb14bc3753b1f257c5803f73fe8ab31a006a41067d6939cd9dba3e092"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__dekalb-esplost__ballot-input__ga.json",
+      "sha256": "70d8b4f88c476bae5640840e2979ed13f680740d9175f79bd99aa38d316be3f7"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__fayette-county-collection-homestead__ballot-input__ga.json",
+      "sha256": "83c581e80fe1e3bf56ec62f6b83caef506773aa072d8c37464e458ae8ff54496"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__fayette-school-collection-homestead__ballot-input__ga.json",
+      "sha256": "9c60885f4e450bc62a4f5b54e2b2f2e4fc65277c607d765b25c55cc1778b011a"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__fayetteville-collection-homestead__ballot-input__ga.json",
+      "sha256": "d128db674da947a5b545bb940921250ebca4b3b075a066bb7aff2ab6e7c6ed02"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__franklin-springs-senior__ballot-input__ga.json",
+      "sha256": "71055741ec5d11654bfd6a4ae997ba57fa93ec36378be59368437ebf89efe41a"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__gainesville-city-homestead__ballot-input__ga.json",
+      "sha256": "99e36aa9d95cde730d35d0882aae91df172ba811feb741d413e0254e8a3f4ddf"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__gainesville-school-homestead__ballot-input__ga.json",
+      "sha256": "544f8246e7f2655f49fffe0cb33cbe5e038ace0064309e8a6bfdd53d0837e1b6"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__hall-county-homestead__ballot-input__ga.json",
+      "sha256": "fc919a0466e3198524af11774fc84b241d396ba9d7347594c03a058163a76c5a"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__hall-school-senior__ballot-input__ga.json",
+      "sha256": "b4ebf335a7a4d5a7135b112e01af91de1c7fb0d2152f98a0b34a5cddc50ae2fb"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__hampton-homestead__ballot-input__ga.json",
+      "sha256": "6a2e913f28f98ac9685a38d1ee4c08b9795bc42a438a2069e506fb9022484789"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__heard-school-senior__ballot-input__ga.json",
+      "sha256": "a822675e976b3a0539c8ca278a1d72351979174a3caad6c99f956647ab25bf9f"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__kingsland-senior-age__ballot-input__ga.json",
+      "sha256": "e09f7833d2e1a9c8cca60b36588e053f66450a201cc9677aa3817bb8a6c0a66f"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__kingsland-value-growth-exemption__ballot-input__ga.json",
+      "sha256": "29caf1597ec182a2f1bdd497d00a9012a6f611ed011691988cf4dbaa1b6a6eff"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__laurens-school-senior__ballot-input__ga.json",
+      "sha256": "cd5e3dad33909810509e2ff6d3ae989c73de1db223ebd14417442cd5f4d6cf2c"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__lee-school-bond-senior__ballot-input__ga.json",
+      "sha256": "f93e9247df8a15472aaf8db9422bbf1f92ab1fd417de26fc1f0040d0672ac8fc"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__lee-school-senior-income__ballot-input__ga.json",
+      "sha256": "fdd9a5743159ffdc7b2dbd84290987e1871e41d3f50e58d52a2112de8670e4e0"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__mableton-redevelopment__ballot-input__ga.json",
+      "sha256": "d4a305ce79fd453edd567768d360a91e29cf62ca726c1bad8752970d6a06fad5"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__macon-bibb-senior__ballot-input__ga.json",
+      "sha256": "5548d51f6e0e9bca69f159984dad842b44af39d6984424ed1767e91e566baf94"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__madison-school-senior__ballot-input__ga.json",
+      "sha256": "fb2c8bbf1c91872ac5605edf34ff56afe17a1e21513f8801ac457bcf825f9dd9"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__pickens-school-income__ballot-input__ga.json",
+      "sha256": "0b6e035ca0b7a24bfc6613902df540531929b7deef8375c124fbeb032143131c"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__pike-disabled-homestead__ballot-input__ga.json",
+      "sha256": "ad8eaf8c68da4ec841aabf8e2c4f31a5b54066210926ad74b5d4e770a7424084"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__pike-senior-homestead__ballot-input__ga.json",
+      "sha256": "d1644d1305ec5210abc5081b9a555915ae20dacb4f7f4eaf8546f4081a462e56"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__springfield-redevelopment__ballot-input__ga.json",
+      "sha256": "c27c2d3048e6b18126858580c6a1952ce4e9ab7861ba1994453b9f0517dabad4"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__statham-packaged-liquor__ballot-input__ga.json",
+      "sha256": "1bd589fcf9f25f451cd80f08079562751a2bbc4a8003002370ec2fe9d6bb995f"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__statham-senior-homestead__ballot-input__ga.json",
+      "sha256": "055b5ef8786bc7aaf50ecd920884bf0bfca6aea5c646eeb1426985d26676aa75"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__suwanee-homestead__ballot-input__ga.json",
+      "sha256": "7a16a9185d63991c8f2afcb25fd0917bc10e5ff1ec6406fdc053d1f7ebeb3fbc"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__union-advisory-commission__ballot-input__ga.json",
+      "sha256": "4877c20b47555d64e6d20b36a250c970c80a013699698cffbe4dd9e63ee5351f"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__walker-school-residency__ballot-input__ga.json",
+      "sha256": "cbae16540f53aba2e1e8ab8862f4128441a0c7c8f63ed7654020a92327010af3"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__ware-school-senior__ballot-input__ga.json",
+      "sha256": "5158434e7320ae937553396c2de86c328919d28ac3775c5911a8a5075066edd8"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__west-point-homestead__ballot-input__ga.json",
+      "sha256": "b64c169cd73961fbbe621726f15b8d3f85640445fd8df04caa1e58a2a83b0cc1"
+    }
+  ],
+  "measureAndHeldPreservation": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 6,
+      "measuresSha256": "f51dd549fc1878dc4cb1acc52466c262b98ba51d6042a18cf2f10a3eee0561cb",
+      "heldContestsSha256": "3a4bfe275f76a6704682877660b7d71fa37961c4cfea4d9e75935aae116f1bcd",
+      "heldCandidaciesSha256": "21b8626ad34548a854711209bd559d81d744e51687c738b507ac1be9334ff6d7"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/GA/fulton/ballot-input/ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 0,
+      "measuresSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "heldContestsSha256": "7b24b39be9073d04d65898d9f4d38626605d10b805268526633e703740e26974",
+      "heldCandidaciesSha256": "98ec424b2336546317fdf26c0ca5ca9051a839a8bec4d600d6adc18db551e4e1"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/GA/gwinnett/ballot-input/ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 2,
+      "measuresSha256": "51165c2606f27ebfd76e6e7dd44a7392045809f657f5356a2ff1cbe9586c21f0",
+      "heldContestsSha256": "d16e66617b56a14a8a9ae40f869993282df1cb71028b641a819e2cc7153f817c",
+      "heldCandidaciesSha256": "e3df86393aeec12447291d8f0c022459542cc4786c913a9714111f4f187c6a85"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "0d66ce7e1373600e0c78c846fd1bfb3aba2bb4ec1a9c4fab35d4c6a2ddeb0db9",
+      "heldContestsSha256": "9284551859c54a389559001676c2d622eb1c12367e27755932dd5a21c0b6d4cc",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__bartow-homestead-increase__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "ff8d4513c8b756076e19af4c0a7accd03e457af7df0e70e776ff981e19b21197",
+      "heldContestsSha256": "97d0c8b86432cd5afebf2098c6b0f2291f2844b7f821ea9699c289126018648a",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__bibb-school-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "d0f019f2c8f4a441850f7ca69066c8b2cc859e08b33050c39141683a20df02b1",
+      "heldContestsSha256": "7c0da658648ff700ca28c06e26afc885ea4ed8e745b49ae3eba4609aad265a3c",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__bremen-school-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "27ae586133977ea648d5ac79ce8901bd706aef0390627da0664fe728ddd4f8ae",
+      "heldContestsSha256": "065f2b3e1603927dfad04de7f91de82616770d6fb7cf412f0d641df6eac44aba",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__brookhaven-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "98b6ecfeec619a5279e98620a8fd74ecd20aa990a3b6642f02083758ca302eca",
+      "heldContestsSha256": "ae227fea72eca47d0b0971c8d60026ff131180e0c7a974affa2cbb0e57a36292",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__bryan-school-value-growth__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "720e46cda3792178c3ef4a5e419c56a42c5c0549595ccb2acf43c512e6e2bd42",
+      "heldContestsSha256": "17b0420e3c20d83149304b917531e4961e683f25dced91450eb87324ce85a9ab",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__cartersville-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "e34334352a2eab8ac790275352ba67cae340c84449b22b9b1502052fdae45923",
+      "heldContestsSha256": "9b0746cc66d29189a431605f5e0caf3b34a4aaf0740af18a0226dcc2a2737afd",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__cartersville-school-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "15df42805a36672e1121139a485fc759d6c6c377feab52bd11da67018e9d785e",
+      "heldContestsSha256": "9299cd24dd7227b1414e1d24150457774839a70740c04051aa877e6e091e8e71",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__chatham-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "c2cd282afbf8ae99666215df848aac01d35ba01276978c02ffb936cf4db7ce5d",
+      "heldContestsSha256": "e00404449f5650b897fc219dc7bd4b229889eb9b5afce6fc333aa61728858c80",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__chattooga-county-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "2e997540dafdf96fb1765b62a5b7918ef732034bcd0887908121769d7ac2749d",
+      "heldContestsSha256": "20e070f33cdf9e4930f1f8b03b9a043597d32d5cee284d5d9b0c05b6a922f690",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__chattooga-school-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "a4d875203ab419f99d859dd1f66b793d309833ebcae2b0189d6b79d66ae5b17a",
+      "heldContestsSha256": "f0cecbb3ac1db6e876e18d5497d88a3491de9955890408c2f8203d1c82cca35e",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__cherokee-school-value-growth__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "18bd5aa2f43b0c7396c54a305857f43775991b1f443e240d412c01e33946e3c0",
+      "heldContestsSha256": "bc63e2de26b17378e3be230ce639f220541445328b202598773d15b67b6e63f4",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__cobb-splost__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "9ab91f8d22a3099b72a1c193d07e73d82a2ef1fa484906be0fb30178394486ab",
+      "heldContestsSha256": "968b46bb57d376909e17e3905f1a11fc97bd52bd9ef5aeeaf088d5e0bbfea022",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__covington-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "06296d35b55023b6f3722a69b853f1e319ca18a3dbe4e715355f134dd19477b5",
+      "heldContestsSha256": "892d2604bca09cc872d85101cb71befe6f4f53054b4fd5d5629168bd39eda3fb",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__dekalb-esplost__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "cd3590756ef856c7bf0ac2569c6449b18c5a5f20df923c7f06e7ed797ed69251",
+      "heldContestsSha256": "521e1bb43f38ef4a9665d65dbc39de923f95dace261754a0741ae9fad70b9b80",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__fayette-county-collection-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "ffa5cafd72434c0994889ccd75bdba4f1c00fe835a82ed65433332b56f42061c",
+      "heldContestsSha256": "7b956f91dfa19f084813d977c8296e9a790140deab4909039954ffdd74ea7ed7",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__fayette-school-collection-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "1cca175c1887deb52707b634268c36877769aba949467403de23dfe3404291a7",
+      "heldContestsSha256": "fee1c1312f33bb8891b2798f65d81e3ef57340848be9f3b72847e850bb9a13f3",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__fayetteville-collection-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "755bb3306761a8c7105817a81b8193004cb2ccac3aa84feac8e18e6f03e444fd",
+      "heldContestsSha256": "15aad39ad68a52a59d8aea811c8c4f5ae9cbdf17720d64c1164d4cdc72c6506b",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__franklin-springs-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "5c7e1222a13daa9377b0a07feaba9c720d8c0e7fa6740d713aec3c20d433f915",
+      "heldContestsSha256": "c3ce0c1dbbe4364addd63328424aec5d33a60f83becd60d758600355c2b8f4ca",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__gainesville-city-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "0e2907f51e1fa39adada863b40dee0d5da41b5a182651f48a2fc61d95c8d0030",
+      "heldContestsSha256": "fc677fc963d7517f53fe300241508bfdf1082cd108df6369743df85ed1398f01",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__gainesville-school-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "0580796dbe13a7d12bae696da40da2e899212fbc2138a44843450dcd1cd76a67",
+      "heldContestsSha256": "c31c25540766c1316cd797887815e1d9209a9d6a41bdb36b8ad38ae27efda5df",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__hall-county-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "c5f5d1fcd321738b38af987438f69b5682e1d87413a1ce99d918b8062e5cd85e",
+      "heldContestsSha256": "23d4d6e853ea9ab5ccc17a1e56bbb95d8801c3f023f427b5323c7899d5550a4d",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__hall-school-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "7cf4d14887bf143bef0fb09eec5988541b067147173c4fa13450dfb5cc87aa4e",
+      "heldContestsSha256": "5807db5d533c6768f9fd39500b4dfd9cc5d0c853a59c9265ac21e679ca949c59",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__hampton-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "e731a9cb7152f8fc60a220e94265a5bd173e0a47f258f852594a4efcc896b3b7",
+      "heldContestsSha256": "20558d6eacdace5f62ecfb1727bb28ba6b5fc3d8fb471e1efd329e7f968b981a",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__heard-school-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "37e239c6f9b3ad42d1b1e10e9eb16352d995f547d08883e477e4dfcb9a3e22d8",
+      "heldContestsSha256": "7fbd32942065ca2185cac72fcb88ed8b48ef1418586ef63e977d29abdfabe8fb",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__kingsland-senior-age__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "e9d6b18f249860d46b7db57f3876ebaf00cf7cbb0e7650f6d9b958615dc4ca8b",
+      "heldContestsSha256": "e8d79140d8c047def3be44d0a0445bdcefa86feb91c9b825118f2d4fc18d97b5",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__kingsland-value-growth-exemption__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "a196d0acbf7707c90a9b4ae9ac28f9f58301b0bcc0e0fc5f17eb5213b970f46d",
+      "heldContestsSha256": "8abb4ec25bdaeb94320a9b713275d044bc9624268412798d6a811e12444655d2",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__laurens-school-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "3f7daa30a19a3a56e30f3c425e7cf5e29455c394025d0c216d16025eb570e0ae",
+      "heldContestsSha256": "a952d0e1322db2ddcb90afaaddc255a489cf7937d2229e6dfcfb7bfdd951c3b9",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__lee-school-bond-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "65811ddf9b5a451c5598e51556c46f13e7286703e293aca3c3ad669ff1a979a9",
+      "heldContestsSha256": "2292bd2e145e878af358fd2a66603d3f9c0aa39a2909e66fb9d4cc94c2bab9f3",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__lee-school-senior-income__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "b7bc98c684dbba1b31181fdf0d35a6d1a2e8d5678ff1c26e7153425deb59ce96",
+      "heldContestsSha256": "bdd9e7c304722137bc72b8942ca7cdc516d0f1464c0ab010e56c08ea7b732d2c",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__mableton-redevelopment__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "44fd89d522668e8fd2103148d6c1a71f2a8684272156faea8557ea329b5221c2",
+      "heldContestsSha256": "7df37b3c1de7619fb642b6c104fde3789966c19ce3b9e609b597a5c3c3c6f020",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__macon-bibb-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "cef39e8db226d715124c0843cc73dc9ed06696f0437b7b56e8d98d6d67db85c8",
+      "heldContestsSha256": "36c77d1d94b081f0c3c6fb1866b5ae3616b28654b3b0daf4e1fdaf9bd095787b",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__madison-school-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "4721c3f037875a02baa5a03ee206c224da49ef9c5a55fe3deec2aed164d3e36c",
+      "heldContestsSha256": "61dff7b4d675b7a6adf83b0253c6476d961b26e6cee99ad2026afea91a664e11",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__pickens-school-income__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "ba68554bb2101e64ee0d1d37b06d1936d57e400acbdd633d91b341bd13d8236e",
+      "heldContestsSha256": "1619069717f84fcec4e340971ed3509709b06fbdb59c87d5f9d3927ebf6931a6",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__pike-disabled-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "f2367fbc801acea8a2b8808a1df9312fdaffe16189ae23ea78372659dee3ad11",
+      "heldContestsSha256": "12437205ed89cfaece88de0ebb02be44aaff1fb2d4417b80665bf7ce70bc1dc9",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__pike-senior-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "cb61b3e24118c69897d4473e446475dc3ac253b19ecf70b4927af36559d3b5a3",
+      "heldContestsSha256": "dcf7f19edde0ca3c329e175d85462971b1ac93bcb8802db4adc91d37292bd13f",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__springfield-redevelopment__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "7ec236cd367a79f41f0f36c80450765b52fcae3e63180d62937948ee2b6041ef",
+      "heldContestsSha256": "44caf2d9e44266bd412dfc4cabe78c6bdda65f14fcdd3de19718d72975a235d2",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__statham-packaged-liquor__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "226d00ae9beb6825e97fb98434adec63c26ecf1b3f02fe1a26226514a8ba715a",
+      "heldContestsSha256": "9fa78c0cbde4f358fc7b516049480fd997214dbf4e92e736de6428b9421a8f8a",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__statham-senior-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "7838aedb8242dd5c88c5bbe138dd25a9c1574184d386d7f5d23be78e7f78fb0a",
+      "heldContestsSha256": "ef2ba205ec19baeb4d8cd70c3428ecca125e8ba48489c10686c3c5b64de28f9b",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__suwanee-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "e44d738b1ee1dd5672da2c3c7198422542a16c5d78fff654f1daa723db05ec37",
+      "heldContestsSha256": "b68d0b75e61941c298c99d968651730501b0cf3d26a57bc7a5872bf7a7ff1424",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__union-advisory-commission__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "aad3c382cd6d265dca085785ccbcb0738393212a85244522e6755ebaafce1dfa",
+      "heldContestsSha256": "225813c564fd605b84e48f3bf952bdf8e9ca4502e4307f006315cd8ca0e101b1",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__walker-school-residency__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "10ef7789b321e97d16ed4142fb1b4d55fd2d838301fe7265e30dc2bf2fcff197",
+      "heldContestsSha256": "0bd76f39328abf4fd6978d60251b20a8087e5640f0209a00234c19b3d3d24ce6",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__ware-school-senior__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "489523297a5b8fec71237745eb43e1c009f48cc716cd8bee30a93d478578eb76",
+      "heldContestsSha256": "347bd041b484183e0ac83d22ea36c370cb294a7d76f4b878f28ffa2dfab2a5b7",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-GA-66e86cf27/explainer-expansion__west-point-homestead__ballot-input__ga.json",
+      "ballotKey": "GA:ga-2026-11-03",
+      "measures": 1,
+      "measuresSha256": "eebbf6284f8f82c9b123635269f259f9fd5bd47a3b08abae512d5b8cc0cb25b6",
+      "heldContestsSha256": "3df57d0ec039b137003c6a0b0a2f4f3b71e55b415286b13b10bf7ac260c63f6c",
+      "heldCandidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ],
+  "identityResult": "Two earlier GA county lanes and held statewide/legislative records fully read. No identical Cobb local election/electorate/office or candidate IDs were found. No shared regional office is duplicated.",
+  "newContestIds": [
+    "ga-cx-local-2026-cobb-solicitor-general",
+    "ga-cx-local-2026-cobb-surveyor",
+    "ga-cx-local-2026-cobb-soil-water-supervisor",
+    "ga-cx-local-2026-cobb-commission-district-1",
+    "ga-cx-local-2026-cobb-school-board-district-2",
+    "ga-cx-local-2026-cobb-commission-district-3",
+    "ga-cx-local-2026-cobb-school-board-district-4",
+    "ga-cx-local-2026-cobb-school-board-district-6"
+  ],
+  "newCandidacyIds": [
+    "ga-cx-local-2026-cobb-solicitor-general:makia-metzger",
+    "ga-cx-local-2026-cobb-surveyor:chris-evans",
+    "ga-cx-local-2026-cobb-soil-water-supervisor:john-i-loyd",
+    "ga-cx-local-2026-cobb-soil-water-supervisor:brad-a-whitfield",
+    "ga-cx-local-2026-cobb-soil-water-supervisor:frank-wigington",
+    "ga-cx-local-2026-cobb-commission-district-1:keli-gambrill",
+    "ga-cx-local-2026-cobb-school-board-district-2:becky-sayler",
+    "ga-cx-local-2026-cobb-commission-district-3:joann-k-birrell",
+    "ga-cx-local-2026-cobb-commission-district-3:kevin-redmon",
+    "ga-cx-local-2026-cobb-school-board-district-4:david-chastain",
+    "ga-cx-local-2026-cobb-school-board-district-4:micheal-garza",
+    "ga-cx-local-2026-cobb-school-board-district-6:nichelle-a-davis"
+  ],
+  "latestInputCount": 44,
+  "latestQuestionIdsAndExplanationsPreserved": true
+}

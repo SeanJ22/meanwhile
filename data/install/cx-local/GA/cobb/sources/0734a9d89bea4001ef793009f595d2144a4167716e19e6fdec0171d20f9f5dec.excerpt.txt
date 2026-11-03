@@ -1,0 +1,5 @@
+Cobb County
+Welcome to the Cobb County Electronic Ballot Delivery System!
+Sample Ballots
+Allows admins to add access to sample ballots
+ABM@cobbcounty.gov

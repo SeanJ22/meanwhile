@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T08:46:57.173480+00:00",
+  "preparedAt": "2026-11-03T08:47:27.250238+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1962,6 +1962,20 @@
           "Local questions remain ancillary; no question or CX-VOTES explanation changed."
         ]
       }
+    },
+    {
+      "state": "GA",
+      "county": "Cobb",
+      "populationRank": 84,
+      "manifest": "GA/cobb/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 8,
+      "measureContests": 0,
+      "candidacies": 12,
+      "newContests": 8,
+      "refreshedContests": 0,
+      "sourceInputSha256": "ab666ff3d28424d5864cd8fd1bec64a20f9c7e36ca983d5053ec598ee7f6c3c5",
+      "coverage": "See per-county manifest for exact source and reader scope."
     }
   ],
   "sourceReviewCounties": [
@@ -2016,17 +2030,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 77,
-    "packetsPrepared": 78,
-    "candidateAndRetentionContests": 3814,
+    "countiesPrepared": 78,
+    "packetsPrepared": 79,
+    "candidateAndRetentionContests": 3822,
     "measureContests": 116,
-    "candidacyEntries": 8530,
-    "newContestEntriesAgainstCheckedInBaseline": 3177,
-    "distinctPreparedContestIds": 3845,
-    "distinctPreparedCandidateIds": 8370,
-    "distinctNewContestsAgainstCheckedInBaseline": 3140,
+    "candidacyEntries": 8542,
+    "newContestEntriesAgainstCheckedInBaseline": 3185,
+    "distinctPreparedContestIds": 3853,
+    "distinctPreparedCandidateIds": 8382,
+    "distinctNewContestsAgainstCheckedInBaseline": 3148,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 79
+    "distinctCountyHandoffs": 80
   },
   "remainingWork": [
     {

@@ -1,0 +1,5 @@
+sdictionId$,this.electionStore.electionId$]).pipe(p(([e,t])=>!e||!t?b(null):this.ballotStyleService.getBallotStylesForElection(e,t)))),n(()=>this.isLoadingBallotStylesSub.next(!1)),y(1)),this.ballotStylesFilterSub=new a({proofingStatus:null}),this.ballotStylesFilter$=this.ballotStylesFilterSub.asObservable(),this.sampleBallotStyles$=this.refreshBallotStylesSub.pipe(c(0),n(()=>this.is
+
+sdictionId$,this.electionStore.electionId$]).pipe(p(([e,t])=>!e||!t?b(null):this.ballotStyleService.getBallotStylesForElection(e,t,!0)))),n(()=>this.isLoadingBallotStylesSub.next(!1)),y(1)),this.filteredBallotStyles$=h([this.ballotStyles$,this.ballotStylesFilter$]).pipe(d(([e,t])=>!t||!t.proofingStatus?e:e.filter(s=>(s.proofingStatus||(s.proofingStatus=F.notYetProofed),s.proofingStat
+
+ew a({proofingStatus:null}),this.ballotStylesFilter$=this.ballotStylesFilterSub.asObservable(),this.sampleBallotStyles$=this.refreshBallotStylesSub.pipe(c(0),n(()=>this.isLoadingBallotStylesSub.next(!0)),f(()=>h([this.jurisdictionStore.childJurisdictionId$,this.electionStore.electionId$]).pipe(p(([e,t])=>!e||!t?b(null):this.ballotStyleService.getBallotStylesForElection(e,t,!0)

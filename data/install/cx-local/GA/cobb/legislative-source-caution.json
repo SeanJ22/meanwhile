@@ -1,0 +1,12 @@
+{
+  "status": "HELD_LEGISLATIVE_RECORDS_PRESERVED_NO_WORKER_CHANGE",
+  "precinct": "Sewell Mill 01",
+  "provenance": {
+    "sourceUrl": "https://www.cobbcounty.gov/news/cobb-elections-announces-isolated-districting-error-affecting-sewell-mill-01-precinct",
+    "sourceOrg": "Cobb County Government / Elections & Registration",
+    "collectedAt": "2026-11-03T08:17:18.200061+00:00",
+    "verifiedAt": "2026-11-03T08:17:18.200061+00:00",
+    "quote": "This error is confined to a single precinct and involves only two unopposed races for the Georgia House of Representative, Ga HD 37 (Mary Frances Williams) and Ga HD 43 (Solomon Adesanya). Both races have a single candidate running unopposed, so this error cannot affect the outcome of either race. No other races are affected by the error."
+  },
+  "action": "No public sample House field is installed or used to overwrite held legislative identity or legal district. Current named local offices are unaffected according to the official notice."
+}

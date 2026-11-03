@@ -1,0 +1,7 @@
+his.jurisdictionStore=i,this.electionStore=d,this.ballotStore=v,this.ballotStyles$=this.ballotStore.sampleBallotStyles$,this.election$=this.electionStore.election$,this.loading$=mt([this.electionStore.isLoadingElection$,this.ballotStore.isLoadingBallotStyles$]).pipe(ut(0),G(([m,h])=>m||h)),this.waitingTexts=[{languageID:"en",text:"Loading Precincts"}]}ngOnInit(){this.jurisdict
+
+();jt();lt();R();A();Nt();et();tt();W();X();var Ae=t=>({count:t}),Ye=(t,l,e,i)=>["../../../../../","sampleballots","jurisdiction",t,"election",l,"precinct",e,"ballotStyle",i];function Ue(t,l){if(t&1&&b(0,"app-content-loading",0),t&2){let e=_();u("texts",e.waitingTexts)}}function Ke(t,l){if(t&1&&(a(0,"tr")(1,"td")(2,"a",10),p(3),r(4,"translate"),o()(),b(5,"td",11)(6,"td",
+
+ched$.pipe(z(m=>{if(m.length===1){let h=m[0];this.router.navigate([`/${this.jurisdiction.shortName}/sampleballots/`,"jurisdiction",h.institutionId,"election",h.electionId,"precinct",h.precincts[0].id,"ballotStyle",h.id],{relativeTo:this.route})}})),this.loading$=this.ballotStore.isLoadingBallotStyles$,this.waitingTexts=[{languageID:"en",text:"Searching Sample Ballots"}]}
+
+r$.pipe(z(m=>{if(m&&m.length===1){let h=m[0];this.router.navigate([`/${this.jurisdiction.shortName}/sampleballots/`,"jurisdiction",h.institutionId,"election",h.electionId,"precinct",h.precincts[0].id,"ballotStyle",h.id],{relativeTo:this.route})}else m&&m.length&&(this.showResults=!0)})),this.ErrorType=Z,this.loading$=this.ballotStore.isLoadingBallotStyles$,this.showResul

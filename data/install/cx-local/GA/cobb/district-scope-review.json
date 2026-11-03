@@ -1,0 +1,97 @@
+{
+  "commissionMapRestoration": {
+    "sourceUrl": "https://www.cobbcounty.gov/news/statement-cobb-county-district-maps-current-commission-makeup",
+    "sourceOrg": "Cobb County Government / Elections & Registration",
+    "collectedAt": "2026-11-03T08:15:36.369730+00:00",
+    "verifiedAt": "2026-11-03T08:15:36.369730+00:00",
+    "quote": "county staff removed links and images of the “home rule” commission map from the county website. These have been replaced with the district map approved by the state legislature."
+  },
+  "commissionCurrentRulingUrl": "https://www.cobbcounty.gov/news/county-statement-ruling-commission-district-map-case",
+  "currentOfficialMapIndexUrl": "https://www.cobbcounty.gov/elections/election-reference/voter-maps",
+  "commissionMapTitle": "Cobb County Commissioner Districts - July 2024",
+  "schoolMapTitle": "Cobb County School Board Districts - June 2024",
+  "schoolMapNote": "Current county school map and every acquired school ballot block preserve school districts independently from county commission districts. The map visibly leaves independent Marietta City Schools territory outside Cobb school-board districts.",
+  "soilCountyEquivalence": {
+    "sourceUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-i-conservation-districts",
+    "sourceOrg": "Georgia Soil and Water Conservation Commission",
+    "collectedAt": "2026-11-03T08:17:17.889397+00:00",
+    "verifiedAt": "2026-11-03T08:17:17.889397+00:00",
+    "quote": "Cobb County SWCD Cobb County"
+  },
+  "countywideOffices": [
+    "Solicitor General",
+    "Surveyor",
+    "Cobb County Soil and Water Conservation District Supervisor"
+  ],
+  "districts": [
+    {
+      "ocdId": "ocd-division/country:us/state:ga/county:cobb/commission_district:1",
+      "status": "DATA_READY_READER_GEOGRAPHY_REQUIRED",
+      "sourceUrl": "https://assets.cobbcounty.gov/files/2024-12/Commissioner%20District%201.pdf",
+      "sourceCheckedAt": "2026-11-03T08:15:34.306249+00:00",
+      "sourceFile": "sources/d2a8e7f8d1526ce44145b9c230d9c787e61dc18f44c112146015219c3841bb91.pdf",
+      "nativeSha256": "d2a8e7f8d1526ce44145b9c230d9c787e61dc18f44c112146015219c3841bb91",
+      "sourceVintage": "Currently linked county official voter-map index retrieved 2026-11-03T08:14:07.776488+00:00",
+      "sampleVintage": "2026-11-03 current official public samples",
+      "scope": "Only the indicated subdistrict electorate; no whole-county/school/city/CCD expansion.",
+      "next": "River/registry must install or link exact current subdistrict geometry and validate selected-ballot delivery."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ga/school_district:cobb_county_school_district/board_district:2",
+      "status": "DATA_READY_READER_GEOGRAPHY_REQUIRED",
+      "sourceUrl": "https://assets.cobbcounty.gov/files/2024-06/School%20Board%20District%202.pdf",
+      "sourceCheckedAt": "2026-11-03T08:15:35.926575+00:00",
+      "sourceFile": "sources/789937de1f0ee0a4a2bcfafcaba9c4be344046861bf1b5c019f20589828bc39a.pdf",
+      "nativeSha256": "789937de1f0ee0a4a2bcfafcaba9c4be344046861bf1b5c019f20589828bc39a",
+      "sourceVintage": "Currently linked county official voter-map index retrieved 2026-11-03T08:14:07.776488+00:00",
+      "sampleVintage": "2026-11-03 current official public samples",
+      "scope": "Only the indicated subdistrict electorate; no whole-county/school/city/CCD expansion.",
+      "next": "River/registry must install or link exact current subdistrict geometry and validate selected-ballot delivery."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ga/county:cobb/commission_district:3",
+      "status": "DATA_READY_READER_GEOGRAPHY_REQUIRED",
+      "sourceUrl": "https://assets.cobbcounty.gov/files/2024-12/Commissioner%20District%203.pdf",
+      "sourceCheckedAt": "2026-11-03T08:15:34.134729+00:00",
+      "sourceFile": "sources/53966fdc712242e993f4ecb12f85f8728e19a58e345adb21b0c8dedf701ecb52.pdf",
+      "nativeSha256": "53966fdc712242e993f4ecb12f85f8728e19a58e345adb21b0c8dedf701ecb52",
+      "sourceVintage": "Currently linked county official voter-map index retrieved 2026-11-03T08:14:07.776488+00:00",
+      "sampleVintage": "2026-11-03 current official public samples",
+      "scope": "Only the indicated subdistrict electorate; no whole-county/school/city/CCD expansion.",
+      "next": "River/registry must install or link exact current subdistrict geometry and validate selected-ballot delivery."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ga/school_district:cobb_county_school_district/board_district:4",
+      "status": "DATA_READY_READER_GEOGRAPHY_REQUIRED",
+      "sourceUrl": "https://assets.cobbcounty.gov/files/2024-06/School%20Board%20District%204.pdf",
+      "sourceCheckedAt": "2026-11-03T08:15:36.076091+00:00",
+      "sourceFile": "sources/52cb98e65399ecb6ae0330c35a7ff1e6f8cdcdf8d07a5af8c95522ea502117bd.pdf",
+      "nativeSha256": "52cb98e65399ecb6ae0330c35a7ff1e6f8cdcdf8d07a5af8c95522ea502117bd",
+      "sourceVintage": "Currently linked county official voter-map index retrieved 2026-11-03T08:14:07.776488+00:00",
+      "sampleVintage": "2026-11-03 current official public samples",
+      "scope": "Only the indicated subdistrict electorate; no whole-county/school/city/CCD expansion.",
+      "next": "River/registry must install or link exact current subdistrict geometry and validate selected-ballot delivery."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ga/school_district:cobb_county_school_district/board_district:6",
+      "status": "DATA_READY_READER_GEOGRAPHY_REQUIRED",
+      "sourceUrl": "https://assets.cobbcounty.gov/files/2024-06/School%20Board%20District%206.pdf",
+      "sourceCheckedAt": "2026-11-03T08:15:36.332703+00:00",
+      "sourceFile": "sources/2efeb89e6eb8c3b57f1476425090a0523e620f5ed0e4032480ebcc1d24eb7ec3.pdf",
+      "nativeSha256": "2efeb89e6eb8c3b57f1476425090a0523e620f5ed0e4032480ebcc1d24eb7ec3",
+      "sourceVintage": "Currently linked county official voter-map index retrieved 2026-11-03T08:14:07.776488+00:00",
+      "sampleVintage": "2026-11-03 current official public samples",
+      "scope": "Only the indicated subdistrict electorate; no whole-county/school/city/CCD expansion.",
+      "next": "River/registry must install or link exact current subdistrict geometry and validate selected-ballot delivery."
+    }
+  ],
+  "wholeMunicipalityMembershipsAdded": 0,
+  "readerPolygonsAdded": 0,
+  "missingReaderGeographyIds": [
+    "ocd-division/country:us/state:ga/county:cobb/commission_district:1",
+    "ocd-division/country:us/state:ga/county:cobb/commission_district:3",
+    "ocd-division/country:us/state:ga/school_district:cobb_county_school_district/board_district:2",
+    "ocd-division/country:us/state:ga/school_district:cobb_county_school_district/board_district:4",
+    "ocd-division/country:us/state:ga/school_district:cobb_county_school_district/board_district:6"
+  ]
+}

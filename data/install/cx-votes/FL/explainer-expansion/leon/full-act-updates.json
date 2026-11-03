@@ -1,0 +1,126 @@
+{
+  "updatedAt": "2026-11-03T05:56:12.374414+00:00",
+  "operation": "Replace only three explanations in the same canonical packet; all five other records and all contest/question facts preserved. No duplicate installation route.",
+  "changes": [
+    {
+      "contestId": "fl-2026-leon-charter-review-process",
+      "before": {
+        "contestId": "fl-2026-leon-charter-review-process",
+        "whatItDoes": "Updates the Leon County Charter by removing outdated statutory references about establishing a charter, specifying public-hearing and notice requirements for considering charter amendments, and requiring the Citizen Charter Review Committee to submit its recommendations 150 days before the general election.",
+        "yesMeans": "Adopt the proposed reference updates, hearing and notice rules, and 150-day recommendation deadline.",
+        "noMeans": "Reject this proposed charter review-process amendment.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "sourceHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "sourceHashKind": "CAPTURE_BYTES",
+        "writtenAt": "2026-11-03T05:32:22.101704+00:00",
+        "citation": "measure-source"
+      },
+      "after": {
+        "contestId": "fl-2026-leon-charter-review-process",
+        "whatItDoes": "Effective January 1, 2027 if approved, updates Leon County’s citizen charter-review rules and removes outdated statutory references. The committee must hold three public hearings before sending its final report and recommended charter amendments to the County Commission. It must submit proposals at least 150 days before the general election and dissolves automatically if it submits none by that deadline. Notice of the charter-amendment referendum must appear in a newspaper of general circulation in the county 30–45 days before the election.",
+        "yesMeans": "Adopt these charter-review rules, including three hearings, the 150-day deadline, automatic dissolution and newspaper notice requirements.",
+        "noMeans": "Reject this proposed charter review-process amendment.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "sourceHash": "2ad4dcef159d40806bd80e6005d0f141de37b0f4a8452456baa4263c4c8cdb71",
+        "sourceHashKind": "HELD_TEXT",
+        "writtenAt": "2026-11-03T05:56:12.374414+00:00",
+        "citation": "measure-source"
+      },
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+      "originalPdfFile": "sources/73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12.pdf",
+      "originalPdfSha256": "73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12",
+      "operativeTextFile": "sources/fcbd36c2912d2004f63cb3ae08890e4810002cd1b549d016fc1df1cca627b7e5.txt",
+      "markupResolutions": [
+        {
+          "removedOrResolved": "Three Ppublic",
+          "currentText": "Three public"
+        },
+        {
+          "removedOrResolved": " as provided by F.S. § 125.63.",
+          "currentText": ""
+        },
+        {
+          "removedOrResolved": "in accordance with F.S. § 125.64.",
+          "currentText": ""
+        },
+        {
+          "removedOrResolved": "one hundred fifty (150)ninety (90)",
+          "currentText": "one hundred fifty (150)"
+        },
+        {
+          "removedOrResolved": "(150)ninety (90)",
+          "currentText": "(150)"
+        }
+      ]
+    },
+    {
+      "contestId": "fl-2026-leon-community-impact-assessment",
+      "before": {
+        "contestId": "fl-2026-leon-community-impact-assessment",
+        "whatItDoes": "Amends Leon County’s Home Rule Charter to provide for periodic Community Impact Assessments, public reporting, and County Commission review and consideration of adverse community conditions related to the county’s historic laws, policies and practices.",
+        "yesMeans": "Approve the proposed assessment, reporting and County Commission review process.",
+        "noMeans": "Reject this proposed charter amendment on community impact assessments.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "sourceHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "sourceHashKind": "CAPTURE_BYTES",
+        "writtenAt": "2026-11-03T05:32:22.101704+00:00",
+        "citation": "measure-source"
+      },
+      "after": {
+        "contestId": "fl-2026-leon-community-impact-assessment",
+        "whatItDoes": "Effective January 1, 2027 if approved, creates a process to assess adverse community conditions in historically underserved and vulnerable populations related to Leon County’s historic laws, policies and practices. Assessments depend on county appropriations and available funding. The county must publish findings in an accessible format, and the County Commission must review them at a public meeting. Commissioners must adopt an implementing ordinance by April 1, 2027. The process does not require specific policy outcomes, funding allocations or preferential treatment for any person or group. Actions must comply with state and federal law and applicable court orders.",
+        "yesMeans": "Adopt this assessment, public-reporting and review process, with its funding limits, implementation deadline and legal conditions.",
+        "noMeans": "Reject this proposed community-impact-assessment charter article.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "sourceHash": "3b2bee910c2c74117b5b330c66b5d579b4d40f3ca119926f18a02ff44444e2b6",
+        "sourceHashKind": "HELD_TEXT",
+        "writtenAt": "2026-11-03T05:56:12.374414+00:00",
+        "citation": "measure-source"
+      },
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+      "originalPdfFile": "sources/282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9.pdf",
+      "originalPdfSha256": "282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9",
+      "operativeTextFile": "sources/65d9847e5de4ba653397d44fa27084ebc1e5aea8a9d337d704a848566e654a2c.txt",
+      "markupResolutions": []
+    },
+    {
+      "contestId": "fl-2026-leon-school-sales-surtax",
+      "before": {
+        "contestId": "fl-2026-leon-school-sales-surtax",
+        "whatItDoes": "Continues the Leon County School District’s one-half-cent sales surtax for fifteen years to fund school safety and security, school-facility construction, expansion and improvements, technology and transportation. Eligible charter schools would receive a share based on their proportion of total district enrollment. A citizen advisory committee appointed by the School Board would review the funding.",
+        "yesMeans": "Continue the school sales surtax for fifteen years with the stated purposes, charter-school share and advisory review.",
+        "noMeans": "Reject this proposed continuation of the school sales surtax.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "sourceHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "sourceHashKind": "CAPTURE_BYTES",
+        "writtenAt": "2026-11-03T05:32:22.101704+00:00",
+        "citation": "measure-source"
+      },
+      "after": {
+        "contestId": "fl-2026-leon-school-sales-surtax",
+        "whatItDoes": "Continues Leon County’s one-half-cent school sales surtax for fifteen years beginning January 1, 2028. Eligible uses include school-facility acquisition, construction, reconstruction and improvements, including safety and security work, with a useful life of at least five years; related land, design and engineering costs; acquisition, leasing or maintenance of school buses with at least a five-year useful life; and technology retrofits, hardware and software. Revenue may pay project costs, related bond debt or lease-purchase payments, and the School Board may modify the specific projects funded. Tax proceeds and interest cannot fund operating expenses. Eligible charter schools receive a share based on their proportion of total district enrollment. A School Board-appointed citizen advisory committee reviews the funding.",
+        "yesMeans": "Renew this school sales surtax for fifteen years starting in 2028, subject to the capital-use limits, charter-school share and citizen advisory review.",
+        "noMeans": "Reject the proposed fifteen-year school sales-surtax renewal beginning in 2028.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "sourceHash": "9e5371226380de2c7668e9639653562dc04086ed07618bb3f31c15ce38adad7a",
+        "sourceHashKind": "HELD_TEXT",
+        "writtenAt": "2026-11-03T05:56:12.374414+00:00",
+        "citation": "measure-source"
+      },
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+      "originalPdfFile": "sources/6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766.pdf",
+      "originalPdfSha256": "6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766",
+      "operativeTextFile": "sources/aa51e9f0377b430f2bf74ad6081f9ecd0cafcc7b5684418af84963cb53b7f94a.txt",
+      "markupResolutions": []
+    }
+  ],
+  "providerCalls": 0,
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

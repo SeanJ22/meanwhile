@@ -54,26 +54,35 @@
   "appCodeChanges": 0,
   "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
   "validation": {
-    "checkedAt": "2026-11-03T05:33:50.230Z",
+    "checkedAt": "2026-11-03T05:58:02.151Z",
     "preparedRecords": 8,
+    "fullActReplacements": 3,
+    "otherFiveRecords": "UNCHANGED",
+    "allPriorContestQuestionAndCandidateFacts": "UNCHANGED",
     "originalSourceHashes": "PASS",
     "exactSupportQuotes": "PASS",
-    "boundedNativeSourceReading": "PASS; all eight rendered question regions viewed and checked",
-    "officialAuthority": "PASS",
-    "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/leon",
-    "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
-    "priorCandidateRows": "UNCHANGED",
-    "unrelatedHeldMeasures": "UNCHANGED",
-    "providerCalls": 0,
+    "fullNativeActSemanticReading": "PASS; redline markings visually resolved; deleted former text excluded",
+    "normalPublicationAdmission": "PASS",
+    "sequentialOldLeonToReplacementMerge": "PASS",
+    "actualWithMeasureTranslationsReplay": "PASS against held fresh FL translations",
+    "staleGuideIdentity": "PASS; all three new exact HELD_TEXT hashes differ from older guide/raw-document hashes and have later writtenAt",
+    "sourceRepresentation": "Original PDFs hash native bytes; HELD_TEXT hashes exact stored question plus newline and relevant officialStatement. Derived extracts and renders labeled separately.",
     "productionWrites": 0,
+    "providerCalls": 0,
     "appCodeChanges": 0
   },
-  "ballotInputSha256": "1ec589417ce184fcd87a6acf21589a3b785a899ab71eaebdc9ad957970c6ca7e",
   "rootChecks": {
     "existingPublicationAdmission": "PASS",
     "actualReaderAndExactJurisdiction": "PASS",
     "sourceCaptureCredentialScan": "PASS",
     "productionWrites": 0,
     "appCodeChanges": 0
-  }
+  },
+  "fullActReplacements": [
+    "fl-2026-leon-charter-review-process",
+    "fl-2026-leon-community-impact-assessment",
+    "fl-2026-leon-school-sales-surtax"
+  ],
+  "fullActUpdatedAt": "2026-11-03T05:56:12.374414+00:00",
+  "ballotInputSha256": "a7b1c40363c26fca0762efa9f24335ad799e1c67eefafff725271a02bc7dbc42"
 }

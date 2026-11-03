@@ -107,107 +107,205 @@
   {
     "contestId": "fl-2026-leon-charter-review-process",
     "ocdId": "ocd-division/country:us/state:fl/county:leon",
-    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
-    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
-    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
-    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
-    "boundedTextFile": "sources/7ec4f57ac30b6079717d80740b6a39bf99364ffaecba92091d3c2f5143e1dfdb.txt",
-    "textFilePerMeasure": "sources/b1be4b794927bdb097b80d8a74bf308dba2ebfa98a31b644aa15e6050b73878b.txt",
-    "imageFile": "sources/54badbf4a338e1e14a4ba6b38c045aa6ab4f7a8c7074f96979b03ca76adfd1c5.png",
-    "sourcePage": 7,
-    "bbox": [
-      243,
-      501,
-      407,
-      644
-    ],
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+    "rawPdfFile": "sources/73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12.pdf",
+    "rawPdfSha256": "73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12",
+    "nativeTextFile": "sources/f3effe267f1f0e99435b6f5beb8ef2561b1b0b3badffd8e269ba9a869baeb3c9.txt",
+    "boundedTextFile": "sources/fcbd36c2912d2004f63cb3ae08890e4810002cd1b549d016fc1df1cca627b7e5.txt",
+    "textFilePerMeasure": "sources/c6d5d77fb13c527ae73f799c1576136e10aca66d316a5061feb2d14bd9eb5b3e.txt",
+    "imageFile": "sources/2fdc0c5ab80da6ce73c1886571e43285d7b1ab1df799869f69b1dd47e5e2f0fc.png",
+    "sourcePage": 1,
     "fields": {
       "whatItDoes": [
-        "Shall the Leon County Charter be amended to remove outdated statutory references related to the establishment of a Charter, specify public hearing and notice requirements to consider amending the Charter, and require the Citizen Charter Review Committee to submit its recommendations 150 days before the general election to provide additional time for the Board and residents of Leon County to consider proposed charter amendments?"
+        "Shall the Leon County Charter be amended to remove outdated statutory references related to the establishment of a Charter, specify public hearing and notice requirements to consider amending the Charter, and require the Citizen Charter Review Committee to submit its recommendations 150 days before the general election to provide additional time for the Board and residents of Leon County to consider proposed charter amendments?",
+        "(2)     Amendments and Revisions by Citizen Charter Review Committee.\n(A) A Citizen Charter Review Committee shall be appointed by the Board of County\nCommissioners at least twelve (12) months before the general election occurring every\neight (8) years thereafter, to be composed and organized in a manner to be determined by\nthe Board of County Commissioners, to review the Home Rule Charter and propose any\namendments or revisions which may be advisable for placement on the general election\nballot. Three public hearings shall be conducted by a Citizen Charter Review Committee\nprior to delivery of the final report and recommended amendments to the Home Rule\nCharter to the Board of County Commissioners.\n\n\n\n\n\n(B) No later than one hundred fifty (150) days prior to the general election, the\nCitizen Charter Review Committee shall deliver to the Board of County Commissioners\nthe proposed amendments or revisions, if any, to the Home Rule Charter, and the Board\nof County Commissioners shall consider such amendments or revisions to be placed on\nthe general election ballot,  Notice of the referendum\non the proposed charter amendments shall be published in a newspaper of general\ncirculation in the County not less than thirty (30) days nor more than forty-five (45) days\nbefore the election.\n(C) If the Citizen Charter Review Committee does not submit any proposed Charter\namendments or revisions to the Board of County Commissioners at least one hundred fifty\n(150) days prior to the general election, the Citizen Charter Review Committee\nshall be automatically dissolved.\n\nThe amendment to the Home Rule Charter of Leon County,\nFlorida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter\nAmendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the\nquestion posed at the November 3, 2026 referendum."
       ],
       "yesMeans": [
-        "Shall the Leon County Charter be amended to remove outdated statutory references related to the establishment of a Charter, specify public hearing and notice requirements to consider amending the Charter, and require the Citizen Charter Review Committee to submit its recommendations 150 days before the general election to provide additional time for the Board and residents of Leon County to consider proposed charter amendments?"
+        "Shall the Leon County Charter be amended to remove outdated statutory references related to the establishment of a Charter, specify public hearing and notice requirements to consider amending the Charter, and require the Citizen Charter Review Committee to submit its recommendations 150 days before the general election to provide additional time for the Board and residents of Leon County to consider proposed charter amendments?",
+        "(2)     Amendments and Revisions by Citizen Charter Review Committee.\n(A) A Citizen Charter Review Committee shall be appointed by the Board of County\nCommissioners at least twelve (12) months before the general election occurring every\neight (8) years thereafter, to be composed and organized in a manner to be determined by\nthe Board of County Commissioners, to review the Home Rule Charter and propose any\namendments or revisions which may be advisable for placement on the general election\nballot. Three public hearings shall be conducted by a Citizen Charter Review Committee\nprior to delivery of the final report and recommended amendments to the Home Rule\nCharter to the Board of County Commissioners.\n\n\n\n\n\n(B) No later than one hundred fifty (150) days prior to the general election, the\nCitizen Charter Review Committee shall deliver to the Board of County Commissioners\nthe proposed amendments or revisions, if any, to the Home Rule Charter, and the Board\nof County Commissioners shall consider such amendments or revisions to be placed on\nthe general election ballot,  Notice of the referendum\non the proposed charter amendments shall be published in a newspaper of general\ncirculation in the County not less than thirty (30) days nor more than forty-five (45) days\nbefore the election.\n(C) If the Citizen Charter Review Committee does not submit any proposed Charter\namendments or revisions to the Board of County Commissioners at least one hundred fifty\n(150) days prior to the general election, the Citizen Charter Review Committee\nshall be automatically dissolved.\n\nThe amendment to the Home Rule Charter of Leon County,\nFlorida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter\nAmendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the\nquestion posed at the November 3, 2026 referendum."
       ],
       "noMeans": [
-        "Shall the Leon County Charter be amended to remove outdated statutory references related to the establishment of a Charter, specify public hearing and notice requirements to consider amending the Charter, and require the Citizen Charter Review Committee to submit its recommendations 150 days before the general election to provide additional time for the Board and residents of Leon County to consider proposed charter amendments?"
+        "Shall the Leon County Charter be amended to remove outdated statutory references related to the establishment of a Charter, specify public hearing and notice requirements to consider amending the Charter, and require the Citizen Charter Review Committee to submit its recommendations 150 days before the general election to provide additional time for the Board and residents of Leon County to consider proposed charter amendments?",
+        "(2)     Amendments and Revisions by Citizen Charter Review Committee.\n(A) A Citizen Charter Review Committee shall be appointed by the Board of County\nCommissioners at least twelve (12) months before the general election occurring every\neight (8) years thereafter, to be composed and organized in a manner to be determined by\nthe Board of County Commissioners, to review the Home Rule Charter and propose any\namendments or revisions which may be advisable for placement on the general election\nballot. Three public hearings shall be conducted by a Citizen Charter Review Committee\nprior to delivery of the final report and recommended amendments to the Home Rule\nCharter to the Board of County Commissioners.\n\n\n\n\n\n(B) No later than one hundred fifty (150) days prior to the general election, the\nCitizen Charter Review Committee shall deliver to the Board of County Commissioners\nthe proposed amendments or revisions, if any, to the Home Rule Charter, and the Board\nof County Commissioners shall consider such amendments or revisions to be placed on\nthe general election ballot,  Notice of the referendum\non the proposed charter amendments shall be published in a newspaper of general\ncirculation in the County not less than thirty (30) days nor more than forty-five (45) days\nbefore the election.\n(C) If the Citizen Charter Review Committee does not submit any proposed Charter\namendments or revisions to the Board of County Commissioners at least one hundred fifty\n(150) days prior to the general election, the Citizen Charter Review Committee\nshall be automatically dissolved.\n\nThe amendment to the Home Rule Charter of Leon County,\nFlorida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter\nAmendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the\nquestion posed at the November 3, 2026 referendum."
       ]
     },
-    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "extractionMethod": "Full native enactment read, including operative conditions and effective date; source excerpts omit legislative recitals, election-administration instructions and crossed-out former language. Original full PDF and rendered pages retained.",
     "choices": [
       "Yes for Approval",
       "No for Rejection"
     ],
-    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+    "materialConditions": "Expanded from full native enactment; source-backed before/after recorded in full-act-updates.json.",
+    "questionSource": {
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+      "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+      "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+      "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+      "boundedTextFile": "sources/7ec4f57ac30b6079717d80740b6a39bf99364ffaecba92091d3c2f5143e1dfdb.txt",
+      "imageFile": "sources/54badbf4a338e1e14a4ba6b38c045aa6ab4f7a8c7074f96979b03ca76adfd1c5.png",
+      "sourcePage": 7,
+      "bbox": [
+        243,
+        501,
+        407,
+        644
+      ]
+    },
+    "sourcePages": [
+      1,
+      2,
+      3
+    ],
+    "fullActPageImages": [
+      "sources/2fdc0c5ab80da6ce73c1886571e43285d7b1ab1df799869f69b1dd47e5e2f0fc.png",
+      "sources/7858656096d1d982cd5ac8bb483bd798ec64ea28074a148d6791a1d3f5d486af.png",
+      "sources/03bd5a0dfed2d5d8ecf3301e40ade6924b9dcb9476be163fd2583b37b8cb40e8.png"
+    ],
+    "fullActTitle": "Leon County Ordinance26-08",
+    "hashScope": "HELD_TEXT of exact unchanged official question, newline and the new complete relevant officialStatement.",
+    "markupResolutions": [
+      {
+        "removedOrResolved": "Three Ppublic",
+        "currentText": "Three public"
+      },
+      {
+        "removedOrResolved": " as provided by F.S. § 125.63.",
+        "currentText": ""
+      },
+      {
+        "removedOrResolved": "in accordance with F.S. § 125.64.",
+        "currentText": ""
+      },
+      {
+        "removedOrResolved": "one hundred fifty (150)ninety (90)",
+        "currentText": "one hundred fifty (150)"
+      },
+      {
+        "removedOrResolved": "(150)ninety (90)",
+        "currentText": "(150)"
+      }
+    ]
   },
   {
     "contestId": "fl-2026-leon-community-impact-assessment",
     "ocdId": "ocd-division/country:us/state:fl/county:leon",
-    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
-    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
-    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
-    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
-    "boundedTextFile": "sources/9751577c4d72b881b6d9fe6e0d523402d38de0aa08f3e1d6a65032c28fddb712.txt",
-    "textFilePerMeasure": "sources/16ac4d121a3fed4cb5954bfb487b496fac3fb646c09defd60bdbd84b3e1891a0.txt",
-    "imageFile": "sources/8da8985928c8c873a4f4b4e1ac64ce5b260102a5af7407b015a1f048dbf5f69f.png",
-    "sourcePage": 7,
-    "bbox": [
-      410,
-      109,
-      575,
-      226
-    ],
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+    "rawPdfFile": "sources/282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9.pdf",
+    "rawPdfSha256": "282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9",
+    "nativeTextFile": "sources/3ca1b3fbff12a39c3ca8db8ae9f4f88fb00cde91e45f56dc7e8f331b940b4518.txt",
+    "boundedTextFile": "sources/65d9847e5de4ba653397d44fa27084ebc1e5aea8a9d337d704a848566e654a2c.txt",
+    "textFilePerMeasure": "sources/c106ea5cb713766ceee2d1911b10aeb5d682d4170055ed8f1a7f5b43bb056e92.txt",
+    "imageFile": "sources/71eccac77a6525ae30b071d57ef752292ba08893b628dac3052deec0422a0371.png",
+    "sourcePage": 2,
     "fields": {
       "whatItDoes": [
-        "Shall the Home Rule Charter of Leon County, Florida, be amended to provide for a periodic Community Impact Assessment process, public reporting, and Board of County Commissioners’ review and consideration regarding adverse community conditions related to the County’s historic laws, policies, and practices?"
+        "Shall the Home Rule Charter of Leon County, Florida, be amended to provide for a periodic Community Impact Assessment process, public reporting, and Board of County Commissioners’ review and consideration regarding adverse community conditions related to the County’s historic laws, policies, and practices?",
+        "Sec. 6.1. Purpose.\n(1) The purpose of this article is to provide for the periodic assessments, public reporting, and\nthe Leon County Board of County Commissioners’ review of adverse community\nconditions in historically underserved and vulnerable populations related to the County’s\nhistoric laws, policies, and practices. This article is intended to inform County decision-\nmaking in a manner consistent with applicable state and federal laws.\n(2) By April 1, 2027, the Board of County Commissioners shall adopt an ordinance for\nimplementation of this article, consistent with applicable state and federal laws.\nSec. 6.2. Periodic Community Impact Assessment Process.\n(1) Leon County shall conduct a periodic community impact assessment of adverse\ncommunity conditions within geographic areas of the County related to historic County\nlaws, policies and practices, subject to appropriation and funding availability.\n(2) The County shall publish the findings of such assessments in a publicly accessible format.\nSec. 6.3. Board of County Commissioners Review and Response.\n(1) The Board of County Commissioners shall review and consider the findings of each\nCommunity Impact Assessment during a public meeting.\nSec. 6.4. Implementation and Legal Compliance.\n(1) This article establishes a periodic process for assessment, public reporting, and the Board\nof County Commissioners’ review and does not mandate specific policy outcomes, funding\nallocations, or preferential treatment for any individual or group.\n(2) Nothing in this article shall be construed to authorize any program, policy, or action\ninconsistent with applicable state or federal constitutional provisions or statutes, rules, or\nregulations or any applicable court order.\n\nThe amendment to the Home Rule Charter of Leon County,\nFlorida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter\n\n\n\n\n\nAmendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the\nquestion posed at the November 3, 2026, referendum."
       ],
       "yesMeans": [
-        "Shall the Home Rule Charter of Leon County, Florida, be amended to provide for a periodic Community Impact Assessment process, public reporting, and Board of County Commissioners’ review and consideration regarding adverse community conditions related to the County’s historic laws, policies, and practices?"
+        "Shall the Home Rule Charter of Leon County, Florida, be amended to provide for a periodic Community Impact Assessment process, public reporting, and Board of County Commissioners’ review and consideration regarding adverse community conditions related to the County’s historic laws, policies, and practices?",
+        "Sec. 6.1. Purpose.\n(1) The purpose of this article is to provide for the periodic assessments, public reporting, and\nthe Leon County Board of County Commissioners’ review of adverse community\nconditions in historically underserved and vulnerable populations related to the County’s\nhistoric laws, policies, and practices. This article is intended to inform County decision-\nmaking in a manner consistent with applicable state and federal laws.\n(2) By April 1, 2027, the Board of County Commissioners shall adopt an ordinance for\nimplementation of this article, consistent with applicable state and federal laws.\nSec. 6.2. Periodic Community Impact Assessment Process.\n(1) Leon County shall conduct a periodic community impact assessment of adverse\ncommunity conditions within geographic areas of the County related to historic County\nlaws, policies and practices, subject to appropriation and funding availability.\n(2) The County shall publish the findings of such assessments in a publicly accessible format.\nSec. 6.3. Board of County Commissioners Review and Response.\n(1) The Board of County Commissioners shall review and consider the findings of each\nCommunity Impact Assessment during a public meeting.\nSec. 6.4. Implementation and Legal Compliance.\n(1) This article establishes a periodic process for assessment, public reporting, and the Board\nof County Commissioners’ review and does not mandate specific policy outcomes, funding\nallocations, or preferential treatment for any individual or group.\n(2) Nothing in this article shall be construed to authorize any program, policy, or action\ninconsistent with applicable state or federal constitutional provisions or statutes, rules, or\nregulations or any applicable court order.\n\nThe amendment to the Home Rule Charter of Leon County,\nFlorida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter\n\n\n\n\n\nAmendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the\nquestion posed at the November 3, 2026, referendum."
       ],
       "noMeans": [
-        "Shall the Home Rule Charter of Leon County, Florida, be amended to provide for a periodic Community Impact Assessment process, public reporting, and Board of County Commissioners’ review and consideration regarding adverse community conditions related to the County’s historic laws, policies, and practices?"
+        "Shall the Home Rule Charter of Leon County, Florida, be amended to provide for a periodic Community Impact Assessment process, public reporting, and Board of County Commissioners’ review and consideration regarding adverse community conditions related to the County’s historic laws, policies, and practices?",
+        "Sec. 6.1. Purpose.\n(1) The purpose of this article is to provide for the periodic assessments, public reporting, and\nthe Leon County Board of County Commissioners’ review of adverse community\nconditions in historically underserved and vulnerable populations related to the County’s\nhistoric laws, policies, and practices. This article is intended to inform County decision-\nmaking in a manner consistent with applicable state and federal laws.\n(2) By April 1, 2027, the Board of County Commissioners shall adopt an ordinance for\nimplementation of this article, consistent with applicable state and federal laws.\nSec. 6.2. Periodic Community Impact Assessment Process.\n(1) Leon County shall conduct a periodic community impact assessment of adverse\ncommunity conditions within geographic areas of the County related to historic County\nlaws, policies and practices, subject to appropriation and funding availability.\n(2) The County shall publish the findings of such assessments in a publicly accessible format.\nSec. 6.3. Board of County Commissioners Review and Response.\n(1) The Board of County Commissioners shall review and consider the findings of each\nCommunity Impact Assessment during a public meeting.\nSec. 6.4. Implementation and Legal Compliance.\n(1) This article establishes a periodic process for assessment, public reporting, and the Board\nof County Commissioners’ review and does not mandate specific policy outcomes, funding\nallocations, or preferential treatment for any individual or group.\n(2) Nothing in this article shall be construed to authorize any program, policy, or action\ninconsistent with applicable state or federal constitutional provisions or statutes, rules, or\nregulations or any applicable court order.\n\nThe amendment to the Home Rule Charter of Leon County,\nFlorida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter\n\n\n\n\n\nAmendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the\nquestion posed at the November 3, 2026, referendum."
       ]
     },
-    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "extractionMethod": "Full native enactment read, including operative conditions and effective date; source excerpts omit legislative recitals, election-administration instructions and crossed-out former language. Original full PDF and rendered pages retained.",
     "choices": [
       "Yes for Approval",
       "No for Rejection"
     ],
-    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+    "materialConditions": "Expanded from full native enactment; source-backed before/after recorded in full-act-updates.json.",
+    "questionSource": {
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+      "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+      "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+      "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+      "boundedTextFile": "sources/9751577c4d72b881b6d9fe6e0d523402d38de0aa08f3e1d6a65032c28fddb712.txt",
+      "imageFile": "sources/8da8985928c8c873a4f4b4e1ac64ce5b260102a5af7407b015a1f048dbf5f69f.png",
+      "sourcePage": 7,
+      "bbox": [
+        410,
+        109,
+        575,
+        226
+      ]
+    },
+    "sourcePages": [
+      2,
+      3,
+      4
+    ],
+    "fullActPageImages": [
+      "sources/71eccac77a6525ae30b071d57ef752292ba08893b628dac3052deec0422a0371.png",
+      "sources/2ddbf6964fbfd582438cb987eaf95f8de3f98d9acdc269e24c7464c7a651ff2a.png",
+      "sources/7fe254b0d0f5a7d31ba8493cafbcd1aac86e9949eb4b8b6321a516578ca07306.png"
+    ],
+    "fullActTitle": "Leon County Ordinance26-12",
+    "hashScope": "HELD_TEXT of exact unchanged official question, newline and the new complete relevant officialStatement.",
+    "markupResolutions": []
   },
   {
     "contestId": "fl-2026-leon-school-sales-surtax",
     "ocdId": "ocd-division/country:us/state:fl/school_district:leon_county_school_district",
-    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
-    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
-    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
-    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
-    "boundedTextFile": "sources/c13570d15e42db66c3ed30cc5ebde63db0ef47a43dfab6cb3865624f40bcc8a6.txt",
-    "textFilePerMeasure": "sources/b9a5bbfc8bb5ce8c096660f1017800d281c8875eef770a020127cb27c30faed5.txt",
-    "imageFile": "sources/c816ff367fb8cc5d19756652e53c64356780de31e914636ab4c7436dd45b507d.png",
-    "sourcePage": 7,
-    "bbox": [
-      410,
-      249,
-      575,
-      400
-    ],
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+    "rawPdfFile": "sources/6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766.pdf",
+    "rawPdfSha256": "6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766",
+    "nativeTextFile": "sources/db5884e5b9e5715fb7262410095a4031e0f2401c226f3ff0bb03d251495d73d3.txt",
+    "boundedTextFile": "sources/aa51e9f0377b430f2bf74ad6081f9ecd0cafcc7b5684418af84963cb53b7f94a.txt",
+    "textFilePerMeasure": "sources/4af7270276c9698316553a88f5aa5a24f2e74b2ce44bf4eecdd666eaa9e9140e.txt",
+    "imageFile": "sources/260db163bf9b5bd4414f17f22ec63dbd3a9ebf463d5ef74c0bfa3c143b8e9468.png",
+    "sourcePage": 4,
     "fields": {
       "whatItDoes": [
-        "To provide resources to improve safety and security and maintain high-quality education by expanding, constructing, and improving school facilities, technology and transportation, with collected revenues shared with eligible charter schools based on their proportionate share of total school district enrollment, shall the school district of Leon County continue to levy a one-half cent sales surtax for fifteen years to fund such activities for such schools, with review by a School Board appointed citizen advisory committee?"
+        "To provide resources to improve safety and security and maintain high-quality education by expanding, constructing, and improving school facilities, technology and transportation, with collected revenues shared with eligible charter schools based on their proportionate share of total school district enrollment, shall the school district of Leon County continue to levy a one-half cent sales surtax for fifteen years to fund such activities for such schools, with review by a School Board appointed citizen advisory committee?",
+        "(E) The Board has heretofore determined to acquire, construct, reconstruct, or\n             improve the educational improvements and facilities described in Exhibit A attached hereto, as\n             such improvements and facilities may be modified from time to time by the Board (the \"Project\").\n             \n\n                              (F) The Project consists of fixed capital expenditures or fixed capital cost\n             associated with the construction, reconstruction, or improvement of school facilities and\n             campuses which have a useful life expectancy of five (5) years or more, including safety and\n             security improvements, and any land acquisition, land improvement, design and engineering\n             costs associated thereto, or any purchase, lease-purchase, lease, or maintenance of school\n             buses, as defined ins.1 006.25, which have a life expectancy of 5 years or more. In addition, the\n             Project also has a component for costs of retrofitting and providing for technology implementation,\n             including hardware and software, for various sites within the District.\n\n                              (G) The levy of the Sales Surtax is necessary for the Board to be able to fund the\n             Project. The Sales Surtax shall be used to acquire and construct the Project or pay bond\n             indebtedness issued to finance the Project, all of which is permitted by Section 212.055(6), Florida\n             Statutes. The Sales Surtax shall be levied for a period of fifteen years, beginning January 1, 2028\n             due to the current school surtax expiring on December 31, 2027. The revenues collected shall be\n             shared with eligible charter schools based on their proportionate share of the total school district\n             enrollment.\n\n                     SECTION 3. DESCRIPTION OF PROJECT AND PLAN FOR USE OF SALES SURTAX\n             REVENUES. The Board hereby adopts a plan for the use of the Sales Surtax revenues, which\n             plan provides for the use of such revenues to pay any portion of the cost of the Project as\n             described in Exhibit A attached hereto and as further described in the findings in Section 2, above.\n             In accordance with the plan for the use of the surtax revenues herein adopted, at the subsequent\n             option of the Board, surtax revenues may be used for the purpose of (i) paying any portion of the\n             cost of the Project, (ii) servicing bond indebtedness, the proceeds of which are used to finance\n             any portion of the cost of the Project, and (iii) the making of lease payments to lease purchase\n             agreements for the acquisition of any portion of the Project. The specific projects to be funded\n\n\n\n\n\n             with the proceeds of the Sales Surtax may be modified from time to time as the Board determines\n             to be in the best interest of the citizens of Leon County.\n\n                     SECTION 4.       LEVY OF SALES SURTAX. Subject to approval of the electors of Leon\n             County, Florida, the Board hereby levies the Sales Surtax in an amount equal to one-half percent\n             (0.5%). The Sales Surtax shall take effect on January 1, 2028, due to the current school surtax\n             expiring on December 31, 2027, and shall remain in effect for a period of fifteen ( 15) years. No\n             proceeds of the Sales Surtax nor any interest accrued thereon shall be used for operational\n             expenses. If the Sales Surtax shall be approved by referendum, the Board shall comply with\n             Section 212.055(6), Florida Statutes.\n\nSECTION 14. EFFECTIVE DATE. This resolution shall take effect immediately upon its\n             adoption. However, the surtax authorized hereunder shall only be effective upon approval by a\n             majority vote of the electors of Leon County."
       ],
       "yesMeans": [
-        "To provide resources to improve safety and security and maintain high-quality education by expanding, constructing, and improving school facilities, technology and transportation, with collected revenues shared with eligible charter schools based on their proportionate share of total school district enrollment, shall the school district of Leon County continue to levy a one-half cent sales surtax for fifteen years to fund such activities for such schools, with review by a School Board appointed citizen advisory committee?"
+        "To provide resources to improve safety and security and maintain high-quality education by expanding, constructing, and improving school facilities, technology and transportation, with collected revenues shared with eligible charter schools based on their proportionate share of total school district enrollment, shall the school district of Leon County continue to levy a one-half cent sales surtax for fifteen years to fund such activities for such schools, with review by a School Board appointed citizen advisory committee?",
+        "(E) The Board has heretofore determined to acquire, construct, reconstruct, or\n             improve the educational improvements and facilities described in Exhibit A attached hereto, as\n             such improvements and facilities may be modified from time to time by the Board (the \"Project\").\n             \n\n                              (F) The Project consists of fixed capital expenditures or fixed capital cost\n             associated with the construction, reconstruction, or improvement of school facilities and\n             campuses which have a useful life expectancy of five (5) years or more, including safety and\n             security improvements, and any land acquisition, land improvement, design and engineering\n             costs associated thereto, or any purchase, lease-purchase, lease, or maintenance of school\n             buses, as defined ins.1 006.25, which have a life expectancy of 5 years or more. In addition, the\n             Project also has a component for costs of retrofitting and providing for technology implementation,\n             including hardware and software, for various sites within the District.\n\n                              (G) The levy of the Sales Surtax is necessary for the Board to be able to fund the\n             Project. The Sales Surtax shall be used to acquire and construct the Project or pay bond\n             indebtedness issued to finance the Project, all of which is permitted by Section 212.055(6), Florida\n             Statutes. The Sales Surtax shall be levied for a period of fifteen years, beginning January 1, 2028\n             due to the current school surtax expiring on December 31, 2027. The revenues collected shall be\n             shared with eligible charter schools based on their proportionate share of the total school district\n             enrollment.\n\n                     SECTION 3. DESCRIPTION OF PROJECT AND PLAN FOR USE OF SALES SURTAX\n             REVENUES. The Board hereby adopts a plan for the use of the Sales Surtax revenues, which\n             plan provides for the use of such revenues to pay any portion of the cost of the Project as\n             described in Exhibit A attached hereto and as further described in the findings in Section 2, above.\n             In accordance with the plan for the use of the surtax revenues herein adopted, at the subsequent\n             option of the Board, surtax revenues may be used for the purpose of (i) paying any portion of the\n             cost of the Project, (ii) servicing bond indebtedness, the proceeds of which are used to finance\n             any portion of the cost of the Project, and (iii) the making of lease payments to lease purchase\n             agreements for the acquisition of any portion of the Project. The specific projects to be funded\n\n\n\n\n\n             with the proceeds of the Sales Surtax may be modified from time to time as the Board determines\n             to be in the best interest of the citizens of Leon County.\n\n                     SECTION 4.       LEVY OF SALES SURTAX. Subject to approval of the electors of Leon\n             County, Florida, the Board hereby levies the Sales Surtax in an amount equal to one-half percent\n             (0.5%). The Sales Surtax shall take effect on January 1, 2028, due to the current school surtax\n             expiring on December 31, 2027, and shall remain in effect for a period of fifteen ( 15) years. No\n             proceeds of the Sales Surtax nor any interest accrued thereon shall be used for operational\n             expenses. If the Sales Surtax shall be approved by referendum, the Board shall comply with\n             Section 212.055(6), Florida Statutes.\n\nSECTION 14. EFFECTIVE DATE. This resolution shall take effect immediately upon its\n             adoption. However, the surtax authorized hereunder shall only be effective upon approval by a\n             majority vote of the electors of Leon County."
       ],
       "noMeans": [
-        "To provide resources to improve safety and security and maintain high-quality education by expanding, constructing, and improving school facilities, technology and transportation, with collected revenues shared with eligible charter schools based on their proportionate share of total school district enrollment, shall the school district of Leon County continue to levy a one-half cent sales surtax for fifteen years to fund such activities for such schools, with review by a School Board appointed citizen advisory committee?"
+        "To provide resources to improve safety and security and maintain high-quality education by expanding, constructing, and improving school facilities, technology and transportation, with collected revenues shared with eligible charter schools based on their proportionate share of total school district enrollment, shall the school district of Leon County continue to levy a one-half cent sales surtax for fifteen years to fund such activities for such schools, with review by a School Board appointed citizen advisory committee?",
+        "(E) The Board has heretofore determined to acquire, construct, reconstruct, or\n             improve the educational improvements and facilities described in Exhibit A attached hereto, as\n             such improvements and facilities may be modified from time to time by the Board (the \"Project\").\n             \n\n                              (F) The Project consists of fixed capital expenditures or fixed capital cost\n             associated with the construction, reconstruction, or improvement of school facilities and\n             campuses which have a useful life expectancy of five (5) years or more, including safety and\n             security improvements, and any land acquisition, land improvement, design and engineering\n             costs associated thereto, or any purchase, lease-purchase, lease, or maintenance of school\n             buses, as defined ins.1 006.25, which have a life expectancy of 5 years or more. In addition, the\n             Project also has a component for costs of retrofitting and providing for technology implementation,\n             including hardware and software, for various sites within the District.\n\n                              (G) The levy of the Sales Surtax is necessary for the Board to be able to fund the\n             Project. The Sales Surtax shall be used to acquire and construct the Project or pay bond\n             indebtedness issued to finance the Project, all of which is permitted by Section 212.055(6), Florida\n             Statutes. The Sales Surtax shall be levied for a period of fifteen years, beginning January 1, 2028\n             due to the current school surtax expiring on December 31, 2027. The revenues collected shall be\n             shared with eligible charter schools based on their proportionate share of the total school district\n             enrollment.\n\n                     SECTION 3. DESCRIPTION OF PROJECT AND PLAN FOR USE OF SALES SURTAX\n             REVENUES. The Board hereby adopts a plan for the use of the Sales Surtax revenues, which\n             plan provides for the use of such revenues to pay any portion of the cost of the Project as\n             described in Exhibit A attached hereto and as further described in the findings in Section 2, above.\n             In accordance with the plan for the use of the surtax revenues herein adopted, at the subsequent\n             option of the Board, surtax revenues may be used for the purpose of (i) paying any portion of the\n             cost of the Project, (ii) servicing bond indebtedness, the proceeds of which are used to finance\n             any portion of the cost of the Project, and (iii) the making of lease payments to lease purchase\n             agreements for the acquisition of any portion of the Project. The specific projects to be funded\n\n\n\n\n\n             with the proceeds of the Sales Surtax may be modified from time to time as the Board determines\n             to be in the best interest of the citizens of Leon County.\n\n                     SECTION 4.       LEVY OF SALES SURTAX. Subject to approval of the electors of Leon\n             County, Florida, the Board hereby levies the Sales Surtax in an amount equal to one-half percent\n             (0.5%). The Sales Surtax shall take effect on January 1, 2028, due to the current school surtax\n             expiring on December 31, 2027, and shall remain in effect for a period of fifteen ( 15) years. No\n             proceeds of the Sales Surtax nor any interest accrued thereon shall be used for operational\n             expenses. If the Sales Surtax shall be approved by referendum, the Board shall comply with\n             Section 212.055(6), Florida Statutes.\n\nSECTION 14. EFFECTIVE DATE. This resolution shall take effect immediately upon its\n             adoption. However, the surtax authorized hereunder shall only be effective upon approval by a\n             majority vote of the electors of Leon County."
       ]
     },
-    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "extractionMethod": "Full native enactment read, including operative conditions and effective date; source excerpts omit legislative recitals, election-administration instructions and crossed-out former language. Original full PDF and rendered pages retained.",
     "choices": [
       "Yes = For the 1/2% (0.5 cents) tax",
       "No = Against the 1/2% (0.5 cents) tax"
     ],
-    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+    "materialConditions": "Expanded from full native enactment; source-backed before/after recorded in full-act-updates.json.",
+    "questionSource": {
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+      "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+      "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+      "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+      "boundedTextFile": "sources/c13570d15e42db66c3ed30cc5ebde63db0ef47a43dfab6cb3865624f40bcc8a6.txt",
+      "imageFile": "sources/c816ff367fb8cc5d19756652e53c64356780de31e914636ab4c7436dd45b507d.png",
+      "sourcePage": 7,
+      "bbox": [
+        410,
+        249,
+        575,
+        400
+      ]
+    },
+    "sourcePages": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "fullActPageImages": [
+      "sources/260db163bf9b5bd4414f17f22ec63dbd3a9ebf463d5ef74c0bfa3c143b8e9468.png",
+      "sources/89285a0ac2139866a69d5bcf99bd5026dae525c0c115fd0ac4bc7efb9c4643cb.png",
+      "sources/57e2d46f61b4ff2a9467174860218857eb1f886f86e0b2944d65e87df372baef.png",
+      "sources/a66a4ed2846529f7424e1567a90374a58f996810fa7df65a3194a6932bac2d0e.png"
+    ],
+    "fullActTitle": "Leon County Resolution26-32 and attached School Board resolution",
+    "hashScope": "HELD_TEXT of exact unchanged official question, newline and the new complete relevant officialStatement.",
+    "markupResolutions": []
   },
   {
     "contestId": "fl-2026-leon-school-operating-millage",

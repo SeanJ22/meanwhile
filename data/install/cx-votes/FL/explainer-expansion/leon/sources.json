@@ -360,6 +360,216 @@
         575,
         713
       ]
+    },
+    {
+      "file": "sources/73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12.pdf",
+      "sha256": "73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12",
+      "bytes": 327868,
+      "kind": "ORIGINAL_FULL_OFFICIAL_ENACTMENT",
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+      "retrievedAt": "2026-11-03T05:42:06.903470+00:00",
+      "httpStatus": 200,
+      "title": "Leon County Ordinance26-08"
+    },
+    {
+      "file": "sources/f3effe267f1f0e99435b6f5beb8ef2561b1b0b3badffd8e269ba9a869baeb3c9.txt",
+      "sha256": "f3effe267f1f0e99435b6f5beb8ef2561b1b0b3badffd8e269ba9a869baeb3c9",
+      "bytes": 8489,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12.pdf"
+    },
+    {
+      "file": "sources/2fdc0c5ab80da6ce73c1886571e43285d7b1ab1df799869f69b1dd47e5e2f0fc.png",
+      "sha256": "2fdc0c5ab80da6ce73c1886571e43285d7b1ab1df799869f69b1dd47e5e2f0fc",
+      "bytes": 208474,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/7858656096d1d982cd5ac8bb483bd798ec64ea28074a148d6791a1d3f5d486af.png",
+      "sha256": "7858656096d1d982cd5ac8bb483bd798ec64ea28074a148d6791a1d3f5d486af",
+      "bytes": 191072,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/03bd5a0dfed2d5d8ecf3301e40ade6924b9dcb9476be163fd2583b37b8cb40e8.png",
+      "sha256": "03bd5a0dfed2d5d8ecf3301e40ade6924b9dcb9476be163fd2583b37b8cb40e8",
+      "bytes": 206080,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9.pdf",
+      "sha256": "282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9",
+      "bytes": 332754,
+      "kind": "ORIGINAL_FULL_OFFICIAL_ENACTMENT",
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+      "retrievedAt": "2026-11-03T05:42:06.903771+00:00",
+      "httpStatus": 200,
+      "title": "Leon County Ordinance26-12"
+    },
+    {
+      "file": "sources/3ca1b3fbff12a39c3ca8db8ae9f4f88fb00cde91e45f56dc7e8f331b940b4518.txt",
+      "sha256": "3ca1b3fbff12a39c3ca8db8ae9f4f88fb00cde91e45f56dc7e8f331b940b4518",
+      "bytes": 8714,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9.pdf"
+    },
+    {
+      "file": "sources/71eccac77a6525ae30b071d57ef752292ba08893b628dac3052deec0422a0371.png",
+      "sha256": "71eccac77a6525ae30b071d57ef752292ba08893b628dac3052deec0422a0371",
+      "bytes": 193170,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/2ddbf6964fbfd582438cb987eaf95f8de3f98d9acdc269e24c7464c7a651ff2a.png",
+      "sha256": "2ddbf6964fbfd582438cb987eaf95f8de3f98d9acdc269e24c7464c7a651ff2a",
+      "bytes": 168362,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/7fe254b0d0f5a7d31ba8493cafbcd1aac86e9949eb4b8b6321a516578ca07306.png",
+      "sha256": "7fe254b0d0f5a7d31ba8493cafbcd1aac86e9949eb4b8b6321a516578ca07306",
+      "bytes": 113043,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766.pdf",
+      "sha256": "6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766",
+      "bytes": 2250636,
+      "kind": "ORIGINAL_FULL_OFFICIAL_ENACTMENT",
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+      "retrievedAt": "2026-11-03T05:42:06.904280+00:00",
+      "httpStatus": 200,
+      "title": "Leon County Resolution26-32 and attached School Board resolution"
+    },
+    {
+      "file": "sources/db5884e5b9e5715fb7262410095a4031e0f2401c226f3ff0bb03d251495d73d3.txt",
+      "sha256": "db5884e5b9e5715fb7262410095a4031e0f2401c226f3ff0bb03d251495d73d3",
+      "bytes": 18479,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766.pdf"
+    },
+    {
+      "file": "sources/260db163bf9b5bd4414f17f22ec63dbd3a9ebf463d5ef74c0bfa3c143b8e9468.png",
+      "sha256": "260db163bf9b5bd4414f17f22ec63dbd3a9ebf463d5ef74c0bfa3c143b8e9468",
+      "bytes": 490822,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/89285a0ac2139866a69d5bcf99bd5026dae525c0c115fd0ac4bc7efb9c4643cb.png",
+      "sha256": "89285a0ac2139866a69d5bcf99bd5026dae525c0c115fd0ac4bc7efb9c4643cb",
+      "bytes": 402283,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/57e2d46f61b4ff2a9467174860218857eb1f886f86e0b2944d65e87df372baef.png",
+      "sha256": "57e2d46f61b4ff2a9467174860218857eb1f886f86e0b2944d65e87df372baef",
+      "bytes": 401005,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/a66a4ed2846529f7424e1567a90374a58f996810fa7df65a3194a6932bac2d0e.png",
+      "sha256": "a66a4ed2846529f7424e1567a90374a58f996810fa7df65a3194a6932bac2d0e",
+      "bytes": 341646,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766.pdf",
+      "sourcePage": 7
+    },
+    {
+      "file": "sources/fcbd36c2912d2004f63cb3ae08890e4810002cd1b549d016fc1df1cca627b7e5.txt",
+      "sha256": "fcbd36c2912d2004f63cb3ae08890e4810002cd1b549d016fc1df1cca627b7e5",
+      "bytes": 1885,
+      "kind": "RELEVANT_OPERATIVE_PROPOSED_TEXT",
+      "derivedFrom": "sources/73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12.pdf",
+      "extractionMethod": "Native PDF text with printed line numbers and document headers removed; charter-review redline deletions resolved only after visual reading. Full native source retained.",
+      "markupResolutions": [
+        {
+          "removedOrResolved": "Three Ppublic",
+          "currentText": "Three public"
+        },
+        {
+          "removedOrResolved": " as provided by F.S. § 125.63.",
+          "currentText": ""
+        },
+        {
+          "removedOrResolved": "in accordance with F.S. § 125.64.",
+          "currentText": ""
+        },
+        {
+          "removedOrResolved": "one hundred fifty (150)ninety (90)",
+          "currentText": "one hundred fifty (150)"
+        },
+        {
+          "removedOrResolved": "(150)ninety (90)",
+          "currentText": "(150)"
+        }
+      ]
+    },
+    {
+      "file": "sources/c6d5d77fb13c527ae73f799c1576136e10aca66d316a5061feb2d14bd9eb5b3e.txt",
+      "sha256": "c6d5d77fb13c527ae73f799c1576136e10aca66d316a5061feb2d14bd9eb5b3e",
+      "bytes": 2318,
+      "kind": "RELEVANT_QUESTION_AND_FULL_ACT_TEXT",
+      "derivedFrom": [
+        "sources/73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12.pdf"
+      ],
+      "questionSource": "Official election guide question retained unchanged; new operative statement from this full enactment."
+    },
+    {
+      "file": "sources/65d9847e5de4ba653397d44fa27084ebc1e5aea8a9d337d704a848566e654a2c.txt",
+      "sha256": "65d9847e5de4ba653397d44fa27084ebc1e5aea8a9d337d704a848566e654a2c",
+      "bytes": 2053,
+      "kind": "RELEVANT_OPERATIVE_PROPOSED_TEXT",
+      "derivedFrom": "sources/282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9.pdf",
+      "extractionMethod": "Native PDF text with printed line numbers and document headers removed; charter-review redline deletions resolved only after visual reading. Full native source retained.",
+      "markupResolutions": []
+    },
+    {
+      "file": "sources/c106ea5cb713766ceee2d1911b10aeb5d682d4170055ed8f1a7f5b43bb056e92.txt",
+      "sha256": "c106ea5cb713766ceee2d1911b10aeb5d682d4170055ed8f1a7f5b43bb056e92",
+      "bytes": 2366,
+      "kind": "RELEVANT_QUESTION_AND_FULL_ACT_TEXT",
+      "derivedFrom": [
+        "sources/282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9.pdf"
+      ],
+      "questionSource": "Official election guide question retained unchanged; new operative statement from this full enactment."
+    },
+    {
+      "file": "sources/aa51e9f0377b430f2bf74ad6081f9ecd0cafcc7b5684418af84963cb53b7f94a.txt",
+      "sha256": "aa51e9f0377b430f2bf74ad6081f9ecd0cafcc7b5684418af84963cb53b7f94a",
+      "bytes": 3927,
+      "kind": "RELEVANT_OPERATIVE_PROPOSED_TEXT",
+      "derivedFrom": "sources/6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766.pdf",
+      "extractionMethod": "Native PDF text with printed line numbers and document headers removed; charter-review redline deletions resolved only after visual reading. Full native source retained.",
+      "markupResolutions": []
+    },
+    {
+      "file": "sources/4af7270276c9698316553a88f5aa5a24f2e74b2ce44bf4eecdd666eaa9e9140e.txt",
+      "sha256": "4af7270276c9698316553a88f5aa5a24f2e74b2ce44bf4eecdd666eaa9e9140e",
+      "bytes": 4456,
+      "kind": "RELEVANT_QUESTION_AND_FULL_ACT_TEXT",
+      "derivedFrom": [
+        "sources/6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766.pdf"
+      ],
+      "questionSource": "Official election guide question retained unchanged; new operative statement from this full enactment."
     }
-  ]
+  ],
+  "updatedAt": "2026-11-03T05:56:12.374414+00:00"
 }

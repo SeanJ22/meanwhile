@@ -1,0 +1,124 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-providence-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:providence_city",
+          "divisionVintage": "2026",
+          "title": "Providence city — Question 6: Affordable multifamily housing borrowing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.526587+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.500720+00:00",
+            "quote": "Shall an act passed at the 2026 session of the General Assembly entitled “An Act authorizing the City of Providence to issue not to exceed $25,000,000 general obligation bonds and notes to fund the Providence Housing Trust Fund to finance Affordable Multi-Family Housing Projects in the City” be approved?"
+          }
+        },
+        {
+          "id": "ri-providence-2026:question-7",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:providence_city",
+          "divisionVintage": "2026",
+          "title": "Providence city — Question 7: Divestment over severe human rights violations",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.526587+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.500720+00:00",
+            "quote": "Shall an Ordinance divesting from foreign countries conducting severe violations of human rights such as ethnic cleansing, apartheid, illegal military occupation, or genocide be approved?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-providence-2026:question-6:measure",
+          "contestId": "ri-providence-2026:question-6",
+          "questionText": "Shall an act passed at the 2026 session of the General Assembly entitled “An Act authorizing the City of Providence to issue not to exceed $25,000,000 general obligation bonds and notes to fund the Providence Housing Trust Fund to finance Affordable Multi-Family Housing Projects in the City” be approved?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.526587+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.500720+00:00",
+            "quote": "Shall an act passed at the 2026 session of the General Assembly entitled “An Act authorizing the City of Providence to issue not to exceed $25,000,000 general obligation bonds and notes to fund the Providence Housing Trust Fund to finance Affordable Multi-Family Housing Projects in the City” be approved?"
+          }
+        },
+        {
+          "id": "ri-providence-2026:question-7:measure",
+          "contestId": "ri-providence-2026:question-7",
+          "questionText": "Shall an Ordinance divesting from foreign countries conducting severe violations of human rights such as ethnic cleansing, apartheid, illegal military occupation, or genocide be approved?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.526587+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.500720+00:00",
+            "quote": "Shall an Ordinance divesting from foreign countries conducting severe violations of human rights such as ethnic cleansing, apartheid, illegal military occupation, or genocide be approved?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-providence-2026:question-6",
+          "whatItDoes": "Allow Providence to borrow up to $25 million through general-obligation bonds and notes for the Providence Housing Trust Fund to finance affordable multifamily housing projects in the city.",
+          "yesMeans": "Approve up to $25 million in borrowing for those affordable housing projects through the trust fund.",
+          "noMeans": "Reject this proposed housing borrowing authority.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
+          "sourceHash": "5545477b7bcc4cf2f518e8603b0f22f34ad6efb3057afec35cb0aabba7a1804e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:17:43.500720+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-providence-2026:question-7",
+          "whatItDoes": "Approve an ordinance to withdraw investments from foreign countries conducting severe human rights violations, such as ethnic cleansing, apartheid, illegal military occupation or genocide.",
+          "yesMeans": "Approve that proposed divestment ordinance.",
+          "noMeans": "Reject that proposed divestment ordinance.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
+          "sourceHash": "5545477b7bcc4cf2f518e8603b0f22f34ad6efb3057afec35cb0aabba7a1804e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:17:43.500720+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:17:43.500720+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
+        "httpStatus": 200,
+        "rawHash": "5545477b7bcc4cf2f518e8603b0f22f34ad6efb3057afec35cb0aabba7a1804e",
+        "retrievedAt": "2026-11-03T07:53:03.526587+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

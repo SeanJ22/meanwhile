@@ -1,0 +1,90 @@
+[
+  {
+    "contestId": "ri-providence-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-2d50-08df1e27bd1e",
+    "sourceTitle": "Providence: 6. PROVIDENCE HOUSING TRUST FUND TO FINANCE AFFORDABLE MULTI-FAMILY HOUSING PROJECTS IN THE CITY",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
+    "sourceFile": "../../official-samples/sources/5545477b7bcc4cf2f518e8603b0f22f34ad6efb3057afec35cb0aabba7a1804e.pdf",
+    "sourceSha256": "5545477b7bcc4cf2f518e8603b0f22f34ad6efb3057afec35cb0aabba7a1804e",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/5545477b7bcc4cf2f518e8603b0f22f34ad6efb3057afec35cb0aabba7a1804e.txt",
+    "extractedTextSha256": "035a12beff9d3b433a69f299e76839efa93c8789856db01ce81a49746c327c7f",
+    "exactQuestion": "Shall an act passed at the 2026 session of the General Assembly entitled “An Act authorizing the City of Providence to issue not to exceed $25,000,000 general obligation bonds and notes to fund the Providence Housing Trust Fund to finance Affordable Multi-Family Housing Projects in the City” be approved?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "6. PROVIDENCE HOUSING TRUST FUND TO FINANCE AFFORDABLE MULTI-FAMILY HOUSING PROJECTS IN THE CITY $25,000,000 BONDS AND NOTES (Local Acts 034/035 – Acts and Resolves of 2026) Shall an act passed at the 2026 session of the General Assembly entitled “An Act authorizing the City of Providence to issue not to exceed $25,000,000 general obligation bonds and notes to fund the Providence Housing Trust Fund to finance Affordable Multi-Family Housing Projects in the City” be approved? 6. FONDO FIDUCIARIO DE VIVIENDA DE PROVIDENCE PARA FINANCIAR PROYECTOS DE VIVIENDA MULTIFAMILIAR ASEQUIBLE EN LA CIUDAD $25,000,000 BONOS Y PAGARÉS (Leyes Locales 034/035 – Leyes y Resoluciones de 2026) ¿Debería aprobarse una ley aprobada durante la sesión de 2026 de la Asamblea General titulada: “ Ley que autoriza a la Ciudad de Providence a emitir bonos de obligación general y pagarés por una cantidad que no exceda $25,000,000 para financiar el Fondo Fiduciario de Vivienda de Providence, destinado a financiar proyectos de vivienda multifamiliar asequible en la Ciudad”?",
+    "excerptFile": "excerpts/cebc6825335442f7e7ac1b488a6b4092479f1e0428f8f08afa5d477ad3051cff.txt",
+    "excerptSha256": "cebc6825335442f7e7ac1b488a6b4092479f1e0428f8f08afa5d477ad3051cff",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "6. PROVIDENCE HOUSING TRUST FUND TO FINANCE AFFORDABLE MULTI-FAMILY HOUSING PROJECTS IN THE CITY $25,000,000 BONDS AND NOTES (Local Acts 034/035 – Acts and Resolves of 2026) Shall an act passed at the 2026 session of the General Assembly entitled “An Act authorizing the City of Providence to issue not to exceed $25,000,000 general obligation bonds and notes to fund the Providence Housing Trust Fund to finance Affordable Multi-Family Housing Projects in the City” be approved? 6. FONDO FIDUCIARIO DE VIVIENDA DE PROVIDENCE PARA FINANCIAR PROYECTOS DE VIVIENDA MULTIFAMILIAR ASEQUIBLE EN LA CIUDAD $25,000,000 BONOS Y PAGARÉS (Leyes Locales 034/035 – Leyes y Resoluciones de 2026) ¿Debería aprobarse una ley aprobada durante la sesión de 2026 de la Asamblea General titulada: “ Ley que autoriza a la Ciudad de Providence a emitir bonos de obligación general y pagarés por una cantidad que no exceda $25,000,000 para financiar el Fondo Fiduciario de Vivienda de Providence, destinado a financiar proyectos de vivienda multifamiliar asequible en la Ciudad”?"
+      ],
+      "yesMeans": [
+        "6. PROVIDENCE HOUSING TRUST FUND TO FINANCE AFFORDABLE MULTI-FAMILY HOUSING PROJECTS IN THE CITY $25,000,000 BONDS AND NOTES (Local Acts 034/035 – Acts and Resolves of 2026) Shall an act passed at the 2026 session of the General Assembly entitled “An Act authorizing the City of Providence to issue not to exceed $25,000,000 general obligation bonds and notes to fund the Providence Housing Trust Fund to finance Affordable Multi-Family Housing Projects in the City” be approved? 6. FONDO FIDUCIARIO DE VIVIENDA DE PROVIDENCE PARA FINANCIAR PROYECTOS DE VIVIENDA MULTIFAMILIAR ASEQUIBLE EN LA CIUDAD $25,000,000 BONOS Y PAGARÉS (Leyes Locales 034/035 – Leyes y Resoluciones de 2026) ¿Debería aprobarse una ley aprobada durante la sesión de 2026 de la Asamblea General titulada: “ Ley que autoriza a la Ciudad de Providence a emitir bonos de obligación general y pagarés por una cantidad que no exceda $25,000,000 para financiar el Fondo Fiduciario de Vivienda de Providence, destinado a financiar proyectos de vivienda multifamiliar asequible en la Ciudad”?"
+      ],
+      "noMeans": [
+        "6. PROVIDENCE HOUSING TRUST FUND TO FINANCE AFFORDABLE MULTI-FAMILY HOUSING PROJECTS IN THE CITY $25,000,000 BONDS AND NOTES (Local Acts 034/035 – Acts and Resolves of 2026) Shall an act passed at the 2026 session of the General Assembly entitled “An Act authorizing the City of Providence to issue not to exceed $25,000,000 general obligation bonds and notes to fund the Providence Housing Trust Fund to finance Affordable Multi-Family Housing Projects in the City” be approved? 6. FONDO FIDUCIARIO DE VIVIENDA DE PROVIDENCE PARA FINANCIAR PROYECTOS DE VIVIENDA MULTIFAMILIAR ASEQUIBLE EN LA CIUDAD $25,000,000 BONOS Y PAGARÉS (Leyes Locales 034/035 – Leyes y Resoluciones de 2026) ¿Debería aprobarse una ley aprobada durante la sesión de 2026 de la Asamblea General titulada: “ Ley que autoriza a la Ciudad de Providence a emitir bonos de obligación general y pagarés por una cantidad que no exceda $25,000,000 para financiar el Fondo Fiduciario de Vivienda de Providence, destinado a financiar proyectos de vivienda multifamiliar asequible en la Ciudad”?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-providence-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-96d4-08df1e27bd2f",
+    "sourceTitle": "Providence: 7. AN ORDINANCE DIVESTING FROM FOREIGN COUNTRIES CONDUCTING SEVERE VIOLATION OF HUMAN RIGHTS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
+    "sourceFile": "../../official-samples/sources/5545477b7bcc4cf2f518e8603b0f22f34ad6efb3057afec35cb0aabba7a1804e.pdf",
+    "sourceSha256": "5545477b7bcc4cf2f518e8603b0f22f34ad6efb3057afec35cb0aabba7a1804e",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/5545477b7bcc4cf2f518e8603b0f22f34ad6efb3057afec35cb0aabba7a1804e.txt",
+    "extractedTextSha256": "035a12beff9d3b433a69f299e76839efa93c8789856db01ce81a49746c327c7f",
+    "exactQuestion": "Shall an Ordinance divesting from foreign countries conducting severe violations of human rights such as ethnic cleansing, apartheid, illegal military occupation, or genocide be approved?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "7. AN ORDINANCE DIVESTING FROM FOREIGN COUNTRIES CONDUCTING SEVERE VIOLATION OF HUMAN RIGHTS (Resolution 326 adopted by the Providence City Council on July 30, 2026) Shall an Ordinance divesting from foreign countries conducting severe violations of human rights such as ethnic cleansing, apartheid, illegal military occupation, or genocide be approved? 7. SE PROPONE UNA ORDENANZA PARA RETIRAR INVERSIONES DE PAÍSES EXTRANJEROS QUE COMETAN GRAVES VIOLACIONES DE LOS DERECHOS HUMANOS (Resolución 326 adoptada por el Concejo Municipal de Providence el 30 de julio de 2026) ¿Debería aprobarse una ordenanza para retirar inversiones de países extranjeros que cometan graves violaciones de los derechos humanos, como la limpieza étnica, el apartheid, la ocupación militar ilegal o el genocidio?",
+    "excerptFile": "excerpts/ed4789468ab9195ef950d56871fed73da542d9e28b9ab99b1e707e4d4758af71.txt",
+    "excerptSha256": "ed4789468ab9195ef950d56871fed73da542d9e28b9ab99b1e707e4d4758af71",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "7. AN ORDINANCE DIVESTING FROM FOREIGN COUNTRIES CONDUCTING SEVERE VIOLATION OF HUMAN RIGHTS (Resolution 326 adopted by the Providence City Council on July 30, 2026) Shall an Ordinance divesting from foreign countries conducting severe violations of human rights such as ethnic cleansing, apartheid, illegal military occupation, or genocide be approved? 7. SE PROPONE UNA ORDENANZA PARA RETIRAR INVERSIONES DE PAÍSES EXTRANJEROS QUE COMETAN GRAVES VIOLACIONES DE LOS DERECHOS HUMANOS (Resolución 326 adoptada por el Concejo Municipal de Providence el 30 de julio de 2026) ¿Debería aprobarse una ordenanza para retirar inversiones de países extranjeros que cometan graves violaciones de los derechos humanos, como la limpieza étnica, el apartheid, la ocupación militar ilegal o el genocidio?"
+      ],
+      "yesMeans": [
+        "7. AN ORDINANCE DIVESTING FROM FOREIGN COUNTRIES CONDUCTING SEVERE VIOLATION OF HUMAN RIGHTS (Resolution 326 adopted by the Providence City Council on July 30, 2026) Shall an Ordinance divesting from foreign countries conducting severe violations of human rights such as ethnic cleansing, apartheid, illegal military occupation, or genocide be approved? 7. SE PROPONE UNA ORDENANZA PARA RETIRAR INVERSIONES DE PAÍSES EXTRANJEROS QUE COMETAN GRAVES VIOLACIONES DE LOS DERECHOS HUMANOS (Resolución 326 adoptada por el Concejo Municipal de Providence el 30 de julio de 2026) ¿Debería aprobarse una ordenanza para retirar inversiones de países extranjeros que cometan graves violaciones de los derechos humanos, como la limpieza étnica, el apartheid, la ocupación militar ilegal o el genocidio?"
+      ],
+      "noMeans": [
+        "7. AN ORDINANCE DIVESTING FROM FOREIGN COUNTRIES CONDUCTING SEVERE VIOLATION OF HUMAN RIGHTS (Resolution 326 adopted by the Providence City Council on July 30, 2026) Shall an Ordinance divesting from foreign countries conducting severe violations of human rights such as ethnic cleansing, apartheid, illegal military occupation, or genocide be approved? 7. SE PROPONE UNA ORDENANZA PARA RETIRAR INVERSIONES DE PAÍSES EXTRANJEROS QUE COMETAN GRAVES VIOLACIONES DE LOS DERECHOS HUMANOS (Resolución 326 adoptada por el Concejo Municipal de Providence el 30 de julio de 2026) ¿Debería aprobarse una ordenanza para retirar inversiones de países extranjeros que cometan graves violaciones de los derechos humanos, como la limpieza étnica, el apartheid, la ocupación militar ilegal o el genocidio?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

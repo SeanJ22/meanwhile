@@ -1,0 +1,39 @@
+{
+  "path": "ballot-input/ri.json",
+  "state": "RI",
+  "priorBasis": "FRESH_MEASURE_ONLY_HELD_SNAPSHOT; fullcandidate-retentioncheckremainsrootowned",
+  "checkAuthority": true,
+  "normalBallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": {
+    "ok": true
+  },
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderChecks": [
+    {
+      "key": "RI:ri-2026-11-03-general",
+      "expected": 7,
+      "usableExpectedRecords": 7,
+      "priorContestsRetained": true,
+      "priorMeasuresRetained": true
+    }
+  ],
+  "productionWrites": 0,
+  "additionalChecks": {
+    "originalNativePdfHashes": "PASS",
+    "separateExtractedTextHashes": "PASS",
+    "literalFullActualQuestions": "PASS",
+    "officialExplanationsSeparated": "PASS",
+    "officialGovS3HostLink": "PASS",
+    "exactHeldTownBindings": "PASS",
+    "actualReaderPositives": 7,
+    "unrelatedParentNegativeChecks": 126,
+    "credentialFiles": 12,
+    "credentialFindings": 0,
+    "neutralMaterialConditions": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0,
+    "modelCalls": 0
+  }
+}

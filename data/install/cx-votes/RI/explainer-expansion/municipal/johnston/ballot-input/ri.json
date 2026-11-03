@@ -1,0 +1,80 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-johnston-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:johnston_town",
+          "divisionVintage": "2026",
+          "title": "Johnston town — Question 6: Financial backing and enforcement for condemnation",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1601.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.536213+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.502176+00:00",
+            "quote": "Shall Section 1-3 of the Johnston Town Charter be amended to identify a fund, establish a pledge of credit, and establish an enforcement mechanism for the exercise of its condemnation authority?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-johnston-2026:question-6:measure",
+          "contestId": "ri-johnston-2026:question-6",
+          "questionText": "Shall Section 1-3 of the Johnston Town Charter be amended to identify a fund, establish a pledge of credit, and establish an enforcement mechanism for the exercise of its condemnation authority?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.536213+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.502176+00:00",
+            "quote": "Shall Section 1-3 of the Johnston Town Charter be amended to identify a fund, establish a pledge of credit, and establish an enforcement mechanism for the exercise of its condemnation authority?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-johnston-2026:question-6",
+          "whatItDoes": "Identify a fund, establish a pledge of town credit and provide an enforcement mechanism for the town’s condemnation authority—the legal power to take property.",
+          "yesMeans": "Approve those financial-backing and enforcement changes to the town’s condemnation provision.",
+          "noMeans": "Reject this proposed condemnation-authority amendment.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1601.pdf",
+          "sourceHash": "2caba7a9f827ffe764b1beb4397a8a92919eb489823b9dfc837fb827c1617709",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:17:43.502176+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:17:43.502176+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1601.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1601.pdf",
+        "httpStatus": 200,
+        "rawHash": "2caba7a9f827ffe764b1beb4397a8a92919eb489823b9dfc837fb827c1617709",
+        "retrievedAt": "2026-11-03T07:53:01.536213+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

@@ -1,0 +1,310 @@
+[
+  {
+    "contestId": "ri-pawtucket-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-b84b-08df1e27ba2e",
+    "sourceTitle": "Pawtucket: 6. CONSTRUCTION AND RECONSTRUCTION OF STREETS AND SIDEWALKS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2601.pdf",
+    "sourceFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.pdf",
+    "sourceSha256": "17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.txt",
+    "extractedTextSha256": "05d70701942ad658398f9cd48d5d69bcf72309cc4967cf98f2d8256c2012f46f",
+    "exactQuestion": "Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the design, construction, reconstruction, repair, and equipping of streets, sidewalks, and other transportation infrastructure improvements including, but not limited to, drainage and landscaping and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "6. CONSTRUCTION AND RECONSTRUCTION OF STREETS AND SIDEWALKS $2,000,000 BONDS AND NOTES (Local Acts 037/038 – Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the design, construction, reconstruction, repair, and equipping of streets, sidewalks, and other transportation infrastructure improvements including, but not limited to, drainage and landscaping and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 6. CONSTRUCCIÓN Y RECONSTRUCCIÓN DE CALLES Y ACERAS $2,000,000 BONOS Y PAGARÉS (Leyes Locales 037/038 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar el diseño, la construcción, la reconstrucción, la reparación y el equipamiento de calles, aceras y otras mejoras de infraestructura de transporte, incluyendo, entre otras, obras de drenaje y paisajismo, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?",
+    "excerptFile": "excerpts/cb87ef460c7257e4461db8edd0dd26db005ab75bf0edb5a6264c91a1b7a44fa7.txt",
+    "excerptSha256": "cb87ef460c7257e4461db8edd0dd26db005ab75bf0edb5a6264c91a1b7a44fa7",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "6. CONSTRUCTION AND RECONSTRUCTION OF STREETS AND SIDEWALKS $2,000,000 BONDS AND NOTES (Local Acts 037/038 – Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the design, construction, reconstruction, repair, and equipping of streets, sidewalks, and other transportation infrastructure improvements including, but not limited to, drainage and landscaping and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 6. CONSTRUCCIÓN Y RECONSTRUCCIÓN DE CALLES Y ACERAS $2,000,000 BONOS Y PAGARÉS (Leyes Locales 037/038 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar el diseño, la construcción, la reconstrucción, la reparación y el equipamiento de calles, aceras y otras mejoras de infraestructura de transporte, incluyendo, entre otras, obras de drenaje y paisajismo, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "yesMeans": [
+        "6. CONSTRUCTION AND RECONSTRUCTION OF STREETS AND SIDEWALKS $2,000,000 BONDS AND NOTES (Local Acts 037/038 – Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the design, construction, reconstruction, repair, and equipping of streets, sidewalks, and other transportation infrastructure improvements including, but not limited to, drainage and landscaping and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 6. CONSTRUCCIÓN Y RECONSTRUCCIÓN DE CALLES Y ACERAS $2,000,000 BONOS Y PAGARÉS (Leyes Locales 037/038 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar el diseño, la construcción, la reconstrucción, la reparación y el equipamiento de calles, aceras y otras mejoras de infraestructura de transporte, incluyendo, entre otras, obras de drenaje y paisajismo, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "noMeans": [
+        "6. CONSTRUCTION AND RECONSTRUCTION OF STREETS AND SIDEWALKS $2,000,000 BONDS AND NOTES (Local Acts 037/038 – Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the design, construction, reconstruction, repair, and equipping of streets, sidewalks, and other transportation infrastructure improvements including, but not limited to, drainage and landscaping and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 6. CONSTRUCCIÓN Y RECONSTRUCCIÓN DE CALLES Y ACERAS $2,000,000 BONOS Y PAGARÉS (Leyes Locales 037/038 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar el diseño, la construcción, la reconstrucción, la reparación y el equipamiento de calles, aceras y otras mejoras de infraestructura de transporte, incluyendo, entre otras, obras de drenaje y paisajismo, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-pawtucket-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-8bb0-08df1e27ba3f",
+    "sourceTitle": "Pawtucket: 7. CONSTRUCTION AND RECONSTRUCTION OF SANITARY SEWERS AND STORM SEWERS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2601.pdf",
+    "sourceFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.pdf",
+    "sourceSha256": "17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.txt",
+    "extractedTextSha256": "05d70701942ad658398f9cd48d5d69bcf72309cc4967cf98f2d8256c2012f46f",
+    "exactQuestion": "Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the planning, evaluation, design, construction, equipping, and reconstruction of sanitary sewers and storm sewers in the City and authorizing the financing thereof, including the issuance of not more than $4,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "7. CONSTRUCTION AND RECONSTRUCTION OF SANITARY SEWERS AND STORM SEWERS $4,000,000 BONDS AND NOTES (Local Acts 044/045 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the planning, evaluation, design, construction, equipping, and reconstruction of sanitary sewers and storm sewers in the City and authorizing the financing thereof, including the issuance of not more than $4,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 7. CONSTRUCCIÓN Y RECONSTRUCCIÓN DE ALCANTARILLAS SANITARIAS Y PLUVIALES $4,000,000 BONOS Y PAGARÉS (Leyes Locales 044/045 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la planificación, evaluación, diseño, construcción, equipamiento y reconstrucción de alcantarillas sanitarias y pluviales en la ciudad, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $4,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?",
+    "excerptFile": "excerpts/b73652f4d6aa27f2847eeba00b479453d4d6acedd919f3b24f01e800cd75cdac.txt",
+    "excerptSha256": "b73652f4d6aa27f2847eeba00b479453d4d6acedd919f3b24f01e800cd75cdac",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "7. CONSTRUCTION AND RECONSTRUCTION OF SANITARY SEWERS AND STORM SEWERS $4,000,000 BONDS AND NOTES (Local Acts 044/045 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the planning, evaluation, design, construction, equipping, and reconstruction of sanitary sewers and storm sewers in the City and authorizing the financing thereof, including the issuance of not more than $4,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 7. CONSTRUCCIÓN Y RECONSTRUCCIÓN DE ALCANTARILLAS SANITARIAS Y PLUVIALES $4,000,000 BONOS Y PAGARÉS (Leyes Locales 044/045 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la planificación, evaluación, diseño, construcción, equipamiento y reconstrucción de alcantarillas sanitarias y pluviales en la ciudad, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $4,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "yesMeans": [
+        "7. CONSTRUCTION AND RECONSTRUCTION OF SANITARY SEWERS AND STORM SEWERS $4,000,000 BONDS AND NOTES (Local Acts 044/045 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the planning, evaluation, design, construction, equipping, and reconstruction of sanitary sewers and storm sewers in the City and authorizing the financing thereof, including the issuance of not more than $4,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 7. CONSTRUCCIÓN Y RECONSTRUCCIÓN DE ALCANTARILLAS SANITARIAS Y PLUVIALES $4,000,000 BONOS Y PAGARÉS (Leyes Locales 044/045 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la planificación, evaluación, diseño, construcción, equipamiento y reconstrucción de alcantarillas sanitarias y pluviales en la ciudad, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $4,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "noMeans": [
+        "7. CONSTRUCTION AND RECONSTRUCTION OF SANITARY SEWERS AND STORM SEWERS $4,000,000 BONDS AND NOTES (Local Acts 044/045 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the planning, evaluation, design, construction, equipping, and reconstruction of sanitary sewers and storm sewers in the City and authorizing the financing thereof, including the issuance of not more than $4,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 7. CONSTRUCCIÓN Y RECONSTRUCCIÓN DE ALCANTARILLAS SANITARIAS Y PLUVIALES $4,000,000 BONOS Y PAGARÉS (Leyes Locales 044/045 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la planificación, evaluación, diseño, construcción, equipamiento y reconstrucción de alcantarillas sanitarias y pluviales en la ciudad, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $4,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-pawtucket-2026:question-8",
+    "officialQuestionNumber": 8,
+    "sourceBallotItemId": "01000000-59ac-daed-d461-08df1e27ba50",
+    "sourceTitle": "Pawtucket: 8. IMPROVEMENT AND REPLACEMENT OF ROAD SAFETY INFRASTRUCTURE AND TRAFFIC CONTROL DEVICES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2601.pdf",
+    "sourceFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.pdf",
+    "sourceSha256": "17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.txt",
+    "extractedTextSha256": "05d70701942ad658398f9cd48d5d69bcf72309cc4967cf98f2d8256c2012f46f",
+    "exactQuestion": "Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the improvement and replacement of road safety infrastructure and traffic control devices in the City of Pawtucket and authorizing the financing thereof, including the issuance of not more than $2,500,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "8. IMPROVEMENT AND REPLACEMENT OF ROAD SAFETY INFRASTRUCTURE AND TRAFFIC CONTROL DEVICES $2,500,000 BONDS AND NOTES (Local Acts 036/048 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the improvement and replacement of road safety infrastructure and traffic control devices in the City of Pawtucket and authorizing the financing thereof, including the issuance of not more than $2,500,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 8. MEJORA Y REEMPLAZO DE LA INFRAESTRUCTURA DE SEGURIDAD VIAL Y DE LOS DISPOSITIVOS DE CONTROL DEL TRÁNSITO $2,500,000 BONOS Y PAGARÉS (Leyes Locales 036/048 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la mejora y el reemplazo de la infraestructura de seguridad vial y de los dispositivos de control del tránsito en la ciudad de Pawtucket, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,500,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?",
+    "excerptFile": "excerpts/4328163c51874fc8ee33e6039dc0626c5b3e928f7a62f5995230918258b85aa3.txt",
+    "excerptSha256": "4328163c51874fc8ee33e6039dc0626c5b3e928f7a62f5995230918258b85aa3",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "8. IMPROVEMENT AND REPLACEMENT OF ROAD SAFETY INFRASTRUCTURE AND TRAFFIC CONTROL DEVICES $2,500,000 BONDS AND NOTES (Local Acts 036/048 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the improvement and replacement of road safety infrastructure and traffic control devices in the City of Pawtucket and authorizing the financing thereof, including the issuance of not more than $2,500,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 8. MEJORA Y REEMPLAZO DE LA INFRAESTRUCTURA DE SEGURIDAD VIAL Y DE LOS DISPOSITIVOS DE CONTROL DEL TRÁNSITO $2,500,000 BONOS Y PAGARÉS (Leyes Locales 036/048 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la mejora y el reemplazo de la infraestructura de seguridad vial y de los dispositivos de control del tránsito en la ciudad de Pawtucket, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,500,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "yesMeans": [
+        "8. IMPROVEMENT AND REPLACEMENT OF ROAD SAFETY INFRASTRUCTURE AND TRAFFIC CONTROL DEVICES $2,500,000 BONDS AND NOTES (Local Acts 036/048 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the improvement and replacement of road safety infrastructure and traffic control devices in the City of Pawtucket and authorizing the financing thereof, including the issuance of not more than $2,500,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 8. MEJORA Y REEMPLAZO DE LA INFRAESTRUCTURA DE SEGURIDAD VIAL Y DE LOS DISPOSITIVOS DE CONTROL DEL TRÁNSITO $2,500,000 BONOS Y PAGARÉS (Leyes Locales 036/048 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la mejora y el reemplazo de la infraestructura de seguridad vial y de los dispositivos de control del tránsito en la ciudad de Pawtucket, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,500,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "noMeans": [
+        "8. IMPROVEMENT AND REPLACEMENT OF ROAD SAFETY INFRASTRUCTURE AND TRAFFIC CONTROL DEVICES $2,500,000 BONDS AND NOTES (Local Acts 036/048 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the improvement and replacement of road safety infrastructure and traffic control devices in the City of Pawtucket and authorizing the financing thereof, including the issuance of not more than $2,500,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 8. MEJORA Y REEMPLAZO DE LA INFRAESTRUCTURA DE SEGURIDAD VIAL Y DE LOS DISPOSITIVOS DE CONTROL DEL TRÁNSITO $2,500,000 BONOS Y PAGARÉS (Leyes Locales 036/048 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la mejora y el reemplazo de la infraestructura de seguridad vial y de los dispositivos de control del tránsito en la ciudad de Pawtucket, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,500,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-pawtucket-2026:question-9",
+    "officialQuestionNumber": 9,
+    "sourceBallotItemId": "01000000-59ac-daed-500c-08df1e27ba63",
+    "sourceTitle": "Pawtucket: 9. CONSTRUCTION, RENOVATION, AND IMPROVEMENTS TO PUBLIC BUILDINGS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2601.pdf",
+    "sourceFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.pdf",
+    "sourceSha256": "17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.txt",
+    "extractedTextSha256": "05d70701942ad658398f9cd48d5d69bcf72309cc4967cf98f2d8256c2012f46f",
+    "exactQuestion": "Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the construction, renovation, improvement, repair, alteration, furnishing, and equipping of public buildings in the City and authorizing the financing thereof, including the issuance of not more than $5,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "9. CONSTRUCTION, RENOVATION, AND IMPROVEMENTS TO PUBLIC BUILDINGS $5,000,000 BONDS AND NOTES (Local Acts 041/042 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the construction, renovation, improvement, repair, alteration, furnishing, and equipping of public buildings in the City and authorizing the financing thereof, including the issuance of not more than $5,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 9. CONSTRUCCIÓN, RENOVACIÓN Y MEJORAS DE EDIFICIOS PÚBLICOS $5,000,000 BONOS Y PAGARÉS (Leyes Locales 041/042 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la construcción, renovación, mejora, reparación, modificación, amueblamiento y equipamiento de edificios públicos en la ciudad, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $5,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?",
+    "excerptFile": "excerpts/6c996ae129a16299163130f3f3d865250cc1ab53a001e57bc4c5a9f1b97d770f.txt",
+    "excerptSha256": "6c996ae129a16299163130f3f3d865250cc1ab53a001e57bc4c5a9f1b97d770f",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "9. CONSTRUCTION, RENOVATION, AND IMPROVEMENTS TO PUBLIC BUILDINGS $5,000,000 BONDS AND NOTES (Local Acts 041/042 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the construction, renovation, improvement, repair, alteration, furnishing, and equipping of public buildings in the City and authorizing the financing thereof, including the issuance of not more than $5,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 9. CONSTRUCCIÓN, RENOVACIÓN Y MEJORAS DE EDIFICIOS PÚBLICOS $5,000,000 BONOS Y PAGARÉS (Leyes Locales 041/042 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la construcción, renovación, mejora, reparación, modificación, amueblamiento y equipamiento de edificios públicos en la ciudad, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $5,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "yesMeans": [
+        "9. CONSTRUCTION, RENOVATION, AND IMPROVEMENTS TO PUBLIC BUILDINGS $5,000,000 BONDS AND NOTES (Local Acts 041/042 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the construction, renovation, improvement, repair, alteration, furnishing, and equipping of public buildings in the City and authorizing the financing thereof, including the issuance of not more than $5,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 9. CONSTRUCCIÓN, RENOVACIÓN Y MEJORAS DE EDIFICIOS PÚBLICOS $5,000,000 BONOS Y PAGARÉS (Leyes Locales 041/042 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la construcción, renovación, mejora, reparación, modificación, amueblamiento y equipamiento de edificios públicos en la ciudad, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $5,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "noMeans": [
+        "9. CONSTRUCTION, RENOVATION, AND IMPROVEMENTS TO PUBLIC BUILDINGS $5,000,000 BONDS AND NOTES (Local Acts 041/042 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the construction, renovation, improvement, repair, alteration, furnishing, and equipping of public buildings in the City and authorizing the financing thereof, including the issuance of not more than $5,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 9. CONSTRUCCIÓN, RENOVACIÓN Y MEJORAS DE EDIFICIOS PÚBLICOS $5,000,000 BONOS Y PAGARÉS (Leyes Locales 041/042 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la construcción, renovación, mejora, reparación, modificación, amueblamiento y equipamiento de edificios públicos en la ciudad, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $5,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-pawtucket-2026:question-10",
+    "officialQuestionNumber": 10,
+    "sourceBallotItemId": "01000000-59ac-daed-2478-08df1e27ba74",
+    "sourceTitle": "Pawtucket: 10. CONSTRUCTION, RECONSTRUCTION, AND REPAIR OF BRIDGES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2601.pdf",
+    "sourceFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.pdf",
+    "sourceSha256": "17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.txt",
+    "extractedTextSha256": "05d70701942ad658398f9cd48d5d69bcf72309cc4967cf98f2d8256c2012f46f",
+    "exactQuestion": "Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the construction, reconstruction, repair, and equipping of bridges and all costs incidental or related thereto and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "10. CONSTRUCTION, RECONSTRUCTION, AND REPAIR OF BRIDGES $2,000,000 BONDS AND NOTES (Local Acts 039/040 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the construction, reconstruction, repair, and equipping of bridges and all costs incidental or related thereto and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 10. CONSTRUCCIÓN, RECONSTRUCCIÓN Y REPARACIÓN DE PUENTES $2,000,000 BONOS Y PAGARÉS (Leyes Locales 039/040 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la construcción, reconstrucción, reparación y equipamiento de puentes, así como todos los costos incidentales o relacionados con dichas obras, y que autoriza el financiamiento de las mismas, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?",
+    "excerptFile": "excerpts/c7b3a19a273edb7f809e917084a0b7c21c4972726ea0898736fc2a9eda5a1702.txt",
+    "excerptSha256": "c7b3a19a273edb7f809e917084a0b7c21c4972726ea0898736fc2a9eda5a1702",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "10. CONSTRUCTION, RECONSTRUCTION, AND REPAIR OF BRIDGES $2,000,000 BONDS AND NOTES (Local Acts 039/040 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the construction, reconstruction, repair, and equipping of bridges and all costs incidental or related thereto and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 10. CONSTRUCCIÓN, RECONSTRUCCIÓN Y REPARACIÓN DE PUENTES $2,000,000 BONOS Y PAGARÉS (Leyes Locales 039/040 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la construcción, reconstrucción, reparación y equipamiento de puentes, así como todos los costos incidentales o relacionados con dichas obras, y que autoriza el financiamiento de las mismas, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "yesMeans": [
+        "10. CONSTRUCTION, RECONSTRUCTION, AND REPAIR OF BRIDGES $2,000,000 BONDS AND NOTES (Local Acts 039/040 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the construction, reconstruction, repair, and equipping of bridges and all costs incidental or related thereto and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 10. CONSTRUCCIÓN, RECONSTRUCCIÓN Y REPARACIÓN DE PUENTES $2,000,000 BONOS Y PAGARÉS (Leyes Locales 039/040 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la construcción, reconstrucción, reparación y equipamiento de puentes, así como todos los costos incidentales o relacionados con dichas obras, y que autoriza el financiamiento de las mismas, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "noMeans": [
+        "10. CONSTRUCTION, RECONSTRUCTION, AND REPAIR OF BRIDGES $2,000,000 BONDS AND NOTES (Local Acts 039/040 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the construction, reconstruction, repair, and equipping of bridges and all costs incidental or related thereto and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 10. CONSTRUCCIÓN, RECONSTRUCCIÓN Y REPARACIÓN DE PUENTES $2,000,000 BONOS Y PAGARÉS (Leyes Locales 039/040 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la construcción, reconstrucción, reparación y equipamiento de puentes, así como todos los costos incidentales o relacionados con dichas obras, y que autoriza el financiamiento de las mismas, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-pawtucket-2026:question-11",
+    "officialQuestionNumber": 11,
+    "sourceBallotItemId": "01000000-59ac-daed-bf2b-08df1e27ba84",
+    "sourceTitle": "Pawtucket: 11. REPAVING OF STREETS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2601.pdf",
+    "sourceFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.pdf",
+    "sourceSha256": "17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.txt",
+    "extractedTextSha256": "05d70701942ad658398f9cd48d5d69bcf72309cc4967cf98f2d8256c2012f46f",
+    "exactQuestion": "Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the repaving of streets in the City and authorizing the financing thereof, including the issuance of not more than $3,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "11. REPAVING OF STREETS $3,000,000 BONDS AND NOTES (Local Acts 046/047 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the repaving of streets in the City and authorizing the financing thereof, including the issuance of not more than $3,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 11. REPAVIMENTACIÓN DE CALLES $3,000,000 BONOS Y PAGARÉS (Leyes Locales 046/047 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la repavimentación de calles en la ciudad y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $3,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?",
+    "excerptFile": "excerpts/761a1ea4fc3c2e1a52ad31e8ebb2eb288c0581fb7606a24f974f600de5374cb1.txt",
+    "excerptSha256": "761a1ea4fc3c2e1a52ad31e8ebb2eb288c0581fb7606a24f974f600de5374cb1",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "11. REPAVING OF STREETS $3,000,000 BONDS AND NOTES (Local Acts 046/047 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the repaving of streets in the City and authorizing the financing thereof, including the issuance of not more than $3,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 11. REPAVIMENTACIÓN DE CALLES $3,000,000 BONOS Y PAGARÉS (Leyes Locales 046/047 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la repavimentación de calles en la ciudad y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $3,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "yesMeans": [
+        "11. REPAVING OF STREETS $3,000,000 BONDS AND NOTES (Local Acts 046/047 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the repaving of streets in the City and authorizing the financing thereof, including the issuance of not more than $3,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 11. REPAVIMENTACIÓN DE CALLES $3,000,000 BONOS Y PAGARÉS (Leyes Locales 046/047 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la repavimentación de calles en la ciudad y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $3,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "noMeans": [
+        "11. REPAVING OF STREETS $3,000,000 BONDS AND NOTES (Local Acts 046/047 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the repaving of streets in the City and authorizing the financing thereof, including the issuance of not more than $3,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 11. REPAVIMENTACIÓN DE CALLES $3,000,000 BONOS Y PAGARÉS (Leyes Locales 046/047 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la repavimentación de calles en la ciudad y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $3,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-pawtucket-2026:question-12",
+    "officialQuestionNumber": 12,
+    "sourceBallotItemId": "01000000-59ac-daed-0d63-08df1e27ba95",
+    "sourceTitle": "Pawtucket: 12. CONSTRUCTION, RENOVATION, AND EQUIPPING OF PUBLIC RECREATION FACILITIES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2601.pdf",
+    "sourceFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.pdf",
+    "sourceSha256": "17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/17d51c21f76aecce384b9818e65f0d9181e56d4f81c52e73547bea6b41547b53.txt",
+    "extractedTextSha256": "05d70701942ad658398f9cd48d5d69bcf72309cc4967cf98f2d8256c2012f46f",
+    "exactQuestion": "Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the renovation, construction, reconstruction, and equipping of public recreation facilities in the City including land acquisition and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "12. CONSTRUCTION, RENOVATION, AND EQUIPPING OF PUBLIC RECREATION FACILITIES $2,000,000 BONDS AND NOTES (Local Acts 033/043 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the renovation, construction, reconstruction, and equipping of public recreation facilities in the City including land acquisition and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 12. CONSTRUCCIÓN, RENOVACIÓN Y EQUIPAMIENTO DE INSTALACIONES PÚBLICAS DE RECREACIÓN $2,000,000 BONOS Y PAGARÉS (Leyes Locales 033/043 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la renovación, construcción, reconstrucción y equipamiento de instalaciones públicas de recreación en la ciudad, incluida la adquisición de terrenos, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?",
+    "excerptFile": "excerpts/931fe7b1f6b35dd52db32e57756f300bdd6fb5b04122940d0c0c0ccf294e3224.txt",
+    "excerptSha256": "931fe7b1f6b35dd52db32e57756f300bdd6fb5b04122940d0c0c0ccf294e3224",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "12. CONSTRUCTION, RENOVATION, AND EQUIPPING OF PUBLIC RECREATION FACILITIES $2,000,000 BONDS AND NOTES (Local Acts 033/043 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the renovation, construction, reconstruction, and equipping of public recreation facilities in the City including land acquisition and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 12. CONSTRUCCIÓN, RENOVACIÓN Y EQUIPAMIENTO DE INSTALACIONES PÚBLICAS DE RECREACIÓN $2,000,000 BONOS Y PAGARÉS (Leyes Locales 033/043 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la renovación, construcción, reconstrucción y equipamiento de instalaciones públicas de recreación en la ciudad, incluida la adquisición de terrenos, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "yesMeans": [
+        "12. CONSTRUCTION, RENOVATION, AND EQUIPPING OF PUBLIC RECREATION FACILITIES $2,000,000 BONDS AND NOTES (Local Acts 033/043 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the renovation, construction, reconstruction, and equipping of public recreation facilities in the City including land acquisition and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 12. CONSTRUCCIÓN, RENOVACIÓN Y EQUIPAMIENTO DE INSTALACIONES PÚBLICAS DE RECREACIÓN $2,000,000 BONOS Y PAGARÉS (Leyes Locales 033/043 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la renovación, construcción, reconstrucción y equipamiento de instalaciones públicas de recreación en la ciudad, incluida la adquisición de terrenos, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ],
+      "noMeans": [
+        "12. CONSTRUCTION, RENOVATION, AND EQUIPPING OF PUBLIC RECREATION FACILITIES $2,000,000 BONDS AND NOTES (Local Acts 033/043 - Acts and Resolves of 2026) Shall an act passed at the January 2026 session of the General Assembly entitled “An Act authorizing the City of Pawtucket to provide for the renovation, construction, reconstruction, and equipping of public recreation facilities in the City including land acquisition and authorizing the financing thereof, including the issuance of not more than $2,000,000 bonds and notes therefor, to fund the capital improvement program for the two fiscal years 2028 and 2029” be approved? 12. CONSTRUCCIÓN, RENOVACIÓN Y EQUIPAMIENTO DE INSTALACIONES PÚBLICAS DE RECREACIÓN $2,000,000 BONOS Y PAGARÉS (Leyes Locales 033/043 – Leyes y Resoluciones de 2026) ¿Debería la ley aprobada por la Asamblea General en la sesión de enero de 2026 titulada \"Ley que autoriza a la Ciudad de Pawtucket a realizar la renovación, construcción, reconstrucción y equipamiento de instalaciones públicas de recreación en la ciudad, incluida la adquisición de terrenos, y que autoriza el financiamiento de dichas obras, incluida la emisión de bonos y pagarés por una cantidad no mayor de $2,000,000, para financiar el programa de mejoras de capital correspondiente a los años fiscales 2028 y 2029\"?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

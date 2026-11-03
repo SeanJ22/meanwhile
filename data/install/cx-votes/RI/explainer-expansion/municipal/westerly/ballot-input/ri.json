@@ -1,0 +1,212 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-westerly-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:washington/place:westerly_town",
+          "divisionVintage": "2026",
+          "title": "Westerly town — Question 6: Council vacancy replacements",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:04.155473+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.497903+00:00",
+            "quote": "Shall Section 2-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the Town Council, the replacement shall serve until the next scheduled General Election for the remainder of that term?"
+          }
+        },
+        {
+          "id": "ri-westerly-2026:question-7",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:washington/place:westerly_town",
+          "divisionVintage": "2026",
+          "title": "Westerly town — Question 7: School Committee consecutive-term limit",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:04.155473+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.497903+00:00",
+            "quote": "Shall Section 11-1-1 of the Westerly Town Charter be amended to establish that no member of the School Committee shall serve more than two consecutive terms?"
+          }
+        },
+        {
+          "id": "ri-westerly-2026:question-8",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:washington/place:westerly_town",
+          "divisionVintage": "2026",
+          "title": "Westerly town — Question 8: School Committee vacancy replacements",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:04.155473+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.497903+00:00",
+            "quote": "Shall Section 11-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the School Committee, the replacement shall serve until the next scheduled General Election for the remainder of that term?"
+          }
+        },
+        {
+          "id": "ri-westerly-2026:question-9",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:washington/place:westerly_town",
+          "divisionVintage": "2026",
+          "title": "Westerly town — Question 9: Ordinance summaries and electronic notices",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:04.155473+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.497903+00:00",
+            "quote": "Shall Section 15-2-2(b) of the Westerly Town Charter be amended to provide newspaper publication of proposed ordinances in a summary format in a newspaper of general circulation when newspaper publication is required by state law and further amended to provide for electronic notice of a proposed ordinance when newspaper publication is not required by state law?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-westerly-2026:question-6:measure",
+          "contestId": "ri-westerly-2026:question-6",
+          "questionText": "Shall Section 2-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the Town Council, the replacement shall serve until the next scheduled General Election for the remainder of that term?",
+          "officialStatement": "If approved, Section 2-1-3 of the Westerly Town Charter would be amended as follows: Whenever a vacancy shall occur in the membership of the Council by death, removal, out of town, resignation, or by neglect or refusal to qualify, or for any other cause, the Council shall offer the right to assume the office sequentially to the first, second, or third runner up candidates from the preceding election to serve until the next scheduled General Election for the remainder of that term. If none of the three runner up candidates from the preceding election assumes the office, within 30 days of the date of the vacancy, the Council shall by majority vote appoint a qualified person to the office to serve the remainder of the vacant office's term.",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:04.155473+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.497903+00:00",
+            "quote": "Shall Section 2-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the Town Council, the replacement shall serve until the next scheduled General Election for the remainder of that term?"
+          }
+        },
+        {
+          "id": "ri-westerly-2026:question-7:measure",
+          "contestId": "ri-westerly-2026:question-7",
+          "questionText": "Shall Section 11-1-1 of the Westerly Town Charter be amended to establish that no member of the School Committee shall serve more than two consecutive terms?",
+          "officialStatement": "If approved, Section 11-1-1 of the Westerly Town Charter would be amended as follows: The School Committee shall consist of seven (7) members elected at large to serve a term of four (4) years and until each one's successor is elected and qualified. Members shall be elected in staggered fashion and no member shall serve more than two (2) consecutive terms.",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:04.155473+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.497903+00:00",
+            "quote": "Shall Section 11-1-1 of the Westerly Town Charter be amended to establish that no member of the School Committee shall serve more than two consecutive terms?"
+          }
+        },
+        {
+          "id": "ri-westerly-2026:question-8:measure",
+          "contestId": "ri-westerly-2026:question-8",
+          "questionText": "Shall Section 11-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the School Committee, the replacement shall serve until the next scheduled General Election for the remainder of that term?",
+          "officialStatement": "If approved, Section 11-1-3 of the Westerly Town Charter would be amended as follows: Whenever a vacancy shall occur in the membership of the School Committee by death, removal, out of town, resignation, or by neglect or refusal to qualify, or for any other cause, the Council shall offer the right to assume the office sequentially to the first, second, or third runner up candidates from the preceding election to serve until the next scheduled General Election for the remainder of that term. If none of the three runner up candidates from the preceding election assumes the office, within 30 days of the date of the vacancy, the Council shall by majority vote appoint a qualified person to the office to serve the remainder of the vacant office's term.",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:04.155473+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.497903+00:00",
+            "quote": "Shall Section 11-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the School Committee, the replacement shall serve until the next scheduled General Election for the remainder of that term?"
+          }
+        },
+        {
+          "id": "ri-westerly-2026:question-9:measure",
+          "contestId": "ri-westerly-2026:question-9",
+          "questionText": "Shall Section 15-2-2(b) of the Westerly Town Charter be amended to provide newspaper publication of proposed ordinances in a summary format in a newspaper of general circulation when newspaper publication is required by state law and further amended to provide for electronic notice of a proposed ordinance when newspaper publication is not required by state law?",
+          "officialStatement": "If approved, Section 15-2-2(b) of the Westerly Town Charter would be amended as follows: When newspaper publication is required by state law, the Town Clerk shall publish in a newspaper having a general circulation in the Town, a summary of the proposed ordinance which summary shall identify the section and any subsections to be adopted, repealed or amended which said publication shall contain a notice setting out the time and place for a public hearing thereon and for its consideration by the Council. The public hearing shall be at least seven days after the publication and may be held separately or in conjunction with a regular or special Council meeting and may be adjourned from time to time. When newspaper publication of a proposed ordinance is not required by state law, the Town Clerk shall make electronic public notice of the proposed ordinance in the same manner as provided for above on the Town's official website and such other available public digital platforms as may be necessary to assure public access to said electronic notice. When notice required by this section is electronic or by newspaper, said proposed ordinance shall be published on the Town's official website in the form required for final adoption at least seven days prior to the public hearing provided for herein.",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:04.155473+00:00",
+            "verifiedAt": "2026-11-03T08:17:43.497903+00:00",
+            "quote": "Shall Section 15-2-2(b) of the Westerly Town Charter be amended to provide newspaper publication of proposed ordinances in a summary format in a newspaper of general circulation when newspaper publication is required by state law and further amended to provide for electronic notice of a proposed ordinance when newspaper publication is not required by state law?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-westerly-2026:question-6",
+          "whatItDoes": "For a council vacancy, offer the seat in order to the first, second and third runners-up from the previous election, to serve until the next scheduled general election for the remainder of that term. If none takes the seat within 30 days of the vacancy, the council would appoint a qualified person by majority vote to serve the remaining term.",
+          "yesMeans": "Approve those replacement, timing and fallback appointment rules.",
+          "noMeans": "Reject this proposed council-vacancy amendment.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+          "sourceHash": "e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:17:43.497903+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-westerly-2026:question-7",
+          "whatItDoes": "Limit School Committee members to two consecutive terms. The proposed charter text keeps seven members elected townwide to staggered four-year terms, serving until successors are elected and qualified.",
+          "yesMeans": "Approve adding the two-consecutive-term limit.",
+          "noMeans": "Reject this proposed School Committee term limit.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+          "sourceHash": "e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:17:43.497903+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-westerly-2026:question-8",
+          "whatItDoes": "For a School Committee vacancy, have the Town Council offer the seat in order to the first, second and third runners-up from the previous election, to serve until the next scheduled general election for the remainder of that term. If none takes the seat within 30 days of the vacancy, the council would appoint a qualified person by majority vote to serve the remaining term.",
+          "yesMeans": "Approve those School Committee replacement and fallback appointment rules.",
+          "noMeans": "Reject this proposed School Committee vacancy amendment.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+          "sourceHash": "e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:17:43.497903+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-westerly-2026:question-9",
+          "whatItDoes": "When state law requires newspaper notice of an ordinance, publish a summary identifying the affected sections and giving the public hearing’s time and place. The hearing would be at least seven days after publication. When newspaper notice is not required, use the town website and other available public digital platforms needed for access. In either case, post the ordinance’s full final-adoption text on the town website at least seven days before the hearing.",
+          "yesMeans": "Approve those newspaper-summary, electronic-notice and seven-day hearing and full-text posting rules.",
+          "noMeans": "Reject this proposed ordinance-publication amendment.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+          "sourceHash": "e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:17:43.497903+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:17:43.497903+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+        "httpStatus": 200,
+        "rawHash": "e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f",
+        "retrievedAt": "2026-11-03T07:53:04.155473+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "ri-johnston-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-9bfc-08df1e27b32e",
+    "sourceTitle": "Johnston: 6. AMENDMENT TO THE JOHNSTON HOME RULE CHARTER SECTION 1-3 - CONDEMNATION Town of Johnston",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1601.pdf",
+    "sourceFile": "../../official-samples/sources/2caba7a9f827ffe764b1beb4397a8a92919eb489823b9dfc837fb827c1617709.pdf",
+    "sourceSha256": "2caba7a9f827ffe764b1beb4397a8a92919eb489823b9dfc837fb827c1617709",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/2caba7a9f827ffe764b1beb4397a8a92919eb489823b9dfc837fb827c1617709.txt",
+    "extractedTextSha256": "b1fb654bde176b125c4b7829018242551cbdebd7f12ce8337a52982d2ccb2e55",
+    "exactQuestion": "Shall Section 1-3 of the Johnston Town Charter be amended to identify a fund, establish a pledge of credit, and establish an enforcement mechanism for the exercise of its condemnation authority?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "6. AMENDMENT TO THE JOHNSTON HOME RULE CHARTER SECTION 1-3 - CONDEMNATION (Resolution 2026-25 of the Johnston Town Council adopted July 31, 2026) Shall Section 1-3 of the Johnston Town Charter be amended to identify a fund, establish a pledge of credit, and establish an enforcement mechanism for the exercise of its condemnation authority?",
+    "excerptFile": "excerpts/94f595f26550e625bb00fa7d3b4743d66ad79e9238baf93de87b4d016528d6b2.txt",
+    "excerptSha256": "94f595f26550e625bb00fa7d3b4743d66ad79e9238baf93de87b4d016528d6b2",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "6. AMENDMENT TO THE JOHNSTON HOME RULE CHARTER SECTION 1-3 - CONDEMNATION (Resolution 2026-25 of the Johnston Town Council adopted July 31, 2026) Shall Section 1-3 of the Johnston Town Charter be amended to identify a fund, establish a pledge of credit, and establish an enforcement mechanism for the exercise of its condemnation authority?"
+      ],
+      "yesMeans": [
+        "6. AMENDMENT TO THE JOHNSTON HOME RULE CHARTER SECTION 1-3 - CONDEMNATION (Resolution 2026-25 of the Johnston Town Council adopted July 31, 2026) Shall Section 1-3 of the Johnston Town Charter be amended to identify a fund, establish a pledge of credit, and establish an enforcement mechanism for the exercise of its condemnation authority?"
+      ],
+      "noMeans": [
+        "6. AMENDMENT TO THE JOHNSTON HOME RULE CHARTER SECTION 1-3 - CONDEMNATION (Resolution 2026-25 of the Johnston Town Council adopted July 31, 2026) Shall Section 1-3 of the Johnston Town Charter be amended to identify a fund, establish a pledge of credit, and establish an enforcement mechanism for the exercise of its condemnation authority?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

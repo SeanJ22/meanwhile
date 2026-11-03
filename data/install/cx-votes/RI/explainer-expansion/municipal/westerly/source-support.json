@@ -1,0 +1,178 @@
+[
+  {
+    "contestId": "ri-westerly-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-1004-08df1e27c386",
+    "sourceTitle": "Westerly: 6. TOWN COUNCIL VACANCIES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+    "sourceFile": "../../official-samples/sources/e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f.pdf",
+    "sourceSha256": "e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f.txt",
+    "extractedTextSha256": "1e9e0a9acda2c26a267aab863be91ba1706122de4ecee165ade310484d2498cc",
+    "exactQuestion": "Shall Section 2-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the Town Council, the replacement shall serve until the next scheduled General Election for the remainder of that term?",
+    "officialStatement": "If approved, Section 2-1-3 of the Westerly Town Charter would be amended as follows: Whenever a vacancy shall occur in the membership of the Council by death, removal, out of town, resignation, or by neglect or refusal to qualify, or for any other cause, the Council shall offer the right to assume the office sequentially to the first, second, or third runner up candidates from the preceding election to serve until the next scheduled General Election for the remainder of that term. If none of the three runner up candidates from the preceding election assumes the office, within 30 days of the date of the vacancy, the Council shall by majority vote appoint a qualified person to the office to serve the remainder of the vacant office's term.",
+    "fullQuestionAndExplanationBlock": "6. TOWN COUNCIL VACANCIES (Art. II, Ch. I, §3 “Vacancies”) Shall Section 2-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the Town Council, the replacement shall serve until the next scheduled General Election for the remainder of that term? If approved, Section 2-1-3 of the Westerly Town Charter would be amended as follows: Whenever a vacancy shall occur in the membership of the Council by death, removal, out of town, resignation, or by neglect or refusal to qualify, or for any other cause, the Council shall offer the right to assume the office sequentially to the first, second, or third runner up candidates from the preceding election to serve until the next scheduled General Election for the remainder of that term. If none of the three runner up candidates from the preceding election assumes the office, within 30 days of the date of the vacancy, the Council shall by majority vote appoint a qualified person to the office to serve the remainder of the vacant office's term.",
+    "excerptFile": "excerpts/bdaf8976328fc88f57b196dead62da9237ba3ae4b4b636868eabe9b7a4aa946e.txt",
+    "excerptSha256": "bdaf8976328fc88f57b196dead62da9237ba3ae4b4b636868eabe9b7a4aa946e",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "6. TOWN COUNCIL VACANCIES (Art. II, Ch. I, §3 “Vacancies”) Shall Section 2-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the Town Council, the replacement shall serve until the next scheduled General Election for the remainder of that term? If approved, Section 2-1-3 of the Westerly Town Charter would be amended as follows: Whenever a vacancy shall occur in the membership of the Council by death, removal, out of town, resignation, or by neglect or refusal to qualify, or for any other cause, the Council shall offer the right to assume the office sequentially to the first, second, or third runner up candidates from the preceding election to serve until the next scheduled General Election for the remainder of that term. If none of the three runner up candidates from the preceding election assumes the office, within 30 days of the date of the vacancy, the Council shall by majority vote appoint a qualified person to the office to serve the remainder of the vacant office's term."
+      ],
+      "yesMeans": [
+        "6. TOWN COUNCIL VACANCIES (Art. II, Ch. I, §3 “Vacancies”) Shall Section 2-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the Town Council, the replacement shall serve until the next scheduled General Election for the remainder of that term? If approved, Section 2-1-3 of the Westerly Town Charter would be amended as follows: Whenever a vacancy shall occur in the membership of the Council by death, removal, out of town, resignation, or by neglect or refusal to qualify, or for any other cause, the Council shall offer the right to assume the office sequentially to the first, second, or third runner up candidates from the preceding election to serve until the next scheduled General Election for the remainder of that term. If none of the three runner up candidates from the preceding election assumes the office, within 30 days of the date of the vacancy, the Council shall by majority vote appoint a qualified person to the office to serve the remainder of the vacant office's term."
+      ],
+      "noMeans": [
+        "6. TOWN COUNCIL VACANCIES (Art. II, Ch. I, §3 “Vacancies”) Shall Section 2-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the Town Council, the replacement shall serve until the next scheduled General Election for the remainder of that term? If approved, Section 2-1-3 of the Westerly Town Charter would be amended as follows: Whenever a vacancy shall occur in the membership of the Council by death, removal, out of town, resignation, or by neglect or refusal to qualify, or for any other cause, the Council shall offer the right to assume the office sequentially to the first, second, or third runner up candidates from the preceding election to serve until the next scheduled General Election for the remainder of that term. If none of the three runner up candidates from the preceding election assumes the office, within 30 days of the date of the vacancy, the Council shall by majority vote appoint a qualified person to the office to serve the remainder of the vacant office's term."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-westerly-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-4427-08df1e27c398",
+    "sourceTitle": "Westerly: 7. SCHOOL COMMITTEE",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+    "sourceFile": "../../official-samples/sources/e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f.pdf",
+    "sourceSha256": "e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f.txt",
+    "extractedTextSha256": "1e9e0a9acda2c26a267aab863be91ba1706122de4ecee165ade310484d2498cc",
+    "exactQuestion": "Shall Section 11-1-1 of the Westerly Town Charter be amended to establish that no member of the School Committee shall serve more than two consecutive terms?",
+    "officialStatement": "If approved, Section 11-1-1 of the Westerly Town Charter would be amended as follows: The School Committee shall consist of seven (7) members elected at large to serve a term of four (4) years and until each one's successor is elected and qualified. Members shall be elected in staggered fashion and no member shall serve more than two (2) consecutive terms.",
+    "fullQuestionAndExplanationBlock": "7. SCHOOL COMMITTEE (Art. XI, Ch. I, §1 “School Committee”) Shall Section 11-1-1 of the Westerly Town Charter be amended to establish that no member of the School Committee shall serve more than two consecutive terms? If approved, Section 11-1-1 of the Westerly Town Charter would be amended as follows: The School Committee shall consist of seven (7) members elected at large to serve a term of four (4) years and until each one's successor is elected and qualified. Members shall be elected in staggered fashion and no member shall serve more than two (2) consecutive terms.",
+    "excerptFile": "excerpts/b6b7d3224e36ca4b7dc23e00a176da78f6394daaee366feabfb4d2885d74c1ce.txt",
+    "excerptSha256": "b6b7d3224e36ca4b7dc23e00a176da78f6394daaee366feabfb4d2885d74c1ce",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "7. SCHOOL COMMITTEE (Art. XI, Ch. I, §1 “School Committee”) Shall Section 11-1-1 of the Westerly Town Charter be amended to establish that no member of the School Committee shall serve more than two consecutive terms? If approved, Section 11-1-1 of the Westerly Town Charter would be amended as follows: The School Committee shall consist of seven (7) members elected at large to serve a term of four (4) years and until each one's successor is elected and qualified. Members shall be elected in staggered fashion and no member shall serve more than two (2) consecutive terms."
+      ],
+      "yesMeans": [
+        "7. SCHOOL COMMITTEE (Art. XI, Ch. I, §1 “School Committee”) Shall Section 11-1-1 of the Westerly Town Charter be amended to establish that no member of the School Committee shall serve more than two consecutive terms? If approved, Section 11-1-1 of the Westerly Town Charter would be amended as follows: The School Committee shall consist of seven (7) members elected at large to serve a term of four (4) years and until each one's successor is elected and qualified. Members shall be elected in staggered fashion and no member shall serve more than two (2) consecutive terms."
+      ],
+      "noMeans": [
+        "7. SCHOOL COMMITTEE (Art. XI, Ch. I, §1 “School Committee”) Shall Section 11-1-1 of the Westerly Town Charter be amended to establish that no member of the School Committee shall serve more than two consecutive terms? If approved, Section 11-1-1 of the Westerly Town Charter would be amended as follows: The School Committee shall consist of seven (7) members elected at large to serve a term of four (4) years and until each one's successor is elected and qualified. Members shall be elected in staggered fashion and no member shall serve more than two (2) consecutive terms."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-westerly-2026:question-8",
+    "officialQuestionNumber": 8,
+    "sourceBallotItemId": "01000000-59ac-daed-5f96-08df1e27c3aa",
+    "sourceTitle": "Westerly: 8. SCHOOL COMMITTEE VACANCIES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+    "sourceFile": "../../official-samples/sources/e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f.pdf",
+    "sourceSha256": "e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f.txt",
+    "extractedTextSha256": "1e9e0a9acda2c26a267aab863be91ba1706122de4ecee165ade310484d2498cc",
+    "exactQuestion": "Shall Section 11-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the School Committee, the replacement shall serve until the next scheduled General Election for the remainder of that term?",
+    "officialStatement": "If approved, Section 11-1-3 of the Westerly Town Charter would be amended as follows: Whenever a vacancy shall occur in the membership of the School Committee by death, removal, out of town, resignation, or by neglect or refusal to qualify, or for any other cause, the Council shall offer the right to assume the office sequentially to the first, second, or third runner up candidates from the preceding election to serve until the next scheduled General Election for the remainder of that term. If none of the three runner up candidates from the preceding election assumes the office, within 30 days of the date of the vacancy, the Council shall by majority vote appoint a qualified person to the office to serve the remainder of the vacant office's term.",
+    "fullQuestionAndExplanationBlock": "8. SCHOOL COMMITTEE VACANCIES (Art. XI, Ch. I, §3 “Vacancies”) Shall Section 11-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the School Committee, the replacement shall serve until the next scheduled General Election for the remainder of that term? If approved, Section 11-1-3 of the Westerly Town Charter would be amended as follows: Whenever a vacancy shall occur in the membership of the School Committee by death, removal, out of town, resignation, or by neglect or refusal to qualify, or for any other cause, the Council shall offer the right to assume the office sequentially to the first, second, or third runner up candidates from the preceding election to serve until the next scheduled General Election for the remainder of that term. If none of the three runner up candidates from the preceding election assumes the office, within 30 days of the date of the vacancy, the Council shall by majority vote appoint a qualified person to the office to serve the remainder of the vacant office's term.",
+    "excerptFile": "excerpts/6c46b53f0763a409b3dcfa3f8692400bf4eb3d267eb7311bfdf41d4a0297ea71.txt",
+    "excerptSha256": "6c46b53f0763a409b3dcfa3f8692400bf4eb3d267eb7311bfdf41d4a0297ea71",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "8. SCHOOL COMMITTEE VACANCIES (Art. XI, Ch. I, §3 “Vacancies”) Shall Section 11-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the School Committee, the replacement shall serve until the next scheduled General Election for the remainder of that term? If approved, Section 11-1-3 of the Westerly Town Charter would be amended as follows: Whenever a vacancy shall occur in the membership of the School Committee by death, removal, out of town, resignation, or by neglect or refusal to qualify, or for any other cause, the Council shall offer the right to assume the office sequentially to the first, second, or third runner up candidates from the preceding election to serve until the next scheduled General Election for the remainder of that term. If none of the three runner up candidates from the preceding election assumes the office, within 30 days of the date of the vacancy, the Council shall by majority vote appoint a qualified person to the office to serve the remainder of the vacant office's term."
+      ],
+      "yesMeans": [
+        "8. SCHOOL COMMITTEE VACANCIES (Art. XI, Ch. I, §3 “Vacancies”) Shall Section 11-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the School Committee, the replacement shall serve until the next scheduled General Election for the remainder of that term? If approved, Section 11-1-3 of the Westerly Town Charter would be amended as follows: Whenever a vacancy shall occur in the membership of the School Committee by death, removal, out of town, resignation, or by neglect or refusal to qualify, or for any other cause, the Council shall offer the right to assume the office sequentially to the first, second, or third runner up candidates from the preceding election to serve until the next scheduled General Election for the remainder of that term. If none of the three runner up candidates from the preceding election assumes the office, within 30 days of the date of the vacancy, the Council shall by majority vote appoint a qualified person to the office to serve the remainder of the vacant office's term."
+      ],
+      "noMeans": [
+        "8. SCHOOL COMMITTEE VACANCIES (Art. XI, Ch. I, §3 “Vacancies”) Shall Section 11-1-3 of the Westerly Town Charter be amended to provide that when a vacancy occurs in the membership of the School Committee, the replacement shall serve until the next scheduled General Election for the remainder of that term? If approved, Section 11-1-3 of the Westerly Town Charter would be amended as follows: Whenever a vacancy shall occur in the membership of the School Committee by death, removal, out of town, resignation, or by neglect or refusal to qualify, or for any other cause, the Council shall offer the right to assume the office sequentially to the first, second, or third runner up candidates from the preceding election to serve until the next scheduled General Election for the remainder of that term. If none of the three runner up candidates from the preceding election assumes the office, within 30 days of the date of the vacancy, the Council shall by majority vote appoint a qualified person to the office to serve the remainder of the vacant office's term."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-westerly-2026:question-9",
+    "officialQuestionNumber": 9,
+    "sourceBallotItemId": "01000000-59ac-daed-bcc3-08df1e27c3bb",
+    "sourceTitle": "Westerly: 9. GENERAL PROVISIONS - ADOPTION OF ORDINANCES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3601.pdf",
+    "sourceFile": "../../official-samples/sources/e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f.pdf",
+    "sourceSha256": "e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/e495ff1b563dfa7126eec2bc5731c22fa6af7beb6728c5f71b2991ff3a48a57f.txt",
+    "extractedTextSha256": "1e9e0a9acda2c26a267aab863be91ba1706122de4ecee165ade310484d2498cc",
+    "exactQuestion": "Shall Section 15-2-2(b) of the Westerly Town Charter be amended to provide newspaper publication of proposed ordinances in a summary format in a newspaper of general circulation when newspaper publication is required by state law and further amended to provide for electronic notice of a proposed ordinance when newspaper publication is not required by state law?",
+    "officialStatement": "If approved, Section 15-2-2(b) of the Westerly Town Charter would be amended as follows: When newspaper publication is required by state law, the Town Clerk shall publish in a newspaper having a general circulation in the Town, a summary of the proposed ordinance which summary shall identify the section and any subsections to be adopted, repealed or amended which said publication shall contain a notice setting out the time and place for a public hearing thereon and for its consideration by the Council. The public hearing shall be at least seven days after the publication and may be held separately or in conjunction with a regular or special Council meeting and may be adjourned from time to time. When newspaper publication of a proposed ordinance is not required by state law, the Town Clerk shall make electronic public notice of the proposed ordinance in the same manner as provided for above on the Town's official website and such other available public digital platforms as may be necessary to assure public access to said electronic notice. When notice required by this section is electronic or by newspaper, said proposed ordinance shall be published on the Town's official website in the form required for final adoption at least seven days prior to the public hearing provided for herein.",
+    "fullQuestionAndExplanationBlock": "9. GENERAL PROVISIONS - ADOPTION OF ORDINANCES (Art. XV, Ch. II, §2(b) “Procedure for Adoption of Ordinances\") Shall Section 15-2-2(b) of the Westerly Town Charter be amended to provide newspaper publication of proposed ordinances in a summary format in a newspaper of general circulation when newspaper publication is required by state law and further amended to provide for electronic notice of a proposed ordinance when newspaper publication is not required by state law? If approved, Section 15-2-2(b) of the Westerly Town Charter would be amended as follows: When newspaper publication is required by state law, the Town Clerk shall publish in a newspaper having a general circulation in the Town, a summary of the proposed ordinance which summary shall identify the section and any subsections to be adopted, repealed or amended which said publication shall contain a notice setting out the time and place for a public hearing thereon and for its consideration by the Council. The public hearing shall be at least seven days after the publication and may be held separately or in conjunction with a regular or special Council meeting and may be adjourned from time to time. When newspaper publication of a proposed ordinance is not required by state law, the Town Clerk shall make electronic public notice of the proposed ordinance in the same manner as provided for above on the Town's official website and such other available public digital platforms as may be necessary to assure public access to said electronic notice. When notice required by this section is electronic or by newspaper, said proposed ordinance shall be published on the Town's official website in the form required for final adoption at least seven days prior to the public hearing provided for herein.",
+    "excerptFile": "excerpts/507855b0b27109ddc21c0adfdb9c75bcd69efb919d77ba2d4cc78521fc655763.txt",
+    "excerptSha256": "507855b0b27109ddc21c0adfdb9c75bcd69efb919d77ba2d4cc78521fc655763",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "9. GENERAL PROVISIONS - ADOPTION OF ORDINANCES (Art. XV, Ch. II, §2(b) “Procedure for Adoption of Ordinances\") Shall Section 15-2-2(b) of the Westerly Town Charter be amended to provide newspaper publication of proposed ordinances in a summary format in a newspaper of general circulation when newspaper publication is required by state law and further amended to provide for electronic notice of a proposed ordinance when newspaper publication is not required by state law? If approved, Section 15-2-2(b) of the Westerly Town Charter would be amended as follows: When newspaper publication is required by state law, the Town Clerk shall publish in a newspaper having a general circulation in the Town, a summary of the proposed ordinance which summary shall identify the section and any subsections to be adopted, repealed or amended which said publication shall contain a notice setting out the time and place for a public hearing thereon and for its consideration by the Council. The public hearing shall be at least seven days after the publication and may be held separately or in conjunction with a regular or special Council meeting and may be adjourned from time to time. When newspaper publication of a proposed ordinance is not required by state law, the Town Clerk shall make electronic public notice of the proposed ordinance in the same manner as provided for above on the Town's official website and such other available public digital platforms as may be necessary to assure public access to said electronic notice. When notice required by this section is electronic or by newspaper, said proposed ordinance shall be published on the Town's official website in the form required for final adoption at least seven days prior to the public hearing provided for herein."
+      ],
+      "yesMeans": [
+        "9. GENERAL PROVISIONS - ADOPTION OF ORDINANCES (Art. XV, Ch. II, §2(b) “Procedure for Adoption of Ordinances\") Shall Section 15-2-2(b) of the Westerly Town Charter be amended to provide newspaper publication of proposed ordinances in a summary format in a newspaper of general circulation when newspaper publication is required by state law and further amended to provide for electronic notice of a proposed ordinance when newspaper publication is not required by state law? If approved, Section 15-2-2(b) of the Westerly Town Charter would be amended as follows: When newspaper publication is required by state law, the Town Clerk shall publish in a newspaper having a general circulation in the Town, a summary of the proposed ordinance which summary shall identify the section and any subsections to be adopted, repealed or amended which said publication shall contain a notice setting out the time and place for a public hearing thereon and for its consideration by the Council. The public hearing shall be at least seven days after the publication and may be held separately or in conjunction with a regular or special Council meeting and may be adjourned from time to time. When newspaper publication of a proposed ordinance is not required by state law, the Town Clerk shall make electronic public notice of the proposed ordinance in the same manner as provided for above on the Town's official website and such other available public digital platforms as may be necessary to assure public access to said electronic notice. When notice required by this section is electronic or by newspaper, said proposed ordinance shall be published on the Town's official website in the form required for final adoption at least seven days prior to the public hearing provided for herein."
+      ],
+      "noMeans": [
+        "9. GENERAL PROVISIONS - ADOPTION OF ORDINANCES (Art. XV, Ch. II, §2(b) “Procedure for Adoption of Ordinances\") Shall Section 15-2-2(b) of the Westerly Town Charter be amended to provide newspaper publication of proposed ordinances in a summary format in a newspaper of general circulation when newspaper publication is required by state law and further amended to provide for electronic notice of a proposed ordinance when newspaper publication is not required by state law? If approved, Section 15-2-2(b) of the Westerly Town Charter would be amended as follows: When newspaper publication is required by state law, the Town Clerk shall publish in a newspaper having a general circulation in the Town, a summary of the proposed ordinance which summary shall identify the section and any subsections to be adopted, repealed or amended which said publication shall contain a notice setting out the time and place for a public hearing thereon and for its consideration by the Council. The public hearing shall be at least seven days after the publication and may be held separately or in conjunction with a regular or special Council meeting and may be adjourned from time to time. When newspaper publication of a proposed ordinance is not required by state law, the Town Clerk shall make electronic public notice of the proposed ordinance in the same manner as provided for above on the Town's official website and such other available public digital platforms as may be necessary to assure public access to said electronic notice. When notice required by this section is electronic or by newspaper, said proposed ordinance shall be published on the Town's official website in the form required for final adoption at least seven days prior to the public hearing provided for herein."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

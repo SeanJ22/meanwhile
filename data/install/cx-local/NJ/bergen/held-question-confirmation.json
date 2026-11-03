@@ -1,0 +1,59 @@
+{
+  "kind": "SOURCE_CONFIRMATION_ONLY_OUTSIDE_CHANGED_INPUT",
+  "checkedAt": "2026-11-03T06:49:36.204832+00:00",
+  "upstreamReference": "92b249b5ed11d6a9d39a227ca5cbc0b569860005",
+  "upstreamPath": "data/install/cx-votes/NJ/explainer-expansion/park-ridge-warren-supplement/ballot-input/nj.json",
+  "upstreamInputSha256": "c76049e53d96ef79104d2f1825a49e0d222810f26a799866a537820e5c39d5b6",
+  "upstreamPreparedContest": {
+    "id": "nj-bergen-2026:park-ridge-question",
+    "electionId": "nj-2026-11-03",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:park_ridge_borough",
+    "divisionVintage": "2023",
+    "title": "Park Ridge open space trust fund continuation",
+    "type": "MEASURE",
+    "voteFor": 1,
+    "termYears": null,
+    "scopeNote": null,
+    "measureTextUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+    "provenance": {
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+      "sourceOrg": "Bergen County Clerk \u2014 official Park Ridge general-election sample ballot",
+      "collectedAt": "2026-11-03T05:07:25.779352+00:00",
+      "verifiedAt": "2026-11-03T05:22:25.880652+00:00",
+      "quote": "Shall the Borough of Park Ridge continue the Open Space, Recreation and Historic Preservation Trust Fund to preserve the character of Park Ridge, through an annual levy of up to 0.007 per $100 of assessed valuation of real property for the purposes of protecting drinking water supplies and water quality in ponds and streams; conserving natural areas; developing, maintaining and acquiring lands for recreation and conservation, including the improvement of recreational facilities; and preserving and acquiring historic properties, with spending based on recommendations of a citizens oversight committee and all funds subject to annual audit."
+    }
+  },
+  "upstreamPreparedQuestion": {
+    "id": "nj-bergen-2026:park-ridge-question#question",
+    "contestId": "nj-bergen-2026:park-ridge-question",
+    "questionText": "Shall the Borough of Park Ridge continue the Open Space, Recreation and Historic Preservation Trust Fund to preserve the character of Park Ridge, through an annual levy of up to 0.007 per $100 of assessed valuation of real property for the purposes of protecting drinking water supplies and water quality in ponds and streams; conserving natural areas; developing, maintaining and acquiring lands for recreation and conservation, including the improvement of recreational facilities; and preserving and acquiring historic properties, with spending based on recommendations of a citizens oversight committee and all funds subject to annual audit.",
+    "officialStatement": "This binding referendum will authorize the maintaining and continuing of the existing Municipal Open Space Trust Fund. The Municipal Open Space Trust Fund was previously approved by the voters of the Borough of Park Ridge on November 2, 2021, and therefore the approval of this referendum would not create a new tax burden on the residents of Park Ridge but simply continue and extend the previously approved Municipal Open Space Tax. This will permit Park Ridge to continue its Open Space, Recreation and Historic Preservation Trust Fund with an annual levy of up to 0.007 cents per $100 of assessed real property value. The average owner would pay $33 per year, or approximately $2.75 per month, ensuring continued support for the Municipal Open Space Trust Fund and the community projects it finances, unless Park Ridge voters choose to modify or repeal the fund through a future referendum. Funds can be used only for the development, maintenance, and acquisition of lands for recreation and land and water conservation purposes, and historic preservation. An oversight committee of local citizens will continue to advise the Borough on how funds should be spent. Every year there would be a public audit of all expenditures. The funds would enable Park Ridge to leverage matching grants from the county and state.",
+    "provenance": {
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+      "sourceOrg": "Bergen County Clerk \u2014 official Park Ridge general-election sample ballot",
+      "collectedAt": "2026-11-03T05:07:25.779352+00:00",
+      "verifiedAt": "2026-11-03T05:22:25.880652+00:00",
+      "quote": "Shall the Borough of Park Ridge continue the Open Space, Recreation and Historic Preservation Trust Fund to preserve the character of Park Ridge, through an annual levy of up to 0.007 per $100 of assessed valuation of real property for the purposes of protecting drinking water supplies and water quality in ponds and streams; conserving natural areas; developing, maintaining and acquiring lands for recreation and conservation, including the improvement of recreational facilities; and preserving and acquiring historic properties, with spending based on recommendations of a citizens oversight committee and all funds subject to annual audit."
+    }
+  },
+  "localSampleConfirmation": {
+    "id": "nj-cx-local-2026-bergen-park-ridge-open-space-trust-fund#question",
+    "contestId": "nj-cx-local-2026-bergen-park-ridge-open-space-trust-fund",
+    "questionText": "Shall the Borough of Park Ridge continue the Open Space, Recreation and Historic Preservation Trust Fund to preserve the character of Park Ridge, through an annual levy of up to 0.007 per $100 of assessed valuation of real property for the purposes of protecting drinking water supplies and water quality in ponds and streams; conserving natural areas; developing, maintaining and acquiring lands for recreation and conservation, including the improvement of recreational facilities; and preserving and acquiring historic properties, with spending based on recommendations of a citizens oversight committee and all funds subject to annual audit.",
+    "officialStatement": "This binding referendum will authorize the maintaining and continuing of the existing Municipal Open Space Trust Fund. The Municipal Open Space Trust Fund was previously approved by the voters of the Borough of Park Ridge on November 2, 2021, and therefore the approval of this referendum would not create a new tax burden on the residents of Park Ridge but simply continue and extend the previously approved Municipal Open Space Tax. This will permit Park Ridge to continue its Open Space, Recreation and Historic Preservation Trust Fund with an annual levy of up to 0.007 cents per $100 of assessed real property value. The average owner would pay $33 per year, or approximately $2.75 per month, ensuring continued support for the Municipal Open Space Trust Fund and the community projects it finances, unless Park Ridge voters choose to modify or repeal the fund through a future referendum. Funds can be used only for the development, maintenance, and acquisition of lands for recreation and land and water conservation purposes, and historic preservation. An oversight committee of local citizens will continue to advise the Borough on how funds should be spent. Every year there would be a public audit of all expenditures. The funds would enable Park Ridge to leverage matching grants from the county and state.",
+    "choices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+      "sourceOrg": "Bergen County Clerk, Election Division",
+      "collectedAt": "2026-11-03T06:00:56.263367+00:00",
+      "verifiedAt": "2026-11-03T06:00:56.263367+00:00",
+      "quote": "PARK RIDGE OPEN SPACE TRUST FUND\n \nShall the Borough of Park Ridge continue the Open Space, Recreation and Historic Preservation Trust \nFund to preserve the character of Park Ridge, through an annual levy of up to 0.007 per $100 of assessed \nvaluation of real property for the purposes of protecting drinking water supplies and water quality in ponds \nand streams; conserving natural areas; developing, maintaining and acquiring lands for recreation and \nconservation, including the improvement of recreational facilities; and preserving and acquiring historic \nproperties, with spending based on recommendations of a citizens oversight committee and all funds subject \nto annual audit. \nINTERPRETIVE STATEMENT\n \nThis binding referendum will authorize the maintaining and continuing of the existing Municipal Open Space \nTrust Fund. The Municipal Open Space Trust Fund was previously approved by the voters of the Borough of Park \nRidge on November 2, 2021, and therefore the approval of this referendum would not create a new tax burden on \nthe residents of Park Ridge but simply continue and extend the previously approved Municipal Open Space Tax. \nThis will permit Park Ridge to continue its Open Space, Recreation and Historic Preservation Trust Fund with an \nannual levy of up to 0.007 cents per $100 of assessed real property value. The average owner would pay $33 per \nyear, or approximately $2.75 per month, ensuring continued support for the Municipal Open Space Trust Fund and \nthe community projects it finances, unless Park Ridge voters choose to modify or repeal the fund through a future \nreferendum. Funds can be used only for the development, maintenance, and acquisition of lands for recreation \nand land and water conservation purposes, and historic preservation. An oversight committee of local citizens \nwill continue to advise the Borough on how funds should be spent. Every year there would be a public audit of all \nexpenditures. The funds would enable Park Ridge to leverage matching grants from the county and state."
+    }
+  },
+  "supersededLocalProposedId": "nj-cx-local-2026-bergen-park-ridge-open-space-trust-fund",
+  "disposition": "Same exact official question/election/electorate is now prepared in CX-VOTES. Leave it outside incoming changed IDs to preserve the latest held explanation. No candidate identity or fact changed.",
+  "riverDependency": "Do not install the superseded local proposed question ID from earlier revision. If any version is already held, resolve to its existing identity while preserving its explanation; CX-LOCAL performs no deletion, identity migration or installation."
+}

@@ -21,9 +21,9 @@
     "municipalNamedFields": 89,
     "namedCandidates": 502,
     "heldNoNamedFields": 2,
-    "newMeasureFields": 1,
-    "unchangedPreparedMeasureConfirmations": 6,
-    "newContests": 181,
+    "newMeasureFields": 0,
+    "unchangedPreparedMeasureConfirmations": 7,
+    "newContests": 180,
     "refreshedContests": 0,
     "preciseUnmatchedWardIds": 2,
     "namedWriteInsEstablished": 0,
@@ -1304,7 +1304,7 @@
     "schools": "62 exact existing local school district IDs including held fields;18 regional constituent contests use exact electing municipality IDs rather than the full regional district. Distinct full/unexpired terms remain separate.",
     "municipal": "89 complete actual named municipal fields. Englewood Council Ward2/4 are precise source-labelled ward IDs with current-linked image-only boundary descriptions/map; registry joins remain pending.",
     "judicial": "Only actual printed elected Surrogate included; no appointed or non-November judge contests invented.",
-    "questions": "Six CX-VOTES prepared Bergen questions/explainers preserved unchanged outside incoming IDs; exact new Park Ridge open-space continuation question and official statement included.",
+    "questions": "All seven CX-VOTES prepared Bergen questions/explainers, including the exact Park Ridge open-space continuation, stay outside changed input IDs. Official Park Ridge text is retained as source confirmation in held-question-confirmation.json.",
     "writeInsAndStatuses": "Generic Personal Choice/NO NOMINATION MADE/NO PETITION FILED spaces excluded from people. Final named-write-in certification and cancelled-office inventory not established, so no zero-write-in or countywide absence claim.",
     "extraction": "Exact nativePDF raw hashes plus separate geometric reading-order/native-text hashes. Every surname-font span assigned once and every local named set independently agrees with the official-linked expressly unofficial roster. Representative visual checks only; no blanket74-page visual claim."
   },
@@ -1314,7 +1314,7 @@
     "identityReuse": "No equivalent prior Bergen candidacy contests found; existing exact geographic IDs reused. See held-and-origin-comparison.json."
   },
   "validation": {
-    "sourceHashesAndQuotes": "PASS: 82 captured sources and 686 exact saved-source quotes",
+    "sourceHashesAndQuotes": "PASS: 82 captured sources and 684 exact saved-source quotes",
     "focusedChecks": "PASS:3367 checks including all480 complete source fields, exact names/parties/voting limits, all74 style inventories and62 local school district identities",
     "genericBallotProblems": "PASS",
     "BallotContestMerge": "PASS",
@@ -1343,5 +1343,7 @@
     "validation.json",
     "review.md",
     "native-extraction-audit.json"
-  ]
+  ],
+  "sourceInputSha256": "b42e7c545f8774f4d7e57633dc463cda3fa56565e4075635cb33fb5db427ea84",
+  "existingCxVotesQuestionConfirmation": "held-question-confirmation.json"
 }

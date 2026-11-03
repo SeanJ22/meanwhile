@@ -1,0 +1,41 @@
+[
+  {
+    "sourceUrl": "https://storage.googleapis.com/juniper-media-library/550/2026/11/11-3-26SampleBallot.pdf",
+    "sourceFile": "sources/ef2f8dc4acc9d8a1b2298c112ce143e698bcb441dacd17ff9e0561cd48c54881.pdf",
+    "sourceEncoding": "identity",
+    "rawHash": "ef2f8dc4acc9d8a1b2298c112ce143e698bcb441dacd17ff9e0561cd48c54881",
+    "rawBytes": 1303901,
+    "storedHash": "ef2f8dc4acc9d8a1b2298c112ce143e698bcb441dacd17ff9e0561cd48c54881",
+    "storedBytes": 1303901,
+    "retrievedAt": "2026-11-03T07:12:56.368672+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  },
+  {
+    "sourceUrl": "https://www.co.juneau.wi.gov/departments/county_clerk/municipalities/index.php",
+    "sourceFile": "sources/744d6af6a69f4d7d46a6e54b8a94e93df5a6d7f5483da2b895bb4470c86a6453.html.gz",
+    "sourceEncoding": "gzip",
+    "rawHash": "744d6af6a69f4d7d46a6e54b8a94e93df5a6d7f5483da2b895bb4470c86a6453",
+    "rawBytes": 216272,
+    "storedHash": "dab1edb9e260b71ff628b8fc3b3cb47f94f1b32ac60248c40f0bab05e9916f14",
+    "storedBytes": 17790,
+    "retrievedAt": "2026-11-03T07:12:56.523418+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  },
+  {
+    "sourceUrl": "https://wonewocwisc.com/news-and-notices/notice-of-general-election-and-sample-ballots-november-3-2026-3",
+    "sourceFile": "sources/d15a413685c0651e21e103f3cd5b35bdffcd40a3621af4e350c379d76554c42b.html",
+    "sourceEncoding": "identity",
+    "rawHash": "d15a413685c0651e21e103f3cd5b35bdffcd40a3621af4e350c379d76554c42b",
+    "rawBytes": 28101,
+    "storedHash": "d15a413685c0651e21e103f3cd5b35bdffcd40a3621af4e350c379d76554c42b",
+    "storedBytes": 28101,
+    "retrievedAt": "2026-11-03T07:12:20.688277+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "Exact native original public HTTP response bytes"
+  }
+]

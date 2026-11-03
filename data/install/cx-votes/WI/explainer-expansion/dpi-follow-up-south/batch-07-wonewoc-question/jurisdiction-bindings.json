@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4381",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:wonewoc_union_center_school_district",
+      "unsd",
+      "5517130",
+      "Wonewoc-Union Center School District"
+    ],
+    "sourceAgencyCode": "6713",
+    "sourceAgencyName": "Wonewoc-Union Center School District (6713)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-6713",
+      "nces_leaid": "5517130",
+      "lea_name": "Wonewoc-Union Center School District",
+      "website": "http://www.wc.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  }
+]

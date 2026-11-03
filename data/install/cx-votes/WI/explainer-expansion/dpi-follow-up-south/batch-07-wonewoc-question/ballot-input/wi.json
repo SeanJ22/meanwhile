@@ -1,0 +1,109 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-dpi-2026-referendum-4381",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:wonewoc_union_center_school_district",
+          "divisionVintage": "2026",
+          "title": "Wonewoc-Union Center School District — Four-year operating revenue-limit increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://storage.googleapis.com/juniper-media-library/550/2026/11/11-3-26SampleBallot.pdf",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T07:15:42.785536+00:00",
+            "quote": "To exceed the revenue limit by $500,000 per year for four years for non-recurring purposes"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-dpi-2026-referendum-4381:measure",
+          "contestId": "wi-dpi-2026-referendum-4381",
+          "questionText": "Shall the School District of Wonewoc and Union Center, Sauk, Juneau and Richland Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+          "officialStatement": "To exceed the revenue limit by $500,000 per year for four years for non-recurring purposes",
+          "provenance": {
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/550/2026/11/11-3-26SampleBallot.pdf",
+            "sourceOrg": "Village of Wonewoc Clerk, official referendum sample ballot",
+            "collectedAt": "2026-11-03T07:12:56.368672+00:00",
+            "verifiedAt": "2026-11-03T07:15:42.785536+00:00",
+            "quote": "Shall the School District of Wonewoc and Union Center, Sauk, Juneau and Richland Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-dpi-2026-referendum-4381",
+          "whatItDoes": "Allow the district to exceed its state revenue limit by $500,000 a year for four school years, 2027–28 through 2030–31, for operating and maintenance expenses. The increase would be temporary.",
+          "yesMeans": "Approve the temporary $500,000 yearly revenue-limit increase for those four years and purposes.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://storage.googleapis.com/juniper-media-library/550/2026/11/11-3-26SampleBallot.pdf",
+          "sourceHash": "ef2f8dc4acc9d8a1b2298c112ce143e698bcb441dacd17ff9e0561cd48c54881",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:15:42.785536+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:15:42.785536+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "finalUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+        "httpStatus": 200,
+        "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+        "publisher": "Wisconsin Department of Public Instruction",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public official report API used by the current state SchoolDistrictReferendaReport UI. Exact Nov3 date filter;79rows equals Total79, all BeforeVoteDate. Only literal full ballot questions are included; board resolutions and abbreviated summaries remain acquisition work. District identities, amounts, periods, recurring/nonrecurring distinction and purposes checked."
+      },
+      {
+        "requestedUrl": "https://storage.googleapis.com/juniper-media-library/550/2026/11/11-3-26SampleBallot.pdf",
+        "finalUrl": "https://storage.googleapis.com/juniper-media-library/550/2026/11/11-3-26SampleBallot.pdf",
+        "publisher": "Village of Wonewoc Clerk, official referendum sample ballot",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:12:56.368672+00:00",
+        "httpStatus": 200,
+        "rawHash": "ef2f8dc4acc9d8a1b2298c112ce143e698bcb441dacd17ff9e0561cd48c54881",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.co.juneau.wi.gov/departments/county_clerk/municipalities/index.php",
+        "finalUrl": "https://www.co.juneau.wi.gov/departments/county_clerk/municipalities/index.php",
+        "publisher": "Juneau County Clerk",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T07:12:56.523418+00:00",
+        "httpStatus": 200,
+        "rawHash": "744d6af6a69f4d7d46a6e54b8a94e93df5a6d7f5483da2b895bb4470c86a6453",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://wonewocwisc.com/news-and-notices/notice-of-general-election-and-sample-ballots-november-3-2026-3",
+        "finalUrl": "https://wonewocwisc.com/news-and-notices/notice-of-general-election-and-sample-ballots-november-3-2026-3/",
+        "publisher": "Village of Wonewoc Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:12:20.688277+00:00",
+        "httpStatus": 200,
+        "rawHash": "d15a413685c0651e21e103f3cd5b35bdffcd40a3621af4e350c379d76554c42b",
+        "reviewedEvidence": "Exact native public official village election notice HTML directly links original sample ballot PDF; native JuneauCounty.gov municipality directory links this same village host. Original bytes/hash and recursive authority proof retained."
+      }
+    ]
+  }
+}

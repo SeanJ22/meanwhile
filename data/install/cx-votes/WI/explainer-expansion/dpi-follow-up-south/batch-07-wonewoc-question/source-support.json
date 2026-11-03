@@ -1,0 +1,42 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4381",
+    "sourceIndex": 78,
+    "agencyCode": "6713",
+    "reportedReferendumId": 4381,
+    "sourceUrl": "https://storage.googleapis.com/juniper-media-library/550/2026/11/11-3-26SampleBallot.pdf",
+    "rawHash": "ef2f8dc4acc9d8a1b2298c112ce143e698bcb441dacd17ff9e0561cd48c54881",
+    "sourceFile": "sources/ef2f8dc4acc9d8a1b2298c112ce143e698bcb441dacd17ff9e0561cd48c54881.pdf",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T07:12:56.368672+00:00",
+    "exactQuestion": "Shall the School District of Wonewoc and Union Center, Sauk, Juneau and Richland Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+    "questionExtraction": "Exact full question manually transcribed and visually verified from original native November3,2026 VillageofWonewoc ballot page2; local OCR used only as a transcription aid. Layout whitespace normalized only; literal official spelling Statutes retained, rather than the Statues typo in secondary reports.",
+    "excerptFile": "sources/87cfbbad0e1314009aaaed9f1fb34e26904c209a23140198f40b6c5c6cd932c3.txt",
+    "excerptSha256": "87cfbbad0e1314009aaaed9f1fb34e26904c209a23140198f40b6c5c6cd932c3",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 78,
+      "FullDescription": "To exceed the revenue limit by $500,000 per year for four years for non-recurring purposes"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Wonewoc and Union Center, Sauk, Juneau and Richland Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Wonewoc and Union Center, Sauk, Juneau and Richland Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the School District of Wonewoc and Union Center, Sauk, Juneau and Richland Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  }
+]

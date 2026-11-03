@@ -1,0 +1,17 @@
+[
+  {
+    "sourceUrl": "https://storage.googleapis.com/juniper-media-library/550/2026/11/11-3-26SampleBallot.pdf",
+    "authorityKind": "RECURSIVE_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://wonewocwisc.com/news-and-notices/notice-of-general-election-and-sample-ballots-november-3-2026-3/",
+      "sourceFile": "sources/d15a413685c0651e21e103f3cd5b35bdffcd40a3621af4e350c379d76554c42b.html",
+      "rawHash": "d15a413685c0651e21e103f3cd5b35bdffcd40a3621af4e350c379d76554c42b",
+      "linkingPage": {
+        "url": "https://www.co.juneau.wi.gov/departments/county_clerk/municipalities/index.php",
+        "sourceFile": "sources/744d6af6a69f4d7d46a6e54b8a94e93df5a6d7f5483da2b895bb4470c86a6453.html.gz",
+        "rawHash": "744d6af6a69f4d7d46a6e54b8a94e93df5a6d7f5483da2b895bb4470c86a6453"
+      }
+    },
+    "basis": "Native JuneauCounty.gov municipalities directory explicitly identifies VillageofWonewoc official website. Native VillageofWonewoc current election notice directly publishes exact original ballot PDF. Both original linking HTML captures retained; existing isOfficialSource recursive linking-page check applies without app change."
+  }
+]

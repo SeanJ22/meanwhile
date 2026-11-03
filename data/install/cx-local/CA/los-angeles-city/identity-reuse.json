@@ -1,0 +1,347 @@
+{
+  "laneInputs": [
+    {
+      "path": "data/install/cx-local/CA/alameda/ballot-input/ca.json",
+      "sha256": "52121dc3222a52a280208a7421806c57c48fee4738b273a4f230e3d916390587",
+      "contests": 95
+    },
+    {
+      "path": "data/install/cx-local/CA/contra-costa/ballot-input/ca.json",
+      "sha256": "223161a10ec755119dfbddc5367ad7fcd7311133cc9ac76db4013e5b3bf8c32d",
+      "contests": 71
+    },
+    {
+      "path": "data/install/cx-local/CA/fresno/ballot-input/ca.json",
+      "sha256": "f3c8eb8fad059a8d25de48bc1b611f74fecb00e79cf022f55b5fde2ccaf75360",
+      "contests": 81
+    },
+    {
+      "path": "data/install/cx-local/CA/kern/ballot-input/ca.json",
+      "sha256": "eb5576c4ab3b3c0c7f6538c61fbf7735ae683cdf4ea5a12a5f5bfc904bea5108",
+      "contests": 88
+    },
+    {
+      "path": "data/install/cx-local/CA/los-angeles/ballot-input/ca.json",
+      "sha256": "fb6dfbe9622ea91930e344cda462de383b8236f59345c1de4488c5234d7318f8",
+      "contests": 246
+    },
+    {
+      "path": "data/install/cx-local/CA/orange/ballot-input/ca.json",
+      "sha256": "d5b4fe05c314bb114d2e437b00d3049c2ea839d112dfce2950a4283fad86877c",
+      "contests": 138
+    },
+    {
+      "path": "data/install/cx-local/CA/riverside/ballot-input/ca.json",
+      "sha256": "35f2415ce2ce16c892673c0f057d65b4cadab1991e9a842c919252a219c77fe3",
+      "contests": 7
+    },
+    {
+      "path": "data/install/cx-local/CA/sacramento/ballot-input/ca.json",
+      "sha256": "8e80520c0cc751539bd563ee061508848e3b27daf3853b6593b8510a744d0ab7",
+      "contests": 68
+    },
+    {
+      "path": "data/install/cx-local/CA/san-bernardino/ballot-input/ca.json",
+      "sha256": "1f22d3116e25c5fdaaff82e93b6d87583fbff764cef89bbe3fca2298e54d0ed4",
+      "contests": 135
+    },
+    {
+      "path": "data/install/cx-local/CA/san-diego/ballot-input/ca.json",
+      "sha256": "53e5dbb4e0bcb8ce84e1131e3c6af9a9dc36bb0b22d1e2c09c9c149b1ff375c2",
+      "contests": 144
+    },
+    {
+      "path": "data/install/cx-local/CA/san-francisco/ballot-input/ca.json",
+      "sha256": "d74fd7237a9376b96f483a368439ebb886e58f4b1930127dabd6fac5f6b00caa",
+      "contests": 24
+    },
+    {
+      "path": "data/install/cx-local/CA/san-joaquin/ballot-input/ca.json",
+      "sha256": "4c03b58c6775f52fbd0efde8cc2fa9c4adad58c770596943cca5dc74cd9ff462",
+      "contests": 46
+    },
+    {
+      "path": "data/install/cx-local/CA/san-mateo/ballot-input/ca.json",
+      "sha256": "617cb4e973c6dd402ef3e5e2765e65d2594fc0b3d106bcf141b3f114f0c5fc90",
+      "contests": 75
+    },
+    {
+      "path": "data/install/cx-local/CA/santa-clara/ballot-input/ca.json",
+      "sha256": "948e34f11ad31707cd59ad5953f73aab517ae279da0c6c712c952083c8406c92",
+      "contests": 73
+    },
+    {
+      "path": "data/install/cx-local/CA/ventura/ballot-input/ca.json",
+      "sha256": "d22a639d37c86d0718648128691e22f660a2ab035522cc042fc358c0ff5ee50f",
+      "contests": 62
+    }
+  ],
+  "cxVotesRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+  "cxVotesFiles": [
+    {
+      "sourcePath": "data/install/cx-votes/CA/ballot-input/ca.json",
+      "sha256": "ae6c7576a32a0dbb31153eb188aface32706e45300bd5b015ab149f85c480e5b",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/alameda-city/ballot-input/ca.json",
+      "sha256": "f3b276c2a42f7f60f182ba3415dcc503b9b842212f6dac19c5ac1aaf86082daa",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/alameda-four-cities/ballot-input/ca.json",
+      "sha256": "25bd2a8267e376ae0dd49526a35bc7eb6c2d7c38ea7a5f981491270b7d0214b1",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/alameda-schools/ballot-input/ca.json",
+      "sha256": "2a50af9d81ff6b40a1440cff884aacff991e04d040a6eedfa0871fffe9978c98",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/albany/ballot-input/ca.json",
+      "sha256": "86a0634b5d16029a8bb48a439e9688334e3eca1cffe08c2871d68be265ac49b5",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/berkeley-first/ballot-input/ca.json",
+      "sha256": "d2a46a7ab63a00ea85f28d2bd55820e8ea606a254d7714275c92e9ad91faffde",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/berkeley-second/ballot-input/ca.json",
+      "sha256": "6c3f42727cc12f13c2d286d95ca7fbb655ba0ba6c1b7a0bb9d1ed7c694787379",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/berkeley-y/ballot-input/ca.json",
+      "sha256": "50ee4f10e829f31a9c6819426c4e56627b2e3ddbc6f39445030b4f150e98f856",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/coronado/ballot-input/ca.json",
+      "sha256": "fc41fdda87b636ea1eb8a902fabac5233359ae130ec1a5d18f3e8acdbca82b57",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/emeryville/ballot-input/ca.json",
+      "sha256": "c1213003c7430d9f534ea49b2d127375b024aed79649830510abbfe11d1db856",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/fresno-city-d/ballot-input/ca.json",
+      "sha256": "1cc238388a47841ecf5774577714a4256ff07360b7d4e37bcb7132cae040381a",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/fresno-coalinga-j/ballot-input/ca.json",
+      "sha256": "e3048a14816ef627ac21675a36b6f7f7a86aa09a5c29d92cf281da3c6fd2b905",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/fresno-county-a/ballot-input/ca.json",
+      "sha256": "449e80f5ade17fe82bafd73c4d16e0dc4021378c493bde7e1408e26c3af5ca50",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/fresno-firebaugh-f/ballot-input/ca.json",
+      "sha256": "4a5f9c194896b573ed5cac9ff5827fa02f6cf0b0ba58820fdf44c1fd565ac1c6",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/fresno-fowler-t/ballot-input/ca.json",
+      "sha256": "d73d1b85492330f9fac6156b11d77f877d475fc2149d9cbd3fa71672f646abe1",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/fresno-orange-cove-o/ballot-input/ca.json",
+      "sha256": "1567f3e45f81076a9096192e205a28fdcb12ffb3389d0982dd8b7f270e3179bc",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/fresno-sanger-b/ballot-input/ca.json",
+      "sha256": "c9576f31b7ce9185c82d88026afa433e66fc1c6701a22198e2136aac48cdac8c",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/fresno-transport-s/ballot-input/ca.json",
+      "sha256": "847589676823744aa422b8633c1c9c993bab0272b8795623cec570a333ef093e",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/grossmont-college/ballot-input/ca.json",
+      "sha256": "81b696139888b2f166a7a9b3f41d7a231936de3031570c3054026f170290cc0d",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/hayward/ballot-input/ca.json",
+      "sha256": "1bb1ce70318c8a00ed0ea0635f55e7a7d4a9dd008095016c2dc39423b37ba97d",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/lemon-grove/ballot-input/ca.json",
+      "sha256": "ce94dd510d645d4379739df961515d55ed80b0279b8d89ddc6d450af20f62885",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/los-angeles-schools/ballot-input/ca.json",
+      "sha256": "4577e4592cb2adae1dfcae03f97cdeffc71e38329319798792a1ca1d4fafd6a0",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/marin-college-ab/ballot-input/ca.json",
+      "sha256": "21c2ceb63720bd097b6bd843f2f58453efd1570c7b0a08bd4ee8695ffa9e38ab",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/marin-county-p/ballot-input/ca.json",
+      "sha256": "e2f7a424f103d4efe086f8f9eae7e18ab92ca0b6ad17c01ebff47c63c6845d86",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/marin-healthcare-cc/ballot-input/ca.json",
+      "sha256": "0a0fd8b5f75b4cf91acbc2f8890649fbf92c133fc8b088212285e5e2bfba5483",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/marin-qrs/ballot-input/ca.json",
+      "sha256": "ae7bbca65f1ca7c09e10e30f6fef0377b5e5e3f0df211c005b6a3ba187e23cdc",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/marin-road-ff/ballot-input/ca.json",
+      "sha256": "6d86b2b8ef777a7accc39d6b76de8684a202e9e851e75496e4a42aecb4bf7d42",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/marin-schools-no/ballot-input/ca.json",
+      "sha256": "4add66cb7068e1ac44a576fee9547c0d35f4911311c668b90dc1fbc450b63521",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/marin-special-six/ballot-input/ca.json",
+      "sha256": "ab51a2edb9d100021a82299e66b6f5863f78d94028d97e2d4d0add2003327081",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/marin-tx/ballot-input/ca.json",
+      "sha256": "f564e84853a061da4a46a10202067f0f15eaaca9c09ac9220a96136c4c0d4988",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/marin-uvw/ballot-input/ca.json",
+      "sha256": "c68b69b993b9bc9f7772d692c5d4324cf6aa83ec27962fb22eeeb3899c8e16ce",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/newark/ballot-input/ca.json",
+      "sha256": "a4db7fe7053e0d8c689cd31880b31d60aaae5f3f8362c1f9321ee8781e0a3574",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/oakland-ee/ballot-input/ca.json",
+      "sha256": "96fa50b6328aaf8558c8114c0bf15e31c409daf67f27c1148fa7c1933b53f940",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/oceanside-fallbrook/ballot-input/ca.json",
+      "sha256": "ff8c388616ca570d3e8d0b8f38a1c977aa544654f106f0528b3d0444c5164b8d",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/orange/ballot-input/ca.json",
+      "sha256": "accaad297537029f2d2e796c35afa70fb583f2cf5c89c4cb9c94bed5dacaa177",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/sacramento/ballot-input/ca.json",
+      "sha256": "064f548b01313966acff605eff79c3663fb01f52c801e909ae86eaa19fc8d944",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/san-bernardino/ballot-input/ca.json",
+      "sha256": "fdc4474eaaa0caa4f5291b16b77a43fd326048024198cb82c04806b27406a558",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/san-diego-county-charter/ballot-input/ca.json",
+      "sha256": "ead58bf3a1311918c19f9837b0057f840e4a3e3ead598fb8cc0a8ed7e05e02b5",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/san-diego-county-health/ballot-input/ca.json",
+      "sha256": "ba818c302a184de2cef7645bcb3b7e4fee34f3128292b2703dce80113a5be848",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/san-diego-schools/ballot-input/ca.json",
+      "sha256": "ec69b804e97741f51bb7c58b05c54a712f87910f48811b0776b5d29d2400d59e",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/san-luis-obispo/ballot-input/ca.json",
+      "sha256": "0b6c988430914a31d50c9b5c0828b629650188e68d5491369d7305b3c2cc08fa",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/san-mateo/ballot-input/ca.json",
+      "sha256": "3713489f778af00dd49f0687c1d8f01a350ca094fdf21347282acd6da69b068a",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/santa-clara-ab/ballot-input/ca.json",
+      "sha256": "6ddaf136efe4d18aaf586d7bce64513fe74d4e5e860674878adaaadd4ad069ca",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/santa-clara-cghi/ballot-input/ca.json",
+      "sha256": "c90a0e8017cbe37c2e100dce8927472fa10deaa0008b85e0708145928126c285",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/santa-clara-dl/ballot-input/ca.json",
+      "sha256": "66b83f66ca38b18fa196073177b523ad8989d370cc511a38a63cc47148b15b6e",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/santa-clara-efj/ballot-input/ca.json",
+      "sha256": "09ec81a736f31c49474683422402cfaa9b80810aafbc511f34ad70c573a03284",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/santa-clara-k/ballot-input/ca.json",
+      "sha256": "f660efc48817b0fa38cad7cab4afbfbc73489f46d461ee1893462878ab2cf340",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/santa-clara-q/ballot-input/ca.json",
+      "sha256": "95e04e81137132b14ef512dd9c74956c83264ef46604f88b874d363248ada232",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/santa-clara-s/ballot-input/ca.json",
+      "sha256": "19f0e5b0b05c9ad822f14e2f092ccdacb138faf617a56aea76ba204b1bfefc35",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/santa-clara-schools-mnopr/ballot-input/ca.json",
+      "sha256": "8d4888b963c9d1897d2b33da6022a1ec6e7d8798d90cb8504a9483858fe3d729",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/santee-city/ballot-input/ca.json",
+      "sha256": "bd2f304bc31fbf9f13e6ea1173d99f8561df375c983921fa6dd65020421a0a60",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/solana-beach/ballot-input/ca.json",
+      "sha256": "d7d699cca85fb275a00c3564a45532a588ec49e065730c309f670bf05a64bea7",
+      "relatedSCrecords": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CA/explainer-expansion/solano/ballot-input/ca.json",
+      "sha256": "a6387cbabdb660ddb5ea0bf3212877cf8d113164c82a963b0b419777da300bf9",
+      "relatedSCrecords": []
+    }
+  ]
+}

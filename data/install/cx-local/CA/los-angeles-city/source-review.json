@@ -1,0 +1,339 @@
+{
+  "kind": "CX_LOCAL_BALLOT_SOURCE_REVIEW",
+  "status": "SOURCE_REVIEW_NO_CANDIDATE_WRITE",
+  "jurisdictionType": "CITY",
+  "state": "CA",
+  "city": "Los Angeles",
+  "cityFips": "0644000",
+  "cityPopulationRank": 2,
+  "cityPopulation": 3869089,
+  "populationYear": 2025,
+  "electionDate": "2026-11-03",
+  "reviewedMunicipalFields": 4,
+  "reviewedMunicipalNames": 8,
+  "reviewedRelatedFields": 12,
+  "reviewedRelatedNames": 34,
+  "candidateFields": [
+    {
+      "contestId": "ca-ba01-la-10767",
+      "title": "Los Angeles — Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:los_angeles",
+      "voteFor": 1,
+      "namedChoices": [
+        {
+          "id": "ca-ba01-la-10767:3355405c73dd805b",
+          "name": "KAREN RUTH BASS"
+        },
+        {
+          "id": "ca-ba01-la-10767:cf448dfe17f890d0",
+          "name": "NITHYA RAMAN"
+        }
+      ],
+      "nativeCandidateCount": 2,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10767.json",
+      "sourceCheckedAt": "2026-11-03T03:43:29.356972+00:00",
+      "sourceSha256": "5cd458c74e43d972d5f17ab3450515861c52fffe50b0ddea234605780ccdb70c",
+      "completeNativeField": true,
+      "relation": "City municipal office",
+      "readerJoin": "Reuse existing exact division; no new membership or reader-visibility assertion"
+    },
+    {
+      "contestId": "ca-ba01-la-10768",
+      "title": "Los Angeles — City Attorney",
+      "ocdId": "ocd-division/country:us/state:ca/place:los_angeles",
+      "voteFor": 1,
+      "namedChoices": [
+        {
+          "id": "ca-ba01-la-10768:72af1281b0320067",
+          "name": "MARISSA ROY"
+        },
+        {
+          "id": "ca-ba01-la-10768:01d67c555cf43148",
+          "name": "JOHN MCKINNEY"
+        }
+      ],
+      "nativeCandidateCount": 2,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10768.json",
+      "sourceCheckedAt": "2026-11-03T03:43:29.720437+00:00",
+      "sourceSha256": "2ddddd2fcc51775fef51c689d7fa0d57dca745e9bf82ba0065ae4bf65b400853",
+      "completeNativeField": true,
+      "relation": "City municipal office",
+      "readerJoin": "Reuse existing exact division; no new membership or reader-visibility assertion"
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10770",
+      "title": "LOS ANGELES CITY GENERAL MUNICIPAL ELECTION Member of the City Council, 3rd District",
+      "ocdId": "ocd-division/country:us/state:ca/place:los_angeles/council_district:3",
+      "voteFor": 1,
+      "namedChoices": [
+        {
+          "id": "ca-cx-local-los-angeles-10770-nk",
+          "name": "TIMOTHY K. GASPAR"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10770-nl",
+          "name": "BARRI WORTH GIRVAN"
+        }
+      ],
+      "nativeCandidateCount": 2,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10770.json",
+      "sourceCheckedAt": "2026-11-03T03:43:29.915768+00:00",
+      "sourceSha256": "dd5bdb4cdb5ed3369ef4000b57a064dda476e0cfd476a5c996591a34898bd212",
+      "completeNativeField": true,
+      "relation": "City municipal office",
+      "readerJoin": "Exact council-district applicability pending"
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10771",
+      "title": "LOS ANGELES CITY GENERAL MUNICIPAL ELECTION Member of the City Council, 9th District",
+      "ocdId": "ocd-division/country:us/state:ca/place:los_angeles/council_district:9",
+      "voteFor": 1,
+      "namedChoices": [
+        {
+          "id": "ca-cx-local-los-angeles-10771-nm",
+          "name": "ESTUARDO MAZARIEGOS"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10771-nn",
+          "name": "JOSE UGARTE"
+        }
+      ],
+      "nativeCandidateCount": 2,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10771.json",
+      "sourceCheckedAt": "2026-11-03T03:43:29.126668+00:00",
+      "sourceSha256": "86d98d73bebd21a292e3204769f8b787098cd9b683a680b0b3060d647ef895ec",
+      "completeNativeField": true,
+      "relation": "City municipal office",
+      "readerJoin": "Exact council-district applicability pending"
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10588",
+      "title": "LOS ANGELES COMMUNITY COLLEGE DISTRICT Member of the Board of Trustees, Seat 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_angeles_community_college_district",
+      "voteFor": 1,
+      "namedChoices": [
+        {
+          "id": "ca-cx-local-los-angeles-10588-337",
+          "name": "ADRIANA CABRERA"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10588-338",
+          "name": "ROY PAYAN"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10588-339",
+          "name": "ROBERT PAYNE"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10588-33a",
+          "name": "KRISTINA IRWIN"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10588-33b",
+          "name": "STEVEN F. VERES"
+        }
+      ],
+      "nativeCandidateCount": 5,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10588.json",
+      "sourceCheckedAt": "2026-11-03T03:43:37.690123+00:00",
+      "sourceSha256": "857bfa7cac522f3d57088e3d917129b429a4ff473386041f6ba775f4099790b1",
+      "completeNativeField": true,
+      "relation": "Existing LACCD base-division record; this review does not establish whole-city membership.",
+      "readerJoin": "Reuse existing exact division; no new membership or reader-visibility assertion"
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10589",
+      "title": "LOS ANGELES COMMUNITY COLLEGE DISTRICT Member of the Board of Trustees, Seat 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_angeles_community_college_district",
+      "voteFor": 1,
+      "namedChoices": [
+        {
+          "id": "ca-cx-local-los-angeles-10589-33c",
+          "name": "DARRYN HARRIS"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10589-33d",
+          "name": "NANCY PEARLMAN"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10589-33e",
+          "name": "ELAINE ALANIZ"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10589-33f",
+          "name": "ISIDRO J. ARMENTA"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10589-33g",
+          "name": "JASON R. AULA"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10589-33h",
+          "name": "ADAM BRUNO"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10589-33j",
+          "name": "PRISCILLA UMANA"
+        }
+      ],
+      "nativeCandidateCount": 7,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10589.json",
+      "sourceCheckedAt": "2026-11-03T03:43:38.529943+00:00",
+      "sourceSha256": "d755c4ceaba7b490f37c017ada6d6d84a0b7f9b7c0218158868924676107ae25",
+      "completeNativeField": true,
+      "relation": "Existing LACCD base-division record; this review does not establish whole-city membership.",
+      "readerJoin": "Reuse existing exact division; no new membership or reader-visibility assertion"
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10590",
+      "title": "LOS ANGELES COMMUNITY COLLEGE DISTRICT Member of the Board of Trustees, Seat 6",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_angeles_community_college_district",
+      "voteFor": 1,
+      "namedChoices": [
+        {
+          "id": "ca-cx-local-los-angeles-10590-33k",
+          "name": "RANDALL WINSTON"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10590-33l",
+          "name": "TONIA AREY"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10590-33m",
+          "name": "ROBERTO DAVID LACARRA"
+        },
+        {
+          "id": "ca-cx-local-los-angeles-10590-33n",
+          "name": "GABRIEL BUELNA"
+        }
+      ],
+      "nativeCandidateCount": 4,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10590.json",
+      "sourceCheckedAt": "2026-11-03T03:43:37.886450+00:00",
+      "sourceSha256": "0ae813245bd9cf85e7aed311b69253819eb50af83e703cc54c71b66a28c1a2dc",
+      "completeNativeField": true,
+      "relation": "Existing LACCD base-division record; this review does not establish whole-city membership.",
+      "readerJoin": "Reuse existing exact division; no new membership or reader-visibility assertion"
+    },
+    {
+      "contestId": "ca-ba01-la-10823",
+      "title": "SHERIFF",
+      "ocdId": "ocd-division/country:us/state:ca/county:los_angeles",
+      "voteFor": 1,
+      "namedChoices": [
+        {
+          "id": "ca-ba01-la-10823:aeba295f542f6489",
+          "name": "ROBERT G. LUNA"
+        },
+        {
+          "id": "ca-ba01-la-10823:5fe529ee43df055f",
+          "name": "ALEX VILLANUEVA"
+        }
+      ],
+      "nativeCandidateCount": 2,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10823.json",
+      "sourceCheckedAt": "2026-11-03T03:43:57.478510+00:00",
+      "sourceSha256": "5b05957b74710d1265bad225599fa69cd7fb94acf559eb1b4705c5a59a797f25",
+      "completeNativeField": true,
+      "relation": "Whole county office; city remains within county",
+      "readerJoin": "Reuse existing exact division; no new membership or reader-visibility assertion"
+    },
+    {
+      "contestId": "ca-ba01-la-10824",
+      "title": "JUDGE OF THE SUPERIOR COURT Office No. 064",
+      "ocdId": "ocd-division/country:us/state:ca/county:los_angeles",
+      "voteFor": 1,
+      "namedChoices": [
+        {
+          "id": "ca-ba01-la-10824:738dfc5559ca5bd8",
+          "name": "RHONDA A. HAYMON"
+        },
+        {
+          "id": "ca-ba01-la-10824:c20dd18d15c3d787",
+          "name": "MARIA GHOBADI"
+        }
+      ],
+      "nativeCandidateCount": 2,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10824.json",
+      "sourceCheckedAt": "2026-11-03T03:43:57.960781+00:00",
+      "sourceSha256": "cd22d29febddc28935d8f42f517621332b595868b65b389e00272af49093c2f6",
+      "completeNativeField": true,
+      "relation": "Whole county office; city remains within county",
+      "readerJoin": "Reuse existing exact division; no new membership or reader-visibility assertion"
+    },
+    {
+      "contestId": "ca-ba01-la-10825",
+      "title": "JUDGE OF THE SUPERIOR COURT Office No. 065",
+      "ocdId": "ocd-division/country:us/state:ca/county:los_angeles",
+      "voteFor": 1,
+      "namedChoices": [
+        {
+          "id": "ca-ba01-la-10825:f93a95d83d478b6e",
+          "name": "JUSTIN ALLEN CLAYTON"
+        },
+        {
+          "id": "ca-ba01-la-10825:3226faf694ed7af7",
+          "name": "ANNA SLOTKY REITANO"
+        }
+      ],
+      "nativeCandidateCount": 2,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10825.json",
+      "sourceCheckedAt": "2026-11-03T03:43:57.249661+00:00",
+      "sourceSha256": "1a38650234a82d2215403e1ac267f290ee3984aaa5afc9500783ee3395540f97",
+      "completeNativeField": true,
+      "relation": "Whole county office; city remains within county",
+      "readerJoin": "Reuse existing exact division; no new membership or reader-visibility assertion"
+    },
+    {
+      "contestId": "ca-ba01-la-10826",
+      "title": "JUDGE OF THE SUPERIOR COURT Office No. 087",
+      "ocdId": "ocd-division/country:us/state:ca/county:los_angeles",
+      "voteFor": 1,
+      "namedChoices": [
+        {
+          "id": "ca-ba01-la-10826:3298b32b2c296f67",
+          "name": "DAVID DEJUTE"
+        },
+        {
+          "id": "ca-ba01-la-10826:2f2a7c682e8295e9",
+          "name": "ANTHONY (A.J.) BAYNE"
+        }
+      ],
+      "nativeCandidateCount": 2,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10826.json",
+      "sourceCheckedAt": "2026-11-03T03:43:58.188346+00:00",
+      "sourceSha256": "a3b375213569fa6088442e56311977847445c11bff6606bea3287e219b527f9c",
+      "completeNativeField": true,
+      "relation": "Whole county office; city remains within county",
+      "readerJoin": "Reuse existing exact division; no new membership or reader-visibility assertion"
+    },
+    {
+      "contestId": "ca-ba01-la-10827",
+      "title": "JUDGE OF THE SUPERIOR COURT Office No. 131",
+      "ocdId": "ocd-division/country:us/state:ca/county:los_angeles",
+      "voteFor": 1,
+      "namedChoices": [
+        {
+          "id": "ca-ba01-la-10827:71808081bcbd93de",
+          "name": "DAVID ROSS"
+        },
+        {
+          "id": "ca-ba01-la-10827:9160a73f248be369",
+          "name": "DONNA TRYFMAN"
+        }
+      ],
+      "nativeCandidateCount": 2,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10827.json",
+      "sourceCheckedAt": "2026-11-03T03:43:57.420485+00:00",
+      "sourceSha256": "3d4eb8ef7cee9146fdfa8315832c268775ae608ac156a101f892819960f12a55",
+      "completeNativeField": true,
+      "relation": "Whole county office; city remains within county",
+      "readerJoin": "Reuse existing exact division; no new membership or reader-visibility assertion"
+    }
+  ],
+  "municipalSourceCensus": "The current City Clerk November 3 certificate and municipal election page list four offices and eight names. All same records already have complete native ISB blocks in the sibling county packet.",
+  "primaryVsGeneral": "The official municipal page lists June primary offices separately, including Controller, other Council seats and LAUSD Board Districts 2, 4 and 6. Their omission from the November inventory is recorded only as a source finding. No cancellation, elected status or absence record is inferred.",
+  "schoolAndSpecialScope": "The prepared county packet retains exact candidate fields for all 103 school/college and 23 special district offices in its official local candidate census. This city source review does not establish district intersections or whole-city reader memberships.",
+  "namedWriteIns": "A current November city named write-in certification was not acquired. The June primary write-in link is not reused as November status. Generic write-in slots remain anonymous and outside candidate records.",
+  "measures": "All eight existing city-sponsored question records remain unchanged. One legal scope correction for SC is supplied with its existing ID and unchanged held question. No new measure or analysis record is created."
+}

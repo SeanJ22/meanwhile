@@ -1,0 +1,96 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CA",
+  "jurisdictionType": "CITY",
+  "city": "Los Angeles",
+  "cityFips": "0644000",
+  "cityPopulationRank": 2,
+  "cityPopulation": 3869089,
+  "populationYear": 2025,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "operation": "Correct the electorate of existing Measure SC using its existing ID. Merge against latest data. No candidate writes, new question IDs, removals, absences or production actions.",
+  "subjects": [
+    {
+      "id": "ca-ba01-la-measure-city_of_los_angeles-sc",
+      "title": "City Of Los Angeles \u2014 Measure SC",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_angeles_unified_school_district",
+      "previousOcdId": "ocd-division/country:us/state:ca/place:los_angeles",
+      "type": "MEASURE",
+      "newIdentity": false,
+      "questionRecordsCarriedUnchanged": 1,
+      "sourceUrl": "https://d22tgksh1zpp6f.cloudfront.net/OnlineDocs/2026/26-1100-S19_ord_188984_07-15-26.pdf"
+    }
+  ],
+  "scopeCorrection": [
+    {
+      "contestId": "ca-ba01-la-measure-city_of_los_angeles-sc",
+      "previousOcdId": "ocd-division/country:us/state:ca/place:los_angeles",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_angeles_unified_school_district",
+      "reason": "Adopted Ordinance 188984, Section 1, expressly submits the measure to qualified voters of LAUSD. The final SC pamphlet 301 corroborates that electorate."
+    }
+  ],
+  "coverage": {
+    "municipalCandidateFieldsReviewed": 4,
+    "municipalNamesReviewed": 8,
+    "newCandidateFields": 0,
+    "newCandidateIds": 0,
+    "scopeCorrectedHeldMeasures": 1,
+    "newMeasures": 0,
+    "newAnalysisRecords": 0,
+    "cityComplete": false,
+    "addressSpecificReaderCoverageComplete": false,
+    "remaining": [
+      "Connect exact reader geography for Council Districts 3 and 9, as listed in the county packet.",
+      "Replay existing LAUSD geometry and reader applicability; no new whole-city membership is supplied.",
+      "Other school and special district source records remain in the county packet; city intersections are not asserted.",
+      "Current November named write-in and cancellation records were not acquired here; no zero or absence claim."
+    ]
+  },
+  "unmatchedDivisions": [],
+  "readerDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:los_angeles/council_district:3",
+      "recordedIn": "../los-angeles/install.json",
+      "nextAction": "River: register and connect the exact Council District, then verify reader applicability. Do not substitute the whole city."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:los_angeles/council_district:9",
+      "recordedIn": "../los-angeles/install.json",
+      "nextAction": "River: register and connect the exact Council District, then verify reader applicability. Do not substitute the whole city."
+    }
+  ],
+  "latestMergePreservationDependency": "River must read latest held CA and recursive CX-VOTES inputs before installation, carrying EVERY current SC question and explanation record unchanged. This snapshot contains one held question; all 53 CX-VOTES inputs at 9b923c7473baa22262f70603cda3ad30712456bc have no SC related records. Do not retire later analyses by installing this partial input unamended.",
+  "sourceReview": "source-review.json",
+  "identityReuse": "identity-reuse.json",
+  "validation": {
+    "sharedChecker": "validation.json",
+    "focusedChecker": "focused-validation.json",
+    "sourceHashes": "PASS",
+    "completeNamedBlockIdentityReuse": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "frozenHeldAndCountyInputsUnchanged": "PASS",
+    "genericBallotProblems": "PASS",
+    "sourceHashesAndQuotes": "PASS: 24 captured sources and 3 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "productionWrites": false,
+  "populationBasis": {
+    "sourceUrl": "https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/cities/totals/sub-est2025.csv",
+    "retrievedAt": "2026-11-03T03:45:22.279022+00:00",
+    "originalSha256": "e3508f5201465913476d4ddf91740f191f7977c9f2614a2a7e30b5fd22027934",
+    "compressedSourceFile": "../../population-sources/e3508f5201465913476d4ddf91740f191f7977c9f2614a2a7e30b5fd22027934.csv.gz",
+    "compressedArtifactSha256": "7d8b7b146eddf3928ca9683023d53a422e3fce178c084734611d5996c4b87746",
+    "exactHeldEntry": {
+      "stateName": "California",
+      "place": "Los Angeles city",
+      "fips": "0644000",
+      "population": 3869089,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false
+    }
+  }
+}

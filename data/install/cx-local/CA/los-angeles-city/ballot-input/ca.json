@@ -1,0 +1,250 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026, General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-ba01-la-measure-city_of_los_angeles-sc",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:los_angeles_unified_school_district",
+          "divisionVintage": "2026",
+          "title": "City Of Los Angeles — Measure SC",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Measure SC is submitted to the qualified voters of the entire Los Angeles Unified School District under adopted Ordinance188984 Section1 and the attested CF26-1100-S19 ballot resolution. The electorate is the school district, including its territory outside the City of Los Angeles. Original contest/question IDs and all held question records retained; no whole-city or school-board-subdistrict substitution.",
+          "measureTextUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://d22tgksh1zpp6f.cloudfront.net/OnlineDocs/2026/26-1100-S19_ord_188984_07-15-26.pdf",
+            "sourceOrg": "City of Los Angeles, Office of the City Clerk — adopted Ordinance188984",
+            "collectedAt": "2026-11-03T10:20:50.119673+00:00",
+            "verifiedAt": "2026-11-03T10:25:10.098419+00:00",
+            "quote": "Section 1. A Special Election is hereby called to be held in the Los Angeles \nUnified School District on November 3, 2026, for the purpose of submitting to the \nqualified voters of the Los Angeles Unified School District a Charter amendment \nregarding the following subject: Campaign Finance Rules related to LAUSD Elections."
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:ca/place:los_angeles",
+            "provenance": {
+              "sourceUrl": "https://d22tgksh1zpp6f.cloudfront.net/OnlineDocs/2026/26-1100-S19_ord_188984_07-15-26.pdf",
+              "sourceOrg": "City of Los Angeles, Office of the City Clerk — adopted Ordinance188984",
+              "collectedAt": "2026-11-03T10:20:50.119673+00:00",
+              "verifiedAt": "2026-11-03T10:25:10.098419+00:00",
+              "quote": "Section 1. A Special Election is hereby called to be held in the Los Angeles \nUnified School District on November 3, 2026, for the purpose of submitting to the \nqualified voters of the Los Angeles Unified School District a Charter amendment \nregarding the following subject: Campaign Finance Rules related to LAUSD Elections."
+            }
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-ba01-la-measure-city_of_los_angeles-sc:question",
+          "contestId": "ca-ba01-la-measure-city_of_los_angeles-sc",
+          "officialNumber": "SC",
+          "questionText": "LOS ANGELES UNIFIED SCHOOL DISTRICT CAMPAIGN FINANCE RULES RELATED TO BOARD OF EDUCATION ELECTIONS. CHARTER AMENDMENT SC. Shall the Los Angeles City Charter be amended to clarify the campaign finance rules for Board of Education elections and allow for changes by ordinance?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "collectedAt": "2026-10-21T00:55:25.504898+00:00",
+            "verifiedAt": "2026-10-21T00:55:25.504898+00:00",
+            "quote": "CITY OF LOS ANGELES | SC | LOS ANGELES UNIFIED SCHOOL DISTRICT CAMPAIGN FINANCE RULES RELATED TO BOARD OF EDUCATION ELECTIONS. CHARTER AMENDMENT SC. Shall the Los Angeles City Charter be amended to clarify the campaign finance rules for Board of Education elections and allow for changes by ordinance?"
+          }
+        }
+      ],
+      "absences": [],
+      "districtMemberships": [],
+      "coverageNotes": [
+        "Same-ID scope correction only for held MeasureSC; no candidate changes.",
+        "Four municipal candidate offices/eightnames and all related county/college candidate fields reviewed here already have complete nativeNovember samples in sibling county packet.",
+        "No cancellation/removal/absence/newanalysis/question is created. River must preserve any later held/CX-VOTES SC question or explanation records at installation."
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:25:10.098419+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://d22tgksh1zpp6f.cloudfront.net/OnlineDocs/2026/26-1100-S19_ord_188984_07-15-26.pdf",
+        "finalUrl": "https://d22tgksh1zpp6f.cloudfront.net/OnlineDocs/2026/26-1100-S19_ord_188984_07-15-26.pdf",
+        "publisher": "City of Los Angeles, Office of the City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T10:20:50.119673+00:00",
+        "rawHash": "39fc2124653d085e8fe2b329c4a80d475738c74b8c6f859230bbdfb4544dbcaf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Adopted Ordinance188984, Section1, expressly calls Nov3,2026 special election in LAUSD and submits amendment to qualified LAUSD voters. Page1 visually checked. Governs same-record MeasureSC scope correction."
+      },
+      {
+        "requestedUrl": "https://d22tgksh1zpp6f.cloudfront.net/OnlineDocs/2026/26-1100-S19_misc_7-10-26.pdf",
+        "finalUrl": "https://d22tgksh1zpp6f.cloudfront.net/OnlineDocs/2026/26-1100-S19_misc_7-10-26.pdf",
+        "publisher": "City of Los Angeles, Office of the City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T10:20:56.850970+00:00",
+        "rawHash": "24112078dc349cc4b21c8900c9e7495e429238822e3599ddcb981679562605ea",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official attested council resolutionCF26-1100-S19, Sections1and7 explicitly submit/mail to qualified LAUSD voters. Nativepage1 visually checked. Final adoption linked from officialLMS."
+      },
+      {
+        "requestedUrl": "https://cityclerk.lacity.org/election/ENG301_NOV-2026_Voter_Info_Pamphlet.pdf",
+        "finalUrl": "https://cityclerk.lacity.org/election/ENG301_NOV-2026_Voter_Info_Pamphlet.pdf",
+        "publisher": "City of Los Angeles, Office of the City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T10:18:44.053224+00:00",
+        "rawHash": "2a70c8e9713505640b91b4da0c0841fc9e6f63cb6d904d1104adf37bb32bcf97",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November3,2026 LAUSD-only pamphlet301, printedpage1 (physical3) identifies LAUSDballotmeasure; physical6 names CharterAmendmentSC and prints its question. Supplies final letter identity; no newquestion/analysis record created."
+      },
+      {
+        "rawHash": "5cd458c74e43d972d5f17ab3450515861c52fffe50b0ddea234605780ccdb70c",
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10767.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10767.json",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:43:29.356972+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10767: all 2 named choices retained; 0 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+      },
+      {
+        "rawHash": "2ddddd2fcc51775fef51c689d7fa0d57dca745e9bf82ba0065ae4bf65b400853",
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10768.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10768.json",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:43:29.720437+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10768: all 2 named choices retained; 0 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+      },
+      {
+        "rawHash": "dd5bdb4cdb5ed3369ef4000b57a064dda476e0cfd476a5c996591a34898bd212",
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10770.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10770.json",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:43:29.915768+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10770: all 2 named choices retained; 0 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+      },
+      {
+        "rawHash": "86d98d73bebd21a292e3204769f8b787098cd9b683a680b0b3060d647ef895ec",
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10771.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10771.json",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:43:29.126668+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10771: all 2 named choices retained; 0 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+      },
+      {
+        "rawHash": "857bfa7cac522f3d57088e3d917129b429a4ff473386041f6ba775f4099790b1",
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10588.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10588.json",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:43:37.690123+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10588: all 5 named choices retained; 1 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+      },
+      {
+        "rawHash": "d755c4ceaba7b490f37c017ada6d6d84a0b7f9b7c0218158868924676107ae25",
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10589.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10589.json",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:43:38.529943+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10589: all 7 named choices retained; 1 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+      },
+      {
+        "rawHash": "0ae813245bd9cf85e7aed311b69253819eb50af83e703cc54c71b66a28c1a2dc",
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10590.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10590.json",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:43:37.886450+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10590: all 4 named choices retained; 1 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+      },
+      {
+        "rawHash": "5b05957b74710d1265bad225599fa69cd7fb94acf559eb1b4705c5a59a797f25",
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10823.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10823.json",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:43:57.478510+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10823: all 2 named choices retained; 1 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+      },
+      {
+        "rawHash": "cd22d29febddc28935d8f42f517621332b595868b65b389e00272af49093c2f6",
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10824.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10824.json",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:43:57.960781+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10824: all 2 named choices retained; 1 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+      },
+      {
+        "rawHash": "1a38650234a82d2215403e1ac267f290ee3984aaa5afc9500783ee3395540f97",
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10825.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10825.json",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:43:57.249661+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10825: all 2 named choices retained; 1 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+      },
+      {
+        "rawHash": "a3b375213569fa6088442e56311977847445c11bff6606bea3287e219b527f9c",
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10826.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10826.json",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:43:58.188346+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10826: all 2 named choices retained; 1 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+      },
+      {
+        "rawHash": "3d4eb8ef7cee9146fdfa8315832c268775ae608ac156a101f892819960f12a55",
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10827.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10827.json",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:43:57.420485+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10827: all 2 named choices retained; 1 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+      },
+      {
+        "requestedUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+        "finalUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:55:25.504898+00:00",
+        "rawHash": "a754b9452fbc7d623a235b4257a33b2caf021ee610b0a3c88973db0a733d2cb5",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved exact official response; BA-01 replay checks the complete cited office or published jurisdiction list."
+      }
+    ]
+  }
+}

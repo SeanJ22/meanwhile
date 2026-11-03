@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8" />
+<noscript><style>form.antibot * :not(.antibot-message) { display: none !important; }</style>
+</noscript><link rel="canonical" href="https://clerk.lacity.gov/elections/municipal-elections/ballot-measures" />
+<meta name="Generator" content="Drupal 10 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:100,200,300,500,600,700,800,900,regular&amp;subset=latin&amp;display=swap" media="all" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<link rel="icon" href="/sites/g/files/wph1491/themes/site/favicon.ico" type="image/vnd.microsoft.icon" />
+
+    <title>Ballot Measures | Office of the City Clerk</title>
+    <link rel="stylesheet" media="all" href="/sites/g/files/wph1491/files/css/css_pRArvho-YoIYuMC8ihcog8subusV22lSU_IkcHihoC8.css?delta=0&amp;language=en&amp;theme=clerk20&amp;include=eJyNUEFuxCAM_BCBqh9CBkyWLmBkQ7f5_WaTNo1yaS-W7RnN2AN1xhyT3Iwj6tIZmoJjF6l2eKBQwSky4gWS0zxncpAn6UtOdVaHmnXAnOhPvFJA5e8YUie24D1xSFTN0enIqyXWoHxGvr-_XSVXHhpPpVHF9TZ9tZgmxwjB8yjuH-SCdVhPeZQqOz3waJA1fMCXOiVzTkk_0O3JvOpCgyP4nWFDkpZhsd_nqwYM8-p4kx_l340etQ2X12AxqCamiX69iaJkNOQt8aOzG2QDRhi5K1mkYzEOBNVnwoeYrepCYWR8AsEIw2I" />
+<link rel="stylesheet" media="all" href="/sites/g/files/wph1491/files/css/css_mhJy38TYELtywhdlr2aRpyfDo0yuIiNv7P1T8r9gCXM.css?delta=1&amp;language=en&amp;theme=clerk20&amp;include=eJyNUEFuxCAM_BCBqh9CBkyWLmBkQ7f5_WaTNo1yaS-W7RnN2AN1xhyT3Iwj6tIZmoJjF6l2eKBQwSky4gWS0zxncpAn6UtOdVaHmnXAnOhPvFJA5e8YUie24D1xSFTN0enIqyXWoHxGvr-_XSVXHhpPpVHF9TZ9tZgmxwjB8yjuH-SCdVhPeZQqOz3waJA1fMCXOiVzTkk_0O3JvOpCgyP4nWFDkpZhsd_nqwYM8-p4kx_l340etQ2X12AxqCamiX69iaJkNOQt8aOzG2QDRhi5K1mkYzEOBNVnwoeYrepCYWR8AsEIw2I" />
+<link rel="stylesheet" media="all" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&amp;display=swap" />
+<link rel="stylesheet" media="all" href="/sites/g/files/wph1491/files/css/css_YL6Gtw9mbf4QbAFF6RlPIOzYqEvmBoJzCk5Jo0XT2Og.css?delta=3&amp;language=en&amp;theme=clerk20&amp;include=eJyNUEFuxCAM_BCBqh9CBkyWLmBkQ7f5_WaTNo1yaS-W7RnN2AN1xhyT3Iwj6tIZmoJjF6l2eKBQwSky4gWS0zxncpAn6UtOdVaHmnXAnOhPvFJA5e8YUie24D1xSFTN0enIqyXWoHxGvr-_XSVXHhpPpVHF9TZ9tZgmxwjB8yjuH-SCdVhPeZQqOz3waJA1fMCXOiVzTkk_0O3JvOpCgyP4nWFDkpZhsd_nqwYM8-p4kx_l340etQ2X12AxqCamiX69iaJkNOQt8aOzG2QDRhi5K1mkYzEOBNVnwoeYrepCYWR8AsEIw2I" />
+<link rel="stylesheet" media="print" href="/sites/g/files/wph1491/files/css/css_YEnI_WUOin8CCPn8EuWJzDHIUo2p4wtIvJBfrAqgl70.css?delta=4&amp;language=en&amp;theme=clerk20&amp;include=eJyNUEFuxCAM_BCBqh9CBkyWLmBkQ7f5_WaTNo1yaS-W7RnN2AN1xhyT3Iwj6tIZmoJjF6l2eKBQwSky4gWS0zxncpAn6UtOdVaHmnXAnOhPvFJA5e8YUie24D1xSFTN0enIqyXWoHxGvr-_XSVXHhpPpVHF9TZ9tZgmxwjB8yjuH-SCdVhPeZQqOz3waJA1fMCXOiVzTkk_0O3JvOpCgyP4nWFDkpZhsd_nqwYM8-p4kx_l340etQ2X12AxqCamiX69iaJkNOQt8aOzG2QDRhi5K1mkYzEOBNVnwoeYrepCYWR8AsEIw2I" />
+<link rel="stylesheet" media="all" href="/sites/g/files/wph1491/files/css/css_REkPuJNQK-86OtrFMgT71GMcuOx2wXVEiFzRDaZ7160.css?delta=5&amp;language=en&amp;theme=clerk20&amp;include=eJyNUEFuxCAM_BCBqh9CBkyWLmBkQ7f5_WaTNo1yaS-W7RnN2AN1xhyT3Iwj6tIZmoJjF6l2eKBQwSky4gWS0zxncpAn6UtOdVaHmnXAnOhPvFJA5e8YUie24D1xSFTN0enIqyXWoHxGvr-_XSVXHhpPpVHF9TZ9tZgmxwjB8yjuH-SCdVhPeZQqOz3waJA1fMCXOiVzTkk_0O3JvOpCgyP4nWFDkpZhsd_nqwYM8-p4kx_l340etQ2X12AxqCamiX69iaJkNOQt8aOzG2QDRhi5K1mkYzEOBNVnwoeYrepCYWR8AsEIw2I" />
+
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/1291","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"gtag":{"tagId":"G-0P2KNE5S7C","consentMode":false,"otherIds":[],"events":[],"additionalConfigInfo":[]},"ajaxPageState":{"libraries":"eJyNUlF24yAMvBAxfT1F__cAfgJkh41ArARxvadf3LSp66bv7Y8szYA01gB5Rpqinu0LCv-i6C8G7pgj-Lvua-aqVaDsMM_EsqsnzhUWVE54mgTxQOmunokd0EnrSjHPe4J5Jhz7pKwEtff400BiSyN4j6rRRYp1tU1RFlg_ad_RJQYcb60diM1w7R9zlz72SiIfh3_jO3rR73DmgMZfMMTKsslhCZGzvWfDJP03MQfjCeXy_HSc9AEn9dRV19X0m9j3mApn7BsajkNPJycIwUtL7j8OJ8xt7La0lNXs7NhbMyzobnZsceUmE_jbiTFELQTr-C7UfLgBs517ONYD_IbXr2AyBQTmLuqsNkgrQMMnMrRcmqNuNAZT1BYdtt2gGm0F5e0F3LNH2HjmK0rctlwf8pqASH1_ffkxv40bA07Q6IcOW6bNPdS0sYU11m630VUrJutA0VwjLmrf4pA4NMJ_7HBVpQ","theme":"clerk20","theme_token":null},"ajaxTrustedUrl":[],"gtm":{"tagId":null,"settings":{"data_layer":"dataLayer","include_classes":false,"allowlist_classes":"google\nnonGooglePixels\nnonGoogleScripts\nnonGoogleIframes","blocklist_classes":"customScripts\ncustomPixels","include_environment":false,"environment_id":"","environment_token":""},"tagIds":["GTM-TVVJ7FM"]},"ckeditorAccordion":{"accordionStyle":{"collapseAll":1,"keepRowsOpen":0,"animateAccordionOpenAndClose":1,"openTabsWithHash":1}},"superfish":{"superfish-main":{"id":"superfish-main","sf":{"animation":{"opacity":"show","height":"show"},"speed":"fast"},"plugins":{"smallscreen":{"mode":"window_width","breakpoint":1200,"accordionButton":2,"title":"\u003Cnone\u003E"},"supposition":true,"supersubs":true}}},"user":{"uid":0,"permissionsHash":"1c58f959cad7429cab2b0a7da7070bcf222da162ea6a46b91ccbca13e1a43fef"}}</script>
+<script src="/sites/g/files/wph1491/files/js/js_dKtNG4840yqNcMYE1p75KYNTiHu1ligGWc_rPnVSe8g.js?scope=header&amp;delta=0&amp;language=en&amp;theme=clerk20&amp;include=eJx1T91awyAMfSEcfj6F9z4AX6AZy5qSmtDN-vTSqbXOegPnh3ByoGTkI9nJP6PKC1PqHaxaZHift1ykWlUYN1pmicAPVmemkreGSGYM7XkxhooOXidQmoYAKaEZRWKqs58M9Qrzj52aeqUOw-fXEdQXuLTLrfmhMSW5D089dlRFlwTRjqT4FR2OKqVi6Vxi1P7p8c_wlzxY4rZInd13A8g-t-OeH-AMb7_Fwdk0ot76r2hPCye5oNKyUN31bQBmS4pY9v0F2RTtP3cUo9p6fwCs8L7Y"></script>
+<script src="/modules/contrib/google_tag/js/gtag.js?tnqhzp"></script>
+<script src="/modules/contrib/google_tag/js/gtm.js?tnqhzp"></script>
+
+  
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="LCBWN-KKHDT-46XGS-SM2QV-KGZQ3",function(){function e(){if(!i){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.parentNode.appendChild(e),i=!0}}function t(e){i=!0;var n,t,a,r,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o.parentNode,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",r=(a.frameElement||a).style,r.width=0,r.height=0,r.border=0,r.display="none",o.parentNode.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void(0);",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=12,window.BOOMR.url=n+"LCBWN-KKHDT-46XGS-SM2QV-KGZQ3";var o=document.currentScript||document.getElementsByTagName("script")[0],i=!1,r=document.createElement("link");if(r.relList&&"function"==typeof r.relList.supports&&r.relList.supports("preload")&&"as"in r)window.BOOMR.snippetMethod="p",r.href=window.BOOMR.url,r.rel="preload",r.as="script",r.addEventListener("load",e),r.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!i)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.parentNode.appendChild(r);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="ljqlodixiagds2xjwtlq-f-d71315041-clientnsv4-s.akamaihd.net",o="false"=="true"?2:1,i={"ak.v":"41","ak.cp":"1502633","ak.ai":parseInt("853012",10),"ak.ol":"0","ak.cr":166,"ak.ipv":4,"ak.proto":"h2","ak.rid":"8ba50f9d","ak.r":45774,"ak.a2":n,"ak.m":"","ak.n":"essl","ak.cport":22736,"ak.gh":"23.64.12.53","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"","ak.t":"1793701079","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==Hw1wp0++58NynWfJdo2HtLxM2dEg8KSWL5wJZdWaiPZZGgRpWLEFiDo7plFA1SNddix2rDDkI60AYZ27+z/eUqc5AFCP8+LKt14yYEU8ovuCmiYotfe80Au91zeegvcLzg3QZUdAa8JAAUi4s2SBbvo0KIUtFltOPzp7dSLvWagkQbUqC/JdikD9gn2LARiwmq7vU3goO6P9PX0MSjGiBJahX1PtBiO+k7+cHLdPhdiYT26Fwf3vhpUE3X66Rfn7zRlUPszujwdfgxMN4tivqeQdo2lyAAhShGpJoWfGMvv0Hm1qTPq/qP+yUuD4CHRTcGgAEZDDTCf88oMjr+7EQ0ojSx+Q1TG656Cns2tPjjfYpjilhY5/8wP3hBtX4sDOmHQ+UoSX6zM9gVsVJM4DnTHAm/abftWBjHK8Epw7NX4=","ak.pv":"8","ak.dpoabenc":"","ak.tf":o};if(""!==t)i["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))i["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(i)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:i,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+  <body class="fontyourface layout-no-sidebars has-featured-top page-node-1291 path-node node--type-board-page">
+    <a href="#main-content" class="visually-hidden-focusable">
+      Skip to main content
+    </a>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TVVJ7FM"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+
+
+
+<div id="page-wrapper">
+  <div id="page">
+    <header id="header" class="header" role="banner" aria-label="Site header">
+                        <nav class="navbar" id="navbar-top">
+            <div class="container">
+                
+                  <section class="row region region-top-header">
+    <div class="views-element-container settings-tray-editable block block-views block-views-blockhomepage-notification-banner-block-1" id="block-clerk20-views-block-homepage-notification-banner-block-1" data-drupal-settingstray="editable">
+  
+    
+      <div class="content">
+      <div><div class="view view-homepage-notification-banner view-id-homepage_notification_banner view-display-id-block_1 js-view-dom-id-22c30087b640750a952e67c98a4fc5d93f7567fe85845689377fc7098faf50f0">
+  
+    
+      
+      <div class="view-content row">
+          <div class="views-row">
+    <div class="views-field views-field-body"><div class="field-content"><p><a href="https://lms.lacity.gov/" target="_blank"><em><span><u>Visit the NEW Legislative Management System</u></span><u> (LMS)</u></em></a></p></div></div>
+  </div>
+
+    </div>
+  
+          </div>
+</div>
+
+    </div>
+  </div>
+
+  </section>
+
+                            </div>
+          </nav>
+                <nav class="navbar" id="navbar-main">
+            <div class="container">
+              
+    <div class="site-branding">
+                    <div class="site-logo">
+                <a href="/" title="Home" rel="home">
+                    <img src="/sites/g/files/wph1491/files/202409_CityClerk_WebLogo_v2_200x86.svg" alt="Home" class="img-fluid" />
+                </a>
+            </div>
+                    </div>
+
+
+
+
+                            <section class="region region-primary-menu">
+    <div id="block-clerk20-mainnavigation" class="d-block d-xl-none settings-tray-editable block block-superfish block-superfishmain" data-drupal-settingstray="editable">
+  
+    
+      <div class="content">
+      
+<ul id="superfish-main" class="menu sf-menu sf-main sf-horizontal sf-style-default">
+  
+<li id="main-menu-link-content2135b710-0168-4a78-bfcd-9fd8b5a76d00" class="active-trail sf-depth-1 sf-depth-2 sf-expanded menuparent"><a href="/clerk-divisions" class="sf-depth-1 menuparent">Clerk Services</a><ul><li id="main-menu-link-contentdda971ea-645c-43e5-88b6-c1c6d78c8bfc" class="sf-depth-2 sf-depth-2 sf-expanded menuparent"><a href="https://clerk.lacity.gov/business-improvement-districts" class="sf-depth-2 sf-external menuparent">Business Improvement Districts</a><ul><li id="main-menu-link-contentb06c74b7-7eb0-4609-9e71-2f0ced2c83d1" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="https://cityclerk.lacity.org/BidsPortal/main" target="_blank" title="BIDs Portal" class="sf-depth-3 sf-external">BIDs Portal</a></li><li id="main-menu-link-content0f5969d8-cf83-49a5-b5e8-daae9e280444" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/business-improvement-districts/administrators" class="sf-depth-3 menuparent">Administrators</a><ul><li id="main-menu-link-content0714ee25-c30d-458d-8997-dafaabe2cc20" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/bids/administrators/administrator-resources" class="sf-depth-4">Administrator Resources</a></li><li id="main-menu-link-contentd7d71278-9970-4b82-a8fd-bb703375521a" class="sf-depth-4 sf-depth-2 sf-expanded menuparent"><a href="/business-improvement-districts/administrators/policies-and-guidelines" class="sf-depth-4 menuparent">Policies and Guidelines</a><ul><li id="main-menu-link-content5e641717-6e93-4ad3-a392-3ae260e55f62" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/business-improvement-districts/administrators/policies-and-guidelines/bids-and" class="sf-depth-5">BID’s and Lobbying</a></li></ul></li></ul></li><li id="main-menu-link-content89ccccde-af68-4346-87b1-1ade95044b66" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/business-improvement-districts/bids-general-information" class="sf-depth-3 menuparent">BIDs General Information</a><ul><li id="main-menu-link-content505c3620-d3da-4b7b-9725-05224089ad93" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/business-improvement-districts/bids-general-information/bids-101" class="sf-depth-4">BIDs 101</a></li><li id="main-menu-link-content0a1ecc0c-6d4d-4db3-9571-0b048c1479ff" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/business-improvement-districts/bids-general-information/bids-faq" class="sf-depth-4">BIDs FAQ</a></li></ul></li><li id="main-menu-link-content0b2371ab-c06b-4563-a66d-142719a4d28d" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/business-improvement-districts/ballot-tabulation" class="sf-depth-3">Ballot Tabulation</a></li><li id="main-menu-link-content601f414e-38bf-4c3d-8b5c-ae2b5c0ce1d0" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="https://cityclerk.lacity.org/nbid/gmaps.html" class="sf-depth-3 sf-external menuparent">Find A BID</a><ul></ul></li></ul></li><li id="main-menu-link-content1f925f0f-431b-4f7d-a211-b29dd5cfe981" class="sf-depth-2 sf-depth-2 sf-expanded menuparent"><a href="https://clerk.lacity.gov/council-and-public-services" class="sf-depth-2 sf-external menuparent">Council and Public Services</a><ul><li id="main-menu-link-contentdc390af3-f92e-4ec3-881d-aa1b46e27646" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/clerk-services/council-and-public-services/alcohol-pcn" class="sf-depth-3 menuparent">Alcohol PCN</a><ul></ul></li><li id="main-menu-link-contentd1921632-a493-4c51-be95-26a6d1f72344" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/clerk-services/council-and-public-services/cps-resources" class="sf-depth-3 menuparent">CPS Resources</a><ul><li id="main-menu-link-content9cc24ed9-6242-411b-af24-3219137fc235" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/cps-resources/directory-organizations" class="sf-depth-4">Directory Organizations</a></li><li id="main-menu-link-content059ce5fd-a3eb-4af0-b664-b25f23311330" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/cps-resources/fcic" class="sf-depth-4">FCIC</a></li><li id="main-menu-link-content0336d350-5ade-40ad-9060-f28fc7fae6e5" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/cps-resources/file-ceqa-appeal" class="sf-depth-4">File CEQA Appeal</a></li><li id="main-menu-link-contentf687ec54-d467-464e-9b42-48bfe59ee277" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/cps/cps-resources/trust-fund-report" class="sf-depth-4">Trust Fund Report</a></li></ul></li><li id="main-menu-link-content88a051d5-05d4-4cb8-963b-49c4adcb0680" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/clerk-services/council-and-public-services/city-health-commission" class="sf-depth-3 menuparent">City Health Commission</a><ul><li id="main-menu-link-contentb4903cff-857b-48cd-b4ad-4b4c72445869" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/agendas" class="sf-depth-4">Agendas</a></li><li id="main-menu-link-content8f9a11d6-8aa7-44b9-a7a6-4c025e4b10f4" class="sf-depth-4 sf-depth-2 sf-expanded menuparent"><a href="/clerk-services/council-and-public-services/city-health-commission/city-health-commissioners" class="sf-depth-4 menuparent">City Health Commissioners</a><ul><li id="main-menu-link-content75b17732-d79c-4104-b0a8-2affb89cad6b" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/city-health-commissioners/vacant" class="sf-depth-5">Amanda Cowan</a></li><li id="main-menu-link-contentb000ca1d-e94e-41a7-a4db-cdaa110bf645" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/cps/city-health-commission/city-health-commissioners/brian-gavidia" class="sf-depth-5">Brian Gavidia</a></li><li id="main-menu-link-content25d96ebd-ccde-425b-9f46-3bffbf473b83" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/city-health-commissioners/clare" class="sf-depth-5">Clare Williams</a></li><li id="main-menu-link-content3a356373-a2ce-41f7-8436-8069bdd182b7" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/cps/city-health-commission/city-health-commissioners/eden-waldman" class="sf-depth-5">Eden Waldman</a></li><li id="main-menu-link-content5d38dcdd-08aa-4c2a-aa18-6a328bd336b3" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/city-health-commissioners/dr" class="sf-depth-5">Howard Mandel</a></li><li id="main-menu-link-contentdd6754e8-a122-49e6-8fe6-9317fb39d343" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-divisions/cps/city-health-commission/city-health-commissioners/ilari-machera" class="sf-depth-5">Ilari Machera</a></li><li id="main-menu-link-content5338380c-c783-46b8-95e4-93d2e9056d69" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-divisions/cps/city-health-commission/city-health-commissioners/irma-avila" class="sf-depth-5">Irma Avila</a></li><li id="main-menu-link-content4eb8a18f-5fe0-4b2e-adbf-9645c4a82be1" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/cps/city-health-commission/city-health-commissioners/lauren-yen" class="sf-depth-5">Lauren Yen</a></li><li id="main-menu-link-content12e53c03-ed6a-4f5d-9c1a-62db64059386" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-divisions/cps/city-health-commission/city-health-commissioners/corinne-ho" class="sf-depth-5">Mahfouz Gereis</a></li><li id="main-menu-link-contentee20e5fc-9f69-4658-9665-2227fc36f563" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/cps/city-health-commission/city-health-commissioners/marvin-chowdhury" class="sf-depth-5">Marvin Chowdhury</a></li><li id="main-menu-link-contentd5788443-5118-4cf4-a51a-3e06c020d122" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-divisions/cps/city-health-commission/city-health-commissioners/matt-grimmig" class="sf-depth-5">Matt Grimmig</a></li><li id="main-menu-link-content4ec84118-e5bf-49f3-b257-504bb289b6c0" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/cps/city-health-commission/city-health-commissioners/monica-rodriguez" class="sf-depth-5">Monica Rodriguez</a></li><li id="main-menu-link-contentc8a9be10-833c-41d6-9e60-1ca153b86749" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/cps/city-health-commission/city-health-commissioners/neyha-parmar" class="sf-depth-5">Neyha Parmar</a></li><li id="main-menu-link-content8d7385ee-da7a-4a1c-b07f-8c254a4c5f37" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/city-health-commissioners/dr-1" class="sf-depth-5">Nomsa Khalfani</a></li><li id="main-menu-link-content6cd48d7d-5bea-48dc-99c2-c5c08a1f3652" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/city-health-commissioners/ron" class="sf-depth-5">Ron Kato</a></li><li id="main-menu-link-content1c603f71-dc37-463b-b2be-39f4c16e3830" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-divisions/cps/city-health-commission/city-health-commissioners/sara-khoshniyati" class="sf-depth-5">Sara Khoshniyati</a></li><li id="main-menu-link-content6e31e056-8c23-4b3f-9469-e86af86cf22f" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/cps/city-health-commission/city-health-commissioners/sascha-weiss" class="sf-depth-5">Sascha Weiss</a></li><li id="main-menu-link-content2a03bb1c-cb43-43ac-87a3-4947678afd8c" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/city-health-commissioners/shamika" class="sf-depth-5">Shamika Ossey</a></li><li id="main-menu-link-contentca6bf300-9792-41f7-8f04-8f04ddeeceff" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/city-health-commissioners/dr-0" class="sf-depth-5">Stephanie Lemus</a></li><li id="main-menu-link-contente338e541-3ed9-4b0b-b8b3-4f4a9a1645e4" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/city-health-commissioners/marco" class="sf-depth-5">Susie Shannon</a></li><li id="main-menu-link-contentf773e714-18d7-44bf-9f74-348f5e8b0465" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-divisions/cps/city-health-commission/city-health-commissioners/travis-chapa" class="sf-depth-5">Travis Chapa</a></li></ul></li><li id="main-menu-link-content8a2dbe27-ed59-4043-8d06-834728fb1950" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/archived-commission-documents" class="sf-depth-4">Commission Documents</a></li><li id="main-menu-link-content53d540d6-32a6-4b0b-8e01-c42f1b80eeac" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/commission-meetings" class="sf-depth-4">Commission Meetings</a></li><li id="main-menu-link-contentd6934ff4-4c32-4774-8763-075561086b37" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/journals-minutes" class="sf-depth-4">Journals (Minutes)</a></li><li id="main-menu-link-contentad464f5e-e6a3-4b85-b249-40705bf77a63" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-divisions/cps/city-health-commission/other-links" class="sf-depth-4">Other Links</a></li><li id="main-menu-link-content33c1e2b0-1bad-49ea-bf67-c9cd442191ff" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/city-health-commission/archived-public-comment-documents" class="sf-depth-4">Public Comment Documents</a></li></ul></li><li id="main-menu-link-content3920ae6e-7f21-4b6f-b4d5-de7d0b6f737a" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/clerk-services/council-and-public-services/claim-damage" class="sf-depth-3 menuparent">Claim for Damage</a><ul><li id="main-menu-link-content27fb45ad-12bf-4862-82fe-3145056aecd7" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/cps/file-claim/refund-5000-less" class="sf-depth-4">Refund 5000 less</a></li><li id="main-menu-link-contentcae34446-534c-4a65-b044-ac3ff6a91d69" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/cps/file-claim/refund-over-5000" class="sf-depth-4">Refund over 5000</a></li></ul></li><li id="main-menu-link-content07aac7e2-aa46-4bd9-8e85-2e1a059fc7c0" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/claim-refund" class="sf-depth-3">Claim for Refund</a></li><li id="main-menu-link-contente8935d93-6325-4084-b82f-5c68e8142d61" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/commission-resources" class="sf-depth-3">Commission Resources</a></li><li id="main-menu-link-contentc1a95b37-d920-421a-bc30-3aff1346eaa4" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/council-and-public-services/council-committee" class="sf-depth-3 menuparent">Council &amp; Committee Meetings</a><ul><li id="main-menu-link-contentbbfd6234-2dd6-4a86-b308-e50714fc6b08" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/council-committee-meetings/annual-budget-materials" class="sf-depth-4">Annual Budget Materials</a></li><li id="main-menu-link-contentb7736216-ee57-40fa-a8a2-55de7ecd9208" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/council-committee-meetings/committee-structure" class="sf-depth-4">Committee Structure Resolution</a></li><li id="main-menu-link-content322c795f-3a03-4751-a02f-89d9e568fe51" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/council-committee-meetings/council-recess-schedule" class="sf-depth-4">Council Recess Schedule</a></li><li id="main-menu-link-contenta1cd7a07-3f08-486b-bb73-84aa9ad81843" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/council-committee-meetings/councilmember-meeting" class="sf-depth-4">Councilmember Meeting Attendance</a></li><li id="main-menu-link-contentfa3bfd4e-65a0-4332-ba98-071aebb34d22" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/council-committee-meetings/info-assignments-structure" class="sf-depth-4">Info Assignments Structure</a></li><li id="main-menu-link-contentac3dd3c0-ab40-4673-84e8-4ca293e5dc73" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/cps/council-committee-meetings/meeting-agendas" class="sf-depth-4">Meeting Agendas</a></li><li id="main-menu-link-content67c2c0a4-df2b-4313-a7c7-9a1af5485d0d" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/council-committee-meetings/city-council-and-committee" class="sf-depth-4">Meeting Interpretation Services</a></li><li id="main-menu-link-contenta68a3332-4cb2-4cfb-a210-a465aa173ab2" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-divisions/cps/council-committee-meetings/van-nuys-meeting-schedule" class="sf-depth-4">Van Nuys Meeting Schedule</a></li></ul></li><li id="main-menu-link-content49577f64-3193-4b71-97a5-5b958c277414" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/metal-and-wire-theft-reward-program" class="sf-depth-3">Metal and Wire Theft Reward Program</a></li><li id="main-menu-link-content97c9912b-4e77-4d79-b51a-1941a782e58e" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/clerk-services/council-and-public-services/naming-renaming-community" class="sf-depth-3 menuparent">Naming Renaming Community</a><ul><li id="main-menu-link-content2e9f7dfa-9564-4853-b0ee-420dd7f2fc6e" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/naming-renaming-community/policy-and-instructions" class="sf-depth-4">Policy and Instructions</a></li></ul></li><li id="main-menu-link-content08a321cd-03ff-44ab-8f0d-038d8328b839" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="https://lms.lacity.gov/home" class="sf-depth-3 sf-external">Search Council Files</a></li><li id="main-menu-link-content5269abb8-0e5a-4ec4-89ae-f9095625d54f" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/service-process" class="sf-depth-3">Service of Process</a></li><li id="main-menu-link-contentbddc18c5-dc1c-4dd9-bf90-4d2d85f02c7c" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/council-and-public-services/special-reward-application" class="sf-depth-3">Special Reward Application</a></li></ul></li><li id="main-menu-link-contentdee15995-be0f-44fb-98e8-87b9143fec09" class="sf-depth-2 sf-depth-2 sf-expanded menuparent"><a href="/neighborhood-council-elections-and-funding" title="Neighborhood Council Elections and Founding" class="sf-depth-2 menuparent">Neighborhood Councils</a><ul><li id="main-menu-link-content04adf034-f888-4007-a3cb-6ed45e9467f9" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/neighborhood-council-elections-and-funding/neighborhood-council-elections" title="Neighborhood Council Elections" class="sf-depth-3 menuparent">Neighborhood Council Elections</a><ul><li id="main-menu-link-contentf390bca4-0470-4b93-b1db-cdf08765d3c5" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/2023-list-certified-candidates" class="sf-depth-4">2023 List of Certified Candidates</a></li><li id="main-menu-link-content3b0ed6d7-36bb-4f9f-879e-c71104246ed2" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/2023-nc-election-results" class="sf-depth-4">2023 NC Election Results</a></li><li id="main-menu-link-content3a3429e5-828a-40c6-a1c6-9205307a5774" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/2023-nc-voter-turnout-information" class="sf-depth-4">2023 NC Voter Turnout Information</a></li><li id="main-menu-link-contentc09dc79e-31ce-48f8-92ac-4899d6f96c7c" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/2025-list-certified-candidates" class="sf-depth-4">2025 List of Certified Candidates</a></li><li id="main-menu-link-content73bf4731-b615-4e8c-bb7e-bf6284ff5d12" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/2025-nc-application-and-ballot-box" class="sf-depth-4">2025 NC Application and Ballot Box Locations</a></li><li id="main-menu-link-content2eec8a30-3acf-459a-8cfc-ea5edb083f81" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/2025-nc-election-results" class="sf-depth-4">2025 NC Election Results</a></li><li id="main-menu-link-contentbf27083d-0e48-424c-a0a1-134445d58c89" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/2025-neighborhood-council-election-timeline" class="sf-depth-4">2025 NC Election Timeline by Regions</a></li><li id="main-menu-link-contentd4ce5bb4-acdf-4d11-8bb7-306ef91ce889" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/independent-grievance-panel" class="sf-depth-4">Independent Grievance Panel</a></li><li id="main-menu-link-contentd397a06b-4efd-426d-bd68-4552668c526b" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/neighborhood-council-elections/list-election-day-challenges" class="sf-depth-4">List of Election Day Challenges</a></li><li id="main-menu-link-content69e45b8c-e843-4435-b889-8985e85232f0" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/2023-nc-election-day-challenges" class="sf-depth-4">NC ELECTION DAY CHALLENGES</a></li><li id="main-menu-link-content1d953952-c2d4-4fb7-8dc3-4e0c31e0690c" class="sf-depth-4 sf-depth-2 sf-expanded menuparent"><a href="/neighborhood-council-elections-and-funding/neighborhood-council-elections/nc-election-archives" title="Neighborhood Council Elections Archives" class="sf-depth-4 menuparent">NC Election Archives</a><ul><li id="main-menu-link-content79e0362a-7341-4f4a-94f2-f3d4d8147fd0" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/nc-elections/nc-election-archives/2021-nc-election-results" class="sf-depth-5">2021 NC Election Results</a></li><li id="main-menu-link-content9e4128e1-9ca0-4546-b38a-aa5c126ef88a" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/nc-election-archives/2021-nc-voter-turnout" class="sf-depth-5">2021 NC Voter Turnout Information</a></li><li id="main-menu-link-content466bf5ab-a6d8-4b80-ad2d-dd51b1371a10" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/nc-election-archives/2025-nc-voter-turnout" class="sf-depth-5">2025 NC Voter Turnout Information</a></li><li id="main-menu-link-content2bc84b55-82cc-4d66-b3c4-5061f15e3cf8" class="sf-depth-5 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/nc-election-archives/2021-certified" class="sf-depth-5">Certified Candidates</a></li></ul></li><li id="main-menu-link-contente2730e90-6077-40a2-8ac0-994fae002ca5" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/neighborhood-council-elections-and-funding/neighborhood-council-elections/nc-election-resources" title="NC Elections Resources" class="sf-depth-4">NC Election Resources</a></li><li id="main-menu-link-contentbbe4c0f8-fab9-4fac-93d3-bdc22023448a" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/nc-elections-faqs" class="sf-depth-4">NC Elections FAQs</a></li><li id="main-menu-link-content2b9c7434-1f03-4736-bfdd-e6ad61dd4f9a" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/nc-information-guide" class="sf-depth-4">NC Information Guide</a></li><li id="main-menu-link-content3faaee4e-1733-4486-a46d-19cfeb0155f6" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/nc-voter-guide" title="2023 NC VOTER GUIDE" class="sf-depth-4">NC VOTER GUIDE</a></li><li id="main-menu-link-contentc891b621-4b20-44d4-96c0-55f54cc18415" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/neighborhood-council-election-challenges" class="sf-depth-4">Neighborhood Council Election Challenges</a></li><li id="main-menu-link-contente5c2b165-1080-4707-9a8a-3ca4f950d818" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/neighborhood-council-elections/nc-election-timeline-regions" class="sf-depth-4">Timeline by Regions</a></li></ul></li><li id="main-menu-link-content00d72009-8e3c-4df4-9291-ac8124b645cf" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="https://clerk.lacity.gov/neighborhood-council-elections-and-funding/neighborhood-council-funding" class="sf-depth-3 sf-external menuparent">Neighborhood Council Funding</a><ul><li id="main-menu-link-contentb58570b8-f710-4cd5-80d0-56ba650e8063" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="https://clerk.lacity.gov/neighborhood-council-elections-and-funding/neighborhood-council-funding/documents-and-forms-page" class="sf-depth-4 sf-external">Documents and Forms Page</a></li><li id="main-menu-link-content30df27fe-20a6-4029-91d6-ac83fe79c5b8" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/neighborhood-council-elections-and-funding/neighborhood-council-funding/nc-funding-faq" title="NEIGHBORHOOD COUNCIL FUNDING PROGRAM FREQUENTLY ASKED QUESTIONS PAGE 9 DATED FEBRUARY 13, 2026" class="sf-depth-4">NC Funding FAQ</a></li></ul></li></ul></li><li id="main-menu-link-content57457bd1-457d-46c9-b803-c9357ec61c9c" class="active-trail sf-depth-2 sf-depth-2 sf-expanded menuparent"><a href="https://clerk.lacity.gov/elections" class="sf-depth-2 sf-external menuparent">Elections</a><ul><li id="main-menu-link-contentd70e74e8-c878-4f94-b672-4111bbe11ce9" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/election-archives" class="sf-depth-3">Election Archives</a></li><li id="main-menu-link-contentbc096e1d-b423-4ad8-9e9f-d567574bf78a" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/election-resources" class="sf-depth-3">Election Resources</a></li><li id="main-menu-link-content53e11ddc-a517-4070-9f97-5e990dc79503" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/elections/multilingual-services" class="sf-depth-3 menuparent">Multilingual Services</a><ul><li id="main-menu-link-content4c027170-5792-4122-bcd6-d03c8ebb474b" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-armenian-arm" class="sf-depth-4">Voter Info Armenian</a></li><li id="main-menu-link-content207bc8c8-2183-4d7a-b1b2-7967085db173" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-chinese-chi" class="sf-depth-4">Voter Info Chinese</a></li><li id="main-menu-link-contentac543593-b983-4ceb-ae5d-ed66a0514eb8" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-english" class="sf-depth-4">Voter Info English</a></li><li id="main-menu-link-contentf9aeb7d4-e201-4e2f-a068-79b055517bed" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-farsi-fas" class="sf-depth-4">Voter Info Farsi</a></li><li id="main-menu-link-content54e99c25-8be0-4833-9837-7b97fa0f2c21" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-hindi-hin" class="sf-depth-4">Voter Info Hindi</a></li><li id="main-menu-link-contentd749dbb7-18c6-4e7e-ade0-65de4ec53af2" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-japanese-jpn" class="sf-depth-4">Voter Info Japanese</a></li><li id="main-menu-link-contentc94a3539-f4ee-4c1d-9039-9bfcc0285f07" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-khmer-khm" class="sf-depth-4">Voter Info Khmer</a></li><li id="main-menu-link-content5e1a2579-c546-4860-9ff8-c4c152b1860e" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-korean-kor" class="sf-depth-4">Voter Info Korean</a></li><li id="main-menu-link-contentc49d2efd-cbe2-4595-8827-af34e8d66de3" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-russian-rus" class="sf-depth-4">Voter Info Russian</a></li><li id="main-menu-link-contentd9e25d7c-efef-4922-9f9e-aa2e94419758" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-spanish-spa" class="sf-depth-4">Voter Info Spanish</a></li><li id="main-menu-link-content148efbbd-3aca-4fb1-8697-23bc73b40d41" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-tagalog-tgl" class="sf-depth-4">Voter Info Tagalog</a></li><li id="main-menu-link-content498c84c5-195b-4a64-93f2-ab04f93a6186" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-thai-tha" class="sf-depth-4">Voter Info Thai</a></li><li id="main-menu-link-content0ae5ef37-63d9-499e-8d4b-8dc36b733f4b" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/multilingual-services/voter-info-vietnamese-vie" class="sf-depth-4">Voter Info Vietnamese</a></li></ul></li><li id="main-menu-link-content41d81218-5431-4180-a66e-5a125dba4a7f" class="active-trail sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/elections/municipal-elections" class="sf-depth-3 menuparent">Municipal Elections</a><ul><li id="main-menu-link-contentd2eafc36-4766-4b75-9e8b-c2654565c00c" class="active-trail sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/municipal-elections/ballot-measures" class="is-active sf-depth-4">Ballot Measures</a></li><li id="main-menu-link-content8bf56607-b402-4e74-96bc-928ba12016a4" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/municipal-elections/declaration-intention-become-candidate" title="Supplemental Candidate Filing Forms" class="sf-depth-4">Candidate Filing Forms</a></li><li id="main-menu-link-contente41e243e-9257-41b3-9353-a72b32221275" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/municipal-elections/candidate-filing-instructional-videos" class="sf-depth-4">Candidate Filing Instructional Videos</a></li><li id="main-menu-link-content1530986d-cd49-490b-9512-bd10384797cc" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/municipal-elections/candidate-filing" class="sf-depth-4">Candidate Filing</a></li><li id="main-menu-link-content9db114e3-7ff9-4374-aa6e-45fcd21798c0" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/municipal-elections/contact-info-statements" class="sf-depth-4">Contact Info Statements</a></li><li id="main-menu-link-contente0e4cff8-153d-478f-abe5-367ca46f19f5" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/municipal-elections/2026-general-information-municipal-candidates" class="sf-depth-4">General Info for Municipal Candidates Pamphlet</a></li></ul></li><li id="main-menu-link-contentcccbfd53-7064-416f-b7ac-2b6e97196393" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/elections/officials-info" class="sf-depth-3">Officials Info</a></li><li id="main-menu-link-contente4877ba5-ab09-40aa-ba1a-7b25cf5f9018" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/elections/petition-and-measure-info" class="sf-depth-3 menuparent">Petition and Measure Info</a><ul><li id="main-menu-link-contente6bd4219-4a61-4fb4-9de7-1c43c1140b6e" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/petition-and-measure-info/ballot-measures-and-petition-text" class="sf-depth-4">Pending Citizen Sponsored Initiative Text</a></li><li id="main-menu-link-content9619ef1b-9156-4019-8bc8-5195d017f0e0" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/petition-and-measure-info/petition-status" title="Citizen-sponsored Petition Status" class="sf-depth-4">Petition Status</a></li></ul></li><li id="main-menu-link-content240776d9-93ef-4f8c-955b-9abdb5481740" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/elections/press-releases" class="sf-depth-3">Press Releases</a></li></ul></li><li id="main-menu-link-contentbcdc2a53-a3ae-45b7-8d14-ed7b412cc033" class="sf-depth-2 sf-depth-2 sf-expanded menuparent"><a href="https://clerk.lacity.gov/rmd" class="sf-depth-2 sf-external menuparent">Records Management</a><ul><li id="main-menu-link-content92b98c09-cc1d-46dd-8873-ed925ad6f580" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/clerk-services/rmd/about-rmd" class="sf-depth-3 menuparent">About RMD</a><ul><li id="main-menu-link-content3189ab45-7b23-4bac-be6c-1205ee8887a4" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/rmd/about-rmd/listing-closures" class="sf-depth-4">Listing of Closures</a></li></ul></li><li id="main-menu-link-contente5b086ba-14c5-4256-a35e-3cdbe3eedfe8" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/records-management/archive-inventory-reports" class="sf-depth-3">Archive Inventory Reports</a></li><li id="main-menu-link-contentb38fb9ff-8e11-4c22-8580-73c59273dcbf" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/clerk-services/records-management/city-archives-and-records-center" class="sf-depth-3 menuparent">City Archives and Records Center</a><ul><li id="main-menu-link-contenta3754851-7792-43f4-be71-859277dd0806" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/records-management/city-archives-and-records-center/city-council-indexes-1940-1979" class="sf-depth-4">City Council Indexes 1940 to 1979</a></li><li id="main-menu-link-content618fe414-36d4-4f80-b66a-6a5e97b7da8e" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/records-management/city-archives-and-records-center/history-comes-alive" class="sf-depth-4">History Comes Alive</a></li><li id="main-menu-link-content2303e696-347b-464f-bb4d-abab9309f463" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/records-management/city-archives-and-records-center/records-disposition-activity" class="sf-depth-4">Records Disposition Activity</a></li></ul></li><li id="main-menu-link-contentdbdec1db-e6ad-4c04-8af5-a093b8bef05e" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/records-management/maps" class="sf-depth-3">Maps</a></li><li id="main-menu-link-contented96538a-c7a5-43ef-9eba-245db078ee1f" class="sf-depth-3 sf-depth-2 sf-expanded menuparent"><a href="/clerk-services/rmd/online-resources" class="sf-depth-3 menuparent">Online Resources</a><ul><li id="main-menu-link-content3fde7e9a-7d59-4b8a-8a7d-7897ece3ecf9" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/records-management/online-resources/city-clerk-resources" class="sf-depth-4">City Clerk Resources</a></li><li id="main-menu-link-content18920c3a-577c-4ab0-9c75-d7082bb7685d" class="sf-depth-4 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/rmd/online-resources/other-resources" class="sf-depth-4">Other Resources</a></li></ul></li><li id="main-menu-link-content0d1e942b-188b-44c9-8b8c-50f15f4ece2d" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/records-management/photographs" class="sf-depth-3">Photographs</a></li><li id="main-menu-link-content09d59ecd-4336-444e-b1b9-82398ebd7f1d" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/records-management/records-disposition-schedules" class="sf-depth-3">Records Disposition Schedules</a></li><li id="main-menu-link-contenta234dbce-7485-4eea-8596-85f6fd172bbc" class="sf-depth-3 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/records-management/records-management-info" class="sf-depth-3">Records Management Info</a></li></ul></li></ul></li><li id="main-menu-link-contente11290fc-5905-452f-82cf-6965ec1c1678" class="sf-depth-1 sf-depth-2 sf-expanded sf-no-children"><a href="/about-us" class="sf-depth-1">About Us</a></li><li id="main-menu-link-content40d64dd9-4340-4aab-b75e-e16a3e8fcbeb" class="sf-depth-1 sf-depth-2 sf-expanded sf-no-children"><a href="/clerk-services/cps/file-claim" class="sf-depth-1">Claim for Damage</a></li><li id="main-menu-link-content5400ea13-e055-4127-bb31-28d7d05385e8" class="sf-depth-1 sf-depth-2 sf-expanded sf-no-children"><a href="/articles/resources" class="sf-depth-1">Resources</a></li><li id="main-menu-link-contentca35a894-58c5-4642-a8c4-7186d32b83ff" class="sf-depth-1 sf-depth-2 sf-expanded sf-no-children"><a href="/contact-us" class="sf-depth-1">Contact Us</a></li><li id="main-menu-link-contentb1312e4e-554f-4c2a-85cc-98350fe8babe" class="sf-depth-1 sf-depth-2 sf-expanded sf-no-children"><span class="acc icon-off sf-depth-1 nolink">Accessibility</span></li><li id="main-menu-link-contentb897329e-dcec-4de2-8b5f-bdb2e5ea1811" class="sf-depth-1 sf-depth-2 sf-expanded sf-no-children"><span class="translate py-3 sf-depth-1 nolink">Español &amp; more</span></li><li id="main-menu-link-content9ace0d50-1826-44a7-81d8-17f3c10bffbe" class="sf-depth-1 sf-depth-2 sf-expanded sf-no-children"><a href="/search" class="search-icon text-off py-2 ms-lg-2 sf-depth-1">Search</a></li>
+</ul>
+
+    </div>
+  </div>
+<nav
+	role="navigation" aria-labelledby="block-clerk20-mainnavigation-2-menu"  id="block-clerk20-mainnavigation-2" class="d-none d-xl-block settings-tray-editable block block-menu navigation menu--main" data-drupal-settingstray="editable">
+						
+	<span class="visually-hidden" id="block-clerk20-mainnavigation-2-menu">Main navigation</span>
+	
+
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <ul class="clearfix nav navbar-nav d-flex align-items-center angelfish-panel-menu onHover">
+    
+
+  
+      
+                  
+            <li class="nav-item menu-item--expanded active">
+                                                     <a href="/clerk-divisions" class="nav-link active dropdown-toggle nav-link--clerk-divisions text-wrap" aria-expanded="true" aria-haspopup="true" data-drupal-link-system-path="node/11">Clerk Services</a>
+                          
+
+
+
+
+  <ul class="mt-0 px-2 py-4 rounded-0 dropdown-menu menu-holder position-absolute" style = "width:1320px;">
+    
+      
+            
+      
+      
+                  
+
+                        <li class="nav-item menu-item--expanded dropdown col-md-3">
+                                       <a href="https://clerk.lacity.gov/business-improvement-districts" class="dropdown-toggle nav-link-https--clerklacitygov-business-improvement-districts text-wrap">Business Improvement Districts</a>
+              
+
+
+
+
+
+    
+    <ul class="ps-0 position-relative show">
+
+      
+      
+                              <li class="dropdown-item">
+                       <a href="https://cityclerk.lacity.org/BidsPortal/main" target="_blank" title="BIDs Portal" class="nav-link-https--cityclerklacityorg-bidsportal-main text-wrap">BIDs Portal</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/business-improvement-districts/administrators" class="nav-link--business-improvement-districts-administrators text-wrap" data-drupal-link-system-path="node/251">Administrators</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/business-improvement-districts/bids-general-information" class="nav-link--business-improvement-districts-bids-general-information text-wrap" data-drupal-link-system-path="node/231">BIDs General Information</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/business-improvement-districts/ballot-tabulation" class="nav-link--business-improvement-districts-ballot-tabulation text-wrap" data-drupal-link-system-path="node/606">Ballot Tabulation</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="https://cityclerk.lacity.org/nbid/gmaps.html" class="nav-link-https--cityclerklacityorg-nbid-gmapshtml text-wrap">Find A BID</a>
+                </li>
+            </ul>
+        
+                          </li>
+        
+            
+      
+      
+                  
+
+                        <li class="nav-item menu-item--expanded dropdown col-md-3">
+                                       <a href="https://clerk.lacity.gov/council-and-public-services" class="dropdown-toggle nav-link-https--clerklacitygov-council-and-public-services text-wrap">Council and Public Services</a>
+              
+
+
+
+
+
+    
+    <ul class="ps-0 position-relative show">
+
+      
+      
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/clerk-services/council-and-public-services/alcohol-pcn" class="nav-link--clerk-services-council-and-public-services-alcohol-pcn text-wrap" data-drupal-link-system-path="node/406">Alcohol PCN</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/clerk-services/council-and-public-services/cps-resources" class="nav-link--clerk-services-council-and-public-services-cps-resources text-wrap" data-drupal-link-system-path="node/381">CPS Resources</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/clerk-services/council-and-public-services/city-health-commission" class="nav-link--clerk-services-council-and-public-services-city-health-commission text-wrap" data-drupal-link-system-path="node/426">City Health Commission</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/clerk-services/council-and-public-services/claim-damage" class="nav-link--clerk-services-council-and-public-services-claim-damage text-wrap" data-drupal-link-system-path="node/351">Claim for Damage</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/council-and-public-services/claim-refund" class="nav-link--clerk-services-council-and-public-services-claim-refund text-wrap" data-drupal-link-system-path="node/1736">Claim for Refund</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/council-and-public-services/commission-resources" class="nav-link--clerk-services-council-and-public-services-commission-resources text-wrap" data-drupal-link-system-path="node/416">Commission Resources</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/council-and-public-services/council-committee" class="nav-link--council-and-public-services-council-committee text-wrap" data-drupal-link-system-path="node/336">Council &amp; Committee Meetings</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/council-and-public-services/metal-and-wire-theft-reward-program" class="nav-link--clerk-services-council-and-public-services-metal-and-wire-theft-reward-program text-wrap" data-drupal-link-system-path="node/1886">Metal and Wire Theft Reward Program</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/clerk-services/council-and-public-services/naming-renaming-community" class="nav-link--clerk-services-council-and-public-services-naming-renaming-community text-wrap" data-drupal-link-system-path="node/376">Naming Renaming Community</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="https://lms.lacity.gov/home" class="nav-link-https--lmslacitygov-home text-wrap">Search Council Files</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/council-and-public-services/service-process" class="nav-link--clerk-services-council-and-public-services-service-process text-wrap" data-drupal-link-system-path="node/1271">Service of Process</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/council-and-public-services/special-reward-application" class="nav-link--clerk-services-council-and-public-services-special-reward-application text-wrap" data-drupal-link-system-path="node/366">Special Reward Application</a>
+                </li>
+            </ul>
+        
+                          </li>
+        
+            
+      
+      
+                  
+
+                        <li class="nav-item menu-item--expanded dropdown col-md-3">
+                                       <a href="/neighborhood-council-elections-and-funding" title="Neighborhood Council Elections and Founding" class="dropdown-toggle nav-link--neighborhood-council-elections-and-funding text-wrap" data-drupal-link-system-path="node/1761">Neighborhood Councils</a>
+              
+
+
+
+
+
+    
+    <ul class="ps-0 position-relative show">
+
+      
+      
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/neighborhood-council-elections-and-funding/neighborhood-council-elections" title="Neighborhood Council Elections" class="nav-link--neighborhood-council-elections-and-funding-neighborhood-council-elections text-wrap" data-drupal-link-system-path="node/1301">Neighborhood Council Elections</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="https://clerk.lacity.gov/neighborhood-council-elections-and-funding/neighborhood-council-funding" class="nav-link-https--clerklacitygov-neighborhood-council-elections-and-funding-neighborhood-council-funding text-wrap">Neighborhood Council Funding</a>
+                </li>
+            </ul>
+        
+                          </li>
+        
+            
+      
+      
+                  
+
+                        <li class="nav-item menu-item--expanded active dropdown col-md-3">
+                                       <a href="https://clerk.lacity.gov/elections" class="active dropdown-toggle nav-link-https--clerklacitygov-elections text-wrap">Elections</a>
+              
+
+
+
+
+
+    
+    <ul class="ps-0 position-relative show">
+
+      
+      
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/elections/election-archives" class="nav-link--clerk-services-elections-election-archives text-wrap" data-drupal-link-system-path="node/561">Election Archives</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/elections/election-resources" class="nav-link--clerk-services-elections-election-resources text-wrap" data-drupal-link-system-path="node/566">Election Resources</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/elections/multilingual-services" class="nav-link--elections-multilingual-services text-wrap" data-drupal-link-system-path="node/576">Multilingual Services</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed active">
+                       <a href="/elections/municipal-elections" class="active nav-link--elections-municipal-elections text-wrap" data-drupal-link-system-path="node/531">Municipal Elections</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/elections/officials-info" class="nav-link--clerk-services-elections-officials-info text-wrap" data-drupal-link-system-path="node/551">Officials Info</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/elections/petition-and-measure-info" class="nav-link--elections-petition-and-measure-info text-wrap" data-drupal-link-system-path="node/546">Petition and Measure Info</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/elections/press-releases" class="nav-link--elections-press-releases text-wrap" data-drupal-link-system-path="node/556">Press Releases</a>
+                </li>
+            </ul>
+        
+                          </li>
+        
+            
+      
+      
+                  
+
+                        <li class="nav-item menu-item--expanded dropdown col-md-3">
+                                       <a href="https://clerk.lacity.gov/rmd" class="dropdown-toggle nav-link-https--clerklacitygov-rmd text-wrap">Records Management</a>
+              
+
+
+
+
+
+    
+    <ul class="ps-0 position-relative show">
+
+      
+      
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/clerk-services/rmd/about-rmd" class="nav-link--clerk-services-rmd-about-rmd text-wrap" data-drupal-link-system-path="node/186">About RMD</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/records-management/archive-inventory-reports" class="nav-link--clerk-services-records-management-archive-inventory-reports text-wrap" data-drupal-link-system-path="node/131">Archive Inventory Reports</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/clerk-services/records-management/city-archives-and-records-center" class="nav-link--clerk-services-records-management-city-archives-and-records-center text-wrap" data-drupal-link-system-path="node/146">City Archives and Records Center</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/records-management/maps" class="nav-link--clerk-services-records-management-maps text-wrap" data-drupal-link-system-path="node/141">Maps</a>
+                </li>
+        
+                              <li class="dropdown-item menu-item--collapsed">
+                       <a href="/clerk-services/rmd/online-resources" class="nav-link--clerk-services-rmd-online-resources text-wrap" data-drupal-link-system-path="node/156">Online Resources</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/records-management/photographs" class="nav-link--clerk-services-records-management-photographs text-wrap" data-drupal-link-system-path="node/136">Photographs</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/records-management/records-disposition-schedules" class="nav-link--clerk-services-records-management-records-disposition-schedules text-wrap" data-drupal-link-system-path="node/121">Records Disposition Schedules</a>
+                </li>
+        
+                              <li class="dropdown-item">
+                       <a href="/clerk-services/records-management/records-management-info" class="nav-link--clerk-services-records-management-records-management-info text-wrap" data-drupal-link-system-path="node/126">Records Management Info</a>
+                </li>
+            </ul>
+        
+                          </li>
+            </ul>
+        
+                            </li>
+        
+                  
+            <li class="nav-item">
+                       <a href="/about-us" class="nav-link nav-link--about-us text-wrap" data-drupal-link-system-path="node/6">About Us</a>
+                </li>
+        
+                  
+            <li class="nav-item">
+                       <a href="/clerk-services/cps/file-claim" class="nav-link nav-link--clerk-services-cps-file-claim text-wrap">Claim for Damage</a>
+                </li>
+        
+                  
+            <li class="nav-item">
+                       <a href="/articles/resources" class="nav-link nav-link--articles-resources text-wrap" data-drupal-link-system-path="node/1641">Resources</a>
+                </li>
+        
+                  
+            <li class="nav-item">
+                       <a href="/contact-us" class="nav-link nav-link--contact-us text-wrap" data-drupal-link-system-path="node/996">Contact Us</a>
+                </li>
+        
+                  
+            <li class="nav-item">
+                       <span class="acc icon-off nav-link acc icon-off nav-link- text-wrap">Accessibility</span>
+                </li>
+        
+                  
+            <li class="nav-item">
+                       <span class="translate py-3 nav-link translate py-3 nav-link- text-wrap">Español &amp; more</span>
+                </li>
+        
+                  
+            <li class="nav-item">
+                       <a href="/search" class="search-icon text-off py-2 ms-lg-2 nav-link search-icon text-off py-2 ms-lg-2 nav-link--search text-wrap" data-drupal-link-system-path="search">Search</a>
+                </li>
+            </ul>
+        
+
+
+	</nav>
+
+
+  </section>
+
+                                                  </div>
+        </nav>
+          </header>
+                  <div class="featured-top">
+          <aside class="featured-top__inner container-fluid section clearfix" role="complementary">
+              <section class="region region-featured-top">
+    <div class="views-element-container settings-tray-editable block block-views block-views-blockhero-block-1" id="block-clerk20-views-block-hero-block-1" data-drupal-settingstray="editable">
+  
+    
+      <div class="content">
+      <div><div class="view view-hero view-id-hero view-display-id-block_1 js-view-dom-id-8e2cd4c69c633b759c1a0b03167acd65d94352a634a6fc1eda9635c224a569ce">
+  
+    
+      
+      <div class="view-content row">
+          <div class="p-0 views-row">
+    <div class="views-field views-field-field-hero-paragraph"><div class="field-content">
+
+
+
+  <div class="paragraph paragraph--type--hero-image-version-2 paragraph--view-mode--default">
+          
+                       <div class="paragraph paragraph--type--hero-image-version-2 paragraph--view-mode--default col-12 px-0" >
+                                                <img class="img-fluid" class="swiper-image" loading="eager" srcset="/sites/g/files/wph1491/files/styles/small_hero_image_192_25_320x41_67_/public/2021-02/municipal-election.jpg.webp?itok=PQ29cH-a 320w, /sites/g/files/wph1491/files/styles/small_hero_image_192_25_576x75_/public/2021-02/municipal-election.jpg.webp?itok=E5nRPMag 576w, /sites/g/files/wph1491/files/styles/small_hero_image_192_25_768x100_/public/2021-02/municipal-election.jpg.webp?itok=ISnFUgnR 768w, /sites/g/files/wph1491/files/styles/small_hero_image_192_25_992x129_/public/2021-02/municipal-election.jpg.webp?itok=VM2farHN 992w, /sites/g/files/wph1491/files/styles/small_hero_image_192_25_1200x156_25_/public/2021-02/municipal-election.jpg.webp?itok=i8xNRqT4 1200w, /sites/g/files/wph1491/files/styles/small_hero_image_192_25_1440x187_5_/public/2021-02/municipal-election.jpg.webp?itok=XIeCyTnd 1440w, /sites/g/files/wph1491/files/styles/small_hero_image_192_25_1600x208_33_/public/2021-02/municipal-election.jpg.webp?itok=tS-Zd1I9 1600w, /sites/g/files/wph1491/files/styles/small_hero_image_192_25_1920x250_/public/2021-02/municipal-election.jpg.webp?itok=3FSqMGZ7 1920w" sizes="100vw" width="320" height="42" src="/sites/g/files/wph1491/files/styles/small_hero_image_192_25_320x41_67_/public/2021-02/municipal-election.jpg.webp?itok=PQ29cH-a" alt="Person pointing the left index finger at a voter tablet " />
+
+
+                                       </div>
+      </div>
+</div></div>
+  </div>
+
+    </div>
+  
+          </div>
+</div>
+
+    </div>
+  </div>
+
+  </section>
+
+          </aside>
+        </div>
+                    <div class="highlighted">
+        <aside class="container section clearfix" role="complementary">
+            <div data-drupal-messages-fallback class="hidden"></div>
+
+
+        </aside>
+      </div>
+        <div id="main-wrapper" class="layout-main-wrapper clearfix">
+              <div class="container">
+          <section class="region region-breadcrumb">
+    <div id="block-clerk20-breadcrumbs" class="settings-tray-editable block block-system block-system-breadcrumb-block" data-drupal-settingstray="editable">
+  
+    
+      <div class="content">
+      
+  <nav role="navigation" aria-label="breadcrumb" style="">
+  <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+        <a href="/">Home</a>
+      </li>
+                <li class="breadcrumb-item">
+        <a href="/elections">Elections</a>
+      </li>
+                <li class="breadcrumb-item">
+        <a href="/elections/municipal-elections">Municipal Elections</a>
+      </li>
+                <li class="breadcrumb-item active">
+        Ballot Measures
+      </li>
+        </ol>
+</nav>
+
+
+    </div>
+  </div>
+
+  </section>
+
+        </div>
+        <div id="main">
+          <div class="clearfix">
+              <main class="main-content" id="content" role="main">
+                <section class="section">
+                  <a id="main-content" tabindex="-1"></a>
+                    <div id="block-clerk20-content" class="block block-system block-system-main-block">
+  
+    
+      <div class="content">
+      
+
+<article class="node node--type-board-page node--view-mode-full clearfix">
+  <header>
+    
+        
+      </header>
+  <div class="node__content clearfix">
+    
+
+
+      <div class="field field--name-field-body field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">
+  
+
+
+		
+
+	
+
+
+              <div id="board-23166"  class="board board-23166 primary-bg">
+    			<div class="container">
+				
+            <div class="field field--name-field-template field--type-entity-reference-revisions field--label-hidden field__item">  <div class="paragraph paragraph--type--icon-menu paragraph--view-mode--default template--_026-general-municipal-election---voter-information-pamphlet-november-3-2026">
+             
+        <h2 class="pb-4"> 
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">2026 General Municipal Election - Voter Information Pamphlet (November 3, 2026)</div>
+      </h2>
+        
+
+
+      <div class="field field--name-field-menu field--type-entity-reference-revisions field--label-hidden field__items row">
+      
+                
+                     <div class="field__item icon-menu-item position-relative col-12 col-sm-6 col-lg-4 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+						
+		
+	
+	
+
+	
+			                                            <a target="_blank" rel="noreferrer noopener" class="stretched-link" href=https://cityclerk.lacity.org/election/ENG101_NOV-2026_Voter_Info_Pamphlet.pdf >
+                				<span class="sr-only">101 City voters, only</span>
+                    </a>
+            
+		<div class="icon-top">
+					<span class="fas fa-file-lines icon-circle icon-medium icon-circle-background"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">101 City voters, only</div>
+      </div>
+
+		
+		                                   <div class="card-caption text-center">
+                        <small>PDF</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                     <div class="field__item icon-menu-item position-relative col-12 col-sm-6 col-lg-4 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+						
+		
+	
+	
+
+	
+			                                            <a target="_blank" rel="noreferrer noopener" class="stretched-link" href=https://cityclerk.lacity.org/election/ENG201_NOV-2026_Voter_Info_Pamphlet.pdf >
+                				<span class="sr-only">201 City and LAUSD voters</span>
+                    </a>
+            
+		<div class="icon-top">
+					<span class="fas fa-file-lines icon-circle icon-medium icon-circle-background"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">201 City and LAUSD voters</div>
+      </div>
+
+		
+		                                   <div class="card-caption text-center">
+                        <small>PDF</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                     <div class="field__item icon-menu-item position-relative col-12 col-sm-6 col-lg-4 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+						
+		
+	
+	
+
+	
+			                                            <a target="_blank" rel="noreferrer noopener" class="stretched-link" href=https://cityclerk.lacity.org/election/ENG301_NOV-2026_Voter_Info_Pamphlet.pdf >
+                				<span class="sr-only">301 LAUSD voters</span>
+                    </a>
+            
+		<div class="icon-top">
+					<span class="fas fa-file-lines icon-circle icon-medium icon-circle-background"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">301 LAUSD voters</div>
+      </div>
+
+		
+		                                   <div class="card-caption text-center">
+                        <small>PDF</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                     <div class="field__item icon-menu-item position-relative col-12 col-sm-6 col-lg-4 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+						
+		
+	
+	
+
+	
+			                                            <a target="_blank" rel="noreferrer noopener" class="stretched-link" href=https://drive.google.com/file/d/1v7wQaF_wOpk4AzZ-J07UDVA_nwfbxtY_/view?usp=drive_link >
+                				<span class="sr-only">Audio File</span>
+                    </a>
+            
+		<div class="icon-top">
+					<span class="fas fa-ear-listen icon-circle icon-medium icon-circle-background"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">Audio File</div>
+      </div>
+
+		
+		                                   <div class="card-caption text-center">
+                        <small>Ballot Measures and Arguments Audio Version (MP3)</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                     <div class="field__item icon-menu-item position-relative col-12 col-sm-6 col-lg-4 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+						
+		
+	
+	
+
+	
+			                                            <a target="_blank" rel="noreferrer noopener" class="stretched-link" href=https://cityclerk.lacity.org/election/November-2026_Ballot_Measures_Argument_Videos.pdf >
+                				<span class="sr-only">Argument Videos</span>
+                    </a>
+            
+		<div class="icon-top">
+					<span class="fab fa-youtube icon-circle icon-medium icon-circle-background"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">Argument Videos</div>
+      </div>
+
+		
+		                                   <div class="card-caption text-center">
+                        <small>Ballot Measure Arguments Video Version</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+          </div>
+  
+        
+      </div>
+
+
+</div>
+      
+			</div>
+		</div>
+    
+</div>
+              <div class="field__item">
+  
+
+
+		
+
+	
+
+
+              <div id="board-23071"  class="board board-23071 pb-5 primary-bg">
+    			<div class="container">
+				
+            <div class="field field--name-field-template field--type-entity-reference-revisions field--label-hidden field__item">  <div class="paragraph paragraph--type--icon-menu paragraph--view-mode--default template--_026-general-municipal-election---voter-information-pamphlet-november-3-2026">
+                  
+
+
+      <div class="field field--name-field-menu field--type-entity-reference-revisions field--label-hidden field__items row">
+      
+                
+                   <div class="field__item icon-menu-item position-relative col-12 col-md-6 col-xl-3 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			
+		<div class="icon-top">
+					<span class="fas fa-check icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">PROPOSITION TE</div>
+      </div>
+
+		
+            <div class="clearfix text-formatted field field--name-field-description field--type-text-long field--label-hidden field__item"><p>PROPERTY TRANSFER TAX EXEMPTION FOR VICTIMS OF THE JANUARY 2025 FIRE DISASTER.&nbsp;</p></div>
+      
+		                                   <div class="card-caption text-center">
+                        <small>Council File: 26-1100-S9</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                   <div class="field__item icon-menu-item position-relative col-12 col-md-6 col-xl-3 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			
+		<div class="icon-top">
+					<span class="fas fa-check icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">CHARTER AMENDMENT LA</div>
+      </div>
+
+		
+            <div class="clearfix text-formatted field field--name-field-description field--type-text-long field--label-hidden field__item"><p>CITY INFRASTRUCTURE, BUDGET, FINANCE, AND CONTRACTING.&nbsp;</p></div>
+      
+		                                   <div class="card-caption text-center">
+                        <small>Council File: 26-1100-S11</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                   <div class="field__item icon-menu-item position-relative col-12 col-md-6 col-xl-3 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			
+		<div class="icon-top">
+					<span class="fas fa-check icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">CHARTER AMENDMENT PL</div>
+      </div>
+
+		
+            <div class="clearfix text-formatted field field--name-field-description field--type-text-long field--label-hidden field__item"><p>CITY PLANNING DEPARTMENT.&nbsp;<br>&nbsp;</p></div>
+      
+		                                   <div class="card-caption text-center">
+                        <small>Council File: 26-1100-S12</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                   <div class="field__item icon-menu-item position-relative col-12 col-md-6 col-xl-3 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			
+		<div class="icon-top">
+					<span class="fas fa-check icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">CHARTER AMENDMENT EE</div>
+      </div>
+
+		
+            <div class="clearfix text-formatted field field--name-field-description field--type-text-long field--label-hidden field__item"><p>CITY ETHICS, ELECTIONS, AND GOVERNANCE.&nbsp;</p></div>
+      
+		                                   <div class="card-caption text-center">
+                        <small>Council File: 26-1100-S13</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                   <div class="field__item icon-menu-item position-relative col-12 col-md-6 col-xl-3 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			
+		<div class="icon-top">
+					<span class="fas fa-check icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">CHARTER AMENDMENT PRK</div>
+      </div>
+
+		
+            <div class="clearfix text-formatted field field--name-field-description field--type-text-long field--label-hidden field__item"><p>CITY DEPARTMENT OF RECREATION AND PARKS BUDGET.&nbsp;</p></div>
+      
+		                                   <div class="card-caption text-center">
+                        <small>Council File: 26-1100-S15</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                   <div class="field__item icon-menu-item position-relative col-12 col-md-6 col-xl-3 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			
+		<div class="icon-top">
+					<span class="fas fa-check icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">CHARTER AMENDMENT PRT</div>
+      </div>
+
+		
+            <div class="clearfix text-formatted field field--name-field-description field--type-text-long field--label-hidden field__item"><p>CITY AIRPORTS, HARBOR, AND WATER AND POWER DEPARTMENTS.&nbsp;</p></div>
+      
+		                                   <div class="card-caption text-center">
+                        <small>Council File: 26-1100-S16</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                   <div class="field__item icon-menu-item position-relative col-12 col-md-6 col-xl-3 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			
+		<div class="icon-top">
+					<span class="fas fa-check icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">CHARTER AMENDMENT SC</div>
+      </div>
+
+		
+            <div class="clearfix text-formatted field field--name-field-description field--type-text-long field--label-hidden field__item"><p>CAMPAIGN FINANCE RULES RELATED TO BOARD OF EDUCATION ELECTIONS.&nbsp;</p></div>
+      
+		                                   <div class="card-caption text-center">
+                        <small>Council File: 26-1100-S19</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                   <div class="field__item icon-menu-item position-relative col-12 col-md-6 col-xl-3 my-3">
+
+	
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default card w-100 p-4 paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			
+		<div class="icon-top">
+					<span class="fas fa-check icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">INITIATIVE ORDINANCE FD</div>
+      </div>
+
+		
+            <div class="clearfix text-formatted field field--name-field-description field--type-text-long field--label-hidden field__item"><p>FUNDING FOR THE LOS ANGELES FIRE DEPARTMENT THROUGH A ONE-HALF PERCENT SALES TAX.</p></div>
+      
+		                                   <div class="card-caption text-center">
+                        <small>Council File: 26-1100-S8</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+          </div>
+  
+        
+      </div>
+
+
+</div>
+      
+			</div>
+		</div>
+    
+</div>
+              <div class="field__item">
+  
+
+
+		
+
+	
+
+
+              <div id="board-22106"  class="board board-22106 pb-5 primary-bg">
+    			<div class="container">
+				
+            <div class="field field--name-field-template field--type-entity-reference-revisions field--label-hidden field__item">  <div class="paragraph paragraph--type--icon-menu paragraph--view-mode--default template--_026-primary-nominating-election---voter-information-pamphlet-june-2-2026">
+             
+        <h2 class="pb-4"> 
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">2026 Primary Nominating Election - Voter Information Pamphlet (June 2, 2026)</div>
+      </h2>
+        
+
+
+      <div class="field field--name-field-menu field--type-entity-reference-revisions field--label-hidden field__items row">
+      
+                
+                     <div class="field__item icon-menu-item position-relative col-12 col-sm-6 col-lg-4 my-3">
+
+
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			                                            <a class="stretched-link" href=https://cityclerk.lacity.org/election/ENG_JUN-2026_Voter_Info_Pamphlet.pdf>
+                				<span class="sr-only">Measure Text</span>
+                    </a>
+            
+		<div class="icon-top">
+					<span class="fas fa-file-lines icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">Measure Text</div>
+      </div>
+
+		
+            <div class="clearfix text-formatted field field--name-field-description field--type-text-long field--label-hidden field__item"><p>Council File: 26-1100-S1</p></div>
+      
+		                                   <div class="card-caption text-center">
+                        <small>APPLYING CANNABIS BUSINESS TAXES TO UNLICENSED CANNABIS BUSINESSES. PROPOSITION CB.</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                     <div class="field__item icon-menu-item position-relative col-12 col-sm-6 col-lg-4 my-3">
+
+
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			                                            <a class="stretched-link" href=https://cityclerk.lacity.org/election/ENG_JUN-2026_Voter_Info_Pamphlet.pdf>
+                				<span class="sr-only">Measure Text</span>
+                    </a>
+            
+		<div class="icon-top">
+					<span class="fas fa-file-lines icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">Measure Text</div>
+      </div>
+
+		
+            <div class="clearfix text-formatted field field--name-field-description field--type-text-long field--label-hidden field__item"><p>Council File: 26-1100-S2</p></div>
+      
+		                                   <div class="card-caption text-center">
+                        <small>APPLYING TRANSIENT OCCUPANCY TAX TO ONLINE TRAVEL COMPANIES. PROPOSITION TC.</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                     <div class="field__item icon-menu-item position-relative col-12 col-sm-6 col-lg-4 my-3">
+
+
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			                                            <a class="stretched-link" href=https://cityclerk.lacity.org/election/ENG_JUN-2026_Voter_Info_Pamphlet.pdf>
+                				<span class="sr-only">Measure Text</span>
+                    </a>
+            
+		<div class="icon-top">
+					<span class="fas fa-file-lines icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">Measure Text</div>
+      </div>
+
+		
+            <div class="clearfix text-formatted field field--name-field-description field--type-text-long field--label-hidden field__item"><p>Council File: 26-1100-S3</p></div>
+      
+		                                   <div class="card-caption text-center">
+                        <small>FUNDING FOR CITY SERVICES THROUGH MODIFICATIONS TO THE TRANSIENT OCCUPANCY TAX. PROPOSITION TT.</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                     <div class="field__item icon-menu-item position-relative col-12 col-sm-6 col-lg-4 my-3">
+
+
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			                                            <a class="stretched-link" href=https://drive.google.com/file/d/1Iu2kNb1ic7f6QJTdUyTRWJ3XF3WfHpB2/view>
+                				<span class="sr-only">Audio File</span>
+                    </a>
+            
+		<div class="icon-top">
+					<span class="fas fa-ear-listen icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">Audio File</div>
+      </div>
+
+		
+		                                   <div class="card-caption text-center">
+                        <small>Ballot Measures and Arguments Audio Version (MP3)</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+      
+                
+                     <div class="field__item icon-menu-item position-relative col-12 col-sm-6 col-lg-4 my-3">
+
+
+
+	
+
+
+   <div class="paragraph paragraph--type--icon-menu-item paragraph--view-mode--default paragraph-top">
+    
+	
+								
+	
+	
+
+	
+			                                            <a class="stretched-link" href=https://cityclerk.lacity.org/election/June-2026_Ballot_Measures_Argument_Videos.pdf>
+                				<span class="sr-only">Argument Videos</span>
+                    </a>
+            
+		<div class="icon-top">
+					<span class="fab fa-youtube icon-circle icon-medium"></span>
+				</div>
+
+	    <div class="menu-item-title m-0">
+            <div class="field field--name-field-title field--type-string field--label-hidden field__item">Argument Videos</div>
+      </div>
+
+		
+		                                   <div class="card-caption text-center">
+                        <small>Ballot Measure Arguments Video Version</small>
+                    </div>
+                
+
+
+	
+
+      </div>
+
+
+
+
+</div>
+        
+          </div>
+  
+        
+      </div>
+
+
+</div>
+      
+			</div>
+		</div>
+    
+</div>
+          </div>
+  
+  </div>
+</article>
+
+    </div>
+  </div>
+
+
+                </section>
+              </main>
+          </div>
+        </div>
+          </div>
+        <footer class="site-footer">
+              <div class="container">
+                      <div class="row site-footer__top clearfix">
+                <section class="col-md-6 col-lg-3 region-footer-first">
+    <div id="block-footercol1-2" class="settings-tray-editable block-content-basic block block-block-content block-block-content635eb2fb-c4c8-4edc-9fe6-1416cc1fd041" data-drupal-settingstray="editable">
+  
+    
+      <div class="content">
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><div id="footer-logo" class="mb-3">
+    <img src="/sites/g/files/wph1491/files/2024-01/logo_0.png" alt="Office of the City Clerk">
+    <a href="/home"><span class="visually-hidden">Office of the City Clerk - Home</span></a>
+</div>
+
+<h1 class="mb-3"><span class="h6">Stay Connected With Us</span></h1>
+
+<div class="d-flex">
+    <div class="me-4"><a href="https://www.youtube.com/LACityClerk" target="_blank" title="YouTube"><span class="fa-youtube fab fa-2xl"></span></a></div>
+    <div class="me-4"><a href="https://www.facebook.com/LACityClerk" target="_blank" title="Facebook"><span class="fa-facebook fab fa-2xl"></span></a></div>
+    <div class="me-4"><a href="https://www.instagram.com/LACityClerk" target="_blank" title="Instagram"><span class="fa-instagram fab fa-2xl"></span></a></div>
+    <div class="me-4"><a href="https://www.linkedin.com/company/lacityclerk" target="_blank" title="Linkedin"><span class="fa-linkedin fab fa-2xl"></span></a></div>
+    <div class="me-4"><a href="https://www.twitter.com/laCityClerk" target="_blank" title="Twitter"><span class="fa-x-twitter fab fa-2xl"></span></a></div>
+</div>
+
+</div>
+      
+    </div>
+  </div>
+
+  </section>
+
+                <section class="col-md-6 col-lg-3 region-footer-second">
+    <div id="block-footercol2-2" class="settings-tray-editable block-content-basic block block-block-content block-block-content78c49462-5c02-480d-bda9-7beae3b268a6" data-drupal-settingstray="editable">
+  
+    
+      <div class="content">
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><h1><span class="h6 ">Subscribe to Notices</span></h1>
+
+<div class="border border-light-subtle rounded-4 px-3 py-2 my-3 position-relative">
+    <span>Subscribe<br><strong>To Election Documents</strong></span>
+    <span class="fas fa-arrow-right position-absolute" style="right:2rem;bottom:0.5rem;font-size:20px;"></span>
+    <a href="https://lacity.gov/government/subscribe-agendas/election-documents" target="_blank" class="stretched-link"><span class="visually-hidden">Subscribe to Election Documents</span></a>
+</div>
+
+<div class="border border-light-subtle rounded-4 px-3 py-2 mb-3 position-relative">
+    <span>Subscribe<br><strong>To City Council Updates</strong></span>
+    <span class="fas fa-arrow-right position-absolute" style="right:2rem;bottom:0.5rem;font-size:20px;"></span>
+    <a href="https://lms.lacity.gov/subscriptions" target="_blank" class="stretched-link"><span class="visually-hidden">Subscribe To City Council Updates</span></a>
+</div></div>
+      
+    </div>
+  </div>
+
+  </section>
+
+                <section class="col-md-6 col-lg-3 region-footer-third">
+    <div id="block-footercol3-2" class="settings-tray-editable block-content-basic block block-block-content block-block-contentce2e3f83-c2cf-4c0a-9881-fe5832b5974e" data-drupal-settingstray="editable">
+  
+    
+      <div class="content">
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><h1><span class="h6">Offices of the City Clerk</span></h1>
+
+<p><strong>Los&nbsp;Angeles City&nbsp;Hall</strong><br>200&nbsp;N&nbsp;Spring&nbsp;St, Room 360<br>Los&nbsp;Angeles, CA 90012</p>
+
+<p><strong>C.&nbsp;Erwin Piper&nbsp;Technical&nbsp;Center</strong><br>555&nbsp;Ramirez&nbsp;St. Space 300<br>Los&nbsp;Angeles, CA 90012</p>
+</div>
+      
+    </div>
+  </div>
+
+  </section>
+
+                <section class="col-md-6 col-lg-3 region-footer-fourth">
+    <div id="block-footer4" class="settings-tray-editable block-content-basic block block-block-content block-block-content4e8e8c13-89d7-4371-ae4c-191ab8107498" data-drupal-settingstray="editable">
+  
+    
+      <div class="content">
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><h1><span class="h6">Our Officers</span></h1>
+
+
+<div class="btn-body d-flex align-self-center my-3 ">
+    <div class="graphic-small me-2">
+         <img width="50" height="50" src="/sites/g/files/wph1491/files/2026-09/Patrice_Web_footer_0-%281%29.jpg" class="rounded-circle" alt="Portrait of Patrice Lattimore, Los Angeles City Clerk">                   
+    </div>
+    <div class="btn-body my-auto">
+        <div class="font-weight-normal m-0"><strong>    <a href="https://clerk.lacity.gov/meet-la-city-clerk">Patrice&nbsp;Lattimore</a></strong><br>City&nbsp;Clerk</div>
+    </div>
+</div>
+
+<div class="btn-body d-flex align-self-center my-3 ">
+    <div class="graphic-small me-2">
+         <img width="50" height="50" src="/sites/g/files/wph1491/files/styles/medium/public/2025-09/ruben_Web_Footer__0.jpg?itok=EEreIxVh" class="rounded-circle" alt="Portrait of Ruben Viramontes, Executive Officer">                   
+    </div>
+    <div class="btn-body my-auto">
+        <div class="font-weight-normal m-0"><strong>Ruben&nbsp;Viramontes</strong><br>Executive&nbsp;Officer</div>
+    </div>
+</div>
+
+</div>
+      
+    </div>
+  </div>
+
+  </section>
+
+            </div>
+                                <div class="site-footer__bottom">
+                <section class="region region-footer-fifth">
+    <div id="block-clerk20-aquariumcopyright" class="settings-tray-editable block block-aquarium-copyright" data-drupal-settingstray="editable">
+  
+    
+      <div class="content">
+      <p>&copy; Copyright 2026 City of Los Angeles. All rights reserved.</p>
+    </div>
+  </div>
+<nav
+	role="navigation" aria-labelledby="block-clerk20-footer-menu"  id="block-clerk20-footer" class="settings-tray-editable block block-menu navigation menu--footer" data-drupal-settingstray="editable">
+						
+	<span class="visually-hidden" id="block-clerk20-footer-menu">Footer</span>
+	
+
+				
+              <ul class="clearfix nav flex-row" data-component-id="bootstrap_barrio:menu_columns">
+                    <li class="nav-item">
+                <a href="https://disclaimer.lacity.gov/disclaimer.htm" class="nav-link nav-link-https--disclaimerlacitygov-disclaimerhtm">Disclaimer</a>
+              </li>
+                <li class="nav-item">
+                <a href="https://disclaimer.lacity.gov/privacy.htm" class="nav-link nav-link-https--disclaimerlacitygov-privacyhtm">Privacy Policy</a>
+              </li>
+                <li class="nav-item">
+                <a href="https://disclaimer.lacity.gov/accessibility.htm" target="_blank" class="nav-link nav-link-https--disclaimerlacitygov-accessibilityhtm">Accessibility Statement</a>
+              </li>
+        </ul>
+  
+
+
+
+	</nav>
+
+<div id="block-clerk20-modalresize" class="settings-tray-editable block-content-basic block block-block-content block-block-content9f0a26b2-0231-4978-9cc0-9c35e9cb81f5" data-drupal-settingstray="editable">
+  
+    
+      <div class="content">
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><style>
+
+@media (min-width: 1300px) { 
+.modal.p1300 .modal-page-dialog.modal-dialog{
+       --bs-modal-width: 1300px; 
+        }
+    }
+
+</style></div>
+      
+    </div>
+  </div>
+
+  </section>
+
+            </div>
+                  </div>
+          </footer>
+      <div class="modal modal-region-wrapper" id="googleTranslate" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+          <div class="modal-content">
+            <div class="d-flex modal-header p-4 pb-0 border-0">
+              <span class="modal-title fw-normal h5">Google Translate</span>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+              </button>
+            </div>
+            <div class="modal-body mb-3">
+            <div id="google_translate_element"></div>
+            
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+  </div>
+
+    
+    <script src="/sites/g/files/wph1491/files/js/js_WphNq_oP0M72bYvGXDn2z94Pj69DQWgpwwp5QGfMyAU.js?scope=footer&amp;delta=0&amp;language=en&amp;theme=clerk20&amp;include=eJx1T91awyAMfSEcfj6F9z4AX6AZy5qSmtDN-vTSqbXOegPnh3ByoGTkI9nJP6PKC1PqHaxaZHift1ykWlUYN1pmicAPVmemkreGSGYM7XkxhooOXidQmoYAKaEZRWKqs58M9Qrzj52aeqUOw-fXEdQXuLTLrfmhMSW5D089dlRFlwTRjqT4FR2OKqVi6Vxi1P7p8c_wlzxY4rZInd13A8g-t-OeH-AMb7_Fwdk0ot76r2hPCye5oNKyUN31bQBmS4pY9v0F2RTtP3cUo9p6fwCs8L7Y"></script>
+<script src="//navbar.lacity.org/global_nav.js"></script>
+<script src="/sites/g/files/wph1491/files/js/js_9rmXPHzVn9Q-SNqncDx20V8W6tjtPmZu_Zj1TVMF4cM.js?scope=footer&amp;delta=2&amp;language=en&amp;theme=clerk20&amp;include=eJx1T91awyAMfSEcfj6F9z4AX6AZy5qSmtDN-vTSqbXOegPnh3ByoGTkI9nJP6PKC1PqHaxaZHift1ykWlUYN1pmicAPVmemkreGSGYM7XkxhooOXidQmoYAKaEZRWKqs58M9Qrzj52aeqUOw-fXEdQXuLTLrfmhMSW5D089dlRFlwTRjqT4FR2OKqVi6Vxi1P7p8c_wlzxY4rZInd13A8g-t-OeH-AMb7_Fwdk0ot76r2hPCye5oNKyUN31bQBmS4pY9v0F2RTtP3cUo9p6fwCs8L7Y"></script>
+<script src="/modules/contrib/ckeditor_accordion/js/accordion.frontend.min.js?tnqhzp"></script>
+<script src="/sites/g/files/wph1491/files/js/js_ddtlEnnT2bnb0uu2cwD7pH7aw_DdU3rLIJ4bggN998M.js?scope=footer&amp;delta=4&amp;language=en&amp;theme=clerk20&amp;include=eJx1T91awyAMfSEcfj6F9z4AX6AZy5qSmtDN-vTSqbXOegPnh3ByoGTkI9nJP6PKC1PqHaxaZHift1ykWlUYN1pmicAPVmemkreGSGYM7XkxhooOXidQmoYAKaEZRWKqs58M9Qrzj52aeqUOw-fXEdQXuLTLrfmhMSW5D089dlRFlwTRjqT4FR2OKqVi6Vxi1P7p8c_wlzxY4rZInd13A8g-t-OeH-AMb7_Fwdk0ot76r2hPCye5oNKyUN31bQBmS4pY9v0F2RTtP3cUo9p6fwCs8L7Y"></script>
+
+  </body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-03T10:29:14.096353+00:00",
+  "nativeSourceRows": 24,
+  "municipalOfficeBlocks": 4,
+  "municipalFullPrintedNames": 8,
+  "relatedOfficeBlocks": 12,
+  "relatedFullPrintedNames": 34,
+  "completeNativeNamedBlocksMatchExistingCountyIds": true,
+  "certificateVisuallyChecked": true,
+  "legalOrdinanceAndAttestedResolutionPageOneVisuallyChecked": true,
+  "exactSCRegisteredElectorate": "Los Angeles Unified School District / NCES0622710",
+  "scopeCorrectedExistingContests": 1,
+  "newContestOrCandidateIds": 0,
+  "heldQuestionRecordsPreservedExactly": 1,
+  "sourceOnlyPrimaryFindingsNoAbsenceWrites": true,
+  "nativeHashAndExcerptChecks": "PASS",
+  "heldAndCountyFilesUnchanged": "PASS",
+  "latestCxVotesRefRead": "9b923c7473baa22262f70603cda3ad30712456bc",
+  "latestCxVotesInputsRead": 53,
+  "installationRequiresLatestRelatedRecordReplay": true,
+  "productionWrites": false
+}

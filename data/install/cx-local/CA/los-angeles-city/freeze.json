@@ -1,0 +1,283 @@
+{
+  "frozenAt": "2026-11-03T10:29:57.578921+00:00",
+  "jurisdictionType": "CITY",
+  "state": "CA",
+  "city": "Los Angeles",
+  "cityFips": "0644000",
+  "cityPopulationRank": 2,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "fileCountExcludingFreeze": 33,
+  "bytesExcludingFreeze": 29128543,
+  "files": [
+    {
+      "path": "HANDOFF.md",
+      "bytes": 4485,
+      "sha256": "afbae5bd58c78f99447b6f06eb0dce88546a3487ee1356c13cb2c57e3c8233a7"
+    },
+    {
+      "path": "ballot-input/ca.json",
+      "bytes": 18106,
+      "sha256": "fb0baffdda8ade68c83cf85aabcf84000c14921ea946e2c768d81ddeffcaeabf"
+    },
+    {
+      "path": "baseline-input-hashes.json",
+      "bytes": 760,
+      "sha256": "3d89d7fdf018b4790203ef35f99c6f9560a97aeab61e034182eb4b0773d2dcef"
+    },
+    {
+      "path": "focused-validation.json",
+      "bytes": 916,
+      "sha256": "94add93606042a39d279055ffe5538a2d7a4a0cabd7fcbd7ed042fb0a4802d0f"
+    },
+    {
+      "path": "identity-reuse.json",
+      "bytes": 15128,
+      "sha256": "33336452c28d6c7896aeca8a8263a595eabe2611cf3610534ba0cd1632c4c416"
+    },
+    {
+      "path": "install.json",
+      "bytes": 4547,
+      "sha256": "101dce546a279f570d487f18b3865b0f2ec83f838708a946e24d2b9acfbd2309"
+    },
+    {
+      "path": "source-review.json",
+      "bytes": 14189,
+      "sha256": "0b9d5fe4f5695751ac25ed98f252072803a8da0067f0bd84e163fdbcf06f37d0"
+    },
+    {
+      "path": "source-support.json",
+      "bytes": 25323,
+      "sha256": "7bb12686c56f6ec22d08b41debd58c96f778ea99d8f7e14b674bbfd8bdedfae3"
+    },
+    {
+      "path": "sources/0d31de16ce968392420b06f291f599a4b26f8f2def3c0a7d194c024813ec4d5f.txt",
+      "bytes": 1817,
+      "sha256": "0d31de16ce968392420b06f291f599a4b26f8f2def3c0a7d194c024813ec4d5f"
+    },
+    {
+      "path": "sources/2408148e8b91f4b8efe91077ba7c9f4bf4cbae09e2171acfb35039c19e32f182.txt",
+      "bytes": 2254,
+      "sha256": "2408148e8b91f4b8efe91077ba7c9f4bf4cbae09e2171acfb35039c19e32f182"
+    },
+    {
+      "path": "sources/24112078dc349cc4b21c8900c9e7495e429238822e3599ddcb981679562605ea.source",
+      "bytes": 20313312,
+      "sha256": "24112078dc349cc4b21c8900c9e7495e429238822e3599ddcb981679562605ea"
+    },
+    {
+      "path": "sources/2995710e7bd8d16bfa3a3c5648edbdc962812d95739b13aea39e886c20e99a5d.source",
+      "bytes": 110236,
+      "sha256": "2995710e7bd8d16bfa3a3c5648edbdc962812d95739b13aea39e886c20e99a5d"
+    },
+    {
+      "path": "sources/2a70c8e9713505640b91b4da0c0841fc9e6f63cb6d904d1104adf37bb32bcf97.source",
+      "bytes": 1017347,
+      "sha256": "2a70c8e9713505640b91b4da0c0841fc9e6f63cb6d904d1104adf37bb32bcf97"
+    },
+    {
+      "path": "sources/39fc2124653d085e8fe2b329c4a80d475738c74b8c6f859230bbdfb4544dbcaf.source",
+      "bytes": 2664974,
+      "sha256": "39fc2124653d085e8fe2b329c4a80d475738c74b8c6f859230bbdfb4544dbcaf"
+    },
+    {
+      "path": "sources/3d6c262a9903c51a3daf3874f7051e06c44c6ef742c0603bd1690681ec257530.source",
+      "bytes": 93406,
+      "sha256": "3d6c262a9903c51a3daf3874f7051e06c44c6ef742c0603bd1690681ec257530"
+    },
+    {
+      "path": "sources/480871be0606b1cd183448421ae951d712a34a74206e0eb8dd57d5186e81193c.txt",
+      "bytes": 226695,
+      "sha256": "480871be0606b1cd183448421ae951d712a34a74206e0eb8dd57d5186e81193c"
+    },
+    {
+      "path": "sources/5181e4984d3235ebd502ab9b11a7ab8ad404162db4bbcc3f2bd37b608e27cb39.source",
+      "bytes": 84884,
+      "sha256": "5181e4984d3235ebd502ab9b11a7ab8ad404162db4bbcc3f2bd37b608e27cb39"
+    },
+    {
+      "path": "sources/55e96d07975e672774db32b53fd2b278fa0cc7fbf4dd1d3e2d0fce819875c51a.source",
+      "bytes": 163573,
+      "sha256": "55e96d07975e672774db32b53fd2b278fa0cc7fbf4dd1d3e2d0fce819875c51a"
+    },
+    {
+      "path": "sources/5985a219f59dda52b34a68c3dfc545741c3657db1044983c25e28ba680d1d00d.txt",
+      "bytes": 59725,
+      "sha256": "5985a219f59dda52b34a68c3dfc545741c3657db1044983c25e28ba680d1d00d"
+    },
+    {
+      "path": "sources/6c97cd46ac8ae596b8a595e771f54a0d6634ee8e9084d8f96b06616b26279815.txt",
+      "bytes": 64382,
+      "sha256": "6c97cd46ac8ae596b8a595e771f54a0d6634ee8e9084d8f96b06616b26279815"
+    },
+    {
+      "path": "sources/7398ddb368092607ab18edaf1209b2f9c6bacf30890768d8109b0e5d177c98de.source",
+      "bytes": 103543,
+      "sha256": "7398ddb368092607ab18edaf1209b2f9c6bacf30890768d8109b0e5d177c98de"
+    },
+    {
+      "path": "sources/7a0682cb9b18119974f6259c4e5a0a0a3d2caedb91a7355fa5523372e1d9aecc.txt",
+      "bytes": 1592,
+      "sha256": "7a0682cb9b18119974f6259c4e5a0a0a3d2caedb91a7355fa5523372e1d9aecc"
+    },
+    {
+      "path": "sources/95fbf8ec61212fc5e712ef4ad5534e6df59882c8c720f7ac433427347585dbfe.txt",
+      "bytes": 1684,
+      "sha256": "95fbf8ec61212fc5e712ef4ad5534e6df59882c8c720f7ac433427347585dbfe"
+    },
+    {
+      "path": "sources/99cfa1925ad5de21fc7187cd3d5c8f6d6ead6ff9582836ea3ff72f0d8a119390.txt",
+      "bytes": 4675,
+      "sha256": "99cfa1925ad5de21fc7187cd3d5c8f6d6ead6ff9582836ea3ff72f0d8a119390"
+    },
+    {
+      "path": "sources/9bf27af3a14bcc82c3da5166f67d5eb4da526a68dd4fc10fe027aef79be4f998.source",
+      "bytes": 1728280,
+      "sha256": "9bf27af3a14bcc82c3da5166f67d5eb4da526a68dd4fc10fe027aef79be4f998"
+    },
+    {
+      "path": "sources/9f170d563fda8f18fd1703bdeaa4d9611be601b286fdedeeb51d34e31e5280de.txt",
+      "bytes": 277155,
+      "sha256": "9f170d563fda8f18fd1703bdeaa4d9611be601b286fdedeeb51d34e31e5280de"
+    },
+    {
+      "path": "sources/a6ffc66874ef16651297a3235db07e6c82f8d324a308dae99339d2509f49a647.txt",
+      "bytes": 5102,
+      "sha256": "a6ffc66874ef16651297a3235db07e6c82f8d324a308dae99339d2509f49a647"
+    },
+    {
+      "path": "sources/a754b9452fbc7d623a235b4257a33b2caf021ee610b0a3c88973db0a733d2cb5.source",
+      "bytes": 308603,
+      "sha256": "a754b9452fbc7d623a235b4257a33b2caf021ee610b0a3c88973db0a733d2cb5"
+    },
+    {
+      "path": "sources/b8eb4cf717393002923a45e4344d38b6d04c44ad0437d1bbdee24422228b4e98.source",
+      "bytes": 1599217,
+      "sha256": "b8eb4cf717393002923a45e4344d38b6d04c44ad0437d1bbdee24422228b4e98"
+    },
+    {
+      "path": "sources/c5150520b31583ad7f78bb5d53564164191554abee3ade9e0f67a901a949896e.txt",
+      "bytes": 52399,
+      "sha256": "c5150520b31583ad7f78bb5d53564164191554abee3ade9e0f67a901a949896e"
+    },
+    {
+      "path": "sources/d1b61035ed80d630ffd6d15f560f2c6ab65c17579a710fbff7da1657a6739201.txt",
+      "bytes": 776,
+      "sha256": "d1b61035ed80d630ffd6d15f560f2c6ab65c17579a710fbff7da1657a6739201"
+    },
+    {
+      "path": "sources/d6e92b0d2c224740a8b89b10e3faa963b8a0ded84d997624f8695625c45a4d94.source",
+      "bytes": 158532,
+      "sha256": "d6e92b0d2c224740a8b89b10e3faa963b8a0ded84d997624f8695625c45a4d94"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 926,
+      "sha256": "47620a9453887d7f1e03b010cfeb3ce6889e957da36c6280481c9a9ccce02059"
+    }
+  ],
+  "externalOriginalAndExcerptDependencies": [
+    {
+      "path": "../los-angeles/sources/5cd458c74e43d972d5f17ab3450515861c52fffe50b0ddea234605780ccdb70c.source",
+      "sha256": "5cd458c74e43d972d5f17ab3450515861c52fffe50b0ddea234605780ccdb70c"
+    },
+    {
+      "path": "../los-angeles/sources/6c38b99d476a38add16e7b0321b515845a9cfccfdd23c8354ad1e735b63ea06e.txt",
+      "sha256": "6c38b99d476a38add16e7b0321b515845a9cfccfdd23c8354ad1e735b63ea06e"
+    },
+    {
+      "path": "../los-angeles/sources/2ddddd2fcc51775fef51c689d7fa0d57dca745e9bf82ba0065ae4bf65b400853.source",
+      "sha256": "2ddddd2fcc51775fef51c689d7fa0d57dca745e9bf82ba0065ae4bf65b400853"
+    },
+    {
+      "path": "../los-angeles/sources/f08ac6d43eb9d8c5cfd6c0ebe5e0327fa4456de9e3efd0c6dd0d084d95789d42.txt",
+      "sha256": "f08ac6d43eb9d8c5cfd6c0ebe5e0327fa4456de9e3efd0c6dd0d084d95789d42"
+    },
+    {
+      "path": "../los-angeles/sources/dd5bdb4cdb5ed3369ef4000b57a064dda476e0cfd476a5c996591a34898bd212.source",
+      "sha256": "dd5bdb4cdb5ed3369ef4000b57a064dda476e0cfd476a5c996591a34898bd212"
+    },
+    {
+      "path": "../los-angeles/sources/41e4a0e36830330da1cf465696424406f176deed4b63c99c24ded04f5d6bd82c.txt",
+      "sha256": "41e4a0e36830330da1cf465696424406f176deed4b63c99c24ded04f5d6bd82c"
+    },
+    {
+      "path": "../los-angeles/sources/86d98d73bebd21a292e3204769f8b787098cd9b683a680b0b3060d647ef895ec.source",
+      "sha256": "86d98d73bebd21a292e3204769f8b787098cd9b683a680b0b3060d647ef895ec"
+    },
+    {
+      "path": "../los-angeles/sources/bef5ac700f7d9e144c8c8ae9f86854896dc1107f392705f7c5b7f9eca1670af9.txt",
+      "sha256": "bef5ac700f7d9e144c8c8ae9f86854896dc1107f392705f7c5b7f9eca1670af9"
+    },
+    {
+      "path": "../los-angeles/sources/857bfa7cac522f3d57088e3d917129b429a4ff473386041f6ba775f4099790b1.source",
+      "sha256": "857bfa7cac522f3d57088e3d917129b429a4ff473386041f6ba775f4099790b1"
+    },
+    {
+      "path": "../los-angeles/sources/814a35c1bc1116f574ab0f3777cd4824c3920d4ef263f8b64008c705c9e04af7.txt",
+      "sha256": "814a35c1bc1116f574ab0f3777cd4824c3920d4ef263f8b64008c705c9e04af7"
+    },
+    {
+      "path": "../los-angeles/sources/d755c4ceaba7b490f37c017ada6d6d84a0b7f9b7c0218158868924676107ae25.source",
+      "sha256": "d755c4ceaba7b490f37c017ada6d6d84a0b7f9b7c0218158868924676107ae25"
+    },
+    {
+      "path": "../los-angeles/sources/ee743b087bee9a1f3ea70f5f77e81668a94c38ccf1969c540c2745e5338a7bbe.txt",
+      "sha256": "ee743b087bee9a1f3ea70f5f77e81668a94c38ccf1969c540c2745e5338a7bbe"
+    },
+    {
+      "path": "../los-angeles/sources/0ae813245bd9cf85e7aed311b69253819eb50af83e703cc54c71b66a28c1a2dc.source",
+      "sha256": "0ae813245bd9cf85e7aed311b69253819eb50af83e703cc54c71b66a28c1a2dc"
+    },
+    {
+      "path": "../los-angeles/sources/347ea411dcd7f914ad432b9c4d653e22cb04ae3ac6b514a1f2bfebcdcc26133d.txt",
+      "sha256": "347ea411dcd7f914ad432b9c4d653e22cb04ae3ac6b514a1f2bfebcdcc26133d"
+    },
+    {
+      "path": "../los-angeles/sources/5b05957b74710d1265bad225599fa69cd7fb94acf559eb1b4705c5a59a797f25.source",
+      "sha256": "5b05957b74710d1265bad225599fa69cd7fb94acf559eb1b4705c5a59a797f25"
+    },
+    {
+      "path": "../los-angeles/sources/0b841023155419991d3b0013d364197d493450d2355c69160a97494af9f86eab.txt",
+      "sha256": "0b841023155419991d3b0013d364197d493450d2355c69160a97494af9f86eab"
+    },
+    {
+      "path": "../los-angeles/sources/cd22d29febddc28935d8f42f517621332b595868b65b389e00272af49093c2f6.source",
+      "sha256": "cd22d29febddc28935d8f42f517621332b595868b65b389e00272af49093c2f6"
+    },
+    {
+      "path": "../los-angeles/sources/b45f20caf8efd6f9a40463758ab9310e3a04d086e6ade4e5e585e16a5a60ad70.txt",
+      "sha256": "b45f20caf8efd6f9a40463758ab9310e3a04d086e6ade4e5e585e16a5a60ad70"
+    },
+    {
+      "path": "../los-angeles/sources/1a38650234a82d2215403e1ac267f290ee3984aaa5afc9500783ee3395540f97.source",
+      "sha256": "1a38650234a82d2215403e1ac267f290ee3984aaa5afc9500783ee3395540f97"
+    },
+    {
+      "path": "../los-angeles/sources/4ec1e59cb44ba5d0833eb9aea778d6cc9f60d1016f5dcb117e788a8bf981b9f8.txt",
+      "sha256": "4ec1e59cb44ba5d0833eb9aea778d6cc9f60d1016f5dcb117e788a8bf981b9f8"
+    },
+    {
+      "path": "../los-angeles/sources/a3b375213569fa6088442e56311977847445c11bff6606bea3287e219b527f9c.source",
+      "sha256": "a3b375213569fa6088442e56311977847445c11bff6606bea3287e219b527f9c"
+    },
+    {
+      "path": "../los-angeles/sources/9a8c0543dd135bf9c88769799c007162b7a80820e526775717fec83d0dfa9dbd.txt",
+      "sha256": "9a8c0543dd135bf9c88769799c007162b7a80820e526775717fec83d0dfa9dbd"
+    },
+    {
+      "path": "../los-angeles/sources/3d4eb8ef7cee9146fdfa8315832c268775ae608ac156a101f892819960f12a55.source",
+      "sha256": "3d4eb8ef7cee9146fdfa8315832c268775ae608ac156a101f892819960f12a55"
+    },
+    {
+      "path": "../los-angeles/sources/5f45e245d739f02176646144cfa64f282dac5de229591987e220b7c8fb1bcf19.txt",
+      "sha256": "5f45e245d739f02176646144cfa64f282dac5de229591987e220b7c8fb1bcf19"
+    }
+  ],
+  "sharedValidation": "PASS",
+  "focusedValidation": "PASS",
+  "sameIdMeasureScopeCorrections": 1,
+  "newCandidateOrContestIds": 0,
+  "latestCxVotesRefRead": "9b923c7473baa22262f70603cda3ad30712456bc",
+  "latestCxVotesRecursiveInputsRead": 53,
+  "productionWrites": false
+}

@@ -1,0 +1,14 @@
+{
+  "state": "CA",
+  "county": "Riverside",
+  "officialCountyDenominator": 17,
+  "denominatorSource": "Official October24,2026 zero bulletin lists17local measures, including shared SanBernardinoCCD Y; seven notices on election page are not the full inventory.",
+  "preparedLabels": [
+    "U",
+    "V"
+  ],
+  "preparedAttached": 2,
+  "scope": "Exact listed measures/electorates only. Other county/local measures remain standing work.",
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

@@ -1,0 +1,105 @@
+[
+  {
+    "whatItDoes": "Approves zoning for the Sunset Crossroads project west of Sunset Avenue and south of Interstate 10 and the railroad, changing specified residential, commercial and open-space zones to the project's commercial, industrial, park and resource-open-space designations. It also pre-zones specified land outside the City, conditional on its annexation.",
+    "yesMeans": "Allow Ordinance 1618 to take effect, including the specified zoning changes, annexation condition and development-agreement payment condition.",
+    "noMeans": "Reject Ordinance 1618. The official analysis says the affected property would keep its existing high-, medium- and low-density residential, commercial and open-space zoning, as applicable.",
+    "contestId": "ca-2026-riverside-u",
+    "parts": [
+      {
+        "id": "ca-2026-riverside-u#property",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Property and allowed uses",
+        "what": "The ordinance concerns the approximately 533.8-acre Sunset Crossroads project, including about 253.7 acres in unincorporated Riverside County. It establishes the Specific Plan–Sunset Crossroads zoning designation for general commercial, industrial, open-space parks and open-space resources under the adopted specific plan. The official ordinance's legal descriptions identify the affected property; this is not a rezoning of the entire City."
+      },
+      {
+        "id": "ca-2026-riverside-u#limits",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Project limits stated in the ordinance",
+        "what": "The incorporated project description limits industrial floor area to 4,749,000 square feet, excludes cold-storage uses and removes the listed industrial buildings in Planning Areas 2,3,7,8 and 9. It removes the truck-fueling operation and limits commercial space to 223,753 square feet, including up to 200,000 square feet for a discount club, plus an approximately 125-room hotel."
+      },
+      {
+        "id": "ca-2026-riverside-u#annexation",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Outside-City land still needs annexation",
+        "what": "Pre-zoning in the City's sphere of influence becomes effective only when Riverside County's Local Agency Formation Commission executes the annexation's Certificate of Completion. A yes vote on this City zoning measure does not itself complete that annexation."
+      },
+      {
+        "id": "ca-2026-riverside-u#fee",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Payment condition can end the approval",
+        "what": "This zoning approval is subject to termination under the development agreement if the first public-benefit installment is not paid on time. The agreement specifies $3 million within 60 days of its effective date, with no extension for annexation denial, development delays, force majeure or a lawsuit. Nonpayment terminates the agreement and development approvals without notice or a chance to cure; development rights do not vest before the first payment."
+      },
+      {
+        "id": "ca-2026-riverside-u#housing",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Related housing-capacity change",
+        "what": "The ordinance links the commercial/industrial project to a separate proposal for approximately 41 acres of the MSJC site at Westward and Sunset, intended to avoid a net loss of residential development capacity. That different zoning ordinance is the subject of MeasureV. This measure's description does not treat the separate referendum result as already decided."
+      },
+      {
+        "id": "ca-2026-riverside-u#vote",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Referendum and approval",
+        "what": "A referendum petition suspended the Council-adopted ordinance for this vote. A majority of votes cast must approve MeasureU for it to take effect. Valid portions of the ordinance remain if another provision is invalidated."
+      }
+    ],
+    "sourceUrl": "https://www.banningca.gov/DocumentCenter/View/15226/Ordinance-No-1618",
+    "sourceHash": "e6025fddba5a1ef6381b9b30d0f4555be9461e7a7073dab0728201c799115481",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T10:57:17.627733+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "The official ballot, analysis and attached map describe changing about 41 acres of the 49.2-acre MSJC site at Westward and Sunset from school/public-facility zoning to very high-density residential zoning. The signed ordinance's main clause contains conflicting parcel and case references; that legal-text conflict remains unresolved.",
+    "yesMeans": "Approve Ordinance 1619 and the residential rezoning described in the official ballot and analysis, with the conflicting references in the signed text still disclosed.",
+    "noMeans": "Reject Ordinance 1619. The official analysis says the MSJC site would retain Public Facilities–School zoning.",
+    "contestId": "ca-2026-riverside-v",
+    "parts": [
+      {
+        "id": "ca-2026-riverside-v#conflict",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Inconsistent references in the signed ordinance",
+        "what": "The ordinance's title and attached map identify the MSJC-site parcels and case 22-3502, matching the ballot and current official analysis. Its main map-amendment clause instead lists different parcels and case 22-2502. This explanation follows the ballot's stated 41-acre proposal and identifies the inconsistency; it does not supply corrected parcel IDs or claim the legal conflict has been resolved."
+      },
+      {
+        "id": "ca-2026-riverside-v#capacity",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Density and housing capacity",
+        "what": "The described zoning permits 24 to 30 dwelling units per acre. The official analysis says it would provide capacity for at least 1,146 homes. Capacity is a planning allowance, not a promise that this number of homes will be built. The proposal addresses about 41 acres of the larger 49.2-acre site, rather than the whole site."
+      },
+      {
+        "id": "ca-2026-riverside-v#related-project",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Relationship to Sunset Crossroads",
+        "what": "The City describes the rezoning as a way to preserve residential development capacity displaced by the related Sunset Crossroads commercial/industrial proposal, under the state's no-net-loss housing rules. Ordinances 1618 and 1620 are separately presented as MeasuresU andW; those results are not assumed here."
+      },
+      {
+        "id": "ca-2026-riverside-v#construction",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Map change and future development",
+        "what": "The ordinance describes these MSJC-site entitlements as land-use and zoning-map changes, with no construction or physical alterations authorized by those entitlements. Its environmental review is programmatic. Actual future development is not guaranteed by this zoning vote."
+      },
+      {
+        "id": "ca-2026-riverside-v#vote",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Referendum and approval",
+        "what": "A majority of votes cast must approve MeasureV for the Council-adopted ordinance to take effect. The current official analysis says a no vote leaves the described school/public-facility zoning in place. Valid portions remain if another provision is invalidated."
+      }
+    ],
+    "sourceUrl": "https://www.banningca.gov/DocumentCenter/View/15227/Ordinance-No-1619",
+    "sourceHash": "b9d11bf7f6982d7647acf764d7366c1e5dd9c06a30d26bc8052b4da9c1339f3a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T10:57:17.627733+00:00",
+    "citation": "measure-source"
+  }
+]

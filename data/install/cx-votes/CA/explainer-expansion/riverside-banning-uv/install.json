@@ -1,0 +1,43 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-riverside-u",
+      "sourceUrl": "https://www.banningca.gov/DocumentCenter/View/15226/Ordinance-No-1618"
+    },
+    {
+      "id": "ca-2026-riverside-v",
+      "sourceUrl": "https://www.banningca.gov/DocumentCenter/View/15227/Ordinance-No-1619"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with CA and this ballot-input directory; preserve prior contests, candidates, measures and unrelated explanations. Data only, no app release.",
+  "sourceSupport": "source-support.json",
+  "coverage": {
+    "state": "CA",
+    "county": "Riverside",
+    "officialCountyDenominator": 17,
+    "denominatorSource": "Official October24,2026 zero bulletin lists17local measures, including shared SanBernardinoCCD Y; seven notices on election page are not the full inventory.",
+    "preparedLabels": [
+      "U",
+      "V"
+    ],
+    "preparedAttached": 2,
+    "scope": "Exact listed measures/electorates only. Other county/local measures remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "validation": "source-reader-check.json and reader-scope-check.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

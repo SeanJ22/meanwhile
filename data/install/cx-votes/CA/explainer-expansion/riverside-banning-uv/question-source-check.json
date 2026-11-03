@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "contestId": "ca-2026-riverside-u",
+      "status": "PASS",
+      "sourceUrl": "https://banningca.gov/1001/Local-Ballot-Measures",
+      "questionFile": "excerpts/ca-2026-riverside-u-question.txt",
+      "exactSourceSubstring": true,
+      "note": "Official current City visible-text question copied verbatim, including its printed l-10 glyph. No inferred correction to legal parcel or case references."
+    },
+    {
+      "contestId": "ca-2026-riverside-v",
+      "status": "PASS",
+      "sourceUrl": "https://banningca.gov/1001/Local-Ballot-Measures",
+      "questionFile": "excerpts/ca-2026-riverside-v-question.txt",
+      "exactSourceSubstring": true,
+      "note": "Official current City visible-text question copied verbatim, including its printed l-10 glyph. No inferred correction to legal parcel or case references."
+    }
+  ]
+}

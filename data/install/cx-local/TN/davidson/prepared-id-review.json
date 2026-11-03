@@ -1,0 +1,28 @@
+{
+  "comparison": {
+    "ref": "79402c8d32e5a7f2daca15219e21ce512de7cfe0",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/TN/ballot-input/tn.json",
+        "sha256": "216e91b9d5ea000655ff7003c37cfae87fe9ced02964decd68a8b796c5d08d9f"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/TN/explainer-expansion/ballot-input/tn.json",
+        "sha256": "04158d19c59b9a78208178f06d5d862003e05238cfcc060cd377608ec95671c3"
+      }
+    ]
+  },
+  "heldContests": 129,
+  "heldCandidacies": 266,
+  "heldMeasures": 3,
+  "sameStateLocalPackets": [
+    "/workspace/meanwhile/data/install/cx-local/TN/shelby/ballot-input/tn.json"
+  ],
+  "newContestIds": [
+    "tn-cx-local-2026-belle-meade-city-commissioner",
+    "tn-cx-local-2026-forest-hills-city-commissioner",
+    "tn-cx-local-2026-goodlettsville-city-commissioner"
+  ],
+  "identityNote": "No exact prior held or lane municipal commission identity found. Goodlettsville ID is city-scoped and shared across both Davidson/Sumner, not county-qualified. No duplicate citywide contest minted.",
+  "preservation": "All2latestrecursivelyenumeratedCX-VOTESTNinputs hashverified. ExistingGoodlettsvilletaxquestion/explanation and allstate/federal/legislative/constitutionaldata remain unchanged outside incoming IDs."
+}

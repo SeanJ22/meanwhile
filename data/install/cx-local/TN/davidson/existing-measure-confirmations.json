@@ -1,0 +1,10 @@
+{
+  "contestId": "tn-goodlettsville-2026-sales-use-tax",
+  "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+  "sourceRawSha256": "a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44",
+  "samplePhysicalPage": 6,
+  "fullPreparedQuestionNormalizedLiteralMatch": true,
+  "action": "SOURCE_CONFIRMATION_ONLY_EXISTING_QUESTION_AND_EXPLANATION_UNCHANGED",
+  "questionTextSha256": "097541056c0b22f4ba388cebd937e379e6cc8cc16fd647c10abb20b6a5020c69",
+  "note": "Complete prepared question includes original printed heading/votinginstruction/ForAgainstchoices. Literal whitespace-normalized match to current page6. No incoming measure or explainer row added."
+}

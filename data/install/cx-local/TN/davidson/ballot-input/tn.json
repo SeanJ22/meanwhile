@@ -1,0 +1,496 @@
+{
+  "ballots": {
+    "TN:tn-2026-general": {
+      "election": {
+        "id": "tn-2026-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "TN"
+      },
+      "contests": [
+        {
+          "id": "tn-cx-local-2026-belle-meade-city-commissioner",
+          "electionId": "tn-2026-general",
+          "ocdId": "ocd-division/country:us/state:tn/place:belle_meade",
+          "divisionVintage": "2026",
+          "title": "Belle Meade — City Commissioner",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Belle Meade Municipal Election\n\n          City Commissioner\n         Vote for Three (3)\n\n  ◼ Louise C. Bryan\n\n  ◼ Neal Clayton\n\n  ◼ Rusty Moore\n\n  ◼ Gray Oliver Thornburg\n\n  ◼ Write-In\n\n  ◼ Write-In\n\n  ◼ Write-In"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://citybellemeade.org/wp-content/uploads/2026/10/Key-Things-to-Know-for-Election-Day-2026.pdf",
+              "sourceOrg": "City of Belle Meade",
+              "collectedAt": "2026-11-03T09:14:08.724998+00:00",
+              "verifiedAt": "2026-11-03T09:14:08.724998+00:00",
+              "quote": "City of Belle Meade will be holding a municipal election for three (3) seats on the five-\nmember Board of Commissioners.  There are four candidates running for three seats.  \nVoters may select up to three individuals from the list of candidates and those three (3) \nreceiving the highest number of votes will serve new four-year terms on the city’s \ngoverning body."
+            },
+            {
+              "sourceUrl": "https://www.mtas.tennessee.edu/sites/default/files/2026-10/Manager_Commission_Charter.pdf",
+              "sourceOrg": "University of Tennessee Municipal Technical Advisory Service — General Law Manager-Commission Charter, TCA6-20-106(a)",
+              "collectedAt": "2026-11-03T09:16:02.657229+00:00",
+              "verifiedAt": "2026-11-03T09:16:02.657229+00:00",
+              "quote": "6-20-106. Qualifications of voters.  (a)  In any election of\ncommissioners under this charter, registered voters of the city or territory may\nvote."
+            }
+          ],
+          "scopeNote": "Complete named candidate block on physical page6 of the current official November3,2026 composite. Every printed name and voting limit retained. No party or incumbent marker is printed in these municipal blocks, so none is invented. Generic Write-In spaces are not people. Whole municipal electorate, using the exact existing city division; no Davidson County or Metro Nashville balance fallback. Registered qualified city voters control under TCA6-20-106(a). The same charter contains narrow population/approval-limited nonresident-property exceptions; this packet creates no ownership-based franchise or assumption that all property owners may vote. "
+        },
+        {
+          "id": "tn-cx-local-2026-forest-hills-city-commissioner",
+          "electionId": "tn-2026-general",
+          "ocdId": "ocd-division/country:us/state:tn/place:forest_hills",
+          "divisionVintage": "2026",
+          "title": "Forest Hills — City Commissioner",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Forest Hills Municipal Election\n\n         City Commissioner\n         Vote for Two (2)\n\n  ◼ Jim Gardner\n\n  ◼ Henry Trost\n\n  ◼ Write-In\n\n  ◼ Write-In"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.cityofforesthills.com/page/board-of-commissioners",
+              "sourceOrg": "City of Forest Hills",
+              "collectedAt": "2026-11-03T09:11:58.589953+00:00",
+              "verifiedAt": "2026-11-03T09:11:58.589953+00:00",
+              "quote": "The Board consists of three Commissioners, who are elected at large. Members serve in four-year, staggered terms."
+            },
+            {
+              "sourceUrl": "https://www.mtas.tennessee.edu/sites/default/files/2026-10/Manager_Commission_Charter.pdf",
+              "sourceOrg": "University of Tennessee Municipal Technical Advisory Service — General Law Manager-Commission Charter, TCA6-20-106(a)",
+              "collectedAt": "2026-11-03T09:16:02.657229+00:00",
+              "verifiedAt": "2026-11-03T09:16:02.657229+00:00",
+              "quote": "6-20-106. Qualifications of voters.  (a)  In any election of\ncommissioners under this charter, registered voters of the city or territory may\nvote."
+            }
+          ],
+          "scopeNote": "Complete named candidate block on physical page6 of the current official November3,2026 composite. Every printed name and voting limit retained. No party or incumbent marker is printed in these municipal blocks, so none is invented. Generic Write-In spaces are not people. Whole municipal electorate, using the exact existing city division; no Davidson County or Metro Nashville balance fallback. Registered qualified city voters control under TCA6-20-106(a). The same charter contains narrow population/approval-limited nonresident-property exceptions; this packet creates no ownership-based franchise or assumption that all property owners may vote. "
+        },
+        {
+          "id": "tn-cx-local-2026-goodlettsville-city-commissioner",
+          "electionId": "tn-2026-general",
+          "ocdId": "ocd-division/country:us/state:tn/place:goodlettsville",
+          "divisionVintage": "2026",
+          "title": "Goodlettsville — City Commissioner",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Goodlettsville Municipal Election\n\n           City Commissioner\n          Vote for Two (2)\n\n   ◼ Jimmy D. Anderson\n\n   ◼ Eric Meacham\n\n   ◼ Michael Milliner\n\n   ◼ Eric Near\n\n   ◼ Rusty Tinnin\n\n   ◼ Write-In\n\n   ◼ Write-In\n\n\n\n          City of Goodlettsville"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://goodlettsville.gov/DocumentCenter/View/8676",
+              "sourceOrg": "City of Goodlettsville — FY2024 ACFR",
+              "collectedAt": "2026-11-03T09:11:58.849886+00:00",
+              "verifiedAt": "2026-11-03T09:11:58.849886+00:00",
+              "quote": "The City of Goodlettsville is located both in Sumner County and Metropolitan Nashville-Davidson County.  \nWhile more than 50% of the land area of Goodlettsville is in Sumner County, approximately sixty percent \nof its residents live in the Metropolitan Nashville-Davidson County portion of the City.  The City of \nGoodlettsville is one of five satellite cities operating within the Metropolitan Nashville area.  It is \napproximately 16 miles from downtown Nashville and is served by numerous major transportation systems \nincluding Interstate 65, U.S. 41, U.S. 31-W, and State Route 386.   \n \nThe City of Goodlettsville was incorporated in 1958 and operates under the City Commission/City Manager \nform of government.  The Municipality’s legislative body is a five-member Board of Commissioners that \nis elected at-large.  Each Commissioner is elected to a four-year alternating term with elections conducted \nevery two years.  The Mayor is the ceremonial head of the Municipality and presides at meetings of the \nBoard.  The City Manager is the chief administrative officer of the Municipality.  The City Manager is \nappointed by the Board of Commissioners and serves at their pleasure."
+            },
+            {
+              "sourceUrl": "https://www.mtas.tennessee.edu/sites/default/files/2026-10/Manager_Commission_Charter.pdf",
+              "sourceOrg": "University of Tennessee Municipal Technical Advisory Service — General Law Manager-Commission Charter, TCA6-20-106(a)",
+              "collectedAt": "2026-11-03T09:16:02.657229+00:00",
+              "verifiedAt": "2026-11-03T09:16:02.657229+00:00",
+              "quote": "6-20-106. Qualifications of voters.  (a)  In any election of\ncommissioners under this charter, registered voters of the city or territory may\nvote."
+            }
+          ],
+          "scopeNote": "Complete named candidate block on physical page6 of the current official November3,2026 composite. Every printed name and voting limit retained. No party or incumbent marker is printed in these municipal blocks, so none is invented. Generic Write-In spaces are not people. Whole municipal electorate, using the exact existing city division; no Davidson County or Metro Nashville balance fallback. Registered qualified city voters control under TCA6-20-106(a). The same charter contains narrow population/approval-limited nonresident-property exceptions; this packet creates no ownership-based franchise or assumption that all property owners may vote. This is the full city across both Davidson and Sumner counties, one shared contest/candidate identity. City ACFR expressly establishes both counties and at-large election; current Sumner sample independently prints the same five choices/vote2. Its IndependentCandidate labels are saved as source-specific corroboration; Davidson prints no party label."
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "tn-cx-local-2026-belle-meade-city-commissioner:louise-c-bryan",
+          "contestId": "tn-cx-local-2026-belle-meade-city-commissioner",
+          "givenName": "",
+          "familyName": "Louise C. Bryan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Louise C. Bryan"
+          }
+        },
+        {
+          "id": "tn-cx-local-2026-belle-meade-city-commissioner:neal-clayton",
+          "contestId": "tn-cx-local-2026-belle-meade-city-commissioner",
+          "givenName": "",
+          "familyName": "Neal Clayton",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Neal Clayton"
+          }
+        },
+        {
+          "id": "tn-cx-local-2026-belle-meade-city-commissioner:rusty-moore",
+          "contestId": "tn-cx-local-2026-belle-meade-city-commissioner",
+          "givenName": "",
+          "familyName": "Rusty Moore",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Rusty Moore"
+          }
+        },
+        {
+          "id": "tn-cx-local-2026-belle-meade-city-commissioner:gray-oliver-thornburg",
+          "contestId": "tn-cx-local-2026-belle-meade-city-commissioner",
+          "givenName": "",
+          "familyName": "Gray Oliver Thornburg",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Gray Oliver Thornburg"
+          }
+        },
+        {
+          "id": "tn-cx-local-2026-forest-hills-city-commissioner:jim-gardner",
+          "contestId": "tn-cx-local-2026-forest-hills-city-commissioner",
+          "givenName": "",
+          "familyName": "Jim Gardner",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Jim Gardner"
+          }
+        },
+        {
+          "id": "tn-cx-local-2026-forest-hills-city-commissioner:henry-trost",
+          "contestId": "tn-cx-local-2026-forest-hills-city-commissioner",
+          "givenName": "",
+          "familyName": "Henry Trost",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Henry Trost"
+          }
+        },
+        {
+          "id": "tn-cx-local-2026-goodlettsville-city-commissioner:jimmy-d-anderson",
+          "contestId": "tn-cx-local-2026-goodlettsville-city-commissioner",
+          "givenName": "",
+          "familyName": "Jimmy D. Anderson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Jimmy D. Anderson"
+          }
+        },
+        {
+          "id": "tn-cx-local-2026-goodlettsville-city-commissioner:eric-meacham",
+          "contestId": "tn-cx-local-2026-goodlettsville-city-commissioner",
+          "givenName": "",
+          "familyName": "Eric Meacham",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Eric Meacham"
+          }
+        },
+        {
+          "id": "tn-cx-local-2026-goodlettsville-city-commissioner:michael-milliner",
+          "contestId": "tn-cx-local-2026-goodlettsville-city-commissioner",
+          "givenName": "",
+          "familyName": "Michael Milliner",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Michael Milliner"
+          }
+        },
+        {
+          "id": "tn-cx-local-2026-goodlettsville-city-commissioner:eric-near",
+          "contestId": "tn-cx-local-2026-goodlettsville-city-commissioner",
+          "givenName": "",
+          "familyName": "Eric Near",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Eric Near"
+          }
+        },
+        {
+          "id": "tn-cx-local-2026-goodlettsville-city-commissioner:rusty-tinnin",
+          "contestId": "tn-cx-local-2026-goodlettsville-city-commissioner",
+          "givenName": "",
+          "familyName": "Rusty Tinnin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T09:08:45.617589+00:00",
+            "verifiedAt": "2026-11-03T09:08:45.617589+00:00",
+            "quote": "Rusty Tinnin"
+          }
+        }
+      ],
+      "measures": [],
+      "heldContests": [],
+      "filingCandidacies": [],
+      "absences": [],
+      "districtMemberships": [],
+      "scopedCoverageNotes": [
+        {
+          "id": "tn-cx-local-2026-davidson-coverage",
+          "note": "Complete published November3,2026 eight-page official Davidson composite: all3 actual municipal candidate blocks/11 names on physicalpage6. Full Goodlettsville city electorate includes Sumner County. The already-prepared Goodlettsville Ordinance26-1146sales-taxquestion literally matches current native sample after whitespace normalization and remains unchanged outside incoming IDs. All state/federal/legislative races, constitutional questions and explanations remain unchanged. Election calendar distinguishes August6county/school/judicial/OakHill elections and earlierBerryHill election; none imported intoNovember. This is published-composite coverage, not every precinct-style inventory or a claim no later amendment exists. Named declared-write-in certification and separate withdrawal/cancellation inventory remain unacquired; generic blanks create no person or status."
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:25:31.570011+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+        "finalUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+        "httpStatus": 200,
+        "rawHash": "a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44",
+        "retrievedAt": "2026-11-03T09:08:45.617589+00:00",
+        "publisher": "Davidson County Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official8-page November3,2026 State/Federal/threeMunicipalElection composite, directly linked by current election authority page. Physicalpage6 contains all3 local candidate blocks11names with votes3/2/2. Each full block visually checked against native text; genericWrite-Inslots excluded as people. Current already-prepared Goodlettsville tax question is confirmation-only."
+      },
+      {
+        "requestedUrl": "https://www.nashville.gov/departments/elections/voters/sample-ballots",
+        "finalUrl": "https://www.nashville.gov/departments/elections/voters/sample-ballots",
+        "httpStatus": 200,
+        "rawHash": "491de5a410acb0dcf91c8acac24f92880c706161b49853a90052f1c9fbf02282",
+        "retrievedAt": "2026-11-03T09:08:06.529810+00:00",
+        "publisher": "Davidson County Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current Nashville.gov sample-ballot page links exact November3,2026 PDF URL including ct query; other election dates do not substitute for November."
+      },
+      {
+        "requestedUrl": "https://www.nashville.gov/departments/elections/voters/find-2026-election-information",
+        "finalUrl": "https://www.nashville.gov/departments/elections/voters/find-2026-election-information",
+        "httpStatus": 200,
+        "rawHash": "d2deb7fc9bf6030f8ce2bbf9d48b5e7997adb30c2c8a34d672ebf9c8d3757bd4",
+        "retrievedAt": "2026-11-03T09:08:06.521499+00:00",
+        "publisher": "Davidson County Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official election information explicitly separatesNovember3BelleMeade/ForestHills/Goodlettsville fromAugust6county-general/OakHill, Mayprimary andMarchBerryHill. No August judicial/school/county field imported."
+      },
+      {
+        "requestedUrl": "https://www.nashville.gov/departments/elections/candidates/write-candidates",
+        "finalUrl": "https://www.nashville.gov/departments/elections/candidates/write-candidates",
+        "httpStatus": 200,
+        "rawHash": "b83cd2daa03161a0aaed72e03537ea478ca066cfdf2483b34939a2c1ff609ac9",
+        "retrievedAt": "2026-11-03T09:08:06.511868+00:00",
+        "publisher": "Davidson County Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official write-in procedural rules only. This source is not a named November2026 write-in certification, so no claimed zero write-in filings or generic write-in person."
+      },
+      {
+        "requestedUrl": "https://citybellemeade.org/",
+        "finalUrl": "https://citybellemeade.org/",
+        "httpStatus": 200,
+        "rawHash": "b3806e6356fe83037908f35d5f6c309e4e90f81bb9f35a8e4c606f22b6c64336",
+        "retrievedAt": "2026-11-03T09:11:56.582361+00:00",
+        "publisher": "City of Belle Meade",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official municipal homepage corroborates November3three-seat election and four named candidates, and links current county sample/candidate/key-things documents. Candidate primary spellingLouiseC.Bryan controls."
+      },
+      {
+        "requestedUrl": "https://citybellemeade.org/commissioners/",
+        "finalUrl": "https://citybellemeade.org/commissioners/",
+        "httpStatus": 200,
+        "rawHash": "a2025a12a144df67fa490d6786a7b9216c641173ac62a4e77dd4055abe30e820",
+        "retrievedAt": "2026-11-03T09:11:56.645211+00:00",
+        "publisher": "City of Belle Meade",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official current municipal board page says citizens elect five commissioners for staggeredfour-yearterms and commissioners select mayor/vice-mayor. No separate mayor election invented."
+      },
+      {
+        "requestedUrl": "https://citybellemeade.org/wp-content/uploads/2026/10/Key-Things-to-Know-for-Election-Day-2026.pdf",
+        "finalUrl": "https://citybellemeade.org/wp-content/uploads/2026/10/Key-Things-to-Know-for-Election-Day-2026.pdf",
+        "httpStatus": 200,
+        "rawHash": "bde96b8b89d570d766cdf307ca827acd697151ca4e9f5f188c09881d82d26a45",
+        "retrievedAt": "2026-11-03T09:14:08.724998+00:00",
+        "publisher": "City of Belle Meade",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official October2026 election note expressly permits choosing up to three of four named candidates for three four-yearcommissioner seats, identifies wholeBelleMeadevoters and current election. It also labels three current incumbents; those supplementary labels do not become invented sample markers."
+      },
+      {
+        "requestedUrl": "https://www.cityofforesthills.com/page/board-of-commissioners",
+        "finalUrl": "https://www.cityofforesthills.com/page/board-of-commissioners",
+        "httpStatus": 200,
+        "rawHash": "fce30aaafc7e7807c37e63d7bee658b9160ae9a556e5b63efc019019d3d47946",
+        "retrievedAt": "2026-11-03T09:11:58.589953+00:00",
+        "publisher": "City of Forest Hills",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official city page publishes board paragraph inside public Nuxt JSON. Saved rawHTML contains it exactly; extraction decodes embedded JSON/HTML and separately hashes the verified paragraph. It explicitly establishes3commissioners elected atlarge and4-yearstaggeredterms; no separate mayor election."
+      },
+      {
+        "requestedUrl": "https://www.goodlettsville.gov/61/Board-of-Commissioners",
+        "finalUrl": "https://www.goodlettsville.gov/61/Board-of-Commissioners",
+        "httpStatus": 200,
+        "rawHash": "cc5470de588dbac130b4e9e7f126166b46828260640276226f639368b27edd7c",
+        "retrievedAt": "2026-11-03T09:11:58.113608+00:00",
+        "publisher": "City of Goodlettsville",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official city board page states five elected commissioners, alternating4-yearterms and terms expiringNovember2026forJimmyD.Anderson/RustyTinnin. Candidate primary is current county sample."
+      },
+      {
+        "requestedUrl": "https://goodlettsville.gov/DocumentCenter/View/8676",
+        "finalUrl": "https://goodlettsville.gov/DocumentCenter/View/8676/City-of-Goodlettsville-ACFR-63026?bidId=",
+        "httpStatus": 200,
+        "rawHash": "be77f1d44becd84422a86e8cb6eca53c6dff645bd88fbd7ddaf0bf5f489f875a",
+        "retrievedAt": "2026-11-03T09:11:58.849886+00:00",
+        "publisher": "City of Goodlettsville",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official city financial report body is FYendedJune30,2024, letterDecember13,2024, despite returned filenameCity-of-Goodlettsville-ACFR-63026. Preserve that discrepancy. Body explicitly says city spansSumnerandMetroDavidson and board electedatlarge; current samples/board corroborate election. No2026financialyearclaim."
+      },
+      {
+        "requestedUrl": "https://www.votesumnertn.org/uploads/files/284d8e5003518a5bfe759e67f6548473be831148.pdf",
+        "finalUrl": "https://www.votesumnertn.org/uploads/files/284d8e5003518a5bfe759e67f6548473be831148.pdf",
+        "httpStatus": 200,
+        "rawHash": "8d6a577310ec9169ba91f9c4b0161c540659f0c52a1b67defdcbd117be63020f",
+        "retrievedAt": "2026-11-03T09:14:10.116957+00:00",
+        "publisher": "Sumner County Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official Sumner November3,2026sample independently corroborates the identical citywide Goodlettsville5names/vote2 and sales-taxquestion. Its municipal labelsIndependentCandidate are source-specific; Davidson primary prints no party labels. OtherSumnercity/federal/statefields are not installed in Davidson."
+      },
+      {
+        "requestedUrl": "https://web.go-vote-tn.elections.tn.gov/help?county=Sumner",
+        "finalUrl": "https://web.go-vote-tn.elections.tn.gov/help?county=Sumner",
+        "httpStatus": 200,
+        "rawHash": "969fbf6d1f8cbebc1d43dbb066b59324a4370d500263f4759350038eead5f5be",
+        "retrievedAt": "2026-11-03T09:20:40.153362+00:00",
+        "publisher": "Tennessee Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Public TennesseeSecretaryofState GoVoteTNcountyhelp identifiesSumnerElectionCommission official websitevotesumnertn.org; no personal voter lookup/address/identity submitted."
+      },
+      {
+        "requestedUrl": "https://www.mtas.tennessee.edu/charter/belle-meade",
+        "finalUrl": "https://www.mtas.tennessee.edu/charter/belle-meade",
+        "httpStatus": 200,
+        "rawHash": "d348768c96a96a055710003c41cb18fc76de5c51d30269a935eb9fadb029d8ad",
+        "retrievedAt": "2026-11-03T09:15:30.491204+00:00",
+        "publisher": "University of Tennessee Municipal Technical Advisory Service",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current UTMTAScitycharter page links exact October2026GeneralLawManagerCommissionCharter. Publication metadataUpdatedThrough12/31/2026retained honestly; relevant voterparagraph amendment history ends2015, and current sample/city sources establish actualNovemberoffice."
+      },
+      {
+        "requestedUrl": "https://www.mtas.tennessee.edu/charter/forest-hills",
+        "finalUrl": "https://www.mtas.tennessee.edu/charter/forest-hills",
+        "httpStatus": 200,
+        "rawHash": "771d7a56e31c41a16f0fb96b2dbe983c7f64196640fc7d8cf85143fbf995d756",
+        "retrievedAt": "2026-11-03T09:15:30.543310+00:00",
+        "publisher": "University of Tennessee Municipal Technical Advisory Service",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current UTMTASForestHillscharter page links sameOctober2026manager-commission compilation. Oldgeneric samplecharter is not substituted as latest source."
+      },
+      {
+        "requestedUrl": "https://www.mtas.tennessee.edu/charter/goodlettsville",
+        "finalUrl": "https://www.mtas.tennessee.edu/charter/goodlettsville",
+        "httpStatus": 200,
+        "rawHash": "b7cbed10511a97d5cb8cff2b5503d5769d4f57bcac70109f5d955903f03d1916",
+        "retrievedAt": "2026-11-03T09:16:02.293882+00:00",
+        "publisher": "University of Tennessee Municipal Technical Advisory Service",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current UTMTASGoodlettsvillecharter page identifiesGeneralLawManagerCommission charter and sameOctober2026PDF, with futureUpdatedThrough12/31/2026metadata. No future-effective provision applied to November facts."
+      },
+      {
+        "requestedUrl": "https://www.mtas.tennessee.edu/sites/default/files/2026-10/Manager_Commission_Charter.pdf",
+        "finalUrl": "https://www.mtas.tennessee.edu/sites/default/files/2026-10/Manager_Commission_Charter.pdf",
+        "httpStatus": 200,
+        "rawHash": "4df5af851f44b5f113c326ce3f0e6daec1c9badc3a4464af678e627d817f1118",
+        "retrievedAt": "2026-11-03T09:16:02.657229+00:00",
+        "publisher": "University of Tennessee Municipal Technical Advisory Service",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Latest currently linked October2026UTMTASManagerCommissionCharter. TCA6-20-106(a)establishesregisteredcity/territoryvoters. Exceptions(b–f)are constrained by historicpopulationbands, ownershiplimits and in some clauses2/3boardapproval; no blanket nonresidentpropertyfranchise is inferred. Fullexact limits preserved; paragraphhistory ends2015."
+      },
+      {
+        "requestedUrl": "https://www.mtas.tennessee.edu/reference/determination-residency",
+        "finalUrl": "https://www.mtas.tennessee.edu/reference/determination-residency",
+        "httpStatus": 200,
+        "rawHash": "311a5c48924b6706618777de65dd2ecc70497bf8bae43e26e781d9fbbe27fc94",
+        "retrievedAt": "2026-11-03T09:15:30.970960+00:00",
+        "publisher": "University of Tennessee Municipal Technical Advisory Service",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official UniversityofTennesseeMTASreference explains nonresidentpropertyvoter rights depend on charter/general law and separateproperty-rightsregistration; propertyownership alone does not authorize voting. No property/voter identity lookup performed."
+      }
+    ]
+  }
+}

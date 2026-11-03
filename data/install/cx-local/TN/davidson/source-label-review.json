@@ -1,0 +1,16 @@
+{
+  "goodlettsvilleAcfr": {
+    "requestedUrl": "https://goodlettsville.gov/DocumentCenter/View/8676",
+    "finalUrl": "https://goodlettsville.gov/DocumentCenter/View/8676/City-of-Goodlettsville-ACFR-63026?bidId=",
+    "actualBodyFiscalYearEnded": "2024-06-30",
+    "actualLetterDate": "2024-12-13",
+    "caution": "ReturnedfilenameACFR63026doesnotmatchFY2024body; no2026financialstatementyear claimed. Geographic/atlargestructure corroborated by currentmunicipal/county sources."
+  },
+  "charterCompilation": {
+    "sourceUrl": "https://www.mtas.tennessee.edu/sites/default/files/2026-10/Manager_Commission_Charter.pdf",
+    "linkedUploadDirectory": "2026-10",
+    "charterLinkingUpdatedThroughLabel": "12/31/2026",
+    "relevantVoterProvisionLatestAmendmentInPrintedHistory": "2015",
+    "caution": "MetadatafutureUpdatedThroughlabel retained; no future-effective provision substituted for November3office/samplefacts."
+  }
+}

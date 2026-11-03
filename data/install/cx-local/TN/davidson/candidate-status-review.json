@@ -1,0 +1,24 @@
+{
+  "primaryPartyLabels": "None printed in Davidson municipal blocks; partyLabel remains null.",
+  "primaryIncumbencyMarkers": "None printed in the3municipal blocks; incumbent remains null, not false.",
+  "sumnerGoodlettsvilleSourceLabels": {
+    "sourceUrl": "https://www.votesumnertn.org/uploads/files/284d8e5003518a5bfe759e67f6548473be831148.pdf",
+    "reportedLabel": "Independent Candidate",
+    "names": [
+      "Jimmy D. Anderson",
+      "Eric Meacham",
+      "Michael Milliner",
+      "Eric Near",
+      "Rusty Tinnin"
+    ],
+    "note": "Supplementary official Sumner style explicitly labels each of the same5 names IndependentCandidate. Preserve source difference without silently rewriting Davidson printed-party display."
+  },
+  "namedDeclaredWriteInCertification": "NOT_ACQUIRED",
+  "withdrawalOrCancellationCertification": "NOT_ACQUIRED",
+  "genericBlankCounts": {
+    "belleMeade": 3,
+    "forestHills": 2,
+    "goodlettsville": 2
+  },
+  "note": "Seven genericWrite-Inslots are not people. Sole or matching seat-count named field does not establish unopposed/cancelledstatus."
+}

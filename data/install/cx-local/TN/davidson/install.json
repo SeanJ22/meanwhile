@@ -1,0 +1,109 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "TN",
+  "county": "Davidson",
+  "countyFips": "47037",
+  "populationRank": 92,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TN",
+  "inputDirectory": "ballot-input",
+  "operation": "Data-only complete current published November municipal candidate blocks. River merges latest Tennessee data and applies exact whole-city qualified electorate, including both counties forGoodlettsville. No production writes/publication.",
+  "counts": {
+    "localCandidateFields": 3,
+    "printedCandidateChoices": 11,
+    "newContestIdentities": 3,
+    "refreshedContests": 0,
+    "changedMeasures": 0,
+    "existingPreparedQuestionConfirmedUnchanged": 1,
+    "heldFields": 0,
+    "samplePdfFiles": 2,
+    "primarySamplePhysicalPages": 8,
+    "localCandidatePhysicalPages": [
+      6
+    ],
+    "genericWriteInBlanksExcluded": 7,
+    "namedWriteInCertificationAcquired": false,
+    "preparedNestedInputsCompared": 2,
+    "heldContestsPreserved": 129,
+    "heldCandidaciesPreserved": 266,
+    "heldMeasuresPreserved": 3,
+    "unmatchedReaderDivisions": 0,
+    "municipalEligibilityDependencies": 1,
+    "sourceCaptures": 20
+  },
+  "subjects": [
+    {
+      "id": "tn-cx-local-2026-belle-meade-city-commissioner",
+      "title": "Belle Meade \u2014 City Commissioner",
+      "ocdId": "ocd-division/country:us/state:tn/place:belle_meade",
+      "candidates": 4,
+      "voteFor": 3,
+      "samplePhysicalPage": 6,
+      "rectangle": [
+        230,
+        240,
+        390,
+        475
+      ],
+      "wholeCity": true
+    },
+    {
+      "id": "tn-cx-local-2026-forest-hills-city-commissioner",
+      "title": "Forest Hills \u2014 City Commissioner",
+      "ocdId": "ocd-division/country:us/state:tn/place:forest_hills",
+      "candidates": 2,
+      "voteFor": 2,
+      "samplePhysicalPage": 6,
+      "rectangle": [
+        230,
+        475,
+        390,
+        650
+      ],
+      "wholeCity": true
+    },
+    {
+      "id": "tn-cx-local-2026-goodlettsville-city-commissioner",
+      "title": "Goodlettsville \u2014 City Commissioner",
+      "ocdId": "ocd-division/country:us/state:tn/place:goodlettsville",
+      "candidates": 5,
+      "voteFor": 2,
+      "samplePhysicalPage": 6,
+      "rectangle": [
+        405,
+        120,
+        575,
+        350
+      ],
+      "wholeCity": true
+    }
+  ],
+  "coverageLimitations": [
+    "Complete3localcandidateblocks in current8-pageofficialNovember3composite; precinct-style inventory and later amendments remain open.",
+    "Goodlettsville electorate is wholecross-countycity, neverDavidson-only, Sumner-only or MetroNashvillebalance.",
+    "Registeredmunicipalvoterqualifications apply; narrow historicpopulation/approval-limited nonresidentpropertyfranchises are not generalized to allowners.",
+    "Nameddeclaredwrite-in and separatewithdrawal/cancellationcertification not acquired; genericblanks excluded as people.",
+    "Augustcounty/school/judicial/OakHill and MarchBerryHill fields are outsidethisNovemberpacket.",
+    "ExistingGoodlettsvillesales-taxquestion/explanation literallyconfirmed and unchanged outsideincoming. Allotherheldstate/federal/legislative/constitutionaldata preserved."
+  ],
+  "sourceSupport": "source-support.json",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 20 captured sources and 14 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "focusedValidation": "focused-validation.json",
+  "readerEligibilityReview": "eligibility-review.json",
+  "reviewFiles": [
+    "sample-field-review.json",
+    "prepared-id-review.json",
+    "existing-measure-confirmations.json",
+    "candidate-status-review.json",
+    "eligibility-review.json",
+    "source-label-review.json"
+  ],
+  "validationDescription": "validation.json"
+}

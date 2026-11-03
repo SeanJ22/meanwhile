@@ -1,0 +1,70 @@
+{
+  "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+  "sourceRawSha256": "a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44",
+  "physicalPages": 8,
+  "blocks": [
+    {
+      "city": "belle_meade",
+      "title": "Belle Meade — City Commissioner",
+      "voteFor": 3,
+      "physicalPage": 6,
+      "rectangle": [
+        230,
+        240,
+        390,
+        475
+      ],
+      "candidateNames": [
+        "Louise C. Bryan",
+        "Neal Clayton",
+        "Rusty Moore",
+        "Gray Oliver Thornburg"
+      ],
+      "sourceQuote": "Belle Meade Municipal Election\n\n          City Commissioner\n         Vote for Three (3)\n\n  ◼ Louise C. Bryan\n\n  ◼ Neal Clayton\n\n  ◼ Rusty Moore\n\n  ◼ Gray Oliver Thornburg\n\n  ◼ Write-In\n\n  ◼ Write-In\n\n  ◼ Write-In"
+    },
+    {
+      "city": "forest_hills",
+      "title": "Forest Hills — City Commissioner",
+      "voteFor": 2,
+      "physicalPage": 6,
+      "rectangle": [
+        230,
+        475,
+        390,
+        650
+      ],
+      "candidateNames": [
+        "Jim Gardner",
+        "Henry Trost"
+      ],
+      "sourceQuote": "Forest Hills Municipal Election\n\n         City Commissioner\n         Vote for Two (2)\n\n  ◼ Jim Gardner\n\n  ◼ Henry Trost\n\n  ◼ Write-In\n\n  ◼ Write-In"
+    },
+    {
+      "city": "goodlettsville",
+      "title": "Goodlettsville — City Commissioner",
+      "voteFor": 2,
+      "physicalPage": 6,
+      "rectangle": [
+        405,
+        120,
+        575,
+        350
+      ],
+      "candidateNames": [
+        "Jimmy D. Anderson",
+        "Eric Meacham",
+        "Michael Milliner",
+        "Eric Near",
+        "Rusty Tinnin"
+      ],
+      "sourceQuote": "Goodlettsville Municipal Election\n\n           City Commissioner\n          Vote for Two (2)\n\n   ◼ Jimmy D. Anderson\n\n   ◼ Eric Meacham\n\n   ◼ Michael Milliner\n\n   ◼ Eric Near\n\n   ◼ Rusty Tinnin\n\n   ◼ Write-In\n\n   ◼ Write-In\n\n\n\n          City of Goodlettsville"
+    }
+  ],
+  "visualReview": {
+    "fullPhysicalPagesReviewed": [
+      6
+    ],
+    "method": "Full native-page raster visually checked against every municipal header, votinglimit, candidate and genericblank. Exact native block extraction separately hashed; no image-only candidate transcription."
+  },
+  "scope": "All3 November local candidate blocks in the currently published official composite. Individual precinct-style parity not acquired; no August county/school/judicial race or mayor field added."
+}

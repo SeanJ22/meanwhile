@@ -1,0 +1,815 @@
+
+<!DOCTYPE html>
+<html ng-app="MCO">
+<head>
+	<title>Belle Meade : Municipal Code</title>
+
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet"/>
+<link href="//fonts.googleapis.com/css?family=Roboto+Slab:400,700" rel="stylesheet"/>
+
+
+	<script src="/Scripts/third/jquery/jquery.js?v=AAAQbvbELUI1"></script>
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+
+	<script src="/Scripts/home/codenav.js?v=b420e59d915cd2b3edff6130bbcc13825637c966097c3f99aab3a1e1147c0b1a"></script>
+	<script src="/Scripts/home/Services/ordinanceService.js?v=424b5c586fc44e474e6c3ee4d21af6deb51a4821ac81b9a3045e1c713ee317ea"></script>
+	<script src="/Scripts/home/Ctrls/AocFormCtrl.js?v=5d99aa624b25892e7fd770e88416e4c3f68959211caf28cd09bae044f51f6c59"></script>
+	<script src="/Scripts/home/Ctrls/PassCtrl.js?v=9e1c28b9475d59f528f2d405d8d742558b3a4119aa724f92eb9f455f8d114784"></script>
+	<script src="/Scripts/home/Ctrls/RepCtrl.js?v=e06b08416a511f99ea78de469de7357699e16f1a8e529a50dd499788977d6b50"></script>
+	<script src="/Scripts/home/Ctrls/EditBookCtrl.js?v=1d43e2c5dde4e681105fc99e50bdede056f92601b59db508f366587aab34d8f5"></script>
+	<script src="/Scripts/home/Ctrls/ProposalCtrl.js?v=abed5e94f3337cb822faa63d39335ded224e666d0b32820908f1f9d65ff43ed1"></script>
+	<script src="/Scripts/home/Ctrls/TimeoutCtrl.js?v=f84d2bfa42e8f00f7c49cdb0255f0b44c64996c9f9896dbefb7c1a529000876b"></script>
+	<script src="/Scripts/home/Ctrls/VotesCtrl.js?v=377711e13eef2a298e3e66e39775aa571f0c4bf78c26b4aa692a94e774f9560c"></script>
+	<script src="/Scripts/home/Ctrls/ChangesCtrl.js?v=ab48435a3d9c2783defa3607130cd389493f40bf1450887c5b24a9850cc4457b"></script>
+	<script src="/Scripts/home/Directives/expand.js?v=15c0331fcf6c6ba660ff45558c3ce88226289de01af5788d76e7f64ce2dc7c5c"></script>
+	<script src="/Scripts/home/Directives/draggable.js?v=cfa46030c35831de2e7e79c29c501bf21c90985e5af48508876da1e158cd76e1"></script>
+	<script src="/Scripts/home/Directives/upload.js?v=07bcdeefa4d5c97b79f5ee89bea57c5d710016cfde2898a01b97c3dc28aa30d9"></script>
+	<script src="/Scripts/home/Bootstrap-Datepicker.js?v=1c284ce8e7482ef76df3d1ce48dd02d3261357b6bce12c84418fb4f8bbcc49bf"></script>
+	<script src="/Scripts/sortable.js?v=2bde56e2eb69a576c1b9b474747079901a28659144c66fd51869e2414830f5c9"></script>
+	<script src="/Scripts/home/bootstrap.js?v=cbc24772b6a47012f38ca6eb7a84ff915cbae9675afc07de23dc5ea0288902f2"></script>
+
+	<link rel="stylesheet" href="/Bundles/home/codenav.css?v=7859a389fd62ea8840c30a10689fb3a9e8be39fdf847f5360ba19f412acdf12e" />
+	<link rel="stylesheet" href="/Bundles/home/bootstrap-datepicker.css?v=3b5b4e1686b1b07365726c37a5ef783384bbc7dd2f9e3474cf6ca9b8bfdbb6e9" />
+	<link rel="stylesheet" href="/Bundles/third/bootstrap-modalonly.css?v=a4d78692458c12c7b69bb6cf7d364fd30dd72d3277205e72697fd4d1b2af9d58" />
+	<link rel="stylesheet" href="/Bundles/home/codenav.css?v=7859a389fd62ea8840c30a10689fb3a9e8be39fdf847f5360ba19f412acdf12e" />
+
+	<link rel="stylesheet" href="/bundles/styles/common?v=4bb8f14afd33b76d930a21835181aa4cc4fa466ca950f9dafb553b04475bd0e7" />
+	<link rel="stylesheet" href="/bundles/styles/common/desktop?v=23cc4676f609189b3a5d6df76ff58f8ccca7ed5ab7c20af160ec5e9620e9ef22" />
+	<link rel="stylesheet" href="/bundles/mco/lists/mco-listtypes?v=4d586c43fd63890d49e83f059ab459b1887ac21b392863ea2335fdb258dfd539" />
+	<link rel="stylesheet" href="/bundles/mco/mco.clientcustom?v=3ead52018242457cd1757da1f7a36f7a4de6e7e64ebd4d20ea8268c94ec01705" />
+	
+		<link href="/bundles/mco/mco.desktop.admin.css?v=AAAMbvbELUI1" rel="stylesheet"/>
+
+	
+		<!--link rel="shortcut icon" href="/favicon.ico?v=c58d8d087241aebcd83bb4a94cb9d64cefe375f75345021587be6c46b4012d1d" /-->
+
+	<link rel="icon" type="image/png" href="../images/favicon-96x96.png" sizes="96x96" />
+	<link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
+	<link rel="shortcut icon" href="../images/favicon.ico" />
+	<link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png" />
+	<meta name="apple-mobile-web-app-title" content="Self Publishing Software" />
+	<link rel="manifest" href="/site.webmanifest" />
+
+	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.js"></script>
+</head>
+<body style="overflow: hidden;" class="">
+	<style>
+
+
+		.left {
+
+		}
+	</style>
+	<div id="wrapper">
+				<header>
+					<div id="banner" >
+						<div class="left" style="background-color: rgba(15,91,69, 0.5);background-image: url(&#39;https://s3-us-west-2.amazonaws.com/municipalcodeonline.com-new/bellemeade/site/logo.png&#39;);">
+						</div>
+						<div class="right" style="background-color: rgb(15,91,69);">
+							<div class="content">
+
+									<a href="https://citybellemeade.org/" class="k-link">Belle Meade Website</a>  |  								<a class="k-link" href="/">Books</a> |
+																								<a href="https://www.civicplus.help/codification/docs/submit-product-feedback" class="k-link" target="_blank">Feedback</a> <text> | </text>
+									<a class="k-link" href="/account/logon">Manage</a>
+
+								<div id="title">
+									<span class="mco-top">City of Belle Meade</span>
+									<br />
+									<span class="mco-bottom">4705 Harding Road, Nashville, TN 37205 / 615-297-6041</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</header>
+			<div id="disabled"></div>
+			<div id="searchnav">
+				<div class="horizontal" style="width:25%;float:left;">
+					<div id="horizontal-left">
+						<table style="width: 100%;">
+							<tr>
+								<td><a id="search-btn" title="Search"><i class="fa fa-search" style="margin-top: 3.5px;"></i></a></td>
+								<td>
+<form action="/book" id="form_search" method="post">										<input id="app-wide-search-box" type="text" name="searchText" class="k-textbox" style="width:95%;font-size:0.9em;" />
+										<label style="display:none;" for="app-wide-search-box">Text Search</label>
+</form>								</td>
+								
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="horizontal" style="width:100%;">
+					<div id="horizontal-right" style="margin-top: 2px;">
+						Municipal Code
+					</div>
+					<div >
+						
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Crimson+Text:400,400i,700" rel="stylesheet">
+<link href="/Bundles/styles/desktop/font-awesome.css?v=63e1d3c224df532db00fbdb86dfb0fd078cd80fafa1ce4693658011a4e7caab1" rel="stylesheet" />
+<div ng-controller="AocFormCtrl" id="aocCtrl">
+    <div class="navigator noprint">
+        <div style="height: 40px; line-height:40px; float:right;">
+            <button id="phx-docs" title="Documents" class="fa fa-gavel fa-lg"></button>
+            <span class="fa" style="font-size:30px;vertical-align:middle;color:#a5a5a5;">|</span>
+            <button id="phx-font-up" title="Increase Font" class="navbutton fa fa-font fa-lg" style="padding:5px;"><span style="margin:0px;font-size:12pt;vertical-align:super;">+</span></button>
+            <button id="phx-font-down" title="Decrease Font" class="navbutton fa fa-font fa-lg" style="padding:5px;"><span style="margin:0px;font-size:12pt;vertical-align:super;">-</span></button>
+            
+            <a><button id="phx-print" title="Print Friendly" class="fa fa-print fa-lg"></button></a>
+            <span class="fa" style="font-size:30px;vertical-align:middle;color:#a5a5a5;">|</span>
+            <button id="phx-first" title="First" class="fa fa-step-backward fa-lg"></button>
+            <button id="phx-prev" title="Previous" class="fa fa-backward fa-lg"></button>
+            <button id="phx-next" title="Next" class="fa fa-forward fa-lg"></button>
+            <button id="phx-last" title="Last" class="fa fa-step-forward fa-lg"></button>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="modal-generate" tabindex="-1" role="dialog" aria-labelledby="modal-about-label" aria-hidden="true">
+        <div id="doc-modal" class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" ng-click="cancel(true)" ng-disabled="isSaving || isLoading" aria-hidden="true" title="Save and Close">&times;</button>
+                    <div ng-if="isSaving" class="pull-right" style="margin-right: 20px">Saving...<span class="k-icon k-loading"></span></div>
+                    <h3 class="modal-title">Document Creator: {{ BookDTO.SelectedOrdinance.ProposalName }}</h3>
+                </div>
+                <div class="modal-body" style="background-color: #E6E6E6;" ng-class="{ 'obscured-overlay': isLoading }">
+                    <div class="spinner-overlay" ng-show="isLoading">
+                        <span class="k-icon k-loading"></span>
+                    </div>
+                    <div class="form-inline">
+                        <select class="form-control" ng-model="BookDTO.SelectedOrdinance.OrdinanceType" id="OrdinanceType" ng-disabled="isLoading">
+                            
+                            <option value="0">Ordinance</option>
+                            <option value="1">Resolution</option>
+                            
+                        </select>
+                        <label for="OrdinanceType" style="display:none;">Select Ordinance Type</label>
+                        <div style="display: inline;">
+                            <input id="OrdinanceName" type="text" ng-change="validateOrdinanceName()" class="form-control" placeholder="Name" ng-model="BookDTO.SelectedOrdinance.OrdinanceName" maxlength="64" ng-disabled="isLoading">
+                            <label style="display:none;" for="OrdinanceName">Ordinance Name</label>
+                            <div style="display: inline; margin-left: 6px;" ng-if="!validOrdinanceName">
+                                <i class="fa fa-exclamation-triangle" style="color: red; font-size: 15px !important;"></i>
+                                <span style="color: red; font-size: 14px; font-weight: 900;">
+                                    &nbsp;{{invalidOrdinanceNameMessage}}
+                                </span>
+                            </div>
+                            <div style="display: inline; margin-left: 6px;" ng-if="validOrdinanceName">
+                                <span style="color: green; font-size: 14px; font-weight: 900;">
+                                    Congrats, this number has never been used.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="line-title">TITLES</div>
+                    <div class="line-sep"></div>
+                    <br/>
+                    <div ng-if="BookDTO.SelectedOrdinance.ShortTitle !== null" class="{{(BookDTO.SelectedOrdinance.ShortTitle.enabled == false || BookDTO.SelectedOrdinance.ShortTitle.enabled == null) ? 'gray-out' : ''}}">
+                        <label for="shortTitle">SHORT TITLE</label>
+                        <div style="display: flex; flex-direction: row;">
+                            <input type="text" class="form-control" placeholder="Short Title" id="shortTitle" ng-model="BookDTO.SelectedOrdinance.ShortTitle.text" ng-readonly="BookDTO.SelectedOrdinance.ShortTitle.enabled == false || BookDTO.SelectedOrdinance.ShortTitle.enabled == null" ng-disabled="isLoading"><br/>
+                            <div class="title-options">
+                                <span class="fa fa-trash-o" ng-if="BookDTO.SelectedOrdinance.LongTitle !== null" ng-click="BookDTO.SelectedOrdinance.ShortTitle = null;" title="Delete"></span>
+                                <br/>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="BookDTO.SelectedOrdinance.ShortTitle == null">
+                        <label>SHORT TITLE </label>
+                        <br/>
+                        <span class="fa fa-plus-square-o" ng-click="BookDTO.SelectedOrdinance.ShortTitle.text = ''; BookDTO.SelectedOrdinance.ShortTitle.enabled = true" title="Add Short Title"></span>
+                    </div>
+                    <br/>
+                    <div ng-if="BookDTO.SelectedOrdinance.LongTitle !== null" class="{{(BookDTO.SelectedOrdinance.LongTitle.enabled == false || BookDTO.SelectedOrdinance.LongTitle.enabled == null) ? 'gray-out' : ''}}">
+                        <label for="longTitle">LONG TITLE</label>
+                        <div style="display: flex; flex-direction: row;">
+                            <textarea class="form-control" style="resize: none;" id="longTitle" placeholder="Long Title" rows="3" ng-model="BookDTO.SelectedOrdinance.LongTitle.text" ng-readonly="BookDTO.SelectedOrdinance.LongTitle.enabled == false || BookDTO.SelectedOrdinance.LongTitle.enabled == null" ng-disabled="isLoading"></textarea>
+                            <div class="title-options">
+                                <span class="fa fa-trash-o" ng-if="BookDTO.SelectedOrdinance.ShortTitle !== null" ng-click="BookDTO.SelectedOrdinance.LongTitle = null;" title="Delete"></span>
+                                <br/>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="BookDTO.SelectedOrdinance.LongTitle == null">
+                        <label>LONG TITLE </label>
+                        <br/>
+                        <span class="fa fa-plus-square-o" ng-click="BookDTO.SelectedOrdinance.LongTitle.text = ''; BookDTO.SelectedOrdinance.LongTitle.enabled = true;" title="Add Long Title"></span>
+                    </div>
+                    <br/>
+                    <div class="line-title">RECITALS</div>
+                    <div class="line-sep"></div>
+                    <br/>
+                    <div class="Recitals" ng-repeat="recital in BookDTO.SelectedOrdinance.Recitals track by $index">
+                        <div class="recital {{(recital.enabled === false) ? 'gray-out' : ''}}">
+                            <div>
+                                <a ng-if="recital.enabled && recital.recitalText !== getDefaultRecital(recital, false)"
+                                   ng-click="getDefaultRecital(recital, true)"
+                                   class="label label-primary"
+                                   style="margin-left: 4px;">
+                                    <span class="fa fa-reply" style="font-size: 12px;"></span>
+                                    Use Default
+                                </a>
+                            </div>
+                            <br/>
+                            <div style="display: flex; flex-direction: row;">
+                                <textarea ng-readonly="recital.enabled === false" class="form-control" id="recitalArea" rows="3" placeholder="Insert preamble paragraph, and close it with a semicolon (;)" ng-model="recital.recitalText" style="margin-bottom: 12px;" ng-disabled="isLoading">{{ recital.recitalText }}</textarea>
+                                <div style="margin-left: 10px">
+                                    <div ng-if="$index > 0">
+                                        <span class="fa fa-trash-o" style="margin-bottom: 10px;" ng-click="remove('Recitals', recital)" title="Delete"></span>
+                                        <br/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="fa fa-plus-square-o" ng-click="addRecital()" title="Add Recital"></span>
+                    <br/>
+                    <br/>
+                    <div class="line-title">ORDAINING CLAUSE</div>
+                    <div class="line-sep"></div>
+                    <div id="clauseSection">
+                        <div ng-repeat="clause in BookDTO.SelectedOrdinance.Clauses | filterToOrdainingClause track by $index">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" data-target="#{{toDataId(clause)}}" ng-model="clause.enabled" ng-change="setCollapse(clause.enabled, '#' + toDataId(clause));" ng-checked="clause.enabled" ng-disabled="isLoading">
+                                    {{clause.name}}
+                                </label>
+                                <a ng-if="clause.enabled && clause.text !== getDefault(clause, false)"
+                                   ng-click="getDefault(clause, true)"
+                                   class="label label-primary"
+                                   style="margin-left: 4px;">
+                                    <span class="fa fa-reply" style="font-size: 12px;"></span>
+                                    Use Default
+                                </a>
+                                
+                                <div ng-if="clause.enabled">
+                                    <div id="{{toDataId(clause)}}" style="margin-top: 2px;">
+                                        <textarea class="form-control" ng-model="clause.text" ng-disabled="isLoading"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="line-title">PROPOSED CHANGES</div>
+                    <div class="line-sep"></div>
+                    <br/>
+                    <div ng-if="proposed.length < 1 && exhibits.length < 1">
+                        *Make changes to add legislation
+                    </div>
+                    <div id="listWithHandle" class="mco-listtype-eight">
+                        <div ng-repeat="node in proposed | orderBy: node.npa[0].Order">
+                            <div class="dropzone" order="{{node.npa[0].Order}}">
+                                <div class="{{(node.npa[0].Enabled === 0) ? 'gray-out' : ''}}">
+                                    <div class="card" style="border-color: #{{BookDTO.BaseColorHex}}; display: inline-block; max-width: 93%">
+                                        <div class="card-block" style="padding: 1rem;">
+                                            <div ng-repeat="npa in node.npa">
+                                                <div style="display: inline-block;" class="{{(node.npa[0].Action == 2) ? 'repealed-title' : ''}}">
+                                                    <p style="display: inline; margin-right: 10px;" ng-if="!node.diffName">{{node.Name}}</p>
+                                                    <p style="display: inline; margin-right: 10px;" ng-if="node.diffName" ng-bind-html="trustHtml(node.diffName)"></p>
+                                                    <expand class="fa fa-chevron-down" style="margin-right: 10px" aria-hidden="true" title="Expand"></expand>
+                                                    <a class="fa fa-arrows move" aria-hidden="true" title="Move"></a>
+                                                    <div class="dropdown" style="margin-top: 10px;">
+                                                        <div class="dropdown-selection">
+                                                            <button class="btn dropdown-toggle npa-button" id="addDropDown" type="button" aria-haspopup="true" data-toggle="dropdown" ng-disabled="isLoading">
+                                                                {{ toLegalAction(npa.LegalAction, npa) }}
+                                                            </button>
+                                                            <div class="dropdown-menu" aria-labelledby="addDropDown">
+                                                                <a ng-repeat="legalAction in getLegalActions(npa.Action)" class="dropdown-item" ng-click="setLegalAction(legalAction, npa)" ng-disabled="isLoading">
+                                                                    {{ toLegalAction(legalAction, npa) }}
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ordinance-options">
+                                        <span class="fa fa-trash-o" ng-click="deleteNpa(node, node.npa[0], $event)" title="Delete" ng-disabled="isLoading"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="line-title">CLAUSES</div>
+                    <div class="line-sep"></div>
+                    <div id="clauseSection">
+                        <div ng-repeat="clause in BookDTO.SelectedOrdinance.Clauses | filterOutOrdainingClause track by $index">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" data-target="#{{toDataId(clause)}}" ng-model="clause.enabled" ng-change="setCollapse(clause.enabled, '#' + toDataId(clause));" ng-checked="clause.enabled" ng-disabled="isLoading">
+                                    {{clause.name}}
+                                </label>
+                                <label>
+                                    <input id="isPlainText-{{toDataId(clause)}}" style="margin-left: 5px" type="checkbox" ng-model="clause.garbage" ng-click="toggleIsPlainText(clause);" ng-checked="clause.isPlainText != 1" ng-disabled="isLoading">
+                                    <span style="margin-left: 20px"> Make as Section</span>
+                                </label>
+                                <a ng-if="clause.enabled && clause.text !== getDefault(clause, false)"
+                                   ng-click="getDefault(clause, true)"
+                                   class="label label-primary"
+                                   style="margin-left: 4px;">
+                                    <span class="fa fa-reply" style="font-size: 12px;"></span>
+                                    Use Default
+                                </a>
+                                
+                                <div ng-if="clause.enabled" style="display: flex; flex-direction: row;">
+                                    <textarea class="form-control" style="resize: none;" id="{{toDataId(clause)}}" placeholder="Custom Clause" rows="3" ng-model="clause.text" ng-disabled="isLoading"></textarea>
+                                    <div class="title-options">
+                                        <span class="fa fa-trash-o" ng-click="deleteClause(clause)" title="Delete" ng-disabled="isLoading"></span>
+                                        <br/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <label>
+                        <span class="fa fa-plus-square-o" ng-click="addClause()" title="Add Custom Clause"></span>
+                    </label>
+                    <br/>
+                    <br/>
+                    <div ng-repeat="exhibit in exhibits track by $index" class="{{(exhibit.Enabled === false) ? 'gray-out' : ''}}">
+                        <br/>
+                        <p>EXHIBIT {{alphabet[$index].toUpperCase()}}</p>
+                        <div style="display: flex; flex-direction: row;">
+                            <div class="card ordinance-block" style="border-color: #{{BookDTO.BaseColorHex}}; display: inline-block; max-width: 93%;">
+                                <div class="card-block">
+                                    <div class="excluded-names">
+                                        <p><span>Exhibit: </span>{{ exhibit.FileName }}</p>
+                                    </div>
+                                    <div class="dropdown">
+                                        <div class="dropdown-selection">
+                                            <button class="btn dropdown-toggle" id="addDropDown" data-toggle="dropdown" ng-disabled="isLoading">
+                                                {{ toLegalAction(exhibit.LegalAction, exhibit) }}
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="addDropDown">
+                                                <a class="dropdown-item" ng-click="setLegalAction(1, exhibit); updateExhibit(exhibit)" ng-disabled="isLoading">Adoption</a>
+                                                <a class="dropdown-item" ng-click="setLegalAction(2, exhibit); updateExhibit(exhibit)" ng-disabled="isLoading">Amendment</a>
+                                                <a class="dropdown-item" ng-click="setLegalAction(3, exhibit); updateExhibit(exhibit)" ng-disabled="isLoading">Correction</a>
+                                                <a class="dropdown-item" ng-click="setLegalAction(5, exhibit); updateExhibit(exhibit)" ng-disabled="isLoading">Reenactment</a>
+                                                <a class="dropdown-item" ng-click="setLegalAction(6, exhibit); updateExhibit(exhibit)" ng-disabled="isLoading">Repeal & Reenactment</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ordinance-options">
+                                <span class="fa fa-trash-o" style="margin-bottom: 10px;" ng-click="exhibit.Deleted = true; updateExhibit(exhibit)" title="Delete" ng-disabled="isLoading"></span>
+                                <br/>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="line-title">
+                        SETTINGS
+                    </div>
+                    <div class="line-sep"></div>
+                    <br/>
+                    <div id="settings">
+                        <label>Show Prior Content:</label>
+                        <br>
+                        <div>
+                            <div class="radio" ng-click="setOrdFormat(1, $event);" ng-disabled="isLoading">
+                                <label><input type="radio" ng-checked="BookDTO.SelectedOrdinance.OrdinanceFormat === 1" ng-disabled="isLoading"/>Yes</label>
+                            </div>
+                            <div class="radio" ng-click="setOrdFormat(2, $event);" ng-disabled="isLoading">
+                                <label><input type="radio" ng-checked="BookDTO.SelectedOrdinance.OrdinanceFormat === 2" ng-disabled="isLoading"/>No</label>
+                            </div>
+                        </div>
+                        <br/>
+                        <label>Show Redlines In:</label><br/>
+                        <div class="redline">
+                            <div class="radio">
+                                <label><input type="radio" ng-model="BookDTO.SelectedOrdinance.RedLine" value="1" {{(BookDTO.SelectedOrdinance.RedLine === 1) ? 'checked': ''"}} ng-disabled="isLoading">Color</label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" ng-model="BookDTO.SelectedOrdinance.RedLine" value="2" {{(BookDTO.SelectedOrdinance.RedLine === 2) ? 'checked': ''"}} ng-disabled="isLoading">Grayscale</label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" ng-model="BookDTO.SelectedOrdinance.RedLine" value="3" {{(BookDTO.SelectedOrdinance.RedLine === 3) ? 'checked': ''"}} ng-disabled="isLoading">No Redlines (Clean)</label>
+                            </div>
+                        </div>
+                        <br/>
+                        <label>Show Document As:</label><br/>
+                        <div class="redline">
+                            <div ng-init="draftOrOfficial=1"/>
+                            <div class="radio">
+                                <label><input type="radio" ng-model="draftOrOfficial" checked value="1" ng-disabled="isLoading">Full {{BookDTO.SelectedOrdinance.OrdinanceType == 0 ? 'Ordinance' : 'Resolution'}}</label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" ng-model="draftOrOfficial" value="0" ng-disabled="isLoading">Changes Only</label>
+                            </div>
+                        </div>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="editedText" class="pull-left">
+                    <p>{{latestRevisionText}}</p>
+                </div>
+                <button type="button" class="btn" ng-click="cancel(false)" style="background-color: #E6E6E6; color: black;">Cancel</button>
+                <button type="button" class="btn" style="background-color: #{{BookDTO.BaseColorHex}}; color: white;" ng-disabled="isSaving || isLoading" ng-click="cancel(true)">Save</button>
+                <button type="button" class="btn" ng-disabled="isSaving || isLoading" ng-click="genOrdinanceHtml()" style="background-color: #{{BookDTO.BaseColorHex}}; color: white;"><i class="fa fa-download" aria-hidden="true"></i> Save And Download Document</button>
+            
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var lastRelated = {};
+    Sortable.create(listWithHandle, {
+        handle: '.move',
+        animation: 100,
+        fallbackTolerance: 0,
+        scrollSensitivity: 100
+    });
+</script>
+						<div ng-controller="PassCtrl" class="modal fade" id="approve-gen" tabindex="-1" role="dialog" aria-labelledby="modal-about-label" aria-hidden="true">
+	<div id="doc-modal" class="modal-dialog modal-md wide">
+		<div class="modal-content modal-content-custom">
+			<div class="modal-header">
+				<button type="button" class="close" ng-click="cancel(true)" aria-hidden="true" title="Save and Close">&times;</button>
+				  <div ng-if="isSaving" class="pull-right" style="margin-right: 20px">Saving...<span class="k-icon k-loading"></span></div>
+				<h3 class="modal-title">Pass Document</h3>
+			</div>
+			<div class="modal-body" id="modal-slide" style="background-color: #E6E6E6; font-family:Roboto" ng-class="{ 'obscured-overlay': isLoading }">
+				<div class="spinner-overlay" ng-show="isLoading">
+					<span class="k-icon k-loading"></span>
+				</div>
+				<div ng-include="currentPage()"></div>
+			</div>
+			<div class="modal-footer">
+				<div class="pull-left">
+					<button ng-if="step < 1" type="button" class="btn" ng-click="cancel(false)" style="background-color: #E6E6E6; color: black;">Cancel</button>
+					<button ng-if="step > 0" type="button" class="btn" ng-click="previousStep()" style="background-color: #E6E6E6; color: black;" ng-disabled="isLoading">Previous</button>
+				</div>
+				<button ng-if="step < totalSteps" type="button" class="btn" ng-click="nextStep()" style="background-color: #{{BookDTO.BaseColorHex}}; color: white;" ng-disabled="isLoading">Next</button>
+
+				<button ng-if="step === totalSteps && !manuallySign.value" ng-disabled="isLoading || !leadingAuthority || leadingAuthority.email == null || leadingAuthority.email == ''"
+				type="button" class="btn" ng-click="pass()" style="background-color: {{leadingAuthority.email ? '#41B865' : 'gray'}}; color: white;" >Send & Download Unapproved Document</button>
+
+				<button ng-if="step === totalSteps && manuallySign.value" ng-disabled="isLoading || !BookDTO.SelectedOrdinance.ManuallySigned" type="button" class="btn" ng-click="pass()"
+                        style="background-color: {{BookDTO.SelectedOrdinance.ManuallySigned  ? '#41B865' : 'gray'}}; color: white;">Pass</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+						<div ng-controller="RepCtrl" class="modal fade" id="rep-modal" tabindex="-1" role="dialog" aria-labelledby="modal-about-label" aria-hidden="true">
+	<div id="doc-modal" class="modal-dialog modal-lg wide">
+		<div class="modal-content modal-content-custom">
+			<div class="modal-header">
+				<button type="button" class="close" ng-click="cancel(true)" aria-hidden="true" title="Save and Close">&times;</button>
+        <div ng-if="isSaving" class="pull-right" style="margin-right: 20px">Saving...<span class="k-icon k-loading"></span></div>
+				<h3 class="modal-title">Representatives</h3>
+       
+			</div>
+      <div class="modal-body" id="modal-slide" style="background-color: #E6E6E6;" ng-class="{ 'obscured-overlay': isLoading }">
+	      <div class="spinner-overlay" ng-show="isLoading">
+		      <span class="k-icon k-loading"></span>
+	      </div>
+	    <ng-include src="'Bundles/Templates/RollCall.html'"></ng-include>
+        <br />
+        <ng-include src="'Bundles/Templates/Approvals.html'"></ng-include>
+      </div>
+      <div class="modal-footer">
+        <p ng-if="hasPublishedDate()" class="pull-left" style="color: red">* This proposal has passed or has been sent for approval. Saving these settings will not affect any other current or future proposals.</p>
+        <button type="button" class="btn" ng-click="cancel(false)" style="background-color: #E6E6E6; color: black;">Cancel</button>
+        <button type="button" class="btn" style="background-color: #{{BookDTO.BaseColorHex}}; color: white;" ng-disabled="isSaving" ng-click="cancel(true)">Save</button>
+      </div>
+		</div>
+	</div>
+</div>
+						<div ng-controller="ProposalCtrl" class="modal fade" id="proposal-modal" tabindex="-1" role="dialog" aria-labelledby="modal-about-label" aria-hidden="true">
+	<div id="doc-modal" class="modal-dialog modal-lg wide">
+		<div class="modal-content modal-content-custom">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title">Edit Proposal: {{BookDTO.SelectedOrdinance.ProposalName}}</h3>
+			</div>
+			<div class="modal-body" id="modal-slide" style="background-color: #E6E6E6;" ng-class="{ 'obscured-overlay': isBusy }">
+				<div class="spinner-overlay" ng-show="isBusy">
+					<span class="k-icon k-loading"></span>
+				</div>
+				<input id="proposalName" type="text" ng-change="checkName()" class="form-control" placeholder="Name" ng-model="BookDTO.SelectedOrdinance.ProposalName">
+				<label for="proposalName">Proposal Name</label>
+				<div style="display: block; margin-top:5px; margin-left: 6px;" ng-if="!validProposalName">
+					<i class="fa fa-exclamation-triangle" style="color: red; font-size: 15px !important;"></i>
+					<span style="color: red; font-size: 14px; font-weight: 900;">
+						Sorry, this name has already been used in past legislation.
+					</span>
+				</div>
+				<div style="display: block; margin-top:5px; margin-left: 6px;" ng-if="validProposalName">
+					<span style="color: green; font-size: 14px; font-weight: 900;">
+						Congrats, this name has never been used.
+					</span>
+				</div>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				To delete [Proposal: {{BookDTO.SelectedOrdinance.ProposalName}}] and its proposed legislation forever, please type its name below and select "Delete"
+				<br/>
+				<br/>
+				<input id="deleteProposalField" type="text" class="form-control" placeholder='enter "{{BookDTO.SelectedOrdinance.ProposalName}}" to enable deletion' ng-model="deleteValue">
+				<label for="deleteProposalField" style="display:none">Enter the name of the propsal into this textbox to verify your intention to delete it.</label>
+			</div>
+      <div class="modal-footer">
+        <button type="button" ng-disabled="isBusy || BookDTO.SelectedOrdinance.ProposalName !== deleteValue" ng-click="delete()">Delete</button>
+        <button ng-disabled="isBusy || deleteValue !== ''" type="button" ng-click="save()">Rename</button>
+      </div>
+		</div>
+	</div>
+</div>
+
+					</div>
+				</div>
+				<div class="updating-mode-block-overlay"></div>
+			</div>
+			<div id="middle">
+				
+
+<div ng-controller="VotesCtrl" class="modal fade" id="vote-modal" tabindex="-1" role="dialog" aria-labelledby="modal-about-label" aria-hidden="true">
+	<div id="doc-modal" class="modal-dialog modal-lg wide">
+		<div class="modal-content modal-content-custom">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title" ><a onclick="changesLinkFunction(this)">Votes</a></h3>
+			</div>
+			<div class="modal-body" id="modal-slide"  style="background-color: #E6E6E6;">
+				<table class="k-grid">
+					<thead class="k-grid-header">
+						<tr>
+							<td>Member</td>
+							<td>Vote</td>
+						</tr>
+					</thead>
+					<tbody ng-repeat="member in Members">
+						<tr>
+							<td>{{member.memberName}}</td>
+							<td ng-if="member.vote == null">Missing</td>
+							<td ng-if="member.vote == 0">Missing</td>
+							<td ng-if="member.vote == 1" style="color:green">Yay</td>
+							<td ng-if="member.vote == 2" style="color:red">Nay</td>
+							<td ng-if="member.vote == 3">Absent</td>
+							<td ng-if="member.vote == 4">Abstain</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+function votesLinkFunction(e)
+{
+	e.preventDefault;
+	setCurrentBookDataId(e.attributes.getNamedItem('data-databookid').value);
+	setCurrentNodeId(e.attributes.getNamedItem('data-nodeId').value);
+	$('#vote-modal').modal('show');
+};
+</script>
+
+<div ng-controller="ChangesCtrl" class="modal fade" id="changes-modal" tabindex="-1" role="dialog" aria-labelledby="modal-about-label" aria-hidden="true">
+	<div id="doc-modal" class="modal-dialog modal-lg wide">
+		<div class="modal-content modal-content-custom">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title">Changes</h3>
+			</div>
+			<div class="modal-body" id="modal-slide" style="background-color: #E6E6E6;" ng-bind-html="html">
+				
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+function changesLinkFunction(e)
+{
+	e.preventDefault;///NOT DONE
+	$('#changes-modal').modal('show');
+};
+</script>
+
+
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Crimson+Text:400,400i,700" rel="stylesheet">
+<link rel="stylesheet" href="/Bundles/styles/desktop/font-awesome.css?v=63e1d3c224df532db00fbdb86dfb0fd078cd80fafa1ce4693658011a4e7caab1" />
+<link rel="stylesheet" href="/Bundles/home/ice?v=ebb2a4da48420dbf41bf7b01d167a2346775ac08b60ed5b1ffa5e2d2d5311652" />
+
+<style type="text/css">
+	#TOC > ul > li:last-child{
+		padding-bottom: 200px;
+	}
+</style>
+<script>
+        var app = angular.module('MCO');
+	app.value('readOnlyStatus', 'ReadOnly');
+	document.getElementsByTagName("BODY")[0].classList.add('mco-listtype-eight');
+</script>
+<div>
+<div class="k-widget k-splitter k-splitter-horizontal splitter" id="Splitter"><div class="k-pane k-scrollable"><div style="height: 100%; min-height: 100%;">
+<form action="/book" id="form_search_contents" method="post">		<div id="results-container">
+			<div class="loading k-loading-image" style="margin-top: 30px;"></div>
+			<div id="results" class="loadable tab">0 results</div>
+		</div>
+<div class="k-widget k-treeview k-reset" id="TOC"></div></form>	<div class="updating-mode-block-overlay"></div>
+</div>
+</div><div class="k-pane"><div id="contents-parent">
+			<div class="loading k-loading-image" style="margin-top: 50px;"></div>
+			<div id="contents-container">
+				<div id="contents" class="loadable" style="display: none;padding: 12px 12px;"></div>
+				<div id="docs" class="loadable"></div>
+			</div>
+		</div>
+</div></div>
+</div>
+<script type="text/javascript">
+	window.addEventListener('popstate', listener);
+	function listener() {
+		if (/docs/.test(window.location.href)) {
+			$("#proposed-nav").hide();
+		} else {
+			$("#proposed-nav").show();
+		}
+	}
+	$(document).ready(listener());
+</script>
+
+				<toaster-container toaster-options="{'position-class': 'toast-top-left', 'close-button': true}"></toaster-container>
+			</div>
+	</div>
+	<div ng-controller="UserTimeoutCtrl" class="modal fade" id="login-timeout-modal" tabindex="-1" role="dialog" aria-labelledby="modal-about-label" aria-hidden="true">
+	<div id="doc-modal" class="modal-dialog modal-lg wide">
+		<div class="modal-content modal-content-custom">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="false">&times;</button>
+				<h3 class="modal-title" >Session Timeout...</h3>
+			</div>
+			<div class="modal-body" id="modal-slide">
+				<div>
+					<label>Your session will timeout in - </label> <span ng-bind="hoursLeft"></span> hours <span ng-bind="minutesLeft"></span> minutes <span ng-bind="secondsLeft"></span> seconds
+					<br />
+					Please save all of your changes, then refresh your page to refresh your session
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn" ng-click="cancel()" style="background-color: #d9534f; color: White;">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="/Scripts/third/kendo/kendo.custom.desktop.min.js?v=AAAQbvbELUI1"></script>
+<script src="/Scripts/third/utilities/mco.utilities.hash.js?v=AAAMbvbELUI1"></script>
+<script src="/Scripts/third/utilities/mco.utilities.ajax.js?v=AAAMbvbELUI1"></script>
+<script src="/Scripts/third/utilities/mco.utilities.modal.js?v=AAAMbvbELUI1"></script>
+<script>jQuery(function(){jQuery("#TOC").kendoTreeView({"select":mco.common.desktop.book.select,"dataBound":mco.common.desktop.book.dataBound,"dataSource":{"transport":{"read":{"url":"/book/expand?type=ordinances"}},"schema":{"model":{}}},"checkboxes":{"name":"checkedNodes","template":"\u003cinput type=\u0027checkbox\u0027 name=\u0027#= treeview.checkboxes.name #\u0027 #= item.checked ? \u0027checked\u0027 : \u0027\u0027 # value=\u0027#= item.id #\u0027 /\u003e","checkChildren":true},"dataTextField":["name"]});});jQuery(function(){jQuery("#Splitter").kendoSplitter({"panes":[{"size":"25%"},{"scrollable":false,"size":"75%"}]});});</script><script src="/Scripts/mco.common.js?v=AAAQbvbELUI1"></script>
+<script src="/Scripts/mco.common.desktop.js?v=AAAQbvbELUI1"></script>
+<script src="/Scripts/mco.common.desktop.account.js?v=AAAQbvbELUI1"></script>
+<script src="/Scripts/cursor-fix-fixer.js?v=AAAQbvbELUI1"></script>
+<script src="/Scripts/mco.common.desktop.book.js?v=AAAQbvbELUI1"></script>
+<script src="/Scripts/mco.common.desktop.home.js?v=AAAQbvbELUI1"></script>
+
+<footer style="vertical-align: bottom;" class="">
+	<div style="text-align:center">
+			<div style="height:22px;">
+				All content maintained by Belle Meade - https://bellemeade.municipalcodeonline.com
+				
+			</div>
+		
+	</div>
+	<div style="float:right; display:inline-block; margin-left:10px;margin-right:10px; position:absolute; right:0;top:0">
+		<a href="https://www.civicplus.com/codification-software-services/" target="_blank">
+			<img src="../images/cp-municode-codification-logo-simple-light-text.svg" alt="Municode Codification"/>
+		</a>
+	</div>
+</footer>
+	<script>
+		function fileExists(file_url, true_callback, false_callback){
+			$.ajax({
+					type: "HEAD",
+					async: true,
+					url: file_url,
+					success: function(data) {
+						true_callback(data);
+					},
+					error: function(textStatus, errorThrown) {
+						false_callback(textStatus, errorThrown);
+					}
+			});
+		}
+
+		function imageFix() {
+			var im = new Image();
+			var logo1 = 'https://s3-us-west-2.amazonaws.com/municipalcodeonline.com-new/bellemeade/site/logo.png';
+			var logo2 = 'https://s3-us-west-2.amazonaws.com/municipalcodeonline.com-new/bellemeade/site/logo2.png';
+			if (false){
+				im.src = logo2;
+			} else {
+				//var logo = document.getElementsByClassName("left")[0];
+				//logo.style.backgroundImage = "url(" + original + ")";
+				im.src = logo1;
+			}
+		}
+		imageFix();
+
+		// uncomment break on alerts
+		//window.alert_ = window.alert;
+        //window.alert = function () {
+        //    debugger;
+        //    alert_.apply(window, arguments);
+		//};
+
+		// if something errored out we need to reload
+		var recentlyErroredAndRefreshing = false;
+		var doTheAlerts = true;
+		window.onerror = function(msg, url, line, column, error) {
+			if (recentlyErroredAndRefreshing) {
+				return;
+			}
+			// TODO: Maybe we should log something here....
+			var errorToSource = "";
+			var errorToString = "";
+			try {
+				//errorToSource = encodeURIComponent(error.toSource());
+				errorToSource = error.toSource();
+			} catch {
+				// we don't care if we can't
+			}
+			try {
+				//errorToString = encodeURIComponent(error.toString());
+				errorToString = error.toString();
+			} catch {
+				// we don't care if we can't
+			}
+			var notes = JSON.stringify({
+					msg: msg || "",
+					url: url || "",
+					line: line || "",
+					column: column || ""
+				});
+			var postObject = JSON.stringify({
+				message: error.message || "",
+				name: error.name || "",
+				fileName: error.fileName || "",
+				lineNumber: error.lineNumber || null,
+				columnNumber: error.columnNumber || null,
+				stack: error.stack || "",
+				description: error.description || "",
+				number: error.number || null,
+				errorSource: errorToSource || "",
+				toStringResult: errorToString || "",
+				notes: notes
+			});
+			//var postUrl = "Api/SubmitLog"
+			//		+ "?message=" + encodeURIComponent(error.message) + "&name=" + encodeURIComponent(error.name)
+			//		+ "&fileName=" + encodeURIComponent(error.fileName) + "&lineNumber=" + encodeURIComponent(error.lineNumber) + "&columnNumber=" + encodeURIComponent(error.columnNumber) + "&stack=" + encodeURIComponent(error.stack)
+			//		+ "&description=" + encodeURIComponent(error.description) + "&number=" + encodeURIComponent(error.number)
+			//		+ "&errorSource=" + errorToSource + "&toStringResult=" + errorToString
+			//		+ "&notes=" + encodeURIComponent(msg) + "-" + encodeURIComponent(url) + "-" + encodeURIComponent(line) + "-" + encodeURIComponent(column);
+			
+			console.log(postObject);
+		}
+		function setCookie(name,value,seconds) {
+			var expires = "";
+			if (seconds) {
+				var date = new Date();
+				date.setTime(date.getTime() + (seconds*1000));
+				expires = "; expires=" + date.toUTCString();
+			}
+			document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+		}
+
+		function getCookie(name) {
+			var dc = document.cookie;
+			var prefix = name + "=";
+			var begin = dc.indexOf("; " + prefix);
+			if (begin == -1) {
+				begin = dc.indexOf(prefix);
+				if (begin != 0) return null;
+			}
+			else
+			{
+				begin += 2;
+				var end = document.cookie.indexOf(";", begin);
+				if (end == -1) {
+				end = dc.length;
+				}
+			}
+			// because unescape has been deprecated, replaced with decodeURI
+			//return unescape(dc.substring(begin + prefix.length, end));
+			return decodeURI(dc.substring(begin + prefix.length, end));
+		}
+	</script>
+</body>
+</html>

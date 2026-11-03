@@ -1,0 +1,115 @@
+Belle Meade : Municipal Code
+Belle Meade Website
+|
+Books
+|
+Feedback
+|
+Manage
+City of Belle Meade
+4705 Harding Road, Nashville, TN 37205 / 615-297-6041
+Text Search
+Municipal Code
+|
++
+-
+|
+×
+Saving...
+Document Creator: {{ BookDTO.SelectedOrdinance.ProposalName }}
+Ordinance
+Resolution
+Select Ordinance Type
+Ordinance Name
+{{invalidOrdinanceNameMessage}}
+Congrats, this number has never been used.
+TITLES
+SHORT TITLE
+SHORT TITLE
+LONG TITLE
+LONG TITLE
+RECITALS
+Use Default
+{{ recital.recitalText }}
+ORDAINING CLAUSE
+{{clause.name}}
+Use Default
+PROPOSED CHANGES
+*Make changes to add legislation
+{{node.Name}}
+{{ toLegalAction(npa.LegalAction, npa) }}
+{{ toLegalAction(legalAction, npa) }}
+CLAUSES
+{{clause.name}}
+Make as Section
+Use Default
+EXHIBIT {{alphabet[$index].toUpperCase()}}
+Exhibit:
+{{ exhibit.FileName }}
+{{ toLegalAction(exhibit.LegalAction, exhibit) }}
+Adoption
+Amendment
+Correction
+Reenactment
+Repeal & Reenactment
+SETTINGS
+Show Prior Content:
+Yes
+No
+Show Redlines In:
+Color
+Grayscale
+No Redlines (Clean)
+Show Document As:
+Full {{BookDTO.SelectedOrdinance.OrdinanceType == 0 ? 'Ordinance' : 'Resolution'}}
+Changes Only
+{{latestRevisionText}}
+Cancel
+Save
+Save And Download Document
+×
+Saving...
+Pass Document
+Cancel
+Previous
+Next
+Send & Download Unapproved Document
+Pass
+×
+Saving...
+Representatives
+* This proposal has passed or has been sent for approval. Saving these settings will not affect any other current or future proposals.
+Cancel
+Save
+×
+Edit Proposal: {{BookDTO.SelectedOrdinance.ProposalName}}
+Proposal Name
+Sorry, this name has already been used in past legislation.
+Congrats, this name has never been used.
+To delete [Proposal: {{BookDTO.SelectedOrdinance.ProposalName}}] and its proposed legislation forever, please type its name below and select "Delete"
+Enter the name of the propsal into this textbox to verify your intention to delete it.
+Delete
+Rename
+×
+Votes
+Member
+Vote
+{{member.memberName}}
+Missing
+Missing
+Yay
+Nay
+Absent
+Abstain
+×
+Changes
+0 results
+×
+Session Timeout...
+Your session will timeout in -
+hours
+minutes
+seconds
+Please save all of your changes, then refresh your page to refresh your session
+Ok
+All content maintained by Belle Meade - https://bellemeade.municipalcodeonline.com

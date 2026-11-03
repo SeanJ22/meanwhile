@@ -1,0 +1,29 @@
+[
+  {
+    "contestId": "co-huerfano-county-2026-recreation-culture-mill-levy",
+    "whatItDoes": "Add 2 mills to the county’s property-tax rate beginning January 1, 2027, for a dedicated recreation and culture fund. The question estimates $354,692 a year, with actual revenue depending on what the levy raises. Money would develop, improve and maintain new and existing parks and recreation facilities; maintain and improve cultural facilities; and provide new and existing recreation and cultural programs for all ages and abilities. All new revenue and earnings would receive the proposed permanent constitutional and other legal revenue-limit exceptions. The question states no tax end date.",
+    "yesMeans": "Approve the additional county property tax for the stated facilities and programs, its funding-review process and its revenue-limit exceptions.",
+    "noMeans": "Do not approve this additional property-tax levy or its proposed revenue-limit exceptions.",
+    "parts": [
+      {
+        "id": "co-huerfano-county-2026-recreation-culture-mill-levy#funding-review",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Who may apply and how spending is reviewed",
+        "what": "Proposed spending must first go to an advisory board for a recommendation to the county commissioners. Municipalities, school districts and special districts within the county may submit projects or programs for funding consideration. A nonprofit may apply if sponsored by the county or one of those local governments."
+      },
+      {
+        "id": "co-huerfano-county-2026-recreation-culture-mill-levy#estimated-home-cost",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Published household estimate",
+        "what": "The question estimates an additional $13.60 a year for each $100,000 of actual residential property value."
+      }
+    ],
+    "sourceUrl": "https://huerfano.us/2026-tabor-election-notice-pro-con-statements/",
+    "sourceHash": "0a30d592a76a767bb28b5233a75e42d089c02c3acebf266d4e302cec400e45b1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:37:57.419680+00:00",
+    "citation": "measure-source"
+  }
+]

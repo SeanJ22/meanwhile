@@ -1,0 +1,14 @@
+{
+  "county": "Huerfano",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 1,
+  "newPendingExactTerritoryCount": 0,
+  "officialPublishedCountyNoticeQuestionCount": 1,
+  "countywideLocalMeasureDenominator": null,
+  "sourceCaveats": [
+    "Complete official November3,2026 county question supplied by the designated election official’s current pro/con notice, citing BoardResolution26-34. No further ballot-qualification condition is stated.",
+    "Official title is recorded; number is unrecorded because the notice leaves it blank. A missing number alone does not prevent publication under§3.",
+    "County clerk page exposes no current general sample; separate school, city or district notices remain to be inventoried. No claim of countywide local completeness is made."
+  ],
+  "limits": "One source-backed county question, not a complete denominator for all local questions in HuerfanoCounty or Colorado."
+}

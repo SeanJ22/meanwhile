@@ -1,0 +1,20 @@
+[
+  {
+    "requestedUrl": "https://huerfano.us/2026-tabor-election-notice-pro-con-statements/",
+    "retrievedAt": "2026-11-03T08:03:52.185038+00:00",
+    "finalUrl": "https://huerfano.us/2026-tabor-election-notice-pro-con-statements/",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "sha256": "0a30d592a76a767bb28b5233a75e42d089c02c3acebf266d4e302cec400e45b1",
+    "bytes": 85242,
+    "rawFormat": "HTML_BYTES",
+    "file": "huerfano-tabor-index.html",
+    "sourceOrg": "Huerfano County Administration / Designated Election Official",
+    "savedFile": "sources/0a30d592a76a767bb28b5233a75e42d089c02c3acebf266d4e302cec400e45b1.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "e7b896fc6df4276dfaa3ca8cee5ed79b3ffef8cc7f5a8b3901142c8cbddc3e25",
+    "storedBytes": 19986,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

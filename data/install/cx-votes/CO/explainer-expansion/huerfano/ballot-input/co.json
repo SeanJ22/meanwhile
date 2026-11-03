@@ -1,0 +1,96 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-huerfano-county-2026-recreation-culture-mill-levy",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:huerfano",
+          "divisionVintage": "2026",
+          "title": "Huerfano County — Recreational and Cultural Facilities and Programming Mill Levy Increase",
+          "type": "MEASURE",
+          "measureTextUrl": "https://huerfano.us/2026-tabor-election-notice-pro-con-statements/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL HUERFANO COUNTY TAXES BE INCREASED BY APPROXIMATELY $354,692 ANNUALLY BEGINNING JANUARY 1, 2027, OR BY SUCH AMOUNT AS MAY BE RAISED, BY INCREASING THE COUNTY’S PROPERTY TAX RATE BY AN ADDITIONAL 2 MILLS (ESTIMATED TO BE $13.60 PER YEAR FOR EACH $100,000 OF ACTUAL RESIDENTIAL VALUE), THE REVENUES FROM WHICH SHALL BE DEPOSITED IN A DEDICATED FUND AND USED FOR THE PURPOSES OF: DEVELOPMENT, IMPROVEMENTS, AND MAINTENANCE OF NEW AND EXISTING PARKS AND RECREATIONAL FACILITIES WITHIN HUERFANO COUNTY; MAINTENANCE AND IMPROVEMENTS TO CULTURAL FACILITIES WITHIN HUERFANO COUNTY; AND PROVIDING MORE RECREATIONAL AND CULTURAL OPPORTUNITIES THROUGH NEW AND EXISTING PROGRAMS FOR ALL AGES AND ABILITIES PROVIDED THAT THE FOLLOWING REQUIREMENTS ARE MET: EXPENDITURES FOR THESE PROJECTS AND PROGRAMS BE FIRST SUBMITTED TO AN ADVISORY BOARD FOR A RECOMMENDATION TO THE BOARD OF COUNTY COMMISSIONERS; ANY MUNICIPALITY, SCHOOL DISTRICT, OR SPECIAL DISTRICT WITHIN HUERFANO COUNTY, OR A NONPROFIT SPONSORED BY EITHER THE COUNTY OR A MUNICIPALITY, SCHOOL DISTRICT, OR SPECIAL DISTRICT WITHIN HUERFANO COUNTY IS ELIGIBLE TO SUBMIT PROJECTS AND PROGRAMS FOR FUNDING CONSIDERATION, AND ALL REVENUE AND ANY EARNINGS ON THIS TAX SHALL CONSTITUTE A PERMANENT VOTER-APPROVED REVENUE CHANGE WITHIN THE MEANING OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW, ALL AS MORE PARTICULARLY SET FORTH IN BOARD OF COUNTY COMMISSIONERS RESOLUTION NO 26-34 ?",
+            "sourceOrg": "Huerfano County Administration / Designated Election Official",
+            "sourceUrl": "https://huerfano.us/2026-tabor-election-notice-pro-con-statements/",
+            "collectedAt": "2026-11-03T08:03:52.185038+00:00",
+            "verifiedAt": "2026-11-03T08:37:57.419680+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-huerfano-county-2026-recreation-culture-mill-levy#question",
+          "contestId": "co-huerfano-county-2026-recreation-culture-mill-levy",
+          "questionText": "SHALL HUERFANO COUNTY TAXES BE INCREASED BY APPROXIMATELY $354,692 ANNUALLY BEGINNING JANUARY 1, 2027, OR BY SUCH AMOUNT AS MAY BE RAISED, BY INCREASING THE COUNTY’S PROPERTY TAX RATE BY AN ADDITIONAL 2 MILLS (ESTIMATED TO BE $13.60 PER YEAR FOR EACH $100,000 OF ACTUAL RESIDENTIAL VALUE), THE REVENUES FROM WHICH SHALL BE DEPOSITED IN A DEDICATED FUND AND USED FOR THE PURPOSES OF: DEVELOPMENT, IMPROVEMENTS, AND MAINTENANCE OF NEW AND EXISTING PARKS AND RECREATIONAL FACILITIES WITHIN HUERFANO COUNTY; MAINTENANCE AND IMPROVEMENTS TO CULTURAL FACILITIES WITHIN HUERFANO COUNTY; AND PROVIDING MORE RECREATIONAL AND CULTURAL OPPORTUNITIES THROUGH NEW AND EXISTING PROGRAMS FOR ALL AGES AND ABILITIES PROVIDED THAT THE FOLLOWING REQUIREMENTS ARE MET: EXPENDITURES FOR THESE PROJECTS AND PROGRAMS BE FIRST SUBMITTED TO AN ADVISORY BOARD FOR A RECOMMENDATION TO THE BOARD OF COUNTY COMMISSIONERS; ANY MUNICIPALITY, SCHOOL DISTRICT, OR SPECIAL DISTRICT WITHIN HUERFANO COUNTY, OR A NONPROFIT SPONSORED BY EITHER THE COUNTY OR A MUNICIPALITY, SCHOOL DISTRICT, OR SPECIAL DISTRICT WITHIN HUERFANO COUNTY IS ELIGIBLE TO SUBMIT PROJECTS AND PROGRAMS FOR FUNDING CONSIDERATION, AND ALL REVENUE AND ANY EARNINGS ON THIS TAX SHALL CONSTITUTE A PERMANENT VOTER-APPROVED REVENUE CHANGE WITHIN THE MEANING OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW, ALL AS MORE PARTICULARLY SET FORTH IN BOARD OF COUNTY COMMISSIONERS RESOLUTION NO 26-34 ?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL HUERFANO COUNTY TAXES BE INCREASED BY APPROXIMATELY $354,692 ANNUALLY BEGINNING JANUARY 1, 2027, OR BY SUCH AMOUNT AS MAY BE RAISED, BY INCREASING THE COUNTY’S PROPERTY TAX RATE BY AN ADDITIONAL 2 MILLS (ESTIMATED TO BE $13.60 PER YEAR FOR EACH $100,000 OF ACTUAL RESIDENTIAL VALUE), THE REVENUES FROM WHICH SHALL BE DEPOSITED IN A DEDICATED FUND AND USED FOR THE PURPOSES OF: DEVELOPMENT, IMPROVEMENTS, AND MAINTENANCE OF NEW AND EXISTING PARKS AND RECREATIONAL FACILITIES WITHIN HUERFANO COUNTY; MAINTENANCE AND IMPROVEMENTS TO CULTURAL FACILITIES WITHIN HUERFANO COUNTY; AND PROVIDING MORE RECREATIONAL AND CULTURAL OPPORTUNITIES THROUGH NEW AND EXISTING PROGRAMS FOR ALL AGES AND ABILITIES PROVIDED THAT THE FOLLOWING REQUIREMENTS ARE MET: EXPENDITURES FOR THESE PROJECTS AND PROGRAMS BE FIRST SUBMITTED TO AN ADVISORY BOARD FOR A RECOMMENDATION TO THE BOARD OF COUNTY COMMISSIONERS; ANY MUNICIPALITY, SCHOOL DISTRICT, OR SPECIAL DISTRICT WITHIN HUERFANO COUNTY, OR A NONPROFIT SPONSORED BY EITHER THE COUNTY OR A MUNICIPALITY, SCHOOL DISTRICT, OR SPECIAL DISTRICT WITHIN HUERFANO COUNTY IS ELIGIBLE TO SUBMIT PROJECTS AND PROGRAMS FOR FUNDING CONSIDERATION, AND ALL REVENUE AND ANY EARNINGS ON THIS TAX SHALL CONSTITUTE A PERMANENT VOTER-APPROVED REVENUE CHANGE WITHIN THE MEANING OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW, ALL AS MORE PARTICULARLY SET FORTH IN BOARD OF COUNTY COMMISSIONERS RESOLUTION NO 26-34 ?",
+            "sourceOrg": "Huerfano County Administration / Designated Election Official",
+            "sourceUrl": "https://huerfano.us/2026-tabor-election-notice-pro-con-statements/",
+            "collectedAt": "2026-11-03T08:03:52.185038+00:00",
+            "verifiedAt": "2026-11-03T08:37:57.419680+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-huerfano-county-2026-recreation-culture-mill-levy",
+          "whatItDoes": "Add 2 mills to the county’s property-tax rate beginning January 1, 2027, for a dedicated recreation and culture fund. The question estimates $354,692 a year, with actual revenue depending on what the levy raises. Money would develop, improve and maintain new and existing parks and recreation facilities; maintain and improve cultural facilities; and provide new and existing recreation and cultural programs for all ages and abilities. All new revenue and earnings would receive the proposed permanent constitutional and other legal revenue-limit exceptions. The question states no tax end date.",
+          "yesMeans": "Approve the additional county property tax for the stated facilities and programs, its funding-review process and its revenue-limit exceptions.",
+          "noMeans": "Do not approve this additional property-tax levy or its proposed revenue-limit exceptions.",
+          "parts": [
+            {
+              "id": "co-huerfano-county-2026-recreation-culture-mill-levy#funding-review",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Who may apply and how spending is reviewed",
+              "what": "Proposed spending must first go to an advisory board for a recommendation to the county commissioners. Municipalities, school districts and special districts within the county may submit projects or programs for funding consideration. A nonprofit may apply if sponsored by the county or one of those local governments."
+            },
+            {
+              "id": "co-huerfano-county-2026-recreation-culture-mill-levy#estimated-home-cost",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Published household estimate",
+              "what": "The question estimates an additional $13.60 a year for each $100,000 of actual residential property value."
+            }
+          ],
+          "sourceUrl": "https://huerfano.us/2026-tabor-election-notice-pro-con-statements/",
+          "sourceHash": "0a30d592a76a767bb28b5233a75e42d089c02c3acebf266d4e302cec400e45b1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:37:57.419680+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:37:57.419680+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://huerfano.us/2026-tabor-election-notice-pro-con-statements/",
+        "finalUrl": "https://huerfano.us/2026-tabor-election-notice-pro-con-statements/",
+        "publisher": "Huerfano County Administration / Designated Election Official",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:03:52.185038+00:00",
+        "httpStatus": 200,
+        "rawHash": "0a30d592a76a767bb28b5233a75e42d089c02c3acebf266d4e302cec400e45b1",
+        "reviewedEvidence": "Complete current official designated-election-official notice expressly submits this full question to the HuerfanoCounty electorate on November3,2026 pursuant to TABOR and cites BoardResolution26-34. Title identifies the measure under§3; no number invented. Exact registered county scope, full operative financial/use/oversight conditions and literal quotes. Source is not merely a qualification hearing or unadopted proposal. No advocacy used."
+      }
+    ]
+  }
+}

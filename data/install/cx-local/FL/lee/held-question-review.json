@@ -1,0 +1,54 @@
+{
+  "unchangedPreparedQuestionRecords": [
+    {
+      "id": "fl-lee-2026-single-member-districts",
+      "title": "Lee County — County Commission single-member districts",
+      "identitySource": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__ballot-input__fl.json",
+      "operation": "PRESERVE_EXACT_QUESTION_RECORD_ANALYSIS_EXPLANATION_ATTACHMENTS;NO_INCOMING_REFRESH"
+    },
+    {
+      "id": "fl-lee-2026-constitutional-officer-term-limits",
+      "title": "Lee County — Consecutive term limits for constitutional officers",
+      "identitySource": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__ballot-input__fl.json",
+      "operation": "PRESERVE_EXACT_QUESTION_RECORD_ANALYSIS_EXPLANATION_ATTACHMENTS;NO_INCOMING_REFRESH"
+    },
+    {
+      "id": "fl-fort-myers-beach-2026-disclosures-gifts",
+      "title": "Fort Myers Beach — Mandating disclosure and prohibiting unlawful gifts",
+      "identitySource": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__ballot-input__fl.json",
+      "operation": "PRESERVE_EXACT_QUESTION_RECORD_ANALYSIS_EXPLANATION_ATTACHMENTS;NO_INCOMING_REFRESH"
+    },
+    {
+      "id": "fl-fort-myers-beach-2026-council-compensation",
+      "title": "Fort Myers Beach — Revising Town Council compensation",
+      "identitySource": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__ballot-input__fl.json",
+      "operation": "PRESERVE_EXACT_QUESTION_RECORD_ANALYSIS_EXPLANATION_ATTACHMENTS;NO_INCOMING_REFRESH"
+    },
+    {
+      "id": "fl-fort-myers-beach-2026-appointed-seat-terms",
+      "title": "Fort Myers Beach — Terms of appointed Town Council members",
+      "identitySource": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__ballot-input__fl.json",
+      "operation": "PRESERVE_EXACT_QUESTION_RECORD_ANALYSIS_EXPLANATION_ATTACHMENTS;NO_INCOMING_REFRESH"
+    },
+    {
+      "id": "fl-fort-myers-beach-2026-interim-mayor",
+      "title": "Fort Myers Beach — Interim Mayor’s term of service",
+      "identitySource": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__ballot-input__fl.json",
+      "operation": "PRESERVE_EXACT_QUESTION_RECORD_ANALYSIS_EXPLANATION_ATTACHMENTS;NO_INCOMING_REFRESH"
+    },
+    {
+      "id": "fl-fort-myers-beach-2026-candidate-qualifying",
+      "title": "Fort Myers Beach — Town Council candidate qualifying period",
+      "identitySource": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__ballot-input__fl.json",
+      "operation": "PRESERVE_EXACT_QUESTION_RECORD_ANALYSIS_EXPLANATION_ATTACHMENTS;NO_INCOMING_REFRESH"
+    },
+    {
+      "id": "fl-fort-myers-beach-2026-canvassing-board",
+      "title": "Fort Myers Beach — Use of the Lee County Canvassing Board",
+      "identitySource": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__ballot-input__fl.json",
+      "operation": "PRESERVE_EXACT_QUESTION_RECORD_ANALYSIS_EXPLANATION_ATTACHMENTS;NO_INCOMING_REFRESH"
+    }
+  ],
+  "operation": "No incoming measure IDs or timestamp refresh; preserve every reader question record, explanation and analysis.",
+  "newFireMergerQuestion": "Actual sample also prints the Fort Myers Beach/Iona-McGregor fire merger question addressed to both precise districts. Ancillary only pending separate electorate and attachment review."
+}

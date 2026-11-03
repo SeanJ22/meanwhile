@@ -1,0 +1,3864 @@
+[
+  {
+    "contestId": "cx-local-fl-lee-2026-supervisor-of-elections",
+    "ocdId": "ocd-division/country:us/state:fl/county:lee",
+    "title": "Supervisor of Elections",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Jenna Persons-Mulicka",
+        "printedParty": "REP"
+      },
+      {
+        "name": "Chris Vignieri",
+        "printedParty": "DEM"
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Jenna Persons-Mulicka",
+        "printedParty": "REP"
+      },
+      {
+        "name": "Chris Vignieri",
+        "printedParty": "DEM"
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 193,
+    "actualStyleIds": [
+      "N1010",
+      "N1020",
+      "N1030",
+      "N1040",
+      "N1050",
+      "N1060",
+      "N1070",
+      "N1080",
+      "N1090",
+      "N1100",
+      "N1110",
+      "N1120",
+      "N1121",
+      "N1130",
+      "N1140",
+      "N1150",
+      "N1160",
+      "N1161",
+      "N1170",
+      "N1171",
+      "N1180",
+      "N1181",
+      "N1190",
+      "N1191",
+      "N1200",
+      "N1210",
+      "N1211",
+      "N1212",
+      "N1220",
+      "N2010",
+      "N2011",
+      "N2012",
+      "N2020",
+      "N2021",
+      "N2023",
+      "N2024",
+      "N2030",
+      "N2031",
+      "N2032",
+      "N2033",
+      "N2034",
+      "N2035",
+      "N2040",
+      "N2041",
+      "N2050",
+      "N2051",
+      "N2052",
+      "N2053",
+      "N2060",
+      "N2065",
+      "N2066",
+      "N2070",
+      "N2074",
+      "N2080",
+      "N2081",
+      "N2082",
+      "N2085",
+      "N2086",
+      "N2090",
+      "N2091",
+      "N2100",
+      "N2101",
+      "N2110",
+      "N2111",
+      "N2120",
+      "N2130",
+      "N2140",
+      "N2150",
+      "N2152",
+      "N2160",
+      "N2161",
+      "N2162",
+      "N2170",
+      "N2180",
+      "N2190",
+      "N2200",
+      "N2210",
+      "N2211",
+      "N2220",
+      "N3010",
+      "N3011",
+      "N3020",
+      "N3030",
+      "N3032",
+      "N3040",
+      "N3041",
+      "N3050",
+      "N3060",
+      "N3070",
+      "N3071",
+      "N3080",
+      "N3090",
+      "N3100",
+      "N3110",
+      "N3111",
+      "N3120",
+      "N3123",
+      "N3124",
+      "N3125",
+      "N3130",
+      "N3137",
+      "N3140",
+      "N3142",
+      "N3143",
+      "N3145",
+      "N3146",
+      "N3150",
+      "N3151",
+      "N3152",
+      "N3160",
+      "N3161",
+      "N3163",
+      "N3165",
+      "N3170",
+      "N3172",
+      "N3180",
+      "N3181",
+      "N3190",
+      "N3191",
+      "N3192",
+      "N3193",
+      "N3200",
+      "N3203",
+      "N3210",
+      "N4010",
+      "N4020",
+      "N4021",
+      "N4023",
+      "N4030",
+      "N4031",
+      "N4032",
+      "N4040",
+      "N4041",
+      "N4050",
+      "N4060",
+      "N4070",
+      "N4080",
+      "N4083",
+      "N4090",
+      "N4091",
+      "N4092",
+      "N4100",
+      "N4110",
+      "N4120",
+      "N4130",
+      "N4140",
+      "N4150",
+      "N4151",
+      "N4153",
+      "N4160",
+      "N4161",
+      "N4163",
+      "N4170",
+      "N4171",
+      "N5010",
+      "N5011",
+      "N5012",
+      "N5013",
+      "N5020",
+      "N5021",
+      "N5030",
+      "N5031",
+      "N5032",
+      "N5040",
+      "N5041",
+      "N5043",
+      "N5044",
+      "N5045",
+      "N5050",
+      "N5051",
+      "N5060",
+      "N5070",
+      "N5080",
+      "N5090",
+      "N5100",
+      "N5101",
+      "N5110",
+      "N5111",
+      "N5120",
+      "N5121",
+      "N5122",
+      "N5130",
+      "N5131",
+      "N5132",
+      "N5140",
+      "N5141",
+      "N5150",
+      "N5151",
+      "N5160",
+      "N5161",
+      "N5162",
+      "N5163",
+      "N5170"
+    ],
+    "allPdfPages": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      11,
+      13,
+      15,
+      17,
+      19,
+      21,
+      23,
+      25,
+      27,
+      29,
+      31,
+      33,
+      35,
+      37,
+      39,
+      41,
+      43,
+      45,
+      47,
+      49,
+      51,
+      53,
+      55,
+      57,
+      59,
+      61,
+      63,
+      65,
+      67,
+      69,
+      71,
+      73,
+      75,
+      77,
+      79,
+      81,
+      83,
+      85,
+      87,
+      89,
+      91,
+      93,
+      95,
+      97,
+      99,
+      101,
+      103,
+      105,
+      107,
+      109,
+      111,
+      113,
+      115,
+      117,
+      119,
+      121,
+      123,
+      125,
+      127,
+      129,
+      131,
+      133,
+      135,
+      137,
+      139,
+      141,
+      143,
+      145,
+      147,
+      149,
+      151,
+      153,
+      155,
+      157,
+      159,
+      161,
+      163,
+      165,
+      167,
+      169,
+      171,
+      173,
+      175,
+      177,
+      179,
+      181,
+      183,
+      187,
+      189,
+      191,
+      193,
+      195,
+      197,
+      199,
+      201,
+      203,
+      205,
+      207,
+      209,
+      211,
+      213,
+      215,
+      217,
+      219,
+      221,
+      223,
+      225,
+      227,
+      229,
+      231,
+      233,
+      235,
+      237,
+      239,
+      241,
+      243,
+      245,
+      247,
+      249,
+      253,
+      255,
+      257,
+      259,
+      261,
+      263,
+      265,
+      267,
+      269,
+      271,
+      273,
+      275,
+      277,
+      279,
+      281,
+      283,
+      285,
+      287,
+      289,
+      291,
+      293,
+      295,
+      297,
+      299,
+      301,
+      303,
+      305,
+      307,
+      309,
+      311,
+      313,
+      315,
+      317,
+      319,
+      321,
+      323,
+      325,
+      327,
+      329,
+      331,
+      333,
+      335,
+      337,
+      339,
+      341,
+      343,
+      345,
+      347,
+      349,
+      351,
+      353,
+      355,
+      357,
+      359,
+      361,
+      363,
+      365,
+      367,
+      369,
+      371,
+      373,
+      375,
+      377,
+      379,
+      381,
+      383,
+      385,
+      387,
+      389
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Supervisor of Elections\nSupervisor de Elecciones\n(Vote for 1) / (Vote por 1)\n\n     Jenna Persons-Mulicka         REP\n\n     Chris Vignieri              DEM"
+    },
+    "sourcePage": 1,
+    "sourceClip": [
+      195.9,
+      327.2528076171875,
+      375.9,
+      416.73277587890624
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-board-of-county-commissioners-district-2",
+    "ocdId": "ocd-division/country:us/state:fl/county:lee",
+    "title": "Board of County Commissioners District 2",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Cecil L. Pendergrass",
+        "printedParty": "REP"
+      },
+      {
+        "name": "Elliot Taylor",
+        "printedParty": "DEM"
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Cecil L. Pendergrass",
+        "printedParty": "REP"
+      },
+      {
+        "name": "Elliot Taylor",
+        "printedParty": "DEM"
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 193,
+    "actualStyleIds": [
+      "N1010",
+      "N1020",
+      "N1030",
+      "N1040",
+      "N1050",
+      "N1060",
+      "N1070",
+      "N1080",
+      "N1090",
+      "N1100",
+      "N1110",
+      "N1120",
+      "N1121",
+      "N1130",
+      "N1140",
+      "N1150",
+      "N1160",
+      "N1161",
+      "N1170",
+      "N1171",
+      "N1180",
+      "N1181",
+      "N1190",
+      "N1191",
+      "N1200",
+      "N1210",
+      "N1211",
+      "N1212",
+      "N1220",
+      "N2010",
+      "N2011",
+      "N2012",
+      "N2020",
+      "N2021",
+      "N2023",
+      "N2024",
+      "N2030",
+      "N2031",
+      "N2032",
+      "N2033",
+      "N2034",
+      "N2035",
+      "N2040",
+      "N2041",
+      "N2050",
+      "N2051",
+      "N2052",
+      "N2053",
+      "N2060",
+      "N2065",
+      "N2066",
+      "N2070",
+      "N2074",
+      "N2080",
+      "N2081",
+      "N2082",
+      "N2085",
+      "N2086",
+      "N2090",
+      "N2091",
+      "N2100",
+      "N2101",
+      "N2110",
+      "N2111",
+      "N2120",
+      "N2130",
+      "N2140",
+      "N2150",
+      "N2152",
+      "N2160",
+      "N2161",
+      "N2162",
+      "N2170",
+      "N2180",
+      "N2190",
+      "N2200",
+      "N2210",
+      "N2211",
+      "N2220",
+      "N3010",
+      "N3011",
+      "N3020",
+      "N3030",
+      "N3032",
+      "N3040",
+      "N3041",
+      "N3050",
+      "N3060",
+      "N3070",
+      "N3071",
+      "N3080",
+      "N3090",
+      "N3100",
+      "N3110",
+      "N3111",
+      "N3120",
+      "N3123",
+      "N3124",
+      "N3125",
+      "N3130",
+      "N3137",
+      "N3140",
+      "N3142",
+      "N3143",
+      "N3145",
+      "N3146",
+      "N3150",
+      "N3151",
+      "N3152",
+      "N3160",
+      "N3161",
+      "N3163",
+      "N3165",
+      "N3170",
+      "N3172",
+      "N3180",
+      "N3181",
+      "N3190",
+      "N3191",
+      "N3192",
+      "N3193",
+      "N3200",
+      "N3203",
+      "N3210",
+      "N4010",
+      "N4020",
+      "N4021",
+      "N4023",
+      "N4030",
+      "N4031",
+      "N4032",
+      "N4040",
+      "N4041",
+      "N4050",
+      "N4060",
+      "N4070",
+      "N4080",
+      "N4083",
+      "N4090",
+      "N4091",
+      "N4092",
+      "N4100",
+      "N4110",
+      "N4120",
+      "N4130",
+      "N4140",
+      "N4150",
+      "N4151",
+      "N4153",
+      "N4160",
+      "N4161",
+      "N4163",
+      "N4170",
+      "N4171",
+      "N5010",
+      "N5011",
+      "N5012",
+      "N5013",
+      "N5020",
+      "N5021",
+      "N5030",
+      "N5031",
+      "N5032",
+      "N5040",
+      "N5041",
+      "N5043",
+      "N5044",
+      "N5045",
+      "N5050",
+      "N5051",
+      "N5060",
+      "N5070",
+      "N5080",
+      "N5090",
+      "N5100",
+      "N5101",
+      "N5110",
+      "N5111",
+      "N5120",
+      "N5121",
+      "N5122",
+      "N5130",
+      "N5131",
+      "N5132",
+      "N5140",
+      "N5141",
+      "N5150",
+      "N5151",
+      "N5160",
+      "N5161",
+      "N5162",
+      "N5163",
+      "N5170"
+    ],
+    "allPdfPages": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      11,
+      13,
+      15,
+      17,
+      19,
+      21,
+      23,
+      25,
+      27,
+      29,
+      31,
+      33,
+      35,
+      37,
+      39,
+      41,
+      43,
+      45,
+      47,
+      49,
+      51,
+      53,
+      55,
+      57,
+      59,
+      61,
+      63,
+      65,
+      67,
+      69,
+      71,
+      73,
+      75,
+      77,
+      79,
+      81,
+      83,
+      85,
+      87,
+      89,
+      91,
+      93,
+      95,
+      97,
+      99,
+      101,
+      103,
+      105,
+      107,
+      109,
+      111,
+      113,
+      115,
+      117,
+      119,
+      121,
+      123,
+      125,
+      127,
+      129,
+      131,
+      133,
+      135,
+      137,
+      139,
+      141,
+      143,
+      145,
+      147,
+      149,
+      151,
+      153,
+      155,
+      157,
+      159,
+      161,
+      163,
+      165,
+      167,
+      169,
+      171,
+      173,
+      175,
+      177,
+      179,
+      181,
+      183,
+      187,
+      189,
+      191,
+      193,
+      195,
+      197,
+      199,
+      201,
+      203,
+      205,
+      207,
+      209,
+      211,
+      213,
+      215,
+      217,
+      219,
+      221,
+      223,
+      225,
+      227,
+      229,
+      231,
+      233,
+      235,
+      237,
+      239,
+      241,
+      243,
+      245,
+      247,
+      249,
+      253,
+      255,
+      257,
+      259,
+      261,
+      263,
+      265,
+      267,
+      269,
+      271,
+      273,
+      275,
+      277,
+      279,
+      281,
+      283,
+      285,
+      287,
+      289,
+      291,
+      293,
+      295,
+      297,
+      299,
+      301,
+      303,
+      305,
+      307,
+      309,
+      311,
+      313,
+      315,
+      317,
+      319,
+      321,
+      323,
+      325,
+      327,
+      329,
+      331,
+      333,
+      335,
+      337,
+      339,
+      341,
+      343,
+      345,
+      347,
+      349,
+      351,
+      353,
+      355,
+      357,
+      359,
+      361,
+      363,
+      365,
+      367,
+      369,
+      371,
+      373,
+      375,
+      377,
+      379,
+      381,
+      383,
+      385,
+      387,
+      389
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Board of County Commissioners\nDistrict 2\nJunta de Comisionados del Condado\nDistrito 2\n(Vote for 1) / (Vote por 1)\n\n      Cecil L. Pendergrass           REP\n\n       Elliot Taylor               DEM"
+    },
+    "sourcePage": 1,
+    "sourceClip": [
+      195.9,
+      416.53277587890625,
+      375.9,
+      527.2527954101563
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-board-of-county-commissioners-district-4",
+    "ocdId": "ocd-division/country:us/state:fl/county:lee",
+    "title": "Board of County Commissioners District 4",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Brian Hamman",
+        "printedParty": "REP"
+      },
+      {
+        "name": "DeMaria \"Princess\" Artis",
+        "printedParty": "NPA"
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Brian Hamman",
+        "printedParty": "REP"
+      },
+      {
+        "name": "DeMaria \"Princess\" Artis",
+        "printedParty": "NPA"
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 193,
+    "actualStyleIds": [
+      "N1010",
+      "N1020",
+      "N1030",
+      "N1040",
+      "N1050",
+      "N1060",
+      "N1070",
+      "N1080",
+      "N1090",
+      "N1100",
+      "N1110",
+      "N1120",
+      "N1121",
+      "N1130",
+      "N1140",
+      "N1150",
+      "N1160",
+      "N1161",
+      "N1170",
+      "N1171",
+      "N1180",
+      "N1181",
+      "N1190",
+      "N1191",
+      "N1200",
+      "N1210",
+      "N1211",
+      "N1212",
+      "N1220",
+      "N2010",
+      "N2011",
+      "N2012",
+      "N2020",
+      "N2021",
+      "N2023",
+      "N2024",
+      "N2030",
+      "N2031",
+      "N2032",
+      "N2033",
+      "N2034",
+      "N2035",
+      "N2040",
+      "N2041",
+      "N2050",
+      "N2051",
+      "N2052",
+      "N2053",
+      "N2060",
+      "N2065",
+      "N2066",
+      "N2070",
+      "N2074",
+      "N2080",
+      "N2081",
+      "N2082",
+      "N2085",
+      "N2086",
+      "N2090",
+      "N2091",
+      "N2100",
+      "N2101",
+      "N2110",
+      "N2111",
+      "N2120",
+      "N2130",
+      "N2140",
+      "N2150",
+      "N2152",
+      "N2160",
+      "N2161",
+      "N2162",
+      "N2170",
+      "N2180",
+      "N2190",
+      "N2200",
+      "N2210",
+      "N2211",
+      "N2220",
+      "N3010",
+      "N3011",
+      "N3020",
+      "N3030",
+      "N3032",
+      "N3040",
+      "N3041",
+      "N3050",
+      "N3060",
+      "N3070",
+      "N3071",
+      "N3080",
+      "N3090",
+      "N3100",
+      "N3110",
+      "N3111",
+      "N3120",
+      "N3123",
+      "N3124",
+      "N3125",
+      "N3130",
+      "N3137",
+      "N3140",
+      "N3142",
+      "N3143",
+      "N3145",
+      "N3146",
+      "N3150",
+      "N3151",
+      "N3152",
+      "N3160",
+      "N3161",
+      "N3163",
+      "N3165",
+      "N3170",
+      "N3172",
+      "N3180",
+      "N3181",
+      "N3190",
+      "N3191",
+      "N3192",
+      "N3193",
+      "N3200",
+      "N3203",
+      "N3210",
+      "N4010",
+      "N4020",
+      "N4021",
+      "N4023",
+      "N4030",
+      "N4031",
+      "N4032",
+      "N4040",
+      "N4041",
+      "N4050",
+      "N4060",
+      "N4070",
+      "N4080",
+      "N4083",
+      "N4090",
+      "N4091",
+      "N4092",
+      "N4100",
+      "N4110",
+      "N4120",
+      "N4130",
+      "N4140",
+      "N4150",
+      "N4151",
+      "N4153",
+      "N4160",
+      "N4161",
+      "N4163",
+      "N4170",
+      "N4171",
+      "N5010",
+      "N5011",
+      "N5012",
+      "N5013",
+      "N5020",
+      "N5021",
+      "N5030",
+      "N5031",
+      "N5032",
+      "N5040",
+      "N5041",
+      "N5043",
+      "N5044",
+      "N5045",
+      "N5050",
+      "N5051",
+      "N5060",
+      "N5070",
+      "N5080",
+      "N5090",
+      "N5100",
+      "N5101",
+      "N5110",
+      "N5111",
+      "N5120",
+      "N5121",
+      "N5122",
+      "N5130",
+      "N5131",
+      "N5132",
+      "N5140",
+      "N5141",
+      "N5150",
+      "N5151",
+      "N5160",
+      "N5161",
+      "N5162",
+      "N5163",
+      "N5170"
+    ],
+    "allPdfPages": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      11,
+      13,
+      15,
+      17,
+      19,
+      21,
+      23,
+      25,
+      27,
+      29,
+      31,
+      33,
+      35,
+      37,
+      39,
+      41,
+      43,
+      45,
+      47,
+      49,
+      51,
+      53,
+      55,
+      57,
+      59,
+      61,
+      63,
+      65,
+      67,
+      69,
+      71,
+      73,
+      75,
+      77,
+      79,
+      81,
+      83,
+      85,
+      87,
+      89,
+      91,
+      93,
+      95,
+      97,
+      99,
+      101,
+      103,
+      105,
+      107,
+      109,
+      111,
+      113,
+      115,
+      117,
+      119,
+      121,
+      123,
+      125,
+      127,
+      129,
+      131,
+      133,
+      135,
+      137,
+      139,
+      141,
+      143,
+      145,
+      147,
+      149,
+      151,
+      153,
+      155,
+      157,
+      159,
+      161,
+      163,
+      165,
+      167,
+      169,
+      171,
+      173,
+      175,
+      177,
+      179,
+      181,
+      183,
+      187,
+      189,
+      191,
+      193,
+      195,
+      197,
+      199,
+      201,
+      203,
+      205,
+      207,
+      209,
+      211,
+      213,
+      215,
+      217,
+      219,
+      221,
+      223,
+      225,
+      227,
+      229,
+      231,
+      233,
+      235,
+      237,
+      239,
+      241,
+      243,
+      245,
+      247,
+      249,
+      253,
+      255,
+      257,
+      259,
+      261,
+      263,
+      265,
+      267,
+      269,
+      271,
+      273,
+      275,
+      277,
+      279,
+      281,
+      283,
+      285,
+      287,
+      289,
+      291,
+      293,
+      295,
+      297,
+      299,
+      301,
+      303,
+      305,
+      307,
+      309,
+      311,
+      313,
+      315,
+      317,
+      319,
+      321,
+      323,
+      325,
+      327,
+      329,
+      331,
+      333,
+      335,
+      337,
+      339,
+      341,
+      343,
+      345,
+      347,
+      349,
+      351,
+      353,
+      355,
+      357,
+      359,
+      361,
+      363,
+      365,
+      367,
+      369,
+      371,
+      373,
+      375,
+      377,
+      379,
+      381,
+      383,
+      385,
+      387,
+      389
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Board of County Commissioners\nDistrict 4\nJunta de Comisionados del Condado\nDistrito 4\n(Vote for 1) / (Vote por 1)\n\n     Brian Hamman               REP\n\n     DeMaria \"Princess\" Artis         NPA"
+    },
+    "sourcePage": 1,
+    "sourceClip": [
+      195.9,
+      527.0527954101562,
+      375.9,
+      637.7728149414063
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-city-of-cape-coral-mayor",
+    "ocdId": "ocd-division/country:us/state:fl/place:cape_coral",
+    "title": "City of Cape Coral Mayor",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Lisa Cohen-Adkinson",
+        "printedParty": null
+      },
+      {
+        "name": "Rick Erickson",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Lisa Cohen-Adkinson",
+        "printedParty": null
+      },
+      {
+        "name": "Rick Erickson",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 29,
+    "actualStyleIds": [
+      "N1010",
+      "N1020",
+      "N1030",
+      "N1040",
+      "N1060",
+      "N1070",
+      "N1080",
+      "N1090",
+      "N1100",
+      "N1110",
+      "N1121",
+      "N1130",
+      "N1140",
+      "N1150",
+      "N1171",
+      "N1181",
+      "N1200",
+      "N1212",
+      "N4021",
+      "N4023",
+      "N4030",
+      "N4032",
+      "N4041",
+      "N4091",
+      "N4092",
+      "N4100",
+      "N4110",
+      "N4120",
+      "N4140"
+    ],
+    "allPdfPages": [
+      1,
+      3,
+      5,
+      7,
+      11,
+      13,
+      15,
+      17,
+      19,
+      21,
+      25,
+      27,
+      29,
+      31,
+      39,
+      43,
+      49,
+      55,
+      257,
+      259,
+      261,
+      265,
+      269,
+      283,
+      285,
+      287,
+      289,
+      291,
+      295
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Cape Coral Mayor\nCiudad de Cape Coral Alcalde\n(Vote for 1) / (Vote por 1)\n\n      Lisa Cohen-Adkinson\n\n     Rick Erickson"
+    },
+    "sourcePage": 1,
+    "sourceClip": [
+      195.9,
+      769.4528198242188,
+      375.9,
+      854.0128051757813
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-city-of-cape-coral-city-council-district-1",
+    "ocdId": "ocd-division/country:us/state:fl/place:cape_coral",
+    "title": "City of Cape Coral City Council District 1",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Dave Newton",
+        "printedParty": null
+      },
+      {
+        "name": "Tom Shadrach",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Dave Newton",
+        "printedParty": null
+      },
+      {
+        "name": "Tom Shadrach",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 29,
+    "actualStyleIds": [
+      "N1010",
+      "N1020",
+      "N1030",
+      "N1040",
+      "N1060",
+      "N1070",
+      "N1080",
+      "N1090",
+      "N1100",
+      "N1110",
+      "N1121",
+      "N1130",
+      "N1140",
+      "N1150",
+      "N1171",
+      "N1181",
+      "N1200",
+      "N1212",
+      "N4021",
+      "N4023",
+      "N4030",
+      "N4032",
+      "N4041",
+      "N4091",
+      "N4092",
+      "N4100",
+      "N4110",
+      "N4120",
+      "N4140"
+    ],
+    "allPdfPages": [
+      1,
+      3,
+      5,
+      7,
+      11,
+      13,
+      15,
+      17,
+      19,
+      21,
+      25,
+      27,
+      29,
+      31,
+      39,
+      43,
+      49,
+      55,
+      257,
+      259,
+      261,
+      265,
+      269,
+      283,
+      285,
+      287,
+      289,
+      291,
+      295
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Cape Coral City Council\nDistrict 1\nConcejo Municipal de la Ciudad\nde Cape Coral\nDistrito 1\n(Vote for 1) / (Vote por 1)\n\n    Dave Newton\n\n    Tom Shadrach"
+    },
+    "sourcePage": 1,
+    "sourceClip": [
+      195.9,
+      853.8128051757812,
+      375.9,
+      964.5328247070313
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-city-of-cape-coral-city-council-district-4",
+    "ocdId": "ocd-division/country:us/state:fl/place:cape_coral",
+    "title": "City of Cape Coral City Council District 4",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Jennifer Nelson Lastra",
+        "printedParty": null
+      },
+      {
+        "name": "James Vargas",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Jennifer Nelson Lastra",
+        "printedParty": null
+      },
+      {
+        "name": "James Vargas",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 29,
+    "actualStyleIds": [
+      "N1010",
+      "N1020",
+      "N1030",
+      "N1040",
+      "N1060",
+      "N1070",
+      "N1080",
+      "N1090",
+      "N1100",
+      "N1110",
+      "N1121",
+      "N1130",
+      "N1140",
+      "N1150",
+      "N1171",
+      "N1181",
+      "N1200",
+      "N1212",
+      "N4021",
+      "N4023",
+      "N4030",
+      "N4032",
+      "N4041",
+      "N4091",
+      "N4092",
+      "N4100",
+      "N4110",
+      "N4120",
+      "N4140"
+    ],
+    "allPdfPages": [
+      1,
+      3,
+      5,
+      7,
+      11,
+      13,
+      15,
+      17,
+      19,
+      21,
+      25,
+      27,
+      29,
+      31,
+      39,
+      43,
+      49,
+      55,
+      257,
+      259,
+      261,
+      265,
+      269,
+      283,
+      285,
+      287,
+      289,
+      291,
+      295
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Cape Coral City Council\n  District 4\n Concejo Municipal de la Ciudad\n de Cape Coral\n  Distrito 4\n  (Vote for 1) / (Vote por 1)\n\n       Jennifer Nelson Lastra\n\n      James Vargas\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 1,
+    "sourceClip": [
+      195.9,
+      964.3328247070312,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-city-of-cape-coral-city-council-district-6",
+    "ocdId": "ocd-division/country:us/state:fl/place:cape_coral",
+    "title": "City of Cape Coral City Council District 6",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Liza King",
+        "printedParty": null
+      },
+      {
+        "name": "Annette Warren",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Liza King",
+        "printedParty": null
+      },
+      {
+        "name": "Annette Warren",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 29,
+    "actualStyleIds": [
+      "N1010",
+      "N1020",
+      "N1030",
+      "N1040",
+      "N1060",
+      "N1070",
+      "N1080",
+      "N1090",
+      "N1100",
+      "N1110",
+      "N1121",
+      "N1130",
+      "N1140",
+      "N1150",
+      "N1171",
+      "N1181",
+      "N1200",
+      "N1212",
+      "N4021",
+      "N4023",
+      "N4030",
+      "N4032",
+      "N4041",
+      "N4091",
+      "N4092",
+      "N4100",
+      "N4110",
+      "N4120",
+      "N4140"
+    ],
+    "allPdfPages": [
+      1,
+      3,
+      5,
+      7,
+      11,
+      13,
+      15,
+      17,
+      19,
+      21,
+      25,
+      27,
+      29,
+      31,
+      39,
+      43,
+      49,
+      55,
+      257,
+      259,
+      261,
+      265,
+      269,
+      283,
+      285,
+      287,
+      289,
+      291,
+      295
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Cape Coral City Council\nDistrict 6\nConcejo Municipal de la Ciudad\nde Cape Coral\nDistrito 6\n(Vote for 1) / (Vote por 1)\n\n      Liza King\n\n     Annette Warren"
+    },
+    "sourcePage": 1,
+    "sourceClip": [
+      377.3,
+      190.4528350830078,
+      557.3,
+      303.4528076171875
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-captiva-erosion-prevention-district-seat-1",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:captiva_erosion_prevention_district",
+    "title": "Captiva Erosion Prevention District Seat 1",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "John Raburn Dupre",
+        "printedParty": null
+      },
+      {
+        "name": "Margarethe Thye-Miville",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "John Raburn Dupre",
+        "printedParty": null
+      },
+      {
+        "name": "Margarethe Thye-Miville",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N1160"
+    ],
+    "allPdfPages": [
+      33
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Captiva Erosion Prevention District\nSeat 1\nDistrito de Prevención de Erosión\nde Captiva\nEscaño 1\n(Vote for 1) / (Vote por 1)\n\n     John Raburn Dupre\n\n     Margarethe Thye-Miville"
+    },
+    "sourcePage": 33,
+    "sourceClip": [
+      195.9,
+      872.1727905273438,
+      375.9,
+      982.8928100585938
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-captiva-erosion-prevention-district-seat-3",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:captiva_erosion_prevention_district",
+    "title": "Captiva Erosion Prevention District Seat 3",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Michael Christopher Mullins",
+        "printedParty": null
+      },
+      {
+        "name": "Bob Walter",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Michael Christopher Mullins",
+        "printedParty": null
+      },
+      {
+        "name": "Bob Walter",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N1160"
+    ],
+    "allPdfPages": [
+      33
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Captiva Erosion Prevention District\n Seat 3\n  Distrito de Prevención de Erosión\n de Captiva\n Escaño 3\n  (Vote for 1) / (Vote por 1)\n\n       Michael Christopher Mullins\n\n      Bob Walter\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 33,
+    "sourceClip": [
+      195.9,
+      982.6928100585938,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-south-trail-fire-protection-and-rescue-service-district-seat-5",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:south_trail_fire_protection_and_rescue_service_district",
+    "title": "South Trail Fire Protection and Rescue Service District Seat 5",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "David Howard",
+        "printedParty": null
+      },
+      {
+        "name": "Ron Tarantino",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "David Howard",
+        "printedParty": null
+      },
+      {
+        "name": "Ron Tarantino",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 20,
+    "actualStyleIds": [
+      "N2010",
+      "N2011",
+      "N2012",
+      "N2031",
+      "N2033",
+      "N2034",
+      "N2035",
+      "N2040",
+      "N2041",
+      "N2050",
+      "N2052",
+      "N2074",
+      "N2081",
+      "N2082",
+      "N2091",
+      "N2111",
+      "N2120",
+      "N2130",
+      "N2211",
+      "N3161"
+    ],
+    "allPdfPages": [
+      59,
+      61,
+      63,
+      75,
+      79,
+      81,
+      83,
+      85,
+      87,
+      89,
+      93,
+      105,
+      109,
+      111,
+      119,
+      127,
+      129,
+      131,
+      155,
+      223
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "South Trail Fire Protection\n and Rescue Service District\n Seat 5\n  Distrito de Protección contra Incendios\n y Servicio de Rescate de South Trail\n Escaño 5\n  (Vote for 1) / (Vote por 1)\n\n      David Howard\n\n     Ron Tarantino\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 59,
+    "sourceClip": [
+      195.9,
+      986.8927612304688,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-city-of-fort-myers-mayor",
+    "ocdId": "ocd-division/country:us/state:fl/place:fort_myers",
+    "title": "City of Fort Myers Mayor",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Kevin B. Anderson",
+        "printedParty": null
+      },
+      {
+        "name": "Amber Ware",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Kevin B. Anderson",
+        "printedParty": null
+      },
+      {
+        "name": "Amber Ware",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 19,
+    "actualStyleIds": [
+      "N2020",
+      "N2021",
+      "N2023",
+      "N2024",
+      "N2085",
+      "N2086",
+      "N2100",
+      "N2101",
+      "N2161",
+      "N2162",
+      "N2170",
+      "N4151",
+      "N4153",
+      "N4161",
+      "N4163",
+      "N4171",
+      "N5043",
+      "N5045",
+      "N5141"
+    ],
+    "allPdfPages": [
+      65,
+      67,
+      69,
+      71,
+      113,
+      115,
+      121,
+      123,
+      141,
+      143,
+      145,
+      299,
+      301,
+      305,
+      307,
+      311,
+      335,
+      339,
+      375
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Fort Myers Mayor\n Ciudad de Fort Myers Alcalde\n  (Vote for 1) / (Vote por 1)\n\n       Kevin B. Anderson\n\n      Amber Ware\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 65,
+    "sourceClip": [
+      195.9,
+      861.4927978515625,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-colonial-country-club-community-development-district-seat-2",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:colonial_country_club_community_development_district",
+    "title": "Colonial Country Club Community Development District Seat 2",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Doug Smith",
+        "printedParty": null
+      },
+      {
+        "name": "Joseph J. Zajac",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Doug Smith",
+        "printedParty": null
+      },
+      {
+        "name": "Joseph J. Zajac",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N2021"
+    ],
+    "allPdfPages": [
+      67
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Colonial Country Club\n Community Development District\n Seat 2\n  Distrito de Desarrollo Comunitario\n de Colonial Country Club\n Escaño 2\n  (Vote for 1) / (Vote por 1)\n\n     Doug Smith\n\n      Joseph J. Zajac\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 67,
+    "sourceClip": [
+      195.9,
+      950.0527954101562,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-wildblue-community-development-district-seat-1",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:wildblue_community_development_district",
+    "title": "WildBlue Community Development District Seat 1",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Herbert Lanese",
+        "printedParty": null
+      },
+      {
+        "name": "Richard S. Losee",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Herbert Lanese",
+        "printedParty": null
+      },
+      {
+        "name": "Richard S. Losee",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N2065"
+    ],
+    "allPdfPages": [
+      99
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "WildBlue Community\n Development District\n Seat 1\n  Distrito de Desarrollo Comunitario\n de WildBlue\n Escaño 1\n  (Vote for 1) / (Vote por 1)\n\n       Herbert Lanese\n\n       Richard S. Losee\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 99,
+    "sourceClip": [
+      195.9,
+      986.8927612304688,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-wildblue-community-development-district-seat-2",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:wildblue_community_development_district",
+    "title": "WildBlue Community Development District Seat 2",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Sima Rae Baker",
+        "printedParty": null
+      },
+      {
+        "name": "Edward Houck",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Sima Rae Baker",
+        "printedParty": null
+      },
+      {
+        "name": "Edward Houck",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N2065"
+    ],
+    "allPdfPages": [
+      99
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "WildBlue Community\nDevelopment District\nSeat 2\nDistrito de Desarrollo Comunitario\nde WildBlue\nEscaño 2\n(Vote for 1) / (Vote por 1)\n\n    Sima Rae Baker\n\n     Edward Houck"
+    },
+    "sourcePage": 99,
+    "sourceClip": [
+      377.3,
+      194.6527862548828,
+      557.3,
+      321.9327880859375
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-blue-lake-community-development-district-seat-1",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:blue_lake_community_development_district",
+    "title": "Blue Lake Community Development District Seat 1",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "John Hadginikitas",
+        "printedParty": null
+      },
+      {
+        "name": "Steven Hamburger",
+        "printedParty": null
+      },
+      {
+        "name": "Paul Marsjanik",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 3,
+    "preparedCountingCandidates": [
+      {
+        "name": "John Hadginikitas",
+        "printedParty": null
+      },
+      {
+        "name": "Steven Hamburger",
+        "printedParty": null
+      },
+      {
+        "name": "Paul Marsjanik",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 3,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N2066"
+    ],
+    "allPdfPages": [
+      101
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Blue Lake Community\n Development District\n Seat 1\n  Distrito de Desarrollo Comunitario\n de Blue Lake\n Escaño 1\n  (Vote for 1) / (Vote por 1)\n\n      John Hadginikitas\n\n      Steven Hamburger\n\n       Paul Marsjanik\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 101,
+    "sourceClip": [
+      195.9,
+      986.8927612304688,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-city-of-fort-myers-city-council-ward-3",
+    "ocdId": "ocd-division/country:us/state:fl/place:fort_myers/ward:3",
+    "title": "City of Fort Myers City Council Ward 3",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Chantel \"Telly\" Rhodes",
+        "printedParty": null
+      },
+      {
+        "name": "Terolyn P. Watson",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Chantel \"Telly\" Rhodes",
+        "printedParty": null
+      },
+      {
+        "name": "Terolyn P. Watson",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 3,
+    "actualStyleIds": [
+      "N2162",
+      "N4153",
+      "N4163"
+    ],
+    "allPdfPages": [
+      143,
+      301,
+      307
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Fort Myers City Council\n Ward 3\n Concejo Municipal de la Ciudad\n de Fort Myers\n  Distrito 3\n  (Vote for 1) / (Vote por 1)\n\n       Chantel \"Telly\" Rhodes\n\n       Terolyn P. Watson\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 143,
+    "sourceClip": [
+      195.9,
+      835.3328247070312,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-iona-mcgregor-fire-protection-and-rescue-service-district-seat-1",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:iona_mcgregor_fire_protection_and_rescue_service_district",
+    "title": "Iona-McGregor Fire Protection and Rescue Service District Seat 1",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Ethan Langford",
+        "printedParty": null
+      },
+      {
+        "name": "Paul Martin Louwers",
+        "printedParty": null
+      },
+      {
+        "name": "Kerry Knuuti Pirrone",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 3,
+    "preparedCountingCandidates": [
+      {
+        "name": "Ethan Langford",
+        "printedParty": null
+      },
+      {
+        "name": "Paul Martin Louwers",
+        "printedParty": null
+      },
+      {
+        "name": "Kerry Knuuti Pirrone",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 3,
+    "actualStyleOccurrences": 16,
+    "actualStyleIds": [
+      "N2180",
+      "N2190",
+      "N2200",
+      "N2210",
+      "N2220",
+      "N3160",
+      "N3163",
+      "N3165",
+      "N3170",
+      "N3172",
+      "N3180",
+      "N3181",
+      "N3190",
+      "N3193",
+      "N3200",
+      "N3203"
+    ],
+    "allPdfPages": [
+      147,
+      149,
+      151,
+      153,
+      157,
+      221,
+      225,
+      227,
+      229,
+      231,
+      233,
+      235,
+      237,
+      243,
+      245,
+      247
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Iona-McGregor Fire Protection\n and Rescue Service District\n Seat 1\n  Distrito de Protección contra Incendios y\n Servicio de Rescate de Iona-McGregor\n Escaño 1\n  (Vote for 1) / (Vote por 1)\n\n      Ethan Langford\n\n       Paul Martin Louwers\n\n       Kerry Knuuti Pirrone\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 147,
+    "sourceClip": [
+      195.9,
+      876.372802734375,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-bonita-springs-fire-control-and-rescue-district-seat-1",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:bonita_springs_fire_control_and_rescue_district",
+    "title": "Bonita Springs Fire Control and Rescue District Seat 1",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Lawrence P. Kosilla",
+        "printedParty": null
+      },
+      {
+        "name": "James P. Murphy",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Lawrence P. Kosilla",
+        "printedParty": null
+      },
+      {
+        "name": "James P. Murphy",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 13,
+    "actualStyleIds": [
+      "N3011",
+      "N3030",
+      "N3040",
+      "N3041",
+      "N3100",
+      "N3110",
+      "N3111",
+      "N3120",
+      "N3123",
+      "N3124",
+      "N3125",
+      "N3130",
+      "N3137"
+    ],
+    "allPdfPages": [
+      161,
+      165,
+      169,
+      171,
+      187,
+      189,
+      191,
+      193,
+      195,
+      197,
+      199,
+      201,
+      203
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Bonita Springs Fire Control\n and Rescue District\n Seat 1\n  Distrito de Rescate y Control de\n Incendios de Bonita Springs\n Escaño 1\n  (Vote for 1) / (Vote por 1)\n\n      Lawrence P. Kosilla\n\n      James P. Murphy\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 161,
+    "sourceClip": [
+      195.9,
+      876.372802734375,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-town-of-fort-myers-beach-town-council",
+    "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+    "title": "Town of Fort Myers Beach Town Council",
+    "type": "CANDIDACY",
+    "voteFor": 3,
+    "allPrintedCandidates": [
+      {
+        "name": "Tom Brady",
+        "printedParty": null
+      },
+      {
+        "name": "Anita Cereceda",
+        "printedParty": null
+      },
+      {
+        "name": "Rebecca Link",
+        "printedParty": null
+      },
+      {
+        "name": "John McLean",
+        "printedParty": null
+      },
+      {
+        "name": "Edward J. Schoonover",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 5,
+    "preparedCountingCandidates": [
+      {
+        "name": "Tom Brady",
+        "printedParty": null
+      },
+      {
+        "name": "Anita Cereceda",
+        "printedParty": null
+      },
+      {
+        "name": "Rebecca Link",
+        "printedParty": null
+      },
+      {
+        "name": "Edward J. Schoonover",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 4,
+    "actualStyleOccurrences": 2,
+    "actualStyleIds": [
+      "N3090",
+      "N3210"
+    ],
+    "allPdfPages": [
+      183,
+      249
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Town of Fort Myers Beach Town Council\nConcejo Municipal del Municipio\nde Fort Myers Beach\n(Vote for up to 3) / (Vote por un máximo de 3)\n\n    Tom Brady\n\n      Anita Cereceda\n\n     Rebecca Link\n\n     John McLean\n\n     Edward J. Schoonover"
+    },
+    "sourcePage": 183,
+    "sourceClip": [
+      195.9,
+      873.9727783203125,
+      375.9,
+      1019.7327758789063
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-fort-myers-beach-fire-control-district-seat-1",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:fort_myers_beach_fire_control_district",
+    "title": "Fort Myers Beach Fire Control District Seat 1",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Jim Knickle",
+        "printedParty": null
+      },
+      {
+        "name": "Bret Randle",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Jim Knickle",
+        "printedParty": null
+      },
+      {
+        "name": "Bret Randle",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 4,
+    "actualStyleIds": [
+      "N3090",
+      "N3191",
+      "N3192",
+      "N3210"
+    ],
+    "allPdfPages": [
+      183,
+      239,
+      241,
+      249
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Fort Myers Beach Fire Control District\n Seat 1\n  Distrito de Control de Incendios\n de Fort Myers Beach\n Escaño 1\n  (Vote for 1) / (Vote por 1)\n\n      Jim Knickle\n\n       Bret Randle\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 183,
+    "sourceClip": [
+      195.9,
+      1019.5327758789062,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-city-of-bonita-springs-city-council-district-3",
+    "ocdId": "ocd-division/country:us/state:fl/place:bonita_springs/council_district:3",
+    "title": "City of Bonita Springs City Council District 3",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Ruth Condit",
+        "printedParty": null
+      },
+      {
+        "name": "Ray Sandelli",
+        "printedParty": null
+      },
+      {
+        "name": "Tim Voit",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 3,
+    "preparedCountingCandidates": [
+      {
+        "name": "Ruth Condit",
+        "printedParty": null
+      },
+      {
+        "name": "Ray Sandelli",
+        "printedParty": null
+      },
+      {
+        "name": "Tim Voit",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 3,
+    "actualStyleOccurrences": 3,
+    "actualStyleIds": [
+      "N3100",
+      "N3124",
+      "N3125"
+    ],
+    "allPdfPages": [
+      187,
+      197,
+      199
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Bonita Springs City Council\nDistrict 3\nConcejo Municipal de la\nCiudad de Bonita Springs\nDistrito 3\n(Vote for 1) / (Vote por 1)\n\n     Ruth Condit\n\n    Ray Sandelli\n\n     Tim Voit"
+    },
+    "sourcePage": 187,
+    "sourceClip": [
+      195.9,
+      872.1727905273438,
+      375.9,
+      1005.572802734375
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-city-of-bonita-springs-city-council-district-5",
+    "ocdId": "ocd-division/country:us/state:fl/place:bonita_springs/council_district:5",
+    "title": "City of Bonita Springs City Council District 5",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "James Anderst",
+        "printedParty": null
+      },
+      {
+        "name": "Nigel Patrick Fullick",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "James Anderst",
+        "printedParty": null
+      },
+      {
+        "name": "Nigel Patrick Fullick",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N3111"
+    ],
+    "allPdfPages": [
+      191
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Bonita Springs City Council\nDistrict 5\nConcejo Municipal de la\nCiudad de Bonita Springs\nDistrito 5\n(Vote for 1) / (Vote por 1)\n\n    James Anderst\n\n      Nigel Patrick Fullick"
+    },
+    "sourcePage": 191,
+    "sourceClip": [
+      195.9,
+      872.1727905273438,
+      375.9,
+      987.0927612304688
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-vasari-community-development-district-seat-5",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:vasari_community_development_district",
+    "title": "Vasari Community Development District Seat 5",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Kurt Deter",
+        "printedParty": null
+      },
+      {
+        "name": "Richard A. Fluet",
+        "printedParty": null
+      },
+      {
+        "name": "Roy R. Rice",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 3,
+    "preparedCountingCandidates": [
+      {
+        "name": "Kurt Deter",
+        "printedParty": null
+      },
+      {
+        "name": "Richard A. Fluet",
+        "printedParty": null
+      },
+      {
+        "name": "Roy R. Rice",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 3,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N3125"
+    ],
+    "allPdfPages": [
+      199
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Vasari Community Development District\nSeat 5\nDistrito de Desarrollo Comunitario de Vasari\nEscaño 5\n(Vote for 1) / (Vote por 1)\n\n      Kurt Deter\n\n     Richard A. Fluet\n\n    Roy R. Rice"
+    },
+    "sourcePage": 199,
+    "sourceClip": [
+      377.3,
+      195.3727569580078,
+      557.3,
+      321.9327880859375
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-bonita-landing-community-development-district-seat-2",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:bonita_landing_community_development_district",
+    "title": "Bonita Landing Community Development District Seat 2",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Christopher Applegate",
+        "printedParty": null
+      },
+      {
+        "name": "Mark Hilton",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Christopher Applegate",
+        "printedParty": null
+      },
+      {
+        "name": "Mark Hilton",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N3137"
+    ],
+    "allPdfPages": [
+      203
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Bonita Landing Community\n Development District\n Seat 2\n  Distrito de Desarrollo Comunitario\n de Bonita Landing\n Escaño 2\n  (Vote for 1) / (Vote por 1)\n\n       Christopher Applegate\n\n      Mark Hilton\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 203,
+    "sourceClip": [
+      195.9,
+      986.8927612304688,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-bonita-landing-community-development-district-seat-3",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:bonita_landing_community_development_district",
+    "title": "Bonita Landing Community Development District Seat 3",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Scott Helling",
+        "printedParty": null
+      },
+      {
+        "name": "Rosanny Larach",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Scott Helling",
+        "printedParty": null
+      },
+      {
+        "name": "Rosanny Larach",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N3137"
+    ],
+    "allPdfPages": [
+      203
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Bonita Landing Community\nDevelopment District\nSeat 3\nDistrito de Desarrollo Comunitario\nde Bonita Landing\nEscaño 3\n(Vote for 1) / (Vote por 1)\n\n      Scott Helling\n\n     Rosanny Larach"
+    },
+    "sourcePage": 203,
+    "sourceClip": [
+      377.3,
+      194.6527862548828,
+      557.3,
+      323.85277099609374
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-bonita-landing-community-development-district-seat-4",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:bonita_landing_community_development_district",
+    "title": "Bonita Landing Community Development District Seat 4",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Andrew W. Brignoni",
+        "printedParty": null
+      },
+      {
+        "name": "Bill McCormick",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Andrew W. Brignoni",
+        "printedParty": null
+      },
+      {
+        "name": "Bill McCormick",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N3137"
+    ],
+    "allPdfPages": [
+      203
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Bonita Landing Community\nDevelopment District\nSeat 4\nDistrito de Desarrollo Comunitario\nde Bonita Landing\nEscaño 4\n(Vote for 1) / (Vote por 1)\n\n     Andrew W. Brignoni\n\n        Bill McCormick"
+    },
+    "sourcePage": 203,
+    "sourceClip": [
+      377.3,
+      323.65277099609375,
+      557.3,
+      452.85277099609374
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-stoneybrook-community-development-district-seat-4",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:stoneybrook_community_development_district",
+    "title": "Stoneybrook Community Development District Seat 4",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Adam Dalton",
+        "printedParty": null
+      },
+      {
+        "name": "Michael J. DeBrino Jr.",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Adam Dalton",
+        "printedParty": null
+      },
+      {
+        "name": "Michael J. DeBrino Jr.",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N3143"
+    ],
+    "allPdfPages": [
+      209
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Stoneybrook Community\n Development District\n Seat 4\n  Distrito de Desarrollo\n Comunitario de Stoneybrook\n Escaño 4\n  (Vote for 1) / (Vote por 1)\n\n     Adam Dalton\n\n       Michael J. DeBrino Jr.\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 209,
+    "sourceClip": [
+      195.9,
+      986.8927612304688,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-stoneybrook-community-development-district-seat-5",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:stoneybrook_community_development_district",
+    "title": "Stoneybrook Community Development District Seat 5",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Eileen L. Huff",
+        "printedParty": null
+      },
+      {
+        "name": "Philip Simonsen",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Eileen L. Huff",
+        "printedParty": null
+      },
+      {
+        "name": "Philip Simonsen",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N3143"
+    ],
+    "allPdfPages": [
+      209
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Stoneybrook Community\nDevelopment District\nSeat 5\nDistrito de Desarrollo\nComunitario de Stoneybrook\nEscaño 5\n(Vote for 1) / (Vote por 1)\n\n      Eileen L. Huff\n\n      Philip Simonsen"
+    },
+    "sourcePage": 209,
+    "sourceClip": [
+      377.3,
+      194.6527862548828,
+      557.3,
+      321.9327880859375
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-habitat-community-development-district-seat-4",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:habitat_community_development_district",
+    "title": "Habitat Community Development District Seat 4",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Greg Grimaudo",
+        "printedParty": null
+      },
+      {
+        "name": "Larry A. Roth",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Greg Grimaudo",
+        "printedParty": null
+      },
+      {
+        "name": "Larry A. Roth",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N3145"
+    ],
+    "allPdfPages": [
+      211
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Habitat Community Development District\n Seat 4\n  Distrito de Desarrollo Comunitario\n de Habitat\n Escaño 4\n  (Vote for 1) / (Vote por 1)\n\n      Greg Grimaudo\n\n       Larry A. Roth\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 211,
+    "sourceClip": [
+      195.9,
+      982.6928100585938,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-cypress-shadows-community-development-district-seat-2",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:cypress_shadows_community_development_district",
+    "title": "Cypress Shadows Community Development District Seat 2",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Gary P. Gauvin",
+        "printedParty": null
+      },
+      {
+        "name": "Corey Graves",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Gary P. Gauvin",
+        "printedParty": null
+      },
+      {
+        "name": "Corey Graves",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N3146"
+    ],
+    "allPdfPages": [
+      213
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Cypress Shadows Community\n Development District\n Seat 2\n  Distrito de Desarrollo Comunitario\n de Cypress Shadows\n Escaño 2\n  (Vote for 1) / (Vote por 1)\n\n      Gary P. Gauvin\n\n      Corey Graves\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 213,
+    "sourceClip": [
+      195.9,
+      986.8927612304688,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-cypress-shadows-community-development-district-seat-4",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:cypress_shadows_community_development_district",
+    "title": "Cypress Shadows Community Development District Seat 4",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Angella Graves",
+        "printedParty": null
+      },
+      {
+        "name": "John A. Sartoris",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Angella Graves",
+        "printedParty": null
+      },
+      {
+        "name": "John A. Sartoris",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N3146"
+    ],
+    "allPdfPages": [
+      213
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Cypress Shadows Community\nDevelopment District\nSeat 4\nDistrito de Desarrollo Comunitario\nde Cypress Shadows\nEscaño 4\n(Vote for 1) / (Vote por 1)\n\n     Angella Graves\n\n     John A. Sartoris"
+    },
+    "sourcePage": 213,
+    "sourceClip": [
+      377.3,
+      194.6527862548828,
+      557.3,
+      323.85277099609374
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-cypress-shadows-community-development-district-seat-5",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:cypress_shadows_community_development_district",
+    "title": "Cypress Shadows Community Development District Seat 5",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Steven Invidiato",
+        "printedParty": null
+      },
+      {
+        "name": "Joseph E. Molsen",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Steven Invidiato",
+        "printedParty": null
+      },
+      {
+        "name": "Joseph E. Molsen",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N3146"
+    ],
+    "allPdfPages": [
+      213
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Cypress Shadows Community\nDevelopment District\nSeat 5\nDistrito de Desarrollo Comunitario\nde Cypress Shadows\nEscaño 5\n(Vote for 1) / (Vote por 1)\n\n     Steven Invidiato\n\n     Joseph E. Molsen"
+    },
+    "sourcePage": 213,
+    "sourceClip": [
+      377.3,
+      323.65277099609375,
+      557.3,
+      450.9327880859375
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-catalina-at-winkler-preserve-community-development-district-seat-3",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:catalina_at_winkler_preserve_community_development_district",
+    "title": "Catalina at Winkler Preserve Community Development District Seat 3",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Richard A. Bonito",
+        "printedParty": null
+      },
+      {
+        "name": "Brian Williams",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Richard A. Bonito",
+        "printedParty": null
+      },
+      {
+        "name": "Brian Williams",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 1,
+    "actualStyleIds": [
+      "N3163"
+    ],
+    "allPdfPages": [
+      225
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Catalina at Winkler Preserve\n Community Development District\n Seat 3\n  Distrito de Desarrollo Comunitario\n de Catalina en Winkler Preserve\n Escaño 3\n  (Vote for 1) / (Vote por 1)\n\n       Richard A. Bonito\n\n       Brian Williams\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 225,
+    "sourceClip": [
+      195.9,
+      876.372802734375,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-school-board-member-district-4",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:lee_county_school_district/school_board_district:4",
+    "title": "School Board Member District 4",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Tony Beougher",
+        "printedParty": null
+      },
+      {
+        "name": "Debbie Jordan",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Tony Beougher",
+        "printedParty": null
+      },
+      {
+        "name": "Debbie Jordan",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 30,
+    "actualStyleIds": [
+      "N4010",
+      "N4020",
+      "N4021",
+      "N4023",
+      "N4030",
+      "N4031",
+      "N4032",
+      "N4040",
+      "N4041",
+      "N4050",
+      "N4060",
+      "N4070",
+      "N4080",
+      "N4083",
+      "N4090",
+      "N4091",
+      "N4092",
+      "N4100",
+      "N4110",
+      "N4120",
+      "N4130",
+      "N4140",
+      "N4150",
+      "N4151",
+      "N4153",
+      "N4160",
+      "N4161",
+      "N4163",
+      "N4170",
+      "N4171"
+    ],
+    "allPdfPages": [
+      253,
+      255,
+      257,
+      259,
+      261,
+      263,
+      265,
+      267,
+      269,
+      271,
+      273,
+      275,
+      277,
+      279,
+      281,
+      283,
+      285,
+      287,
+      289,
+      291,
+      293,
+      295,
+      297,
+      299,
+      301,
+      303,
+      305,
+      307,
+      309,
+      311
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "School Board Member\nDistrict 4\nMiembro de la Junta Escolar\nDistrito 4\n(Vote for 1) / (Vote por 1)\n\n     Tony Beougher\n\n     Debbie Jordan"
+    },
+    "sourcePage": 253,
+    "sourceClip": [
+      195.9,
+      877.2128295898438,
+      375.9,
+      987.0927612304688
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-north-fort-myers-fire-control-and-rescue-service-district-seat-1",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:north_fort_myers_fire_control_and_rescue_service_district",
+    "title": "North Fort Myers Fire Control and Rescue Service District Seat 1",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Mike Gatewood",
+        "printedParty": null
+      },
+      {
+        "name": "Justin M. Thomas",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Mike Gatewood",
+        "printedParty": null
+      },
+      {
+        "name": "Justin M. Thomas",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 11,
+    "actualStyleIds": [
+      "N4010",
+      "N4020",
+      "N4031",
+      "N4040",
+      "N4050",
+      "N4060",
+      "N4070",
+      "N4080",
+      "N4083",
+      "N4130",
+      "N5132"
+    ],
+    "allPdfPages": [
+      253,
+      255,
+      263,
+      267,
+      271,
+      273,
+      275,
+      277,
+      279,
+      293,
+      371
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "North Fort Myers Fire Control\n and Rescue Service District\n Seat 1\n  Distrito de Control de Incendios y\n Servicio de Rescate de North Fort Myers\n Escaño 1\n  (Vote for 1) / (Vote por 1)\n\n      Mike Gatewood\n\n        Justin M. Thomas\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 253,
+    "sourceClip": [
+      195.9,
+      986.8927612304688,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-north-fort-myers-fire-control-and-rescue-service-district-seat-3",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:north_fort_myers_fire_control_and_rescue_service_district",
+    "title": "North Fort Myers Fire Control and Rescue Service District Seat 3",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Doug Dailey",
+        "printedParty": null
+      },
+      {
+        "name": "Thomas C. Mere",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Doug Dailey",
+        "printedParty": null
+      },
+      {
+        "name": "Thomas C. Mere",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 11,
+    "actualStyleIds": [
+      "N4010",
+      "N4020",
+      "N4031",
+      "N4040",
+      "N4050",
+      "N4060",
+      "N4070",
+      "N4080",
+      "N4083",
+      "N4130",
+      "N5132"
+    ],
+    "allPdfPages": [
+      253,
+      255,
+      263,
+      267,
+      271,
+      273,
+      275,
+      277,
+      279,
+      293,
+      371
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "North Fort Myers Fire Control\nand Rescue Service District\nSeat 3\nDistrito de Control de Incendios y\nServicio de Rescate de North Fort Myers\nEscaño 3\n(Vote for 1) / (Vote por 1)\n\n    Doug Dailey\n\n    Thomas C. Mere"
+    },
+    "sourcePage": 253,
+    "sourceClip": [
+      377.3,
+      194.6527862548828,
+      557.3,
+      323.85277099609374
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-north-fort-myers-fire-control-and-rescue-service-district-seat-5",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:north_fort_myers_fire_control_and_rescue_service_district",
+    "title": "North Fort Myers Fire Control and Rescue Service District Seat 5",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Joshua \"Bodacious\" Krohn",
+        "printedParty": null
+      },
+      {
+        "name": "Bill Schaible",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Joshua \"Bodacious\" Krohn",
+        "printedParty": null
+      },
+      {
+        "name": "Bill Schaible",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 11,
+    "actualStyleIds": [
+      "N4010",
+      "N4020",
+      "N4031",
+      "N4040",
+      "N4050",
+      "N4060",
+      "N4070",
+      "N4080",
+      "N4083",
+      "N4130",
+      "N5132"
+    ],
+    "allPdfPages": [
+      253,
+      255,
+      263,
+      267,
+      271,
+      273,
+      275,
+      277,
+      279,
+      293,
+      371
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "North Fort Myers Fire Control\nand Rescue Service District\nSeat 5\nDistrito de Control de Incendios y\nServicio de Rescate de North Fort Myers\nEscaño 5\n(Vote for 1) / (Vote por 1)\n\n     Joshua \"Bodacious\" Krohn\n\n        Bill Schaible"
+    },
+    "sourcePage": 253,
+    "sourceClip": [
+      377.3,
+      323.65277099609375,
+      557.3,
+      450.9327880859375
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-school-board-member-district-5",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:lee_county_school_district/school_board_district:5",
+    "title": "School Board Member District 5",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Crystal Johnson",
+        "printedParty": null
+      },
+      {
+        "name": "Armor Persons",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Crystal Johnson",
+        "printedParty": null
+      },
+      {
+        "name": "Armor Persons",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 39,
+    "actualStyleIds": [
+      "N5010",
+      "N5011",
+      "N5012",
+      "N5013",
+      "N5020",
+      "N5021",
+      "N5030",
+      "N5031",
+      "N5032",
+      "N5040",
+      "N5041",
+      "N5043",
+      "N5044",
+      "N5045",
+      "N5050",
+      "N5051",
+      "N5060",
+      "N5070",
+      "N5080",
+      "N5090",
+      "N5100",
+      "N5101",
+      "N5110",
+      "N5111",
+      "N5120",
+      "N5121",
+      "N5122",
+      "N5130",
+      "N5131",
+      "N5132",
+      "N5140",
+      "N5141",
+      "N5150",
+      "N5151",
+      "N5160",
+      "N5161",
+      "N5162",
+      "N5163",
+      "N5170"
+    ],
+    "allPdfPages": [
+      313,
+      315,
+      317,
+      319,
+      321,
+      323,
+      325,
+      327,
+      329,
+      331,
+      333,
+      335,
+      337,
+      339,
+      341,
+      343,
+      345,
+      347,
+      349,
+      351,
+      353,
+      355,
+      357,
+      359,
+      361,
+      363,
+      365,
+      367,
+      369,
+      371,
+      373,
+      375,
+      377,
+      379,
+      381,
+      383,
+      385,
+      387,
+      389
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "School Board Member\nDistrict 5\nMiembro de la Junta Escolar\nDistrito 5\n(Vote for 1) / (Vote por 1)\n\n      Crystal Johnson\n\n     Armor Persons"
+    },
+    "sourcePage": 313,
+    "sourceClip": [
+      195.9,
+      748.2127685546875,
+      375.9,
+      858.2127563476563
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-lehigh-acres-municipal-services-improvement-district-seat-4",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:lehigh_acres_municipal_services_improvement_district",
+    "title": "Lehigh Acres Municipal Services Improvement District Seat 4",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Mike Bonacolta",
+        "printedParty": null
+      },
+      {
+        "name": "Derek Felder",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Mike Bonacolta",
+        "printedParty": null
+      },
+      {
+        "name": "Derek Felder",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 20,
+    "actualStyleIds": [
+      "N5010",
+      "N5012",
+      "N5020",
+      "N5030",
+      "N5040",
+      "N5044",
+      "N5050",
+      "N5051",
+      "N5060",
+      "N5070",
+      "N5080",
+      "N5090",
+      "N5100",
+      "N5101",
+      "N5110",
+      "N5111",
+      "N5150",
+      "N5151",
+      "N5162",
+      "N5163"
+    ],
+    "allPdfPages": [
+      313,
+      317,
+      321,
+      325,
+      331,
+      337,
+      341,
+      343,
+      345,
+      347,
+      349,
+      351,
+      353,
+      355,
+      357,
+      359,
+      377,
+      379,
+      385,
+      387
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Lehigh Acres Municipal Services\n Improvement District\n Seat 4\n  Distrito de Mejoramiento de los\n Servicios Municipales de Lehigh Acres\n Escaño 4\n  (Vote for 1) / (Vote por 1)\n\n      Mike Bonacolta\n\n      Derek Felder\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 313,
+    "sourceClip": [
+      195.9,
+      858.0127563476562,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-fort-myers-shores-fire-protection-and-rescue-service-district-seat-4",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:fort_myers_shores_fire_protection_and_rescue_service_district",
+    "title": "Fort Myers Shores Fire Protection and Rescue Service District Seat 4",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Paul Cerrito",
+        "printedParty": null
+      },
+      {
+        "name": "Anita Kressel",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Paul Cerrito",
+        "printedParty": null
+      },
+      {
+        "name": "Anita Kressel",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 2,
+    "actualStyleIds": [
+      "N5121",
+      "N5170"
+    ],
+    "allPdfPages": [
+      363,
+      389
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Fort Myers Shores Fire Protection\n and Rescue Service District\n Seat 4\n  Distrito de Protección contra Incendios y\n Servicio de Rescate de Fort Myers Shores\n Escaño 4\n  (Vote for 1) / (Vote por 1)\n\n       Paul Cerrito\n\n       Anita Kressel\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 363,
+    "sourceClip": [
+      195.9,
+      858.0127563476562,
+      375.9,
+      1151.7
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-lee-2026-alva-fire-protection-and-rescue-service-district-seat-2",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:alva_fire_protection_and_rescue_service_district",
+    "title": "Alva Fire Protection and Rescue Service District Seat 2",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "Richard Spence",
+        "printedParty": null
+      },
+      {
+        "name": "Darren Watkins",
+        "printedParty": null
+      }
+    ],
+    "printedCandidateCount": 2,
+    "preparedCountingCandidates": [
+      {
+        "name": "Richard Spence",
+        "printedParty": null
+      },
+      {
+        "name": "Darren Watkins",
+        "printedParty": null
+      }
+    ],
+    "preparedCandidateCount": 2,
+    "actualStyleOccurrences": 4,
+    "actualStyleIds": [
+      "N5130",
+      "N5160",
+      "N5161",
+      "N5162"
+    ],
+    "allPdfPages": [
+      367,
+      381,
+      383,
+      385
+    ],
+    "completeField": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Alva Fire Protection and\n Rescue Service District\n Seat 2\n  Distrito de Protección contra\n Incendios y Servicio de Rescate de Alva\n Escaño 2\n  (Vote for 1) / (Vote por 1)\n\n       Richard Spence\n\n      Darren Watkins\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "sourcePage": 367,
+    "sourceClip": [
+      195.9,
+      858.0127563476562,
+      375.9,
+      1151.7
+    ]
+  }
+]

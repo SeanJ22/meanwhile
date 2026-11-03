@@ -1,0 +1,3751 @@
+{
+ "displayFieldName": "Name",
+ "fieldAliases": {
+  "Name": "AuthorityName",
+  "Number": "AuthorityNumber",
+  "Auth_Numb": "Auth_Numb",
+  "Type": "AuthorityType",
+  "InDistrict": "InDistrict"
+ },
+ "fields": [
+  {
+   "name": "Name",
+   "type": "esriFieldTypeString",
+   "alias": "AuthorityName",
+   "length": 255
+  },
+  {
+   "name": "Number",
+   "type": "esriFieldTypeString",
+   "alias": "AuthorityNumber",
+   "length": 6
+  },
+  {
+   "name": "Auth_Numb",
+   "type": "esriFieldTypeSmallInteger",
+   "alias": "Auth_Numb"
+  },
+  {
+   "name": "Type",
+   "type": "esriFieldTypeString",
+   "alias": "AuthorityType",
+   "length": 1
+  },
+  {
+   "name": "InDistrict",
+   "type": "esriFieldTypeString",
+   "alias": "InDistrict",
+   "length": 3
+  }
+ ],
+ "features": [
+  {
+   "attributes": {
+    "Name": "Heiman Apollo Street Light Unit MSTU",
+    "Number": "113",
+    "Auth_Numb": 113,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Useppa Island Fire MSTU",
+    "Number": "093",
+    "Auth_Numb": 93,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Iona Gardens Light MSTU",
+    "Number": "049",
+    "Auth_Numb": 49,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Flamingo Bay Light MSTU",
+    "Number": "030",
+    "Auth_Numb": 30,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Bayshore Estates Light MSTU",
+    "Number": "005",
+    "Auth_Numb": 5,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Villa Pines Light MSTU",
+    "Number": "095",
+    "Auth_Numb": 95,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Colonial Country Club CDD",
+    "Number": "197",
+    "Auth_Numb": 197,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Laguna Lakes CDD",
+    "Number": "198",
+    "Auth_Numb": 198,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Country Triple Crown Waterline MSBU",
+    "Number": "200",
+    "Auth_Numb": 200,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Copper Oaks CDD",
+    "Number": "247",
+    "Auth_Numb": 247,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Bonita Village CDD",
+    "Number": "257",
+    "Auth_Numb": 257,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Catalina at Winkler Preserve CDD",
+    "Number": "259",
+    "Auth_Numb": 259,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "River Hall CDD",
+    "Number": "265",
+    "Auth_Numb": 265,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Portofino Vineyards CDD",
+    "Number": "282",
+    "Auth_Numb": 282,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Portofino Springs CDD",
+    "Number": "283",
+    "Auth_Numb": 283,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sanibel Isles Water Shadows Canal Area Dredging",
+    "Number": "290",
+    "Auth_Numb": 290,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Cherry Bluebery Special Improvement",
+    "Number": "132",
+    "Auth_Numb": 132,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Country Estates Unit 3",
+    "Number": "133",
+    "Auth_Numb": 133,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Vasari CDD",
+    "Number": "190",
+    "Auth_Numb": 190,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Parklands West CDD",
+    "Number": "186",
+    "Auth_Numb": 186,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Anchorage Way MSBU",
+    "Number": "201",
+    "Auth_Numb": 201,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Lucaya CDD",
+    "Number": "251",
+    "Auth_Numb": 251,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sail Harbour CDD",
+    "Number": "266",
+    "Auth_Numb": 266,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Paseo CDD",
+    "Number": "277",
+    "Auth_Numb": 277,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Daughtrey Creek Light MSTU",
+    "Number": "025",
+    "Auth_Numb": 25,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Central Redev",
+    "Number": "125",
+    "Auth_Numb": 125,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Cleveland Redev 1",
+    "Number": "158",
+    "Auth_Numb": 158,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sheltering Pines Spec Imp",
+    "Number": "140",
+    "Auth_Numb": 140,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Birkdale Street Lighting MSTU",
+    "Number": "112",
+    "Auth_Numb": 112,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Town River Improvement MSTU",
+    "Number": "089",
+    "Auth_Numb": 89,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Fort Myers Villas Light MSTU",
+    "Number": "041",
+    "Auth_Numb": 41,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Country Lakes Special Lighting District",
+    "Number": "134",
+    "Auth_Numb": 134,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Golden Lakes Special Lighting District",
+    "Number": "135",
+    "Auth_Numb": 135,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Villa Palm Light MSTU",
+    "Number": "094",
+    "Auth_Numb": 94,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "University Square CDD",
+    "Number": "155",
+    "Auth_Numb": 155,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Mobile Haven Light MSTU",
+    "Number": "061",
+    "Auth_Numb": 61,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "McGregor Isles O&M Special Imp Unit",
+    "Number": "334",
+    "Auth_Numb": 334,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral  Downtown Redev Area",
+    "Number": "122",
+    "Auth_Numb": 122,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Lochmoor Village Light MSTU",
+    "Number": "057",
+    "Auth_Numb": 57,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Port Edison Light MSTU",
+    "Number": "071",
+    "Auth_Numb": 71,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sanibel Fire Rescue District",
+    "Number": "080",
+    "Auth_Numb": 80,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Stoneybrook CDD",
+    "Number": "153",
+    "Auth_Numb": 153,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Dewberry MSBU",
+    "Number": "202",
+    "Auth_Numb": 202,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sanibel Estates Canal Trimming Assmt District",
+    "Number": "210",
+    "Auth_Numb": 210,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Parklands Lee CDD",
+    "Number": "252",
+    "Auth_Numb": 252,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Bella Vida CDD",
+    "Number": "280",
+    "Auth_Numb": 280,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Mirada CDD",
+    "Number": "299",
+    "Auth_Numb": 299,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sanibel Sewer System PH5",
+    "Number": "305",
+    "Auth_Numb": 305,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Solid Waste Area 6",
+    "Number": "006",
+    "Auth_Numb": 126,
+    "Type": "G",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Pine Island Rd Potable Water Ext",
+    "Number": "173",
+    "Auth_Numb": 173,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Del Prado Mall Parking Lot Impv",
+    "Number": "241",
+    "Auth_Numb": 241,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Florida Governmental Utility Authority",
+    "Number": "281",
+    "Auth_Numb": 281,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Moody River Estates CDD",
+    "Number": "260",
+    "Auth_Numb": 260,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Harbor Road MSBU",
+    "Number": "244",
+    "Auth_Numb": 244,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Miromar Lakes CDD",
+    "Number": "162",
+    "Auth_Numb": 162,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Billy Creek Comm Ctr Light MSTU",
+    "Number": "007",
+    "Auth_Numb": 7,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Cypress Lake Light MSTU",
+    "Number": "024",
+    "Auth_Numb": 24,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Trailwinds Light MSTU",
+    "Number": "090",
+    "Auth_Numb": 90,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Waterway Shores Light MSTU",
+    "Number": "097",
+    "Auth_Numb": 97,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "NE Hurricane Bay MSTU",
+    "Number": "215",
+    "Auth_Numb": 215,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Country Line Drainage",
+    "Number": "023",
+    "Auth_Numb": 23,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "River Ridge CDD",
+    "Number": "120",
+    "Auth_Numb": 120,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Pine Lake Special Lighting District",
+    "Number": "138",
+    "Auth_Numb": 138,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Cypress Shadows CDD",
+    "Number": "278",
+    "Auth_Numb": 278,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Shell Harbor and Sanibel Canal Dredging Assessment",
+    "Number": "324",
+    "Auth_Numb": 324,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Habitat CDD",
+    "Number": "207",
+    "Auth_Numb": 207,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Waterford Landing CDD",
+    "Number": "262",
+    "Auth_Numb": 262,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #003",
+    "Number": "003",
+    "Auth_Numb": 3,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #004",
+    "Number": "004",
+    "Auth_Numb": 4,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #010",
+    "Number": "010",
+    "Auth_Numb": 10,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #011",
+    "Number": "011",
+    "Auth_Numb": 11,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #014",
+    "Number": "014",
+    "Auth_Numb": 14,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #027",
+    "Number": "027",
+    "Auth_Numb": 27,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #029",
+    "Number": "029",
+    "Auth_Numb": 29,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #041",
+    "Number": "041",
+    "Auth_Numb": 41,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #042",
+    "Number": "042",
+    "Auth_Numb": 42,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #045",
+    "Number": "045",
+    "Auth_Numb": 45,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #056",
+    "Number": "056",
+    "Auth_Numb": 56,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #072",
+    "Number": "072",
+    "Auth_Numb": 72,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #073",
+    "Number": "073",
+    "Auth_Numb": 73,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #084",
+    "Number": "084",
+    "Auth_Numb": 84,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #087",
+    "Number": "087",
+    "Auth_Numb": 87,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #093",
+    "Number": "093",
+    "Auth_Numb": 93,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #102",
+    "Number": "102",
+    "Auth_Numb": 102,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #104",
+    "Number": "104",
+    "Auth_Numb": 104,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #106",
+    "Number": "106",
+    "Auth_Numb": 106,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #108",
+    "Number": "108",
+    "Auth_Numb": 108,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #111",
+    "Number": "111",
+    "Auth_Numb": 111,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #112",
+    "Number": "112",
+    "Auth_Numb": 112,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #121",
+    "Number": "121",
+    "Auth_Numb": 121,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #122",
+    "Number": "122",
+    "Auth_Numb": 122,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #124",
+    "Number": "124",
+    "Auth_Numb": 124,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #127",
+    "Number": "127",
+    "Auth_Numb": 127,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #129",
+    "Number": "129",
+    "Auth_Numb": 129,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #138",
+    "Number": "138",
+    "Auth_Numb": 138,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #139",
+    "Number": "139",
+    "Auth_Numb": 139,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #144",
+    "Number": "144",
+    "Auth_Numb": 144,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #256",
+    "Number": "256",
+    "Auth_Numb": 256,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #273",
+    "Number": "273",
+    "Auth_Numb": 273,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #279",
+    "Number": "279",
+    "Auth_Numb": 279,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #282",
+    "Number": "282",
+    "Auth_Numb": 282,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Sanibel Garbage",
+    "Number": "010",
+    "Auth_Numb": 10,
+    "Type": "G",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Alabama Groves Light MSTU",
+    "Number": "002",
+    "Auth_Numb": 2,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "San Carlos Estates Water Control District",
+    "Number": "076",
+    "Auth_Numb": 76,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Lee County General Revenue",
+    "Number": "044",
+    "Auth_Numb": 44,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "ECWCD Lee Co Mitigation Park",
+    "Number": "337",
+    "Auth_Numb": 337,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Cherry Estates O&M MSBU",
+    "Number": "330",
+    "Auth_Numb": 330,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Cherry Estates CIP Road MSBU",
+    "Number": "329",
+    "Auth_Numb": 329,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #281",
+    "Number": "281",
+    "Auth_Numb": 281,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #048",
+    "Number": "048",
+    "Auth_Numb": 48,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Upper Captiva Fire",
+    "Number": "092",
+    "Auth_Numb": 92,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #314",
+    "Number": "314",
+    "Auth_Numb": 314,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #315",
+    "Number": "315",
+    "Auth_Numb": 315,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Beach Road Golf Estates CDD",
+    "Number": "347",
+    "Auth_Numb": 347,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Fort Myers Shores Lighting Unit MSTU",
+    "Number": "040",
+    "Auth_Numb": 40,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Palm Beach BLVD Spec Imp Ut MSTU",
+    "Number": "325",
+    "Auth_Numb": 325,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "San Carlos Island Street MSTU",
+    "Number": "034",
+    "Auth_Numb": 34,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #078",
+    "Number": "078",
+    "Auth_Numb": 78,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #275",
+    "Number": "275",
+    "Auth_Numb": 275,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #079",
+    "Number": "079",
+    "Auth_Numb": 79,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #086",
+    "Number": "086",
+    "Auth_Numb": 86,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #002 ",
+    "Number": "002",
+    "Auth_Numb": 2,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Bonita Landing CDD",
+    "Number": "352",
+    "Auth_Numb": 352,
+    "Type": "N",
+    "InDistrict": "NO"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Babcock Ranch CDD",
+    "Number": "353",
+    "Auth_Numb": 353,
+    "Type": "N",
+    "InDistrict": "NO"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Baycreek CDD",
+    "Number": "111",
+    "Auth_Numb": 111,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #255",
+    "Number": "255",
+    "Auth_Numb": 255,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Corkscrew Fames Development District",
+    "Number": "351",
+    "Auth_Numb": 351,
+    "Type": "N",
+    "InDistrict": "no"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Solid Waste Area 7",
+    "Number": "007",
+    "Auth_Numb": 126,
+    "Type": "G",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #205",
+    "Number": "205",
+    "Auth_Numb": 205,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Boca Grande Fire District",
+    "Number": "008",
+    "Auth_Numb": 8,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Bonita Springs Fire District",
+    "Number": "009",
+    "Auth_Numb": 9,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Charleston Park Light MSTU",
+    "Number": "019",
+    "Auth_Numb": 19,
+    "Type": "A",
+    "InDistrict": "yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "North Fort Myers Light MSTU",
+    "Number": "064",
+    "Auth_Numb": 4,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Burnt Store Fire MSTU",
+    "Number": "011",
+    "Auth_Numb": 11,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Cherry Estates CIP Road MSBU",
+    "Number": "355",
+    "Auth_Numb": 355,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "East Bonita Beach Road CDD",
+    "Number": "349",
+    "Auth_Numb": 349,
+    "Type": "N",
+    "InDistrict": "YES"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North 2 Irrigation",
+    "Number": "360",
+    "Auth_Numb": 360,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North 2 Wastewater",
+    "Number": "361",
+    "Auth_Numb": 361,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North 2 Water",
+    "Number": "362",
+    "Auth_Numb": 362,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Captiva Island Beach Maintenance Renourishment Project",
+    "Number": "119",
+    "Auth_Numb": 119,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Bayside Improvement CDD",
+    "Number": "104",
+    "Auth_Numb": 104,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Herons Glen Recreation District",
+    "Number": "144",
+    "Auth_Numb": 144,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Blue Lake CDD",
+    "Number": "375",
+    "Auth_Numb": 375,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Mediterra CDD",
+    "Number": "374",
+    "Auth_Numb": 374,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #075",
+    "Number": "075",
+    "Auth_Numb": 75,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North 2 Util CFEC Irrigation",
+    "Number": "367",
+    "Auth_Numb": 367,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North 2 Util CFEC Wastewater",
+    "Number": "366",
+    "Auth_Numb": 366,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North 2 Util CFEC Potable Wtr",
+    "Number": "365",
+    "Auth_Numb": 365,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Uty CIAC Water",
+    "Number": "371",
+    "Auth_Numb": 371,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Uty CIAC Wastewater",
+    "Number": "372",
+    "Auth_Numb": 372,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Uty CIAC Irrigation",
+    "Number": "373",
+    "Auth_Numb": 373,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Green Corridor PACE",
+    "Number": "363",
+    "Auth_Numb": 363,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Burgundy Farms Road Paving CIP MSBU",
+    "Number": "383",
+    "Auth_Numb": 383,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Oak Creek Road Paving CIP MSBU",
+    "Number": "384",
+    "Auth_Numb": 384,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Telegraph Creek Bridge Repair CIP MSBU",
+    "Number": "386",
+    "Auth_Numb": 386,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers DR MLK Jr Blvd 1",
+    "Number": "169",
+    "Auth_Numb": 169,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Dr MLK Jr Blvd 2 Redev",
+    "Number": "170",
+    "Auth_Numb": 170,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers DR MLK Jr Blvd 3",
+    "Number": "171",
+    "Auth_Numb": 171,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Dr MLK Jr Blvd 4 Redev",
+    "Number": "172",
+    "Auth_Numb": 172,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Dr MLK Jr Blvd 1 Redev1 SubA",
+    "Number": "377",
+    "Auth_Numb": 377,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Dr MLK Jr Blvd 2 Redev2 SubA",
+    "Number": "378",
+    "Auth_Numb": 378,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Dr MLK Jr Blvd 3 Redev3 SubA",
+    "Number": "379",
+    "Auth_Numb": 379,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Dr MLK Jr Blvd 4 Redev4 SubA",
+    "Number": "380",
+    "Auth_Numb": 380,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #265",
+    "Number": "265",
+    "Auth_Numb": 265,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #268",
+    "Number": "268",
+    "Auth_Numb": 268,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #270",
+    "Number": "270",
+    "Auth_Numb": 270,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #271",
+    "Number": "271",
+    "Auth_Numb": 271,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #318",
+    "Number": "318",
+    "Auth_Numb": 318,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #319",
+    "Number": "319",
+    "Auth_Numb": 319,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #321",
+    "Number": "321",
+    "Auth_Numb": 321,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #064",
+    "Number": "064",
+    "Auth_Numb": 64,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #320",
+    "Number": "320",
+    "Auth_Numb": 320,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "University Village CDD",
+    "Number": "327",
+    "Auth_Numb": 327,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Timber Creek Southwest CDD",
+    "Number": "388",
+    "Auth_Numb": 388,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Wildblue CDD",
+    "Number": "357",
+    "Auth_Numb": 357,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Telegraph Creek Bridge Repair O&M",
+    "Number": "389",
+    "Auth_Numb": 389,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sunset Cove Channel Marker O&M",
+    "Number": "390",
+    "Auth_Numb": 390,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Riverdale Shores Improvement MSTU",
+    "Number": "072",
+    "Auth_Numb": 72,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #189",
+    "Number": "189",
+    "Auth_Numb": 189,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Captiva Erosion Prevention District",
+    "Number": "017",
+    "Auth_Numb": 17,
+    "Type": "A",
+    "InDistrict": "yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Stonewater CDD",
+    "Number": "393",
+    "Auth_Numb": 393,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "East Bonita Beach Road 2 CDD",
+    "Number": "394",
+    "Auth_Numb": 394,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #006",
+    "Number": "006",
+    "Auth_Numb": 6,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Captiva Island Fire Control District",
+    "Number": "018",
+    "Auth_Numb": 18,
+    "Type": "A",
+    "InDistrict": "yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Pine Island Rd Wastewater Ext",
+    "Number": "174",
+    "Auth_Numb": 174,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Pine Island Rd Irrigation Ext",
+    "Number": "175",
+    "Auth_Numb": 175,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Palermo CDD",
+    "Number": "297",
+    "Auth_Numb": 297,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Galt Island Ave OM MSBU",
+    "Number": "396",
+    "Auth_Numb": 396,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Southwest 2 Water",
+    "Number": "211",
+    "Auth_Numb": 211,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Southwest 2 Wastewater",
+    "Number": "212",
+    "Auth_Numb": 212,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Southwest 2 Irrigation",
+    "Number": "213",
+    "Auth_Numb": 213,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Southeast 1 Water",
+    "Number": "218",
+    "Auth_Numb": 218,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Southeast 1 Wastewater",
+    "Number": "219",
+    "Auth_Numb": 219,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Southeast 1 Irrigation",
+    "Number": "220",
+    "Auth_Numb": 220,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Southwest 4 Water",
+    "Number": "221",
+    "Auth_Numb": 221,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Southwest 4 Wastewater",
+    "Number": "222",
+    "Auth_Numb": 222,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Southwest 4 Irrigation",
+    "Number": "223",
+    "Auth_Numb": 223,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Southwest 5 Water",
+    "Number": "224",
+    "Auth_Numb": 224,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Southwest 5 Wastewater",
+    "Number": "225",
+    "Auth_Numb": 225,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Southwest 5 Irrigation",
+    "Number": "226",
+    "Auth_Numb": 226,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Orange Wastewater Water",
+    "Number": "233",
+    "Auth_Numb": 233,
+    "Type": "N",
+    "InDistrict": "nO"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Orange Irrigation",
+    "Number": "234",
+    "Auth_Numb": 234,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Stripe Green Wastewater",
+    "Number": "236",
+    "Auth_Numb": 236,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Del Prado Alley Improvement",
+    "Number": "255",
+    "Auth_Numb": 255,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Seawall Improv PH IX",
+    "Number": "256",
+    "Auth_Numb": 256,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Surfside Irrigation",
+    "Number": "288",
+    "Auth_Numb": 288,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North Central Loop Waste Water",
+    "Number": "292",
+    "Auth_Numb": 292,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Lot Mowing District 2",
+    "Number": "316",
+    "Auth_Numb": 316,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Surfside Wastewater",
+    "Number": "289",
+    "Auth_Numb": 289,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Lot Mowing District 4",
+    "Number": "318",
+    "Auth_Numb": 318,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Surfside Water",
+    "Number": "287",
+    "Auth_Numb": 287,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North Central Loop Water",
+    "Number": "291",
+    "Auth_Numb": 291,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North Central Loop Irrigation",
+    "Number": "293",
+    "Auth_Numb": 293,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Uty CEF Water",
+    "Number": "368",
+    "Auth_Numb": 368,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Uty CEF Wastewater",
+    "Number": "369",
+    "Auth_Numb": 369,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Uty CEF Irrigation",
+    "Number": "370",
+    "Auth_Numb": 370,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #263",
+    "Number": "263",
+    "Auth_Numb": 263,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Cleveland Redev 4",
+    "Number": "161",
+    "Auth_Numb": 161,
+    "Type": "R",
+    "InDistrict": "yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Harlem Heights Light MSTU",
+    "Number": "046",
+    "Auth_Numb": 46,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Hendry Creek Light MSTU",
+    "Number": "047",
+    "Auth_Numb": 47,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Lehigh Acres Light MSTU",
+    "Number": "055",
+    "Auth_Numb": 55,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Russell Park Light",
+    "Number": "073",
+    "Auth_Numb": 73,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "San Carols Improvement MSTU",
+    "Number": "078",
+    "Auth_Numb": 78,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Palmona Park Light MSTU",
+    "Number": "069",
+    "Auth_Numb": 69,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Pine Manor Light MSTU",
+    "Number": "070",
+    "Auth_Numb": 70,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Palmetto Point Light MSTU",
+    "Number": "068",
+    "Auth_Numb": 68,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Morse Shores Light MSTU",
+    "Number": "062",
+    "Auth_Numb": 62,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Page Park Light MSTU",
+    "Number": "066",
+    "Auth_Numb": 66,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Tropical Lighting MSTU",
+    "Number": "091",
+    "Auth_Numb": 91,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Saint Jude Harbor Light MSTU",
+    "Number": "086",
+    "Auth_Numb": 86,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Skyline Drive Streetlighting Unit",
+    "Number": "083",
+    "Auth_Numb": 83,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Waterway Estates Light MSTU",
+    "Number": "096",
+    "Auth_Numb": 96,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Sanibel Sewer Voted Debt SVC",
+    "Number": "129",
+    "Auth_Numb": 129,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Sanibel Sewer Voted Debt SVC",
+    "Number": "129",
+    "Auth_Numb": 129,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Fort Myers Beach Library",
+    "Number": "033",
+    "Auth_Numb": 33,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Whiskey Creek Channel Dredge",
+    "Number": "397",
+    "Auth_Numb": 397,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Heritage Farms O+M",
+    "Number": "399",
+    "Auth_Numb": 399,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Mid Metro OM Special Imp Unit",
+    "Number": "263",
+    "Auth_Numb": 263,
+    "Type": "A",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sanibel Public Library District",
+    "Number": "268",
+    "Auth_Numb": 268,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Tropical Point Mangrove Pruning O + M",
+    "Number": "400",
+    "Auth_Numb": 400,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Sanibel Rec Ctr Voted Debt SVC",
+    "Number": "261",
+    "Auth_Numb": 261,
+    "Type": "A",
+    "InDistrict": "YES"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Gasparilla Island MSTU",
+    "Number": "391",
+    "Auth_Numb": 391,
+    "Type": "A",
+    "InDistrict": "N"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Redev Expansion 2",
+    "Number": "321",
+    "Auth_Numb": 321,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Redev Expansion",
+    "Number": "214",
+    "Auth_Numb": 214,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Redev Exp 3",
+    "Number": "342",
+    "Auth_Numb": 342,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Downtown Redev CRA",
+    "Number": "123",
+    "Auth_Numb": 123,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #091",
+    "Number": "091",
+    "Auth_Numb": 91,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Bristol Road Paving MSBU",
+    "Number": "398",
+    "Auth_Numb": 398,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Whiskey Creek Improvement MSTU",
+    "Number": "099",
+    "Auth_Numb": 99,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Brooks of Bonita Springs CDD",
+    "Number": "145",
+    "Auth_Numb": 145,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Heritage Palms CDD",
+    "Number": "154",
+    "Auth_Numb": 154,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Renaissance CDD",
+    "Number": "187",
+    "Auth_Numb": 187,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Verandah West CDD",
+    "Number": "195",
+    "Auth_Numb": 195,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "CFM CDD",
+    "Number": "208",
+    "Auth_Numb": 208,
+    "Type": "N",
+    "InDistrict": "nO"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Villagewalk of Bonita Springs CDD",
+    "Number": "246",
+    "Auth_Numb": 246,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Arborwood CDD",
+    "Number": "248",
+    "Auth_Numb": 248,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Portico CDD",
+    "Number": "264",
+    "Auth_Numb": 264,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "River Forest Street Light MSBU",
+    "Number": "310",
+    "Auth_Numb": 10,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Old Pelican Bay Dredging OM MSBU",
+    "Number": "332",
+    "Auth_Numb": 332,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "V Dana CDD",
+    "Number": "392",
+    "Auth_Numb": 392,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Verandah East CDD",
+    "Number": "269",
+    "Auth_Numb": 269,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sanibel Sewer System PH3A",
+    "Number": "272",
+    "Auth_Numb": 272,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Bonita Springs",
+    "Number": "157",
+    "Auth_Numb": 157,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Sanibel",
+    "Number": "079",
+    "Auth_Numb": 79,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North Water 1_8 Improvements",
+    "Number": "314",
+    "Auth_Numb": 314,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Lot Mowing District 3",
+    "Number": "317",
+    "Auth_Numb": 317,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Western Acres MSBU",
+    "Number": "250",
+    "Auth_Numb": 250,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Street Light Improvements",
+    "Number": "306",
+    "Auth_Numb": 306,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Bayshore Fire District",
+    "Number": "006",
+    "Auth_Numb": 6,
+    "Type": "A",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Fort Myers Shores Fire",
+    "Number": "039",
+    "Auth_Numb": 39,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Iona McGregor Fire District",
+    "Number": "050",
+    "Auth_Numb": 50,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #036",
+    "Number": "036",
+    "Auth_Numb": 36,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #051",
+    "Number": "051",
+    "Auth_Numb": 51,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #160",
+    "Number": "160",
+    "Auth_Numb": 160,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "SFL Water Mgmt Everglades Const",
+    "Number": "084",
+    "Auth_Numb": 84,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "SFL Water MGMT Okeechobee Levy",
+    "Number": "308",
+    "Auth_Numb": 308,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Lee County Library Fund",
+    "Number": "052",
+    "Auth_Numb": 52,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Lee County Hyacinth Control",
+    "Number": "051",
+    "Auth_Numb": 51,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "School District By Local Board",
+    "Number": "012",
+    "Auth_Numb": 12,
+    "Type": "A",
+    "InDistrict": "yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "West Coast Inland Waterway",
+    "Number": "098",
+    "Auth_Numb": 98,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "SFL Water Mgmt District Levy",
+    "Number": "110",
+    "Auth_Numb": 110,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "School District By State Law",
+    "Number": "013",
+    "Auth_Numb": 13,
+    "Type": "A",
+    "InDistrict": "yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Solid Waste Area 2",
+    "Number": "002",
+    "Auth_Numb": 126,
+    "Type": "G",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Lee County Mosquito Control",
+    "Number": "053",
+    "Auth_Numb": 53,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #068",
+    "Number": "068",
+    "Auth_Numb": 68,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #100",
+    "Number": "100",
+    "Auth_Numb": 100,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Estero Fire Rescue",
+    "Number": "029",
+    "Auth_Numb": 29,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #316",
+    "Number": "316",
+    "Auth_Numb": 316,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Bonita Springs Stormwater",
+    "Number": "387",
+    "Auth_Numb": 387,
+    "Type": "N",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Village of Estero Corkscrew Rd",
+    "Number": "395",
+    "Auth_Numb": 395,
+    "Type": "N",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #317",
+    "Number": "317",
+    "Auth_Numb": 317,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Village of Estero",
+    "Number": "340",
+    "Auth_Numb": 340,
+    "Type": "A",
+    "InDistrict": "YES"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #311",
+    "Number": "311",
+    "Auth_Numb": 311,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #258",
+    "Number": "258",
+    "Auth_Numb": 258,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #261",
+    "Number": "261",
+    "Auth_Numb": 261,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Cleveland Redev 3",
+    "Number": "160",
+    "Auth_Numb": 160,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Cleveland Redev 2",
+    "Number": "159",
+    "Auth_Numb": 159,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Bonita Springs Redev Area",
+    "Number": "336",
+    "Auth_Numb": 336,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #017",
+    "Number": "017",
+    "Auth_Numb": 17,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #037",
+    "Number": "037",
+    "Auth_Numb": 37,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Fort Myers Beach Downtown Redev",
+    "Number": "253",
+    "Auth_Numb": 253,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Fort Myers Beach Mosquito",
+    "Number": "035",
+    "Auth_Numb": 35,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #032",
+    "Number": "032",
+    "Auth_Numb": 32,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Fort Myers Beach Fire District",
+    "Number": "032",
+    "Auth_Numb": 32,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Town of Fort Myers Beach",
+    "Number": "118",
+    "Auth_Numb": 118,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Solid Waste Area 1",
+    "Number": "001",
+    "Auth_Numb": 126,
+    "Type": "G",
+    "InDistrict": "no"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #202",
+    "Number": "202",
+    "Auth_Numb": 202,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #083",
+    "Number": "083",
+    "Auth_Numb": 83,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "FRED",
+    "Number": "359",
+    "Auth_Numb": 359,
+    "Type": "N",
+    "InDistrict": "nO"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #001",
+    "Number": "001",
+    "Auth_Numb": 1,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #043",
+    "Number": "043",
+    "Auth_Numb": 43,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #005",
+    "Number": "005",
+    "Auth_Numb": 5,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #158",
+    "Number": "158",
+    "Auth_Numb": 158,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #046",
+    "Number": "046",
+    "Auth_Numb": 46,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #076",
+    "Number": "076",
+    "Auth_Numb": 76,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #066",
+    "Number": "066",
+    "Auth_Numb": 66,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #143",
+    "Number": "143",
+    "Auth_Numb": 143,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #085",
+    "Number": "085",
+    "Auth_Numb": 85,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Solid Waste Area 4",
+    "Number": "004",
+    "Auth_Numb": 126,
+    "Type": "G",
+    "InDistrict": "no"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Tice Fire Protection Rescue District",
+    "Number": "088",
+    "Auth_Numb": 88,
+    "Type": "A",
+    "InDistrict": "yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #028",
+    "Number": "028",
+    "Auth_Numb": 28,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #034",
+    "Number": "034",
+    "Auth_Numb": 34,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #035",
+    "Number": "035",
+    "Auth_Numb": 35,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Marina Coral Dredge CIP MSBU",
+    "Number": "356",
+    "Auth_Numb": 356,
+    "Type": "N",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sunset Cove Dredge CIP MSBU",
+    "Number": "385",
+    "Auth_Numb": 385,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Coral Bay of Lee County CDD",
+    "Number": "404",
+    "Auth_Numb": 404,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sheffield Way Channel Dredge CIP MSBU",
+    "Number": "401",
+    "Auth_Numb": 401,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Savanna Lakes CDD",
+    "Number": "402",
+    "Auth_Numb": 402,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Corkscrew Crossing CDD",
+    "Number": "405",
+    "Auth_Numb": 405,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Brooks of Bonita Springs II",
+    "Number": "152",
+    "Auth_Numb": 152,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sanibel Sewer System PH3B",
+    "Number": "273",
+    "Auth_Numb": 273,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Parks Voted Debt Svc",
+    "Number": "382",
+    "Auth_Numb": 382,
+    "Type": "A",
+    "InDistrict": "yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Florida Pace Funding Agency",
+    "Number": "343",
+    "Auth_Numb": 343,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "North Fort Myers Fire District",
+    "Number": "063",
+    "Auth_Numb": 63,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Target Green Wastewater",
+    "Number": "235",
+    "Auth_Numb": 235,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Lot Mowing District 1",
+    "Number": "311",
+    "Auth_Numb": 311,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #039",
+    "Number": "039",
+    "Auth_Numb": 39,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Solid Waste Area 3",
+    "Number": "003",
+    "Auth_Numb": 126,
+    "Type": "G",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Lee County All Hazards Unic",
+    "Number": "101",
+    "Auth_Numb": 101,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Fire Assessment",
+    "Number": "189",
+    "Auth_Numb": 189,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Solid Waste Area 9",
+    "Number": "009",
+    "Auth_Numb": 126,
+    "Type": "G",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Esplanade Lake Club CDD",
+    "Number": "381",
+    "Auth_Numb": 381,
+    "Type": "N",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #166",
+    "Number": "166",
+    "Auth_Numb": 166,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Stornwater",
+    "Number": "142",
+    "Auth_Numb": 142,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "East Mulloch Water Control District",
+    "Number": "376",
+    "Auth_Numb": 376,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Maravilla Fire District MSTU",
+    "Number": "058",
+    "Auth_Numb": 58,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers",
+    "Number": "031",
+    "Auth_Numb": 31,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #090",
+    "Number": "090",
+    "Auth_Numb": 90,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Florida Green Finance",
+    "Number": "358",
+    "Auth_Numb": 358,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Alley Improvements",
+    "Number": "239",
+    "Auth_Numb": 239,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Seawall Improv Ph VIIB",
+    "Number": "243",
+    "Auth_Numb": 243,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Fire Assessment",
+    "Number": "312",
+    "Auth_Numb": 312,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Sidewalk Improvements",
+    "Number": "242",
+    "Auth_Numb": 242,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Lee County Unincorporated MSTU",
+    "Number": "020",
+    "Auth_Numb": 20,
+    "Type": "A",
+    "InDistrict": "yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #057",
+    "Number": "057",
+    "Auth_Numb": 57,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Waterway Lock Imprv",
+    "Number": "301",
+    "Auth_Numb": 301,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #007",
+    "Number": "007",
+    "Auth_Numb": 7,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Solid Waste Area 5",
+    "Number": "005",
+    "Auth_Numb": 126,
+    "Type": "G",
+    "InDistrict": "no"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Maintenance of Medians Right of Ways",
+    "Number": "237",
+    "Auth_Numb": 237,
+    "Type": "N",
+    "InDistrict": "n"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Pepper Tree Removal",
+    "Number": "238",
+    "Auth_Numb": 238,
+    "Type": "N",
+    "InDistrict": "n"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Parking Lot Improvements",
+    "Number": "240",
+    "Auth_Numb": 240,
+    "Type": "N",
+    "InDistrict": "n"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Solid Waste Area 17",
+    "Number": "017",
+    "Auth_Numb": 126,
+    "Type": "G",
+    "InDistrict": "no"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral General Fund",
+    "Number": "014",
+    "Auth_Numb": 14,
+    "Type": "A",
+    "InDistrict": "yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral Stormwater Annual",
+    "Number": "183",
+    "Auth_Numb": 183,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Matlacha Pine Island Fire District",
+    "Number": "059",
+    "Auth_Numb": 59,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Alva Fire District",
+    "Number": "004",
+    "Auth_Numb": 4,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Lehigh Acres Fire District",
+    "Number": "054",
+    "Auth_Numb": 54,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Lehigh Acres Mun Svs Imp Dist",
+    "Number": "350",
+    "Auth_Numb": 350,
+    "Type": "N",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Lehigh Acres Fire Control & Rescue District",
+    "Number": "341",
+    "Auth_Numb": 341,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #280",
+    "Number": "280",
+    "Auth_Numb": 280,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Edison Park Lighting District",
+    "Number": "354",
+    "Auth_Numb": 354,
+    "Type": "A",
+    "InDistrict": "YES"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Gateway Services CDD",
+    "Number": "043",
+    "Auth_Numb": 43,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "South Trail Fire District",
+    "Number": "085",
+    "Auth_Numb": 85,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #047",
+    "Number": "047",
+    "Auth_Numb": 47,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Sanibel Solid Waste Assement",
+    "Number": "249",
+    "Auth_Numb": 249,
+    "Type": "N",
+    "InDistrict": "No "
+   }
+  },
+  {
+   "attributes": {
+    "Name": "San Carlos Park Fire District",
+    "Number": "077",
+    "Auth_Numb": 77,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #071",
+    "Number": "071",
+    "Auth_Numb": 71,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Mobile Manor OM MSBU",
+    "Number": "409",
+    "Auth_Numb": 409,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Saltleaf CDD",
+    "Number": "410",
+    "Auth_Numb": 410,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Cape Coral  Town Center CDD",
+    "Number": "412",
+    "Auth_Numb": 412,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Kingstone One CDD",
+    "Number": "413",
+    "Auth_Numb": 413,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Cape Coral NonAd",
+    "Number": "411",
+    "Auth_Numb": 411,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North 1 West Cap Fac Exp Irrigation",
+    "Number": "416",
+    "Auth_Numb": 416,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North 1 West Cap Fac Exp Water",
+    "Number": "414",
+    "Auth_Numb": 414,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City Of Cape Coral North 1 West Water",
+    "Number": "406",
+    "Auth_Numb": 406,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North 1 West Wastewater",
+    "Number": "407",
+    "Auth_Numb": 407,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North 1 West Cap Fac Exp Wastewater",
+    "Number": "415",
+    "Auth_Numb": 415,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Cape Coral North 1 West Irrigation",
+    "Number": "408",
+    "Auth_Numb": 408,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Parks Voted Debt SVC",
+    "Number": "418",
+    "Auth_Numb": 418,
+    "Type": "A",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Ibis Landing CDD",
+    "Number": "419",
+    "Auth_Numb": 419,
+    "Type": "N",
+    "InDistrict": ""
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Serena Park",
+    "Number": "417",
+    "Auth_Numb": 417,
+    "Type": "N",
+    "InDistrict": ""
+   }
+  },
+  {
+   "attributes": {
+    "Name": "East Fort Myers Community Redevelopment Area",
+    "Number": "421",
+    "Auth_Numb": 421,
+    "Type": "R",
+    "InDistrict": ""
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #322",
+    "Number": "322",
+    "Auth_Numb": 322,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Del Webb Oak Creek CDD",
+    "Number": "403",
+    "Auth_Numb": 403,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Tanglewood Improvement MSTU",
+    "Number": "087",
+    "Auth_Numb": 87,
+    "Type": "A",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Vivid Shores CDD",
+    "Number": "422",
+    "Auth_Numb": 422,
+    "Type": "N",
+    "InDistrict": ""
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Cypress Bend RV Resort Sewer",
+    "Number": "425",
+    "Auth_Numb": 425,
+    "Type": "N",
+    "InDistrict": ""
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Nancy Lane WAter & Sewer CIP MSBU",
+    "Number": "427",
+    "Auth_Numb": 427,
+    "Type": "N",
+    "InDistrict": ""
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Victory Park CDD",
+    "Number": "428",
+    "Auth_Numb": 428,
+    "Type": "N",
+    "InDistrict": ""
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sunny Grove Park Sewer",
+    "Number": "426",
+    "Auth_Numb": 426,
+    "Type": "N",
+    "InDistrict": ""
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Brightwater CDD",
+    "Number": "364",
+    "Auth_Numb": 364,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Stoneybrook North CDD",
+    "Number": "345",
+    "Auth_Numb": 345,
+    "Type": "N",
+    "InDistrict": "No"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Sanibel Habours Dredging ",
+    "Number": "430",
+    "Auth_Numb": 430,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Sanibel Stormwater",
+    "Number": "431",
+    "Auth_Numb": 431,
+    "Type": "N",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #323",
+    "Number": "323",
+    "Auth_Numb": 323,
+    "Type": "D",
+    "InDistrict": ""
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Dr MLK Jr Blvd  3 Redev Sub Area Exp 2",
+    "Number": "432",
+    "Auth_Numb": 432,
+    "Type": "R",
+    "InDistrict": "Yes"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Duke Farms Stewardship District",
+    "Number": "423",
+    "Auth_Numb": 423,
+    "Type": "N",
+    "InDistrict": "Y"
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Cleveland Ave 3 Reve Sub Area Expansion",
+    "Number": "433",
+    "Auth_Numb": 433,
+    "Type": "R",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #324",
+    "Number": "324",
+    "Auth_Numb": 324,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "City of Fort Myers Downtown River Community Redev Expansion",
+    "Number": "434",
+    "Auth_Numb": 434,
+    "Type": "R",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "District #325",
+    "Number": "325",
+    "Auth_Numb": 325,
+    "Type": "D",
+    "InDistrict": null
+   }
+  },
+  {
+   "attributes": {
+    "Name": "Iona McGregor Fire Protection & Rescue Service District",
+    "Number": "429",
+    "Auth_Numb": 429,
+    "Type": "N",
+    "InDistrict": null
+   }
+  }
+ ]
+}

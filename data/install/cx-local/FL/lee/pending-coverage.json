@@ -1,0 +1,61 @@
+{
+  "items": [
+    {
+      "status": "READER_DISTRICT_INTEGRATION",
+      "ocdIds": [
+        "ocd-division/country:us/state:fl/place:bonita_springs/council_district:3",
+        "ocd-division/country:us/state:fl/place:bonita_springs/council_district:5",
+        "ocd-division/country:us/state:fl/place:fort_myers/ward:3",
+        "ocd-division/country:us/state:fl/school_district:lee_county_school_district/school_board_district:4",
+        "ocd-division/country:us/state:fl/school_district:lee_county_school_district/school_board_district:5",
+        "ocd-division/country:us/state:fl/special_district:blue_lake_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:bonita_landing_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:bonita_springs_fire_control_and_rescue_district",
+        "ocd-division/country:us/state:fl/special_district:captiva_erosion_prevention_district",
+        "ocd-division/country:us/state:fl/special_district:catalina_at_winkler_preserve_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:colonial_country_club_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:cypress_shadows_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:fort_myers_beach_fire_control_district",
+        "ocd-division/country:us/state:fl/special_district:habitat_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:lehigh_acres_municipal_services_improvement_district",
+        "ocd-division/country:us/state:fl/special_district:north_fort_myers_fire_control_and_rescue_service_district",
+        "ocd-division/country:us/state:fl/special_district:stoneybrook_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:vasari_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:wildblue_community_development_district"
+      ],
+      "issue": "Exact source-backed identities; no county/place fallback. Ten source geometry features supplied."
+    },
+    {
+      "status": "LEGAL_VOTER_BOUNDARIES_PENDING",
+      "ocdIds": [
+        "ocd-division/country:us/state:fl/place:bonita_springs/council_district:3",
+        "ocd-division/country:us/state:fl/place:bonita_springs/council_district:5",
+        "ocd-division/country:us/state:fl/place:fort_myers/ward:3",
+        "ocd-division/country:us/state:fl/special_district:blue_lake_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:bonita_landing_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:captiva_erosion_prevention_district",
+        "ocd-division/country:us/state:fl/special_district:catalina_at_winkler_preserve_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:colonial_country_club_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:cypress_shadows_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:habitat_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:stoneybrook_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:vasari_community_development_district",
+        "ocd-division/country:us/state:fl/special_district:wildblue_community_development_district"
+      ],
+      "issue": "Nine CDDs, Captiva and three municipal subdistricts need legal voter boundaries. Taxing parcel footprints explicitly excluded."
+    },
+    {
+      "status": "NAMED_WITHDRAWN_ELECTED_DISPLAY_DISTINCTIONS",
+      "file": "named-candidate-statuses.json"
+    },
+    {
+      "status": "MEASURES_ANCILLARY",
+      "heldQuestionIds": 8,
+      "issue": "All existing question records remain unchanged. New two-fire-district merger question is ancillary."
+    },
+    {
+      "status": "MUNICIPAL_WRITE_IN_CERTIFICATION_NOT_INDEPENDENTLY_ENUMERATED",
+      "file": "declared-write-ins.json"
+    }
+  ]
+}

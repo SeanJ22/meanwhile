@@ -1,0 +1,2254 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+<!-- Google Tag Manager for GA4 -->
+				<script>(function(w,d,s,l,i){w.GAMeasurementID='G-PVLBTP99SY';w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','cpDataLayerGA4','GTM-K73C5PS');</script>
+				<!-- End Google Tag Manager for GA4 -->
+				<script type='text/javascript'>
+					var enableTelemetry = 'false'
+					var aiConfig = {
+					instrumentationKey: '1cde048e-3185-4906-aa46-c92a7312b60f'						
+					}
+					var appInsights = window.appInsights || function (a) { function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement('script'); b.src = a.url || 'https://js.monitor.azure.com/scripts/a/ai.0.js', d.getElementsByTagName('script')[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ['Event', 'Exception', 'Metric', 'PageView', 'Trace', 'Dependency']; f.length;)b('track' + f.pop()); if (b('setAuthenticatedUserContext'), b('clearAuthenticatedUserContext'), b('startTrackEvent'), b('stopTrackEvent'), b('startTrackPage'), b('stopTrackPage'), b('flush'), !a.disableExceptionTracking) { f = 'onerror', b('_' + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c['_' + f](a, b, d, e, h), i } } return c }(aiConfig);
+					window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length;
+					// Add telemetry initializer
+					appInsights.queue.push(function() {
+						appInsights.context.addTelemetryInitializer(function(envelope) {
+							var telemetryItem = envelope.data.baseData;
+							// To check the telemetry item’s type:
+							if (!false)
+							{
+								//If the telemetry is not enabled, we still want to capture Google map custom event, so only allow that
+								if (envelope.name.indexOf('.Event') == -1)
+									return false;
+							}
+						});
+					});						
+					appInsights.trackPageView();
+				</script>
+	<script>
+		function populateAntiForgery(token) {
+			var input = document.createElement("input");
+			input.name = "__RequestVerificationToken";
+			input.type = "hidden";
+			input.value = token;
+			var absPat = /^https?:\/\/|^\/\//i;
+			var forms = document.getElementsByTagName("form");
+			for (var i = 0; i < forms.length; i++) {
+				if (forms[i].method == "post" &&
+					!forms[i].querySelector('[name="__RequestVerificationToken"]') &&
+					!absPat.test(forms[i].getAttribute("action"))) {
+					forms[i].appendChild(input.cloneNode());
+				}
+			}
+		}
+
+		function getAntiForgeryToken(callback, error) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/antiforgery");
+			xhr.addEventListener("load", function() {
+				try {
+					if (this.status !== 200) {
+						throw Error("Invalid status. Could not retrieve antiforgery token.");
+					}
+					var obj = JSON.parse(this.responseText);
+					callback(obj.token);
+				} catch (e) {
+					typeof error === "function" && error(e);
+				}
+			});
+			xhr.send();
+		}
+
+		getAntiForgeryToken(function(token) {
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded" 
+				|| document.readyState === "interactive") {
+				populateAntiForgery(token);
+				return;
+			}
+			document.addEventListener("DOMContentLoaded", function() {
+				populateAntiForgery(token);
+			}, false);
+		}, console.error);
+	</script>
+			
+
+	<script type="text/javascript">
+		window.departmentHeader = {};
+		window.pageSectionTracker = {};
+		window.isResponsiveEnabled = true;
+		window.isRemoveSetHeights= false;
+		if (window.isRemoveSetHeights) {
+			document.documentElement.className += ' removeSetHeights';
+		}
+		window.mainMenuMediaQuery = 'screen and (max-width: 40em)';
+		window.isMobileBrowserIncludingTablets = false;
+		window.fixedResponsiveMenu = false;
+		window.fullWidthResponsiveMenu = true;
+		window.responsiveMenuHeight = '';
+		window.responsiveMenuFontSize = '';
+		window.isContentAdvisor = false;
+		(function () {
+			window.setSizeCookie = function () {
+				document.cookie = "dpi=" + window.devicePixelRatio + "; path=/";
+				document.cookie = "viewportWidth=" + window.innerWidth + "; path=/";
+				document.cookie = "viewportHeight=" + window.innerHeight + "; path=/";
+				if (screen && screen.width && screen.height) {
+					document.cookie = "screenWidth=" + screen.width + "; path=/";
+					document.cookie = "screenHeight=" + screen.height + "; path=/";
+				}
+				document.cookie = "responsiveGhost=1; path=/";
+			};
+
+			setSizeCookie();
+		}());
+	</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script async src="https://docaccess.com/docbox.js"></script>
+	
+	<meta name="category0" content="Home" />
+<meta name="category1" content="Election Information" />
+<meta name="category2" content="Offices to Be Elected" />
+
+	
+	<meta name="theme-color" content="rgb(3, 49, 83)">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+		<title>Offices to Be Elected | Lee County Elections, FL</title>
+
+		<meta name="description" content="Find a list of offices up for election in 2026.">
+			<script src="/Assets/Scripts/jQuery/jquery-3.7.1.min.js"></script>
+	<script src="/Assets/Scripts/jQuery/jquery-migrate-3.6.0.min.js" type="text/javascript"></script>
+	
+
+	<!--[if IE 6]><script language="JavaScript" type="text/javascript"> var isie6 = true; </script><![endif]-->
+	<!--[if IE 7]><script language="JavaScript" type="text/javascript"> var isie7 = true; </script><![endif]-->
+	<!--[if IE 8]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<!--[if IE 9]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<script type="text/javascript"><!--
+	var intCountryCode = 840;
+	var order = '';
+//--></script>
+	
+	<link href="/-2140275272.css" rel="stylesheet" type="text/css" />	<link href="/-909548520.css" rel="stylesheet" type="text/css" />
+
+	<link rel="stylesheet" type="text/css" href="/Assets/Styles/Print.css" media="print">
+	<script type="text/javascript">
+		window.Pages = window.Pages || {};
+		// FrontEnd RWD initialization
+		window.Pages.rwdReady = $.Deferred();
+		window.Pages.toolBarDeferred = $.Deferred();
+		window.Pages.rwdSetupComplete = $.Deferred();
+		window.Pages.megaMenuLoaded = $.Deferred();
+		window.Pages.angularToolbarComplete = $.Deferred();
+		window.Pages.frontEndToolbarComplete = $.Deferred();
+	</script>
+	<!--CPHeadContent-->
+	<script src="/739942322.js" type="text/javascript"></script>
+	
+	
+	
+	
+
+
+
+
+	<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="/App_Themes/ie8.css"><![endif]-->
+	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/App_Themes/ie7.css"><![endif]-->
+	<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="/App_Themes/ie6.css"><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="/Scripts/html5.js"></script><![endif]-->
+
+	<script type="text/javascript">
+		setEditorVariables(false, 840);
+		function getPrintPreviewType() { return 0; } function printPreview() {pPreview(getPrintPreviewType()); }
+	</script>
+	<script src="/Assets/Scripts/AlpineJS/3.14.1/alpine.min.js" type="text/javascript" defer="defer"></script>
+</head>
+<body class="wide " >
+
+    <script>jQuery(document).click(function (event) {
+	var target = jQuery(event.target);
+	if (target.attr('src') && target.parents('.image').length && target.parents('.widget').length) {
+		var text = target.attr('title');
+		
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Image',
+				eventAction: 'Image - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.is('button') || target.hasClass('button') || target.parents().hasClass('button')) {
+		var text = "";
+		if (target.parents('.button')[0]) {
+			text = target.parents('.button').first().text();
+		} else if (target.text().length) {
+			text = target.text();
+		} else if (target.attr('title').length) {
+			text = target.attr('title');
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Button - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetCustomHtml').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Custom Html',
+				eventAction: 'Custom Html Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.editor').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Editor',
+				eventAction: 'Editor Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.GraphicLinks').length) {
+		var text = "";
+		var targetGraphicLink = target;
+		if (target.hasClass('widgetGraphicLinksLink')) {
+			targetGraphicLink = jQuery(target.children()[0]);
+		}
+		if (targetGraphicLink.hasClass('text')) {
+			text = targetGraphicLink.text();
+		} else if (targetGraphicLink.attr('src').length) {
+			if (targetGraphicLink.attr('alt').length) {
+				text = targetGraphicLink.attr('alt');
+			} else {
+				text = targetGraphicLink.attr('src');
+			}
+		} else {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Graphic Links',
+				eventAction: 'Graphic Link - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.InfoAdvanced').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Info Advanced',
+				eventAction: 'Info Advanced Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.list').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'List',
+				eventAction: 'List Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.megaMenuItem').length || target.parents('.topMenuItem').length) {
+		var megaMenuText = jQuery('.topMenuItem.mouseover').find('span').text();
+		var breadCrumbs = [];
+		jQuery('.breadCrumbs > li').each(function () {
+			 breadCrumbs.push(this.textContent);
+		});
+		var pageTitle = breadCrumbs.join('>');
+		var subTitleText = target.parents('.megaMenuItem').children('.widgetTitle').children().text();
+		var text = "";
+		if (pageTitle) {
+			text += pageTitle + " | ";
+		} else {
+			text += document.title + ' - ';
+		}
+		if (target.text() == "" && megaMenuText == "") {
+			text += "N/A";
+		} else if (target.text().length && megaMenuText.length) {
+			if (megaMenuText == target.text()) {
+				text += megaMenuText;
+			} else {
+				text += megaMenuText + " - " + subTitleText + " - " + target.text();
+			}
+		} else if (target.text() == "") {
+			text += megaMenuText;
+		} else {
+			text += target.text();
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Mega Menu',
+				eventAction: 'Mega Menu : ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetNewsFlash').length && target.parents('.widgetItem').length) {
+		var text = jQuery(target.parents('.widgetItem')[0]).find('.widgetTitle').children().text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'News Flash',
+				eventAction: 'News Flash - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.hasClass('widgetQuickLinksLink') || target.find('.widgetQuickLinksLink').length) {
+		var text = target.text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Quick Links',
+				eventAction: 'Quick Links - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.attr('src') && target.parents('.cpSlideshow').length) {
+		var text = target.attr('title');
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Slideshow',
+				eventAction: 'Slideshow - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetText').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Text',
+				eventAction: 'Text Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+});</script>
+	<div id="popoverModal" class="cp-PopOver cp-PopOver--modal cp-AdminWrap" style="position: fixed; display: none;">
+	<div class="cp-PopOver-header">
+		<h3 class="cp-PopOver-title"></h3>
+		<button class="cp-Btn cp-PopOver-close" onclick="closePopOverModal(event)">
+			<svg class="cp-Icon--close" alt="close" title="close">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconClose"></use>
+			</svg>
+		</button>
+	</div>
+	<div id="cpPopOverBody" class="cp-PopOver-body">
+		<form id="cpPopOverForm" name="cpPopOverForm" novalidate></form>
+	</div>
+	<div id="cpPopOverFooter" class="cp-PopOver-footer">
+		<div class="cp-BtnGroup" id="actionButtons">
+			<!-- Action buttons will be dynamically added here -->
+		</div>
+	</div>
+</div>
+    <div id="fb-root"></div>
+<div id=skipToContentLinks>
+<a href="#cc5f8c90dc-b4cb-431b-90ee-10648f8df655" target="_self" class="skipToContentLink">Skip to Main Content</a>
+</div>
+    <form id="frmReferenceFormForTelerikEditorDialogs"></form>
+
+        <input type="hidden" id="GoogleMapsKey" value="AIzaSyDWUuE-ifkbhxblF920N8MjpBdTg1Wt784" />
+
+
+
+    <input type="hidden" id="cpcDomain" value="https://cp-civicplusuniversity2.civicplus.com">
+    <input type="hidden" id="hdnStructureID" value="1" />
+    <input type="hidden" id="hdnContentCollectionID" value="526977e0-2ffd-409a-8d9b-9b993e055c17" />
+    <input type="hidden" id="hdnWorkingCopyID" value="00000000-0000-0000-0000-000000000000" />
+    <input type="hidden" id="hdnThemeID" value="1" />
+    <input type="hidden" id="pageIsFrontEnd" value="true" />
+    <input type="hidden" id="pageModuleID" />
+    <input type="hidden" id="pagePageID" value="246" />
+
+    <div id="stickyPlaceholder"></div>
+    <div id="outer-wrap" class="outer-wrap">
+        <div id="inner-wrap" class="inner-wrap">
+                <div id="divToolbars" class="cpToolbars newCP mui-fixed" style="">
+                    
+
+
+
+                </div>
+            <div id="bodyWrapper">
+                <div id="mainNavHolderMobile" class="mainNavHolderMobile"></div>
+                
+<div data-cpRole="structuralContainer" id="bodyContainerTS">
+<!-- Header Container --><!-- <header data-cpRole="structuralContainer" id="headerContainerTS" class="fixedTopTS">
+    <div class="siteWrap" id="flexHeaderTS">
+      <div data-cpRole="banner" id="bannerLogoTS" class="bannerLogoTS"></div>
+      <nav data-cpRole="nav" id="mainNav" class="siteNav mainNav" role="navigation">
+        <aside data-cpRole="megaMenu" id="megaMenu" class="megaMenu"></aside>
+      </nav>
+      <div data-cpRole="contentContainer" id="searchTS"></div>
+    </div>
+  </header> --><!-- Banner --><div data-cpRole="structuralContainer" id="bannerContainerTS" class="noOverflowTS">
+<div data-cpRole="banner" id="banner1"><header data-cpRole="structuralContainer" id="headerContainerTS">
+<div class="siteWrap3" id="flexHeaderTS"><div data-cpRole="contentContainer" id="translateTS">	<div id="cca33c799a-dcd3-4db2-b21f-7957844a501c" data-containerid="a33c799a-dcd3-4db2-b21f-7957844a501c" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="bf2cd0e3-f4a3-43ad-b5d1-8801ccfa1d40">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id0cc13d8e-9a52-4a39-ab11-66d66bd0b6fa" style="" data-widgetcontainerid="0cc13d8e-9a52-4a39-ab11-66d66bd0b6fa">	
+ 
+	<div data-widget-id='02042e21-8bc9-4952-bcdb-952562a7361f' data-moduleName="customHtml" id='widgetCustomHtml02042e21-8bc9-4952-bcdb-952562a7361f' class="widget widgetCustomHtml skin43 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBody02042e21-8bc9-4952-bcdb-952562a7361f">
+		<div id="customHtml02042e21-8bc9-4952-bcdb-952562a7361f"><div><!----------Google Translate (Mobile Friendly)--------->
+
+<style>
+  #google-translate-container {
+    text-align: center;
+    padding: 3px 5px 0px 0px;
+    z-index: 5;
+  }
+  
+  .goog-te-combo, .goog-te-banner *, .goog-te-ftab *, .goog-te-menu *, .goog-te-menu2 *, .goog-te-balloon * {
+    font-family: arial;
+    font-size: 10pt;
+    background-image: url("https://www.gstatic.com/images/branding/product/2x/translate_24dp.png");
+    background-position: 5px 5px;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    text-indent: 16px;
+    background-color: #fff;
+    color: #000 !important;
+  }
+  
+  .goog-logo-link {
+    display: none !important;
+  }
+  
+  .goog-te-gadget {
+    color: transparent !important;
+  }
+  
+  .goog-te-gadget .goog-te-combo {
+    margin: 2px 0 !important;
+    border-radius: 15px !important;
+    }
+  
+  .goog-te-combo{
+    border: 1px solid !important;
+    border-color: #bcc9d7 #96a3b1 #96a3b1 #bcc9d7 !important;
+    border-radius: 50px !important;
+    height:31px !important;
+    padding: 0 1px 0 .25rem !important;
+                width: 156px;
+  }
+
+  #launcher-wrapper {
+    bottom: 50px !important;
+  }
+
+</style>
+
+<div id="google-translate-container">
+  <div id="google_translate_element">
+  </div>
+</div>
+
+<script>
+
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({ pageLanguage: "en" }, "google_translate_element");
+    // begin accessibility compliance
+    $('img.goog-te-gadget-icon').attr('alt','Google Translate');
+    $('div#goog-gt-tt div.logo img').attr('alt','translate');
+    $('div#goog-gt-tt .original-text').css('text-align','left');
+    $('.goog-te-gadget-simple .goog-te-menu-value span').css('color','#000000');
+    $('.goog-te-combo').attr('aria-label','google translate languages');
+    $('svg.goog-te-spinner').attr('title','Google Translate Spinner');
+    $('.goog-te-gadget-simple .goog-te-menu-value span').css('color','#000000');
+  }
+
+  $(function() {
+    $.getScript("//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit");
+  });
+
+</script>
+
+<!--------------End Google Translate----------------->
+</div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div><div data-cpRole="banner" id="bannerLogoTS" class="bannerLogoTS empty">
+
+
+
+
+				<span id="bannerLogoTS-48" style="			display: block; text-align: center;
+"><img alt="" class="bannerObject" height="477" src="/ImageRepository/Document?documentID=874" width="1466" /></span>
+</div><div data-cpRole="contentContainer" id="searchTS">	<div id="cc72a9f628-e491-47a4-8cca-9313c9d663c7" data-containerid="72a9f628-e491-47a4-8cca-9313c9d663c7" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="a4d4dba6-90c2-4e82-b6d3-9ef60025c38b">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id8701b913-9565-461f-a255-bcb8bc159b51" style="" data-widgetcontainerid="8701b913-9565-461f-a255-bcb8bc159b51">	
+<div data-widget-id="1e83949d-8d12-42b6-b87d-16253f40683e" data-widget-controller-path="/Layout/WidgetSearch">
+	
+	<script defer type="text/javascript" src="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.js"></script>
+	<script defer src="/Areas/Layout/Assets/Scripts/Search.js" type="text/javascript"></script>
+	<script defer type="text/javascript">
+
+		$(document).ready(function () {
+			try {
+				// Minimum characters required before performing a search/autocomplete
+				var minPrefixLength = 3;
+				var autoCompleteDebounceDelay = 500;
+				var searchFieldSelector = "#searchField" + '1e83949d-8d12-42b6-b87d-16253f40683e';
+				var checkboxSelector = "#ysnSearchOnlyDept" + '1e83949d-8d12-42b6-b87d-16253f40683e';
+				var buttonSelector = ".widgetSearchButton" + '1e83949d-8d12-42b6-b87d-16253f40683e';
+				var autoCompleteCache = {};
+				var autoCompleteCacheKeys = [];
+				var autoCompleteCacheLimit = 25;
+				var currentAutoCompleteRequest = null;
+				var currentAutoCompleteRequestKey = null;
+				var autoCompleteDebounceTimer = null;
+				var autoCompleteDebounceKey = null;
+				var pendingAutoCompleteResponses = [];
+
+				function normalizeAutoCompleteTerm(term) {
+					return $.trim((term || "") + "").replace(/\s+/g, " ");
+				}
+
+				function shouldSearch(term) {
+					return normalizeAutoCompleteTerm(term).length >= minPrefixLength;
+				}
+
+				function getAutoCompleteUrl() {
+					return '/Search/AutoComplete' + ($(checkboxSelector).is(':checked') || false? '?departmentId=0' : '');
+				}
+
+				function getAutoCompleteCacheKey(requestUrl, term) {
+					return requestUrl + "|" + term.toLowerCase();
+				}
+
+				function cacheAutoCompleteResult(cacheKey, data) {
+					if (!Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+						autoCompleteCacheKeys.push(cacheKey);
+						if (autoCompleteCacheKeys.length > autoCompleteCacheLimit) {
+							delete autoCompleteCache[autoCompleteCacheKeys.shift()];
+						}
+					}
+					autoCompleteCache[cacheKey] = data;
+				}
+
+				function respondToPendingAutoComplete(data) {
+					var responses = pendingAutoCompleteResponses;
+					pendingAutoCompleteResponses = [];
+					for (var i = 0; i < responses.length; i++) {
+						responses[i](data);
+					}
+				}
+
+				function cancelPendingAutoComplete() {
+					clearTimeout(autoCompleteDebounceTimer);
+					autoCompleteDebounceKey = null;
+					if (currentAutoCompleteRequest != null) {
+						currentAutoCompleteRequest.abort();
+						currentAutoCompleteRequest = null;
+					}
+					currentAutoCompleteRequestKey = null;
+					respondToPendingAutoComplete([]);
+				}
+
+				function createWidgetAutoCompleteSource(options) {
+					return function (request, response) {
+						var term = normalizeAutoCompleteTerm(request.term);
+						if (!options.shouldSearch(term)) {
+							response([]);
+							return;
+						}
+
+						var requestUrl = options.url();
+						var cacheKey = getAutoCompleteCacheKey(requestUrl, term);
+						if (Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+							response(autoCompleteCache[cacheKey]);
+							if (options.success) {
+								options.success(autoCompleteCache[cacheKey]);
+							}
+							return;
+						}
+
+						if (currentAutoCompleteRequestKey === cacheKey || autoCompleteDebounceKey === cacheKey) {
+							pendingAutoCompleteResponses.push(response);
+							return;
+						}
+
+						cancelPendingAutoComplete();
+						autoCompleteDebounceKey = cacheKey;
+						pendingAutoCompleteResponses.push(response);
+						autoCompleteDebounceTimer = setTimeout(function () {
+							autoCompleteDebounceKey = null;
+							currentAutoCompleteRequestKey = cacheKey;
+							currentAutoCompleteRequest = $.ajax({
+								url: requestUrl,
+								dataType: "json",
+								timeout: options.timeout,
+								data: {
+									term: term,
+								},
+								success: function (data) {
+									if (currentAutoCompleteRequestKey === cacheKey) {
+										cacheAutoCompleteResult(cacheKey, data);
+										respondToPendingAutoComplete(data);
+										if (options.success) {
+											options.success(data);
+										}
+									}
+								},
+								error: function (xmlhttprequest, textstatus, message) {
+									if (textstatus === "abort") {
+										return;
+									}
+
+									if (options.error) {
+										options.error(xmlhttprequest, textstatus, message);
+									}
+
+									respondToPendingAutoComplete([]);
+								},
+								complete: function (xmlhttprequest) {
+									if (currentAutoCompleteRequest === xmlhttprequest) {
+										currentAutoCompleteRequest = null;
+										currentAutoCompleteRequestKey = null;
+									}
+								}
+							});
+						}, options.delay);
+					};
+				}
+
+				// click handler for search buttons
+				$(buttonSelector).click(function (e) {
+					e.preventDefault();
+					var $btn = $(this);
+					var $field = $btn.siblings(".widgetSearchBox");
+					var term = $field.val() + "";
+					if (!shouldSearch(term)) {
+						// do nothing until user types enough characters
+						$field.focus();
+						return;
+					}
+
+					if ($(checkboxSelector).is(':checked') || false)
+					{
+						doWidgetSearch($.trim(term), Number(0));
+					}
+					else {
+						doWidgetSearch($.trim(term), 0);
+					}
+				});
+
+				// enter key handler for the search field
+				$(searchFieldSelector).keypress(function (e) {
+					var code = e.which || e.keyCode;
+					if (code === 13) {
+						e.preventDefault();
+						var $this = $(this);
+						var term = $this.val() + "";
+						if (!shouldSearch(term)) {
+							// do nothing until user types enough characters
+							$this.focus();
+							return false;
+						}
+
+						if ($(checkboxSelector).is(':checked') || false) {
+							doWidgetSearch($.trim(term), Number(0));
+						} else {
+							doWidgetSearch($.trim(term), 0);
+						}
+						return false;
+					}
+					return true;
+				});
+
+				// autocomplete: set minLength and guard source
+				if (true) {
+					var $searchField = $(searchFieldSelector).autocomplete({
+						minLength: minPrefixLength,
+						source: createWidgetAutoCompleteSource({
+							delay: autoCompleteDebounceDelay,
+							timeout: 10000,
+							shouldSearch: shouldSearch,
+							url: getAutoCompleteUrl,
+							success: function () {
+								$('.autoCompleteError').remove();
+							},
+							error: function (xmlhttprequest, textstatus, message) {
+								if (textstatus === "timeout") {
+									if ($(searchFieldSelector).siblings('.autoCompleteError').length == 0)
+										$('<span class="autoCompleteError"><p class="alert error">Search autocomplete is currently not responding. Please try again later.</p></span>').insertAfter($(searchFieldSelector));
+								}
+							}
+						}),
+						html: true,
+						delay: 0,
+						select: function (event, ui) {
+							$(this).val(ui.item.value);
+							$(this).next().click();
+						}
+					});
+
+					$searchField.data("ui-autocomplete")._renderItem = function (ul, item) {
+						return $("<li class=\"itemList\"></li>")
+							.data("ui-autocomplete-item", item)
+							.append("<a>" + item.label + "</a>")
+							.appendTo(ul);
+					};
+				}
+
+				// keep searchBtnApplyQuery consistent with prefix rule
+				window.searchBtnApplyQuery = function() {
+					var $field = $(searchFieldSelector);
+					var term = $field.val() + "";
+					if (shouldSearch(term)) {
+						// update href for the icon/button (if present)
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "/Search?searchPhrase=" + encodeURIComponent($.trim(term));
+					} else {
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "#";
+					}
+				};
+			}
+			catch(e) {} //we're going to eat this error. Autocomplete won't work but we dont wan't to break anything else on the page.
+		});
+	</script>
+
+	<section id="widgetPreviewSearch" class="widget widgetSearch skin43 widgetOptionSet15" style="display: block;" aria-label="Search">
+				<!-- For the button right and inside -->
+		<div class="widgetBody buttonRightInside">
+			<input class="widgetSearchBox widgetSearchBox1e83949d-8d12-42b6-b87d-16253f40683e" cp5ph="true" id="searchField1e83949d-8d12-42b6-b87d-16253f40683e" name="searchField" onchange="searchBtnApplyQuery();" placeholder="Search..." type="text" value="" />
+						<a href="/Search/Results" id="btnSearchIcon" class="widgetSearchButton widgetSearchButton1e83949d-8d12-42b6-b87d-16253f40683e" role="button"><img alt="Search" class="imageHover" data-hover="/ImageRepository/Document?documentID=96" data-image="/ImageRepository/Document?documentID=97" src="/ImageRepository/Document?documentID=97" /></a>
+
+			<label class="searchLabel" aria-hidden="true" for="searchField1e83949d-8d12-42b6-b87d-16253f40683e">Search</label>
+		</div>
+
+	</section>
+
+
+<style scoped>
+	  
+		.widgetSearch ::-webkit-input-placeholder {
+		color: #fff;
+	  }
+		.widgetSearch :-moz-placeholder { /* Firefox 18- */
+	   color: #fff;
+	}
+		.widgetSearch ::-moz-placeholder {  /* Firefox 19+ */
+	   color: #fff;
+	}
+	.widgetSearch :-ms-input-placeholder {
+	   color: #fff;
+	}
+	
+
+	.widgetSearch .widgetBody .widgetSearchBox1e83949d-8d12-42b6-b87d-16253f40683e
+	{
+		color: #fff;
+		font-family: Open Sans;
+height: 55px;
+border: 2px solid white;
+padding: 0 80px 0 20px;
+border-radius: 5px;
+box-shadow: 0px 3px 10px #00000033;
+background: #1A2954;
+	}
+	.widgetSearch .widgetBody .widgetSearchButton1e83949d-8d12-42b6-b87d-16253f40683e
+	{
+		margin: 7px;
+width: 40px;
+	}
+	.widgetSearch .widgetSearch-onlyDept1e83949d-8d12-42b6-b87d-16253f40683e
+	{
+		display: inline-block;
+		color: #333;
+		
+		
+		 padding-top: 10px;
+	}
+	#ysnSearchOnlyDept1e83949d-8d12-42b6-b87d-16253f40683e
+	{
+		position: relative;
+		top: .125em;
+	}
+
+</style>
+
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.css">
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.theme.min.css">
+
+
+
+<script type="text/javascript">
+	//Updates search icons href to have the correct queryString
+	function searchBtnApplyQuery() {
+		document.getElementById("btnSearchIcon").href = "/Search?searchPhrase=" + document.getElementById("searchField1e83949d-8d12-42b6-b87d-16253f40683e").value;
+	}
+</script>
+
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</header>
+
+
+
+
+		<div id="bannerImagesJSON2" class="hidden"></div>
+		<div id="bannerSlideshowControls_banner1" class="bannerSlideshowControlsNew none " style="display:none">
+			<a id="arrowPrev_banner1" tabindex="0" class="arrowNew prev" aria-label="Banner Arrow Previous"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowLeft"></use></svg></a>
+			<a id="arrowNext_banner1" tabindex="0" class="arrowNew next" aria-label="Banner Arrow Next"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowRight"></use></svg></a>
+		</div>
+			<script type="text/javascript">
+				$(window).on("load", function () {
+					$.when(window.Pages.rwdSetupComplete)
+						.done(function () {
+							renderExternalBannerSlideshow('banner1',
+								{"BannerOptionID":2,"ThemeID":1,"SlotName":"banner1","Name":"Default","IsDefault":true,"BannerMode":2,"SlideShowSlideTiming":null,"SlideshowTransition":0,"SlideShowTransitionTiming":null,"ImageScale":true,"ImageAlignment":1,"ImageScroll":true,"MuteSound":true,"VideoType":0,"Status":40,"SlideshowControlsPosition":0,"SlideshowControlsAlignment":0,"SlideshowBannerControlsColorScheme":0,"DisplayVideoPauseButton":false,"VideoPauseButtonAlignment":1,"VideoPauseButtonControlsAlignment":0,"VideoPauseButtonStyle":"#FFFFFF","VideoPauseButtonBackgroundStyle":"#000000","VideoPauseButtonAlignmentClass":"alignRight viewport","DisplaySlideshowPauseButton":false,"SlideshowControlsColor":"#FFFFFF","SlideshowControlsBackgroundColor":"#000000","SlideshowPauseButtonClass":"isHidden","BannerImages":[{"BannerImageID":57,"BannerOptionID":2,"FileName":"/ImageRepository/Document?documentID=89","Height":700,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":1,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135578800000)\/","AltText":""}],"BannerVideos":[],"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135578800000)\/"},
+								'/App_Themes/Interior/Images/',
+								'Rotating');
+						});
+				});
+			</script>
+
+</div>
+</div><!-- Statistics --><div data-cpRole="structuralContainer" id="statsContainerTS">
+<div class="siteWrap3"><div data-cpRole="contentContainer" id="statsTS">	<div id="cc8b9b2b3f-3953-463f-a530-a8799f4dc943" data-containerid="8b9b2b3f-3953-463f-a530-a8799f4dc943" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="3d9df637-2c12-4f24-8851-97432e67f964">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id13870acd-7489-46d6-a521-1a4d793d75f9" style="" data-widgetcontainerid="13870acd-7489-46d6-a521-1a4d793d75f9">	
+ 
+	<div data-widget-id='87f318dc-1746-4cf7-b95b-bbb7db1fa276' data-moduleName="customHtml" id='widgetCustomHtml87f318dc-1746-4cf7-b95b-bbb7db1fa276' class="widget widgetCustomHtml skin59 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBody87f318dc-1746-4cf7-b95b-bbb7db1fa276">
+		<div id="customHtml87f318dc-1746-4cf7-b95b-bbb7db1fa276"><div><div class="registrationTotalsList">
+  <div class="dataWrapper">
+    <p class="data">Active Registered Voters: <span class="dateValue dataValue"></span></p>
+  </div>
+  <div class="dataWrapper">
+    <p class="data">Democrats: <span class="demValue dataValue"></span></p>
+  </div>
+  <div class="dataWrapper">
+    <p class="data">Republicans: <span class="repValue dataValue"></span></p>
+  </div>
+
+  <div class="dataWrapper">
+    <p class="data">Other: <span class="othValue dataValue"></span></p>
+  </div>
+  <div class="dataWrapper">
+    <p class="data">Total: <span class="totValue dataValue"></span></p>
+  </div>
+</div>
+
+<style>
+    .registrationTotalsList {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    @media (max-width: 40em) {
+        .registrationTotalsList {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<script>
+var TOTCounty = "lee"; 
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+var myDate = new Date();
+var asOf = (myDate.getMonth() + 1) + "/" + myDate.getDate() + "/" + myDate.getFullYear().toString().substring(2, 4);
+
+$(document).ready(function () {
+    if (TOTCounty > "") {
+        $(".registrationTotalsList").hide();
+        jQuery.support.cors = true;
+
+        if (!window.XDomainRequest) {
+            $.ajax({
+                dataType: "json",
+                url: "//vrcdn.electionsfl.org/parameters/CountyParameters_" + TOTCounty + ".json",
+                success: function (data) {
+                    ProcessJson(data);
+                },
+                error: function (data, textStatus, errorThrown) {
+                    ProcessError(data, textStatus, errorThrown);
+                },
+                timeout: 10000,
+                complete: function (data) {
+                    ProcessEnd(data);
+                }
+            });
+        } else {
+            var xdr = new XDomainRequest();
+            xdr.onerror = function () {};
+            xdr.ontimeout = function () {};
+            xdr.onprogress = function () {};
+            xdr.open("get", "//vrcdn.electionsfl.org/parameters/CountyParameters_" + TOTCounty + ".json");
+            xdr.onload = function () {
+                JsonIn(xdr.responseText);
+            };
+            setTimeout(function () {
+                xdr.send();
+            }, 0);
+        }
+
+        function ProcessEnd(data) {
+            // Optional: handle end of request
+        }
+
+        function ProcessError(data, textStatus, errorThrown) {
+            if (textStatus === "timeout") {
+                console.log("Call has timed out");
+            } else {
+                console.log(textStatus);
+            }
+        }
+
+        function JsonIn(sdata) {
+            ProcessJson(JSON.parse(sdata));
+        }
+
+        function ProcessJson(data) {
+            var npaValue = Number(data.NewNPA);
+            var othValue = Number(data.NewOTH);
+            var demValue = Number(data.NewDEM);
+            var repValue = Number(data.NewREP);
+            var totValue = npaValue + othValue + demValue + repValue;
+
+            if ($(".npaValue").length) {
+                $(".npaValue").html(numberWithCommas(npaValue));
+            } else {
+                othValue += npaValue;
+                npaValue = 0;
+            }
+
+            $(".dateValue").html(asOf);
+            $(".repValue").html(numberWithCommas(repValue));
+            $(".demValue").html(numberWithCommas(demValue));
+            $(".othValue").html(numberWithCommas(othValue));
+            $(".totValue").html(numberWithCommas(totValue));
+
+            var dateparts = data.frozen.RegstatDate.optionvalue.split("-");
+            var asOfDate = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
+            dateparts = data.frozen.RegstatRevert.optionvalue.split("-");
+            var endFreeze = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
+            var dateNow = new Date();
+
+            if (dateNow.getTime() < endFreeze.getTime() && dateNow.getTime() > asOfDate.getTime()) {
+                $(".registrationTotalsList").after(
+                    "<div style=\"padding: 1px 5px; float: left; background-color: white; color: black; position: absolute; margin-left: 10px;\" class=\"bookclosingmessage\">" +
+                    "NOTE: Election Books are closed. Totals are as of Book Closing</div>"
+                );
+                setTimeout(function () {
+                    $(".bookclosingmessage").fadeOut(3000);
+                    $(".registrationTotalsList").fadeIn(2000);
+                }, 4000);
+
+                var frozenDEM = Number(data.frozen.RegstatDEM.optionvalue.replace(",", ""));
+                var frozenREP = Number(data.frozen.RegstatREP.optionvalue.replace(",", ""));
+                var frozenNPA = Number(data.frozen.RegstatNPA.optionvalue.replace(",", ""));
+                var frozenOTH = Number(data.frozen.RegstatOTH.optionvalue.replace(",", ""));
+
+                if ($(".npaValue").length) {
+                    $(".npaValue").html(numberWithCommas(frozenNPA));
+                } else {
+                    frozenOTH += frozenNPA;
+                    frozenNPA = 0;
+                }
+
+                var asOfFreeze = ('0' + (asOfDate.getMonth() + 1)).slice(-2) + '/' + ('0' + asOfDate.getDate()).slice(-2) + '/' + asOfDate.getFullYear().toString().substr(2, 2);
+                $(".dateValue").html(asOfFreeze);
+                $(".repValue").html(numberWithCommas(frozenREP));
+                $(".demValue").html(numberWithCommas(frozenDEM));
+                $(".othValue").html(numberWithCommas(frozenOTH));
+
+                var frozenTOT = frozenDEM + frozenNPA + frozenOTH + frozenREP;
+                $(".totValue").html(numberWithCommas(frozenTOT));
+            } else {
+                $(".registrationTotalsList").show();
+            }
+        }
+    }
+});
+</script></div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- GBs --><div data-cpRole="structuralContainer" id="gbsContainerTS">
+<div class="siteWrap4"><div data-cpRole="contentContainer" id="gbsTS">	<div id="cc08c88c6a-a093-47e9-8fab-9b0140da938a" data-containerid="08c88c6a-a093-47e9-8fab-9b0140da938a" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="2">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col12 first" style="" data-widgetcontainerid="a079b1db-872a-438f-ac88-d5e38c09f350">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id89221055-09ac-4dea-9a6f-08a0cf7125ce" style="" data-widgetcontainerid="89221055-09ac-4dea-9a6f-08a0cf7125ce">	
+<div data-widget-id="cf2290d7-c29b-475a-b140-fb5baec3f602" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetcf2290d7-c29b-475a-b140-fb5baec3f602" class="widget widgetGraphicLinks skin45 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:33em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid3 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/" target="_self" class="fancyButton fancyButton69 " >
+		<span>
+			<span><span class="text">Back to Home</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton69.fancyButton:link,.fancyButton69.fancyButton:visited, .fancyButton69div.fancyButton{
+	background-color: rgb(189, 39, 68);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+transition: all .3s ease-in-out;}
+.fancyButton69.fancyButton:hover,.fancyButton69.fancyButton:focus,.fancyButton69.fancyButton:active,.fancyButton69.fancyButton.hover{
+	background-color: rgb(19, 85, 135);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton69.fancyButton:link > span,.fancyButton69.fancyButton:visited > span, .fancyButton69div.fancyButton > span{
+}
+.fancyButton69.fancyButton:hover > span,.fancyButton69.fancyButton:focus > span,.fancyButton69.fancyButton:active > span,.fancyButton69.fancyButton.hover > span{
+}
+.fancyButton69.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 5.5em;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 5.5em;
+	background-image: url('/ImageRepository/Document?documentID=304');
+	background-repeat: no-repeat;
+	background-position: center .25em ;
+background-size: 80px;
+transition: all .3s ease-in-out;
+}
+.fancyButton69.fancyButton:hover .text,.fancyButton69.fancyButton:focus .text,.fancyButton69.fancyButton:active .text,.fancyButton69.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 85px;
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/290" target="_self" class="fancyButton fancyButton46 " >
+		<span>
+			<span><span class="text">Register to Vote</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton46.fancyButton:link,.fancyButton46.fancyButton:visited, .fancyButton46div.fancyButton{
+	background-color: rgb(189, 39, 68);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+transition: all .3s ease-in-out;}
+.fancyButton46.fancyButton:hover,.fancyButton46.fancyButton:focus,.fancyButton46.fancyButton:active,.fancyButton46.fancyButton.hover{
+	background-color: rgb(19, 85, 135);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton46.fancyButton:link > span,.fancyButton46.fancyButton:visited > span, .fancyButton46div.fancyButton > span{
+}
+.fancyButton46.fancyButton:hover > span,.fancyButton46.fancyButton:focus > span,.fancyButton46.fancyButton:active > span,.fancyButton46.fancyButton.hover > span{
+}
+.fancyButton46.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 5.5em;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 5.5em;
+	background-image: url('/ImageRepository/Document?documentID=91');
+	background-repeat: no-repeat;
+	background-position: center .25em ;
+background-size: 80px;
+transition: all .3s ease-in-out;
+}
+.fancyButton46.fancyButton:hover .text,.fancyButton46.fancyButton:focus .text,.fancyButton46.fancyButton:active .text,.fancyButton46.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 85px;
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/277" target="_self" class="fancyButton fancyButton47 " >
+		<span>
+			<span><span class="text">Vote By Mail</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton47.fancyButton:link,.fancyButton47.fancyButton:visited, .fancyButton47div.fancyButton{
+	background-color: rgb(189, 39, 68);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+transition: all .3s ease-in-out;}
+.fancyButton47.fancyButton:hover,.fancyButton47.fancyButton:focus,.fancyButton47.fancyButton:active,.fancyButton47.fancyButton.hover{
+	background-color: rgb(19, 85, 135);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton47.fancyButton:link > span,.fancyButton47.fancyButton:visited > span, .fancyButton47div.fancyButton > span{
+}
+.fancyButton47.fancyButton:hover > span,.fancyButton47.fancyButton:focus > span,.fancyButton47.fancyButton:active > span,.fancyButton47.fancyButton.hover > span{
+}
+.fancyButton47.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 5.5em;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 5.5em;
+	background-image: url('/ImageRepository/Document?documentID=93');
+	background-repeat: no-repeat;
+	background-position: center .25em ;
+background-size: 80px;
+transition: all .3s ease-in-out;
+}
+.fancyButton47.fancyButton:hover .text,.fancyButton47.fancyButton:focus .text,.fancyButton47.fancyButton:active .text,.fancyButton47.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 85px;
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col12 last" style="" data-widgetcontainerid="d1ef60dc-1589-4333-be2d-e3792878c518">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id3658b085-962f-4fd5-a81d-4d6c266c0000" style="" data-widgetcontainerid="3658b085-962f-4fd5-a81d-4d6c266c0000">	
+<div data-widget-id="0102c6da-3235-477a-8229-a867d66e6ac6" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget0102c6da-3235-477a-8229-a867d66e6ac6" class="widget widgetGraphicLinks skin45 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:33em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid3 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/284" target="_self" class="fancyButton fancyButton70 " >
+		<span>
+			<span><span class="text">Update My Voter Record</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton70.fancyButton:link,.fancyButton70.fancyButton:visited, .fancyButton70div.fancyButton{
+	background-color: rgb(189, 39, 68);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+transition: all .3s ease-in-out;}
+.fancyButton70.fancyButton:hover,.fancyButton70.fancyButton:focus,.fancyButton70.fancyButton:active,.fancyButton70.fancyButton.hover{
+	background-color: rgb(19, 85, 135);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton70.fancyButton:link > span,.fancyButton70.fancyButton:visited > span, .fancyButton70div.fancyButton > span{
+}
+.fancyButton70.fancyButton:hover > span,.fancyButton70.fancyButton:focus > span,.fancyButton70.fancyButton:active > span,.fancyButton70.fancyButton.hover > span{
+}
+.fancyButton70.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 5.5em;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 5.5em;
+	background-image: url(/ImageRepository/Document?documentID=92);
+	background-repeat: no-repeat;
+	background-position: center .25em ;
+background-size: 80px;
+transition: all .3s ease-in-out;
+}
+.fancyButton70.fancyButton:hover .text,.fancyButton70.fancyButton:focus .text,.fancyButton70.fancyButton:active .text,.fancyButton70.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 85px;
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/291" target="_self" class="fancyButton fancyButton71 " >
+		<span>
+			<span><span class="text">Where Do I Vote</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton71.fancyButton:link,.fancyButton71.fancyButton:visited, .fancyButton71div.fancyButton{
+	background-color: rgb(189, 39, 68);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+transition: all .3s ease-in-out;}
+.fancyButton71.fancyButton:hover,.fancyButton71.fancyButton:focus,.fancyButton71.fancyButton:active,.fancyButton71.fancyButton.hover{
+	background-color: rgb(19, 85, 135);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton71.fancyButton:link > span,.fancyButton71.fancyButton:visited > span, .fancyButton71div.fancyButton > span{
+}
+.fancyButton71.fancyButton:hover > span,.fancyButton71.fancyButton:focus > span,.fancyButton71.fancyButton:active > span,.fancyButton71.fancyButton.hover > span{
+}
+.fancyButton71.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 5.5em;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 5.5em;
+	background-image: url(/ImageRepository/Document?documentID=94);
+	background-repeat: no-repeat;
+	background-position: center .25em ;
+background-size: 80px;
+transition: all .3s ease-in-out;
+}
+.fancyButton71.fancyButton:hover .text,.fancyButton71.fancyButton:focus .text,.fancyButton71.fancyButton:active .text,.fancyButton71.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 85px;
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/291" target="_self" class="fancyButton fancyButton75 " >
+		<span>
+			<span><span class="text">Check My Voter Record</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton75.fancyButton:link,.fancyButton75.fancyButton:visited, .fancyButton75div.fancyButton{
+	background-color: rgb(189, 39, 68);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+transition: all .3s ease-in-out;}
+.fancyButton75.fancyButton:hover,.fancyButton75.fancyButton:focus,.fancyButton75.fancyButton:active,.fancyButton75.fancyButton.hover{
+	background-color: rgb(19, 85, 135);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton75.fancyButton:link > span,.fancyButton75.fancyButton:visited > span, .fancyButton75div.fancyButton > span{
+}
+.fancyButton75.fancyButton:hover > span,.fancyButton75.fancyButton:focus > span,.fancyButton75.fancyButton:active > span,.fancyButton75.fancyButton.hover > span{
+}
+.fancyButton75.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 5.5em;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 5.5em;
+	background-image: url('/ImageRepository/Document?documentID=90');
+	background-repeat: no-repeat;
+	background-position: center .25em ;
+background-size: 80px;
+transition: all .3s ease-in-out;
+}
+.fancyButton75.fancyButton:hover .text,.fancyButton75.fancyButton:focus .text,.fancyButton75.fancyButton:active .text,.fancyButton75.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 85px;
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- Content container --><div data-cpRole="structuralContainer" id="mainContainerTS">
+<div class="siteWrap4"><div data-cpRole="structuralContainer" id="mainWrapTS" class="mainWrap" role="main">
+<div data-cpRole="structuralContainer" id="siteSidebarTS" class="siteSidebar">
+<aside data-cpRole="contentContainer" id="sidebarContainer1TS">	<div id="cc9f1a32af-7ddf-45ad-a332-b5e78f0a6e00" data-containerid="9f1a32af-7ddf-45ad-a332-b5e78f0a6e00" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><nav data-cpRole="nav" id="secondaryNav" class="siteNav secondaryNav">
+
+
+
+
+
+	<ol role="menu" id="secondaryMenusecondaryNav" data-parent="172" class="rootNavMenu accordionNav">
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem251" data-pageid="251">
+		<div class="accordionNavItem">
+			<a href="/251/Access-to-Ballot-Materials" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Access to Ballot Materials</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem250" data-pageid="250">
+		<div class="accordionNavItem">
+			<a href="/250/Election-Dates-and-Deadlines" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Election Dates and Deadlines</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="Election Dates and Deadlines Submenu" aria-expanded="false" aria-controls="submenu-lvl1-250"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-250" style="display: none;" data-parent="250">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem254" data-pageid="254">
+			<div class="accordionNavItem">
+				<a href="/254/November-3-2026" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">November 3, 2026</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem249" data-pageid="249">
+		<div class="accordionNavItem">
+			<a href="/249/General-Election-Preparation-Report" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">General Election Preparation Report</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem248" data-pageid="248">
+		<div class="accordionNavItem">
+			<a href="/248/Lee-County-Elections-Facts" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Lee County Elections Facts</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem247" data-pageid="247">
+		<div class="accordionNavItem">
+			<a href="/247/Municipal-Elections-Schedule" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Municipal Elections Schedule</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem246" data-pageid="246">
+		<div class="accordionNavItem">
+			<a href="/246/Offices-to-Be-Elected" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Offices to Be Elected</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem245" data-pageid="245">
+		<div class="accordionNavItem">
+			<a href="/245/Precincts-and-Polling-Places" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Precincts and Polling Places</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem244" data-pageid="244">
+		<div class="accordionNavItem">
+			<a href="/244/Proposed-Ballot-Measures" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Proposed Ballot Measures</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem243" data-pageid="243">
+		<div class="accordionNavItem">
+			<a href="/243/Sample-Ballots" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Sample Ballots</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem242" data-pageid="242">
+		<div class="accordionNavItem">
+			<a href="/242/Voting-ID-Requirements" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Voting ID Requirements</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem305" data-pageid="305">
+		<div class="accordionNavItem">
+			<a href="/291/Check-My-Voter-Registration-Status" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">What&#39;s on My Ballot?</a>
+		</div>
+			</li>
+
+	</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupSecondaryMenuProperties() {
+				//setup menu manager properties for secondary menu
+				menuManager.isSideMenuEditable = false;
+				menuManager.sideMenuMaxSubMenuLevels = 4;
+				menuManager.sideMenuHasCustomLinks = true;
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupSecondaryMenuProperties, { once: true });
+				return;
+			}
+
+			setupSecondaryMenuProperties();
+		})();
+	</script>
+
+	<script type="text/javascript">
+		(function () {
+			function setupAccordionSecondaryNav() {
+				var $menuContainer = $('#secondaryNav');
+
+				$menuContainer.find('*[id^="SideItem"]').each(function () {
+					var ids = $('[id="' + this.id + '"]');
+					if (ids.length > 1)
+						$.each(ids, function (index, value) {
+							value.id = value.id + '_' + index;
+						});
+				});
+
+				$menuContainer.find('.hasAccordionChildren .openAccordionNav').off('click.secondaryNav').on('click.secondaryNav', function (e) {
+					e.preventDefault();
+					showHideAccordionMenuForSecondaryNav($(this));
+				});
+
+				$menuContainer.find(".grippy").each(function () {
+					menuManager.setupDraggableElement($(this), SIDE_MENU, '#secondaryNav');
+				});
+
+				$menuContainer.find("li").each(function () {
+					menuManager.setupDroppableAccordionElement($(this), SIDE_MENU);
+				});
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupAccordionSecondaryNav, { once: true });
+				return;
+			}
+
+			setupAccordionSecondaryNav();
+		})();
+	</script>
+
+
+
+</nav><aside data-cpRole="contentContainer" id="sidebarContainer2TS">	<div id="cc4a552654-8cd7-443c-b5d9-be29a37db595" data-containerid="4a552654-8cd7-443c-b5d9-be29a37db595" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div><div data-cpRole="structuralContainer" id="outerContentWrapTS" class="outerContentWrap">
+<div data-cpRole="structuralContainer" id="contentWrapTS" class="contentWrap">
+<div data-cpRole="breadCrumbs" id="breadCrumbs" class="breadCrumbContainer">		<ol class="semanticList breadCrumbs">
+			<li><a class="breadCrumb" href="/4/Home">Home</a></li><li><a class="breadCrumb" href="/172/Election-Information">Election Information</a></li><li id="currentBCPage" data-pageid="246"><a href class="breadCrumb" aria-current="page">Offices to Be Elected</a></li>
+		</ol>
+
+	   
+    
+</div><div data-cpRole="mainContentContainer" id="moduleContent">
+	
+	<div id="page" class="moduleContentNew">
+		
+
+	<input id="hdnPageID" name="hdnPageID" type="hidden" value="246" />
+	<input id="hdnParentID" name="hdnParentID" type="hidden" value="172" />
+	<input id="hdnVersionID" name="hdnVersionID" type="hidden" value="1803" />
+	<input id="pageMenuTitle" name="pageMenuTitle" type="hidden" value="Offices to Be Elected" />
+	<input id="pageShowFeatureColumn" name="pageShowFeatureColumn" type="hidden" value="False" />
+	<input id="hdnIsLayoutPage" name="hdnIsLayoutPage" type="hidden" value="False" />
+	<input id="hdnPageStatus" name="hdnPageStatus" type="hidden" value="Published" />
+
+				<h1 id="versionHeadLine" class="headline">
+
+Offices to Be Elected		</h1>
+	
+		<div id="cc5f8c90dc-b4cb-431b-90ee-10648f8df655" data-containerid="5f8c90dc-b4cb-431b-90ee-10648f8df655" class="pageContent cpGrid cpGrid24"  data-contentcontainerbreakpoint="30" >
+			
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="d6871f71-7c76-47c4-8aee-681350660fe2">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id266ed47d-b7b3-4374-8418-8ec80d5c759c" style="" data-widgetcontainerid="266ed47d-b7b3-4374-8418-8ec80d5c759c">	
+<div class="widget editor pageStyles narrow" id="divEditor06f322cf-237a-4ba3-b453-176a69dae5c2" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><span style="font-size: 18px;">Please refer to the <a href="/173" id="isPasted" target="_blank" rel="noopener" style="font-size: 18px;">Elected Official List</a> for the terms of current officeholders representing Lee County, Florida.</span></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '06f322cf-237a-4ba3-b453-176a69dae5c2'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="02c30f9b-4eeb-4754-8ed3-020577fb80fa">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last ide4f28ea0-3d95-4832-bb71-310315af468e" style="" data-widgetcontainerid="e4f28ea0-3d95-4832-bb71-310315af468e">	
+
+	<div id="divTabbeda22482b2-cdad-48f7-9082-9c91a4177d04" class="widget widgetTabbed narrow skin43 accordionTabs" data-widgetid="a22482b2-cdad-48f7-9082-9c91a4177d04">
+
+		<div class="cpTabPanels">
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#taba22482b2-cdad-48f7-9082-9c91a4177d04_0" class="tabButton" id="tabBtnNarrowa22482b2-cdad-48f7-9082-9c91a4177d04_0" role="button" aria-controls="taba22482b2-cdad-48f7-9082-9c91a4177d04_0" aria-expanded="false" ><span class="tabName editable" data-sequence="0" data-tabname="State of Florida - Federal Offices" contenteditable="false">State of Florida - Federal Offices</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="taba22482b2-cdad-48f7-9082-9c91a4177d04_0" role="region" aria-labelledby="tabBtna22482b2-cdad-48f7-9082-9c91a4177d04_0" >
+
+<div class="widget editor pageStyles narrow" id="divEditor6c7e4b1d-91e0-4eb5-a746-6cd4c9455908" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1"><span style="font-family: Arial,Helvetica,sans-serif;"><span style="color: rgb(0, 0, 0);">(1) United States Senator</span></span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">08/18/26 Primary Election or 11/03/26 General Election<br>Candidates must qualify for office with the Florida Division of Elections.<br>6-year term, 2026 to 2032</span></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">(2) United States Representatives in Congress</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">2-year term, 2026 to 2028</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>United States Representative in Congress - District 17<br></strong>(All of Sarasota and Charlotte Counties and parts of Lee County)</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>United States Representative in Congress - District 19<br></strong>(Parts of Collier and Lee Counties)</span></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '6c7e4b1d-91e0-4eb5-a746-6cd4c9455908'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#taba22482b2-cdad-48f7-9082-9c91a4177d04_1" class="tabButton" id="tabBtnNarrowa22482b2-cdad-48f7-9082-9c91a4177d04_1" role="button" aria-controls="taba22482b2-cdad-48f7-9082-9c91a4177d04_1" aria-expanded="false" ><span class="tabName editable" data-sequence="1" data-tabname="State of Florida - State Offices" contenteditable="false">State of Florida - State Offices</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="taba22482b2-cdad-48f7-9082-9c91a4177d04_1" role="region" aria-labelledby="tabBtna22482b2-cdad-48f7-9082-9c91a4177d04_1" >
+
+<div class="widget editor pageStyles narrow" id="divEditorec6a3099-b168-4e9e-ac78-ce3f8c066a95" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><span style="font-size: 18px;">08/18/26 Primary Election or 11/03/26 General Election.&nbsp;<br>Candidates must qualify for office with the Florida Division of Elections.</span></p><p><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">4-year term, 2026 to 2030</span></p><p><span style="font-size: 18px;"><strong>(1) Governor</strong></span></p><p><span style="font-size: 18px;"><strong>(1) Attorney General</strong></span></p><p><span style="font-size: 18px;"><strong>(1) Chief Financial Officer</strong></span></p><p><span style="font-size: 18px;"><strong>(1) Commissioner of Agriculture</strong></span></p><p><span style="font-size: 18px;"><strong>(1) Public Defender 20th Judicial Circuit</strong></span></p><p><span style="font-size: 18px;"><strong>(1) State Attorne</strong></span><strong><span style="font-size: 18px;"><strong>y</strong></span></strong></p><p><br></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">(5) Florida State House Representatives</span></h2><p><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">2-year term, 2026 to 2028</span></p><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>District 76 (Parts of Charlotte and Lee Counties)</strong></span></p><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>Districts 77, 78, and 79 (Parts of Lee County)</strong></span></p><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>District 80 (Parts of Collier and Lee Counties)</strong></span></p><p><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">(1) Florida State Senator</span></h2><p><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>State Senator District 28</strong><br>Collier, Hendry, and parts of Lee County</span></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'ec6a3099-b168-4e9e-ac78-ce3f8c066a95'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#taba22482b2-cdad-48f7-9082-9c91a4177d04_2" class="tabButton" id="tabBtnNarrowa22482b2-cdad-48f7-9082-9c91a4177d04_2" role="button" aria-controls="taba22482b2-cdad-48f7-9082-9c91a4177d04_2" aria-expanded="false" ><span class="tabName editable" data-sequence="2" data-tabname="County Offices" contenteditable="false">County Offices</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="taba22482b2-cdad-48f7-9082-9c91a4177d04_2" role="region" aria-labelledby="tabBtna22482b2-cdad-48f7-9082-9c91a4177d04_2" >
+
+<div class="widget editor pageStyles narrow" id="divEditorfd672bac-1093-4722-a1c6-933494d7e6a3" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p aria-hidden="true" tabindex="-1"><span style="font-size: 18px;">Candidates will qualify for office with the Lee County Supervisor of Election</span><span style="font-size: 18px;">s.</span></p><h2 class="subhead1" id="isPasted"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">(3) County Commissioners</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px;">08/18/26 Primary Election or 11/03/26 General Election&nbsp;</span></p><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">Elected countywide/at-large<br></span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">4-year term, 2026 to 2030<br><strong>Districts 2 and 4</strong></span></p><p data-pasted="true" style="margin-left: 40px;"><span style="font-size: 18px;">2-year term, 2026 to 2028</span></p><p style="margin-left: 40px;"><span style="font-size: 18px;"><strong>District 5</strong></span></p><p style="margin-left: 20px;"><br></p><p><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>Supervisor of Elections</strong></span><br><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">&nbsp; &nbsp; 08/18/26 Primary Election or 11/03/26 General Election</span></p><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">2-year term, 2026 to 2028</span></p><p style="margin-left: 20px;"><br></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">(4) School Board Member</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">08/18/26 Primary Election or 11/03/26 General Election</span></p><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">4-year term, 2026 to 2030</span></p><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">School Board members are non‐partisan officeholders<br></span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>Districts 1, 4, and 5 (elected by district/single member)</strong></span></p><p style="margin-left: 40px;"><strong><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">District 6 (elected countywide/at‐large)</span></strong></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'fd672bac-1093-4722-a1c6-933494d7e6a3'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#taba22482b2-cdad-48f7-9082-9c91a4177d04_3" class="tabButton" id="tabBtnNarrowa22482b2-cdad-48f7-9082-9c91a4177d04_3" role="button" aria-controls="taba22482b2-cdad-48f7-9082-9c91a4177d04_3" aria-expanded="false" ><span class="tabName editable" data-sequence="3" data-tabname="Municipalities" contenteditable="false">Municipalities</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="taba22482b2-cdad-48f7-9082-9c91a4177d04_3" role="region" aria-labelledby="tabBtna22482b2-cdad-48f7-9082-9c91a4177d04_3" >
+
+<div class="widget editor pageStyles narrow" id="divEditor47571e09-a685-44c5-8cbf-86467d5ff37e" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p id="isPasted"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">All municipal council members are non-partisan office holders.</span></p><p><br><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>(3) City of Bonita Springs</strong></span></p><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">11/03/26 Regular Election<br>Candidates will qualify for office with the City of Bonita Springs.</span></p><p style="margin-left: 40px;"><span style="font-size: 18px;">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>Districts 1, 3, and 5 (elected by district/single member)</strong><br><br></span></p><p><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><span style="color: rgb(0, 0, 0);">(4) </span><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);" data-pasted="true">City of Cape Coral</span></span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">08/18/26 Primary Election or 11/03/26 General Election<br>Candidates will qualify for office with the Lee County Supervisor of Elections Office.</span></p><p style="margin-left: 40px;"><span style="font-size: 18px;">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>Mayor<br>Districts 1, 4, and 6</strong><br><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><span style="color: rgb(0, 0, 0);">(4) </span><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);" data-pasted="true">City of Fort Myers</span></span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">08/18/26 Primary Election or 11/03/26 General Election<br>Candidates will qualify for office with the City of Fort Myers.</span></p><p style="margin-left: 40px;"><span style="font-size: 18px;">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>Mayor<br>City Wards 1, 3, and 5</strong></span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">(3) Town <span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;" data-pasted="true"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);" data-pasted="true">of Fort Myers Beach</span></span></span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">11/03/26 Regular Election<br>Candidates will qualify for office with the Lee County Supervisor of Elections Office.</span></p><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">4-year term, 2026 to 2030</span></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '47571e09-a685-44c5-8cbf-86467d5ff37e'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#taba22482b2-cdad-48f7-9082-9c91a4177d04_4" class="tabButton" id="tabBtnNarrowa22482b2-cdad-48f7-9082-9c91a4177d04_4" role="button" aria-controls="taba22482b2-cdad-48f7-9082-9c91a4177d04_4" aria-expanded="false" ><span class="tabName editable" data-sequence="4" data-tabname="Judicial Offices" contenteditable="false">Judicial Offices</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="taba22482b2-cdad-48f7-9082-9c91a4177d04_4" role="region" aria-labelledby="tabBtna22482b2-cdad-48f7-9082-9c91a4177d04_4" >
+
+<div class="widget editor pageStyles narrow" id="divEditorb0f27cc0-f8b5-453d-bfd5-eea72ac40d59" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1" id="isPasted"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">(1) Florida Supreme Court Justices (Merit Retention Office)</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">11/03/26 General Election<br>6-year term, 2026 to 2032<br>Candidates must qualify for office with the Florida Division of Elections.<br>The term for a Florida Appellate Court Judge is six years upon successful &quot;Merit Retention.&quot;&nbsp;<br>Judges are non‐partisan officeholders.</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>(1) Florida Supreme Court Justices</strong><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">(2) Lee County Court Judge</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">Elected countywide/at‐large</span><span style="font-family: Arial,Helvetica,sans-serif;"><br></span><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">08/18/26 Primary Election</span><span style="font-family: Arial,Helvetica,sans-serif;"><br></span><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">6-year term, 2026 to 2032</span><span style="font-family: Arial,Helvetica,sans-serif;"><br></span><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">Candidates for Lee County Court Judge will qualify for office with the Lee County Supervisor of Elections.</span><span style="font-family: Arial,Helvetica,sans-serif;"><br></span><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">The term for an elected Lee County Court Judge is 6 years. Judges are non‐partisan officeholders.</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;"><strong>County Judge Groups 5, and 6</strong><br><br></span></p><h2 class="subhead1"><span style="color: rgb(0, 0, 0); font-family: Arial, Helvetica, sans-serif;">(7) Twentieth Judicial Circuit Court Judges</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">08/18/26 Primary Election or 11/03/26 General Election</span><span style="font-family: Arial,Helvetica,sans-serif;"><br></span><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">6-year term, 2026 to 2032</span><span style="font-family: Arial,Helvetica,sans-serif;"><br></span><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">Candidates must qualify for office with the Florida Division of Elections.&nbsp;</span><span style="font-family: Arial,Helvetica,sans-serif;"><br></span><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">The Twentieth Judicial Circuit includes Charlotte, Collier, Glades, Hendry, and Lee Counties. Term for Florida Circuit Court Judge is 6 years&quot;.&nbsp;</span><span style="font-family: Arial,Helvetica,sans-serif;"><br></span><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">Judges are non‐partisan officeholders.</span></p><p style="margin-left: 40px;"><strong><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif;">Circuit Judge Groups 9, 11, 16, 17, 19, 23, 25, 27, and 32</span></strong></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'b0f27cc0-f8b5-453d-bfd5-eea72ac40d59'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#taba22482b2-cdad-48f7-9082-9c91a4177d04_5" class="tabButton" id="tabBtnNarrowa22482b2-cdad-48f7-9082-9c91a4177d04_5" role="button" aria-controls="taba22482b2-cdad-48f7-9082-9c91a4177d04_5" aria-expanded="false" ><span class="tabName editable" data-sequence="5" data-tabname="Independent Special Districts" contenteditable="false">Independent Special Districts</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="taba22482b2-cdad-48f7-9082-9c91a4177d04_5" role="region" aria-labelledby="tabBtna22482b2-cdad-48f7-9082-9c91a4177d04_5" >
+
+<div class="widget editor pageStyles narrow" id="divEditorc087a237-5e7b-4c37-98f7-33bfee9fddbf" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">All Independent Special District offices are non‐partisan and only appear in the 11/03/26 General Election.</span></p><p><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Unless otherwise indicated, candidates will qualify for office with the Lee County Supervisor of Elections.</span></p><p><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Candidates are elected by qualified voters residing within the district.</span></p><h2 class="subhead1"><span style="font-size: 18px;"><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br>Alva Fire Protection &amp; Rescue Service District</span></span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030&nbsp;</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 2, and 4</strong></span></p><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">2-year term, 2026 to 2028</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 3, and 5</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Arborwood Community Development District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 2, and 3</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 data-pasted="true"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Babcock Ranch Community Independent Special District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);" data-pasted="true">This is a multicounty independent special district. Candidates must qualify for office with the Florida Division of Elections.</span><br><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seat 1</strong></span><br><br></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Bay Creek Community Development District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 2, 4, and 5</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Bayshore Fire Protection &amp; Rescue Service District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 3, and 5</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Bayside Improvement Community Development District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 2, and 4</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Beach Road Golf Estates Community Development District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 3, 4, and 5</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Bella Vida Community Development District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026-2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 4, and 5</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Blue Lake Community Development District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 2</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Boca Grande Fire Control District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">This is a multicounty independent special district. Candidates must qualify for office with the Florida Division of Elections.<br>4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 2</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Bonita Landing Community Development District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 2, 3, and 4</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Bonita Springs Fire Control &amp; Rescue District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 3, and 5</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Brooks of Bonita Springs Community Development District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 4, and 5</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Brooks of Bonita Springs II Community Development District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 3, 4, and 5</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Captiva Erosion Prevention District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 3</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Captiva Island Fire Control District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seat 3</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h2 class="subhead1"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Catalina at Winkler Preserve Community Development District</span></h2><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 3, and 4</strong></span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br><br></span></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">CFM Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 3, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Colonial Country Club Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 2, and 3</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Copper Oaks Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 3</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Corkscrew Farms Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 3, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Cypress Shadows Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 2, 4, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">East Bonita Beach Road Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 3, 4, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Esplanade Lake Club Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 2</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Estero Fire Rescue District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 3, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Fort Myers Beach Fire Control District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 3, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Fort Myers Beach Mosquito Control District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seat 1</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Fort Myers Beach Public Library District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 2, 3, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Fort Myers Shores Fire Protection &amp; Rescue Service District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 4, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Gasparilla Island Bridge Authority</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">This is a multicounty independent special district.&nbsp;<br>Candidates must qualify for office with the Florida Division of Elections.<br>4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 2, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Gateway Services Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 4, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Habitat Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 3, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Heritage Palms Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 4, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Iona-McGregor Fire Protection &amp; Rescue Service District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 3, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Laguna Lakes Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 2, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Lee County Mosquito Control District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Areas 2, 4, and 6</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Lehigh Acres Fire Control &amp; Rescue District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 2, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Lehigh Acres Municipal Services Improvement District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">This is a multicounty independent special district.&nbsp;<br>Candidates must qualify for office with the Florida Division of Elections.<br>4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 2, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Lucaya Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 4, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Matlacha / Pine Island Fire Control District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 4, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Mediterra Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">This is a multicounty independent special district.&nbsp;</span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br></span><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Candidates must qualify for office with the Florida Division of Elections.</span><span style="font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><br></span><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 2</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Mirada Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 3</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Miromar Lakes Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 2, and 3</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Moody River Estates Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">North Fort Myers Fire Control and Rescue Service District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 3, and 5</strong></span><br><br></p><h3 class="subhead2" aria-hidden="true" tabindex="-1" aria-level="2" role="heading"><span style="font-family: Arial, Helvetica, sans-serif; font-size: 18px; color: rgb(0, 0, 0);">Palermo Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-family: Arial, Helvetica, sans-serif; font-size: 18px;">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-family: Arial, Helvetica, sans-serif; font-size: 18px;"><strong>Seats 3, and 4</strong></span></p><p style="margin-left: 40px;"><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Parklands Lee Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 2, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Parklands West Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 2</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Paseo Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 2</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Portico Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 4, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Portofino Springs Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 2, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Renaissance Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 2, and 3</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">River Hall Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 4, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">River Ridge Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 2</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Sail Harbour Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 2, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">San Carlos Park Fire Protection &amp; Rescue Service District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 3, and 5</strong></span></p><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">2-year term, 2026 to 2028</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seat 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Sanibel Fire &amp; Rescue District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 2</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Sanibel Public Library District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 2, 3, and 5</strong></span></p><p style="margin-left: 20px;" data-pasted="true"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">2-year term, 2026 to 2028</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 6, and 7</strong></span></p><p style="margin-left: 20px;"><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">South Trail Fire Protection &amp; Rescue Service District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 3, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Stoneybrook Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 4, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Stoneybrook North Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 2</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Tice Fire Control &amp; Rescue Service District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, 3, and 5</strong></span><br><br></p><h3 class="subhead2" aria-hidden="true" tabindex="-1" aria-level="2" role="heading"><span style="font-family: Arial, Helvetica, sans-serif; font-size: 18px; color: rgb(0, 0, 0);">Timber Creek Southwest Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-family: Arial, Helvetica, sans-serif; font-size: 18px;">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-family: Arial, Helvetica, sans-serif; font-size: 18px;"><strong>Seats 2, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Upper Captiva Fire Protection &amp; Rescue Service District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 2</strong></span><br><br></p><h3 class="subhead2" aria-hidden="true" tabindex="-1" aria-level="2" role="heading"><span style="font-family: Arial, Helvetica, sans-serif; font-size: 18px; color: rgb(0, 0, 0);">V-Dana Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-family: Arial, Helvetica, sans-serif; font-size: 18px; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-family: Arial, Helvetica, sans-serif; font-size: 18px; color: rgb(0, 0, 0);"><strong>Seats 3, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Vasari Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 3, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Verandah East Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 1, and 2</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Verandah West Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 2, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Villagewalk of Bonita Springs Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 2, and 4</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Waterford Landing Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><strong>Seats 3, 4, and 5</strong></span><br><br></p><h3 class="subhead2" aria-level="2" role="heading"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Wildblue Community Development District</span></h3><p style="margin-left: 20px;"><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">4-year term, 2026 to 2030</span></p><p style="margin-left: 40px;"><strong><span style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">Seats 1, and 2</span></strong></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'c087a237-5e7b-4c37-98f7-33bfee9fddbf'));
+	});
+</script>
+</div>
+
+				</div>
+					</div>
+	</div>
+	<script type="text/javascript">
+
+		//If responsive not enabled, execute this after a timeout
+		if(!isResponsiveEnabled)
+		{
+			window.setTimeout(function(){
+				var tabbedWidgetID = 'divTabbeda22482b2-cdad-48f7-9082-9c91a4177d04';
+				typeof setTabbedWidgetsTabHeight === "function" && setTabbedWidgetsTabHeight(tabbedWidgetID);
+			}, 1500);
+		}
+
+		function reinitCarousels() {
+			if (window.carouselsToInit) {
+				for (var i = 0; i < window.carouselsToInit.length; i++) {
+					carouselsToInit[i]();
+				}
+			}
+		}
+		function sizeTabbedContent(element){
+			if(window.Pages){
+				if(window.Pages.onResizeHandlers){
+					var setTabbedInterval = setInterval(function () {
+						window.Pages.onResizeHandlers.forEach(function(car){car();});
+					}, 25)
+
+
+					setTimeout(function () {
+						clearInterval(setTabbedInterval);
+						if ($.cookie("enableLiveEdit") === "true") {
+							setInterval(function () {
+								window.Pages.onResizeHandlers.forEach(function(car){car();});
+							}, 2000);
+						}
+					}, 2500);
+					element.onclick="window.setTimeout(function(){reinitCarousels();},2);"
+				}
+			}
+		}
+
+		function adjustTab(e) {
+			e.preventDefault();
+			window.setTimeout(function(){
+				reinitCarousels();
+			}, 2);
+			sizeTabbedContent(this);
+		}
+
+		var tabButtons = document.querySelectorAll("#divTabbeda22482b2-cdad-48f7-9082-9c91a4177d04 .tabButton");
+
+		tabButtons.forEach(function (tabButton) {
+			tabButton.addEventListener("click", adjustTab);
+		});
+
+	</script>
+
+
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+		</div>
+
+	</div>
+
+	
+	<div class="newCP">
+
+	</div>
+</div>
+</div><aside data-cpRole="contentContainer" id="featureColumn" class="secondaryContent">	<div id="ccd6923f64-2522-4bce-8783-61ad1b416b69" data-containerid="d6923f64-2522-4bce-8783-61ad1b416b69" class="pageContent cpGrid cpGrid24 showInMobile" data-contentcontainerbreakpoint="40">
+				                
+
+
+
+	</div>
+</aside>
+</div>
+</div></div>
+</div><!-- Calendar/Carousel --><!-- <div data-cpRole="structuralContainer" id="homeContainer1">
+    <div class="siteWrap2">
+      <div data-cpRole="contentContainer" id="homeContent1a"></div>
+    </div>
+  </div> --><!-- Footer --><footer data-cpRole="structuralContainer" id="footerContainerTS">
+<div data-cpRole="structuralContainer" id="footerContainerTS1">
+<div class="siteWrap3"><div data-cpRole="contentContainer" id="footerTS1">	<div id="ccf72af812-0a26-4878-8b2a-a828b536b1f8" data-containerid="f72af812-0a26-4878-8b2a-a828b536b1f8" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="6dff3d0b-9a5e-4ac0-be7d-98e3295bc3f0">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idfc6f8ae9-ee49-4b71-9970-0b4e9f03614a" style="" data-widgetcontainerid="fc6f8ae9-ee49-4b71-9970-0b4e9f03614a">	
+    <div data-widget-id="77b4a4a8-51b5-467b-9a9b-5fc5d2b1ebf4" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdv77b4a4a8-51b5-467b-9a9b-5fc5d2b1ebf4" class="widget widgetInfoAdvanced skin37 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-label="Info Advanced">
+			<header class="widgetHeader" id="header77b4a4a8-51b5-467b-9a9b-5fc5d2b1ebf4">
+		<div class="">
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid2 ">
+		<div class="row  wide">
+					<div class="col col1 first ">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p id="isPasted">Mailing Address: P.O. Box 2545, Fort Myers, FL 33902-2545<br>Phone (all offices): <a href="tel:%20239-533-8683">239-533-8683</a><br>Hours (all offices): M - F, 8:30 am - 5:00 pm<br>Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3b5e575e584f525455487b575e5e154d544f5e">[email&#160;protected]</a></p>
+</li>						</ol>
+					</div>
+					<div class="col col1  last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<h1 class="headline"><strong>Main Office</strong></h1><p>Melvin Morgan Constitutional Complex<br>2480 Thompson St, 3rd Floor<br>Fort Myers, FL 33901</p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdv77b4a4a8-51b5-467b-9a9b-5fc5d2b1ebf4 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><div data-cpRole="structuralContainer" id="footerContainerTS2">
+<div class="siteWrap3"><div data-cpRole="contentContainer" id="footerTS2">	<div id="cc216deef6-2a92-4bb7-b5d8-56f235568a75" data-containerid="216deef6-2a92-4bb7-b5d8-56f235568a75" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="aae27f1f-ea76-478a-bfd7-4762d0682b8a">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id452c1cf2-4ec1-42f1-a84f-69521da5cfd7" style="" data-widgetcontainerid="452c1cf2-4ec1-42f1-a84f-69521da5cfd7">	
+    <div data-widget-id="4b51c24f-2e2c-4b0a-8535-8c201ddabfe8" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdv4b51c24f-2e2c-4b0a-8535-8c201ddabfe8" class="widget widgetInfoAdvanced skin37 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="header4b51c24f-2e2c-4b0a-8535-8c201ddabfe8">
+			<header class="widgetHeader" id="header4b51c24f-2e2c-4b0a-8535-8c201ddabfe8">
+		<div class="">
+					<h3 >Branch Offices</h3>
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid4 ">
+		<div class="row  wide">
+					<div class="col col1 first ">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<h1 class="headline" id="isPasted"><strong><span style="font-family: Verdana, Geneva, sans-serif;">Bonita Springs</span></strong></h1><p>at Bonita Commons<br>25987 S Tamiami Trail, #105<br>Bonita Springs, FL 34134</p>
+</li>						</ol>
+					</div>
+					<div class="col col1  ">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<h1 class="headline" id="isPasted"><strong>Cape Coral</strong></h1><p>Commissioner John E. Manning<br>Government Complex<br>1039 SE 9th Ave<br>Cape Coral, FL 33990</p>
+</li>						</ol>
+					</div>
+					<div class="col col1  ">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<h1 class="headline" id="isPasted"><strong>Lee County Elections Center</strong></h1><p>South Fort Myers Branch Office<br>13180 S Cleveland Ave<br>Fort Myers, FL 33907</p>
+</li>						</ol>
+					</div>
+					<div class="col col1  last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<h1 class="headline" id="isPasted"><strong>Lehigh Acres</strong></h1><p>East Lee County<br>Government Center<br>600 Homestead Rd S, #9<br>Lehigh Acres, FL 33974</p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdv4b51c24f-2e2c-4b0a-8535-8c201ddabfe8 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div>
+</footer><!-- Powered By --><div data-cpRole="structuralContainer" id="poweredByContainerTS">
+<div class="siteWrap3"><div data-cpRole="contentContainer" id="poweredByTS">	<div id="ccf0e20e0b-c2f7-497a-b6ac-7cf3e1df8c68" data-containerid="f0e20e0b-c2f7-497a-b6ac-7cf3e1df8c68" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="fc6efa7d-0faa-4932-b36f-8a675331d76e">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last iddbe08c27-ef5c-4f36-b92c-1b73db741f97" style="" data-widgetcontainerid="dbe08c27-ef5c-4f36-b92c-1b73db741f97">	
+    <div data-widget-id="bd96b823-6e1b-4a1d-98e7-a9dc19fa992d" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdvbd96b823-6e1b-4a1d-98e7-a9dc19fa992d" class="widget widgetInfoAdvanced skin37 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-label="Info Advanced">
+			<header class="widgetHeader" id="headerbd96b823-6e1b-4a1d-98e7-a9dc19fa992d">
+		<div class="">
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p>Under Florida law, s. 668.6076, F.S., e-mail addresses are public records. If you do not want your e-mail address released in response to a public records request, do not send electronic mail to this entity. Instead, contact this office by phone or in writing.</p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdvbd96b823-6e1b-4a1d-98e7-a9dc19fa992d .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="1e33d7f4-c944-4ac8-97c6-4c666a8723a0">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id791c1c51-19cd-4543-9648-8e3afb72c9d3" style="" data-widgetcontainerid="791c1c51-19cd-4543-9648-8e3afb72c9d3">	
+ 
+	<div data-widget-id='3cad6179-4ee6-4918-953f-20d5eecc67d4' data-moduleName="customHtml" id='widgetCustomHtml3cad6179-4ee6-4918-953f-20d5eecc67d4' class="widget widgetCustomHtml skin43 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBody3cad6179-4ee6-4918-953f-20d5eecc67d4">
+		<div id="customHtml3cad6179-4ee6-4918-953f-20d5eecc67d4"><div><!-- CP BAR -->
+
+  <style>
+    /* CP icon */
+    .cpBylineIconTS {
+        color: #fff;
+    }
+    /* CP Text */
+    .cpBylineTextTS,
+    .cpBylineTextTS a:link,
+    .cpBylineTextTS a:visited,
+    .cpBylineTextTS a:hover,
+    .cpBylineTextTS a:focus,
+    .cpBylineTextTS a:active {
+        color: #fff!important;
+    }
+
+    .cpBylineTextTS a:link,
+    .cpBylineTextTS a:visited,
+    .cpBylineTextTS a:hover,
+    .cpBylineTextTS a:focus,
+    .cpBylineTextTS a:active {
+        text-decoration: underline !important;
+    }
+
+    .cpBylineTS {
+        text-align: center;
+    }
+    .cpBylineIconTS {
+        fill: currentColor;
+        width: 39px;
+        height: 26px;
+        display: inline;
+        vertical-align: middle;
+    }
+  </style>
+    
+  <div class="widgetItem cpBylineTS">
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 100 100" class="cpBylineIconTS">
+      <path class="c" d="M73.4,23.2h-19v16.7h19c2.8,0,5,2.2,5,5c0,2.8-2.2,5-5,5h-19v28.4h5.5l11.3-11.7h2.2c11.9,0,21.6-9.7,21.6-21.6C95,33,85.3,23.2,73.4,23.2"></path>
+      <path class="p" d="M45.8,66.5H26.6C14.7,66.5,5,56.8,5,44.9C5,33,14.7,23.2,26.6,23.2h19.1v16.7H26.6c-2.8,0-5,2.2-5,5c0,2.8,2.2,5,5,5h19.1V66.5z"></path>
+    </svg>
+    <span class="cpBylineTextTS">Government Websites by <a href="https://connect.civicplus.com/referral">CivicPlus&reg;</a></span>
+  </div></div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+<link href="/745732998.css" rel="stylesheet" type="text/css" />
+
+<div id="SplashMessageWrapper" class="cp-Splash-wrapper">
+	<div role="dialog" aria-labelledby="cp-Splash-title" aria-describedby="editorContentDesc" aria-modal="true" tabindex="-1" id="SplashMessage" class="hidden cp-Splash cp-Splash--modal is-open">
+		<div class="cp-Splash-header">
+			<h2 class="cp-Splash-title" id="cp-Splash-title">Loading</h2>
+			<button class="cp-Splash-Btn cp-Splash-close" aria-label="Close this modal" title="Close this window">
+				<svg id="iconClose" viewBox="0 0 25 25">
+					<polygon style="fill:currentcolor"
+							 points="18.806,6.98 18.075,6.248 12.532,11.792 6.989,6.248 6.257,6.98 11.786,12.508 6.212,18.084 6.943,18.815 12.532,13.224 18.12,18.815 18.851,18.084 13.277,12.508"></polygon>
+				</svg>
+			</button>
+		</div>
+		<div class="cp-Splash-body">
+			<div class="cp-Splash-Prose editorContent fr-view" id="editorContentDesc">
+				<!-- Content from the Froala Editor will go here. -->
+				Loading
+			</div>
+		</div>
+		<div class="cp-Splash-footer">
+			<button class="cp-Splash-Btn cp-Splash-Btn--NoShow">Do Not Show Again</button>
+			<button class="cp-Splash-Btn cp-Splash-Btn--Close">Close</button>
+		</div>
+	</div>
+</div>
+
+<script src="/Assets/Scripts/APIClient.js"></script>
+<script src="/Assets/Mystique/Shared/Scripts/Moment/Moment.min.js"></script>
+<script src="/Assets/Scripts/SplashModal/SplashModalRender.js"></script>
+<script>
+
+		$(document).ready(function () {
+			var filter = {
+				targetId: '246',
+				targetType: 1
+			}
+
+			new SplashModalRender().triggerRender(filter);
+		});
+</script>
+
+
+	
+	
+	
+	
+
+
+
+	
+
+
+
+
+
+
+    <script src="/-1442400649.js" type="text/javascript"></script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6VNRMTL8FZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6VNRMTL8FZ');
+</script>
+
+<script type="text/javascript">!function(){var b=function(){window.__AudioEyeSiteHash = "4a1f7dd0b33f5f1e4793c9bf5ff1bc9f"; var a=document.createElement("script");a.src="https://wsmcdn.audioeye.com/aem.js";a.type="text/javascript";a.setAttribute("async","");document.getElementsByTagName("body")[0].appendChild(a)};"complete"!==document.readyState?window.addEventListener?window.addEventListener("load",b):window.attachEvent&&window.attachEvent("onload",b):b()}();</script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            document.cookie = "responsiveGhost=0; path=/";
+        });
+        $(window).on("load", function () {
+            $('body').addClass('doneLoading').removeClass('hideContent');
+
+            if ($('#404Content').length > 0)
+                $('div#bodyWrapper').css('padding', '0px');
+        });
+    </script>
+
+    <noscript>
+        <style>
+            body.hideContent {
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
+
+        
+<div style="display: none;">
+	<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+
+		<symbol id="iconArrow--left" viewbox="0 0 25 25">
+			<title>Arrow Left</title>
+			<polygon style="fill:currentcolor" points="18.044,25 19.498,23.545 8.409,12.454 19.408,1.455 17.954,0 5.502,12.452"></polygon>
+		</symbol>
+
+		<symbol id="iconArrow--right" viewbox="0 0 25 25">
+			<title>Arrow Right</title>
+			<polygon style="fill:currentcolor" points="6.957,0 5.502,1.455 16.591,12.546 5.592,23.545 7.047,25 19.498,12.548"></polygon>
+		</symbol>
+
+	</svg>
+</div>
+    <script type="text/javascript">loadCSS('//fonts.googleapis.com/css?family=Open+Sans:500,600,700,800,italic,regular|');</script>
+    
+
+    <div class="hidden activeWidgetSkinComponentsOnPageJson">[]</div>
+        <div style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="iconSlideshowArrowLeft" viewBox="0 0 22.68 40">
+                    <title>Slideshow Left Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M20,40a2.67,2.67,0,0,1-1.9-.79L.79,21.9a2.68,2.68,0,0,1,0-3.79L18.1.79a2.68,2.68,0,1,1,3.79,3.79L6.47,20,21.89,35.42A2.68,2.68,0,0,1,20,40Z"></path>
+                    </g>
+                </symbol>
+                <symbol id="iconSlideshowArrowRight" viewBox="0 0 22.68 40">
+                    <title>Slideshow Right Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M2.68,0a2.67,2.67,0,0,1,1.9.79L21.89,18.1a2.68,2.68,0,0,1,0,3.79L4.58,39.21A2.68,2.68,0,0,1,.79,35.42L16.21,20,.79,4.58A2.68,2.68,0,0,1,2.68,0Z"></path>
+                    </g>
+                </symbol>
+            </svg>
+        </div>
+    
+	
+	
+
+    <div id="root-picker-outlet"></div>
+</body>
+</html>

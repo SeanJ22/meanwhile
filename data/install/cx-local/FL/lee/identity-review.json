@@ -1,0 +1,185 @@
+{
+  "heldBaselineSha256": "02a9aa2e12926ee741dae80081e7b469d24fe560066cef23b1949c8b6a693d7c",
+  "identityInputs": [
+    "/workspace/meanwhile/data/ballot/2026-general/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/broward/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/orange/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/pinellas/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/hillsborough/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/palm-beach/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/polk/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/duval/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/miami-dade/ballot-input/fl.json",
+    "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__ballot-input__fl.json",
+    "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__alachua__ballot-input__fl.json",
+    "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__leon__ballot-input__fl.json",
+    "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__hernando-duval-walton__ballot-input__fl.json",
+    "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/ballot-input__fl.json"
+  ],
+  "records": [
+    {
+      "contestId": "cx-local-fl-lee-2026-supervisor-of-elections",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-board-of-county-commissioners-district-2",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-board-of-county-commissioners-district-4",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-city-of-cape-coral-mayor",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-city-of-cape-coral-city-council-district-1",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-city-of-cape-coral-city-council-district-4",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-city-of-cape-coral-city-council-district-6",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-captiva-erosion-prevention-district-seat-1",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-captiva-erosion-prevention-district-seat-3",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-south-trail-fire-protection-and-rescue-service-district-seat-5",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-city-of-fort-myers-mayor",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-colonial-country-club-community-development-district-seat-2",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-wildblue-community-development-district-seat-1",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-wildblue-community-development-district-seat-2",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-blue-lake-community-development-district-seat-1",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-city-of-fort-myers-city-council-ward-3",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-iona-mcgregor-fire-protection-and-rescue-service-district-seat-1",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-bonita-springs-fire-control-and-rescue-district-seat-1",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-town-of-fort-myers-beach-town-council",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-fort-myers-beach-fire-control-district-seat-1",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-city-of-bonita-springs-city-council-district-3",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-city-of-bonita-springs-city-council-district-5",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-vasari-community-development-district-seat-5",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-bonita-landing-community-development-district-seat-2",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-bonita-landing-community-development-district-seat-3",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-bonita-landing-community-development-district-seat-4",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-stoneybrook-community-development-district-seat-4",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-stoneybrook-community-development-district-seat-5",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-habitat-community-development-district-seat-4",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-cypress-shadows-community-development-district-seat-2",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-cypress-shadows-community-development-district-seat-4",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-cypress-shadows-community-development-district-seat-5",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-catalina-at-winkler-preserve-community-development-district-seat-3",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-school-board-member-district-4",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-north-fort-myers-fire-control-and-rescue-service-district-seat-1",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-north-fort-myers-fire-control-and-rescue-service-district-seat-3",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-north-fort-myers-fire-control-and-rescue-service-district-seat-5",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-school-board-member-district-5",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-lehigh-acres-municipal-services-improvement-district-seat-4",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-fort-myers-shores-fire-protection-and-rescue-service-district-seat-4",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    },
+    {
+      "contestId": "cx-local-fl-lee-2026-alva-fire-protection-and-rescue-service-district-seat-2",
+      "identityStatus": "NEW_CX_LOCAL_ID"
+    }
+  ]
+}

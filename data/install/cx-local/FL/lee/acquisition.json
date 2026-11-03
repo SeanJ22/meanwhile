@@ -1,0 +1,250 @@
+{
+  "checkedAt": "2026-11-03T07:45:09.497288+00:00",
+  "method": "Native official site works through lee.vote without www. All actual PDF bytes acquired; no voter identity/address supplied. Full native plus explicitly geometric text hashes preserved. Taxing parcel geometry stays scratch-only, not voter geometry. Helpers stay scratch.",
+  "sources": [
+    {
+      "name": "sample-all-inclusive",
+      "url": "https://lee.vote/DocumentCenter/View/1074",
+      "retrievedAt": "2026-11-03T07:03:51.623817+00:00",
+      "finalUrl": "https://www.lee.vote/DocumentCenter/View/1074/2026-General-Election---All-Inclusive-Sample-Ballot?bidId=",
+      "status": 200,
+      "rawHash": "4313c3114d954c66d2a42ff90643ec44bdbef23ced58a4d8105a4211cef6192b",
+      "file": "sample-all-inclusive.pdf",
+      "bytes": 180791,
+      "textFile": "sample-all-inclusive.txt",
+      "textHash": "76c0cc405635957794b5dd9d0c1f6b6612ca7d6c11a81b7454e5841d30368821"
+    },
+    {
+      "name": "sample-voter-specific",
+      "url": "https://lee.vote/DocumentCenter/View/1075",
+      "retrievedAt": "2026-11-03T07:06:51.106155+00:00",
+      "finalUrl": "https://www.lee.vote/DocumentCenter/View/1075/2026-General-Election---FINAL---No-Timing-Tracks---FULL?bidId=",
+      "status": 200,
+      "rawHash": "0dc52da07228212008bc97d7f08d95a7f7276ecdd0a69e92b4e7c76fb9daeb21",
+      "file": "sample-voter-specific.pdf",
+      "bytes": 12893879,
+      "textFile": "sample-voter-specific.txt",
+      "textHash": "12b8aad92367af75bf9cf16079ef2bafd14463943f68723733b175fc35c343a3"
+    },
+    {
+      "name": "sample-index-nowww",
+      "url": "https://lee.vote/243/Sample-Ballots",
+      "retrievedAt": "2026-11-03T07:02:44.088791+00:00",
+      "finalUrl": "https://www.lee.vote/243/Sample-Ballots",
+      "status": 200,
+      "rawHash": "0fbfcb57ce748725c09600d285509185b19921cc82f6a2e2c62b3579283db641",
+      "file": "sample-index-nowww.html",
+      "bytes": 101413
+    },
+    {
+      "name": "general-election-native",
+      "url": "https://lee.vote/254/November-3-2026",
+      "retrievedAt": "2026-11-03T07:03:51.625619+00:00",
+      "finalUrl": "https://www.lee.vote/254/November-3-2026",
+      "status": 200,
+      "rawHash": "8439e1608211b1fcfc25a80d36ab69f0cdab206e40a53ea46fc0c307b2dd560c",
+      "file": "general-election-native.html",
+      "bytes": 82675
+    },
+    {
+      "name": "offices-native",
+      "url": "https://lee.vote/246/Offices-to-Be-Elected",
+      "retrievedAt": "2026-11-03T07:03:51.626301+00:00",
+      "finalUrl": "https://www.lee.vote/246/Offices-to-Be-Elected",
+      "status": 200,
+      "rawHash": "f9e1f7694df6cfcd4577581087a928fffcee40007c1498a3b6f4a2f46c3baacc",
+      "file": "offices-native.html",
+      "bytes": 143760
+    },
+    {
+      "name": "general-notice-native",
+      "url": "https://lee.vote/DocumentCenter/View/655/2026_NGE_LEE_English-PDF?bidId=",
+      "retrievedAt": "2026-11-03T07:03:51.627668+00:00",
+      "finalUrl": "https://www.lee.vote/DocumentCenter/View/655/2026_NGE_LEE_English-PDF?bidId=",
+      "status": 200,
+      "rawHash": "01be84878d076a18eda699e8236dd3547d4a8bc617f8d94e5a8a17ac1ddcdfce",
+      "file": "general-notice-native.pdf",
+      "bytes": 128849,
+      "textFile": "general-notice-native.txt",
+      "textHash": "55a1746b47d0c416613dc5aade413c18fbbf1f24936b275bdd64795feaea6d49"
+    },
+    {
+      "name": "public-notices",
+      "url": "https://lee.vote/319/Public-Notices",
+      "retrievedAt": "2026-11-03T07:08:37.810302+00:00",
+      "finalUrl": "https://www.lee.vote/319/Public-Notices",
+      "status": 200,
+      "rawHash": "3fbf0512c58bb1e8992b351ba15c0a80d46a9ca7b603c82adf26e758f21b44f4",
+      "file": "public-notices.html",
+      "bytes": 136814
+    },
+    {
+      "name": "candidate-lists",
+      "url": "https://lee.vote/187/Candidate-Lists",
+      "retrievedAt": "2026-11-03T07:09:16.789086+00:00",
+      "finalUrl": "https://www.lee.vote/187/Candidate-Lists",
+      "status": 200,
+      "rawHash": "0664c560daea84f20dfdec603a15f673c4619f1f9bb052e6d4f2f6761f973e69",
+      "file": "candidate-lists.html",
+      "bytes": 96077
+    },
+    {
+      "name": "candidate-roster-2026",
+      "url": "https://lee.vote/DocumentCenter/View/728",
+      "retrievedAt": "2026-11-03T07:19:15.648006+00:00",
+      "finalUrl": "https://www.lee.vote/DocumentCenter/View/728/2026-Candidate-List_092426?bidId=",
+      "status": 200,
+      "rawHash": "40f401ffd27828e2686c32f6b5200a6903fab021ba9e426951624a024d2b29ad",
+      "file": "candidate-roster-2026.html",
+      "bytes": 303711
+    },
+    {
+      "name": "elected-officials",
+      "url": "https://lee.vote/173/Elected-Officials",
+      "retrievedAt": "2026-11-03T07:09:16.790233+00:00",
+      "finalUrl": "https://www.lee.vote/173/Elected-Officials",
+      "status": 200,
+      "rawHash": "b8d941262dd862449c41565298eab126cdd2dd901b3b8bfaac229eb7009418ed",
+      "file": "elected-officials.html",
+      "bytes": 343862
+    },
+    {
+      "name": "county-commission-rule",
+      "url": "https://lee.vote/209/County-Commission",
+      "retrievedAt": "2026-11-03T07:21:28.015894+00:00",
+      "finalUrl": "https://www.lee.vote/209/County-Commission",
+      "status": 200,
+      "rawHash": "82d9530f1a340b840177566e22112bb9ff69bef553cac28b49c4b476866681b9",
+      "file": "county-commission-rule.html",
+      "bytes": 85128
+    },
+    {
+      "name": "school-rule",
+      "url": "https://lee.vote/204/School-Board",
+      "retrievedAt": "2026-11-03T07:21:28.016748+00:00",
+      "finalUrl": "https://www.lee.vote/204/School-Board",
+      "status": 200,
+      "rawHash": "9aa73e37ff5fdb27e8fc5556959e38d302a417eb6e5723c645f4c929ca3ffbb6",
+      "file": "school-rule.html",
+      "bytes": 84858
+    },
+    {
+      "name": "municipal-rule",
+      "url": "https://lee.vote/205/Municipal-Candidates",
+      "retrievedAt": "2026-11-03T07:21:28.017461+00:00",
+      "finalUrl": "https://www.lee.vote/205/Municipal-Candidates",
+      "status": 200,
+      "rawHash": "c0608c15ec0a5ac1c77c82b0c617be6a647a46c3d5989cc9675943194e61e8c2",
+      "file": "municipal-rule.html",
+      "bytes": 85958
+    },
+    {
+      "name": "district-rule",
+      "url": "https://lee.vote/203/Special-District",
+      "retrievedAt": "2026-11-03T07:21:28.017932+00:00",
+      "finalUrl": "https://www.lee.vote/203/Special-District",
+      "status": 200,
+      "rawHash": "88abec34db461bafb8ea0c1eb02a4b7f16a7054b5ba2650938ddb8f9fcc0fd34",
+      "file": "district-rule.html",
+      "bytes": 85722
+    },
+    {
+      "name": "county-atlarge-rule",
+      "url": "https://www.leefl.gov/963/Board-of-County-Commissioners-BOCC",
+      "retrievedAt": "2026-11-03T07:27:29.507764+00:00",
+      "finalUrl": "https://www.leefl.gov/963/Board-of-County-Commissioners-BOCC",
+      "status": 200,
+      "rawHash": "566e47337b8beb928d08e22873087d59c4ff70ea413aa4bc95ba07b2429ff947",
+      "file": "county-atlarge-rule.html",
+      "bytes": 115639
+    },
+    {
+      "name": "lee-boundaries-service",
+      "url": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer?f=pjson",
+      "retrievedAt": "2026-11-03T07:28:45.143571+00:00",
+      "finalUrl": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer?f=pjson",
+      "status": 200,
+      "rawHash": "ad92a7d892077b89f3597446fdae2ed0d7cffdb67176f4e3557ba3f3773885fe",
+      "file": "lee-boundaries-service.html",
+      "bytes": 6997
+    },
+    {
+      "name": "school-districts-metadata",
+      "url": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/3?f=pjson",
+      "retrievedAt": "2026-11-03T07:30:56.383864+00:00",
+      "finalUrl": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/3?f=pjson",
+      "status": 200,
+      "rawHash": "12d36affc0c005ce25b5b5a6b5f9f0c1c859d6f7267e2960d2061cb0d67d054f",
+      "file": "school-districts-metadata.html",
+      "bytes": 6752
+    },
+    {
+      "name": "school-districts-geometry",
+      "url": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T07:30:56.385002+00:00",
+      "finalUrl": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+      "status": 200,
+      "rawHash": "402ac57182e28306c0f61a04b3bc219ed25fd896f0727b6ef364d6f6b4db727a",
+      "file": "school-districts-geometry.html",
+      "bytes": 179623
+    },
+    {
+      "name": "lamsid-geometry",
+      "url": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/6/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T07:30:56.385909+00:00",
+      "finalUrl": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/6/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+      "status": 200,
+      "rawHash": "8cae6e160cc6671fccf30a967329b1565c38e8f9924038e5fba6674ef3789cdf",
+      "file": "lamsid-geometry.html",
+      "bytes": 21195
+    },
+    {
+      "name": "lee-fire-service",
+      "url": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0?f=pjson",
+      "retrievedAt": "2026-11-03T07:28:45.144598+00:00",
+      "finalUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0?f=pjson",
+      "status": 200,
+      "rawHash": "4bd582493c92e5d6e4badaaeec8f4c98d019f4c2d90c0c65297345f454cf0f1e",
+      "file": "lee-fire-service.html",
+      "bytes": 16915
+    },
+    {
+      "name": "fire-districts-geometry",
+      "url": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=1%3D1&outFields=FIREDISTRICT,TAXAUTHORITY,EDIT_DATE&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T07:30:56.386848+00:00",
+      "finalUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=1%3D1&outFields=FIREDISTRICT,TAXAUTHORITY,EDIT_DATE&outSR=4326&f=geojson",
+      "status": 200,
+      "rawHash": "ac9366850cdbe7d75868f08bbb100af4303361a477dbc5b0e49568e6f3954a44",
+      "file": "fire-districts-geometry.html",
+      "bytes": 438160
+    },
+    {
+      "name": "taxing-districts-metadata",
+      "url": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/18?f=pjson",
+      "retrievedAt": "2026-11-03T07:30:56.382882+00:00",
+      "finalUrl": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/18?f=pjson",
+      "status": 200,
+      "rawHash": "d2f279400d2d8d1db7b44fbc25a367ed72d95c8f6b95333f1e6023d331e1569a",
+      "file": "taxing-districts-metadata.html",
+      "bytes": 7750
+    },
+    {
+      "name": "taxing-district-identities",
+      "url": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/18/query?where=1%3D1&outFields=Name,Number,Auth_Numb,Type,InDistrict&returnGeometry=false&f=pjson",
+      "retrievedAt": "2026-11-03T07:33:19.164904+00:00",
+      "finalUrl": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/18/query?where=1%3D1&outFields=Name,Number,Auth_Numb,Type,InDistrict&returnGeometry=false&f=pjson",
+      "status": 200,
+      "rawHash": "5efd3bf0d447d4746b3d7694e547182ec69f0272ed058cf3592a12cbc21cd340",
+      "file": "taxing-district-identities.html",
+      "bytes": 65542
+    }
+  ],
+  "scratchOnlyTaxingGeometry": {
+    "file": "raw/taxing-districts-geometry.html",
+    "rawHash": "f17530dd413f18a1753c539fa40ca4106c82807ded76d7300ed9f94336352338",
+    "bytes": 63946972,
+    "reason": "Source warns parcel footprints may differ from legal descriptions. Portable attributes and disclaimer included; geometry excluded.",
+    "sourceUrl": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/18/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T07:30:56.384427+00:00"
+  }
+}

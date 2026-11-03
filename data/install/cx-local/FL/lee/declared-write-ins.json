@@ -1,0 +1,16 @@
+{
+  "status": "CURRENT_OFFICIAL_COUNTY_ROSTER_HAS_ONLY_NONQUALIFYING_LOCAL_WRI_RECORD",
+  "records": [
+    {
+      "name": "Michael Mincieli",
+      "printedParty": "WRI",
+      "status": "Did not Qualify",
+      "statusClass": "Status-DQ",
+      "office": "COUNTY COMMISSIONER 5",
+      "filedDate": "4/28/2026"
+    }
+  ],
+  "qualifiedLocalNamedWriteInsInThisRoster": 0,
+  "ordinaryCandidaciesCreated": 0,
+  "limit": "Michael Mincieli did not qualify for County Commission 5. No candidacy or voting field created. Separate municipal write-in qualification inventory not independently acquired; no blanket zero-write-in claim."
+}

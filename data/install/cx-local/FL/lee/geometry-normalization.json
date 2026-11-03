@@ -1,0 +1,10 @@
+{
+  "rawSourcesUnchanged": true,
+  "derivedRepairs": [],
+  "sameDistrictComponentUnions": [
+    {
+      "ocdId": "ocd-division/country:us/state:fl/special_district:fort_myers_beach_fire_control_district",
+      "sourceFeatures": 2
+    }
+  ]
+}

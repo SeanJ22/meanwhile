@@ -1,0 +1,1479 @@
+{
+  "sourceUrl": "https://lee.vote/DocumentCenter/View/728",
+  "records": [
+    {
+      "name": "Keegan Hall",
+      "printedParty": "REP",
+      "status": "Withdrew",
+      "statusClass": "Status-WD",
+      "office": "COUNTY COMMISSIONER 2",
+      "filedDate": "3/30/2026"
+    },
+    {
+      "name": "Cecil L Pendergrass",
+      "printedParty": "REP",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "COUNTY COMMISSIONER 2",
+      "filedDate": "4/7/2026"
+    },
+    {
+      "name": "Elliot Taylor",
+      "printedParty": "DEM",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "COUNTY COMMISSIONER 2",
+      "filedDate": "6/11/2026"
+    },
+    {
+      "name": "DeMaria \"Princess\" Artis",
+      "printedParty": "NPA",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "COUNTY COMMISSIONER 4",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Brian Hamman",
+      "printedParty": "REP",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "COUNTY COMMISSIONER 4",
+      "filedDate": "11/21/2025"
+    },
+    {
+      "name": "Amanda Cochran",
+      "printedParty": "REP",
+      "status": "Elected",
+      "statusClass": "Status-E",
+      "office": "COUNTY COMMISSIONER 5",
+      "filedDate": "11/20/2025"
+    },
+    {
+      "name": "Michael Mincieli",
+      "printedParty": "WRI",
+      "status": "Did not Qualify",
+      "statusClass": "Status-DQ",
+      "office": "COUNTY COMMISSIONER 5",
+      "filedDate": "4/28/2026"
+    },
+    {
+      "name": "Trish Petrosky",
+      "printedParty": "REP",
+      "status": "Defeated",
+      "statusClass": "Status-D",
+      "office": "COUNTY COMMISSIONER 5",
+      "filedDate": "3/2/2026"
+    },
+    {
+      "name": "Mike Colombo",
+      "printedParty": "NON",
+      "status": "Elected",
+      "statusClass": "Status-E",
+      "office": "COUNTY COURT JUDGE GRP 5",
+      "filedDate": "3/10/2026"
+    },
+    {
+      "name": "Javier A. Pacheco",
+      "printedParty": "NON",
+      "status": "Defeated",
+      "statusClass": "Status-D",
+      "office": "COUNTY COURT JUDGE GRP 5",
+      "filedDate": "10/1/2025"
+    },
+    {
+      "name": "Josephine M Gagliardi",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "COUNTY COURT JUDGE GRP 6",
+      "filedDate": "1/23/2026"
+    },
+    {
+      "name": "Gabriel J Denny",
+      "printedParty": "NON",
+      "status": "Withdrew",
+      "statusClass": "Status-WD",
+      "office": "SCHOOL BOARD 1",
+      "filedDate": "12/3/2025"
+    },
+    {
+      "name": "Heidi Charlotte Fausel",
+      "printedParty": "NON",
+      "status": "Did not Qualify",
+      "statusClass": "Status-DQ",
+      "office": "SCHOOL BOARD 1",
+      "filedDate": "10/16/2025"
+    },
+    {
+      "name": "Sam Fisher",
+      "printedParty": "NON",
+      "status": "Elected Incumbent",
+      "statusClass": "Status-E",
+      "office": "SCHOOL BOARD 1",
+      "filedDate": "1/5/2026"
+    },
+    {
+      "name": "Jenn McDaigle",
+      "printedParty": "NON",
+      "status": "Defeated",
+      "statusClass": "Status-D",
+      "office": "SCHOOL BOARD 1",
+      "filedDate": "4/17/2026"
+    },
+    {
+      "name": "Carl Baxter",
+      "printedParty": "NON",
+      "status": "Defeated",
+      "statusClass": "Status-D",
+      "office": "SCHOOL BOARD 4",
+      "filedDate": "8/21/2025"
+    },
+    {
+      "name": "Tony Beougher",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "SCHOOL BOARD 4",
+      "filedDate": "10/1/2025"
+    },
+    {
+      "name": "Gisele \"GiGi\" Gentile",
+      "printedParty": "NON",
+      "status": "Defeated",
+      "statusClass": "Status-D",
+      "office": "SCHOOL BOARD 4",
+      "filedDate": "2/18/2026"
+    },
+    {
+      "name": "Debbie Jordan",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "SCHOOL BOARD 4",
+      "filedDate": "8/19/2025"
+    },
+    {
+      "name": "Crystal Johnson",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "SCHOOL BOARD 5",
+      "filedDate": "4/21/2026"
+    },
+    {
+      "name": "Armor Persons",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "SCHOOL BOARD 5",
+      "filedDate": "7/14/2025"
+    },
+    {
+      "name": "Carline Saintilus",
+      "printedParty": "NON",
+      "status": "Defeated",
+      "statusClass": "Status-D",
+      "office": "SCHOOL BOARD 5",
+      "filedDate": "10/2/2025"
+    },
+    {
+      "name": "Jada Langford-Fleming",
+      "printedParty": "NON",
+      "status": "Elected Incumbent",
+      "statusClass": "Status-E",
+      "office": "SCHOOL BOARD AT LARGE 6",
+      "filedDate": "1/5/2026"
+    },
+    {
+      "name": "India Palencia",
+      "printedParty": "NON",
+      "status": "Defeated",
+      "statusClass": "Status-D",
+      "office": "SCHOOL BOARD AT LARGE 6",
+      "filedDate": "6/2/2025"
+    },
+    {
+      "name": "DeMaria Artis",
+      "printedParty": "NPA",
+      "status": "Withdrew",
+      "statusClass": "Status-WD",
+      "office": "SUPERVISOR OF ELECTIONS",
+      "filedDate": "5/22/2026"
+    },
+    {
+      "name": "Jenna Persons-Mulicka",
+      "printedParty": "REP",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "SUPERVISOR OF ELECTIONS",
+      "filedDate": "5/21/2026"
+    },
+    {
+      "name": "Chris Vignieri",
+      "printedParty": "DEM",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "SUPERVISOR OF ELECTIONS",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Karin Hagen",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - ARBORWOOD, 2",
+      "filedDate": "5/28/2026"
+    },
+    {
+      "name": "Norman A LaRose",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - BAY CREEK, 2",
+      "filedDate": "6/2/2026"
+    },
+    {
+      "name": "Mary McVay",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - BAY CREEK, 4",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Robert Gary Durney",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - BAY CREEK, 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Daniel DiTommaso",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - BEACH RD ESTATES, 3",
+      "filedDate": "6/4/2026"
+    },
+    {
+      "name": "Michael R Ciberey",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - BEACH RD ESTATES, 5",
+      "filedDate": "5/29/2026"
+    },
+    {
+      "name": "John Hadginikitas",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - BLUE LAKE, 1",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Steven Hamburger",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - BLUE LAKE, 1",
+      "filedDate": "6/11/2026"
+    },
+    {
+      "name": "Paul Marsjanik",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - BLUE LAKE, 1",
+      "filedDate": "6/12/2026"
+    },
+    {
+      "name": "David Bello",
+      "printedParty": "NON",
+      "status": "Elected Unopposed",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - BLUE LAKE, 2",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Steven Hamburger",
+      "printedParty": "NON",
+      "status": "Withdrew",
+      "statusClass": "Status-WD",
+      "office": "Community Development District - BLUE LAKE, 2",
+      "filedDate": "6/5/2026"
+    },
+    {
+      "name": "Christopher Applegate",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - BONITA LANDING, 2",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Mark Hilton",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - BONITA LANDING, 2",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Scott Helling",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - BONITA LANDING, 3",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "Rosanny Larach",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - BONITA LANDING, 3",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Andrew W Brignoni",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - BONITA LANDING, 4",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Bill McCormick",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - BONITA LANDING, 4",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "John R Woolsey",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - BROOKS I, 4",
+      "filedDate": "5/29/2026"
+    },
+    {
+      "name": "David L Garner",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - BROOKS I, 5",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Thomas Bertucci",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - BROOKS II, 4",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Joseph R Bartoletti",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - BROOKS II, 5",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Richard A Bonito",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - CATALINA, 3",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "Brian Williams",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - CATALINA, 3",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Joseph Molon",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - CATALINA, 4",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "Kimberly Earl",
+      "printedParty": "NON",
+      "status": "Elected Unopposed",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - CFM, 3",
+      "filedDate": "6/12/2026"
+    },
+    {
+      "name": "Mary Lieberman",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - CFM, 4",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Howard Klein",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - COLONIAL CC, 1",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Doug Smith",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - COLONIAL CC, 2",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Joseph J Zajac",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - COLONIAL CC, 2",
+      "filedDate": "5/28/2026"
+    },
+    {
+      "name": "Sally Hefti",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - COLONIAL CC, 3",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Gary P Gauvin",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - CYPRESS SHADOWS, 2",
+      "filedDate": "6/5/2026"
+    },
+    {
+      "name": "Corey Graves",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - CYPRESS SHADOWS, 2",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Angella Graves",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - CYPRESS SHADOWS, 4",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "John A Sartoris",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - CYPRESS SHADOWS, 4",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Steven Invidiato",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - CYPRESS SHADOWS, 5",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Joseph E Molsen",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - CYPRESS SHADOWS, 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Paul LeoGrande",
+      "printedParty": "NON",
+      "status": "Withdrew",
+      "statusClass": "Status-WD",
+      "office": "Community Development District - GATEWAY, 4",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Carole Pankau",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - GATEWAY, 4",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Doug Banks",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - GATEWAY, 5",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Joe Camarota",
+      "printedParty": "NON",
+      "status": "Withdrew",
+      "statusClass": "Status-WD",
+      "office": "Community Development District - GATEWAY, 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Matthew Elliott",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - HABITAT, 1",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Jenny A. Licht",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - HABITAT, 3",
+      "filedDate": "5/30/2026"
+    },
+    {
+      "name": "Greg Grimaudo",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - HABITAT, 4",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "Larry A Roth",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - HABITAT, 4",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Stanley W Switzer",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - HERITAGE PALMS, 5",
+      "filedDate": "5/29/2026"
+    },
+    {
+      "name": "Bruce E Given",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - LAGUNA LAKES, 1",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Michelle Martel",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - LAGUNA LAKES, 2",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Jonathan Busa",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - LAGUNA LAKES, 4",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Michael T Weber",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - MIROMAR LAKES, 1",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "C Douglas Ballinger",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - MIROMAR LAKES, 2",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "Alan Refkin",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - MIROMAR LAKES, 3",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "William Krukowski",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - MOODY RIVER, 5",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Elliott Erickson",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - PARKLANDS LEE, 2",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Russell Rupp",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - PARKLANDS LEE, 5",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "James Lukas",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - PARKLANDS WEST, 1",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Francis Percuoco",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - PARKLANDS WEST, 2",
+      "filedDate": "6/11/2026"
+    },
+    {
+      "name": "David W Cabell",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - PASEO, 1",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "Patrick F Infante",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - RIVER HALL, 4",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Daniel J Block",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - RIVER HALL, 5",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Steven Fox",
+      "printedParty": "NON",
+      "status": "Withdrew",
+      "statusClass": "Status-WD",
+      "office": "Community Development District - RIVER HALL, 5",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Keith Edward Merrill",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - RIVER RIDGE, 1",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Raymond Halik",
+      "printedParty": "NON",
+      "status": "Elected Unopposed",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - RIVER RIDGE, 2",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Ernest Huggard",
+      "printedParty": "NON",
+      "status": "Did not Qualify Incumbent",
+      "statusClass": "Status-DQ",
+      "office": "Community Development District - SAIL HARBOUR, 4",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Ronald George Hicks",
+      "printedParty": "NON",
+      "status": "Elected Unopposed",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - STONEYBROOK NORTH, 1",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Anton Crusty Goellner",
+      "printedParty": "NON",
+      "status": "Elected Unopposed",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - STONEYBROOK NORTH, 2",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Adam Dalton",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - STONEYBROOK, 4",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "Michael J DeBrino, Jr",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - STONEYBROOK, 4",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Eileen L Huff",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - STONEYBROOK, 5",
+      "filedDate": "6/3/2026"
+    },
+    {
+      "name": "Philip Simonsen",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - STONEYBROOK, 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Patricia Resnyk",
+      "printedParty": "NON",
+      "status": "Elected Unopposed",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - TIMBER CREEK SOUTHWEST, 2",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Elisabeth Gross",
+      "printedParty": "NON",
+      "status": "Elected Unopposed",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - TIMBER CREEK SOUTHWEST, 4",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Kurt Deter",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - VASARI, 5",
+      "filedDate": "6/2/2026"
+    },
+    {
+      "name": "Richard A Fluet",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - VASARI, 5",
+      "filedDate": "6/2/2026"
+    },
+    {
+      "name": "Roy R Rice",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - VASARI, 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Richard D Shields Jr",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - VERANDAH EAST, 1",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "John G Sample Jr",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - VERANDAH EAST, 2",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Susan A McIntyre",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - VERANDAH WEST, 2",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Norman Toback",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - VERANDAH WEST, 4",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Jerald Robinson",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - VILLAGE WALK, 2",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Dan Ellabarger",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - VILLAGE WALK, 4",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Charles P Cox, Sr",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - WATERFORD, 3",
+      "filedDate": "6/5/2026"
+    },
+    {
+      "name": "Barbara Hanahan",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - WATERFORD, 4",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Donald Alpaio",
+      "printedParty": "NON",
+      "status": "Elected Unopposed",
+      "statusClass": "Status-EU",
+      "office": "Community Development District - WATERFORD, 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Herbert Lanese",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - WILDBLUE, 1",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Richard S Losee",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - WILDBLUE, 1",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Sima Rae Baker",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - WILDBLUE, 2",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Edward Houck",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "Community Development District - WILDBLUE, 2",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "Donald A Krispin",
+      "printedParty": "NON",
+      "status": "Withdrew",
+      "statusClass": "Status-WD",
+      "office": "Community Development District - WILDBLUE, 2",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "Richard Spence",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "ALVA FIRE 2",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Darren Watkins",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "ALVA FIRE 2",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Henry MacArty",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "ALVA FIRE 3",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Grant Fichter",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "ALVA FIRE 4",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "Debbie Whitney",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "ALVA FIRE 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Brian F Farrar",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "LEE COUNTY MOSQUITO CONTROL 2",
+      "filedDate": "5/28/2026"
+    },
+    {
+      "name": "Stephen R \"Steve\" Bowen",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "LEE COUNTY MOSQUITO CONTROL 4",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Tom Hart",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "LEE COUNTY MOSQUITO CONTROL 6",
+      "filedDate": "5/28/2026"
+    },
+    {
+      "name": "Lawrence P Kosilla",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "BONITA SPRINGS FIRE 1",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "James P Murphy",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "BONITA SPRINGS FIRE 1",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Jeff Maturo",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "BONITA SPRINGS FIRE 3",
+      "filedDate": "6/10/2026"
+    },
+    {
+      "name": "Eddie Arriaga",
+      "printedParty": "NON",
+      "status": "Did not Qualify",
+      "statusClass": "Status-DQ",
+      "office": "BONITA SPRINGS FIRE 5",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "David Brewer",
+      "printedParty": "NON",
+      "status": "Elected Unopposed",
+      "statusClass": "Status-EU",
+      "office": "BONITA SPRINGS FIRE 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "John Raburn Dupre",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "CAPTIVA EROSION 1",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Margarethe Thye-Miville",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "CAPTIVA EROSION 1",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Michael Christopher Mullins",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "CAPTIVA EROSION 3",
+      "filedDate": "6/2/2026"
+    },
+    {
+      "name": "Bob Walter",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "CAPTIVA EROSION 3",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Jeffrey B Brown",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "CAPTIVA FIRE 3",
+      "filedDate": "6/3/2026"
+    },
+    {
+      "name": "James J Mendolera",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "ESTERO FIRE 1",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Jeff Maas",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "ESTERO FIRE 3",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Jack Lienesch",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "ESTERO FIRE 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Jim Knickle",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "FORT MYERS BEACH FIRE 1",
+      "filedDate": "6/5/2026"
+    },
+    {
+      "name": "Bret Randle",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "FORT MYERS BEACH FIRE 1",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Jacki Liszak",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "FORT MYERS BEACH FIRE 3",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "John A Bennett",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "FORT MYERS BEACH FIRE 5",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Steve Johnson",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "FORT MYERS BEACH MOSQUITO 1",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Greg Scasny",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "FORT MYERS BEACH LIBRARY 4",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Paul Cerrito",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "FORT MYERS SHORES FIRE 4",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Anita Kressel",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "FORT MYERS SHORES FIRE 4",
+      "filedDate": "6/5/2026"
+    },
+    {
+      "name": "Joseph Ragen",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "FORT MYERS SHORES FIRE 5",
+      "filedDate": "6/5/2026"
+    },
+    {
+      "name": "Ethan Langford",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "IONA-MCGREGOR FIRE 1",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Paul Martin Louwers",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "IONA-MCGREGOR FIRE 1",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Kerry Knuuti Pirrone",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "IONA-MCGREGOR FIRE 1",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "James G Andersen",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "IONA-MCGREGOR FIRE 3",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Steven Barbosa",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "IONA-MCGREGOR FIRE 5",
+      "filedDate": "5/28/2026"
+    },
+    {
+      "name": "Paul A Griffin",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "BAYSHORE FIRE 1",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Tracy R Hansen",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "BAYSHORE FIRE 3",
+      "filedDate": "6/5/2026"
+    },
+    {
+      "name": "Thomas A \"Tony\" Mere",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "BAYSHORE FIRE 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Linda Carter",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "LEHIGH ACRES FIRE 2",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Cia Gomez-Sherman",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "LEHIGH ACRES FIRE 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "John E Cammick",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "MATLACHA/PINE ISLAND FIRE 4",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Joe Hernandez",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "MATLACHA/PINE ISLAND FIRE 5",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "Mike Gatewood",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "NORTH FORT MYERS FIRE 1",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Justin M. Thomas",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "NORTH FORT MYERS FIRE 1",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Doug Dailey",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "NORTH FORT MYERS FIRE 3",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Thomas C Mere",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "NORTH FORT MYERS FIRE 3",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "Joshua \"Bodacious\" Krohn",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "NORTH FORT MYERS FIRE 5",
+      "filedDate": "6/5/2026"
+    },
+    {
+      "name": "Bill Schaible",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "NORTH FORT MYERS FIRE 5",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Matthew Fields",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SAN CARLOS PARK FIRE 1",
+      "filedDate": "6/3/2026"
+    },
+    {
+      "name": "Mark Stirns",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SAN CARLOS PARK FIRE 3",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Michael A. Muttie",
+      "printedParty": "NON",
+      "status": "Elected Unopposed",
+      "statusClass": "Status-EU",
+      "office": "SAN CARLOS PARK FIRE 4",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Steve Tokarz",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SAN CARLOS PARK FIRE 5",
+      "filedDate": "6/3/2026"
+    },
+    {
+      "name": "Richard McCurry",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SANIBEL FIRE 1",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Bruce Cochrane",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SANIBEL FIRE 2",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "Linda Uhler",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SANIBEL PUBLIC LIBRARY 1",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Chelle Koster Walton",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SANIBEL PUBLIC LIBRARY 2",
+      "filedDate": "6/5/2026"
+    },
+    {
+      "name": "Michelle Walker",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SANIBEL PUBLIC LIBRARY 3",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Shelley Greggs",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SANIBEL PUBLIC LIBRARY 5",
+      "filedDate": "6/2/2026"
+    },
+    {
+      "name": "Sandon C Shepard",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SANIBEL PUBLIC LIBRARY 6",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Ellen Ryan-Vinciguerra",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SANIBEL PUBLIC LIBRARY 7",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "A Kenneth Brown, Jr",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SOUTH TRAIL FIRE 1",
+      "filedDate": "6/5/2026"
+    },
+    {
+      "name": "Robert McDonnell, Jr",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "SOUTH TRAIL FIRE 3",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "David Howard",
+      "printedParty": "NON",
+      "status": "Qualified",
+      "statusClass": "Status-Q",
+      "office": "SOUTH TRAIL FIRE 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Ron Tarantino",
+      "printedParty": "NON",
+      "status": "Qualified Incumbent",
+      "statusClass": "Status-Q",
+      "office": "SOUTH TRAIL FIRE 5",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "Joseph Gambino",
+      "printedParty": "NON",
+      "status": "Elected Unopposed",
+      "statusClass": "Status-EU",
+      "office": "TICE FIRE 1",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "Ted Pickering, Sr",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "TICE FIRE 3",
+      "filedDate": "6/1/2026"
+    },
+    {
+      "name": "James Burgess",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "TICE FIRE 5",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "William R Fry",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "UPPER CAPTIVA FIRE 1",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "Hammond Van",
+      "printedParty": "NON",
+      "status": "Elected Unopposed Incumbent",
+      "statusClass": "Status-EU",
+      "office": "UPPER CAPTIVA FIRE 2",
+      "filedDate": "6/8/2026"
+    }
+  ],
+  "sourceRole": "FILINGS_AND_STATUSES_NOT_ACTUAL_SAMPLE",
+  "limit": "184 filing rows are not 184 November ballot choices. Primary winners, unopposed, withdrawn, defeated and nonqualifying records remain statuses. Municipal fields rely on actual samples and withdrawal notice. Addresses and voter IDs excluded from parsed inventory."
+}

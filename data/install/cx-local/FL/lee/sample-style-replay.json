@@ -1,0 +1,3067 @@
+{
+  "physicalPages": 390,
+  "uniquePrintedStyleIds": 193,
+  "twoPageStyles": 191,
+  "fourPageStyles": 2,
+  "fourPageStyleIds": [
+    "N3090",
+    "N3210"
+  ],
+  "officialDateHeaders": 195,
+  "completeLocalOccurrences": 924,
+  "uniquePrintedLocalFields": 42,
+  "allPrintedLocalNames": 91,
+  "brochureVotingFields": 41,
+  "brochurePrintedNames": 89,
+  "gatewayStatusOnlyPrintedFieldNames": 2,
+  "fullFieldNamePartyVoteLimitEquality": "PASS",
+  "brochureToActualFullNameSetReplay": "PASS",
+  "rosterRecords": 184,
+  "rosterStatusCounts": {
+    "Withdrew": 8,
+    "Qualified Incumbent": 27,
+    "Qualified": 38,
+    "Elected": 2,
+    "Did not Qualify": 3,
+    "Defeated": 7,
+    "Elected Unopposed Incumbent": 85,
+    "Elected Incumbent": 2,
+    "Elected Unopposed": 11,
+    "Did not Qualify Incumbent": 1
+  },
+  "namedWriRecords": [
+    {
+      "name": "Michael Mincieli",
+      "printedParty": "WRI",
+      "status": "Did not Qualify",
+      "statusClass": "Status-DQ",
+      "office": "COUNTY COMMISSIONER 5",
+      "filedDate": "4/28/2026"
+    }
+  ],
+  "styles": [
+    {
+      "printedStyleId": "N1010",
+      "pdfPages": [
+        1,
+        2
+      ]
+    },
+    {
+      "printedStyleId": "N1020",
+      "pdfPages": [
+        3,
+        4
+      ]
+    },
+    {
+      "printedStyleId": "N1030",
+      "pdfPages": [
+        5,
+        6
+      ]
+    },
+    {
+      "printedStyleId": "N1040",
+      "pdfPages": [
+        7,
+        8
+      ]
+    },
+    {
+      "printedStyleId": "N1050",
+      "pdfPages": [
+        9,
+        10
+      ]
+    },
+    {
+      "printedStyleId": "N1060",
+      "pdfPages": [
+        11,
+        12
+      ]
+    },
+    {
+      "printedStyleId": "N1070",
+      "pdfPages": [
+        13,
+        14
+      ]
+    },
+    {
+      "printedStyleId": "N1080",
+      "pdfPages": [
+        15,
+        16
+      ]
+    },
+    {
+      "printedStyleId": "N1090",
+      "pdfPages": [
+        17,
+        18
+      ]
+    },
+    {
+      "printedStyleId": "N1100",
+      "pdfPages": [
+        19,
+        20
+      ]
+    },
+    {
+      "printedStyleId": "N1110",
+      "pdfPages": [
+        21,
+        22
+      ]
+    },
+    {
+      "printedStyleId": "N1120",
+      "pdfPages": [
+        23,
+        24
+      ]
+    },
+    {
+      "printedStyleId": "N1121",
+      "pdfPages": [
+        25,
+        26
+      ]
+    },
+    {
+      "printedStyleId": "N1130",
+      "pdfPages": [
+        27,
+        28
+      ]
+    },
+    {
+      "printedStyleId": "N1140",
+      "pdfPages": [
+        29,
+        30
+      ]
+    },
+    {
+      "printedStyleId": "N1150",
+      "pdfPages": [
+        31,
+        32
+      ]
+    },
+    {
+      "printedStyleId": "N1160",
+      "pdfPages": [
+        33,
+        34
+      ]
+    },
+    {
+      "printedStyleId": "N1161",
+      "pdfPages": [
+        35,
+        36
+      ]
+    },
+    {
+      "printedStyleId": "N1170",
+      "pdfPages": [
+        37,
+        38
+      ]
+    },
+    {
+      "printedStyleId": "N1171",
+      "pdfPages": [
+        39,
+        40
+      ]
+    },
+    {
+      "printedStyleId": "N1180",
+      "pdfPages": [
+        41,
+        42
+      ]
+    },
+    {
+      "printedStyleId": "N1181",
+      "pdfPages": [
+        43,
+        44
+      ]
+    },
+    {
+      "printedStyleId": "N1190",
+      "pdfPages": [
+        45,
+        46
+      ]
+    },
+    {
+      "printedStyleId": "N1191",
+      "pdfPages": [
+        47,
+        48
+      ]
+    },
+    {
+      "printedStyleId": "N1200",
+      "pdfPages": [
+        49,
+        50
+      ]
+    },
+    {
+      "printedStyleId": "N1210",
+      "pdfPages": [
+        51,
+        52
+      ]
+    },
+    {
+      "printedStyleId": "N1211",
+      "pdfPages": [
+        53,
+        54
+      ]
+    },
+    {
+      "printedStyleId": "N1212",
+      "pdfPages": [
+        55,
+        56
+      ]
+    },
+    {
+      "printedStyleId": "N1220",
+      "pdfPages": [
+        57,
+        58
+      ]
+    },
+    {
+      "printedStyleId": "N2010",
+      "pdfPages": [
+        59,
+        60
+      ]
+    },
+    {
+      "printedStyleId": "N2011",
+      "pdfPages": [
+        61,
+        62
+      ]
+    },
+    {
+      "printedStyleId": "N2012",
+      "pdfPages": [
+        63,
+        64
+      ]
+    },
+    {
+      "printedStyleId": "N2020",
+      "pdfPages": [
+        65,
+        66
+      ]
+    },
+    {
+      "printedStyleId": "N2021",
+      "pdfPages": [
+        67,
+        68
+      ]
+    },
+    {
+      "printedStyleId": "N2023",
+      "pdfPages": [
+        69,
+        70
+      ]
+    },
+    {
+      "printedStyleId": "N2024",
+      "pdfPages": [
+        71,
+        72
+      ]
+    },
+    {
+      "printedStyleId": "N2030",
+      "pdfPages": [
+        73,
+        74
+      ]
+    },
+    {
+      "printedStyleId": "N2031",
+      "pdfPages": [
+        75,
+        76
+      ]
+    },
+    {
+      "printedStyleId": "N2032",
+      "pdfPages": [
+        77,
+        78
+      ]
+    },
+    {
+      "printedStyleId": "N2033",
+      "pdfPages": [
+        79,
+        80
+      ]
+    },
+    {
+      "printedStyleId": "N2034",
+      "pdfPages": [
+        81,
+        82
+      ]
+    },
+    {
+      "printedStyleId": "N2035",
+      "pdfPages": [
+        83,
+        84
+      ]
+    },
+    {
+      "printedStyleId": "N2040",
+      "pdfPages": [
+        85,
+        86
+      ]
+    },
+    {
+      "printedStyleId": "N2041",
+      "pdfPages": [
+        87,
+        88
+      ]
+    },
+    {
+      "printedStyleId": "N2050",
+      "pdfPages": [
+        89,
+        90
+      ]
+    },
+    {
+      "printedStyleId": "N2051",
+      "pdfPages": [
+        91,
+        92
+      ]
+    },
+    {
+      "printedStyleId": "N2052",
+      "pdfPages": [
+        93,
+        94
+      ]
+    },
+    {
+      "printedStyleId": "N2053",
+      "pdfPages": [
+        95,
+        96
+      ]
+    },
+    {
+      "printedStyleId": "N2060",
+      "pdfPages": [
+        97,
+        98
+      ]
+    },
+    {
+      "printedStyleId": "N2065",
+      "pdfPages": [
+        99,
+        100
+      ]
+    },
+    {
+      "printedStyleId": "N2066",
+      "pdfPages": [
+        101,
+        102
+      ]
+    },
+    {
+      "printedStyleId": "N2070",
+      "pdfPages": [
+        103,
+        104
+      ]
+    },
+    {
+      "printedStyleId": "N2074",
+      "pdfPages": [
+        105,
+        106
+      ]
+    },
+    {
+      "printedStyleId": "N2080",
+      "pdfPages": [
+        107,
+        108
+      ]
+    },
+    {
+      "printedStyleId": "N2081",
+      "pdfPages": [
+        109,
+        110
+      ]
+    },
+    {
+      "printedStyleId": "N2082",
+      "pdfPages": [
+        111,
+        112
+      ]
+    },
+    {
+      "printedStyleId": "N2085",
+      "pdfPages": [
+        113,
+        114
+      ]
+    },
+    {
+      "printedStyleId": "N2086",
+      "pdfPages": [
+        115,
+        116
+      ]
+    },
+    {
+      "printedStyleId": "N2090",
+      "pdfPages": [
+        117,
+        118
+      ]
+    },
+    {
+      "printedStyleId": "N2091",
+      "pdfPages": [
+        119,
+        120
+      ]
+    },
+    {
+      "printedStyleId": "N2100",
+      "pdfPages": [
+        121,
+        122
+      ]
+    },
+    {
+      "printedStyleId": "N2101",
+      "pdfPages": [
+        123,
+        124
+      ]
+    },
+    {
+      "printedStyleId": "N2110",
+      "pdfPages": [
+        125,
+        126
+      ]
+    },
+    {
+      "printedStyleId": "N2111",
+      "pdfPages": [
+        127,
+        128
+      ]
+    },
+    {
+      "printedStyleId": "N2120",
+      "pdfPages": [
+        129,
+        130
+      ]
+    },
+    {
+      "printedStyleId": "N2130",
+      "pdfPages": [
+        131,
+        132
+      ]
+    },
+    {
+      "printedStyleId": "N2140",
+      "pdfPages": [
+        133,
+        134
+      ]
+    },
+    {
+      "printedStyleId": "N2150",
+      "pdfPages": [
+        135,
+        136
+      ]
+    },
+    {
+      "printedStyleId": "N2152",
+      "pdfPages": [
+        137,
+        138
+      ]
+    },
+    {
+      "printedStyleId": "N2160",
+      "pdfPages": [
+        139,
+        140
+      ]
+    },
+    {
+      "printedStyleId": "N2161",
+      "pdfPages": [
+        141,
+        142
+      ]
+    },
+    {
+      "printedStyleId": "N2162",
+      "pdfPages": [
+        143,
+        144
+      ]
+    },
+    {
+      "printedStyleId": "N2170",
+      "pdfPages": [
+        145,
+        146
+      ]
+    },
+    {
+      "printedStyleId": "N2180",
+      "pdfPages": [
+        147,
+        148
+      ]
+    },
+    {
+      "printedStyleId": "N2190",
+      "pdfPages": [
+        149,
+        150
+      ]
+    },
+    {
+      "printedStyleId": "N2200",
+      "pdfPages": [
+        151,
+        152
+      ]
+    },
+    {
+      "printedStyleId": "N2210",
+      "pdfPages": [
+        153,
+        154
+      ]
+    },
+    {
+      "printedStyleId": "N2211",
+      "pdfPages": [
+        155,
+        156
+      ]
+    },
+    {
+      "printedStyleId": "N2220",
+      "pdfPages": [
+        157,
+        158
+      ]
+    },
+    {
+      "printedStyleId": "N3010",
+      "pdfPages": [
+        159,
+        160
+      ]
+    },
+    {
+      "printedStyleId": "N3011",
+      "pdfPages": [
+        161,
+        162
+      ]
+    },
+    {
+      "printedStyleId": "N3020",
+      "pdfPages": [
+        163,
+        164
+      ]
+    },
+    {
+      "printedStyleId": "N3030",
+      "pdfPages": [
+        165,
+        166
+      ]
+    },
+    {
+      "printedStyleId": "N3032",
+      "pdfPages": [
+        167,
+        168
+      ]
+    },
+    {
+      "printedStyleId": "N3040",
+      "pdfPages": [
+        169,
+        170
+      ]
+    },
+    {
+      "printedStyleId": "N3041",
+      "pdfPages": [
+        171,
+        172
+      ]
+    },
+    {
+      "printedStyleId": "N3050",
+      "pdfPages": [
+        173,
+        174
+      ]
+    },
+    {
+      "printedStyleId": "N3060",
+      "pdfPages": [
+        175,
+        176
+      ]
+    },
+    {
+      "printedStyleId": "N3070",
+      "pdfPages": [
+        177,
+        178
+      ]
+    },
+    {
+      "printedStyleId": "N3071",
+      "pdfPages": [
+        179,
+        180
+      ]
+    },
+    {
+      "printedStyleId": "N3080",
+      "pdfPages": [
+        181,
+        182
+      ]
+    },
+    {
+      "printedStyleId": "N3090",
+      "pdfPages": [
+        183,
+        184,
+        185,
+        186
+      ]
+    },
+    {
+      "printedStyleId": "N3100",
+      "pdfPages": [
+        187,
+        188
+      ]
+    },
+    {
+      "printedStyleId": "N3110",
+      "pdfPages": [
+        189,
+        190
+      ]
+    },
+    {
+      "printedStyleId": "N3111",
+      "pdfPages": [
+        191,
+        192
+      ]
+    },
+    {
+      "printedStyleId": "N3120",
+      "pdfPages": [
+        193,
+        194
+      ]
+    },
+    {
+      "printedStyleId": "N3123",
+      "pdfPages": [
+        195,
+        196
+      ]
+    },
+    {
+      "printedStyleId": "N3124",
+      "pdfPages": [
+        197,
+        198
+      ]
+    },
+    {
+      "printedStyleId": "N3125",
+      "pdfPages": [
+        199,
+        200
+      ]
+    },
+    {
+      "printedStyleId": "N3130",
+      "pdfPages": [
+        201,
+        202
+      ]
+    },
+    {
+      "printedStyleId": "N3137",
+      "pdfPages": [
+        203,
+        204
+      ]
+    },
+    {
+      "printedStyleId": "N3140",
+      "pdfPages": [
+        205,
+        206
+      ]
+    },
+    {
+      "printedStyleId": "N3142",
+      "pdfPages": [
+        207,
+        208
+      ]
+    },
+    {
+      "printedStyleId": "N3143",
+      "pdfPages": [
+        209,
+        210
+      ]
+    },
+    {
+      "printedStyleId": "N3145",
+      "pdfPages": [
+        211,
+        212
+      ]
+    },
+    {
+      "printedStyleId": "N3146",
+      "pdfPages": [
+        213,
+        214
+      ]
+    },
+    {
+      "printedStyleId": "N3150",
+      "pdfPages": [
+        215,
+        216
+      ]
+    },
+    {
+      "printedStyleId": "N3151",
+      "pdfPages": [
+        217,
+        218
+      ]
+    },
+    {
+      "printedStyleId": "N3152",
+      "pdfPages": [
+        219,
+        220
+      ]
+    },
+    {
+      "printedStyleId": "N3160",
+      "pdfPages": [
+        221,
+        222
+      ]
+    },
+    {
+      "printedStyleId": "N3161",
+      "pdfPages": [
+        223,
+        224
+      ]
+    },
+    {
+      "printedStyleId": "N3163",
+      "pdfPages": [
+        225,
+        226
+      ]
+    },
+    {
+      "printedStyleId": "N3165",
+      "pdfPages": [
+        227,
+        228
+      ]
+    },
+    {
+      "printedStyleId": "N3170",
+      "pdfPages": [
+        229,
+        230
+      ]
+    },
+    {
+      "printedStyleId": "N3172",
+      "pdfPages": [
+        231,
+        232
+      ]
+    },
+    {
+      "printedStyleId": "N3180",
+      "pdfPages": [
+        233,
+        234
+      ]
+    },
+    {
+      "printedStyleId": "N3181",
+      "pdfPages": [
+        235,
+        236
+      ]
+    },
+    {
+      "printedStyleId": "N3190",
+      "pdfPages": [
+        237,
+        238
+      ]
+    },
+    {
+      "printedStyleId": "N3191",
+      "pdfPages": [
+        239,
+        240
+      ]
+    },
+    {
+      "printedStyleId": "N3192",
+      "pdfPages": [
+        241,
+        242
+      ]
+    },
+    {
+      "printedStyleId": "N3193",
+      "pdfPages": [
+        243,
+        244
+      ]
+    },
+    {
+      "printedStyleId": "N3200",
+      "pdfPages": [
+        245,
+        246
+      ]
+    },
+    {
+      "printedStyleId": "N3203",
+      "pdfPages": [
+        247,
+        248
+      ]
+    },
+    {
+      "printedStyleId": "N3210",
+      "pdfPages": [
+        249,
+        250,
+        251,
+        252
+      ]
+    },
+    {
+      "printedStyleId": "N4010",
+      "pdfPages": [
+        253,
+        254
+      ]
+    },
+    {
+      "printedStyleId": "N4020",
+      "pdfPages": [
+        255,
+        256
+      ]
+    },
+    {
+      "printedStyleId": "N4021",
+      "pdfPages": [
+        257,
+        258
+      ]
+    },
+    {
+      "printedStyleId": "N4023",
+      "pdfPages": [
+        259,
+        260
+      ]
+    },
+    {
+      "printedStyleId": "N4030",
+      "pdfPages": [
+        261,
+        262
+      ]
+    },
+    {
+      "printedStyleId": "N4031",
+      "pdfPages": [
+        263,
+        264
+      ]
+    },
+    {
+      "printedStyleId": "N4032",
+      "pdfPages": [
+        265,
+        266
+      ]
+    },
+    {
+      "printedStyleId": "N4040",
+      "pdfPages": [
+        267,
+        268
+      ]
+    },
+    {
+      "printedStyleId": "N4041",
+      "pdfPages": [
+        269,
+        270
+      ]
+    },
+    {
+      "printedStyleId": "N4050",
+      "pdfPages": [
+        271,
+        272
+      ]
+    },
+    {
+      "printedStyleId": "N4060",
+      "pdfPages": [
+        273,
+        274
+      ]
+    },
+    {
+      "printedStyleId": "N4070",
+      "pdfPages": [
+        275,
+        276
+      ]
+    },
+    {
+      "printedStyleId": "N4080",
+      "pdfPages": [
+        277,
+        278
+      ]
+    },
+    {
+      "printedStyleId": "N4083",
+      "pdfPages": [
+        279,
+        280
+      ]
+    },
+    {
+      "printedStyleId": "N4090",
+      "pdfPages": [
+        281,
+        282
+      ]
+    },
+    {
+      "printedStyleId": "N4091",
+      "pdfPages": [
+        283,
+        284
+      ]
+    },
+    {
+      "printedStyleId": "N4092",
+      "pdfPages": [
+        285,
+        286
+      ]
+    },
+    {
+      "printedStyleId": "N4100",
+      "pdfPages": [
+        287,
+        288
+      ]
+    },
+    {
+      "printedStyleId": "N4110",
+      "pdfPages": [
+        289,
+        290
+      ]
+    },
+    {
+      "printedStyleId": "N4120",
+      "pdfPages": [
+        291,
+        292
+      ]
+    },
+    {
+      "printedStyleId": "N4130",
+      "pdfPages": [
+        293,
+        294
+      ]
+    },
+    {
+      "printedStyleId": "N4140",
+      "pdfPages": [
+        295,
+        296
+      ]
+    },
+    {
+      "printedStyleId": "N4150",
+      "pdfPages": [
+        297,
+        298
+      ]
+    },
+    {
+      "printedStyleId": "N4151",
+      "pdfPages": [
+        299,
+        300
+      ]
+    },
+    {
+      "printedStyleId": "N4153",
+      "pdfPages": [
+        301,
+        302
+      ]
+    },
+    {
+      "printedStyleId": "N4160",
+      "pdfPages": [
+        303,
+        304
+      ]
+    },
+    {
+      "printedStyleId": "N4161",
+      "pdfPages": [
+        305,
+        306
+      ]
+    },
+    {
+      "printedStyleId": "N4163",
+      "pdfPages": [
+        307,
+        308
+      ]
+    },
+    {
+      "printedStyleId": "N4170",
+      "pdfPages": [
+        309,
+        310
+      ]
+    },
+    {
+      "printedStyleId": "N4171",
+      "pdfPages": [
+        311,
+        312
+      ]
+    },
+    {
+      "printedStyleId": "N5010",
+      "pdfPages": [
+        313,
+        314
+      ]
+    },
+    {
+      "printedStyleId": "N5011",
+      "pdfPages": [
+        315,
+        316
+      ]
+    },
+    {
+      "printedStyleId": "N5012",
+      "pdfPages": [
+        317,
+        318
+      ]
+    },
+    {
+      "printedStyleId": "N5013",
+      "pdfPages": [
+        319,
+        320
+      ]
+    },
+    {
+      "printedStyleId": "N5020",
+      "pdfPages": [
+        321,
+        322
+      ]
+    },
+    {
+      "printedStyleId": "N5021",
+      "pdfPages": [
+        323,
+        324
+      ]
+    },
+    {
+      "printedStyleId": "N5030",
+      "pdfPages": [
+        325,
+        326
+      ]
+    },
+    {
+      "printedStyleId": "N5031",
+      "pdfPages": [
+        327,
+        328
+      ]
+    },
+    {
+      "printedStyleId": "N5032",
+      "pdfPages": [
+        329,
+        330
+      ]
+    },
+    {
+      "printedStyleId": "N5040",
+      "pdfPages": [
+        331,
+        332
+      ]
+    },
+    {
+      "printedStyleId": "N5041",
+      "pdfPages": [
+        333,
+        334
+      ]
+    },
+    {
+      "printedStyleId": "N5043",
+      "pdfPages": [
+        335,
+        336
+      ]
+    },
+    {
+      "printedStyleId": "N5044",
+      "pdfPages": [
+        337,
+        338
+      ]
+    },
+    {
+      "printedStyleId": "N5045",
+      "pdfPages": [
+        339,
+        340
+      ]
+    },
+    {
+      "printedStyleId": "N5050",
+      "pdfPages": [
+        341,
+        342
+      ]
+    },
+    {
+      "printedStyleId": "N5051",
+      "pdfPages": [
+        343,
+        344
+      ]
+    },
+    {
+      "printedStyleId": "N5060",
+      "pdfPages": [
+        345,
+        346
+      ]
+    },
+    {
+      "printedStyleId": "N5070",
+      "pdfPages": [
+        347,
+        348
+      ]
+    },
+    {
+      "printedStyleId": "N5080",
+      "pdfPages": [
+        349,
+        350
+      ]
+    },
+    {
+      "printedStyleId": "N5090",
+      "pdfPages": [
+        351,
+        352
+      ]
+    },
+    {
+      "printedStyleId": "N5100",
+      "pdfPages": [
+        353,
+        354
+      ]
+    },
+    {
+      "printedStyleId": "N5101",
+      "pdfPages": [
+        355,
+        356
+      ]
+    },
+    {
+      "printedStyleId": "N5110",
+      "pdfPages": [
+        357,
+        358
+      ]
+    },
+    {
+      "printedStyleId": "N5111",
+      "pdfPages": [
+        359,
+        360
+      ]
+    },
+    {
+      "printedStyleId": "N5120",
+      "pdfPages": [
+        361,
+        362
+      ]
+    },
+    {
+      "printedStyleId": "N5121",
+      "pdfPages": [
+        363,
+        364
+      ]
+    },
+    {
+      "printedStyleId": "N5122",
+      "pdfPages": [
+        365,
+        366
+      ]
+    },
+    {
+      "printedStyleId": "N5130",
+      "pdfPages": [
+        367,
+        368
+      ]
+    },
+    {
+      "printedStyleId": "N5131",
+      "pdfPages": [
+        369,
+        370
+      ]
+    },
+    {
+      "printedStyleId": "N5132",
+      "pdfPages": [
+        371,
+        372
+      ]
+    },
+    {
+      "printedStyleId": "N5140",
+      "pdfPages": [
+        373,
+        374
+      ]
+    },
+    {
+      "printedStyleId": "N5141",
+      "pdfPages": [
+        375,
+        376
+      ]
+    },
+    {
+      "printedStyleId": "N5150",
+      "pdfPages": [
+        377,
+        378
+      ]
+    },
+    {
+      "printedStyleId": "N5151",
+      "pdfPages": [
+        379,
+        380
+      ]
+    },
+    {
+      "printedStyleId": "N5160",
+      "pdfPages": [
+        381,
+        382
+      ]
+    },
+    {
+      "printedStyleId": "N5161",
+      "pdfPages": [
+        383,
+        384
+      ]
+    },
+    {
+      "printedStyleId": "N5162",
+      "pdfPages": [
+        385,
+        386
+      ]
+    },
+    {
+      "printedStyleId": "N5163",
+      "pdfPages": [
+        387,
+        388
+      ]
+    },
+    {
+      "printedStyleId": "N5170",
+      "pdfPages": [
+        389,
+        390
+      ]
+    }
+  ],
+  "uniqueFields": [
+    {
+      "title": "Supervisor of Elections",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Jenna Persons-Mulicka",
+          "printedParty": "REP"
+        },
+        {
+          "name": "Chris Vignieri",
+          "printedParty": "DEM"
+        }
+      ],
+      "actualStyles": 193,
+      "pdfPages": [
+        1,
+        3,
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17,
+        19,
+        21,
+        23,
+        25,
+        27,
+        29,
+        31,
+        33,
+        35,
+        37,
+        39,
+        41,
+        43,
+        45,
+        47,
+        49,
+        51,
+        53,
+        55,
+        57,
+        59,
+        61,
+        63,
+        65,
+        67,
+        69,
+        71,
+        73,
+        75,
+        77,
+        79,
+        81,
+        83,
+        85,
+        87,
+        89,
+        91,
+        93,
+        95,
+        97,
+        99,
+        101,
+        103,
+        105,
+        107,
+        109,
+        111,
+        113,
+        115,
+        117,
+        119,
+        121,
+        123,
+        125,
+        127,
+        129,
+        131,
+        133,
+        135,
+        137,
+        139,
+        141,
+        143,
+        145,
+        147,
+        149,
+        151,
+        153,
+        155,
+        157,
+        159,
+        161,
+        163,
+        165,
+        167,
+        169,
+        171,
+        173,
+        175,
+        177,
+        179,
+        181,
+        183,
+        187,
+        189,
+        191,
+        193,
+        195,
+        197,
+        199,
+        201,
+        203,
+        205,
+        207,
+        209,
+        211,
+        213,
+        215,
+        217,
+        219,
+        221,
+        223,
+        225,
+        227,
+        229,
+        231,
+        233,
+        235,
+        237,
+        239,
+        241,
+        243,
+        245,
+        247,
+        249,
+        253,
+        255,
+        257,
+        259,
+        261,
+        263,
+        265,
+        267,
+        269,
+        271,
+        273,
+        275,
+        277,
+        279,
+        281,
+        283,
+        285,
+        287,
+        289,
+        291,
+        293,
+        295,
+        297,
+        299,
+        301,
+        303,
+        305,
+        307,
+        309,
+        311,
+        313,
+        315,
+        317,
+        319,
+        321,
+        323,
+        325,
+        327,
+        329,
+        331,
+        333,
+        335,
+        337,
+        339,
+        341,
+        343,
+        345,
+        347,
+        349,
+        351,
+        353,
+        355,
+        357,
+        359,
+        361,
+        363,
+        365,
+        367,
+        369,
+        371,
+        373,
+        375,
+        377,
+        379,
+        381,
+        383,
+        385,
+        387,
+        389
+      ]
+    },
+    {
+      "title": "Board of County Commissioners District 2",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Cecil L. Pendergrass",
+          "printedParty": "REP"
+        },
+        {
+          "name": "Elliot Taylor",
+          "printedParty": "DEM"
+        }
+      ],
+      "actualStyles": 193,
+      "pdfPages": [
+        1,
+        3,
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17,
+        19,
+        21,
+        23,
+        25,
+        27,
+        29,
+        31,
+        33,
+        35,
+        37,
+        39,
+        41,
+        43,
+        45,
+        47,
+        49,
+        51,
+        53,
+        55,
+        57,
+        59,
+        61,
+        63,
+        65,
+        67,
+        69,
+        71,
+        73,
+        75,
+        77,
+        79,
+        81,
+        83,
+        85,
+        87,
+        89,
+        91,
+        93,
+        95,
+        97,
+        99,
+        101,
+        103,
+        105,
+        107,
+        109,
+        111,
+        113,
+        115,
+        117,
+        119,
+        121,
+        123,
+        125,
+        127,
+        129,
+        131,
+        133,
+        135,
+        137,
+        139,
+        141,
+        143,
+        145,
+        147,
+        149,
+        151,
+        153,
+        155,
+        157,
+        159,
+        161,
+        163,
+        165,
+        167,
+        169,
+        171,
+        173,
+        175,
+        177,
+        179,
+        181,
+        183,
+        187,
+        189,
+        191,
+        193,
+        195,
+        197,
+        199,
+        201,
+        203,
+        205,
+        207,
+        209,
+        211,
+        213,
+        215,
+        217,
+        219,
+        221,
+        223,
+        225,
+        227,
+        229,
+        231,
+        233,
+        235,
+        237,
+        239,
+        241,
+        243,
+        245,
+        247,
+        249,
+        253,
+        255,
+        257,
+        259,
+        261,
+        263,
+        265,
+        267,
+        269,
+        271,
+        273,
+        275,
+        277,
+        279,
+        281,
+        283,
+        285,
+        287,
+        289,
+        291,
+        293,
+        295,
+        297,
+        299,
+        301,
+        303,
+        305,
+        307,
+        309,
+        311,
+        313,
+        315,
+        317,
+        319,
+        321,
+        323,
+        325,
+        327,
+        329,
+        331,
+        333,
+        335,
+        337,
+        339,
+        341,
+        343,
+        345,
+        347,
+        349,
+        351,
+        353,
+        355,
+        357,
+        359,
+        361,
+        363,
+        365,
+        367,
+        369,
+        371,
+        373,
+        375,
+        377,
+        379,
+        381,
+        383,
+        385,
+        387,
+        389
+      ]
+    },
+    {
+      "title": "Board of County Commissioners District 4",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Brian Hamman",
+          "printedParty": "REP"
+        },
+        {
+          "name": "DeMaria \"Princess\" Artis",
+          "printedParty": "NPA"
+        }
+      ],
+      "actualStyles": 193,
+      "pdfPages": [
+        1,
+        3,
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17,
+        19,
+        21,
+        23,
+        25,
+        27,
+        29,
+        31,
+        33,
+        35,
+        37,
+        39,
+        41,
+        43,
+        45,
+        47,
+        49,
+        51,
+        53,
+        55,
+        57,
+        59,
+        61,
+        63,
+        65,
+        67,
+        69,
+        71,
+        73,
+        75,
+        77,
+        79,
+        81,
+        83,
+        85,
+        87,
+        89,
+        91,
+        93,
+        95,
+        97,
+        99,
+        101,
+        103,
+        105,
+        107,
+        109,
+        111,
+        113,
+        115,
+        117,
+        119,
+        121,
+        123,
+        125,
+        127,
+        129,
+        131,
+        133,
+        135,
+        137,
+        139,
+        141,
+        143,
+        145,
+        147,
+        149,
+        151,
+        153,
+        155,
+        157,
+        159,
+        161,
+        163,
+        165,
+        167,
+        169,
+        171,
+        173,
+        175,
+        177,
+        179,
+        181,
+        183,
+        187,
+        189,
+        191,
+        193,
+        195,
+        197,
+        199,
+        201,
+        203,
+        205,
+        207,
+        209,
+        211,
+        213,
+        215,
+        217,
+        219,
+        221,
+        223,
+        225,
+        227,
+        229,
+        231,
+        233,
+        235,
+        237,
+        239,
+        241,
+        243,
+        245,
+        247,
+        249,
+        253,
+        255,
+        257,
+        259,
+        261,
+        263,
+        265,
+        267,
+        269,
+        271,
+        273,
+        275,
+        277,
+        279,
+        281,
+        283,
+        285,
+        287,
+        289,
+        291,
+        293,
+        295,
+        297,
+        299,
+        301,
+        303,
+        305,
+        307,
+        309,
+        311,
+        313,
+        315,
+        317,
+        319,
+        321,
+        323,
+        325,
+        327,
+        329,
+        331,
+        333,
+        335,
+        337,
+        339,
+        341,
+        343,
+        345,
+        347,
+        349,
+        351,
+        353,
+        355,
+        357,
+        359,
+        361,
+        363,
+        365,
+        367,
+        369,
+        371,
+        373,
+        375,
+        377,
+        379,
+        381,
+        383,
+        385,
+        387,
+        389
+      ]
+    },
+    {
+      "title": "City of Cape Coral Mayor",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Lisa Cohen-Adkinson",
+          "printedParty": null
+        },
+        {
+          "name": "Rick Erickson",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 29,
+      "pdfPages": [
+        1,
+        3,
+        5,
+        7,
+        11,
+        13,
+        15,
+        17,
+        19,
+        21,
+        25,
+        27,
+        29,
+        31,
+        39,
+        43,
+        49,
+        55,
+        257,
+        259,
+        261,
+        265,
+        269,
+        283,
+        285,
+        287,
+        289,
+        291,
+        295
+      ]
+    },
+    {
+      "title": "City of Cape Coral City Council District 1",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Dave Newton",
+          "printedParty": null
+        },
+        {
+          "name": "Tom Shadrach",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 29,
+      "pdfPages": [
+        1,
+        3,
+        5,
+        7,
+        11,
+        13,
+        15,
+        17,
+        19,
+        21,
+        25,
+        27,
+        29,
+        31,
+        39,
+        43,
+        49,
+        55,
+        257,
+        259,
+        261,
+        265,
+        269,
+        283,
+        285,
+        287,
+        289,
+        291,
+        295
+      ]
+    },
+    {
+      "title": "City of Cape Coral City Council District 4",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Jennifer Nelson Lastra",
+          "printedParty": null
+        },
+        {
+          "name": "James Vargas",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 29,
+      "pdfPages": [
+        1,
+        3,
+        5,
+        7,
+        11,
+        13,
+        15,
+        17,
+        19,
+        21,
+        25,
+        27,
+        29,
+        31,
+        39,
+        43,
+        49,
+        55,
+        257,
+        259,
+        261,
+        265,
+        269,
+        283,
+        285,
+        287,
+        289,
+        291,
+        295
+      ]
+    },
+    {
+      "title": "City of Cape Coral City Council District 6",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Liza King",
+          "printedParty": null
+        },
+        {
+          "name": "Annette Warren",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 29,
+      "pdfPages": [
+        1,
+        3,
+        5,
+        7,
+        11,
+        13,
+        15,
+        17,
+        19,
+        21,
+        25,
+        27,
+        29,
+        31,
+        39,
+        43,
+        49,
+        55,
+        257,
+        259,
+        261,
+        265,
+        269,
+        283,
+        285,
+        287,
+        289,
+        291,
+        295
+      ]
+    },
+    {
+      "title": "Captiva Erosion Prevention District Seat 1",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "John Raburn Dupre",
+          "printedParty": null
+        },
+        {
+          "name": "Margarethe Thye-Miville",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        33
+      ]
+    },
+    {
+      "title": "Captiva Erosion Prevention District Seat 3",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Michael Christopher Mullins",
+          "printedParty": null
+        },
+        {
+          "name": "Bob Walter",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        33
+      ]
+    },
+    {
+      "title": "South Trail Fire Protection and Rescue Service District Seat 5",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "David Howard",
+          "printedParty": null
+        },
+        {
+          "name": "Ron Tarantino",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 20,
+      "pdfPages": [
+        59,
+        61,
+        63,
+        75,
+        79,
+        81,
+        83,
+        85,
+        87,
+        89,
+        93,
+        105,
+        109,
+        111,
+        119,
+        127,
+        129,
+        131,
+        155,
+        223
+      ]
+    },
+    {
+      "title": "City of Fort Myers Mayor",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Kevin B. Anderson",
+          "printedParty": null
+        },
+        {
+          "name": "Amber Ware",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 19,
+      "pdfPages": [
+        65,
+        67,
+        69,
+        71,
+        113,
+        115,
+        121,
+        123,
+        141,
+        143,
+        145,
+        299,
+        301,
+        305,
+        307,
+        311,
+        335,
+        339,
+        375
+      ]
+    },
+    {
+      "title": "Colonial Country Club Community Development District Seat 2",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Doug Smith",
+          "printedParty": null
+        },
+        {
+          "name": "Joseph J. Zajac",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        67
+      ]
+    },
+    {
+      "title": "Gateway Services Community Development District Seat 4",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Paul LeoGrande",
+          "printedParty": null
+        },
+        {
+          "name": "Carole Pankau",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 3,
+      "pdfPages": [
+        69,
+        111,
+        119
+      ]
+    },
+    {
+      "title": "WildBlue Community Development District Seat 1",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Herbert Lanese",
+          "printedParty": null
+        },
+        {
+          "name": "Richard S. Losee",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        99
+      ]
+    },
+    {
+      "title": "WildBlue Community Development District Seat 2",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Sima Rae Baker",
+          "printedParty": null
+        },
+        {
+          "name": "Edward Houck",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        99
+      ]
+    },
+    {
+      "title": "Blue Lake Community Development District Seat 1",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "John Hadginikitas",
+          "printedParty": null
+        },
+        {
+          "name": "Steven Hamburger",
+          "printedParty": null
+        },
+        {
+          "name": "Paul Marsjanik",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        101
+      ]
+    },
+    {
+      "title": "City of Fort Myers City Council Ward 3",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Chantel \"Telly\" Rhodes",
+          "printedParty": null
+        },
+        {
+          "name": "Terolyn P. Watson",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 3,
+      "pdfPages": [
+        143,
+        301,
+        307
+      ]
+    },
+    {
+      "title": "Iona-McGregor Fire Protection and Rescue Service District Seat 1",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Ethan Langford",
+          "printedParty": null
+        },
+        {
+          "name": "Paul Martin Louwers",
+          "printedParty": null
+        },
+        {
+          "name": "Kerry Knuuti Pirrone",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 16,
+      "pdfPages": [
+        147,
+        149,
+        151,
+        153,
+        157,
+        221,
+        225,
+        227,
+        229,
+        231,
+        233,
+        235,
+        237,
+        243,
+        245,
+        247
+      ]
+    },
+    {
+      "title": "Bonita Springs Fire Control and Rescue District Seat 1",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Lawrence P. Kosilla",
+          "printedParty": null
+        },
+        {
+          "name": "James P. Murphy",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 13,
+      "pdfPages": [
+        161,
+        165,
+        169,
+        171,
+        187,
+        189,
+        191,
+        193,
+        195,
+        197,
+        199,
+        201,
+        203
+      ]
+    },
+    {
+      "title": "Town of Fort Myers Beach Town Council",
+      "voteFor": 3,
+      "allPrintedCandidates": [
+        {
+          "name": "Tom Brady",
+          "printedParty": null
+        },
+        {
+          "name": "Anita Cereceda",
+          "printedParty": null
+        },
+        {
+          "name": "Rebecca Link",
+          "printedParty": null
+        },
+        {
+          "name": "John McLean",
+          "printedParty": null
+        },
+        {
+          "name": "Edward J. Schoonover",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 2,
+      "pdfPages": [
+        183,
+        249
+      ]
+    },
+    {
+      "title": "Fort Myers Beach Fire Control District Seat 1",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Jim Knickle",
+          "printedParty": null
+        },
+        {
+          "name": "Bret Randle",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 4,
+      "pdfPages": [
+        183,
+        239,
+        241,
+        249
+      ]
+    },
+    {
+      "title": "City of Bonita Springs City Council District 3",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Ruth Condit",
+          "printedParty": null
+        },
+        {
+          "name": "Ray Sandelli",
+          "printedParty": null
+        },
+        {
+          "name": "Tim Voit",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 3,
+      "pdfPages": [
+        187,
+        197,
+        199
+      ]
+    },
+    {
+      "title": "City of Bonita Springs City Council District 5",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "James Anderst",
+          "printedParty": null
+        },
+        {
+          "name": "Nigel Patrick Fullick",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        191
+      ]
+    },
+    {
+      "title": "Vasari Community Development District Seat 5",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Kurt Deter",
+          "printedParty": null
+        },
+        {
+          "name": "Richard A. Fluet",
+          "printedParty": null
+        },
+        {
+          "name": "Roy R. Rice",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        199
+      ]
+    },
+    {
+      "title": "Bonita Landing Community Development District Seat 2",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Christopher Applegate",
+          "printedParty": null
+        },
+        {
+          "name": "Mark Hilton",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        203
+      ]
+    },
+    {
+      "title": "Bonita Landing Community Development District Seat 3",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Scott Helling",
+          "printedParty": null
+        },
+        {
+          "name": "Rosanny Larach",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        203
+      ]
+    },
+    {
+      "title": "Bonita Landing Community Development District Seat 4",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Andrew W. Brignoni",
+          "printedParty": null
+        },
+        {
+          "name": "Bill McCormick",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        203
+      ]
+    },
+    {
+      "title": "Stoneybrook Community Development District Seat 4",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Adam Dalton",
+          "printedParty": null
+        },
+        {
+          "name": "Michael J. DeBrino Jr.",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        209
+      ]
+    },
+    {
+      "title": "Stoneybrook Community Development District Seat 5",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Eileen L. Huff",
+          "printedParty": null
+        },
+        {
+          "name": "Philip Simonsen",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        209
+      ]
+    },
+    {
+      "title": "Habitat Community Development District Seat 4",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Greg Grimaudo",
+          "printedParty": null
+        },
+        {
+          "name": "Larry A. Roth",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        211
+      ]
+    },
+    {
+      "title": "Cypress Shadows Community Development District Seat 2",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Gary P. Gauvin",
+          "printedParty": null
+        },
+        {
+          "name": "Corey Graves",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        213
+      ]
+    },
+    {
+      "title": "Cypress Shadows Community Development District Seat 4",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Angella Graves",
+          "printedParty": null
+        },
+        {
+          "name": "John A. Sartoris",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        213
+      ]
+    },
+    {
+      "title": "Cypress Shadows Community Development District Seat 5",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Steven Invidiato",
+          "printedParty": null
+        },
+        {
+          "name": "Joseph E. Molsen",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        213
+      ]
+    },
+    {
+      "title": "Catalina at Winkler Preserve Community Development District Seat 3",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Richard A. Bonito",
+          "printedParty": null
+        },
+        {
+          "name": "Brian Williams",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 1,
+      "pdfPages": [
+        225
+      ]
+    },
+    {
+      "title": "School Board Member District 4",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Tony Beougher",
+          "printedParty": null
+        },
+        {
+          "name": "Debbie Jordan",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 30,
+      "pdfPages": [
+        253,
+        255,
+        257,
+        259,
+        261,
+        263,
+        265,
+        267,
+        269,
+        271,
+        273,
+        275,
+        277,
+        279,
+        281,
+        283,
+        285,
+        287,
+        289,
+        291,
+        293,
+        295,
+        297,
+        299,
+        301,
+        303,
+        305,
+        307,
+        309,
+        311
+      ]
+    },
+    {
+      "title": "North Fort Myers Fire Control and Rescue Service District Seat 1",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Mike Gatewood",
+          "printedParty": null
+        },
+        {
+          "name": "Justin M. Thomas",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 11,
+      "pdfPages": [
+        253,
+        255,
+        263,
+        267,
+        271,
+        273,
+        275,
+        277,
+        279,
+        293,
+        371
+      ]
+    },
+    {
+      "title": "North Fort Myers Fire Control and Rescue Service District Seat 3",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Doug Dailey",
+          "printedParty": null
+        },
+        {
+          "name": "Thomas C. Mere",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 11,
+      "pdfPages": [
+        253,
+        255,
+        263,
+        267,
+        271,
+        273,
+        275,
+        277,
+        279,
+        293,
+        371
+      ]
+    },
+    {
+      "title": "North Fort Myers Fire Control and Rescue Service District Seat 5",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Joshua \"Bodacious\" Krohn",
+          "printedParty": null
+        },
+        {
+          "name": "Bill Schaible",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 11,
+      "pdfPages": [
+        253,
+        255,
+        263,
+        267,
+        271,
+        273,
+        275,
+        277,
+        279,
+        293,
+        371
+      ]
+    },
+    {
+      "title": "School Board Member District 5",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Crystal Johnson",
+          "printedParty": null
+        },
+        {
+          "name": "Armor Persons",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 39,
+      "pdfPages": [
+        313,
+        315,
+        317,
+        319,
+        321,
+        323,
+        325,
+        327,
+        329,
+        331,
+        333,
+        335,
+        337,
+        339,
+        341,
+        343,
+        345,
+        347,
+        349,
+        351,
+        353,
+        355,
+        357,
+        359,
+        361,
+        363,
+        365,
+        367,
+        369,
+        371,
+        373,
+        375,
+        377,
+        379,
+        381,
+        383,
+        385,
+        387,
+        389
+      ]
+    },
+    {
+      "title": "Lehigh Acres Municipal Services Improvement District Seat 4",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Mike Bonacolta",
+          "printedParty": null
+        },
+        {
+          "name": "Derek Felder",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 20,
+      "pdfPages": [
+        313,
+        317,
+        321,
+        325,
+        331,
+        337,
+        341,
+        343,
+        345,
+        347,
+        349,
+        351,
+        353,
+        355,
+        357,
+        359,
+        377,
+        379,
+        385,
+        387
+      ]
+    },
+    {
+      "title": "Fort Myers Shores Fire Protection and Rescue Service District Seat 4",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Paul Cerrito",
+          "printedParty": null
+        },
+        {
+          "name": "Anita Kressel",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 2,
+      "pdfPages": [
+        363,
+        389
+      ]
+    },
+    {
+      "title": "Alva Fire Protection and Rescue Service District Seat 2",
+      "voteFor": 1,
+      "allPrintedCandidates": [
+        {
+          "name": "Richard Spence",
+          "printedParty": null
+        },
+        {
+          "name": "Darren Watkins",
+          "printedParty": null
+        }
+      ],
+      "actualStyles": 4,
+      "pdfPages": [
+        367,
+        381,
+        383,
+        385
+      ]
+    }
+  ]
+}

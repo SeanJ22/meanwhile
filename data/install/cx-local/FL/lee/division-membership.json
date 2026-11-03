@@ -1,0 +1,407 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:alva_fire_protection_and_rescue_service_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "OFFICIAL_COUNTY_PUBLISHED_FIRE_DISTRICT_BOUNDARY",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=1%3D1&outFields=FIREDISTRICT,TAXAUTHORITY,EDIT_DATE&outSR=4326&f=geojson",
+        "sourceOrg": "Lee County GIS",
+        "collectedAt": "2026-11-03T07:30:56.386848+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "{\"FIREDISTRICT\":\"Alva\",\"TAXAUTHORITY\":\"004\",\"EDIT_DATE\":1741208871835}"
+      }
+    ],
+    "geometryLimit": "Official county-published fire district geometry; completeness outside Lee County not independently asserted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:bonita_springs_fire_control_and_rescue_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_COUNTY_PUBLISHED_FIRE_DISTRICT_BOUNDARY",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=1%3D1&outFields=FIREDISTRICT,TAXAUTHORITY,EDIT_DATE&outSR=4326&f=geojson",
+        "sourceOrg": "Lee County GIS",
+        "collectedAt": "2026-11-03T07:30:56.386848+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "{\"FIREDISTRICT\":\"Bonita Springs\",\"TAXAUTHORITY\":\"009\",\"EDIT_DATE\":1741208871835}"
+      }
+    ],
+    "geometryLimit": "Official county-published fire district geometry; completeness outside Lee County not independently asserted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:fort_myers_beach_fire_control_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_COUNTY_PUBLISHED_FIRE_DISTRICT_BOUNDARY",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=1%3D1&outFields=FIREDISTRICT,TAXAUTHORITY,EDIT_DATE&outSR=4326&f=geojson",
+        "sourceOrg": "Lee County GIS",
+        "collectedAt": "2026-11-03T07:30:56.386848+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "{\"FIREDISTRICT\":\"Fort Myers Beach\",\"TAXAUTHORITY\":\"032\",\"EDIT_DATE\":1741208871835}"
+      },
+      {
+        "sourceUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=1%3D1&outFields=FIREDISTRICT,TAXAUTHORITY,EDIT_DATE&outSR=4326&f=geojson",
+        "sourceOrg": "Lee County GIS",
+        "collectedAt": "2026-11-03T07:30:56.386848+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "{\"FIREDISTRICT\":\"Fort Myers Beach\",\"TAXAUTHORITY\":\"032\",\"EDIT_DATE\":1741208871835}"
+      }
+    ],
+    "geometryLimit": "Official county-published fire district geometry; completeness outside Lee County not independently asserted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:fort_myers_shores_fire_protection_and_rescue_service_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "OFFICIAL_COUNTY_PUBLISHED_FIRE_DISTRICT_BOUNDARY",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=1%3D1&outFields=FIREDISTRICT,TAXAUTHORITY,EDIT_DATE&outSR=4326&f=geojson",
+        "sourceOrg": "Lee County GIS",
+        "collectedAt": "2026-11-03T07:30:56.386848+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "{\"FIREDISTRICT\":\"Ft Myers Shores\",\"TAXAUTHORITY\":\"039\",\"EDIT_DATE\":1741208871835}"
+      }
+    ],
+    "geometryLimit": "Official county-published fire district geometry; completeness outside Lee County not independently asserted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:iona_mcgregor_fire_protection_and_rescue_service_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "OFFICIAL_COUNTY_PUBLISHED_FIRE_DISTRICT_BOUNDARY",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=1%3D1&outFields=FIREDISTRICT,TAXAUTHORITY,EDIT_DATE&outSR=4326&f=geojson",
+        "sourceOrg": "Lee County GIS",
+        "collectedAt": "2026-11-03T07:30:56.386848+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "{\"FIREDISTRICT\":\"Iona-McGregor\",\"TAXAUTHORITY\":\"050\",\"EDIT_DATE\":1741208871835}"
+      }
+    ],
+    "geometryLimit": "Official county-published fire district geometry; completeness outside Lee County not independently asserted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:north_fort_myers_fire_control_and_rescue_service_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_COUNTY_PUBLISHED_FIRE_DISTRICT_BOUNDARY",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=1%3D1&outFields=FIREDISTRICT,TAXAUTHORITY,EDIT_DATE&outSR=4326&f=geojson",
+        "sourceOrg": "Lee County GIS",
+        "collectedAt": "2026-11-03T07:30:56.386848+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "{\"FIREDISTRICT\":\"North Fort Myers\",\"TAXAUTHORITY\":\"063\",\"EDIT_DATE\":1763584038000}"
+      }
+    ],
+    "geometryLimit": "Official county-published fire district geometry; completeness outside Lee County not independently asserted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:south_trail_fire_protection_and_rescue_service_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "OFFICIAL_COUNTY_PUBLISHED_FIRE_DISTRICT_BOUNDARY",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=1%3D1&outFields=FIREDISTRICT,TAXAUTHORITY,EDIT_DATE&outSR=4326&f=geojson",
+        "sourceOrg": "Lee County GIS",
+        "collectedAt": "2026-11-03T07:30:56.386848+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "{\"FIREDISTRICT\":\"South Trail\",\"TAXAUTHORITY\":\"085\",\"EDIT_DATE\":1741208871835}"
+      }
+    ],
+    "geometryLimit": "Official county-published fire district geometry; completeness outside Lee County not independently asserted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/school_district:lee_county_school_district/school_board_district:4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_CURRENT_SCHOOL_BOARD_VOTER_DISTRICT",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Lee County GIS",
+        "collectedAt": "2026-11-03T07:30:56.385002+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "{\"OBJECTID\":4,\"District\":4,\"SchoolBoardMember\":\"Debbie Jordan\",\"SHAPE.STArea()\":3110719545.346066,\"SHAPE.STLength()\":295413.15642440756,\"GlobalID\":\"{7BA9A844-BBDD-44AD-AC83-69DC505601A1}\",\"created_user\":null,\"created_date\":null,\"last_edited_user\":null,\"last_edited_date\":null}"
+      }
+    ],
+    "geometryLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/school_district:lee_county_school_district/school_board_district:5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_CURRENT_SCHOOL_BOARD_VOTER_DISTRICT",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Lee County GIS",
+        "collectedAt": "2026-11-03T07:30:56.385002+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "{\"OBJECTID\":5,\"District\":5,\"SchoolBoardMember\":\"Armor Persons\",\"SHAPE.STArea()\":6252098988.3403511,\"SHAPE.STLength()\":367998.93877735792,\"GlobalID\":\"{6888EDAB-F551-4C3A-8BDF-DF8E81B0DF56}\",\"created_user\":null,\"created_date\":null,\"last_edited_user\":null,\"last_edited_date\":null}"
+      }
+    ],
+    "geometryLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:lehigh_acres_municipal_services_improvement_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_PRECISE_LAMSID_DISTRICT_BOUNDARY",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/6/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Lee County GIS",
+        "collectedAt": "2026-11-03T07:30:56.385909+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "{\"OBJECTID_1\":1,\"OBJECTID\":693,\"SHAPE_Leng\":386384.123853,\"acres\":64580.5124603,\"Name\":\"Lehigh Acres Municipal Services Improvement District\",\"AKA\":\"LAMSID\",\"GlobalID\":\"{00000000-0000-0000-0000-000000000000}\",\"Shape.STArea()\":2813115870.2721362,\"Shape.STLength()\":386384.12385248765}"
+      }
+    ],
+    "geometryLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:lee",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Supervisor of Elections\nSupervisor de Elecciones\n(Vote for 1) / (Vote por 1)\n\n     Jenna Persons-Mulicka         REP\n\n     Chris Vignieri              DEM"
+    },
+    "readerMappingLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:bonita_springs/council_district:3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Bonita Springs City Council\nDistrict 3\nConcejo Municipal de la\nCiudad de Bonita Springs\nDistrito 3\n(Vote for 1) / (Vote por 1)\n\n     Ruth Condit\n\n    Ray Sandelli\n\n     Tim Voit"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:bonita_springs/council_district:5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Bonita Springs City Council\nDistrict 5\nConcejo Municipal de la\nCiudad de Bonita Springs\nDistrito 5\n(Vote for 1) / (Vote por 1)\n\n    James Anderst\n\n      Nigel Patrick Fullick"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:cape_coral",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Cape Coral Mayor\nCiudad de Cape Coral Alcalde\n(Vote for 1) / (Vote por 1)\n\n      Lisa Cohen-Adkinson\n\n     Rick Erickson"
+    },
+    "readerMappingLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:fort_myers",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Fort Myers Mayor\n Ciudad de Fort Myers Alcalde\n  (Vote for 1) / (Vote por 1)\n\n       Kevin B. Anderson\n\n      Amber Ware\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "readerMappingLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:fort_myers/ward:3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "City of Fort Myers City Council\n Ward 3\n Concejo Municipal de la Ciudad\n de Fort Myers\n  Distrito 3\n  (Vote for 1) / (Vote por 1)\n\n       Chantel \"Telly\" Rhodes\n\n       Terolyn P. Watson\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Town of Fort Myers Beach Town Council\nConcejo Municipal del Municipio\nde Fort Myers Beach\n(Vote for up to 3) / (Vote por un máximo de 3)\n\n    Tom Brady\n\n      Anita Cereceda\n\n     Rebecca Link\n\n     John McLean\n\n     Edward J. Schoonover"
+    },
+    "readerMappingLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:blue_lake_community_development_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Blue Lake Community\n Development District\n Seat 1\n  Distrito de Desarrollo Comunitario\n de Blue Lake\n Escaño 1\n  (Vote for 1) / (Vote por 1)\n\n      John Hadginikitas\n\n      Steven Hamburger\n\n       Paul Marsjanik\n\nSides of Page / Votar en ambos lados d"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:bonita_landing_community_development_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Bonita Landing Community\n Development District\n Seat 2\n  Distrito de Desarrollo Comunitario\n de Bonita Landing\n Escaño 2\n  (Vote for 1) / (Vote por 1)\n\n       Christopher Applegate\n\n      Mark Hilton\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:captiva_erosion_prevention_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Captiva Erosion Prevention District\nSeat 1\nDistrito de Prevención de Erosión\nde Captiva\nEscaño 1\n(Vote for 1) / (Vote por 1)\n\n     John Raburn Dupre\n\n     Margarethe Thye-Miville"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:catalina_at_winkler_preserve_community_development_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Catalina at Winkler Preserve\n Community Development District\n Seat 3\n  Distrito de Desarrollo Comunitario\n de Catalina en Winkler Preserve\n Escaño 3\n  (Vote for 1) / (Vote por 1)\n\n       Richard A. Bonito\n\n       Brian Williams\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:colonial_country_club_community_development_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Colonial Country Club\n Community Development District\n Seat 2\n  Distrito de Desarrollo Comunitario\n de Colonial Country Club\n Escaño 2\n  (Vote for 1) / (Vote por 1)\n\n     Doug Smith\n\n      Joseph J. Zajac\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:cypress_shadows_community_development_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Cypress Shadows Community\n Development District\n Seat 2\n  Distrito de Desarrollo Comunitario\n de Cypress Shadows\n Escaño 2\n  (Vote for 1) / (Vote por 1)\n\n      Gary P. Gauvin\n\n      Corey Graves\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:habitat_community_development_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Habitat Community Development District\n Seat 4\n  Distrito de Desarrollo Comunitario\n de Habitat\n Escaño 4\n  (Vote for 1) / (Vote por 1)\n\n      Greg Grimaudo\n\n       Larry A. Roth\n\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:stoneybrook_community_development_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Stoneybrook Community\n Development District\n Seat 4\n  Distrito de Desarrollo\n Comunitario de Stoneybrook\n Escaño 4\n  (Vote for 1) / (Vote por 1)\n\n     Adam Dalton\n\n       Michael J. DeBrino Jr.\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:vasari_community_development_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Vasari Community Development District\nSeat 5\nDistrito de Desarrollo Comunitario de Vasari\nEscaño 5\n(Vote for 1) / (Vote por 1)\n\n      Kurt Deter\n\n     Richard A. Fluet\n\n    Roy R. Rice"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:wildblue_community_development_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_CURRENT_SAMPLE_IDENTITY;LEGAL_VOTER_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "WildBlue Community\n Development District\n Seat 1\n  Distrito de Desarrollo Comunitario\n de WildBlue\n Escaño 1\n  (Vote for 1) / (Vote por 1)\n\n       Herbert Lanese\n\n       Richard S. Losee\n\n\nSides of Page / Votar en ambos lados d"
+    },
+    "readerMappingLimit": "No county/place or taxing-parcel fallback. Current sample proves exact named district/ward; legal voter boundary remains a River acquisition dependency."
+  }
+]

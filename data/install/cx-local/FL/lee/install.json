@@ -1,0 +1,402 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "FL",
+  "county": "Lee",
+  "countyFips": "12071",
+  "populationRank": 72,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge only 41 reviewed local counting fields/88 eligible candidates against latest FL. Preserve all 91 printed names through three explicit non-counting status records. Gateway 4 is legally elected/unopposed; no ordinary voting field proposed. Preserve every existing state/legislative/federal/court record and all eight prepared local questions with reader attachments. No measure refresh or production publication.",
+  "subjects": [
+    {
+      "id": "cx-local-fl-lee-2026-supervisor-of-elections",
+      "title": "Supervisor of Elections",
+      "ocdId": "ocd-division/country:us/state:fl/county:lee",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-board-of-county-commissioners-district-2",
+      "title": "Board of County Commissioners District 2",
+      "ocdId": "ocd-division/country:us/state:fl/county:lee",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-board-of-county-commissioners-district-4",
+      "title": "Board of County Commissioners District 4",
+      "ocdId": "ocd-division/country:us/state:fl/county:lee",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-city-of-cape-coral-mayor",
+      "title": "City of Cape Coral Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:cape_coral",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-city-of-cape-coral-city-council-district-1",
+      "title": "City of Cape Coral City Council District 1",
+      "ocdId": "ocd-division/country:us/state:fl/place:cape_coral",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-city-of-cape-coral-city-council-district-4",
+      "title": "City of Cape Coral City Council District 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:cape_coral",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-city-of-cape-coral-city-council-district-6",
+      "title": "City of Cape Coral City Council District 6",
+      "ocdId": "ocd-division/country:us/state:fl/place:cape_coral",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-captiva-erosion-prevention-district-seat-1",
+      "title": "Captiva Erosion Prevention District Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:captiva_erosion_prevention_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-captiva-erosion-prevention-district-seat-3",
+      "title": "Captiva Erosion Prevention District Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:captiva_erosion_prevention_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-south-trail-fire-protection-and-rescue-service-district-seat-5",
+      "title": "South Trail Fire Protection and Rescue Service District Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:south_trail_fire_protection_and_rescue_service_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-city-of-fort-myers-mayor",
+      "title": "City of Fort Myers Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_myers",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-colonial-country-club-community-development-district-seat-2",
+      "title": "Colonial Country Club Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:colonial_country_club_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-wildblue-community-development-district-seat-1",
+      "title": "WildBlue Community Development District Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:wildblue_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-wildblue-community-development-district-seat-2",
+      "title": "WildBlue Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:wildblue_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-blue-lake-community-development-district-seat-1",
+      "title": "Blue Lake Community Development District Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:blue_lake_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-city-of-fort-myers-city-council-ward-3",
+      "title": "City of Fort Myers City Council Ward 3",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_myers/ward:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-iona-mcgregor-fire-protection-and-rescue-service-district-seat-1",
+      "title": "Iona-McGregor Fire Protection and Rescue Service District Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:iona_mcgregor_fire_protection_and_rescue_service_district",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-bonita-springs-fire-control-and-rescue-district-seat-1",
+      "title": "Bonita Springs Fire Control and Rescue District Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:bonita_springs_fire_control_and_rescue_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-town-of-fort-myers-beach-town-council",
+      "title": "Town of Fort Myers Beach Town Council",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-fort-myers-beach-fire-control-district-seat-1",
+      "title": "Fort Myers Beach Fire Control District Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:fort_myers_beach_fire_control_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-city-of-bonita-springs-city-council-district-3",
+      "title": "City of Bonita Springs City Council District 3",
+      "ocdId": "ocd-division/country:us/state:fl/place:bonita_springs/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-city-of-bonita-springs-city-council-district-5",
+      "title": "City of Bonita Springs City Council District 5",
+      "ocdId": "ocd-division/country:us/state:fl/place:bonita_springs/council_district:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-vasari-community-development-district-seat-5",
+      "title": "Vasari Community Development District Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:vasari_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-bonita-landing-community-development-district-seat-2",
+      "title": "Bonita Landing Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:bonita_landing_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-bonita-landing-community-development-district-seat-3",
+      "title": "Bonita Landing Community Development District Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:bonita_landing_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-bonita-landing-community-development-district-seat-4",
+      "title": "Bonita Landing Community Development District Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:bonita_landing_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-stoneybrook-community-development-district-seat-4",
+      "title": "Stoneybrook Community Development District Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:stoneybrook_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-stoneybrook-community-development-district-seat-5",
+      "title": "Stoneybrook Community Development District Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:stoneybrook_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-habitat-community-development-district-seat-4",
+      "title": "Habitat Community Development District Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:habitat_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-cypress-shadows-community-development-district-seat-2",
+      "title": "Cypress Shadows Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:cypress_shadows_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-cypress-shadows-community-development-district-seat-4",
+      "title": "Cypress Shadows Community Development District Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:cypress_shadows_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-cypress-shadows-community-development-district-seat-5",
+      "title": "Cypress Shadows Community Development District Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:cypress_shadows_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-catalina-at-winkler-preserve-community-development-district-seat-3",
+      "title": "Catalina at Winkler Preserve Community Development District Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:catalina_at_winkler_preserve_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-school-board-member-district-4",
+      "title": "School Board Member District 4",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:lee_county_school_district/school_board_district:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-north-fort-myers-fire-control-and-rescue-service-district-seat-1",
+      "title": "North Fort Myers Fire Control and Rescue Service District Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:north_fort_myers_fire_control_and_rescue_service_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-north-fort-myers-fire-control-and-rescue-service-district-seat-3",
+      "title": "North Fort Myers Fire Control and Rescue Service District Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:north_fort_myers_fire_control_and_rescue_service_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-north-fort-myers-fire-control-and-rescue-service-district-seat-5",
+      "title": "North Fort Myers Fire Control and Rescue Service District Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:north_fort_myers_fire_control_and_rescue_service_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-school-board-member-district-5",
+      "title": "School Board Member District 5",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:lee_county_school_district/school_board_district:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-lehigh-acres-municipal-services-improvement-district-seat-4",
+      "title": "Lehigh Acres Municipal Services Improvement District Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:lehigh_acres_municipal_services_improvement_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-fort-myers-shores-fire-protection-and-rescue-service-district-seat-4",
+      "title": "Fort Myers Shores Fire Protection and Rescue Service District Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:fort_myers_shores_fire_protection_and_rescue_service_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    },
+    {
+      "id": "cx-local-fl-lee-2026-alva-fire-protection-and-rescue-service-district-seat-2",
+      "title": "Alva Fire Protection and Rescue Service District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:alva_fire_protection_and_rescue_service_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1075"
+    }
+  ],
+  "coverage": {
+    "preparedContests": 41,
+    "preparedCountingCandidates": 88,
+    "uniquePrintedLocalFields": 42,
+    "allPrintedLocalNames": 91,
+    "withdrawnPrintedNames": 2,
+    "electedUnopposedPrintedNames": 1,
+    "namedStatusRecords": 3,
+    "statusOnlyFieldsHeld": 1,
+    "fullActualSamplePhysicalPages": 390,
+    "actualUniquePrintedStyles": 193,
+    "twoPageStyles": 191,
+    "fourPageStyles": 2,
+    "officialDateFrontSheetHeaders": 195,
+    "completeLocalPrintedFieldOccurrences": 924,
+    "brochurePages": 4,
+    "brochureVotingFields": 41,
+    "brochurePrintedLocalNames": 89,
+    "officialFilingStatusRecords": 184,
+    "nonqualifyingNamedWriteInRecords": 1,
+    "preciseSourceGeometryFeatures": 10,
+    "exactPreparedElectorates": 27,
+    "missingReaderDistrictIds": 19,
+    "legalVoterPolygonsPending": 13,
+    "heldQuestionIdsPreserved": 8,
+    "newMeasureFields": 0,
+    "absencesCreated": 0,
+    "sourceCaptures": 23
+  },
+  "summary": "Complete acquired 390-page/193-style official ballot and four-page all-inclusive corroboration: 42 printed local fields/91 names, comprising 41 counting fields/88 active choices and three separate withdrawn/elected status names. Exact countywide, school, municipal and special-district electorates retained. Ten official source geometries; reader/remaining legal-boundary dependencies explicit.",
+  "missingReaderDistrictIds": [
+    "ocd-division/country:us/state:fl/place:bonita_springs/council_district:3",
+    "ocd-division/country:us/state:fl/place:bonita_springs/council_district:5",
+    "ocd-division/country:us/state:fl/place:fort_myers/ward:3",
+    "ocd-division/country:us/state:fl/school_district:lee_county_school_district/school_board_district:4",
+    "ocd-division/country:us/state:fl/school_district:lee_county_school_district/school_board_district:5",
+    "ocd-division/country:us/state:fl/special_district:blue_lake_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:bonita_landing_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:bonita_springs_fire_control_and_rescue_district",
+    "ocd-division/country:us/state:fl/special_district:captiva_erosion_prevention_district",
+    "ocd-division/country:us/state:fl/special_district:catalina_at_winkler_preserve_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:colonial_country_club_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:cypress_shadows_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:fort_myers_beach_fire_control_district",
+    "ocd-division/country:us/state:fl/special_district:habitat_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:lehigh_acres_municipal_services_improvement_district",
+    "ocd-division/country:us/state:fl/special_district:north_fort_myers_fire_control_and_rescue_service_district",
+    "ocd-division/country:us/state:fl/special_district:stoneybrook_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:vasari_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:wildblue_community_development_district"
+  ],
+  "namedStatusRecords": "named-candidate-statuses.json",
+  "nextOwner": "River: latest-state merge, exact reader district/geometry integration and supported status display. Preserve every unrelated question/explanation. Acquire remaining legal voter boundaries and separate municipal write-in supplements.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 23 captured sources and 129 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

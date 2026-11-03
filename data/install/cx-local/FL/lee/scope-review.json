@@ -1,0 +1,61 @@
+{
+  "countyCommission": {
+    "sourceUrl": "https://www.leefl.gov/963/Board-of-County-Commissioners-BOCC",
+    "sourceOrg": "Lee County Board of County Commissioners",
+    "collectedAt": "2026-11-03T07:27:29.507764+00:00",
+    "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+    "quote": "Each County Commissioner is elected at large for a maximum of three, four-year terms of office."
+  },
+  "countyFull193StyleParity": true,
+  "capeCoral": {
+    "wholeCityCaption": {
+      "sourceUrl": "https://lee.vote/DocumentCenter/View/1074",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:03:51.623817+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Only Voters in the City of Cape Coral"
+    },
+    "completeActualStyleParity": 29,
+    "fields": [
+      "cx-local-fl-lee-2026-city-of-cape-coral-mayor",
+      "cx-local-fl-lee-2026-city-of-cape-coral-city-council-district-1",
+      "cx-local-fl-lee-2026-city-of-cape-coral-city-council-district-4",
+      "cx-local-fl-lee-2026-city-of-cape-coral-city-council-district-6"
+    ],
+    "reason": "Explicit whole-city electorate caption and complete four-field parity; district labels are candidate residence seats."
+  },
+  "school": {
+    "metadata": {
+      "sourceUrl": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/3?f=pjson",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:30:56.383864+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "The five Lee County School Board member district boundaries follow the Lee County Commissioner district boundaries."
+    },
+    "districts": [
+      4,
+      5
+    ],
+    "reason": "Actual sample explicitly limits voters to district 4/5; official voter geometries supplied. County commission election remains at-large."
+  },
+  "taxingParcels": {
+    "excludedFromVoterGeometry": true,
+    "sourceWarning": {
+      "sourceUrl": "https://gismapserver.leegov.com/gisserver910/rest/services/Layers/Boundaries/MapServer/18?f=pjson",
+      "sourceOrg": "Lee County Supervisor of Elections",
+      "collectedAt": "2026-11-03T07:30:56.382882+00:00",
+      "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+      "quote": "Resulting polygons may not reflect the actual legal description; however the Authority/District has verified the parcels that should be included in their boundary."
+    }
+  },
+  "fortMyersBeach": {
+    "voteFor": 3,
+    "printedNames": 5,
+    "activeCountingCandidates": 4,
+    "withdrawnPrintedCandidate": "John McLean"
+  },
+  "gateway": {
+    "printedNames": 2,
+    "ordinaryVotingContestPrepared": false
+  }
+}

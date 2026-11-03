@@ -1,0 +1,74 @@
+{
+  "status": "EXPLICIT_OFFICIAL_STATUS_RECORDS_NOT_ORDINARY_COUNTING_CANDIDACIES",
+  "records": [
+    {
+      "name": "Paul LeoGrande",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:gateway_services_community_development_district",
+      "nativeField": "Gateway Services Community Development District Seat 4",
+      "status": "WITHDRAWN_AFTER_PRINTING",
+      "ordinaryVotingCandidacyPrepared": false,
+      "printedSample": {
+        "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+        "sourceOrg": "Lee County Supervisor of Elections",
+        "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "Gateway Services Community\n Development District\n Seat 4\n  Distrito de Desarrollo Comunitario\n de Servicios de Gateway\n Escaño 4\n  (Vote for 1) / (Vote por 1)\n\n       Paul LeoGrande\n\n       Carole Pankau\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+      },
+      "officialStatus": {
+        "sourceUrl": "https://lee.vote/319/Public-Notices",
+        "sourceOrg": "Lee County Supervisor of Elections",
+        "collectedAt": "2026-11-03T07:08:37.810302+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "Paul LeoGrande - withdrew 9/23/2026"
+      }
+    },
+    {
+      "name": "Carole Pankau",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:gateway_services_community_development_district",
+      "nativeField": "Gateway Services Community Development District Seat 4",
+      "status": "ELECTED_UNOPPOSED_RACE_VOTES_DO_NOT_COUNT",
+      "ordinaryVotingCandidacyPrepared": false,
+      "printedSample": {
+        "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+        "sourceOrg": "Lee County Supervisor of Elections",
+        "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "Gateway Services Community\n Development District\n Seat 4\n  Distrito de Desarrollo Comunitario\n de Servicios de Gateway\n Escaño 4\n  (Vote for 1) / (Vote por 1)\n\n       Paul LeoGrande\n\n       Carole Pankau\n\n\n\n\n\nSides of Page / Votar en ambos lados d"
+      },
+      "officialStatus": {
+        "sourceUrl": "https://lee.vote/319/Public-Notices",
+        "sourceOrg": "Lee County Supervisor of Elections",
+        "collectedAt": "2026-11-03T07:08:37.810302+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "A vote cast in the Gateway Services Community Development District Seat 4 race will not change the outcome, as the remaining candidate is deemed by law to be unopposed and elected for that race."
+      }
+    },
+    {
+      "name": "John McLean",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+      "associatedContestId": "cx-local-fl-lee-2026-town-of-fort-myers-beach-town-council",
+      "nativeField": "Town of Fort Myers Beach Town Council",
+      "status": "WITHDRAWN_AFTER_PRINTING_VOTES_DO_NOT_COUNT",
+      "withdrawalDate": "2026-09-15",
+      "ordinaryVotingCandidacyPrepared": false,
+      "printedSample": {
+        "sourceUrl": "https://lee.vote/DocumentCenter/View/1075",
+        "sourceOrg": "Lee County Supervisor of Elections",
+        "collectedAt": "2026-11-03T07:06:51.106155+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "Town of Fort Myers Beach Town Council\nConcejo Municipal del Municipio\nde Fort Myers Beach\n(Vote for up to 3) / (Vote por un máximo de 3)\n\n    Tom Brady\n\n      Anita Cereceda\n\n     Rebecca Link\n\n     John McLean\n\n     Edward J. Schoonover"
+      },
+      "officialStatus": {
+        "sourceUrl": "https://lee.vote/319/Public-Notices",
+        "sourceOrg": "Lee County Supervisor of Elections",
+        "collectedAt": "2026-11-03T07:08:37.810302+00:00",
+        "verifiedAt": "2026-11-03T07:45:09.497288+00:00",
+        "quote": "John McLean - withdrew 9/15/2026"
+      }
+    }
+  ],
+  "allPrintedNames": 91,
+  "preparedActiveChoices": 88,
+  "nonCountingPrintedNames": 3,
+  "limit": "Every printed name preserved. Gateway remaining candidate is legally elected, no voting field proposed. Fort Myers Beach retains four eligible choices for three seats and an explicit reader note about the printed withdrawn name."
+}

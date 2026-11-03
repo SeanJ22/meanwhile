@@ -1,0 +1,82 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 8,
+    "newPlainLanguageExplanations": 8,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": "OTHER_NJ_COUNTIES_LOCAL_INVENTORIES_OPEN",
+    "officialInventoryScope": "Complete current Hunterdon County Clerk November3,2026 PUBLICQUESTIONS master:7distinctproposals (1municipal,5school,1fire). Regionalization hasseparateexistingNHVandBloomsburyelectorates,therefore8proposedreadercontests. Current26municipalnative samplepackets also retained; no separateoffcycleuniverseclaim.",
+    "distinctCertifiedProposals": 7,
+    "separatelyApprovingElectorateContests": 8
+  },
+  "subjects": [
+    {
+      "id": "nj-hunterdon-2026:west-amwell-open-space-levy",
+      "ocdId": "ocd-division/country:us/state:nj/county:hunterdon/place:west_amwell_township",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20947/West-Amwell-1-2"
+    },
+    {
+      "id": "nj-hunterdon-2026:delaware-valley-school-bond",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:delaware_valley_regional_school_district",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624"
+    },
+    {
+      "id": "nj-hunterdon-2026:north-hunterdon-bloomsbury-membership",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:north_hunterdon_voorhees_regional_school_district",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624"
+    },
+    {
+      "id": "nj-hunterdon-2026:bloomsbury-regional-membership",
+      "ocdId": "ocd-division/country:us/state:nj/county:hunterdon/place:bloomsbury_borough",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624"
+    },
+    {
+      "id": "nj-hunterdon-2026:holland-school-bond-1",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:holland_township_school_district",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624"
+    },
+    {
+      "id": "nj-hunterdon-2026:holland-school-bond-2",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:holland_township_school_district",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624"
+    },
+    {
+      "id": "nj-hunterdon-2026:flemington-raritan-school-bond",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:flemington_raritan_regional_school_district",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624"
+    },
+    {
+      "id": "nj-hunterdon-2026:lambertville-fire-capital",
+      "ocdId": "ocd-division/country:us/state:nj/county:hunterdon/place:lambertville_city",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Complete original official question-certification PDF with native selectable text; current West Amwell actual rasterized ballot supplies its full updated interpretive statement. Native 26 municipal sample packets/117 pages retained, local OCR inventories complete, all 117 November 3 headers verified. Actual Bloomsbury and all four Lambertville ballot images verify distinct electorates. All record hashes are original PDF bytes, no OCR-as-native claim.",
+  "reviewedScratchPacketSha256": "06127eea836d9e0e3cc9355261773731905b991962146d146761a2a875acb253",
+  "canonicalInputSha256": "4b44edf027527b7fa48319dedba210ad41135547ee8ee569baa48607a29bf29c",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

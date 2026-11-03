@@ -1,0 +1,18 @@
+{
+  "state": "NJ",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "06127eea836d9e0e3cc9355261773731905b991962146d146761a2a875acb253",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Completecurrentofficialcountycertification7distinctproposals;all26nativecurrentmunicipalpackets/117operativeimagepages locallyOMP1OCRed,all117Nov3,2026headers verified,questionfootprints reconcilewithcertification. Nozerofromemptyselectabletext.",
+    "Regionalization needsseparatemajoritiesexisting12NHVmunicipalitiescollectivelyandBloomsbury:explicitcurrentofficialFAQandactualBloomsburyballot. TwoexistingOCDterritoriesusedfortwoseparateapprovalcontests,notguessedunionboundary. Fulltaxapportionment,schoolattendanceunchanged,12to13board,all6initialsharedseatallocations andconditionalNOrepresentationmeaning retained. No projectedsavingsorautomaticapprovalclaim.",
+    "FirequestionidenticalonallfourcurrentLambertvilleCityDistrict1–4ballots,fullquestions/statement/YesNo/header directlyvisuallychecked. ExistingwholecityOCDexactvoterterritory,firegov152361primary-1unchanged. Mutualaid/enforcementserviceareasnotusedasvoterboundaries.7.5mcap,threetrucktypes,firehouseworkandbonds/notes/leasepurchasealternatives retained.",
+    "WestAmwellcurrentactualballotcontainsmoreinterpretiveparagraphsthanAugustmaster. Fullactualstatementvisuallyreadandretained,actualnativePDFprimary.6cceilingnotfixedlevy,noautomaticdecrease;fundpurposesunchanged.",
+    "DelawareValley926000firealarmequipment/allcostsapprovedeligible,40%eligibleannualdebtserviceformula correct.",
+    "HollandQ111550060andQ24422600caps,projectlists,allcosteligible40%annualdebtservice,transferauthority,Q2requiresQ1whileQ1independent,both15972660total retained.",
+    "FlemingtonRaritan30320944cap,allsixschoolnamesandsixeligibleallocations,allcostseligible40%annualdebtserviceformula andtransferauthority retained. No40%-oftotalcostsupportguarantee.",
+    "NativePDFbytehashes, exactboundedtext/excerpt hashes,primary/supplementalper-sentencequotes,exactregistereddivisions/heldelection,ordinaryauthority/admission/manualProjection andactualreader allPASS;rootfinalfullhelddatamerge requested."
+  ]
+}

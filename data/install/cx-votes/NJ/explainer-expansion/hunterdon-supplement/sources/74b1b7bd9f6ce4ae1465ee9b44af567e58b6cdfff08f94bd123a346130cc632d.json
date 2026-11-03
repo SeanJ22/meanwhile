@@ -1,0 +1,22 @@
+{
+  "url": "https://www.co.hunterdon.nj.us/Admin/DocumentCenter/Home/Document_AjaxBinding?renderMode=0&loadSource=7",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T10:29:15.050312+00:00",
+  "sha256": "eaac882e7e6dd955c118a7ef3f699355a9cebbc24bd2cf13c1af69a52c54317c",
+  "bytes": 24008,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-hunterdon-samples-public-list.json",
+  "method": "UnauthenticatedpublicfrontendreadonlyPOST documentlisting; exactHomecontroller/loadSource7 usedbyofficialpageReactfrontend. No login/adminmutation;routeincludesAdminprefixforpublicreadhandler.",
+  "requestBody": {
+    "folderId": "1336",
+    "getDocuments": 1,
+    "imageRepo": false,
+    "renderMode": 0,
+    "loadSource": 7,
+    "requestingModuleID": 75,
+    "searchString": "",
+    "pageNumber": 1,
+    "rowsPerPage": 100,
+    "sortColumn": "DisplayName",
+    "sortOrder": 0
+  }
+}

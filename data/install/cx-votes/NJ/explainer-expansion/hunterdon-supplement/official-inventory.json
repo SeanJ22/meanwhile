@@ -1,0 +1,1130 @@
+{
+  "scope": "Complete current Hunterdon County Clerk November3,2026 PUBLICQUESTIONS master:7distinctproposals (1municipal,5school,1fire). Regionalization hasseparateexistingNHVandBloomsburyelectorates,therefore8proposedreadercontests. Current26municipalnative samplepackets also retained; no separateoffcycleuniverseclaim.",
+  "officialCurrentIndexUrl": "https://www.co.hunterdon.nj.us/countyclerk.htm",
+  "officialSourceUniverse": "ExplicitcurrentcountyPUBLICQUESTIONSmasterincludes1municipal,5school,1fireproposal;all26municipalnativecurrentballotpackets/117pages alsocaptured,all117currentheaders/operativepanels locallyOCRed. Separateoffcycleuniverseexcluded.",
+  "municipalityCount": 26,
+  "nativePdfPackets": 26,
+  "nativeRasterPages": 117,
+  "distinctCertifiedProposals": 7,
+  "readerElectorateContests": 8,
+  "regionalizationElectorates": "ExistingNHVdistrict12municipalitiescollectively,andseparateBloomsburyBorough,requireseparatemajoritiespercurrentofficialNHVFAQ andactualballot.",
+  "fireElectorate": "IdenticalFireDistrict1questionprintedonallfourLambertvilleCitydistricts1–4. ExistingcityOCDusedforexactvoterterritory; noassumedfire-service-area map.",
+  "all117PageHeadersCurrentNov3": true,
+  "municipalities": [
+    "Alexandria",
+    "Bethlehem",
+    "Bloomsbury",
+    "Califon",
+    "Clinton Town",
+    "Clinton Township",
+    "Delaware",
+    "East Amwell",
+    "Flemington",
+    "Franklin",
+    "Frenchtown",
+    "Glen Gardner",
+    "Hampton",
+    "High Bridge",
+    "Holland",
+    "Kingwood",
+    "Lambertville City",
+    "Lebanon Borough",
+    "Lebanon Township",
+    "Milford",
+    "Raritan",
+    "Readington",
+    "Stockton",
+    "Tewksbury",
+    "Union",
+    "West Amwell"
+  ],
+  "questionPacketPageFootprints": {
+    "Alexandria 1-4": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "Bethlehem 1-4": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "Bloomsbury 1": [
+      1
+    ],
+    "Califon 1": [
+      1
+    ],
+    "Clinton Town 1-2": [
+      1,
+      2
+    ],
+    "Clinton Township 1-12": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "Flemington 1-3": [
+      1,
+      2,
+      3
+    ],
+    "Franklin 1-3": [
+      1,
+      2,
+      3
+    ],
+    "Frenchtown 1": [
+      1
+    ],
+    "Glen Gardner 1": [
+      1
+    ],
+    "Hampton 1": [
+      1
+    ],
+    "High Bridge 1-3": [
+      1,
+      2,
+      3
+    ],
+    "Holland 1-5": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "Kingwood 1-4": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "Lambertville City 1-4": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "Lebanon Borough 1": [
+      1
+    ],
+    "Lebanon Township 1-6": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "Milford 1": [
+      1
+    ],
+    "Raritan 1-22": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22
+    ],
+    "Tewksbury 1-5": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "Union 1-4": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "West Amwell 1-2": [
+      1,
+      2
+    ]
+  },
+  "westAmwellSourceDifference": "ActualcurrentballotstatementaddsparagraphsbeyondAugustcertification;packageusestheactualballotnativePDFandfullstatement,questionunchanged.",
+  "panelOcrInventoryPath": "panel-ocr-inventory.json",
+  "sources": [
+    {
+      "publishedLabel": "Alexandria 1-4",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20922/Alexandria-1-4",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20922/Alexandria-1-4",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:23.574531+00:00",
+      "sha256": "6467f8fdc7a52254e4a73a08da481b6909a6d8115827761f930b5cb35693db99",
+      "bytes": 660002,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 4,
+      "textPath": "sources/c33e372d28c089e093c594439910ab1c53b2ff3c387e5ddcad986baf167dbaf0.txt",
+      "textSha256": "c33e372d28c089e093c594439910ab1c53b2ff3c387e5ddcad986baf167dbaf0",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/6467f8fdc7a52254e4a73a08da481b6909a6d8115827761f930b5cb35693db99.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Bethlehem 1-4",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20923/Bethlehem-1-4",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20923/Bethlehem-1-4",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:23.400796+00:00",
+      "sha256": "c2a529844c2f41c4c417aa38e935ef92e5886edf36e760a98483c2a7d5c4e184",
+      "bytes": 754162,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 4,
+      "textPath": "sources/c33e372d28c089e093c594439910ab1c53b2ff3c387e5ddcad986baf167dbaf0.txt",
+      "textSha256": "c33e372d28c089e093c594439910ab1c53b2ff3c387e5ddcad986baf167dbaf0",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/c2a529844c2f41c4c417aa38e935ef92e5886edf36e760a98483c2a7d5c4e184.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Bloomsbury 1",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20924/Bloomsbury-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20924/Bloomsbury-1",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:23.442718+00:00",
+      "sha256": "0be42ade624c4223c488557e57abbbfc5e0a0cce9f8efa8b990abaa7ed969e42",
+      "bytes": 193612,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/0be42ade624c4223c488557e57abbbfc5e0a0cce9f8efa8b990abaa7ed969e42.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Califon 1",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20925/Califon-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20925/Califon-1",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:23.545087+00:00",
+      "sha256": "eeb26e83c1738d7edbfc4a99e9981d6687aabb4cbcfa0af2bd80c2a2398a7869",
+      "bytes": 215266,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/eeb26e83c1738d7edbfc4a99e9981d6687aabb4cbcfa0af2bd80c2a2398a7869.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Clinton Town 1-2",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20926/Clinton-Town-1-2",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20926/Clinton-Town-1-2",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:23.630639+00:00",
+      "sha256": "63237490b609357be50dea02da13ed0252a42734a74a1155dc3992140e189797",
+      "bytes": 396234,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/63237490b609357be50dea02da13ed0252a42734a74a1155dc3992140e189797.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Clinton Township 1-12",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20927/Clinton-Township-1-12",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20927/Clinton-Township-1-12",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:23.833041+00:00",
+      "sha256": "92119f1c98a8bb8d36c4930e45edb0ca4cdef48ac7d37071f3ad236cb5f26884",
+      "bytes": 2541544,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 12,
+      "textPath": "sources/4f671d0be1f62f49d01e1a2281d1e5c78d1e4d54d1c7c11d57ba40462ddc851c.txt",
+      "textSha256": "4f671d0be1f62f49d01e1a2281d1e5c78d1e4d54d1c7c11d57ba40462ddc851c",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/92119f1c98a8bb8d36c4930e45edb0ca4cdef48ac7d37071f3ad236cb5f26884.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Delaware 1-5",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20928/Delaware-1-5",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20928/Delaware-1-5",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:23.792920+00:00",
+      "sha256": "22529e94a2ffcea10670413f7a818ba19768dd4cbe230a947242b32f2ba1c3be",
+      "bytes": 528166,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 5,
+      "textPath": "sources/1727f7ef7724ee064a59cee7e73cc5c344310ecdbe6cacd1697bd882756292de.txt",
+      "textSha256": "1727f7ef7724ee064a59cee7e73cc5c344310ecdbe6cacd1697bd882756292de",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/22529e94a2ffcea10670413f7a818ba19768dd4cbe230a947242b32f2ba1c3be.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "East Amwell 1-5",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20929/East-Amwell-1-5",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20929/East-Amwell-1-5",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:23.852387+00:00",
+      "sha256": "a3e7c5fdfc5d3c066123d425b53cfc085447c89ba31cf463f78aa001781e18b3",
+      "bytes": 654861,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 5,
+      "textPath": "sources/1727f7ef7724ee064a59cee7e73cc5c344310ecdbe6cacd1697bd882756292de.txt",
+      "textSha256": "1727f7ef7724ee064a59cee7e73cc5c344310ecdbe6cacd1697bd882756292de",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/a3e7c5fdfc5d3c066123d425b53cfc085447c89ba31cf463f78aa001781e18b3.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Flemington 1-3",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20930/Flemington-1-3",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20930/Flemington-1-3",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.047821+00:00",
+      "sha256": "765a1225fbf951cb9d447e9b10b41e4728ab17d298373c032feacd9afaa8fbb3",
+      "bytes": 455074,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 3,
+      "textPath": "sources/bcb98ec31cd31f9da979767d23a9d525773357e4a7ceafccf4e20645624c863b.txt",
+      "textSha256": "bcb98ec31cd31f9da979767d23a9d525773357e4a7ceafccf4e20645624c863b",
+      "pageTextLengths": [
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/765a1225fbf951cb9d447e9b10b41e4728ab17d298373c032feacd9afaa8fbb3.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Franklin 1-3",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20931/Franklin-1-3",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20931/Franklin-1-3",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.042050+00:00",
+      "sha256": "d45e9d7922b1d808a416ec4bc9fcad33f56b5384465867b6489e6453d2d9358a",
+      "bytes": 667153,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 3,
+      "textPath": "sources/bcb98ec31cd31f9da979767d23a9d525773357e4a7ceafccf4e20645624c863b.txt",
+      "textSha256": "bcb98ec31cd31f9da979767d23a9d525773357e4a7ceafccf4e20645624c863b",
+      "pageTextLengths": [
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/d45e9d7922b1d808a416ec4bc9fcad33f56b5384465867b6489e6453d2d9358a.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Frenchtown 1",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20932/Frenchtown-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20932/Frenchtown-1",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.034913+00:00",
+      "sha256": "5db97fccc1f3687136b52c8af73704b2bf46c0f2189bfff5b1f30cef31893ca2",
+      "bytes": 165648,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/5db97fccc1f3687136b52c8af73704b2bf46c0f2189bfff5b1f30cef31893ca2.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Glen Gardner 1",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20933/Glen-Gardner-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20933/Glen-Gardner-1",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.226019+00:00",
+      "sha256": "8018b7e336e8e4ca734ca99e064d50a0fa34bb3c7d7f5b10ea402d566f2ef84d",
+      "bytes": 203902,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/8018b7e336e8e4ca734ca99e064d50a0fa34bb3c7d7f5b10ea402d566f2ef84d.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Hampton 1",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20934/Hampton-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20934/Hampton-1",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.181461+00:00",
+      "sha256": "bd34a095a5a75beccc0b4c40ef19ad347b116476024dc57a4239b8c163009b46",
+      "bytes": 191563,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/bd34a095a5a75beccc0b4c40ef19ad347b116476024dc57a4239b8c163009b46.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "High Bridge 1-3",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20935/High-Bridge-1-3",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20935/High-Bridge-1-3",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.252708+00:00",
+      "sha256": "f733cb53500e6ab730ac7f0911d00dfb1742a9e300fead3578eb965f93e7c746",
+      "bytes": 572923,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 3,
+      "textPath": "sources/bcb98ec31cd31f9da979767d23a9d525773357e4a7ceafccf4e20645624c863b.txt",
+      "textSha256": "bcb98ec31cd31f9da979767d23a9d525773357e4a7ceafccf4e20645624c863b",
+      "pageTextLengths": [
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/f733cb53500e6ab730ac7f0911d00dfb1742a9e300fead3578eb965f93e7c746.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Holland 1-5",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20936/Holland-1-5",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20936/Holland-1-5",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.395616+00:00",
+      "sha256": "0fe8e68e9d83d39e28e9ca95092f8b65f237c4ad82dffcaf9e835b540b6e0f0e",
+      "bytes": 1480040,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 5,
+      "textPath": "sources/1727f7ef7724ee064a59cee7e73cc5c344310ecdbe6cacd1697bd882756292de.txt",
+      "textSha256": "1727f7ef7724ee064a59cee7e73cc5c344310ecdbe6cacd1697bd882756292de",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/0fe8e68e9d83d39e28e9ca95092f8b65f237c4ad82dffcaf9e835b540b6e0f0e.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Kingwood 1-4",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20937/Kingwood-1-4",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20937/Kingwood-1-4",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.460950+00:00",
+      "sha256": "c508185300141b9e2aa100c73d12a1fa793840a546ad609bbb6d7639d17c0570",
+      "bytes": 646302,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 4,
+      "textPath": "sources/c33e372d28c089e093c594439910ab1c53b2ff3c387e5ddcad986baf167dbaf0.txt",
+      "textSha256": "c33e372d28c089e093c594439910ab1c53b2ff3c387e5ddcad986baf167dbaf0",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/c508185300141b9e2aa100c73d12a1fa793840a546ad609bbb6d7639d17c0570.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Lambertville City 1-4",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20938/Lambertville-City-1-4",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20938/Lambertville-City-1-4",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.495392+00:00",
+      "sha256": "fb709f738c5c9e9b99aea9b6c774c2d73927d98d415fdc59516ff5e5960dc965",
+      "bytes": 664927,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 4,
+      "textPath": "sources/c33e372d28c089e093c594439910ab1c53b2ff3c387e5ddcad986baf167dbaf0.txt",
+      "textSha256": "c33e372d28c089e093c594439910ab1c53b2ff3c387e5ddcad986baf167dbaf0",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/fb709f738c5c9e9b99aea9b6c774c2d73927d98d415fdc59516ff5e5960dc965.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Lebanon Borough 1",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20939/Lebanon-Borough-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20939/Lebanon-Borough-1",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.627973+00:00",
+      "sha256": "fdeb835c6053ca472cf997fa2abda988073ddd6fb3498b31124572ed35502463",
+      "bytes": 207664,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/fdeb835c6053ca472cf997fa2abda988073ddd6fb3498b31124572ed35502463.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Lebanon Township 1-6",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20940/Lebanon-Township-1-6",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20940/Lebanon-Township-1-6",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.690038+00:00",
+      "sha256": "c91d7cdf80109ef734ccabc1306b0125ac452463c6c0973910c188d6fc28b039",
+      "bytes": 1153170,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 6,
+      "textPath": "sources/a291a239bca6c26c335ad11fa2f316eea0dfd007ca271fc21cf9b1e928c3d644.txt",
+      "textSha256": "a291a239bca6c26c335ad11fa2f316eea0dfd007ca271fc21cf9b1e928c3d644",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/c91d7cdf80109ef734ccabc1306b0125ac452463c6c0973910c188d6fc28b039.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Milford 1",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20941/Milford-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20941/Milford-1",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.699598+00:00",
+      "sha256": "3f58740949465b80d9b69b4d13d5fb7371846c9b8d78770e39775bbb38c90768",
+      "bytes": 153454,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/3f58740949465b80d9b69b4d13d5fb7371846c9b8d78770e39775bbb38c90768.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Raritan 1-22",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20942/Raritan-1-22",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20942/Raritan-1-22",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:25.066447+00:00",
+      "sha256": "6f21a405ca30476e66412fb7a75215cf8e1d595b3df48e2a9a95e2c20b7b82ce",
+      "bytes": 3886638,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 22,
+      "textPath": "sources/257f6ef23557cf2469bbd98996ffc4aef2c0654c37b1c279f7e7f1b98ab00c80.txt",
+      "textSha256": "257f6ef23557cf2469bbd98996ffc4aef2c0654c37b1c279f7e7f1b98ab00c80",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/6f21a405ca30476e66412fb7a75215cf8e1d595b3df48e2a9a95e2c20b7b82ce.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Readington 1-16",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20943/Readington-1-16",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20943/Readington-1-16",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:25.038015+00:00",
+      "sha256": "1b60d39a34bdf0a872ca1c710f209494455aa730b39365e04264a9aaf8d5e9f5",
+      "bytes": 2081261,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 16,
+      "textPath": "sources/09bb5d83ae6327ecb2613f038356d9c8739417561e52dfb749787fb4ad117c56.txt",
+      "textSha256": "09bb5d83ae6327ecb2613f038356d9c8739417561e52dfb749787fb4ad117c56",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/1b60d39a34bdf0a872ca1c710f209494455aa730b39365e04264a9aaf8d5e9f5.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Stockton 1",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20944/Stockton-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20944/Stockton-1",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:24.962324+00:00",
+      "sha256": "4bb67149119ea6a7aa63bad5bbb8226d3d42cfc18cfe3d617abb91ac25094523",
+      "bytes": 94705,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/4bb67149119ea6a7aa63bad5bbb8226d3d42cfc18cfe3d617abb91ac25094523.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Tewksbury 1-5",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20945/Tewksbury-1-5",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20945/Tewksbury-1-5",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:25.230766+00:00",
+      "sha256": "fba6ff2f4bef737e5876a2807817ac1aa14c57c0a261c40ea3bd1a67abeabf2b",
+      "bytes": 1068121,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 5,
+      "textPath": "sources/1727f7ef7724ee064a59cee7e73cc5c344310ecdbe6cacd1697bd882756292de.txt",
+      "textSha256": "1727f7ef7724ee064a59cee7e73cc5c344310ecdbe6cacd1697bd882756292de",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/fba6ff2f4bef737e5876a2807817ac1aa14c57c0a261c40ea3bd1a67abeabf2b.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Union 1-4",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20946/Union-1-4",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20946/Union-1-4",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:25.248898+00:00",
+      "sha256": "0bba3eec9f8424590202b004362288ae45c2c0a121326531b1d9d1916efc1d80",
+      "bytes": 757152,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 4,
+      "textPath": "sources/c33e372d28c089e093c594439910ab1c53b2ff3c387e5ddcad986baf167dbaf0.txt",
+      "textSha256": "c33e372d28c089e093c594439910ab1c53b2ff3c387e5ddcad986baf167dbaf0",
+      "pageTextLengths": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/0bba3eec9f8424590202b004362288ae45c2c0a121326531b1d9d1916efc1d80.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "West Amwell 1-2",
+      "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20947/West-Amwell-1-2",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20947/West-Amwell-1-2",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:29:25.240181+00:00",
+      "sha256": "45c0706b4523ae3ee91e1cec5a1ca86498627357bad06c4628f349b5f6a3d79d",
+      "bytes": 331876,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/45c0706b4523ae3ee91e1cec5a1ca86498627357bad06c4628f349b5f6a3d79d.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    }
+  ]
+}

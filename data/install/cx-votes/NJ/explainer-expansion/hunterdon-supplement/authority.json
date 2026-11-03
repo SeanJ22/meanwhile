@@ -1,0 +1,41 @@
+{
+  "scope": "Complete current Hunterdon County Clerk November3,2026 PUBLICQUESTIONS master:7distinctproposals (1municipal,5school,1fire). Regionalization hasseparateexistingNHVandBloomsburyelectorates,therefore8proposedreadercontests. Current26municipalnative samplepackets also retained; no separateoffcycleuniverseclaim.",
+  "officialCurrentIndexUrl": "https://www.co.hunterdon.nj.us/countyclerk.htm",
+  "captureMetadataPaths": {
+    "currentClerkIndex": {
+      "extractedTextPath": "sources/5f535bc91866c949814cf56e8ae2204507bf050bba122d86fe1627c14b2fac71.txt",
+      "extractedTextSha256": "5f535bc91866c949814cf56e8ae2204507bf050bba122d86fe1627c14b2fac71",
+      "nativeMetadataPath": "sources/432467e5bfd3057ed8f4e737d367e4ad67cc35f237daa980a779ae1d3f1b7f26.json",
+      "publishedLinksPath": "sources/f4c670ad144af1115251e851e541aa976d1a1a565bd126844d7fad5acc462a01.json",
+      "representation": "CAPTURED_SOURCE_TEXT: complete nativeHTML text with scripts/styles/tags excluded, actual anchor links separately retained. NativeHTML hash/length are distinct in metadata, nativeHTML scratch only."
+    },
+    "sampleDirectory": {
+      "extractedTextPath": "sources/389262224b1d27c9bbcf0c2444afae361011f086a44ddeede94d4b58211b7b67.txt",
+      "extractedTextSha256": "389262224b1d27c9bbcf0c2444afae361011f086a44ddeede94d4b58211b7b67",
+      "nativeMetadataPath": "sources/e2965ec36a729fb79f971570e2b226ceb67d6d974eefd51bda2eb5b8dee44542.json",
+      "publishedLinksPath": "sources/0547822334775f6b818dc2c7cff90ff101760bec4286eac38fc854166b50f291.json",
+      "representation": "CAPTURED_SOURCE_TEXT: complete nativeHTML text with scripts/styles/tags excluded, actual anchor links separately retained. NativeHTML hash/length are distinct in metadata, nativeHTML scratch only."
+    },
+    "sampleListingResponsePath": "sources/eaac882e7e6dd955c118a7ef3f699355a9cebbc24bd2cf13c1af69a52c54317c.json",
+    "sampleListingMetadataPath": "sources/74b1b7bd9f6ce4ae1465ee9b44af567e58b6cdfff08f94bd123a346130cc632d.json",
+    "officialNHVFAQ": {
+      "extractedTextPath": "sources/40c891718f3dcdc4f85a8a8dc5a8591e18f08b75a04b5df3024fb79f61954ede.txt",
+      "extractedTextSha256": "40c891718f3dcdc4f85a8a8dc5a8591e18f08b75a04b5df3024fb79f61954ede",
+      "nativeMetadataPath": "sources/c09ba2bd487f2cb24096f957c14807ac44a57fc20a4b4c044cebcb7ff0cbc11e.json",
+      "publishedLinksPath": "sources/77c04645c5cdfc5886960a2bb8c4cad2d651cf21a7917b5b099cb64afa537a41.json",
+      "representation": "CAPTURED_SOURCE_TEXT: complete nativeHTML text with scripts/styles/tags excluded, actual anchor links separately retained. NativeHTML hash/length are distinct in metadata, nativeHTML scratch only."
+    }
+  },
+  "nativeFullQuestionMasterTextPath": "sources/dbb938de627d8e6055ba0f64becefaa1f6aefdcbf62e334ff20b6b5cc76a4731.txt",
+  "lambertvilleElectorateEvidencePath": "lambertville-electorate-proof.json",
+  "nativeCountySourceInventoryPath": "official-inventory.json",
+  "electionDate": "November3,2026",
+  "distinctCertifiedProposals": 7,
+  "readerElectorateContests": 8,
+  "authorityChain": [
+    "NativeofficialHunterdoncounty.govClerkpagedirectlylinkscurrentquestionmasterand2026GeneralSampleBallotsfolder.",
+    "Officialfrontendreadonlylistingprovidesall26currentmunicipalpackets.",
+    "ActualBloomsburyballotandNHVofficialFAQverifyseparateBloomsburyvote;allfourLambertvilleballotsverifywholecityfirequestionvoterterritory."
+  ],
+  "panelOcrInventoryPath": "panel-ocr-inventory.json"
+}

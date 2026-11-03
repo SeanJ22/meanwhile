@@ -1,0 +1,33 @@
+{
+  "fireGovernment": [
+    "152361",
+    "nj:special:lambertville-fire-district-1",
+    "LAMBERTVILLE FIRE DISTRICT 1",
+    "SPECIAL DISTRICT",
+    -1,
+    "NO_CENSUS_GEOGRAPHY",
+    -1
+  ],
+  "governmentPrimaryDivisionBindingUnchanged": -1,
+  "existingCityDivisionIndex": 284,
+  "existingCityDivision": [
+    "ocd-division/country:us/state:nj/county:hunterdon/place:lambertville_city",
+    "cousub",
+    "3401938610",
+    "Lambertville city"
+  ],
+  "officialCurrentSampleDirectoryUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/Index/1336",
+  "publicFrontendListingMetadataPath": "sources/74b1b7bd9f6ce4ae1465ee9b44af567e58b6cdfff08f94bd123a346130cc632d.json",
+  "publishedCityPacketLabel": "Lambertville City 1-4",
+  "nativeCityPacketPath": "sources/fb709f738c5c9e9b99aea9b6c774c2d73927d98d415fdc59516ff5e5960dc965.source",
+  "cityPacketSha256": "fb709f738c5c9e9b99aea9b6c774c2d73927d98d415fdc59516ff5e5960dc965",
+  "visualScopeProofPath": "sources/e70a5105c881ea2f39ca3bc055879bc5e840ada6d6b42876dbbac44212700193.source",
+  "actualPrintedHeaders": [
+    "Lambertville City District 1",
+    "Lambertville City District 2",
+    "Lambertville City District 3",
+    "Lambertville City District 4"
+  ],
+  "actualMeasureSection": "OFFICIAL FIRE DISTRICT ELECTION / CITY OF LAMBERTVILLE-FIRE DISTRICT NO. 1",
+  "basis": "CurrentelectionauthoritycompletecitypacketDistricts1–4printstheidenticalFireDistrict1questionandYes/No onALLFOURcityelectorates, eachNov3,2026header. ExistingCitycousubisexactwholecityvoterterritoryforthisquestion. Districtgovernment152361 remainsseparate/unbound;no registrymutationorfabricatedspecialOCD. Fireenforcement/mutualaidserviceareaselsewherearenotusedaselectorateproof."
+}

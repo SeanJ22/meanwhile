@@ -1,0 +1,188 @@
+[
+  {
+    "contestId": "nj-hunterdon-2026:west-amwell-open-space-levy",
+    "ocdId": "ocd-division/country:us/state:nj/county:hunterdon/place:west_amwell_township",
+    "registeredDivisionIndex": 293,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:hunterdon/place:west_amwell_township",
+      "cousub",
+      "3401978230",
+      "West Amwell township"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "208781",
+      "nj:city:township-of-west-amwell",
+      "TOWNSHIP OF WEST AMWELL",
+      "TOWNSHIP",
+      293,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-hunterdon-2026:delaware-valley-school-bond",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:delaware_valley_regional_school_district",
+    "registeredDivisionIndex": 1379,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:delaware_valley_regional_school_district",
+      "scsd",
+      "3403750",
+      "Delaware Valley Regional School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "109282",
+      "nj:school:delaware-valley-reg-high-school-dist",
+      "DELAWARE VALLEY REG HIGH SCHOOL DIST",
+      "SCHOOL DISTRICT",
+      1379,
+      "SCHOOL_NAME_LOOSE",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-hunterdon-2026:north-hunterdon-bloomsbury-membership",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:north_hunterdon_voorhees_regional_school_district",
+    "registeredDivisionIndex": 1632,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:north_hunterdon_voorhees_regional_school_district",
+      "scsd",
+      "3411610",
+      "North Hunterdon-Voorhees Regional School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "210622",
+      "nj:school:north-hunterdon-voorhees-reg-sch-dist",
+      "NORTH HUNTERDON-VOORHEES REG SCH DIST",
+      "SCHOOL DISTRICT",
+      1632,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-hunterdon-2026:bloomsbury-regional-membership",
+    "ocdId": "ocd-division/country:us/state:nj/county:hunterdon/place:bloomsbury_borough",
+    "registeredDivisionIndex": 270,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:hunterdon/place:bloomsbury_borough",
+      "cousub",
+      "3401906370",
+      "Bloomsbury borough"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "170181",
+      "nj:city:borough-of-bloomsbury",
+      "BOROUGH OF BLOOMSBURY",
+      "MUNICIPAL",
+      270,
+      "COUSUB_FIPS",
+      643
+    ],
+    "basis": "ActualcompletecurrentBloomsburyBoroughDistrict1sampleprintsthisregionalmembershipquestion;officialNHVFAQrequiresseparateBloomsburymajority. ExistingwholeBloomsburymunicipalOCD270/GEOID3401906370isitsdistinctapprovalelectorate,notaproposedunionboundary."
+  },
+  {
+    "contestId": "nj-hunterdon-2026:holland-school-bond-1",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:holland_township_school_district",
+    "registeredDivisionIndex": 1496,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:holland_township_school_district",
+      "elsd",
+      "3407380",
+      "Holland Township School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "181315",
+      "nj:school:holland-twp-sch-dist",
+      "HOLLAND TWP SCH DIST",
+      "SCHOOL DISTRICT",
+      1496,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-hunterdon-2026:holland-school-bond-2",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:holland_township_school_district",
+    "registeredDivisionIndex": 1496,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:holland_township_school_district",
+      "elsd",
+      "3407380",
+      "Holland Township School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "181315",
+      "nj:school:holland-twp-sch-dist",
+      "HOLLAND TWP SCH DIST",
+      "SCHOOL DISTRICT",
+      1496,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-hunterdon-2026:flemington-raritan-school-bond",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:flemington_raritan_regional_school_district",
+    "registeredDivisionIndex": 1424,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:flemington_raritan_regional_school_district",
+      "elsd",
+      "3405190",
+      "Flemington-Raritan Regional School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "210620",
+      "nj:school:flemington-raritan-reg-sch-dist",
+      "FLEMINGTON-RARITAN REG SCH DIST",
+      "SCHOOL DISTRICT",
+      1424,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-hunterdon-2026:lambertville-fire-capital",
+    "ocdId": "ocd-division/country:us/state:nj/county:hunterdon/place:lambertville_city",
+    "registeredDivisionIndex": 284,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:hunterdon/place:lambertville_city",
+      "cousub",
+      "3401938610",
+      "Lambertville city"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "152361",
+      "nj:special:lambertville-fire-district-1",
+      "LAMBERTVILLE FIRE DISTRICT 1",
+      "SPECIAL DISTRICT",
+      -1,
+      "NO_CENSUS_GEOGRAPHY",
+      -1
+    ],
+    "basis": "CurrentelectionauthoritycompletecitypacketDistricts1–4printstheidenticalFireDistrict1questionandYes/No onALLFOURcityelectorates, eachNov3,2026header. ExistingCitycousubisexactwholecityvoterterritoryforthisquestion. Districtgovernment152361 remainsseparate/unbound;no registrymutationorfabricatedspecialOCD. Fireenforcement/mutualaidserviceareaselsewherearenotusedaselectorateproof.",
+    "identityEvidencePath": "lambertville-electorate-proof.json",
+    "governmentPrimaryDivisionBindingUnchanged": -1
+  }
+]

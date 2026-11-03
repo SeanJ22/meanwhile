@@ -1,0 +1,403 @@
+{
+  "ballots": {
+    "NJ:nj-2026-11-03": {
+      "election": {
+        "id": "nj-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NJ"
+      },
+      "contests": [
+        {
+          "id": "nj-hunterdon-2026:west-amwell-open-space-levy",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:hunterdon/place:west_amwell_township",
+          "divisionVintage": "2023",
+          "title": "West Amwell — flexibility in open-space tax levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20947/West-Amwell-1-2",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20947/West-Amwell-1-2",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:29:25.240181+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "Shall the Township Committee of the Township of West Amwell amend Chapter 35, Section 35-3 of the Township Code, entitled “Funding,” to provide that the Municipal Open Space, Farmland and Recreation and Historic Preservation Trust Fund shall be funded by an annual tax levy in an amount up to, but not exceeding, $0.06 per $100.00 of assessed valuation, rather than requiring the annual levy to be set at $0.06 per $100.00 of assessed valuation?"
+          }
+        },
+        {
+          "id": "nj-hunterdon-2026:delaware-valley-school-bond",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:delaware_valley_regional_school_district",
+          "divisionVintage": "2023",
+          "title": "Delaware Valley Regional High School District — fire-alarm bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "The Board of Education of the Delaware Valley Regional High School District in the County of Hunterdon, New Jersey (the “Board”) is authorized to: (a) purchase and install a fire alarm system at Delaware Valley Regional High School to replace the existing 20-year-old system equipment; (b) appropriate $926,000 for such acquisition and improvements; and (c) issue bonds in an amount not to exceed $926,000. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $926,000. The project includes $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State of New Jersey (the “State”) support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. Do you approve this Bond Proposal Question?"
+          }
+        },
+        {
+          "id": "nj-hunterdon-2026:north-hunterdon-bloomsbury-membership",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:north_hunterdon_voorhees_regional_school_district",
+          "divisionVintage": "2023",
+          "title": "North Hunterdon–Voorhees — Bloomsbury regional membership",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "Shall the Board of Education of the Bloomsbury School District be permitted to join the North Hunterdon-Voorhees Regional High School District as a constituent member with the tax apportionment formula to remain 100% on each municipality’s equalized valuation allocated to the regional district as provided by state law and with the membership of the North Hunterdon- Vorhees Regional Board of Education to be expanded to 13 members with such membership to be apportioned utilizing the same methodology currently utilized by the North Hunterdon-Voorhees Regional Board of Education."
+          }
+        },
+        {
+          "id": "nj-hunterdon-2026:bloomsbury-regional-membership",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:hunterdon/place:bloomsbury_borough",
+          "divisionVintage": "2023",
+          "title": "Bloomsbury — North Hunterdon–Voorhees regional membership",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "Shall the Board of Education of the Bloomsbury School District be permitted to join the North Hunterdon-Voorhees Regional High School District as a constituent member with the tax apportionment formula to remain 100% on each municipality’s equalized valuation allocated to the regional district as provided by state law and with the membership of the North Hunterdon- Vorhees Regional Board of Education to be expanded to 13 members with such membership to be apportioned utilizing the same methodology currently utilized by the North Hunterdon-Voorhees Regional Board of Education."
+          }
+        },
+        {
+          "id": "nj-hunterdon-2026:holland-school-bond-1",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:holland_township_school_district",
+          "divisionVintage": "2023",
+          "title": "Holland Township School District — school improvements, Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "The Board of Education of the Township of Holland in the County of Hunterdon, New Jersey (the “Board”) is authorized to (a) undertake various improvements, renovations, alterations and upgrades at the Holland Township School, including but not limited to the replacement of roofing, various HVAC improvements and the replacement of asbestos flooring, including acquisition and installation of fixtures, equipment, and any site work; (b) appropriate $11,550,060 for such improvements; and (c) issue bonds in an amount not to exceed $11,550,060. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $11,550,060. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage will equal 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 1?"
+          }
+        },
+        {
+          "id": "nj-hunterdon-2026:holland-school-bond-2",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:holland_township_school_district",
+          "divisionVintage": "2023",
+          "title": "Holland Township School District — additional improvements, Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "(Bond Proposal Question No. 2 will only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election.) The Board of Education of the Township of Holland in the County of Hunterdon, New Jersey (the “Board”) is authorized to (a) undertake various improvements, renovations, alterations and upgrades at Holland Township School, including but not limited to window replacement, renovations to bathrooms, lockers, flooring, classrooms, the multi-purpose room and the installation of an alarm, including acquisition and installation of fixtures, furniture, equipment, and any site work; (b) appropriate $4,422,600 for such improvements; and (c) issue bonds in an amount not to exceed $4,422,600. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $4,422,600. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 2?"
+          }
+        },
+        {
+          "id": "nj-hunterdon-2026:flemington-raritan-school-bond",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:flemington_raritan_regional_school_district",
+          "divisionVintage": "2023",
+          "title": "Flemington–Raritan Regional School District — school improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "The Board of Education of the Flemington-Raritan Regional School District in the County of Hunterdon, New Jersey (the “Board”) is authorized (a) to undertake various improvements, alterations, renovations, and upgrades at J.P. Case Middle School, Reading-Fleming Intermediate School, Barley Sheaf Elementary School, Copper Hill Elementary School, Francis A. Desmares Elementary School, and Robert Hunter Elementary School, including acquisition and installation of fixtures, equipment, any site work and related work and costs; (b) to appropriate $30,320,944 for such improvements; and (c) to issue bonds in an amount not to exceed $30,320,944. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $30,320,944 (consisting of $9,732,750 for J.P. Case Middle School, $8,874,000 for Reading-Fleming Intermediate School, $2,825,000 for Barley Sheaf Elementary School, $1,303,250 for Copper Hill Elementary School, $1,145,750 for Francis A. Desmares Elementary School, and $6,440,194 for Robert Hunter Elementary School). The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State of New Jersey (the “State”) support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question?"
+          }
+        },
+        {
+          "id": "nj-hunterdon-2026:lambertville-fire-capital",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:hunterdon/place:lambertville_city",
+          "divisionVintage": "2023",
+          "title": "Lambertville Fire District No. 1 — equipment and firehouse financing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "Shall The Commissioners of Fire District No. 1 in the City of Lambertville, County of Hunterdon, New Jersey be authorized to expend the amount of $7,500,000 to (i) acquire three fire engines and all related apparatus equipment and (ii) undertake various capital improvements to the Lambertville Fire House located at 230 North Main Street, Lambertville, NJ, and issue bonds and bond anticipation notes and/or enter into lease purchase financing to fund such capital projects?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "nj-hunterdon-2026:west-amwell-open-space-levy#question",
+          "contestId": "nj-hunterdon-2026:west-amwell-open-space-levy",
+          "questionText": "Shall the Township Committee of the Township of West Amwell amend Chapter 35, Section 35-3 of the Township Code, entitled “Funding,” to provide that the Municipal Open Space, Farmland and Recreation and Historic Preservation Trust Fund shall be funded by an annual tax levy in an amount up to, but not exceeding, $0.06 per $100.00 of assessed valuation, rather than requiring the annual levy to be set at $0.06 per $100.00 of assessed valuation?",
+          "officialStatement": "A “Yes” vote authorizes the Township Committee to amend Section 35-3 of the Township Code so that the annual dedicated levy for the Municipal Open Space, Farmland and Recreation and Historic Preservation Trust Fund may be set each year in an amount up to, but not exceeding, $0.06 per $100.00 of assessed valuation. The current ordinance provides for an annual levy of exactly $0.06 per $100.00 of assessed valuation. Approval of this question would not increase the maximum authorized open space levy. Instead, it would allow the Township Committee to levy less than $0.06 per $100.00 of assessed valuation in a particular year if the Township Committee determines that a lower levy is appropriate. Funds raised by the levy would continue to be dedicated to the purposes authorized for the Municipal Open Space, Farmland and Recreation and Historic Preservation Trust Fund, including open space, recreation, farmland preservation, historic preservation, and related purposes authorized by law. A “No” vote means Section 35-3 would remain unchanged, and the ordinance would continue to provide for an annual levy of $0.06 per $100.00 of assessed valuation.",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20947/West-Amwell-1-2",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:29:25.240181+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "Shall the Township Committee of the Township of West Amwell amend Chapter 35, Section 35-3 of the Township Code, entitled “Funding,” to provide that the Municipal Open Space, Farmland and Recreation and Historic Preservation Trust Fund shall be funded by an annual tax levy in an amount up to, but not exceeding, $0.06 per $100.00 of assessed valuation, rather than requiring the annual levy to be set at $0.06 per $100.00 of assessed valuation?"
+          }
+        },
+        {
+          "id": "nj-hunterdon-2026:delaware-valley-school-bond#question",
+          "contestId": "nj-hunterdon-2026:delaware-valley-school-bond",
+          "questionText": "The Board of Education of the Delaware Valley Regional High School District in the County of Hunterdon, New Jersey (the “Board”) is authorized to: (a) purchase and install a fire alarm system at Delaware Valley Regional High School to replace the existing 20-year-old system equipment; (b) appropriate $926,000 for such acquisition and improvements; and (c) issue bonds in an amount not to exceed $926,000. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $926,000. The project includes $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State of New Jersey (the “State”) support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. Do you approve this Bond Proposal Question?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "The Board of Education of the Delaware Valley Regional High School District in the County of Hunterdon, New Jersey (the “Board”) is authorized to: (a) purchase and install a fire alarm system at Delaware Valley Regional High School to replace the existing 20-year-old system equipment; (b) appropriate $926,000 for such acquisition and improvements; and (c) issue bonds in an amount not to exceed $926,000. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $926,000. The project includes $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State of New Jersey (the “State”) support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. Do you approve this Bond Proposal Question?"
+          }
+        },
+        {
+          "id": "nj-hunterdon-2026:north-hunterdon-bloomsbury-membership#question",
+          "contestId": "nj-hunterdon-2026:north-hunterdon-bloomsbury-membership",
+          "questionText": "Shall the Board of Education of the Bloomsbury School District be permitted to join the North Hunterdon-Voorhees Regional High School District as a constituent member with the tax apportionment formula to remain 100% on each municipality’s equalized valuation allocated to the regional district as provided by state law and with the membership of the North Hunterdon- Vorhees Regional Board of Education to be expanded to 13 members with such membership to be apportioned utilizing the same methodology currently utilized by the North Hunterdon-Voorhees Regional Board of Education.",
+          "officialStatement": "Beginning with the 2025-26 school year, students from Bloomsbury began attending North Hunterdon High School through a sending-receiving (contractual) relationship. Regardless of whether this referendum passes, Bloomsbury students will continue to attend North Hunterdon High School. If this referendum passes, Bloomsbury will become a constituent member of the North Hunterdon-Voorhees Regional High School District. As a constituent member, Bloomsbury residents will gain voting representation on the Regional Board of Education, and Bloomsbury’s share of the regional district’s costs will be allocated based on equalized property valuation, consistent with the Regional District’s current and long-standing practice and state law. The Regional Board of Education will expand from 12 to 13 members, with seats apportioned based on census population data and updated following each decennial census. Based on the 2020 Census, the initial seat allocation would be as follows: • Bethlehem Township and Hampton Borough: 1 representative (elected at-large) • Union Township and Bloomsbury: 2 representatives (elected at-large) • Califon Borough and Tewksbury Township: 2 representatives (elected at-large) • Clinton Township and Lebanon Borough: 4 representatives (elected at-large) • High Bridge Borough and Lebanon Township: 2 representatives (elected at-large) • Town of Clinton, Franklin Township, and Glen Gardner Borough: 2 representatives (elected at-large) If this referendum does not pass, Bloomsbury students will continue to attend North Hunterdon High School under the existing sending-receiving relationship. However, Bloomsbury would not become a constituent member of the regional district, would not have voting representation on the Regional Board of Education, unless and until it sends a sufficient percentage of students to meet the statutory threshold, and would continue to pay tuition under the terms of the sending- receiving agreement rather than contributing through the regional tax apportionment formula.",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "Shall the Board of Education of the Bloomsbury School District be permitted to join the North Hunterdon-Voorhees Regional High School District as a constituent member with the tax apportionment formula to remain 100% on each municipality’s equalized valuation allocated to the regional district as provided by state law and with the membership of the North Hunterdon- Vorhees Regional Board of Education to be expanded to 13 members with such membership to be apportioned utilizing the same methodology currently utilized by the North Hunterdon-Voorhees Regional Board of Education."
+          }
+        },
+        {
+          "id": "nj-hunterdon-2026:bloomsbury-regional-membership#question",
+          "contestId": "nj-hunterdon-2026:bloomsbury-regional-membership",
+          "questionText": "Shall the Board of Education of the Bloomsbury School District be permitted to join the North Hunterdon-Voorhees Regional High School District as a constituent member with the tax apportionment formula to remain 100% on each municipality’s equalized valuation allocated to the regional district as provided by state law and with the membership of the North Hunterdon- Vorhees Regional Board of Education to be expanded to 13 members with such membership to be apportioned utilizing the same methodology currently utilized by the North Hunterdon-Voorhees Regional Board of Education.",
+          "officialStatement": "Beginning with the 2025-26 school year, students from Bloomsbury began attending North Hunterdon High School through a sending-receiving (contractual) relationship. Regardless of whether this referendum passes, Bloomsbury students will continue to attend North Hunterdon High School. If this referendum passes, Bloomsbury will become a constituent member of the North Hunterdon-Voorhees Regional High School District. As a constituent member, Bloomsbury residents will gain voting representation on the Regional Board of Education, and Bloomsbury’s share of the regional district’s costs will be allocated based on equalized property valuation, consistent with the Regional District’s current and long-standing practice and state law. The Regional Board of Education will expand from 12 to 13 members, with seats apportioned based on census population data and updated following each decennial census. Based on the 2020 Census, the initial seat allocation would be as follows: • Bethlehem Township and Hampton Borough: 1 representative (elected at-large) • Union Township and Bloomsbury: 2 representatives (elected at-large) • Califon Borough and Tewksbury Township: 2 representatives (elected at-large) • Clinton Township and Lebanon Borough: 4 representatives (elected at-large) • High Bridge Borough and Lebanon Township: 2 representatives (elected at-large) • Town of Clinton, Franklin Township, and Glen Gardner Borough: 2 representatives (elected at-large) If this referendum does not pass, Bloomsbury students will continue to attend North Hunterdon High School under the existing sending-receiving relationship. However, Bloomsbury would not become a constituent member of the regional district, would not have voting representation on the Regional Board of Education, unless and until it sends a sufficient percentage of students to meet the statutory threshold, and would continue to pay tuition under the terms of the sending- receiving agreement rather than contributing through the regional tax apportionment formula.",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "Shall the Board of Education of the Bloomsbury School District be permitted to join the North Hunterdon-Voorhees Regional High School District as a constituent member with the tax apportionment formula to remain 100% on each municipality’s equalized valuation allocated to the regional district as provided by state law and with the membership of the North Hunterdon- Vorhees Regional Board of Education to be expanded to 13 members with such membership to be apportioned utilizing the same methodology currently utilized by the North Hunterdon-Voorhees Regional Board of Education."
+          }
+        },
+        {
+          "id": "nj-hunterdon-2026:holland-school-bond-1#question",
+          "contestId": "nj-hunterdon-2026:holland-school-bond-1",
+          "questionText": "The Board of Education of the Township of Holland in the County of Hunterdon, New Jersey (the “Board”) is authorized to (a) undertake various improvements, renovations, alterations and upgrades at the Holland Township School, including but not limited to the replacement of roofing, various HVAC improvements and the replacement of asbestos flooring, including acquisition and installation of fixtures, equipment, and any site work; (b) appropriate $11,550,060 for such improvements; and (c) issue bonds in an amount not to exceed $11,550,060. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $11,550,060. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage will equal 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 1?",
+          "officialStatement": "At this election, the voters of the school district are being asked to consider Bond Proposal Questions No. 1 and No. 2. As set forth above, Bond Proposal Question No. 2 can only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election, although Bond Proposal No. 1, if approved, can go into effect even if Bond Proposal No. 2 is rejected. If Bond Proposal Questions No. 1 and No. 2 are approved by the voters at this election, the Board of Education will be authorized to undertake various improvements, renovations, alterations and upgrades at Holland Township School, including but not limited to the replacement of roofing, various HVAC improvements, the replacement of asbestos flooring, window replacement, renovations to bathrooms, lockers, flooring, classrooms, the multi-purpose room and the installation of an alarm. The foregoing improvements shall include acquisition of fixtures, furniture, equipment and any site work. The total cost for the projects will be $15,972,660, and the Board of Education will be authorized to issue bonds in an amount not to exceed $15,972,660. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $15,972,660. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election.",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "The Board of Education of the Township of Holland in the County of Hunterdon, New Jersey (the “Board”) is authorized to (a) undertake various improvements, renovations, alterations and upgrades at the Holland Township School, including but not limited to the replacement of roofing, various HVAC improvements and the replacement of asbestos flooring, including acquisition and installation of fixtures, equipment, and any site work; (b) appropriate $11,550,060 for such improvements; and (c) issue bonds in an amount not to exceed $11,550,060. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $11,550,060. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage will equal 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 1?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "nj-hunterdon-2026:holland-school-bond-2#question",
+          "contestId": "nj-hunterdon-2026:holland-school-bond-2",
+          "questionText": "(Bond Proposal Question No. 2 will only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election.) The Board of Education of the Township of Holland in the County of Hunterdon, New Jersey (the “Board”) is authorized to (a) undertake various improvements, renovations, alterations and upgrades at Holland Township School, including but not limited to window replacement, renovations to bathrooms, lockers, flooring, classrooms, the multi-purpose room and the installation of an alarm, including acquisition and installation of fixtures, furniture, equipment, and any site work; (b) appropriate $4,422,600 for such improvements; and (c) issue bonds in an amount not to exceed $4,422,600. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $4,422,600. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 2?",
+          "officialStatement": "At this election, the voters of the school district are being asked to consider Bond Proposal Questions No. 1 and No. 2. As set forth above, Bond Proposal Question No. 2 can only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election, although Bond Proposal No. 1, if approved, can go into effect even if Bond Proposal No. 2 is rejected. If Bond Proposal Questions No. 1 and No. 2 are approved by the voters at this election, the Board of Education will be authorized to undertake various improvements, renovations, alterations and upgrades at Holland Township School, including but not limited to the replacement of roofing, various HVAC improvements, the replacement of asbestos flooring, window replacement, renovations to bathrooms, lockers, flooring, classrooms, the multi-purpose room and the installation of an alarm. The foregoing improvements shall include acquisition of fixtures, furniture, equipment and any site work. The total cost for the projects will be $15,972,660, and the Board of Education will be authorized to issue bonds in an amount not to exceed $15,972,660. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $15,972,660. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election.",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "(Bond Proposal Question No. 2 will only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election.) The Board of Education of the Township of Holland in the County of Hunterdon, New Jersey (the “Board”) is authorized to (a) undertake various improvements, renovations, alterations and upgrades at Holland Township School, including but not limited to window replacement, renovations to bathrooms, lockers, flooring, classrooms, the multi-purpose room and the installation of an alarm, including acquisition and installation of fixtures, furniture, equipment, and any site work; (b) appropriate $4,422,600 for such improvements; and (c) issue bonds in an amount not to exceed $4,422,600. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $4,422,600. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 2?"
+          },
+          "officialNumber": "2"
+        },
+        {
+          "id": "nj-hunterdon-2026:flemington-raritan-school-bond#question",
+          "contestId": "nj-hunterdon-2026:flemington-raritan-school-bond",
+          "questionText": "The Board of Education of the Flemington-Raritan Regional School District in the County of Hunterdon, New Jersey (the “Board”) is authorized (a) to undertake various improvements, alterations, renovations, and upgrades at J.P. Case Middle School, Reading-Fleming Intermediate School, Barley Sheaf Elementary School, Copper Hill Elementary School, Francis A. Desmares Elementary School, and Robert Hunter Elementary School, including acquisition and installation of fixtures, equipment, any site work and related work and costs; (b) to appropriate $30,320,944 for such improvements; and (c) to issue bonds in an amount not to exceed $30,320,944. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $30,320,944 (consisting of $9,732,750 for J.P. Case Middle School, $8,874,000 for Reading-Fleming Intermediate School, $2,825,000 for Barley Sheaf Elementary School, $1,303,250 for Copper Hill Elementary School, $1,145,750 for Francis A. Desmares Elementary School, and $6,440,194 for Robert Hunter Elementary School). The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State of New Jersey (the “State”) support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "The Board of Education of the Flemington-Raritan Regional School District in the County of Hunterdon, New Jersey (the “Board”) is authorized (a) to undertake various improvements, alterations, renovations, and upgrades at J.P. Case Middle School, Reading-Fleming Intermediate School, Barley Sheaf Elementary School, Copper Hill Elementary School, Francis A. Desmares Elementary School, and Robert Hunter Elementary School, including acquisition and installation of fixtures, equipment, any site work and related work and costs; (b) to appropriate $30,320,944 for such improvements; and (c) to issue bonds in an amount not to exceed $30,320,944. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $30,320,944 (consisting of $9,732,750 for J.P. Case Middle School, $8,874,000 for Reading-Fleming Intermediate School, $2,825,000 for Barley Sheaf Elementary School, $1,303,250 for Copper Hill Elementary School, $1,145,750 for Francis A. Desmares Elementary School, and $6,440,194 for Robert Hunter Elementary School). The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State of New Jersey (the “State”) support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question?"
+          }
+        },
+        {
+          "id": "nj-hunterdon-2026:lambertville-fire-capital#question",
+          "contestId": "nj-hunterdon-2026:lambertville-fire-capital",
+          "questionText": "Shall The Commissioners of Fire District No. 1 in the City of Lambertville, County of Hunterdon, New Jersey be authorized to expend the amount of $7,500,000 to (i) acquire three fire engines and all related apparatus equipment and (ii) undertake various capital improvements to the Lambertville Fire House located at 230 North Main Street, Lambertville, NJ, and issue bonds and bond anticipation notes and/or enter into lease purchase financing to fund such capital projects?",
+          "officialStatement": "A yes vote will authorize the Board of Fire Commissioners to expend up to $7,500,000 to (i) acquire three fire trucks, including a Fire Engine Truck, a Fire Engine Tanker Truck and a Fire Engine Ladder Truck and all related apparatus equipment for such fire trucks and (ii) undertake various capital improvements to the Lambertville Fire House, including but not limited to, an addition to and renovation of the Fire House, renovation of the existing fire truck bays, HV AC, asphalt, curbing and sidewalk improvements, and associated site work, and to issue bonds and bond anticipation notes and/or enter into lease purchase financing to fund such projects.",
+          "provenance": {
+            "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+            "sourceOrg": "Hunterdon County Clerk — official2026 General Election public-question certification",
+            "collectedAt": "2026-11-03T10:23:12.391252+00:00",
+            "verifiedAt": "2026-11-03T10:36:28.881836+00:00",
+            "quote": "Shall The Commissioners of Fire District No. 1 in the City of Lambertville, County of Hunterdon, New Jersey be authorized to expend the amount of $7,500,000 to (i) acquire three fire engines and all related apparatus equipment and (ii) undertake various capital improvements to the Lambertville Fire House located at 230 North Main Street, Lambertville, NJ, and issue bonds and bond anticipation notes and/or enter into lease purchase financing to fund such capital projects?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nj-hunterdon-2026:west-amwell-open-space-levy",
+          "whatItDoes": "Allows West Amwell to set the annual tax for its Municipal Open Space, Farmland and Recreation and Historic Preservation Trust Fund at any rate up to 6 cents per $100 of assessed value. The current ordinance requires exactly 6 cents per $100 each year. The authorized maximum and the fund’s open-space, recreation, farmland and historic-preservation purposes would stay unchanged.",
+          "yesMeans": "Authorize changing the ordinance so the Township Committee can choose a lower rate while keeping a 6-cent ceiling.",
+          "noMeans": "Keep the requirement to levy exactly 6 cents per $100 of assessed value each year.",
+          "parts": [],
+          "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20947/West-Amwell-1-2",
+          "sourceHash": "45c0706b4523ae3ee91e1cec5a1ca86498627357bad06c4628f349b5f6a3d79d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:36:28.881836+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-hunterdon-2026:delaware-valley-school-bond",
+          "whatItDoes": "Authorizes the Delaware Valley regional school board to spend $926,000 and issue up to that amount in bonds to replace the high school’s 20-year-old fire-alarm system equipment. All $926,000 is approved as eligible project costs, with the stated state-aid calculation equal to 40% of annual debt payments associated with those eligible costs.",
+          "yesMeans": "Approve replacing the fire-alarm equipment and up to $926,000 in bonds.",
+          "noMeans": "Reject this project and bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "sourceHash": "5ea40f05f91e33728871b974e24c4534bf2e604380bcaeaa0ec0994ad2ffd0c6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:36:28.881836+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-hunterdon-2026:north-hunterdon-bloomsbury-membership",
+          "whatItDoes": "Makes Bloomsbury a full constituent member of the North Hunterdon–Voorhees regional high-school district, with its share of district costs based entirely on equalized property value under the existing regional tax formula, rather than tuition under a sending–receiving contract. Bloomsbury students would continue attending North Hunterdon High School whether this proposal passes or fails. The regional board would expand from 12 to 13 members, with seats apportioned by census population and updated after each ten-year census. The initial shared, at-large seat allocation would be: Bethlehem Township and Hampton, one; Union Township and Bloomsbury, two; Califon and Tewksbury, two; Clinton Township and Lebanon Borough, four; High Bridge and Lebanon Township, two; and Clinton Town, Franklin Township and Glen Gardner, two. Approval requires both a majority across the existing 12 regional municipalities combined and a separate majority in Bloomsbury.",
+          "yesMeans": "Approve Bloomsbury joining as a constituent member with the proposed tax formula and board representation. Both electorates must approve for the membership change to proceed.",
+          "noMeans": "Reject the proposed membership change; Bloomsbury would continue its tuition-based arrangement, with no regional-board voting representation unless it later meets the statutory student-enrollment threshold.",
+          "parts": [],
+          "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "sourceHash": "5ea40f05f91e33728871b974e24c4534bf2e604380bcaeaa0ec0994ad2ffd0c6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:36:28.881836+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-hunterdon-2026:bloomsbury-regional-membership",
+          "whatItDoes": "Makes Bloomsbury a full constituent member of the North Hunterdon–Voorhees regional high-school district, with its share of district costs based entirely on equalized property value under the existing regional tax formula, rather than tuition under a sending–receiving contract. Bloomsbury students would continue attending North Hunterdon High School whether this proposal passes or fails. The regional board would expand from 12 to 13 members, with seats apportioned by census population and updated after each ten-year census. The initial shared, at-large seat allocation would be: Bethlehem Township and Hampton, one; Union Township and Bloomsbury, two; Califon and Tewksbury, two; Clinton Township and Lebanon Borough, four; High Bridge and Lebanon Township, two; and Clinton Town, Franklin Township and Glen Gardner, two. Approval requires both a majority across the existing 12 regional municipalities combined and a separate majority in Bloomsbury.",
+          "yesMeans": "Approve Bloomsbury joining as a constituent member with the proposed tax formula and board representation. Both electorates must approve for the membership change to proceed.",
+          "noMeans": "Reject the proposed membership change; Bloomsbury would continue its tuition-based arrangement, with no regional-board voting representation unless it later meets the statutory student-enrollment threshold.",
+          "parts": [],
+          "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "sourceHash": "5ea40f05f91e33728871b974e24c4534bf2e604380bcaeaa0ec0994ad2ffd0c6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:36:28.881836+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-hunterdon-2026:holland-school-bond-1",
+          "whatItDoes": "Authorizes the Holland school board to spend $11,550,060 and issue up to that amount in bonds for improvements at Holland Township School. The work includes roof replacement, heating, ventilation and air-conditioning improvements, replacement of asbestos flooring, fixtures, equipment and site work. All $11,550,060 is approved as eligible costs, with the stated state-aid calculation equal to 40% of annual debt payments associated with those costs. The board could transfer funds among projects approved at this election. Question 1 can take effect if approved even when Question 2 is rejected; approving both would authorize $15,972,660 in total project costs and bonds.",
+          "yesMeans": "Approve these projects and up to $11,550,060 in bonds, independently of whether Question 2 passes.",
+          "noMeans": "Reject this project and bond authorization; Question 2 also could not take effect without Question 1’s approval.",
+          "parts": [],
+          "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "sourceHash": "5ea40f05f91e33728871b974e24c4534bf2e604380bcaeaa0ec0994ad2ffd0c6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:36:28.881836+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-hunterdon-2026:holland-school-bond-2",
+          "whatItDoes": "Authorizes the Holland school board to spend $4,422,600 and issue up to that amount in bonds for additional improvements at Holland Township School, only if Question 1 also passes at this election. The work includes replacing windows; renovating bathrooms, lockers, flooring, classrooms and the multipurpose room; installing an alarm; and related fixtures, furniture, equipment and site work. All $4,422,600 is approved as eligible costs, with the stated state-aid calculation equal to 40% of annual debt payments associated with those costs. The board could transfer funds among approved projects; approving both questions would authorize $15,972,660 in total project costs and bonds.",
+          "yesMeans": "Approve these additional projects and up to $4,422,600 in bonds, taking effect only if Question 1 is also approved.",
+          "noMeans": "Reject this additional project and bond authorization; Question 1 could still take effect if separately approved.",
+          "parts": [],
+          "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "sourceHash": "5ea40f05f91e33728871b974e24c4534bf2e604380bcaeaa0ec0994ad2ffd0c6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:36:28.881836+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-hunterdon-2026:flemington-raritan-school-bond",
+          "whatItDoes": "Authorizes the Flemington–Raritan regional school board to spend $30,320,944 and issue up to that amount in bonds for improvements, alterations, renovations and upgrades, with equipment, fixtures, site work and related costs. Projects cover J.P. Case Middle School, Reading-Fleming Intermediate School, Barley Sheaf Elementary, Copper Hill Elementary, Francis A. Desmares Elementary and Robert Hunter Elementary. All $30,320,944 is approved as eligible costs: $9,732,750 at J.P. Case, $8,874,000 at Reading-Fleming, $2,825,000 at Barley Sheaf, $1,303,250 at Copper Hill, $1,145,750 at Desmares and $6,440,194 at Robert Hunter. The stated state-aid calculation is 40% of annual debt payments associated with those eligible costs; the board could transfer money among projects approved at this election.",
+          "yesMeans": "Approve these school improvements and up to $30,320,944 in bonds.",
+          "noMeans": "Reject this project and bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "sourceHash": "5ea40f05f91e33728871b974e24c4534bf2e604380bcaeaa0ec0994ad2ffd0c6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:36:28.881836+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-hunterdon-2026:lambertville-fire-capital",
+          "whatItDoes": "Authorizes Lambertville Fire District No. 1 to spend up to $7.5 million on three fire trucks, related equipment and improvements at the firehouse at 230 North Main Street. The trucks are a fire engine, an engine tanker and an engine ladder truck. Firehouse work includes an addition and renovation, work on existing truck bays, heating, ventilation and air-conditioning, paving, curbs, sidewalks and related site work. The district could finance the projects with bonds, short-term bond-anticipation notes, lease-purchase financing, or a combination of those options.",
+          "yesMeans": "Approve spending up to $7.5 million for the listed equipment and firehouse projects and the proposed financing options.",
+          "noMeans": "Reject this capital-project spending and financing authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+          "sourceHash": "5ea40f05f91e33728871b974e24c4534bf2e604380bcaeaa0ec0994ad2ffd0c6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:36:28.881836+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:36:28.881836+00:00",
+    "reviewedBy": "CX-VOTES exactofficial hunterdon current2026 questions, fullstatements, neutral effects and nativePDFvisual/sourcechecks",
+    "sources": [
+      {
+        "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20947/West-Amwell-1-2",
+        "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20947/West-Amwell-1-2",
+        "httpStatus": 200,
+        "rawHash": "45c0706b4523ae3ee91e1cec5a1ca86498627357bad06c4628f349b5f6a3d79d",
+        "retrievedAt": "2026-11-03T10:29:25.240181+00:00",
+        "publisher": "Hunterdon County Clerk — official2026 General Election public-question certification",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete originalnativecurrentWestAmwellNovember3,2026sampleballotPDF. Fullquestion/fullactualinterpretivestatement/YesNo directlyvisuallychecked onpage1; actualstatementhasadditionalparagraphsbeyondtheAugustcountycertification,allretained. NativePDFSHAisoriginalbytes,notOCRtext."
+      },
+      {
+        "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+        "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624/public-questions-website?bidId=",
+        "httpStatus": 200,
+        "rawHash": "5ea40f05f91e33728871b974e24c4534bf2e604380bcaeaa0ec0994ad2ffd0c6",
+        "retrievedAt": "2026-11-03T10:23:12.391252+00:00",
+        "publisher": "Hunterdon County Clerk — official2026 General Election public-question certification",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete originalnativeofficialNOVEMBER3,2026GENERAL ELECTION PUBLICQUESTIONS masterlistsmunicipal,schoolandfirequestions;fullquestionblocks+allofficialstatements retained. PublishedcurrentClerkpagelinks exactPDF. Actualcurrent26municipalsamplepackets separatelycaptured, noresultvaluesornewcandidatefacts extracted."
+      }
+    ]
+  }
+}

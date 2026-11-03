@@ -1,0 +1,266 @@
+{
+  "packetPath": "ballot-input/nj.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20947/West-Amwell-1-2",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20947/West-Amwell-1-2",
+      "rawPath": "sources/45c0706b4523ae3ee91e1cec5a1ca86498627357bad06c4628f349b5f6a3d79d.source",
+      "rawHash": "45c0706b4523ae3ee91e1cec5a1ca86498627357bad06c4628f349b5f6a3d79d",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-hunterdon-2026:west-amwell-open-space-levy"
+      ],
+      "textPath": "sources/8f9ba67c83c6efd491751a40175e99c76c87650f7f77dcac92f4cc49550df0fb.txt",
+      "textSha256": "8f9ba67c83c6efd491751a40175e99c76c87650f7f77dcac92f4cc49550df0fb",
+      "textRepresentation": "Exact bounded question and full supplied statement transcript/extraction; full originalPDF bytes retained. Method/visualproof per source-support. No claim that this is the wholePDFselectabletext."
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20624/public-questions-website?bidId=",
+      "rawPath": "sources/5ea40f05f91e33728871b974e24c4534bf2e604380bcaeaa0ec0994ad2ffd0c6.source",
+      "rawHash": "5ea40f05f91e33728871b974e24c4534bf2e604380bcaeaa0ec0994ad2ffd0c6",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-hunterdon-2026:delaware-valley-school-bond",
+        "nj-hunterdon-2026:north-hunterdon-bloomsbury-membership",
+        "nj-hunterdon-2026:bloomsbury-regional-membership",
+        "nj-hunterdon-2026:holland-school-bond-1",
+        "nj-hunterdon-2026:holland-school-bond-2",
+        "nj-hunterdon-2026:flemington-raritan-school-bond",
+        "nj-hunterdon-2026:lambertville-fire-capital"
+      ],
+      "textPath": "sources/7ff68358ca95f2bd6bcd79e59234224ff32946c5d9e9cedf6452073bfab6dfb9.txt",
+      "textSha256": "7ff68358ca95f2bd6bcd79e59234224ff32946c5d9e9cedf6452073bfab6dfb9",
+      "textRepresentation": "Exact bounded question and full supplied statement transcript/extraction; full originalPDF bytes retained. Method/visualproof per source-support. No claim that this is the wholePDFselectabletext."
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20922/Alexandria-1-4",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20922/Alexandria-1-4",
+      "rawPath": "sources/6467f8fdc7a52254e4a73a08da481b6909a6d8115827761f930b5cb35693db99.source",
+      "rawHash": "6467f8fdc7a52254e4a73a08da481b6909a6d8115827761f930b5cb35693db99",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20923/Bethlehem-1-4",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20923/Bethlehem-1-4",
+      "rawPath": "sources/c2a529844c2f41c4c417aa38e935ef92e5886edf36e760a98483c2a7d5c4e184.source",
+      "rawHash": "c2a529844c2f41c4c417aa38e935ef92e5886edf36e760a98483c2a7d5c4e184",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20924/Bloomsbury-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20924/Bloomsbury-1",
+      "rawPath": "sources/0be42ade624c4223c488557e57abbbfc5e0a0cce9f8efa8b990abaa7ed969e42.source",
+      "rawHash": "0be42ade624c4223c488557e57abbbfc5e0a0cce9f8efa8b990abaa7ed969e42",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20925/Califon-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20925/Califon-1",
+      "rawPath": "sources/eeb26e83c1738d7edbfc4a99e9981d6687aabb4cbcfa0af2bd80c2a2398a7869.source",
+      "rawHash": "eeb26e83c1738d7edbfc4a99e9981d6687aabb4cbcfa0af2bd80c2a2398a7869",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20926/Clinton-Town-1-2",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20926/Clinton-Town-1-2",
+      "rawPath": "sources/63237490b609357be50dea02da13ed0252a42734a74a1155dc3992140e189797.source",
+      "rawHash": "63237490b609357be50dea02da13ed0252a42734a74a1155dc3992140e189797",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20927/Clinton-Township-1-12",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20927/Clinton-Township-1-12",
+      "rawPath": "sources/92119f1c98a8bb8d36c4930e45edb0ca4cdef48ac7d37071f3ad236cb5f26884.source",
+      "rawHash": "92119f1c98a8bb8d36c4930e45edb0ca4cdef48ac7d37071f3ad236cb5f26884",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20928/Delaware-1-5",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20928/Delaware-1-5",
+      "rawPath": "sources/22529e94a2ffcea10670413f7a818ba19768dd4cbe230a947242b32f2ba1c3be.source",
+      "rawHash": "22529e94a2ffcea10670413f7a818ba19768dd4cbe230a947242b32f2ba1c3be",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20929/East-Amwell-1-5",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20929/East-Amwell-1-5",
+      "rawPath": "sources/a3e7c5fdfc5d3c066123d425b53cfc085447c89ba31cf463f78aa001781e18b3.source",
+      "rawHash": "a3e7c5fdfc5d3c066123d425b53cfc085447c89ba31cf463f78aa001781e18b3",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20930/Flemington-1-3",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20930/Flemington-1-3",
+      "rawPath": "sources/765a1225fbf951cb9d447e9b10b41e4728ab17d298373c032feacd9afaa8fbb3.source",
+      "rawHash": "765a1225fbf951cb9d447e9b10b41e4728ab17d298373c032feacd9afaa8fbb3",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20931/Franklin-1-3",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20931/Franklin-1-3",
+      "rawPath": "sources/d45e9d7922b1d808a416ec4bc9fcad33f56b5384465867b6489e6453d2d9358a.source",
+      "rawHash": "d45e9d7922b1d808a416ec4bc9fcad33f56b5384465867b6489e6453d2d9358a",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20932/Frenchtown-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20932/Frenchtown-1",
+      "rawPath": "sources/5db97fccc1f3687136b52c8af73704b2bf46c0f2189bfff5b1f30cef31893ca2.source",
+      "rawHash": "5db97fccc1f3687136b52c8af73704b2bf46c0f2189bfff5b1f30cef31893ca2",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20933/Glen-Gardner-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20933/Glen-Gardner-1",
+      "rawPath": "sources/8018b7e336e8e4ca734ca99e064d50a0fa34bb3c7d7f5b10ea402d566f2ef84d.source",
+      "rawHash": "8018b7e336e8e4ca734ca99e064d50a0fa34bb3c7d7f5b10ea402d566f2ef84d",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20934/Hampton-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20934/Hampton-1",
+      "rawPath": "sources/bd34a095a5a75beccc0b4c40ef19ad347b116476024dc57a4239b8c163009b46.source",
+      "rawHash": "bd34a095a5a75beccc0b4c40ef19ad347b116476024dc57a4239b8c163009b46",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20935/High-Bridge-1-3",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20935/High-Bridge-1-3",
+      "rawPath": "sources/f733cb53500e6ab730ac7f0911d00dfb1742a9e300fead3578eb965f93e7c746.source",
+      "rawHash": "f733cb53500e6ab730ac7f0911d00dfb1742a9e300fead3578eb965f93e7c746",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20936/Holland-1-5",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20936/Holland-1-5",
+      "rawPath": "sources/0fe8e68e9d83d39e28e9ca95092f8b65f237c4ad82dffcaf9e835b540b6e0f0e.source",
+      "rawHash": "0fe8e68e9d83d39e28e9ca95092f8b65f237c4ad82dffcaf9e835b540b6e0f0e",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20937/Kingwood-1-4",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20937/Kingwood-1-4",
+      "rawPath": "sources/c508185300141b9e2aa100c73d12a1fa793840a546ad609bbb6d7639d17c0570.source",
+      "rawHash": "c508185300141b9e2aa100c73d12a1fa793840a546ad609bbb6d7639d17c0570",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20938/Lambertville-City-1-4",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20938/Lambertville-City-1-4",
+      "rawPath": "sources/fb709f738c5c9e9b99aea9b6c774c2d73927d98d415fdc59516ff5e5960dc965.source",
+      "rawHash": "fb709f738c5c9e9b99aea9b6c774c2d73927d98d415fdc59516ff5e5960dc965",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20939/Lebanon-Borough-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20939/Lebanon-Borough-1",
+      "rawPath": "sources/fdeb835c6053ca472cf997fa2abda988073ddd6fb3498b31124572ed35502463.source",
+      "rawHash": "fdeb835c6053ca472cf997fa2abda988073ddd6fb3498b31124572ed35502463",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20940/Lebanon-Township-1-6",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20940/Lebanon-Township-1-6",
+      "rawPath": "sources/c91d7cdf80109ef734ccabc1306b0125ac452463c6c0973910c188d6fc28b039.source",
+      "rawHash": "c91d7cdf80109ef734ccabc1306b0125ac452463c6c0973910c188d6fc28b039",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20941/Milford-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20941/Milford-1",
+      "rawPath": "sources/3f58740949465b80d9b69b4d13d5fb7371846c9b8d78770e39775bbb38c90768.source",
+      "rawHash": "3f58740949465b80d9b69b4d13d5fb7371846c9b8d78770e39775bbb38c90768",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20942/Raritan-1-22",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20942/Raritan-1-22",
+      "rawPath": "sources/6f21a405ca30476e66412fb7a75215cf8e1d595b3df48e2a9a95e2c20b7b82ce.source",
+      "rawHash": "6f21a405ca30476e66412fb7a75215cf8e1d595b3df48e2a9a95e2c20b7b82ce",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20943/Readington-1-16",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20943/Readington-1-16",
+      "rawPath": "sources/1b60d39a34bdf0a872ca1c710f209494455aa730b39365e04264a9aaf8d5e9f5.source",
+      "rawHash": "1b60d39a34bdf0a872ca1c710f209494455aa730b39365e04264a9aaf8d5e9f5",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20944/Stockton-1",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20944/Stockton-1",
+      "rawPath": "sources/4bb67149119ea6a7aa63bad5bbb8226d3d42cfc18cfe3d617abb91ac25094523.source",
+      "rawHash": "4bb67149119ea6a7aa63bad5bbb8226d3d42cfc18cfe3d617abb91ac25094523",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20945/Tewksbury-1-5",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20945/Tewksbury-1-5",
+      "rawPath": "sources/fba6ff2f4bef737e5876a2807817ac1aa14c57c0a261c40ea3bd1a67abeabf2b.source",
+      "rawHash": "fba6ff2f4bef737e5876a2807817ac1aa14c57c0a261c40ea3bd1a67abeabf2b",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20946/Union-1-4",
+      "finalUrl": "https://www.co.hunterdon.nj.us/DocumentCenter/View/20946/Union-1-4",
+      "rawPath": "sources/0bba3eec9f8424590202b004362288ae45c2c0a121326531b1d9d1916efc1d80.source",
+      "rawHash": "0bba3eec9f8424590202b004362288ae45c2c0a121326531b1d9d1916efc1d80",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json",
+  "officialInventoryPath": "official-inventory.json"
+}

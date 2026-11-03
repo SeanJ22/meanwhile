@@ -1,0 +1,937 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-2026-coconut-creek-charter-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:coconut_creek",
+          "divisionVintage": "2026",
+          "title": "Coconut Creek Question 1 — Day calculations and salaries",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+          "provenance": {
+            "sourceUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+            "sourceOrg": "City of Coconut Creek",
+            "collectedAt": "2026-11-03T10:13:07.082710+00:00",
+            "verifiedAt": "2026-11-03T10:28:14.914259+00:00",
+            "rawHash": "b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39",
+            "quote": "Shall the Charter be amended to provide general clarification, by specifying when references to “days” means calendar days and when it means business days and clarifying that the officers the City Commission sets salaries for are the City Manager and City Attorney?"
+          }
+        },
+        {
+          "id": "fl-2026-coconut-creek-charter-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:coconut_creek",
+          "divisionVintage": "2026",
+          "title": "Coconut Creek Question 2 — Homeowner and condominium board officers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+          "provenance": {
+            "sourceUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+            "sourceOrg": "City of Coconut Creek",
+            "collectedAt": "2026-11-03T10:13:07.082710+00:00",
+            "verifiedAt": "2026-11-03T10:28:14.914259+00:00",
+            "rawHash": "b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39",
+            "quote": "Shall the general powers and duties of the Mayor and City Commission be amended to prohibit the Mayor and City Commissioners from simultaneously serving as an officer on a homeowner or condominium association board located within the City while they are serving as the Mayor or a City Commissioner?"
+          }
+        },
+        {
+          "id": "fl-2026-coconut-creek-charter-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:coconut_creek",
+          "divisionVintage": "2026",
+          "title": "Coconut Creek Question 3 — Unused capital appropriations",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+          "provenance": {
+            "sourceUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+            "sourceOrg": "City of Coconut Creek",
+            "collectedAt": "2026-11-03T10:13:07.082710+00:00",
+            "verifiedAt": "2026-11-03T10:28:14.914259+00:00",
+            "rawHash": "b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39",
+            "quote": "Shall the Charter be amended to remove the current five-year automatic lapse of unspent appropriations and instead authorize the City Commission to determine, during the annual budget process, which appropriations shall be deemed abandoned? Currently, the Charter requires abandonment of appropriations within five years, if not disbursed or encumbered, which reduces the effectiveness of long range financial planning."
+          }
+        },
+        {
+          "id": "fl-2026-coconut-creek-charter-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:coconut_creek",
+          "divisionVintage": "2026",
+          "title": "Coconut Creek Question 4 — Citizen initiative and repeal procedures",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+          "provenance": {
+            "sourceUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+            "sourceOrg": "City of Coconut Creek",
+            "collectedAt": "2026-11-03T10:13:07.082710+00:00",
+            "verifiedAt": "2026-11-03T10:28:14.914259+00:00",
+            "rawHash": "b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39",
+            "quote": "Shall the Charter be amended to revise the initiative and repeal procedures to provide that the Land Development Code, Comprehensive Plan and related ordinances are not subject to the referendum process; define a procedure for validation of the form of a petition or ordinance; and a methodology for addressing conflicting Charter amendments approved by the voters?"
+          }
+        },
+        {
+          "id": "fl-2026-coconut-creek-charter-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:coconut_creek",
+          "divisionVintage": "2026",
+          "title": "Coconut Creek Question 5 — Charter review schedule",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+          "provenance": {
+            "sourceUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+            "sourceOrg": "City of Coconut Creek",
+            "collectedAt": "2026-11-03T10:13:07.082710+00:00",
+            "verifiedAt": "2026-11-03T10:28:14.914259+00:00",
+            "rawHash": "b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39",
+            "quote": "Shall the Charter be amended to require review of the City Charter every six years beginning in January 2030 in order to align with the general election schedule? Currently, the Charter is reviewed every five years, which often does not align with a scheduled election thereby creating a delay in voter consideration of the board’s recommendations."
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "fl-2026-coconut-creek-charter-1:measure",
+          "contestId": "fl-2026-coconut-creek-charter-1",
+          "questionText": "Shall the Charter be amended to provide general clarification, by specifying when references to “days” means calendar days and when it means business days and clarifying that the officers the City Commission sets salaries for are the City Manager and City Attorney?",
+          "officialStatement": " - Rules of Construction.\n\na. The singular includes the plural and vice versa.\nb. Words used in the present or past tense include the future as well as the present\n   and past.\nc. The words \"written\" or \"in writing,\" may include any form of reproduction or\n   communication, except oral.\nd. References to “days” shall mean calendar days unless the specified time is fifteen\n   (15) days or less, then it shall mean business days.\n\n****************************************************************************************************\n\n\n\nd. Salaries and Compensation of Officers and Employees; and Bonds.\n    1. The Commission has the power to  fix the salaries of  all other officers and\n      employees the City Manager and City Attorney hired or appointed by the City\n      Commission, and to establish such bonds as in the opinion of the Commission are\n      necessary for the faithful discharge of the City Manager’s and City Attorney’s\n       duties of such officers and employees.\n****************************************************************************************************\n\n",
+          "provenance": {
+            "sourceUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+            "sourceOrg": "City of Coconut Creek",
+            "collectedAt": "2026-11-03T10:13:07.082710+00:00",
+            "verifiedAt": "2026-11-03T10:28:14.914259+00:00",
+            "rawHash": "b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39",
+            "quote": "Shall the Charter be amended to provide general clarification, by specifying when references to “days” means calendar days and when it means business days and clarifying that the officers the City Commission sets salaries for are the City Manager and City Attorney?"
+          }
+        },
+        {
+          "id": "fl-2026-coconut-creek-charter-2:measure",
+          "contestId": "fl-2026-coconut-creek-charter-2",
+          "questionText": "Shall the general powers and duties of the Mayor and City Commission be amended to prohibit the Mayor and City Commissioners from simultaneously serving as an officer on a homeowner or condominium association board located within the City while they are serving as the Mayor or a City Commissioner?",
+          "officialStatement": " - Prohibitions.\n\na.  Holding Other Office or Employment Except as Authorized by Law. Commission\n   members must not hold any office in this City (other than Mayor or Vice Mayor), or\n    serve as an officer on a homeowner or condominium association board within the\n     City, or serve as a City employee during the term for which he/she is elected to office\n    or be employed as a paid lobbyist.\n****************************************************************************************************\n\n",
+          "provenance": {
+            "sourceUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+            "sourceOrg": "City of Coconut Creek",
+            "collectedAt": "2026-11-03T10:13:07.082710+00:00",
+            "verifiedAt": "2026-11-03T10:28:14.914259+00:00",
+            "rawHash": "b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39",
+            "quote": "Shall the general powers and duties of the Mayor and City Commission be amended to prohibit the Mayor and City Commissioners from simultaneously serving as an officer on a homeowner or condominium association board located within the City while they are serving as the Mayor or a City Commissioner?"
+          }
+        },
+        {
+          "id": "fl-2026-coconut-creek-charter-3:measure",
+          "contestId": "fl-2026-coconut-creek-charter-3",
+          "questionText": "Shall the Charter be amended to remove the current five-year automatic lapse of unspent appropriations and instead authorize the City Commission to determine, during the annual budget process, which appropriations shall be deemed abandoned? Currently, the Charter requires abandonment of appropriations within five years, if not disbursed or encumbered, which reduces the effectiveness of long range financial planning.",
+          "officialStatement": " – Lapse of Appropriations.\nEvery appropriation, except an appropriation for a capital expenditure, shall lapse at the\nclose of the fiscal year to the extent that it has not been expended or encumbered. An\nappropriation for a capital expenditure shall continue in force until the purpose for which\nit was made has been accomplished  or abandoned;  the purpose  of any such\nappropriation shall be deemed abandoned  if five (5) years pass without disbursement\nfrom or encumbrance of the appropriation so determined by the City Commission through\nthe annual budget process.\n\n****************************************************************************************************\n\n",
+          "provenance": {
+            "sourceUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+            "sourceOrg": "City of Coconut Creek",
+            "collectedAt": "2026-11-03T10:13:07.082710+00:00",
+            "verifiedAt": "2026-11-03T10:28:14.914259+00:00",
+            "rawHash": "b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39",
+            "quote": "Shall the Charter be amended to remove the current five-year automatic lapse of unspent appropriations and instead authorize the City Commission to determine, during the annual budget process, which appropriations shall be deemed abandoned? Currently, the Charter requires abandonment of appropriations within five years, if not disbursed or encumbered, which reduces the effectiveness of long range financial planning."
+          }
+        },
+        {
+          "id": "fl-2026-coconut-creek-charter-4:measure",
+          "contestId": "fl-2026-coconut-creek-charter-4",
+          "questionText": "Shall the Charter be amended to revise the initiative and repeal procedures to provide that the Land Development Code, Comprehensive Plan and related ordinances are not subject to the referendum process; define a procedure for validation of the form of a petition or ordinance; and a methodology for addressing conflicting Charter amendments approved by the voters?",
+          "officialStatement": " – INITIATIVE, REFERENDUM AND RECALL\n\nSection 801. – General Authority.\n****************************************************************************************************\n\nb.  Limitations. Such power  to  initiate  shall not extend  to the budget  or  capital\n   improvement program or any ordinance relating to the Land Development Code or\n   Comprehensive Plan or any ordinance related thereto or to appropriation of money,\n   levy of taxes or salaries of City officers or employees and such power to repeal an\n   ordinance shall not extend to any emergency ordinance relating to appropriation of\n   money, nor to the levy of taxes, the budget, or the capital improvement program except\n   on capital improvement projects financed by tax revenue certificates for water and\n   sewer systems.\n\nSection 802. – Commencement of Proceedings; Petitioner’s Committee; Affidavit.\n\na. Any fifty (50) qualified voters may commence initiative or repeal proceedings by filing\n   with the City Clerk an affidavit stating their names and addresses and specifying the\n   address to which all notices to the committee are to be sent, and setting out in full\n   the proposed initiative ordinance or citing the ordinance sought to be repealed.\nb. The proposed initiative ordinance or ordinance sought to be repealed shall be\n   reviewed by the City Attorney, or designee, within fifteen (15) days of submittal for\n   consistency with the City Charter, Comprehensive Plan, City Code of Ordinances\n   and applicable city, county, state and federal laws and requirements.  If the City\n   Attorney determines the proposed amendment is facially invalid, inconsistent, or\n   creates conflicts with any other applicable legal authority, the petition shall be\n   returned to the Petitioner, together with a notice of deficiency specifying the\n   deficiencies or conflicts. The Petitioner will thereafter have a period of thirty (30)\n   days from the date of the notice of deficiency within which to submit a revised petition\n   addressing such deficiencies. The City Attorney shall review any subsequent\n   resubmissions pursuant to this paragraph and provide a finding of consistency or\n   deficiency within fifteen (15) days of any resubmission.  Petitioner may submit a\n   revised petition addressing identified deficiencies no more than three (3) times after\n   the initial submittal.  If the petition is determined deficient after the third (3rd) re-\n   submittal, the petition shall be deemed withdrawn. Petitioner may initiate a new\n    petition pursuant to this Section 802, with new affidavits pursuant to Section 802(a),\n   no sooner than thirty (30) days after a prior petition is deemed withdrawn.\nc. Promptly after the affidavit of the petitioner's committee is filed, If the City Attorney\n   determines the  petition  is consistent, the City Clerk shall promptly issue the\n   appropriate blank petition forms to the petitioner's committee.\n\nSection 803. – Petitions.\n\n\n****************************************************************************************************\n\nc. Time for Filing Petition to Initiate or Repeal an Ordinance. Initiative and Repeal\n    Petitions signed by a minimum of five (5) percent of the total number of registered\n   voters as of the preceding election must be filed within ninety (90) days after the\n    affidavit of the petitioner's committee is filed with the City Clerk blank petition forms\n   are provided to petitioner by the City Clerk.\n\n\n****************************************************************************************************\n\nSection 806. – Action by Petitions.\n\na.  Action by Commission. When an  initiative or repeal  petition has been  finally\n    determined sufficient, the Commission shall promptly consider the proposed initiative\n    ordinance or repeal of the referred ordinance in the manner provided in Section 311\n    of this Charter. If the Commission fails to adopt a proposed initiative ordinance without\n\nany change in substance within sixty (60) days or fails to repeal the referred ordinance\n    within thirty (30) sixty (60) days after the date the petition was finally determined\n     sufficient, it shall submit the proposed or referred ordinance to the voters of the City,\n    unless same would violate state or federal law.\nb. Submission to Voters. The vote of the qualified voters of the City on an ordinance\n   proposed for adoption or for repeal shall be held not less than thirty (30) days and not\n    later than one (1) year from the date of the final Commission vote thereon and shall\n   be noticed in accordance with state law. If no general election or regular City election\n    is to be held within the period prescribed in the subsection, the Commission shall\n   provide for a special election otherwise, the vote shall be held at the same time as\n   such regular election, except that the Commission may in its discretion provide for a\n   special election at an earlier date within the prescribed period. Copies of the ordinance\n   proposed for adoption or for repeal shall be made available at the polls.\nSection 807. - Results of Election.\n\na.   Initiative.  If a majority of the qualified electors voting on a proposed  initiative\n    ordinance vote in its favor,  it shall be considered adopted upon certification of the\n    election results and shall be treated in all respects in the same manner as ordinances\n    of the same kind adopted by the Commission. If conflicting ordinances are approved\n    at the same election, the one receiving the greatest number of affirmative votes shall\n    prevail to the extent of such conflict they shall be implemented as provided in Section\n    906, “Amendments to Charter”.\n****************************************************************************************************\n\nARTICLE IX. - GENERAL PROVISIONS\n\n****************************************************************************************************\n\nSection 906. - Amendments to Charter.\n\na. The Charter may be amended by any one of the following:\n    a1.  As provided by the Florida Statutes.\n    b2.  By a Charter Review Board as provided for in Section 907 of this Article.\n\nb.  In the event that there is more than one Charter Amendment on a ballot at the same\n   election and the results of the elections on those Charter Amendments creates a\n    conflict between the approved Charter Amendments, then each Charter Amendment\n    shall go into effect in respect to the provisions that are not in conflict and, where there\n    is conflict, the one receiving the highest affirmative vote shall prevail as to the\n   provisions in conflict.\n\n\n",
+          "provenance": {
+            "sourceUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+            "sourceOrg": "City of Coconut Creek",
+            "collectedAt": "2026-11-03T10:13:07.082710+00:00",
+            "verifiedAt": "2026-11-03T10:28:14.914259+00:00",
+            "rawHash": "b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39",
+            "quote": "Shall the Charter be amended to revise the initiative and repeal procedures to provide that the Land Development Code, Comprehensive Plan and related ordinances are not subject to the referendum process; define a procedure for validation of the form of a petition or ordinance; and a methodology for addressing conflicting Charter amendments approved by the voters?"
+          }
+        },
+        {
+          "id": "fl-2026-coconut-creek-charter-5:measure",
+          "contestId": "fl-2026-coconut-creek-charter-5",
+          "questionText": "Shall the Charter be amended to require review of the City Charter every six years beginning in January 2030 in order to align with the general election schedule? Currently, the Charter is reviewed every five years, which often does not align with a scheduled election thereby creating a delay in voter consideration of the board’s recommendations.",
+          "officialStatement": " - Charter Review; Charter Review Board.\n\nIn January, 1980 2030, and every five (5) six (6) years thereafter, the Commission will in\nJanuary appoint a Charter Review Board consisting of five (5) electors of the City, one (1)\n\nfrom each district, holding no other office, appointment or employment in the government\nof the City of Coconut Creek except on advisory bodies of the City. Commencing with the\nreorganization of the City Commission on March 13, 2029 and thereafter, the composition\nof the Charter Review Board will include an appointed elector from each of the four (4)\ndistricts, and one (1) appointed elector who is selected by the Elected Mayor and resides\nin any district of the City; all of whom must not hold any other office, appointment or\nemployment in the government of the City of Coconut Creek except on advisory bodies\nof the City. In addition, the Commission may appoint a Charter Review Board at any other\ntime as it may deem necessary or desirable, having the required composition as stated\nherein. Such Board must review the Municipal Charter, and within one hundred twenty\n(120) days after such appointment, submit to the Commission such alteration, revisions,\nand amendments, if any, to this Charter, as in its judgment are desirable. The Commission\nwill submit to the electors not later than the next succeeding general election or municipal\nelection any such proposed  alterations,  revisions, or amendments. The members\nappointed to said Board will serve without compensation and their terms will expire one\nhundred twenty (120) days after their appointment\n\n****************************************************************************************************\n\n      ",
+          "provenance": {
+            "sourceUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+            "sourceOrg": "City of Coconut Creek",
+            "collectedAt": "2026-11-03T10:13:07.082710+00:00",
+            "verifiedAt": "2026-11-03T10:28:14.914259+00:00",
+            "rawHash": "b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39",
+            "quote": "Shall the Charter be amended to require review of the City Charter every six years beginning in January 2030 in order to align with the general election schedule? Currently, the Charter is reviewed every five years, which often does not align with a scheduled election thereby creating a delay in voter consideration of the board’s recommendations."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "fl-2026-coconut-creek-charter-1",
+          "whatItDoes": "Defines Charter time periods of 15 days or less as business days and longer periods as calendar days. It specifies that the Commission sets the City Manager’s and City Attorney’s salaries and any bonds it considers necessary for their duties, replacing the general reference to other city officers and employees.",
+          "yesMeans": "Approve the day-counting rule and clarification of Commission authority over the City Manager and City Attorney.",
+          "noMeans": "Reject these proposed day-counting and salary-authority clarifications.",
+          "parts": [],
+          "sourceUrl": "https://www.coconutcreek.gov/government/city-directory/city-clerk/election/november-3-2026-referendum-election",
+          "sourceHash": "8d3695d517464d4ab5c6db64d766c4e3c91f072f77f31a6a9e1b776ef4c84973",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:28:14.914259+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-coconut-creek-charter-2",
+          "whatItDoes": "Prohibits the mayor and city commissioners from simultaneously serving as an officer on a homeowner or condominium association board located within Coconut Creek during their Commission service.",
+          "yesMeans": "Approve the restriction on serving as an association-board officer while mayor or commissioner.",
+          "noMeans": "Reject this proposed association-board officer restriction.",
+          "parts": [],
+          "sourceUrl": "https://www.coconutcreek.gov/government/city-directory/city-clerk/election/november-3-2026-referendum-election",
+          "sourceHash": "a0703fd538cc0556aa013a062e3355f0e9cd7fc765588e77899ef2ecce4dd8d0",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:28:14.914259+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-coconut-creek-charter-3",
+          "whatItDoes": "Removes the automatic abandonment of a capital-spending appropriation after five years without spending or committing its funds. Instead, the Commission would decide through the annual budget process when its purpose has been abandoned. A capital appropriation would otherwise continue until its purpose is completed. Noncapital money that has neither been spent nor committed would still expire at the fiscal year’s end.",
+          "yesMeans": "Approve Commission decisions on abandoning capital appropriations through the annual budget process.",
+          "noMeans": "Reject replacing the automatic five-year capital-appropriation rule.",
+          "parts": [],
+          "sourceUrl": "https://www.coconutcreek.gov/government/city-directory/city-clerk/election/november-3-2026-referendum-election",
+          "sourceHash": "cc939b725d0aa02960998dc7125023ae2b09ddc0081ce154ba3deb679f539dde",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:28:14.914259+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-coconut-creek-charter-4",
+          "whatItDoes": "Excludes the Land Development Code, Comprehensive Plan and related ordinances from citizen initiatives. Fifty qualified voters could start an initiative or repeal proceeding by affidavit. The city attorney would review legal consistency within 15 days, with 30 days to correct deficiencies and up to three resubmissions; after a third deficient resubmission, it is withdrawn and a new petition with new affidavits must wait 30 days. After validation, the Clerk issues forms. Signatures from at least 5% of registered voters at the preceding election must be filed within 90 days after forms are provided. The Commission would have 60 days to adopt an initiative or repeal an ordinance before referring it to voters, unless that would violate state or federal law. The vote would occur 30 days to one year after the final Commission vote, at an available regular election or a special election. For conflicting voter-approved amendments, the higher affirmative vote prevails only on conflicting provisions; the other provisions take effect.",
+          "yesMeans": "Approve the initiative exclusions, legal-review and timing rules, and method for resolving conflicting approved amendments.",
+          "noMeans": "Reject this proposed set of initiative and repeal procedure changes.",
+          "parts": [],
+          "sourceUrl": "https://www.coconutcreek.gov/government/city-directory/city-clerk/election/november-3-2026-referendum-election",
+          "sourceHash": "c1a46234e48b4bf9653a15a7872493f3753c7b66db8d4a2c1421f6b7c2f24dea",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:28:14.914259+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-coconut-creek-charter-5",
+          "whatItDoes": "Changes regular Charter review from every five years to every six years, beginning in January 2030. The Commission could still appoint a review board at other times. The five-member board would retain its 120-day deadline to submit recommendations, and proposed changes would go to voters no later than the next general or municipal election.",
+          "yesMeans": "Approve the six-year regular Charter-review schedule beginning in 2030.",
+          "noMeans": "Reject the proposed regular Charter-review schedule.",
+          "parts": [],
+          "sourceUrl": "https://www.coconutcreek.gov/government/city-directory/city-clerk/election/november-3-2026-referendum-election",
+          "sourceHash": "dc831f9340bdc710bbeaeb98598d231a4327bbba3d77776672da453c03359fc1",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:28:14.914259+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:28:14.914259+00:00",
+    "reviewedBy": "CX-VOTES direct current official-source and native legal-redline reading; no provider calls",
+    "sources": [
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "finalUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:24.342Z",
+        "httpStatus": 200,
+        "rawHash": "461c5f7f145c4ab962a4e76b8de144a9b125bef5b751606c94187a35216604db",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.831Z",
+        "httpStatus": 200,
+        "rawHash": "71e1eca18215e9ee481414b3cc0b128de7d20ed9cc36669a75e9a8c3a81576a7",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.107Z",
+        "httpStatus": 200,
+        "rawHash": "0b453293300bf92b94865c7146e759916b97124ee3bb11645088bc73e5935372",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.804Z",
+        "httpStatus": 200,
+        "rawHash": "7084e3d9008cc6d85dc3775970c414d4386d6677c86e4e8b987b2446a64733fe",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.657Z",
+        "httpStatus": 200,
+        "rawHash": "801c72e16e7689e15c639c9c42902fe7ee42bebf7cfcc3229a50b507fabcad0e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.522Z",
+        "httpStatus": 200,
+        "rawHash": "b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.411Z",
+        "httpStatus": 200,
+        "rawHash": "409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.089Z",
+        "httpStatus": 200,
+        "rawHash": "b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.650Z",
+        "httpStatus": 200,
+        "rawHash": "51f53116d8cf9b79bdce23bdfaeb5c3adb169c4997ba004c3fe24b5717ef9a67",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.046Z",
+        "httpStatus": 200,
+        "rawHash": "7816bec8439edb080760b6087c817e308285694c6a96dd5f6cffa4b71c610e63",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.983Z",
+        "httpStatus": 200,
+        "rawHash": "9cccd61589f047f607ab0cef93dc3b036e66f122a538b8048198ccaac76dfc3d",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.627Z",
+        "httpStatus": 200,
+        "rawHash": "7d4fae7a6b646c9aad9ee64076e4b19673e89058f6457c740cc00af0ccb060e3",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.857Z",
+        "httpStatus": 200,
+        "rawHash": "e8940328a2726451d3bfc28468d01bbe248646e534c4bc78ab5947d915008ba8",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.586Z",
+        "httpStatus": 200,
+        "rawHash": "e2c15bd5ee4bd642102cfbf42fc00f1d8a485bd6dc5ac31c3af7f2ec92d9a90e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.410Z",
+        "httpStatus": 200,
+        "rawHash": "6afcea8c86d61743d068f146ad619c062ea5f5eb48f3d6bc1c1b076738c1b456",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Replayed all 55 complete local referendum questions from official master pages 19–73, exact printed local candidate names and vote limits. Only established county-wide, municipal mayor and at-large scopes projected; district or residential-area offices remain separate."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021 states that the eleventh judicial circuit is composed of Miami-Dade County."
+      },
+      {
+        "requestedUrl": "https://www.cityofdoral.com/Government-Center",
+        "finalUrl": "https://www.cityofdoral.com/Government-Center",
+        "publisher": "Doral municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.249835+00:00",
+        "httpStatus": 200,
+        "rawHash": "7317cec4d40d5774e58bc9aa89d10eba291594e209cf46427cd809478ef91cb0",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.hialeahfl.gov/169/Overview",
+        "finalUrl": "https://www.hialeahfl.gov/169/Overview",
+        "publisher": "Hialeah municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:57.558631+00:00",
+        "httpStatus": 200,
+        "rawHash": "f77c0a81537d4374f5d20fe5aaa4dd5bbff508906fe412e3dc867a5c449aca4e",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "finalUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "publisher": "Sunny Isles Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.487943+00:00",
+        "httpStatus": 200,
+        "rawHash": "9588e6970eb91e57b1a03f53a424d05a2719b0f801fc4237653d448b2011d914",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "finalUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "publisher": "Pinecrest municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.918266+00:00",
+        "httpStatus": 200,
+        "rawHash": "f617a5044e79bd05292353baf3bcc3b21664e1ec2dff43231eb9be57373303bb",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "finalUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "publisher": "Cutler Bay municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:08.208099+00:00",
+        "httpStatus": 200,
+        "rawHash": "42754b1b79830d6242643460bc1c2a5914875860e655d9b937c77735c8c2cdd3",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.southmiamifl.gov/113/Mayor-Commission",
+        "finalUrl": "https://www.somifl.gov/m/directory/department?did=4",
+        "publisher": "South Miami municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:38:24.121063+00:00",
+        "httpStatus": 200,
+        "rawHash": "59685f13e13e578856153d4f1b723fd9eaa8c8e3b276ab62680dea10f2da39d2",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "finalUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "publisher": "North Miami Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:09.096471+00:00",
+        "httpStatus": 200,
+        "rawHash": "355afb41eb88ee7b54b7e4e07b1e0cc5f32f653ee25c368db261666bb3e4ecf9",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "All 20 circuit definitions parsed from Florida Statutes 26.021 and matched to all 67 unique existing county divisions. Each entire county belongs to exactly one circuit."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:49:15.305881+00:00",
+        "httpStatus": 200,
+        "rawHash": "93e42cdfca0f35640ee35ade7c87eb72c5feed5c043eb63eba64ff7964454e61",
+        "reviewedEvidence": "All six appellate districts parsed from Florida Statutes 35.02–35.044, collectively covering all 20 circuits. Combined with section 26.021, this establishes 67 exact whole-county appellate memberships. No partial county is inferred."
+      },
+      {
+        "requestedUrl": "https://www.coralgables.com/department/city-commission",
+        "finalUrl": "https://www.coralgables.com/department/city-commission",
+        "publisher": "Coral Gables municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:22.085521+00:00",
+        "httpStatus": 200,
+        "rawHash": "11e14ae71de08a1d7ceb3e57fc8af4b43b9e7489ab56704e0a731631f5df8069",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "publisher": "Miami-Dade County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:20.904818+00:00",
+        "httpStatus": 200,
+        "rawHash": "29c71144edc323aa0a563ce0e6dd00be68b181a5fe004cb149204f241c67efe6",
+        "reviewedEvidence": "Official current map establishes COMMISSION DISTRICT 5; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "finalUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "publisher": "Miami-Dade County Public Schools",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:24.308954+00:00",
+        "httpStatus": 200,
+        "rawHash": "0eb0b12fa5a301c0056c7d7fe71109f8ef0fe704ccb4cb7988c2706697fa2894",
+        "reviewedEvidence": "Official current map establishes School Board District 1; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Both exact printed runoff candidate names and the vote-for-one instruction replayed."
+      },
+      {
+        "requestedUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "finalUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.016645+00:00",
+        "httpStatus": 200,
+        "rawHash": "94bf152e683cf32ecfecf5d5502831a021b510841ac56086978e00f10caed793",
+        "reviewedEvidence": "Current municipal election authority confirms November 3, 2026 runoff for Residential Area Seat 4, four-year term, both candidates, and that residential council seats are elected by their area."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.258159+00:00",
+        "httpStatus": 200,
+        "rawHash": "cc75a68c2dcbeab0a7c84a992e49b9e87c1b3971cc9c0138373922d38ca9e13b",
+        "reviewedEvidence": "Official 2026 election notice supplies the complete metes-and-bounds description of Residential Area Seat 4. Current exact canonical council_district:4 ID checked without widening to the city."
+      },
+      {
+        "requestedUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "finalUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:34:08.006625+00:00",
+        "httpStatus": 200,
+        "rawHash": "f313b7d7cca721df7b8aa8c019c8c55af2025365fba51dbe92c13cda323d8af0",
+        "reviewedEvidence": "Current official city district-map index independently identifies the Seat 4 map URL; current 2026 election notice supplies the full scope description."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.205430+00:00",
+        "httpStatus": 200,
+        "rawHash": "337f466ef1d36c5b46a86fe794603be15da79acd3bdab85665d229d82be662a3",
+        "reviewedEvidence": "Exact county clerk, county mayor, Circuit 9 Group 1 candidate lists and full school-tax question from the official November 3 composite. Composite explicitly warns that individual ballots contain only applicable races."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.426510+00:00",
+        "httpStatus": 200,
+        "rawHash": "6f930af9b78938006f90cd7709c19612dbe8d475768ea57702999fd705656d97",
+        "reviewedEvidence": "All 330 full official November precinct ballot styles replayed. Each imported countywide candidate and the complete English school-tax question occurs in every style. Soil, district commissioner, school-board district and CDD races are not widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021(9) explicitly establishes exactly Orange and Osceola as whole-county members of Circuit 9. Canonical circuit_court:9 is independently verified in the complete current OCD registry."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:52:21.487981+00:00",
+        "httpStatus": 200,
+        "rawHash": "a6115b68fd504b0888871f511a995069a222f7963dc7b7ba1cb6550800d092f0",
+        "reviewedEvidence": "Certified general roster contains 31 unopposed core entries: 28 State House, two State Senate, and one U.S. House. These certified records are preserved, with explicit unopposed context; the roster is not a printed-ballot denominator."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.142032+00:00",
+        "httpStatus": 200,
+        "rawHash": "2c2313f00a088cbd5944809556aea809cdf2c55a870c898ea57516aeeee8706e",
+        "reviewedEvidence": "Florida Statutes 101.151(7) explicitly excludes unopposed candidates, except justices or judges seeking retention, from the general election ballot. No certified record is deleted or hidden."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:38.531872+00:00",
+        "httpStatus": 200,
+        "rawHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+        "reviewedEvidence": "All seven imported candidate contests replayed with all 17 exact printed names and vote limits; full English text of all three countywide referendum questions. CDD races and the Country Run special-tax-district question are excluded pending exact scope proof."
+      },
+      {
+        "requestedUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "finalUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "publisher": "Hillsborough County",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.047821+00:00",
+        "httpStatus": 200,
+        "rawHash": "e1169c9218a554ba7dbdcfffa09131652efcec8d1ff0c8f2d762f241da819cd8",
+        "reviewedEvidence": "Current official board directory explicitly labels Districts 5 and 7 countywide, while identifying the separate District 1 and District 3 offices. Current canonical partial districts 1/3 are preserved precisely."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218/School-Board-Fact-Sheet-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:01:43.394502+00:00",
+        "httpStatus": 200,
+        "rawHash": "29baa4e03d2c374559e75ab57bb99c4d93c3a2e32a7537986a5b2d7e49eb16c1",
+        "reviewedEvidence": "Official 2026 School Board qualifying/electorate table explicitly labels District 6 countywide and Districts 2/4 single-member; four-year term is stated. This is county-specific and is not inferred for other Florida school boards."
+      },
+      {
+        "requestedUrl": "https://www.templeterrace.gov/791/Elections",
+        "finalUrl": "https://www.templeterrace.gov/791/Elections",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:02:17.706255+00:00",
+        "httpStatus": 200,
+        "rawHash": "9d30404e4c48d4da070f39c70d22d3e28522b16eab461dba49585bbd4c7dd65f",
+        "reviewedEvidence": "Current November 3 municipal election page lists the complete five qualified candidates for three council positions."
+      },
+      {
+        "requestedUrl": "https://templeterrace.gov/Archive.aspx?ADID=8463",
+        "finalUrl": "https://templeterrace.gov/ArchiveCenter/ViewFile/Item/8463",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:43.873527+00:00",
+        "httpStatus": 200,
+        "rawHash": "ae5239fbb9b5dfbcce7f1b51e25adb51efda52d837d9376a04f1e6b52c43f22d",
+        "reviewedEvidence": "Official annual city report explicitly establishes four-year at-large council elections. Current 2026 city election notice confirms the same undivided council contest and five qualified names; county sample provides vote-for-three instruction."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1083",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1083/11-03-26-Lee-County-BOCC-Single-Member-Districts-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "042efe9a7a27eafbc0291f58a937a9fa7fe9ceb1d7aff8156e43f4f4cf5ec50c",
+        "retrievedAt": "2026-11-03T03:44:05.111851+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1080",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1080/11-03-26-Lee-County-BOCC-CharterAmendment-TERM-LIMITS-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "658c18689bd8ad5d6feea2cd24327895d4867dc9afdc8e61238b104a29db1bea",
+        "retrievedAt": "2026-11-03T03:44:44.506753+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1086/11-03-26-TFMB-Charter-Amendment-Referendums-ENG?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+        "retrievedAt": "2026-11-03T03:44:05.112178+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1092",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1092/11-03-26-Lee-County-Mosquito-FMB-Mosquito-Control-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20",
+        "retrievedAt": "2026-11-03T03:44:05.112573+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1093",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1093/11-03-26-Iona-McGregor-FMB-Fire-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba",
+        "retrievedAt": "2026-11-03T03:44:05.314059+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816",
+        "finalUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816/General-Election---November-3-2026---State-Representative-District-53-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hernando County official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:36.276054+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "finalUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "publisher": "Duval County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:45.933140+00:00",
+        "httpStatus": 200,
+        "rawHash": "1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "finalUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "publisher": "Walton County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:32.531103+00:00",
+        "httpStatus": 200,
+        "rawHash": "1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "publisher": "Leon County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:39.125912+00:00",
+        "httpStatus": 200,
+        "rawHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "reviewedEvidence": "Complete native2026GeneralElectionGuide. Page7has five county charter amendments, two school-district tax questions and one nonbinding county advisory question. Eight bounded question fields extracted and checked; original bytes and source images retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903470+00:00",
+        "httpStatus": 200,
+        "rawHash": "73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12",
+        "reviewedEvidence": "Leon County Ordinance26-08; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903771+00:00",
+        "httpStatus": 200,
+        "rawHash": "282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9",
+        "reviewedEvidence": "Leon County Ordinance26-12; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "publisher": "Leon County Board of County Commissioners and School Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.904280+00:00",
+        "httpStatus": 200,
+        "rawHash": "6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766",
+        "reviewedEvidence": "Leon County Resolution26-32 and attached School Board resolution; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:07:27.875535+00:00",
+        "httpStatus": 200,
+        "rawHash": "a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1",
+        "reviewedEvidence": "Leon County Ordinance 26-06; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.895395+00:00",
+        "httpStatus": 200,
+        "rawHash": "335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a",
+        "reviewedEvidence": "Leon County Ordinance 26-05; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.896140+00:00",
+        "httpStatus": 200,
+        "rawHash": "c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141",
+        "reviewedEvidence": "Leon County Ordinance 26-07; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:18.595782+00:00",
+        "httpStatus": 200,
+        "rawHash": "771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c",
+        "reviewedEvidence": "Leon County Resolution 26-08; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+        "finalUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+        "publisher": "City of Coconut Creek",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:13:07.082710+00:00",
+        "httpStatus": 200,
+        "rawHash": "b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39",
+        "reviewedEvidence": "Official unsigned final-reading Ordinance2025-018 copy. Current City.gov referendum publication explicitly records second-reading approval June12,2025 and lists all five November3,2026questions; native Legistar action record independently records adoption. Blank second-reading signature fields are not represented as signed."
+      },
+      {
+        "requestedUrl": "https://www.coconutcreek.gov/government/city-directory/city-clerk/election/november-3-2026-referendum-election",
+        "finalUrl": "https://www.coconutcreek.gov/government/city-directory/city-clerk/election/november-3-2026-referendum-election",
+        "publisher": "City of Coconut Creek",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:20:39.067720+00:00",
+        "httpStatus": 200,
+        "rawHash": "29c903b66afe983cb4385c56d5d53f1d1ef106d4ec645b8fc9ff884552122e1d",
+        "reviewedEvidence": "Current official government publication or government-linked public information site, with direct native signed ordinance links."
+      },
+      {
+        "requestedUrl": "https://www.coconutcreek.gov/news-and-events/top-stories/news-detail/2026/09/21/ballot",
+        "finalUrl": "https://www.coconutcreek.gov/news-and-events/top-stories/news-detail/2026/09/21/ballot",
+        "publisher": "City of Coconut Creek",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:13:06.749905+00:00",
+        "httpStatus": 200,
+        "rawHash": "0984a14e7d71ef3f2b21b07b05fae7d2d7b168d2c4b83df178f116dbcecc697b",
+        "reviewedEvidence": "Current official government publication or government-linked public information site, with direct native signed ordinance links."
+      },
+      {
+        "requestedUrl": "https://coconutcreek.legistar.com/LegislationDetail.aspx?FullText=1&GUID=F222C330-44CF-4473-939B-EFC54AC7295B&ID=7428333",
+        "finalUrl": "https://coconutcreek.legistar.com/LegislationDetail.aspx?FullText=1&GUID=F222C330-44CF-4473-939B-EFC54AC7295B&ID=7428333",
+        "publisher": "City of Coconut Creek",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:10:21.267499+00:00",
+        "httpStatus": 200,
+        "rawHash": "a1837632676d8c968c7c25241628bfcd10d0dcdddc5d7dd954934da6e16b4c1b",
+        "reviewedEvidence": "Current official government publication or government-linked public information site, with direct native signed ordinance links."
+      }
+    ]
+  }
+}

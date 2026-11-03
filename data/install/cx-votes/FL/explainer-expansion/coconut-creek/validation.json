@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-03T10:28:32.109Z",
+  "preparedRecords": 5,
+  "originalSourceHashes": "PASS; complete native official final-reading PDF bytes retained, with unsigned status explicit; current City.gov primary referendum publication confirms June12,2025approval and all five current questions",
+  "exactSupportQuotes": "PASS; every field quote occurs in its relevant per-measure source excerpt",
+  "sourceSemanticAndNativeRenderReading": "PASS; native current five-question City.gov publication and all relevant native vector-PDF redlines/printed questions/choices read.15day business threshold and discretionary duty bonds; only HOA/condo board officers within city; capital-only5year abandonment replaced while noncapital unspent AND uncommitted lapse retained; full50voter/15day/30day/3resubmission/30dayrestart/5%/90day/60day/30day–1year petition conditions and conflict portions;2030six-year schedule/offcycle authority/120day review preserved. Unsigned final-reading PDF not described as signed; current official City.gov June12approval provides adoption evidence. No projected benefit claims.",
+  "publisherIdentification": "Current City.gov referendum page directly links the official Legistar second-reading adoption record and identifies the five November3questions. That record directly links the retained full native ordinance copy; unsigned and adopted statuses are distinguished truthfully.",
+  "normalPublicationAdmission": "PASS; exact-byte receipts for every projected source URL",
+  "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0
+}

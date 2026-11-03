@@ -1,0 +1,180 @@
+{
+  "preparedAt": "2026-11-03T10:28:14.914259+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sha256": "b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39",
+      "bytes": 456569,
+      "kind": "NATIVE_OFFICIAL_FINAL_READING_ORDINANCE_COPY_UNSIGNED",
+      "sourceUrl": "https://coconutcreek.legistar.com/View.ashx?M=F&ID=14270843&GUID=889250A1-1F13-4732-BA8E-E968735A8F2D",
+      "retrievedAt": "2026-11-03T10:13:07.082710+00:00"
+    },
+    {
+      "file": "sources/2ad42023d3996d2fcf94abaa62a043219d814ef35ad480f47fcb40c2cf3fab98.txt",
+      "sha256": "2ad42023d3996d2fcf94abaa62a043219d814ef35ad480f47fcb40c2cf3fab98",
+      "bytes": 21865,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "method": "Native vector-PDF text extraction; no OCR. Read actual legal-redline additions/deletions against native renders."
+    },
+    {
+      "file": "sources/9de4f696c6cd5283cbcd40998a53f2c38f3f1c3578e5861ca594fd9b4cbd27db.txt",
+      "sha256": "9de4f696c6cd5283cbcd40998a53f2c38f3f1c3578e5861ca594fd9b4cbd27db",
+      "bytes": 1367,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sourcePages": [
+        2,
+        3,
+        6,
+        8
+      ],
+      "representation": "Printed question verbatim, whitespace normalized; relevant operative text is native vector-PDF extraction preserving deleted and added redline text, distinguished by the retained native renders. This is the official final-reading ordinance copy with blank second-reading signature fields, supported by the current City.gov page explicitly recording June12,2025approval and all five November3,2026questions. It is not represented as a signed enrolled original."
+    },
+    {
+      "file": "sources/217621f455ece7dd7f23967792ce7b93aad6c3f51154e9271a1f2c02e89df101.png",
+      "sha256": "217621f455ece7dd7f23967792ce7b93aad6c3f51154e9271a1f2c02e89df101",
+      "bytes": 108838,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/8e4a5dca2f3b83bda9d1b886622c57967d6683e7f2ace9c86c45ec25cde3cfc0.png",
+      "sha256": "8e4a5dca2f3b83bda9d1b886622c57967d6683e7f2ace9c86c45ec25cde3cfc0",
+      "bytes": 134816,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/45629628c2d1382cf2184424aaa7abb453c9326b34c8cc698424c9cb74293f6f.png",
+      "sha256": "45629628c2d1382cf2184424aaa7abb453c9326b34c8cc698424c9cb74293f6f",
+      "bytes": 168165,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/f45f62a8ad487146eaf3eb8b2851406dc41530b2b61ec82be89a1cc4c10ad3cc.png",
+      "sha256": "f45f62a8ad487146eaf3eb8b2851406dc41530b2b61ec82be89a1cc4c10ad3cc",
+      "bytes": 71881,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sourcePage": 8
+    },
+    {
+      "file": "sources/9fc1c49961eab21f360637040ff46f49d6e08af694ca7fbaa77057e26e45d3f4.txt",
+      "sha256": "9fc1c49961eab21f360637040ff46f49d6e08af694ca7fbaa77057e26e45d3f4",
+      "bytes": 801,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sourcePages": [
+        3,
+        7,
+        8
+      ],
+      "representation": "Printed question verbatim, whitespace normalized; relevant operative text is native vector-PDF extraction preserving deleted and added redline text, distinguished by the retained native renders. This is the official final-reading ordinance copy with blank second-reading signature fields, supported by the current City.gov page explicitly recording June12,2025approval and all five November3,2026questions. It is not represented as a signed enrolled original."
+    },
+    {
+      "file": "sources/c608a238987af69d49ba382a4f87a30fc7008fc75fff58668fe28d183cbf17cb.png",
+      "sha256": "c608a238987af69d49ba382a4f87a30fc7008fc75fff58668fe28d183cbf17cb",
+      "bytes": 128364,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sourcePage": 7
+    },
+    {
+      "file": "sources/df6b0de302eff2535436f1c80bededa4d419d1c110ad046047538938afd98bc4.txt",
+      "sha256": "df6b0de302eff2535436f1c80bededa4d419d1c110ad046047538938afd98bc4",
+      "bytes": 1098,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sourcePages": [
+        3,
+        7,
+        8
+      ],
+      "representation": "Printed question verbatim, whitespace normalized; relevant operative text is native vector-PDF extraction preserving deleted and added redline text, distinguished by the retained native renders. This is the official final-reading ordinance copy with blank second-reading signature fields, supported by the current City.gov page explicitly recording June12,2025approval and all five November3,2026questions. It is not represented as a signed enrolled original."
+    },
+    {
+      "file": "sources/6cdf0c0167a06884182b706c343f802b3a140537913124c9e81fd52c913f461d.txt",
+      "sha256": "6cdf0c0167a06884182b706c343f802b3a140537913124c9e81fd52c913f461d",
+      "bytes": 7012,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sourcePages": [
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "representation": "Printed question verbatim, whitespace normalized; relevant operative text is native vector-PDF extraction preserving deleted and added redline text, distinguished by the retained native renders. This is the official final-reading ordinance copy with blank second-reading signature fields, supported by the current City.gov page explicitly recording June12,2025approval and all five November3,2026questions. It is not represented as a signed enrolled original."
+    },
+    {
+      "file": "sources/68bc4fa6d14a66d6e72f7847e5043198a22a7f2e4e3792ad17c000bad5c953d0.png",
+      "sha256": "68bc4fa6d14a66d6e72f7847e5043198a22a7f2e4e3792ad17c000bad5c953d0",
+      "bytes": 164661,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/76bc0b15703c25846e489e608c6058f3d436a62b0553f3263addb269f80fe237.png",
+      "sha256": "76bc0b15703c25846e489e608c6058f3d436a62b0553f3263addb269f80fe237",
+      "bytes": 154308,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/7b6d0a444ceeb6cae01b64d2e82862a7c930612c42b4ca1f6f1f183f4bb70f85.txt",
+      "sha256": "7b6d0a444ceeb6cae01b64d2e82862a7c930612c42b4ca1f6f1f183f4bb70f85",
+      "bytes": 2051,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/b4d93d19feb4df1e2fbdd8813c7ac2e1370d2baa50690708f2c0f8e55f1bdc39.pdf",
+      "sourcePages": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "representation": "Printed question verbatim, whitespace normalized; relevant operative text is native vector-PDF extraction preserving deleted and added redline text, distinguished by the retained native renders. This is the official final-reading ordinance copy with blank second-reading signature fields, supported by the current City.gov page explicitly recording June12,2025approval and all five November3,2026questions. It is not represented as a signed enrolled original."
+    },
+    {
+      "file": "sources/29c903b66afe983cb4385c56d5d53f1d1ef106d4ec645b8fc9ff884552122e1d.html",
+      "sha256": "29c903b66afe983cb4385c56d5d53f1d1ef106d4ec645b8fc9ff884552122e1d",
+      "bytes": 189904,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.coconutcreek.gov/government/city-directory/city-clerk/election/november-3-2026-referendum-election",
+      "retrievedAt": "2026-11-03T10:20:39.067720+00:00",
+      "nativeCaptureSha256": "29c903b66afe983cb4385c56d5d53f1d1ef106d4ec645b8fc9ff884552122e1d",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    },
+    {
+      "file": "sources/0984a14e7d71ef3f2b21b07b05fae7d2d7b168d2c4b83df178f116dbcecc697b.html",
+      "sha256": "0984a14e7d71ef3f2b21b07b05fae7d2d7b168d2c4b83df178f116dbcecc697b",
+      "bytes": 177161,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.coconutcreek.gov/news-and-events/top-stories/news-detail/2026/09/21/ballot",
+      "retrievedAt": "2026-11-03T10:13:06.749905+00:00",
+      "nativeCaptureSha256": "0984a14e7d71ef3f2b21b07b05fae7d2d7b168d2c4b83df178f116dbcecc697b",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    },
+    {
+      "file": "sources/a1837632676d8c968c7c25241628bfcd10d0dcdddc5d7dd954934da6e16b4c1b.html",
+      "sha256": "a1837632676d8c968c7c25241628bfcd10d0dcdddc5d7dd954934da6e16b4c1b",
+      "bytes": 111480,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://coconutcreek.legistar.com/LegislationDetail.aspx?FullText=1&GUID=F222C330-44CF-4473-939B-EFC54AC7295B&ID=7428333",
+      "retrievedAt": "2026-11-03T10:10:21.267499+00:00",
+      "nativeCaptureSha256": "a1837632676d8c968c7c25241628bfcd10d0dcdddc5d7dd954934da6e16b4c1b",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    }
+  ]
+}

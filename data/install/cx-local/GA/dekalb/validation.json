@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-11-03T09:11:08.422Z",
+  "state": "GA",
+  "sources": 32,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 29,
+  "newContests": 10,
+  "refreshedContests": 0,
+  "candidacies": 18,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 279,
+  "unrelatedCandidateCoreFieldsPreserved": 479,
+  "unrelatedCandidateAliasEnrichments": 479,
+  "unmatchedReaderDivisionCount": 6,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ga/county:dekalb/commission_district:2",
+    "ocd-division/country:us/state:ga/county:dekalb/commission_district:3",
+    "ocd-division/country:us/state:ga/county:dekalb/commission_district:7",
+    "ocd-division/country:us/state:ga/county:dekalb/special_district:tucker_sb622_annexation_referendum_2026",
+    "ocd-division/country:us/state:ga/place:brookhaven/council_district:2",
+    "ocd-division/country:us/state:ga/place:stonecrest/council_district:2"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ga/county:dekalb/commission_district:2",
+    "ocd-division/country:us/state:ga/county:dekalb/commission_district:3",
+    "ocd-division/country:us/state:ga/county:dekalb/commission_district:7",
+    "ocd-division/country:us/state:ga/county:dekalb/special_district:tucker_sb622_annexation_referendum_2026",
+    "ocd-division/country:us/state:ga/place:brookhaven/council_district:2",
+    "ocd-division/country:us/state:ga/place:stonecrest/council_district:2"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

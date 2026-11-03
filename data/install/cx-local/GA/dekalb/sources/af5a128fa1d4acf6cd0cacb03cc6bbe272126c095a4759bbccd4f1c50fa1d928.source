@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8" />
+<meta name="description" content="DeKalb County provides essential information on voter registration, checking or updating voter registration, and understanding election procedures." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://dekalbcountyga.gov/departments/voter-registration-and-elections" />
+<link rel="shortlink" href="/departments/voter-registration-and-elections" />
+<link rel="image_src" href="https://dekalbcountyga.gov/themes/custom/dekalb_theme/screenshot.png" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<meta property="og:site_name" content="DeKalb County, GA" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://dekalbcountyga.gov/departments/voter-registration-and-elections" />
+<meta property="og:title" content="Voter Registration &amp; Elections" />
+<meta property="og:description" content="DeKalb County provides essential information on voter registration, checking or updating voter registration, and understanding election procedures." />
+<meta property="og:image" content="https://dekalbcountyga.gov/themes/custom/dekalb_theme/screenshot.png" />
+<meta name="dcterms.title" content="Voter Registration &amp; Elections" />
+<meta name="dcterms.description" content="DeKalb County provides essential information on voter registration, checking or updating voter registration, and understanding election procedures." />
+<meta name="dcterms.publisher" content="DeKalb County Government" />
+<meta name="dcterms.type" content="Text" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Voter Registration &amp; Elections" />
+<meta name="twitter:description" content="DeKalb County provides essential information on voter registration, checking or updating voter registration, and understanding election procedures." />
+<meta name="twitter:image" content="https://dekalbcountyga.gov/themes/custom/dekalb_theme/screenshot.png" />
+<meta name="msvalidate.01" content="0B9C1836365E5EF85ADEF3CC377CA62E" />
+<meta name="google-site-verification" content="iELUKgodiNThUgFqId916WqLZNUE9QwJqxRFDv3fm5I" />
+<meta name="Generator" content="Drupal 11 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="preconnect" href="https://challenges.cloudflare.com" />
+<link rel="icon" href="/sites/default/files/dkc_0.ico" type="image/vnd.microsoft.icon" />
+
+    <title>Voter Registration &amp; Elections | DeKalb County, GA</title>
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_BQmCdVStc97eq6yxD2su6ilgG9gd5POSANeWwd_W_cw.css?delta=0&amp;language=en&amp;theme=dekalb_theme&amp;include=eJxtjlEOwjAMQy9U1iMhdw1bWNpUSYeA0zMmEEjwE1nPsp1RjWK2tUEGnHEN4xNUtQLhO4VMCyQd-0yF4iSaIGERmMb9fuuDXsiMM4VCmRFPLJ1sGNE6aw0NhsnQZn_vfciw1rYmYZ8pB--wLbhwf80mOP3Srf4PLeSOifzXqbp95jfvVPbGB4W4Yb0" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css__Puoad4AGnVaZLAd0anzQoURZryUpIJCpGb-qb5U5To.css?delta=1&amp;language=en&amp;theme=dekalb_theme&amp;include=eJxtjlEOwjAMQy9U1iMhdw1bWNpUSYeA0zMmEEjwE1nPsp1RjWK2tUEGnHEN4xNUtQLhO4VMCyQd-0yF4iSaIGERmMb9fuuDXsiMM4VCmRFPLJ1sGNE6aw0NhsnQZn_vfciw1rYmYZ8pB--wLbhwf80mOP3Srf4PLeSOifzXqbp95jfvVPbGB4W4Yb0" />
+<link rel="stylesheet" media="print" href="/sites/default/files/css/css_jiiRLfPGVk0180aJv0FjHN1JjV0XAMASgbAbjBNgo_8.css?delta=2&amp;language=en&amp;theme=dekalb_theme&amp;include=eJxtjlEOwjAMQy9U1iMhdw1bWNpUSYeA0zMmEEjwE1nPsp1RjWK2tUEGnHEN4xNUtQLhO4VMCyQd-0yF4iSaIGERmMb9fuuDXsiMM4VCmRFPLJ1sGNE6aw0NhsnQZn_vfciw1rYmYZ8pB--wLbhwf80mOP3Srf4PLeSOifzXqbp95jfvVPbGB4W4Yb0" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_A17SWfCyA6XCFZMzlIvGzLEYhu63CWB7iyDkoo8AGp0.css?delta=3&amp;language=en&amp;theme=dekalb_theme&amp;include=eJxtjlEOwjAMQy9U1iMhdw1bWNpUSYeA0zMmEEjwE1nPsp1RjWK2tUEGnHEN4xNUtQLhO4VMCyQd-0yF4iSaIGERmMb9fuuDXsiMM4VCmRFPLJ1sGNE6aw0NhsnQZn_vfciw1rYmYZ8pB--wLbhwf80mOP3Srf4PLeSOifzXqbp95jfvVPbGB4W4Yb0" />
+
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/180","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"gtag":{"tagId":"UA-74183382-1","consentMode":false,"otherIds":[],"events":[],"additionalConfigInfo":[]},"ajaxPageState":{"libraries":"eJxtj1FuwzAMQy-UxUcKFJtzvMiWISnDutPP7Qa0TfdDSE8gIUZRhCZaics3poSdeF18Q0WgGEVTkXbCRyq-KLqo2-K08smXiiK66OUZZ5aV-JlVwEvLfylZJDPGkkMect5n-qCvaWdSCTd9nN_kE6olYapIhcJ7YYfOkbpfG3RSykp9s5D06MTzncxH68fKxTakyZx0GPdR8ffFlQyvdMT_QyvMKMNeL03GZ3YxR70l_gDLRpLg","theme":"dekalb_theme","theme_token":null},"ajaxTrustedUrl":{"\/search\/node":true},"klaro":{"config":{"elementId":"klaro","storageMethod":"cookie","cookieName":"klaro","cookieExpiresAfterDays":180,"cookieDomain":"","groupByPurpose":false,"acceptAll":false,"hideDeclineAll":false,"hideLearnMore":false,"learnMoreAsButton":false,"additionalClass":" hide-consent-dialog-title klaro-theme-dekalb_theme","disablePoweredBy":true,"htmlTexts":false,"autoFocus":true,"privacyPolicy":"\/","lang":"en","services":[{"name":"cms","default":true,"title":"Functional","description":"Store data (e.g. cookie for user session) in your browser (required to use this website).","purposes":["cms"],"callbackCode":"","onInit":"","onAccept":"","onDecline":"","cookies":[["^[SESS|SSESS]","",""]],"required":true,"optOut":false,"onlyOnce":false,"contextualConsentOnly":false,"contextualConsentText":"","wrapperIdentifier":[],"translations":{"en":{"title":"Functional"}}},{"name":"google_recaptcha","default":true,"title":"Google reCAPTCHA","description":"reCAPTCHA is a CAPTCHA system owned by Google LLC.","purposes":["security"],"callbackCode":"","onInit":"","onAccept":"","onDecline":"","cookies":[],"required":false,"optOut":false,"onlyOnce":false,"contextualConsentOnly":false,"contextualConsentText":"","wrapperIdentifier":[".g-recaptcha"],"translations":{"en":{"title":"Google reCAPTCHA"}}},{"name":"klaro","default":true,"title":"Consent manager","description":"Klaro! Cookie \u0026 Consent manager saves your consent status in the browser.","purposes":["cms"],"callbackCode":"","onInit":"","onAccept":"","onDecline":"","cookies":[["klaro","",""]],"required":true,"optOut":false,"onlyOnce":false,"contextualConsentOnly":false,"contextualConsentText":"","wrapperIdentifier":[],"translations":{"en":{"title":"Consent manager"}}},{"name":"userway","default":true,"title":"UserWay","description":"UserWay accessibility widget.","purposes":["accessibility"],"callbackCode":"","onInit":"","onAccept":"","onDecline":"","cookies":[],"required":false,"optOut":false,"onlyOnce":false,"contextualConsentOnly":false,"contextualConsentText":"","wrapperIdentifier":["#block-dekalb-theme-userwayadatool"],"translations":{"en":{"title":"UserWay"}}},{"name":"vimeo","default":true,"title":"Vimeo","description":"Vimeo is a video sharing platform by Vimeo, LLC (USA).","purposes":["external_content"],"callbackCode":"","onInit":"","onAccept":"","onDecline":"","cookies":[],"required":false,"optOut":false,"onlyOnce":false,"contextualConsentOnly":false,"contextualConsentText":"","wrapperIdentifier":[],"translations":{"en":{"title":"Vimeo"}}},{"name":"youtube","default":true,"title":"YouTube","description":"YouTube is an online video sharing platform owned by Google.","purposes":["external_content"],"callbackCode":"","onInit":"","onAccept":"","onDecline":"","cookies":[],"required":false,"optOut":false,"onlyOnce":false,"contextualConsentOnly":false,"contextualConsentText":"","wrapperIdentifier":[],"translations":{"en":{"title":"YouTube"}}},{"name":"gtm","default":true,"title":"Google Tag Manager","description":"Manages and deploys marketing tags.","purposes":["analytics"],"callbackCode":"","onInit":"","onAccept":"","onDecline":"","cookies":[],"required":false,"optOut":false,"onlyOnce":false,"contextualConsentOnly":false,"contextualConsentText":"","wrapperIdentifier":[],"translations":{"en":{"title":"Google Tag Manager"}}}],"translations":{"en":{"consentModal":{"title":"Use of personal data and cookies","description":"Please choose the services and 3rd party applications we would like to use.\r\n","privacyPolicy":{"name":"privacy policy","text":"To learn more, please read our {privacyPolicy}.\r\n"}},"consentNotice":{"title":"Use of personal data and cookies","changeDescription":"There were changes since your last visit, please update your consent.","description":"This website uses cookies for essential functionality and aggregated analytics. We do not identify individual visitors and do not sell personal information.","learnMore":"Customize","privacyPolicy":{"name":"privacy policy"}},"ok":"Accept","save":"Save","decline":"Decline","close":"Close","acceptAll":"Accept all","acceptSelected":"Accept selected","service":{"disableAll":{"title":"Toggle all services","description":"Use this switch to enable\/disable all services."},"optOut":{"title":"(opt-out)","description":"This service is loaded by default (opt-out possible)."},"required":{"title":"(always required)","description":"This service is always required."},"purposes":"Purposes","purpose":"Purpose"},"contextualConsent":{"acceptAlways":"Always","acceptOnce":"Yes (this time)","description":"Load external content supplied by {title}?"},"poweredBy":"Powered by Klaro!","purposeItem":{"service":"Service","services":"Services"},"privacyPolicy":{"name":"privacy policy","text":"To learn more, please read our {privacyPolicy}.\r\n"},"purposes":{"cms":{"title":"Functional","description":""},"accessibility":{"title":"Accessibility","description":""},"advertising":{"title":"Advertising and Marketing","description":""},"analytics":{"title":"Analytics","description":""},"livechat":{"title":"Live chat","description":""},"security":{"title":"Security","description":""},"styling":{"title":"Styling","description":""},"external_content":{"title":"Embedded external content","description":""}}}},"purposeOrder":["cms","accessibility","advertising","analytics","livechat","security","styling","external_content"],"showNoticeTitle":true,"styling":{"theme":["light"]}},"dialog_mode":"notice","show_toggle_button":false,"toggle_button_icon":null,"show_close_button":false,"exclude_urls":[],"disable_urls":[]},"user":{"uid":0,"permissionsHash":"5beaebf0cf90cf139e7e668f2f355a9e515747443e56b28c5a6ebbef6921cb38"}}</script>
+<script src="/sites/default/files/js/js_2KCfFpe274TYM9qLUPHNnx1_f1dcPtSSzpd7T_ZvRng.js?scope=header&amp;delta=0&amp;language=en&amp;theme=dekalb_theme&amp;include=eJxdjFEKhDAMBS8k9kglbR6xmhqJEdzbr8j-dH8GZng8xkZacizoSFSrOTfbJx7yxS2y4zCPMwcVxTjg5qhh_hmzqBXSsXUg2i6_FzETxSOS5MG_z7TSPW1KbunlFz2ZQ4Q"></script>
+<script src="/modules/contrib/klaro/js/klaro_placeholder.js" data-type="text/javascript" type="text/plain" data-name="gtm" data-src="/modules/contrib/google_tag/js/gtag.js?tnw1pr"></script>
+<script src="/libraries/klaro/dist/klaro-no-translations-no-css.js?tnw1pr" defer id="klaro-js"></script>
+
+  </head>
+  <body class="path-node page-node-type-page">
+        <a href="#main-content" class="visually-hidden focusable skip-link">
+      Skip to main content
+    </a>
+    
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+    <div class="region region-highlighted">
+    <div data-drupal-messages-fallback class="hidden"></div>
+<div id="block-dekalb-theme-searchform" role="search" class="block block-search container-inline">
+  
+    
+      <form class="search-block-form" data-drupal-selector="search-block-form" action="/search/node" method="get" id="search-block-form" accept-charset="UTF-8">
+  <div class="js-form-item form-item js-form-type-search form-type-search js-form-item-keys form-item-keys form-no-label">
+      <label for="edit-keys" class="visually-hidden">Search</label>
+        <input title="Enter the terms you wish to search for." data-drupal-selector="edit-keys" type="search" id="edit-keys" name="keys" value="" size="15" maxlength="128" class="form-search" />
+
+        </div>
+<div data-drupal-selector="edit-actions" class="form-actions js-form-wrapper form-wrapper" id="edit-actions"><input data-drupal-selector="edit-submit" type="submit" id="edit-submit" value="Search" class="button js-form-submit form-submit" />
+</div>
+
+</form>
+
+  </div>
+
+<div id="block-dekalb-theme-newwebsitebanner" class="site-banner site-banner--informational" aria-live="polite">
+
+  
+  
+
+  <div class="site-banner__icon" aria-hidden="true"></div>
+
+  <div class="site-banner__content">
+    <div class="site-banner__marquee">
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><p><a href="https://dekalbcountyga.gov1.qualtrics.com/jfe/form/SV_0GwimFIH85Pm5dc" rel="nofollow">DeKalb County Cybersecurity Awareness Training.</a></p></div>
+      
+    </div>
+  </div>
+
+  <button class="site-banner__dismiss" aria-label="Dismiss banner">
+    &times;
+  </button>
+</div>
+
+
+<div id="block-dekalb-theme-voterregistrationandelections" class="site-banner site-banner--informational" aria-live="polite">
+
+  
+  
+
+  <div class="site-banner__icon" aria-hidden="true"></div>
+
+  <div class="site-banner__content">
+    <div class="site-banner__marquee">
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><p><a href="/departments/voter-registration-and-elections" data-entity-substitution="canonical" rel="nofollow"><strong>Vote on Election Day - November 3, 2026. Visit DeKalbVotes.com to confirm your polling place</strong></a></p></div>
+      
+    </div>
+  </div>
+
+  <button class="site-banner__dismiss" aria-label="Dismiss banner">
+    &times;
+  </button>
+</div>
+
+
+<div id="block-dekalb-theme-watershedemergencyalert" class="site-banner site-banner--alert" aria-live="polite">
+
+  
+  
+
+  <div class="site-banner__icon" aria-hidden="true"></div>
+
+  <div class="site-banner__content">
+    <div class="site-banner__marquee">
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><p><a href="/sites/default/files/2026-11/11-02-26%20DeKalb%20Crews%20Investigating%20Low%20Water%20Pressure%20in%20Norris%20Lake%20Area845pm.pdf" data-entity-substitution="media" rel="nofollow">Alert: Low Water Pressure - Norris Lake Area</a></p></div>
+      
+    </div>
+  </div>
+
+  <button class="site-banner__dismiss" aria-label="Dismiss banner">
+    &times;
+  </button>
+</div>
+
+
+  </div>
+
+
+<!-- Header / Navigation -->
+<header>
+    <div class="region region-header">
+    <div id="block-dekalb-theme-branding" class="block block-system block-system-branding-block">
+  
+    
+        <a href="/" rel="home" class="site-logo">
+      <img src="/themes/custom/dekalb_theme/logo.svg" alt="Home" fetchpriority="high" />
+    </a>
+          <div class="site-slogan"><a href="/">Welcome to <strong>DeKalb County, GA</strong></a></div>
+  </div>
+<nav aria-labelledby="block-main-menu-menu" id="block-main-menu" class="block block-menu navigation menu--main">
+            
+  <h2 class="visually-hidden" id="block-main-menu-menu">Main Menu</h2>
+  
+
+        <button class="menu-toggle" aria-expanded="false" aria-controls="main-menu-list">
+  <span class="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </span>
+  <span class="visually-hidden">Menu</span>
+</button>
+
+<ul id="main-menu-list" class="menu">
+              <li class="menu-item menu-item--expanded">
+      <button type="button">Government</button>
+              <ul class="menu sub-menu">
+                                              <li class="menu-item">
+              <a href="/government/chief-executive-officer" data-drupal-link-system-path="node/191">Chief Executive Officer (CEO)</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/government/board-of-commissioners" data-drupal-link-system-path="node/55">Board of Commissioners</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://dekalbcountyga.granicus.com/boards/w/968f9572ef2211df" target="_blank" rel="noopener noreferrer">Boards &amp; Commissions</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/government/judicial-system" data-drupal-link-system-path="node/194">Judicial System</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://www.dekalbsheriff.org/" target="_blank" rel="noopener noreferrer">Sheriff</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://dekalbtax.org/" target="_blank" rel="noopener noreferrer">Tax Commissioner</a>
+            </li>
+                  </ul>
+          </li>
+              <li class="menu-item menu-item--expanded">
+      <button type="button">Departments</button>
+              <ul class="menu sub-menu">
+                                              <li class="menu-item">
+              <a href="/departments/airport" data-drupal-link-system-path="node/61">Airport (PDK)</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-safety/animal-services" data-drupal-link-system-path="node/225">Animal Services</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/budget" data-drupal-link-system-path="node/68">Budget (OMB)</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/child-advocacy-center" data-drupal-link-system-path="node/71">Child Advocacy Center</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/code-compliance" data-drupal-link-system-path="node/72">Code Compliance</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/communications" data-drupal-link-system-path="node/75">Communications</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/community-development" data-drupal-link-system-path="node/84">Community Development</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://extension.uga.edu/county-offices/dekalb.html" target="_blank" rel="noopener noreferrer">Cooperative Extension</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/dctv" data-drupal-link-system-path="node/79">DCTV Channel 23</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-safety/dema" data-drupal-link-system-path="node/140">Emergency Management (DEMA)</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/facilities-management" data-drupal-link-system-path="node/89">Facilities Management</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/finance" data-drupal-link-system-path="node/91">Finance</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-safety/fire-rescue" data-drupal-link-system-path="node/123">Fire Rescue</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/gis" data-drupal-link-system-path="node/95">GIS</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/human-resources" data-drupal-link-system-path="node/100">Human Resources</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/human-services" data-drupal-link-system-path="node/104">Human Services</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/innovation-technology" data-drupal-link-system-path="node/107">Innovation &amp; Technology</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/law" data-drupal-link-system-path="node/109">Law Department</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://dekalblibrary.org/" target="_blank" rel="noopener noreferrer">Library</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-safety/medical-examiner" data-drupal-link-system-path="node/129">Medical Examiner&#039;s Office</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/planning-and-sustainability" data-drupal-link-system-path="node/111">Planning &amp; Sustainability</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-safety/police" data-drupal-link-system-path="node/134">Police</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/property-appraisal" data-drupal-link-system-path="node/117">Property Appraisal</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-safety" data-drupal-link-system-path="node/122">Public Safety</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-works" data-drupal-link-system-path="node/221">Public Works</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/purchasing-and-contracting" data-drupal-link-system-path="node/147">Purchasing and Contracting</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/recreation-parks-and-cultural-affairs" data-drupal-link-system-path="node/153">Recreation, Parks &amp; Cultural Affairs</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-works/roads-and-drainage" data-drupal-link-system-path="node/160">Roads and Drainage</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/splost" data-drupal-link-system-path="node/172">SPLOST</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-works/solid-waste-management" data-drupal-link-system-path="node/166">Solid Waste Management</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://dekalbtax.org/" target="_blank" rel="noopener noreferrer">Taxes</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-works/transportation" data-drupal-link-system-path="node/176">Transportation</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/voter-registration-and-elections" data-drupal-link-system-path="node/180" class="is-active" aria-current="page">Voter Registration &amp; Elections</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/watershed-management" data-drupal-link-system-path="node/206">Watershed Management</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/worksource-dekalb" data-drupal-link-system-path="node/186">WorkSource DeKalb</a>
+            </li>
+                  </ul>
+          </li>
+              <li class="menu-item menu-item--expanded">
+      <button type="button">Services</button>
+              <ul class="menu sub-menu">
+                                                                        <li class="menu-item">
+              <a href="https://dekalbanimalservices.com/" target="_blank" rel="noopener noreferrer">Animal Services</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://dekalbpublichealth.com/" target="_blank" rel="noopener noreferrer">Board of Health</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/child-advocacy-center" data-drupal-link-system-path="node/71">Child Advocacy Center</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://extension.uga.edu/county-offices/dekalb.html" target="_blank" rel="noopener noreferrer">Cooperative Extension</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-safety/fire-rescue" data-drupal-link-system-path="node/123">Fire Rescue</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/human-services" data-drupal-link-system-path="node/104">Human Services</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://dekalblibrary.org/" target="_blank" rel="noopener noreferrer">Library</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/services/office-of-aging" data-drupal-link-system-path="node/202">Office of Aging</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/services/partner-services" data-drupal-link-system-path="node/205">Partner Services</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-safety/police" data-drupal-link-system-path="node/134">Police Department</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-works/solid-waste-management/recycling-program" data-drupal-link-system-path="node/170">Recycling</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-works/transportation" data-drupal-link-system-path="node/176">Transportation</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/watershed-management/services-and-billing" data-drupal-link-system-path="node/207">Water Services &amp; Billing</a>
+            </li>
+                  </ul>
+          </li>
+              <li class="menu-item menu-item--expanded">
+      <button type="button">Transparency</button>
+              <ul class="menu sub-menu">
+                                              <li class="menu-item">
+              <a href="/departments/finance/financial-reports-and-transparency" data-drupal-link-system-path="node/94">Annual Financial Reports</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/budget" data-drupal-link-system-path="node/68">Budget</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/transparency/charter-review" data-drupal-link-system-path="node/256">Charter Review</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://dekalbcountyethics.org/" target="_blank" rel="noopener noreferrer">Ethics</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/transparency/lobbyist" data-drupal-link-system-path="node/328">Lobbyist</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://library.municode.com/ga/dekalb_county/codes/code_of_ordinances?nodeId=ORAC" target="_blank" rel="noopener noreferrer">Municipal Codes</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/transparency/non-discrimination-ordinance" data-drupal-link-system-path="node/2366">Non-Discrimination Ordinance</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/transparency/office-of-independent-internal-audit" data-drupal-link-system-path="node/197">Office of Independent Internal Audit</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/communications/open-records-request" data-drupal-link-system-path="node/77">Submit Open Records Request</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/transparency/title-vi" data-drupal-link-system-path="node/251">Title VI</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://library.municode.com/ga/dekalb_county/codes/code_of_ordinances?nodeId=ORAC" target="_blank" rel="noopener noreferrer">Zoning Codes</a>
+            </li>
+                  </ul>
+          </li>
+              <li class="menu-item menu-item--expanded">
+      <button type="button">Business</button>
+              <ul class="menu sub-menu">
+                                              <li class="menu-item">
+              <a href="/departments/purchasing-and-contracting/current-opportunities" data-drupal-link-system-path="node/150">Bid Opportunities</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/planning-and-sustainability/land-development" data-drupal-link-system-path="node/113">Building Permits &amp; Inspection</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/planning-and-sustainability/business-and-alcohol-license" data-drupal-link-system-path="node/112">Business &amp; Alcohol License</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://www.dekalbchamber.org/" target="_blank" rel="noopener noreferrer">Chamber of Commerce</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://www.decidedekalb.com/" target="_blank" rel="noopener noreferrer">Decide DeKalb Development Authority</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://dekalbentertainment.com/apply-for-permit/" target="_blank" rel="noopener noreferrer">Film &amp; TV Permits</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://dekalbpublichealth.com/environmental-health/food-safety/opening-a-fixed-non-mobile-food-service-operation/" target="_blank" rel="noopener noreferrer">Food Safety Requirements &amp; Inspections</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://www.decidedekalb.com/grow-your-business/" target="_blank" rel="noopener noreferrer">Grow a Business</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/purchasing-and-contracting" data-drupal-link-system-path="node/147">Purchasing and Contracting</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://www.decidedekalb.com/start-a-business/" target="_blank" rel="noopener noreferrer">Start a Business</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/watershed-management/services-and-billing" data-drupal-link-system-path="node/207">Water Services &amp; Billing</a>
+            </li>
+                  </ul>
+          </li>
+              <li class="menu-item menu-item--expanded">
+      <button type="button">Residents</button>
+              <ul class="menu sub-menu">
+                                              <li class="menu-item">
+              <a href="/residents/bill-pay" data-drupal-link-system-path="node/201">Bill Pay</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-safety/dema" data-drupal-link-system-path="node/140">Emergency Preparedness</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/recreation-parks-and-cultural-affairs/reservations-and-rentals" data-drupal-link-system-path="node/158">Recreational Reservations</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/public-works/solid-waste-management/recycling-program" data-drupal-link-system-path="node/170">Recycling</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/residents/report-311" data-drupal-link-system-path="node/214">Report (311)</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://511ga.org/" target="_blank" rel="noopener noreferrer">Road Closures</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://dekalbtax.org/" target="_blank" rel="noopener noreferrer">Vehicle Registration</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/voter-registration-and-elections" data-drupal-link-system-path="node/180" class="is-active" aria-current="page">Voter Registration &amp; Elections</a>
+            </li>
+                  </ul>
+          </li>
+              <li class="menu-item menu-item--expanded">
+      <button type="button">Visitors</button>
+              <ul class="menu sub-menu">
+                                              <li class="menu-item">
+              <a href="/visitors/attractions" data-drupal-link-system-path="node/232">Attractions</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://discoverdekalb.com/" target="_blank" rel="noopener noreferrer">Discover DeKalb</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/visitors/golf" data-drupal-link-system-path="node/233">Golf Courses</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/visitors/maps" data-drupal-link-system-path="node/252">Maps</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://dekalbcountyga.gov/visitors/parks" target="_blank" rel="noopener noreferrer">Parks</a>
+            </li>
+                                                                        <li class="menu-item">
+              <a href="https://dekalbcountyga.gov/visitors/trails" target="_blank" rel="noopener noreferrer">Trails</a>
+            </li>
+                  </ul>
+          </li>
+              <li class="menu-item menu-item--expanded">
+      <button type="button">News</button>
+              <ul class="menu sub-menu">
+                                              <li class="menu-item">
+              <a href="/news/brand-assets" data-drupal-link-system-path="node/196">Brand Assets</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/events" data-drupal-link-system-path="node/242">Events</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/communications" data-drupal-link-system-path="node/75">Media Requests</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/departments/communications/stay-connected" data-drupal-link-system-path="node/78">Newsletter</a>
+            </li>
+                                              <li class="menu-item">
+              <a href="/news" data-drupal-link-system-path="node/244">Press Releases</a>
+            </li>
+                  </ul>
+          </li>
+  </ul>
+
+  </nav>
+<div id="block-dekalb-theme-socialiconsheader" class="block block-block-content block-block-contentf444ef05-44e0-43fc-97d1-2bbb28bc961d">
+  
+    
+      
+      <div class="field field--name-field-social field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">
+  <a
+    href="https://www.facebook.com/ItsInDeKalbGA#"
+    class="icon-text-link"
+          target="_blank" rel="noopener nofollow"
+      >
+    
+            <div class="field field--name-field-icon field--type-entity-reference field--label-hidden field__item"><article class="media media--type-image media--view-mode-default">
+  
+      
+            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/styles/default/public/2025-11/facebook_logo_blue.png.avif?itok=e7YzJXWc" width="29" height="28" alt="A small icon of a blue circle containing a stylized lowercase letter &quot;f&quot; in black, resembling the Facebook logo." class="image-style-default" />
+
+
+</div>
+      
+  </article>
+</div>
+      
+  </a>
+</div>
+              <div class="field__item">
+  <a
+    href="https://x.com/ItsInDeKalb"
+    class="icon-text-link"
+          target="_blank" rel="noopener nofollow"
+      >
+    
+            <div class="field field--name-field-icon field--type-entity-reference field--label-hidden field__item"><article class="media media--type-image media--view-mode-default">
+  
+      
+            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/styles/default/public/2025-11/x_logo_blue.png.avif?itok=682m5KgA" width="29" height="28" alt="Blue circle with a white &quot;X&quot; in the center, representing X (formerly Twitter)." class="image-style-default" />
+
+
+</div>
+      
+  </article>
+</div>
+      
+  </a>
+</div>
+              <div class="field__item">
+  <a
+    href="https://www.instagram.com/ItsInDeKalbGa/"
+    class="icon-text-link"
+          target="_blank" rel="noopener nofollow"
+      >
+    
+            <div class="field field--name-field-icon field--type-entity-reference field--label-hidden field__item"><article class="media media--type-image media--view-mode-default">
+  
+      
+            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/styles/default/public/2025-11/instagram_logo_blue.png.avif?itok=UFZkc5lt" width="29" height="28" alt="A blue circular icon featuring a white outline of a camera, symbolizing the Instagram logo." class="image-style-default" />
+
+
+</div>
+      
+  </article>
+</div>
+      
+  </a>
+</div>
+              <div class="field__item">
+  <a
+    href="https://www.youtube.com/user/DeKalbCountyGov"
+    class="icon-text-link"
+          target="_blank" rel="noopener nofollow"
+      >
+    
+            <div class="field field--name-field-icon field--type-entity-reference field--label-hidden field__item"><article class="media media--type-image media--view-mode-default">
+  
+      
+            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/styles/default/public/2025-11/youtube_logo_blue.png.avif?itok=VFwnlNyn" width="29" height="28" alt="A blue circular icon with a white play symbol in the center, resembling a video play button, representing YouTube." class="image-style-default" />
+
+
+</div>
+      
+  </article>
+</div>
+      
+  </a>
+</div>
+              <div class="field__item">
+  <a
+    href="https://video.ibm.com/channel/dctv-channel-23"
+    class="icon-text-link"
+          target="_blank" rel="noopener nofollow"
+      >
+    
+            <div class="field field--name-field-icon field--type-entity-reference field--label-hidden field__item"><article class="media media--type-image media--view-mode-default">
+  
+      
+            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/styles/default/public/2025-11/ustream_logo_blue.png.avif?itok=nec-Et1w" width="29" height="28" alt="A small blue circular logo, featuring a bold, white letter &quot;U&quot;, representing the Ustream platform." class="image-style-default" />
+
+
+</div>
+      
+  </article>
+</div>
+      
+  </a>
+</div>
+          </div>
+  
+  </div>
+
+  </div>
+
+</header>
+
+<!-- Hero Section (conditional) -->
+  <section class="hero">
+      <picture>
+                  <source srcset="/sites/default/files/styles/hero_desktop/public/2026-04/voter_registration_hero.png.avif?itok=vW1EPhzr 1x, /sites/default/files/styles/hero_large_screen/public/2026-04/voter_registration_hero.png.avif?itok=iBQ6Uwxf 2x" media="all and (min-width: 1920px)" type="image/avif" width="1920" height="300"/>
+              <source srcset="/sites/default/files/styles/hero_desktop/public/2026-04/voter_registration_hero.png.avif?itok=vW1EPhzr 1x, /sites/default/files/styles/hero_large_screen/public/2026-04/voter_registration_hero.png.avif?itok=iBQ6Uwxf 2x" media="all and (min-width: 1200px) and (max-width: 1920px)" type="image/avif" width="1920" height="300"/>
+              <source srcset="/sites/default/files/styles/hero_tablet/public/2026-04/voter_registration_hero.png.avif?itok=c75Ib4AK 1x, /sites/default/files/styles/hero_desktop/public/2026-04/voter_registration_hero.png.avif?itok=vW1EPhzr 2x" media="all and (min-width: 768px) and (max-width: 1200px)" type="image/avif" width="1200" height="188"/>
+              <source srcset="/sites/default/files/styles/hero_mobile/public/2026-04/voter_registration_hero.png.avif?itok=gW2NsES9 1x, /sites/default/files/styles/hero_tablet/public/2026-04/voter_registration_hero.png.avif?itok=c75Ib4AK 2x" media="all and (max-width: 768px)" type="image/avif" width="768" height="120"/>
+                  <img width="1920" height="300" src="/sites/default/files/styles/hero_desktop/public/2026-04/voter_registration_hero.png.avif?itok=vW1EPhzr" alt="Close-up of a hand filling out a voter registration form with a pen. The U.S. flag is partially visible, symbolizing civic duty and patriotism." loading="lazy" />
+
+  </picture>
+
+
+    <!-- Search Icon -->
+    <button id="hero-search-toggle" class="hero-search-toggle" aria-label="Search">
+      <span class="icon-search">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none" focusable="false">
+        <path d="M19.874 19.874L25.178 25.178M12.1139 23.0877C6.05326 23.0877 1.14014 18.1746 1.14014 12.1139C1.14014 6.05326 6.05326 1.14014 12.1139 1.14014C18.1746 1.14014 23.0877 6.05326 23.0877 12.1139C23.0877 18.1746 18.1746 23.0877 12.1139 23.0877Z" stroke="white" stroke-width="2.28027"/>
+        </svg>
+      </span>
+    </button>
+  </section>
+
+
+<!-- Breadcrumbs -->
+
+<!-- Main Content Wrapper -->
+<div class="main-content-wrapper">
+      <aside class="sidebar-left">
+        <div class="region region-sidebar-left">
+    
+
+
+  <nav role="navigation" id="block-dekalb-theme-sidebar" class="block-menu menu--sidebar-menu sidebar-menu">
+          <h2>
+        <a href="/departments/voter-registration-and-elections">Voter Registration &amp; Elections</a>
+      </h2>
+    
+          <ul class="menu">
+                      
+        <li class="menu-item">
+          <div class="menu-item__row">
+            <div class="menu-item__content">
+              <a href="/departments/voter-registration-and-elections/register-to-vote">Register to Vote</a>
+            </div>
+
+                      </div>
+
+                  </li>
+                      
+        <li class="menu-item">
+          <div class="menu-item__row">
+            <div class="menu-item__content">
+              <a href="/departments/voter-registration-and-elections/how-to-vote">How to Vote</a>
+            </div>
+
+                      </div>
+
+                  </li>
+                      
+        <li class="menu-item">
+          <div class="menu-item__row">
+            <div class="menu-item__content">
+              <a href="https://public.dekalbcountyga.gov/ProvisionalSearch/" target="_blank">Provisional Ballot Search</a>
+            </div>
+
+                      </div>
+
+                  </li>
+                      
+        <li class="menu-item">
+          <div class="menu-item__row">
+            <div class="menu-item__content">
+              <a href="/departments/voter-registration-and-elections/election-results">Election Results</a>
+            </div>
+
+                      </div>
+
+                  </li>
+                      
+        <li class="menu-item">
+          <div class="menu-item__row">
+            <div class="menu-item__content">
+              <a href="/departments/voter-registration-and-elections/leadership-board-members-meetings">Leadership, Board Members &amp; Meetings</a>
+            </div>
+
+                      </div>
+
+                  </li>
+                      
+        <li class="menu-item">
+          <div class="menu-item__row">
+            <div class="menu-item__content">
+              <a href="/departments/voter-registration-and-elections/campaign-finance-and-candidate-information">Campaign Finance &amp; Candidate Information</a>
+            </div>
+
+                      </div>
+
+                  </li>
+                      
+        <li class="menu-item">
+          <div class="menu-item__row">
+            <div class="menu-item__content">
+              <a href="/departments/voter-registration-and-elections/poll-officials">Poll Officials</a>
+            </div>
+
+                      </div>
+
+                  </li>
+                      
+        <li class="menu-item">
+          <div class="menu-item__row">
+            <div class="menu-item__content">
+              <a href="/departments/voter-registration-and-elections/get-involved">Get Involved</a>
+            </div>
+
+                      </div>
+
+                  </li>
+                      
+        <li class="menu-item">
+          <div class="menu-item__row">
+            <div class="menu-item__content">
+              <a href="https://dekalbgis.maps.arcgis.com/apps/dashboards/4c790bbc7bca4d748a71d69429904d6c" target="_blank">Wait Times</a>
+            </div>
+
+                      </div>
+
+                  </li>
+                      
+        <li class="menu-item">
+          <div class="menu-item__row">
+            <div class="menu-item__content">
+              <a href="https://mvp.sos.ga.gov/s/" target="_blank">Find Your Polling Location</a>
+            </div>
+
+                      </div>
+
+                  </li>
+                      
+        <li class="menu-item">
+          <div class="menu-item__row">
+            <div class="menu-item__content">
+              <a href="/departments/voter-registration-and-elections/frequently-asked-questions">Frequently Asked Questions</a>
+            </div>
+
+                      </div>
+
+                  </li>
+          </ul>
+  
+  </nav>
+
+
+
+
+<nav aria-labelledby="block-dekalb-theme-quicklinks-menu" id="block-dekalb-theme-quicklinks" class="block block-menu navigation menu--quick-links">
+      
+  <h2 id="block-dekalb-theme-quicklinks-menu">Quick Links</h2>
+  
+
+        
+              <ul class="menu">
+                    <li class="menu-item">
+        <a href="https://dekalbcountyga.gov/residents/bill-pay">Bill Pay</a>
+              </li>
+                <li class="menu-item">
+        <a href="https://dekalbcountyga.granicus.com/boards/w/968f9572ef2211df" target="_blank">Boards &amp; Commissions</a>
+              </li>
+                <li class="menu-item">
+        <a href="/residents/report-311" data-drupal-link-system-path="node/214">Customer Support</a>
+              </li>
+                <li class="menu-item">
+        <a href="/department-directory" data-drupal-link-system-path="node/291">Directory</a>
+              </li>
+                <li class="menu-item">
+        <a href="/events/events-calendar" data-drupal-link-system-path="node/243">Events Calendar</a>
+              </li>
+                <li class="menu-item">
+        <a href="/departments/planning-and-sustainability/business-and-alcohol-license" data-drupal-link-system-path="node/112">Licensing &amp; Permits</a>
+              </li>
+                <li class="menu-item">
+        <a href="/departments/planning-and-sustainability" data-drupal-link-system-path="node/111">Planning &amp; Sustainability</a>
+              </li>
+                <li class="menu-item">
+        <a href="/departments/public-works/solid-waste-management" data-drupal-link-system-path="node/166">Trash</a>
+              </li>
+        </ul>
+  
+
+
+  </nav>
+
+  </div>
+
+    </aside>
+  
+  <main id="main-content" class="content" tabindex="-1">
+            <div class="region region-page-title">
+    <div id="block-dekalb-theme-page-title" class="block block-core block-page-title-block">
+  
+    
+      
+  <h1 class="page-title"><span class="field field--name-title field--type-string field--label-hidden">Voter Registration &amp; Elections</span>
+</h1>
+
+
+  </div>
+
+  </div>
+
+          <div class="region region-content">
+    <div id="block-dekalb-theme-content" class="block block-system block-system-main-block">
+  
+    
+      
+<article class="node node--type-page node--view-mode-full">
+
+  
+    
+
+  
+  <div class="node__content">
+    
+      <div class="field field--name-field-content field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--media-text-2-column paragraph--view-mode--default">
+          
+            <div class="field field--name-field-media field--type-entity-reference field--label-hidden field__item"><article class="media media--type-image media--view-mode-default">
+  
+      
+            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/styles/default/public/2026-11/800Dek-precinct_0.png.avif?itok=JhpfqqaD" width="800" height="432" alt="A black banner for DeKalb County Georgia Voter Registration and Elections with text and informational flyers attached." class="image-style-default" />
+
+
+</div>
+      
+  </article>
+</div>
+      
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><p><strong class="subtitle_large">Welcome to the DeKalb County Voter Registration and Elections page.</strong></p><p>Here, residents can find essential information on registering to vote, checking or updating voter registration, understanding election procedures, and accessing resources for upcoming local, state, and federal elections. This page serves as your central guide to participating in the democratic process in DeKalb County.</p><p><a class="button" href="/sites/default/files/2026-10/KnowBefore2%208.5x11.png" data-entity-substitution="media" rel="nofollow">Know Before You Vote</a></p></div>
+      
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-section paragraph--view-mode--default">
+          
+            <div class="field field--name-field-heading field--type-string field--label-hidden field__item">Current Elections</div>
+      
+      <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--grid-layout paragraph--view-mode--default">
+          
+            <div class="field field--name-field-grid-style field--type-entity-reference-revisions field--label-hidden field__item">  <div class="paragraph paragraph--type--_-column-section-50-50 paragraph--view-mode--default">
+          
+      <div class="field field--name-field-column-1 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><p><strong class="subtitle_large">General Election/ Special Election&nbsp;</strong></p><p><strong class="bold_blue">Election Date:</strong> November 3rd<br><strong class="bold_blue">Early voting:</strong> October 13th-October 30th<br><strong class="bold_blue">First Day to Request Absentee Ballot:</strong> August 17th<br><strong class="bold_blue">Last Day to Request Absentee Ballot:</strong> October 23rd<br><strong class="bold_blue">Registration Deadline: </strong>October 5th</p><p><a href="/sites/default/files/2026-09/AIP3%20Nov_2026_%20EV8.5x11.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">Early Voting Locations</strong></a> | <a href="https://dekalbgis.maps.arcgis.com/apps/dashboards/4c790bbc7bca4d748a71d69429904d6c#" rel="nofollow">Check Wait Times</a></p><ul><li><a href="/sites/default/files/2026-10/AIP3%20Nov%20EV8.5x11-es-US.pdf" data-entity-substitution="media" rel="nofollow">Lugares de Votación Anticipada</a></li><li><a href="/sites/default/files/2026-10/AIP3%20Nov%20EV8.5x11-ko.pdf" data-entity-substitution="media" rel="nofollow">사전투표&nbsp;장소</a></li><li><a data-entity-uuid="87ef8bc1-1fb4-474f-964e-aa15f9cdd8b3" rel="nofollow">የቅድመ&nbsp;ምርጫ&nbsp;ድምፅ&nbsp;መስጫ&nbsp;ቦታዎች</a></li></ul><p><a href="https://dekalbcountyga.gov/sites/default/files/2026-09/Printable%20Polling%20Place%20List%2011-03.pdf" rel="nofollow">Election Day Locations</a></p><p><a href="https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf" rel="nofollow"><strong class="bold_blue">Sample Ballot(s)</strong></a>&nbsp;<br><a href="/sites/default/files/2026-10/NOV_2026%20_GENERAL.SPECIAL%20Sample-booklet-es-US.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">Boleta de Muestra</strong></a><strong class="bold_blue">&nbsp;</strong><br><a href="/sites/default/files/2026-10/NOV_2026%20_GENERAL.SPECIAL%20Sample-booklet-ko.pdf" data-entity-substitution="media" rel="nofollow"><a data-entity-uuid="5d1abd63-d284-434e-9bea-515637bef1a9" rel="nofollow"><strong class="bold_blue">견본 투표용지</strong></a></a><br><a href="/sites/default/files/2026-10/NOV_2026%20_GENERAL.SPECIAL%20Sample-booklet-am.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">የናሙና ድምጽ መስጫ</strong></a></p><p><strong class="bold_blue">To view your precinct-specific sample ballot, click My Voter Page (MVP) and follow the steps below:&nbsp;</strong></p><ol><li><a href="https://mvp.sos.ga.gov/s/" target="_blank" rel="nofollow">Login to the My Voter Page</a></li><li>Click on View My Sample Ballot</li><li>Select ballot choice</li></ol></div>
+      
+      </div>
+</div>
+          </div>
+  
+      <div class="field field--name-field-column-2 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><p><strong class="subtitle_large">General Election/ Special Election Runoff</strong></p><p><strong class="bold_blue">Election Date:</strong> December 1st<br><strong class="bold_blue">Early voting:</strong> TBD<br><strong class="bold_blue">Last Day to Request Absentee Ballot:</strong> October 20th<br><strong class="bold_blue">Registration Deadline: </strong>October 5th<br>&nbsp;</p><p><strong class="bold_blue">Early Voting Locations: </strong><em>Available soon</em></p><p><strong class="bold_blue">Sample Ballot(s): </strong><em>Available soon</em><br><strong class="bold_blue">Boleta de Muestra</strong><br><strong class="bold_blue">견본 투표용지</strong><br><strong class="bold_blue">የናሙና ድምጽ መስጫ</strong></p><p><strong class="bold_blue">To view your precinct-specific sample ballot, click My Voter Page (MVP) and follow the steps below:&nbsp;</strong></p><ol><li><a href="https://mvp.sos.ga.gov/s/" target="_blank" rel="nofollow">Login to the My Voter Page</a></li><li>Click on View My Sample Ballot</li><li>Select ballot choice</li></ol></div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--grid-layout paragraph--view-mode--default">
+          
+            <div class="field field--name-field-grid-style field--type-entity-reference-revisions field--label-hidden field__item">  <div class="paragraph paragraph--type--_-column-section-50-50 paragraph--view-mode--default">
+          
+      <div class="field field--name-field-column-1 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><article class="media media--type-video media--view-mode-default">
+  
+      
+  <div class="field field--name-field-media-video-file field--type-file field--label-visually_hidden">
+    <div class="field__label visually-hidden">Video file</div>
+              <div class="field__item">
+<video controls="controls" width="640" height="480">
+      <source src="/sites/default/files/2026-10/Early%20Voting%20Reel.mp4" type="video/mp4">
+  </video>
+</div>
+          </div>
+
+  </article>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+      <div class="field field--name-field-column-2 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><article class="media media--type-video media--view-mode-default">
+  
+      
+  <div class="field field--name-field-media-video-file field--type-file field--label-visually_hidden">
+    <div class="field__label visually-hidden">Video file</div>
+              <div class="field__item">
+<video controls="controls" width="640" height="480">
+      <source src="/sites/default/files/2026-10/VRE%20Numbered%20List%20PSA.mp4" type="video/mp4">
+  </video>
+</div>
+          </div>
+
+  </article>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+      
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--grey-box paragraph--view-mode--default">
+          
+            <div class="field field--name-field-heading field--type-string field--label-hidden field__item">Mission</div>
+      
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><p class="text-align-center">The mission of the DeKalb County Voter Registration and Elections (VRE) is to provide the residents with quality voter registration and election services, information and education that enable them to exercise their right to vote and have confidence that the elections are fair, impartial, and accurate.</p><hr><p>&nbsp;</p></div>
+      
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-section paragraph--view-mode--default">
+          
+            <div class="field field--name-field-heading field--type-string field--label-hidden field__item">Goals</div>
+      
+      <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><p>DeKalb Voter Registration and Elections (VRE) is committed to strengthening public trust and operational excellence through a strategic focus on accuracy, accessibility, transparency and accountability. To that end, VRE works throughout the year to enable electors to be super voters by maintaining accurate and compliant voter registration records, delivering secure, accessible, and transparent elections, enhancing community engagement through proactive communication and education, and advancing organizational excellence through collaboration, innovation, and a skilled and accountable workforce.</p></div>
+      
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--grid-layout paragraph--view-mode--default">
+          
+            <div class="field field--name-field-grid-style field--type-entity-reference-revisions field--label-hidden field__item">  <div class="paragraph paragraph--type--_-column-section-50-50 paragraph--view-mode--default">
+          
+      <div class="field field--name-field-column-1 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><p><strong class="bold_blue">Goal 1:</strong> Strengthen Voter Registration Integrity<br><strong class="bold_blue">Goal 2:</strong> Deliver Secure, Transparent, &nbsp;Accessible and Accurate Elections</p></div>
+      
+      </div>
+</div>
+          </div>
+  
+      <div class="field field--name-field-column-2 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><p><strong class="bold_blue">Goal 3:</strong> Enhance Engagement and Public Trust<br><strong class="bold_blue">Goal 4:</strong> Advance Organizational Excellence</p></div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-section paragraph--view-mode--default">
+          
+            <div class="field field--name-field-heading field--type-string field--label-hidden field__item">Public Notices/News</div>
+      
+      <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--grid-layout paragraph--view-mode--default">
+          
+            <div class="field field--name-field-grid-style field--type-entity-reference-revisions field--label-hidden field__item">  <div class="paragraph paragraph--type--_-column-section-50-50 paragraph--view-mode--default">
+          
+      <div class="field field--name-field-column-1 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><p><strong class="subtitle">Public Notices</strong></p><ul type="disc"><li><strong class="bold_blue">December 1, 2026: Special Election Runoff Notices:</strong><ul><li><a href="/sites/default/files/2026-10/2026_12-01_LA%20Notice%20for%20General-Special%20Runoff%20Election_FINAL.pdf" data-entity-substitution="media" rel="nofollow">Notice of Logic &amp; Accuracy Testing</a></li><li><a href="/sites/default/files/2026-10/2026_12-01_General-Special%20Election_Computation%20and%20Canvassing%20Notice_FINAL.pdf" data-entity-substitution="media" rel="nofollow">Computation &amp; Canvassing</a></li><li><a href="/sites/default/files/2026-10/2026_12-01_General-Special%20Runoff%20Election_Intent%20to%20Tabulate%20Notice_FINAL.pdf" data-entity-substitution="media" rel="nofollow">Intent to Tabulate</a></li><li><a href="/sites/default/files/2026-10/2026_12-01_General-Special%20Election_Early%20Processing%20Notice_FINAL.pdf" data-entity-substitution="media" rel="nofollow">Early Processing Notice</a></li><li><a href="/sites/default/files/2026-10/2026_12-01_General-Special%20Runoff%20Election_NOTICE%20OF%20RISK-LIMITING%20AUDIT_FINAL.pdf" data-entity-substitution="media" rel="nofollow">Notice of Risk-Limiting Audit</a></li></ul></li><li><strong class="bold_blue">November 3, 2026: General/Special Election Notices:</strong><ul><li><a href="/sites/default/files/2026-09/2026_11-03_General_Election_LA_Notice-FINAL.pdf" data-entity-substitution="media" rel="nofollow">Notice of Logic &amp; Accuracy Testing</a></li><li><a href="/sites/default/files/2026-10/2026_11-03_General-Special%20Election_Computation%20and%20Canvassing%20Notice_FINAL.pdf" data-entity-substitution="media" rel="nofollow">Computation &amp; Canvassing</a></li><li><a href="/sites/default/files/2026-10/2026_11-03_General-Special%20Election%20Intent%20to%20Tabulate%20Notice_FINAL.pdf" data-entity-substitution="media" rel="nofollow">Intent to Tabulate</a></li><li><a href="/sites/default/files/2026-10/2026_11-03_General-Special%20Election_Early%20Processing%20Notice_FINAL.pdf" data-entity-substitution="media" rel="nofollow">Early Processing Notice</a></li><li><a href="/sites/default/files/2026-10/2026_11-03_General-Special%20Election_NOTICE%20OF%20RISK-LIMITING%20AUDIT_FINAL.pdf" data-entity-substitution="media" rel="nofollow">Notice of Risk-Limiting Audit</a></li><li><a href="/sites/default/files/2026-08/2026_Nov-03_General%20Election_Polling%20Location%20Change_Combo.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">Polling Place Change Notice(s)</strong></a></li><li><a href="https://dekalbcountyga.gov/sites/default/files/2026-09/Notice%20of%20Ballot%20Proof%20Availability.pdf" rel="nofollow">Notice of Ballot Proof Availability</a></li><li><a href="/sites/default/files/2026-11/2026%20Call%20DeKalb%20County%20School%20SPLOST-FINAL.pdf" data-entity-substitution="media" rel="nofollow">Call for Election - DeKalb County School District, Atlanta Independent School System, and City of Decatur School System</a></li><li><a href="/sites/default/files/2026-11/2026%20SB%20622%20Call%20Tucker%20Referendum-FINAL.pdf" data-entity-substitution="media" rel="nofollow">Call for Election - City of Tucker Annexation&nbsp;</a></li><li><a href="/sites/default/files/2026-11/2026%20Constitutional%20Summaries%20booklet%20FINAL.pdf" data-entity-substitution="media" rel="nofollow">Statewide Proposed Constitutional Amendments and Summaries</a></li></ul></li><li><strong class="bold_blue">August 25, 2026: Special Election Runoff Notices:</strong><ul><li><a href="/sites/default/files/2026-07/2026_08-25_Special%20Election%20Runoff_LA%20Testing_FINAL%20%28003%29.pdf" data-entity-substitution="media" rel="nofollow">Notice of Logic &amp; Accuracy Testing</a></li><li><a href="/sites/default/files/2026-07/2026_08-25_Special%20Election%20Runoff_Computation%20and%20Canvassing%20Notice_FINAL.pdf" data-entity-substitution="media" rel="nofollow">Computation &amp; Canvassing</a></li><li><a href="/sites/default/files/2026-07/2026_08-25_Special%20Election%20Runoff_Intent%20to%20Tabulate%20Notice_FINAL.pdf" data-entity-substitution="media" rel="nofollow">Intent to Tabulate</a></li><li><a href="/sites/default/files/2026-07/2026_08-25_Special%20Election%20Runoff_Early%20Processing%20Notice_FINAL.pdf" data-entity-substitution="media" rel="nofollow">Early Processing Notice</a></li><li><a href="https://dekalbcountyga.gov/sites/default/files/2026-08/Notice_Aug%2025%202026%20RLA_083126_FINAL.pdf" rel="nofollow">Notice of Risk-Limiting Audit</a></li></ul></li><li><strong class="bold_blue">June 10, 2026: </strong><a href="/sites/default/files/2026-06/2026_General%20Primary%20%26%20Nonpartisan%20Reco...ice_PSC%20District%203_FINAL_06102026.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">Notice of Recount</strong></a></li><li><strong class="bold_blue">July 28, 2026: Special Election Notices:</strong><ul><li><a href="/sites/default/files/2026-06/2026_07-28_Special%20Election_L%26A%20Notice_DRAFT_05222026.pdf" data-entity-substitution="media" rel="nofollow">Notice of Logic &amp; Accuracy Testing</a></li><li><a href="/sites/default/files/2026-07/2026_07-28_Special%20Election_Computation%20and%20Canvassing%20Notice_FINAL_06252026.pdf" data-entity-substitution="media" rel="nofollow">Computation &amp; Canvassing</a></li><li><a href="/sites/default/files/2026-07/2026_07-28_Special%20Election%20Intent%20to%20Tabulate%20Notice_FINAL_06252026.pdf" data-entity-substitution="media" rel="nofollow">Intent to Tabulate</a></li><li><a href="/sites/default/files/2026-07/2026_07-28_Special%20Election_Early%20Processing%20Notice_FINAL_06252026.pdf" data-entity-substitution="media" rel="nofollow">Early Processing Notice&nbsp;</a></li></ul></li><li><strong class="bold_blue">June 1, 2026: </strong><a href="/sites/default/files/2026-06/Sample%20Notice%20of%20Ballot%20Proof%20Availability_07.28.26%20Special%20Election_FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">Notice of Ballot Proof Availability</strong></a></li><li><strong class="bold_blue">June 16, 2026: &nbsp;General Primary and Nonpartisan Election Runoff Notices:</strong><ul><li><a href="/sites/default/files/2026-05/2026_06-16_General%20Primary-Nonpartisan%20Runoff%20Election_LA_FINAL_05262026.pdf" data-entity-substitution="media" rel="nofollow">Notice of Logic &amp; Accuracy Testing</a></li><li><a href="/sites/default/files/2026-05/2026_06-16_General%20Primary-Nonpartisan%20Election%20Runoff_Computation%20and%20Canvassing%20Notice_FINAL_03172026.pdf" data-entity-substitution="media" rel="nofollow">Computation &amp; Canvassing</a></li><li><a href="/sites/default/files/2026-05/2026_06-16_General%20Primary-Nonpartisan%20Runoff%20Election_Intent%20to%20Tabulate%20Notice_FINAL_03172026.pdf" data-entity-substitution="media" rel="nofollow">Intent to Tabulate</a></li><li><a href="/sites/default/files/2026-05/2026_06-16_General%20Primary-Nonpartisan%20Runoff%20Election_Early%20Processing%20Notice_FINAL_03172026.pdf" data-entity-substitution="media" rel="nofollow">Early Processing Notice&nbsp;</a></li><li><a href="/sites/default/files/2026-06/DeKalb%20VRE%20RLA%20Notice%20-%20June%20Runoff.pdf" data-entity-substitution="media" rel="nofollow">Risk Limiting Audit</a></li></ul></li><li><strong class="bold_blue">March 30, 2026:</strong> <a href="/sites/default/files/2026-04/Notice%20of%20Ballot%20Proof%20Availability%2003-30.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Notice of Ballot Proof Availability</a></li><li><strong class="bold_blue">March 30, 2026 General Primary and Nonpartisan Election Notices:</strong><ul><li><a href="/sites/default/files/2026-04/2026_05-19_L%26A_FINAL_03132026.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Notice of Logic &amp; Accuracy Testing</a></li><li><a href="/sites/default/files/2026-04/2026_05-19_Computation%20and%20Canvassing%20Notice_FINAL_03172026.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Computation &amp; Canvassing</a></li><li><a href="/sites/default/files/2026-04/2026_05-19_Intent%20to%20Tabulate%20Early%20Notice_FINAL_03172026.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Intent to Tabulate</a></li><li><a href="https://dekalbcountyga.gov/sites/default/files/2026-04/2026_05_19_Early_Processing.pdf" rel="nofollow">Early Processing Notice</a> (updated 4/20)</li><li><a href="/sites/default/files/2026-04/2026_05-19_Risk%20Limiting%20Audit_FINAL_03132026.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Risk Limiting Audit</a></li></ul></li><li><strong class="bold_blue">March 19, 2026:</strong> <a href="/sites/default/files/2026-04/2026_04-07_LA%20Testing%20Notice%20for%20Special%20Runoff%20Election.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Notice of Logic &amp; Accuracy Testing</a></li><li><strong class="bold_blue">February 16, 2026:</strong> <a href="/sites/default/files/2026-04/2026_May%2019%20General%20Primary_Polling%20Location%20Changes_FINAL_02162026.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Notice of Proposed Polling Place Changes-May General Primary Election</a></li><li><strong class="bold_blue">February 2, 2026:</strong> <a href="/sites/default/files/2026-04/Notice%20of%20Ballot%20Proof%20Availability%2003-10.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Notice of Ballot Proof Availability</a></li><li><strong class="bold_blue">January 29, 2026 HD 94 Special Election:</strong><ul><li><a href="/sites/default/files/2026-04/2026_03-10_LA%20Testing%20Notice%20for%20Special%20Election_DRAFT_01202026.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Notice of Logic &amp; Accuracy Testing</a></li><li><a href="/sites/default/files/2026-04/2026_03-10_Special%20Election_Computation%20and%20Canvassing%20Notice_FINAL_01292026.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Computation &amp; Canvassing</a></li><li><a href="/sites/default/files/2026-04/2026_03-10_Special%20Election%20Intent%20to%20Tabulate%20Notice_FINAL_01292026.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Intent to Tabulate</a></li><li><a href="/sites/default/files/2026-04/2026_03-10_Special%20Election_Early%20Processing%20Notice_FINAL_01292026.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Early Processing Notice</a></li></ul></li></ul></div>
+      
+      </div>
+</div>
+          </div>
+  
+      <div class="field field--name-field-column-2 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><p><strong class="subtitle">Press Releases</strong></p><ul><li><strong class="bold_blue">October 30, 2026:</strong> <a href="/sites/default/files/2026-10/10.30.26%20DeKalb%20VRE%20Press%20Release.pdf" data-entity-substitution="media" rel="nofollow">DeKalb VRE Reminds Voters to Make a Plan for November 3 Election Day</a></li><li><strong class="bold_blue">October 6, 2026</strong>: <a href="/sites/default/files/2026-10/10.6.26%20PR_DeKalb%20VRE%20Hosts%20Series%20of%20Voter%20Town%20Hall%20Meetings_FINAL%20%28002%29.pdf" data-entity-substitution="media" rel="nofollow">Dekalb VRE Hosts Series of Voter Town Hall Meetings</a></li><li><strong class="bold_blue">October 1, 2026: </strong><a href="/sites/default/files/2026-09/BRE%20October%20Regular_Called%20Meeting_10_08_2026FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong>DeKalb&nbsp;County Board of&nbsp;Registration&nbsp;and&nbsp;Elections&nbsp;Holds Scheduled Meeting</strong></a></li><li><strong class="bold_blue">September 16, 2026: </strong><a href="/sites/default/files/2026-09/Press%20Release%20-%20BRE%20Early%20Voting%20Locations%20Expansion_09162026_FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">DeKalb BRE Expands Early Voting Access to 22 Locations</strong></a><br><a href="/sites/default/files/2026-09/Press%20Release%20-%20BRE%20Early%20Voting%20Locations%20Expansion_09162026_FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">for November General Election</strong></a></li><li><strong class="bold_blue">August 25, 2026: </strong><a href="/sites/default/files/2026-08/Press%20Release%20-%20VRE%20Announces%20Unofficial%20and%20Incomplete%20Results%20for%20Aug%2025%20Special%20Election%20Runoff_082426_FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">Unofficial/Incomplete Results for U.S. Congressional District 13 Special Election Runoff</strong></a></li><li><strong class="bold_blue">August 14, 2026:</strong><a href="/sites/default/files/2026-08/8.14.26%20DeKalb%20VRE%20Announces%20Registered%20and%20Ready%20Block%20Party_FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue"> VRE to Host “Registered and Ready” Block Party</strong></a></li><li><strong class="bold_blue">August 10, 2026: </strong><a href="/sites/default/files/2026-08/Press%20Release%20-%20VRE%20Special%20Election%20Congressional%20District%2013%20Reminders_FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">Early Voting &amp; Election Day Locations for Congressional District 13 Special Election Runoff</strong></a></li><li><strong class="bold_blue">July 28, 2026:&nbsp;</strong><a href="/sites/default/files/2026-08/Press%20Release%20-%20VRE%20Announces%20Unofficial%20and%20Incomplete%20Results%20for%20July%2028%20Special%20Election_07272026_FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue"> &nbsp;Unofficial &amp; Incomplete Results for July 28 Special Election</strong></a></li><li><strong class="bold_blue">July 22, 2026: </strong><a href="/sites/default/files/2026-07/Press%20Release%20-%20VRE%20Special%20Election%20Congressional%20District%2013%20Reminders_FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">DeKalb VRE Reminds Voters of CD13 Special Election, July 28&nbsp;</strong></a></li><li><strong class="bold_blue">July 14, 2026: </strong><a href="/sites/default/files/2026-07/DeKalb%20County%20Encourages%20Voters%20to%20Verify%20Registration%20Information%20Through%20Official%20Election%20Sources%20Remain%20Mindful%20of%20Third-Party%20Mailings.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">DeKalb County Encourages Voters to Verify Registration and Remain Mindful of Third-Party Mailings&nbsp;</strong></a></li><li><strong class="bold_blue">June 16, 2026: </strong><a href="/sites/default/files/2026-06/Press%20Release%20-%20VRE%20Announces%20Unofficial%20and%20Incomplete%20Results%20for%20June%2016%20Runoff_06162026_FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong>Unofficial &amp; Incomplete June 16 Primary Runoff Election Results</strong></a></li><li><strong class="bold_blue">June 12, 2026: </strong><a href="/sites/default/files/2026-06/Press%20Release%20-%20VRE%20June%2016%20Election%20Reminders_06122026_FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong>Reminds Voters to Make a Plan for June 16 Primary Election Runoff</strong></a></li><li><strong class="bold_blue">May 27, 2026:</strong><a href="/sites/default/files/2026-06/Press%20Release%20-%20DeKalb%20BRE%20Certifies%20Primary%20Election%20and%20Sets%20Dates%20for%20June%20Runoff%20Early%20Voting-FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue"> </strong><strong>DeKalb County BRE Certifies May 19 Primary Election, Announces June 16 Runoff Details</strong></a></li><li><strong class="bold_blue">May 20, 2026:&nbsp;</strong><a href="/sites/default/files/2026-06/Press%20Release%20DeKalb%20VRE_05192026_Primary%20Results_FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong> Unofficial &amp; Incomplete Results for the May 19 General Primary Election</strong></a></li><li><strong class="bold_blue">April 20, 2026: &nbsp;</strong><a href="/sites/default/files/2026-06/Press%20Release%20-%20VRE%204.19.26%20Key%20Primary%20Dates%20Reminders%20DeKalb%20VRE_FINAL.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">Reminder to Residents: Deadline to Register for May 19 Primary Election</strong></a></li><li><strong class="bold_blue">April 7, 2026:&nbsp;</strong><a href="/news/2021-03-10/dekalb-voter-registration-and-elections-announces-unofficial-results-georgia-house" data-entity-substitution="canonical" rel="nofollow"><strong class="bold_blue"> Unofficial &amp; Incomplete Results for Georgia House District 94 Special Election Runoff</strong></a></li><li><strong class="bold_blue">March 10, 2026:</strong> <a href="/sites/default/files/2026-04/Press%20Release%20-%20VRE%20Announces%20Unofficial%20and%20Incomplete%20Results%20for%20Georgia%20House%20District%2094%20Special%20Election.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">Unofficial &amp; Incomplete Results for Georgia House District 94 Special Election</a></li><li><strong class="bold_blue">February 2, 2026:</strong> <a href="/sites/default/files/2026-04/Press%20Release%20-%20VRE%20Candidate%20Workshop_020226_FINAL.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">To Host Candidate Workshop for Individuals Considering Public Office</a></li><li><strong class="bold_blue">February 2, 2026:</strong> <a href="/sites/default/files/2026-04/Press%20Release%20-%20VRE%20Deputy%20Registrar%20and%20Key%20Dates_123025-FINAL.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">2026 Deputy Registrar Training Schedule, Key Election Dates</a></li><li><strong class="bold_blue">January 30, 2026:</strong> <a href="/sites/default/files/2026-04/Press%20Release%20-%20VRE%20HD94%20Special%20Election%20Updates%203.10.2026_01302026_FINAL.pdf" target="_blank" data-entity-substitution="media" rel="nofollow">DeKalb County Voter Registration &amp; Elections Prepares for Georgia House District 94 Special Election</a></li></ul></div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-section paragraph--view-mode--default">
+          
+            <div class="field field--name-field-heading field--type-string field--label-hidden field__item">Quick Links</div>
+      
+      <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--grid-layout paragraph--view-mode--default">
+          
+            <div class="field field--name-field-grid-style field--type-entity-reference-revisions field--label-hidden field__item">  <div class="paragraph paragraph--type--_-column-section-50-50 paragraph--view-mode--default">
+          
+      <div class="field field--name-field-column-1 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><ul><li><a href="https://mvp.sos.ga.gov/s/olvr-home" target="_blank" rel="nofollow"><strong class="bold_blue">Register to Vote</strong></a></li><li><a href="https://www.mvp.sos.ga.gov/MVP/mvp.do" target="_blank" rel="nofollow"><strong class="bold_blue">Check Registration Status</strong></a></li><li><a href="https://dds.georgia.gov/voter" target="_blank" rel="nofollow"><strong class="bold_blue">Voter ID</strong></a></li><li><a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank" rel="nofollow"><strong class="bold_blue">My Voter Page</strong></a></li></ul></div>
+      
+      </div>
+</div>
+          </div>
+  
+      <div class="field field--name-field-column-2 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><ul><li><a href="https://mvp.sos.ga.gov/s/" target="_blank" rel="nofollow"><strong class="bold_blue">Find Your Polling Location</strong></a></li><li><a href="https://sos.ga.gov/voter-resources" target="_blank" rel="nofollow"><strong class="bold_blue">Vote by Mail/Absentee</strong></a></li><li><a href="/sites/default/files/2026-08/ELECTED%20OFFICIALS%20revised%20%208.26.2026.pdf" data-entity-substitution="media" rel="nofollow"><strong class="bold_blue">Elected Officials</strong></a></li><li><a href="https://cancelmyregistration.sos.ga.gov/s/" rel="nofollow"><strong class="bold_blue">Voter Registration Cancellation&nbsp;</strong></a></li></ul></div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-section paragraph--view-mode--default">
+          
+            <div class="field field--name-field-heading field--type-string field--label-hidden field__item">Additional Resources</div>
+      
+      <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--grid-layout paragraph--view-mode--default">
+          
+            <div class="field field--name-field-grid-style field--type-entity-reference-revisions field--label-hidden field__item">  <div class="paragraph paragraph--type--_-column-section-50-50 paragraph--view-mode--default">
+          
+      <div class="field field--name-field-column-1 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><ul><li><a href="https://sos.ga.gov/" target="_blank" rel="nofollow"><strong class="bold_blue">Georgia Secretary of State Elections Division&nbsp;</strong></a></li><li><a href="https://dekalbgis.maps.arcgis.com/apps/instant/lookup/index.html?appid=807b4f3a22e64ba080b3d4bd29ec04df" target="_blank" rel="nofollow"><strong class="bold_blue">My Elected Representative</strong></a></li><li><a href="https://dekalbcountyga.easyvotecampaignfinance.com/" target="_blank" rel="nofollow"><strong class="bold_blue">Campaign Finance Reporting System</strong></a></li><li><a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank" rel="nofollow"><strong class="bold_blue">My Voter Page</strong></a></li></ul></div>
+      
+      </div>
+</div>
+          </div>
+  
+      <div class="field field--name-field-column-2 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><ul><li><a href="https://dekalbgis.maps.arcgis.com/apps/instant/lookup/index.html?appid=807b4f3a22e64ba080b3d4bd29ec04df" target="_blank" rel="nofollow"><strong class="bold_blue">District Maps</strong></a></li><li><a href="https://sos.ga.gov/news/division/31" target="_blank" rel="nofollow"><strong class="bold_blue">Press Releases &amp; Public Notices</strong></a></li><li><a href="https://public.dekalbcountyga.gov/ProvisionalSearch/" target="_blank" rel="nofollow"><strong class="bold_blue">Provisional Resources</strong></a></li></ul></div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-section paragraph--view-mode--default">
+          
+            <div class="field field--name-field-heading field--type-string field--label-hidden field__item">Maps</div>
+      
+      <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--grid-layout paragraph--view-mode--default">
+          
+            <div class="field field--name-field-grid-style field--type-entity-reference-revisions field--label-hidden field__item">  <div class="paragraph paragraph--type--_-column-section-50-50 paragraph--view-mode--default">
+          
+      <div class="field field--name-field-column-1 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><ul><li><a href="/sites/default/files/2026-01/20250509_VotingPrecincts_0.pdf" data-entity-substitution="media" target="_blank" rel="nofollow"><strong class="bold_blue">Precincts</strong></a></li><li><a href="/sites/default/files/2026-01/20250509_USCongress_0.pdf" data-entity-substitution="media" target="_blank" rel="nofollow"><strong class="bold_blue">Congressional Districts</strong></a></li><li><a href="/sites/default/files/2026-01/20250509_GASenateDistrict_0.pdf" data-entity-substitution="media" target="_blank" rel="nofollow"><strong class="bold_blue">Georgia Senate Districts</strong></a></li><li><a href="/sites/default/files/2026-01/20250509_GAHouseDistrict.pdf" data-entity-substitution="media" target="_blank" rel="nofollow"><strong class="bold_blue">Georgia House Districts</strong></a></li></ul></div>
+      
+      </div>
+</div>
+          </div>
+  
+      <div class="field field--name-field-column-2 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><ul><li><a href="/sites/default/files/2026-01/20250509_Commissioner.pdf" data-entity-substitution="media" target="_blank" rel="nofollow"><strong class="bold_blue">Commission Districts</strong></a></li><li><a href="/sites/default/files/2026-01/20250509_SuperCommissioner.pdf" data-entity-substitution="media" target="_blank" rel="nofollow"><strong class="bold_blue">Super Commission Districts</strong></a></li><li><a href="/sites/default/files/2026-01/20250509_SchoolBoard.pdf" data-entity-substitution="media" target="_blank" rel="nofollow"><strong class="bold_blue">Board of Education Districts</strong></a></li></ul></div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-section paragraph--view-mode--default">
+          
+            <div class="field field--name-field-heading field--type-string field--label-hidden field__item">Follow Us</div>
+      
+      <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><ul><li><a href="/departments/voter-registration-and-elections/forms/stakeholder-voter-email-database" data-entity-substitution="canonical" rel="nofollow"><strong class="bold_blue">Join Our Mailing List</strong></a></li><li><a href="https://www.facebook.com/DeKalbVotes" target="_blank" rel="nofollow"><strong class="bold_blue">Facebook</strong></a></li><li><a href="https://x.com/DeKalbVotes/" target="_blank" rel="nofollow"><strong class="bold_blue">X</strong></a></li></ul></div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-section paragraph--view-mode--default">
+          
+            <div class="field field--name-field-heading field--type-string field--label-hidden field__item">Contact &amp; Office Information</div>
+      
+      <div class="field field--name-field-components field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--grid-layout paragraph--view-mode--default">
+          
+            <div class="field field--name-field-grid-style field--type-entity-reference-revisions field--label-hidden field__item">  <div class="paragraph paragraph--type--_-column-section-50-50 paragraph--view-mode--default">
+          
+      <div class="field field--name-field-column-1 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><p><strong class="bold_blue">DeKalb County Voter Registration &amp; Elections </strong><br>4380 Memorial Drive, Suite 300<br>Decatur, GA 30032</p><p><strong class="bold_blue">Phone:</strong> <a href="tel:4042984020" rel="nofollow">404-298-4020</a></p><p><strong class="bold_blue">Fax:</strong> <a href="tel:4042984038" rel="nofollow">404-298-4038</a></p></div>
+      
+      </div>
+</div>
+          </div>
+  
+      <div class="field field--name-field-column-2 field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">  <div class="paragraph paragraph--type--basic-block paragraph--view-mode--default">
+          
+            <div class="clearfix text-formatted field field--name-field-text-block field--type-text-long field--label-hidden field__item"><p><strong class="bold_blue">Email:</strong> <a href="mailto:voterreg@dekalbcountyga.gov" rel="nofollow">voterreg@dekalbcountyga.gov</a></p><p><strong class="bold_blue">Office Hours:</strong> Monday-Friday, 8:00 AM-4:30 PM</p><p><strong class="bold_blue">Location: </strong>Memorial Drive at I-285, across from DeKalb County Jail, co-located with Tax Commissioner</p><p><em>Hours may be extended during an active election including Election Day and Early Voting which includes some evening and weekend hours.</em></p><p><em>The office is closed on weekends and holidays when voting is not in progress.</em></p></div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+      
+      </div>
+</div>
+          </div>
+  
+      </div>
+</div>
+          </div>
+  
+  </div>
+
+</article>
+
+  </div>
+
+  </div>
+
+  </main>
+
+  </div>
+
+<!-- Bottom Section -->
+    <div class="region region-bottom">
+    <div id="block-dekalb-theme-newssignupbanner" class="block block-block-content block-block-contentcf1f169c-94a9-46ce-88b1-ff2f87053aea">
+  
+    
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><div class="paragraph--type--banner"><p>DeKalb County Newsletter</p><p><a href="https://lp.constantcontactpages.com/sl/rjB9CtH" target="_blank">Sign Up</a></p></div></div>
+      
+  </div>
+
+  </div>
+
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="region region-footer-first">
+    <div id="block-dekalb-theme-dekalbcountyseal" class="block block-block-content block-block-content35ff94a3-d14d-4dcd-bac0-64e7aec73fda">
+  
+    
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><a href="/"><article class="media media--type-image media--view-mode-default">
+  
+      
+            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/styles/default/public/2025-09/DeKalb%20Seal.png.avif?itok=OlzwkPLt" width="212" height="239" alt="DeKalb County Homepage" class="image-style-default">
+
+
+</div>
+      
+  </article>
+</a></div>
+      
+  </div>
+<div id="block-dekalb-theme-userwayadatool" class="block block-block-content block-block-content00858573-a22c-4bc4-9045-e7bf7f5f88b8">
+  
+    
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><script src="https://cdn.userway.org/widget.js" data-account="dzaAsHlwZF"></script></div>
+      
+  </div>
+<div id="block-dekalb-theme-docaccessscript" class="block block-block-content block-block-content4479b662-345f-49ba-a31f-465d26d516a5">
+  
+    
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><script async="" src="https://docaccess.com/docbox.js"></script></div>
+      
+  </div>
+
+  </div>
+
+    <div class="region region-footer-second">
+    <div id="block-dekalb-theme-dekalbfootermain" class="block block-block-content block-block-content7cf57d36-42ec-4a1c-9f56-78d7b44a9e6d">
+  
+    
+      
+  <div class="clearfix text-formatted field field--name-field-dekalb-county field--type-text-long field--label-above">
+    <div class="field__label">DeKalb County</div>
+              <div class="field__item"><p>1300 Commerce Drive</p><p>Decatur, GA 30030</p><p><strong class="bold_blue">Email:</strong> <a href="mailto:311CCC@dekalbcountyga.gov">311CCC@dekalbcountyga.gov</a></p><p><strong class="bold_blue">Phone:</strong> <a href="tel:+4043712000" rel="nofollow">404-371-2000</a></p><p><strong class="bold_blue">Hours: </strong>8:00 AM - 4:30 PM</p><p>Monday - Friday</p></div>
+          </div>
+
+  <div class="field field--name-field-helpful-links field--type-link field--label-above">
+    <div class="field__label">Helpful Links</div>
+          <div class="field__items">
+              <div class="field__item"><a href="/ada-statement">Accessibility Statement</a></div>
+          <div class="field__item"><a href="/contact">Contact DeKalb County</a></div>
+          <div class="field__item"><a href="/department-directory">Department Directory</a></div>
+          <div class="field__item"><a href="https://gov.georgia.gov/contact-us/open-records-request" target="_blank" rel="noreferrer noopener">Freedom of Information Act (FOIA)</a></div>
+          <div class="field__item"><a href="/privacy-statement">Privacy Policy</a></div>
+          <div class="field__item"><a href="/departments/human-resources/employeeportal">Employee Portal</a></div>
+              </div>
+      </div>
+
+  <div class="field field--name-field-other-dekalb-agencies field--type-link field--label-above">
+    <div class="field__label">Other DeKalb Agencies</div>
+          <div class="field__items">
+              <div class="field__item"><a href="https://discoverdekalb.com/" target="_blank" rel="nofollow">DeKalb Convention &amp; Visitors Bureau</a></div>
+          <div class="field__item"><a href="https://www.decidedekalb.com/" target="_blank" rel="nofollow">Economic Development Authority</a></div>
+          <div class="field__item"><a href="https://dekalbpublichealth.com/" target="_blank" rel="nofollow">Health Department</a></div>
+              </div>
+      </div>
+
+  </div>
+
+  </div>
+
+    <div class="region region-footer-third">
+    <div id="block-dekalb-theme-socialiconsfooter" class="block block-block-content block-block-content011b3073-838b-4655-8f61-022f2e8d0ffa">
+  
+    
+      
+      <div class="field field--name-field-social field--type-entity-reference-revisions field--label-hidden field__items">
+              <div class="field__item">
+  <a
+    href="https://www.facebook.com/ItsInDeKalbGA#"
+    class="icon-text-link"
+          target="_blank" rel="noopener nofollow"
+      >
+    
+            <div class="field field--name-field-icon field--type-entity-reference field--label-hidden field__item"><article class="media media--type-image media--view-mode-default">
+  
+      
+            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/styles/default/public/2025-11/facebook_logo.png.avif?itok=aGHgqdAY" width="25" height="25" alt="A gray circle icon with a white lowercase &quot;f&quot; in the center, representing the Facebook logo." class="image-style-default" />
+
+
+</div>
+      
+  </article>
+</div>
+      
+  </a>
+</div>
+              <div class="field__item">
+  <a
+    href="https://x.com/ItsInDeKalb"
+    class="icon-text-link"
+          target="_blank" rel="noopener nofollow"
+      >
+    
+            <div class="field field--name-field-icon field--type-entity-reference field--label-hidden field__item"><article class="media media--type-image media--view-mode-default">
+  
+      
+            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/styles/default/public/2025-11/x_logo.png.avif?itok=6rAnDjlj" width="25" height="25" alt="Dark gray circular logo with a stylized &#039;X&#039; in the center, representing X (formerly Twitter)" class="image-style-default" />
+
+
+</div>
+      
+  </article>
+</div>
+      
+  </a>
+</div>
+              <div class="field__item">
+  <a
+    href="https://www.instagram.com/ItsInDeKalbGa/"
+    class="icon-text-link"
+          target="_blank" rel="noopener nofollow"
+      >
+    
+            <div class="field field--name-field-icon field--type-entity-reference field--label-hidden field__item"><article class="media media--type-image media--view-mode-default">
+  
+      
+            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/styles/default/public/2025-11/instagram_logo.png.avif?itok=RFO8TpUD" width="25" height="25" alt="Circular, dark gray Instagram icon on a lighter gray background." class="image-style-default" />
+
+
+</div>
+      
+  </article>
+</div>
+      
+  </a>
+</div>
+              <div class="field__item">
+  <a
+    href="https://www.youtube.com/user/DeKalbCountyGov"
+    class="icon-text-link"
+          target="_blank" rel="noopener nofollow"
+      >
+    
+            <div class="field field--name-field-icon field--type-entity-reference field--label-hidden field__item"><article class="media media--type-image media--view-mode-default">
+  
+      
+            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/styles/default/public/2025-11/youtube_logo.png.avif?itok=M2PxvfOj" width="25" height="25" alt="A circular gray button with a white play icon in the center, resembling a video play button." class="image-style-default" />
+
+
+</div>
+      
+  </article>
+</div>
+      
+  </a>
+</div>
+              <div class="field__item">
+  <a
+    href="https://video.ibm.com/channel/dctv-channel-23"
+    class="icon-text-link"
+          target="_blank" rel="noopener nofollow"
+      >
+    
+            <div class="field field--name-field-icon field--type-entity-reference field--label-hidden field__item"><article class="media media--type-image media--view-mode-default">
+  
+      
+            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">  <img loading="lazy" src="/sites/default/files/styles/default/public/2025-11/ustream_logo.png.avif?itok=V2Xnn7-A" width="25" height="25" alt="A small gray circular logo, featuring a bold, white letter &quot;U&quot;, representing the Ustream platform." class="image-style-default" />
+
+
+</div>
+      
+  </article>
+</div>
+      
+  </a>
+</div>
+          </div>
+  
+  </div>
+<div id="block-dekalb-theme-eventcalendarbutton" class="block block-block-content block-block-content4af3d511-16df-43f0-b460-54aa26640df0">
+  
+    
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><p><a class="button" href="/events/events-calendar" rel="nofollow">Calendar</a></p></div>
+      
+  </div>
+<div id="block-dekalb-theme-googletranslatewidget" class="block block-block-content block-block-content453f8e6c-2eae-4ae4-8dfb-9dfa3797920d">
+  
+    
+      
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><div id="google_translate_element">&nbsp;</div><script type="text/javascript">
+function googleTranslateElementInit() {
+new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+}
+</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script></div>
+      
+  </div>
+
+  </div>
+
+  </div>
+  <!-- Copyright -->
+  <div class="copyright">
+    <p>
+      © 2026 DeKalb County, Georgia, All Rights Reserved.
+          </p>
+
+    <!-- <div class="powered-by">
+      <p>Powered by:</p>
+      <a href="https://911emergensee.com/">
+        <img
+          class="emerge-n-see-logo"
+          src="/themes/custom/dekalb_theme/images/911_emerge_n_see.png"
+          alt="Gray text logo reads &quot;911 Emerge-N-See&quot; with a star of life and flame icon between &quot;911&quot; and &quot;Emerge-N-See&quot; on a light gray background."
+        />
+      </a>
+      <a href="https://365degreetotalmarketing.com/">
+        <img
+          src="/themes/custom/dekalb_theme/images/365_degree_total_marketing.png"
+          alt='Logo for "365 Total Marketing" features a circular design with "365" inside. The slogan "Beyond Full Circle Marketing" appears below. The background is black.'
+        />
+      </a>
+    </div> -->
+  </div>
+</footer>
+
+
+
+  </div>
+
+    
+    <script src="/core/assets/vendor/jquery/jquery.min.js?v=4.0.0"></script>
+<script src="/sites/default/files/js/js_VWQHAuj438RkZej3gYOYTDrtDx6T3LLhiRhsKhPwxzY.js?scope=footer&amp;delta=1&amp;language=en&amp;theme=dekalb_theme&amp;include=eJxdjFEKhDAMBS8k9kglbR6xmhqJEdzbr8j-dH8GZng8xkZacizoSFSrOTfbJx7yxS2y4zCPMwcVxTjg5qhh_hmzqBXSsXUg2i6_FzETxSOS5MG_z7TSPW1KbunlFz2ZQ4Q"></script>
+
+  </body>
+</html>

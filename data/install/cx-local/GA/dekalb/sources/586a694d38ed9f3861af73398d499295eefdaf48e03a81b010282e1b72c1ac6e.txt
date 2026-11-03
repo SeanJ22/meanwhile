@@ -1,0 +1,1225 @@
+Path: C:\Users\szell\OneDrive - DeKalb County, Georgia\VoterReg\Maps\202504_Precincts.aprx
+Date Printed: 5/9/2025
+Map produced by the GIS Department
+±
+DeKalb County, GA
+Geographic Information Systems Department
+DeKalb County GIS Disclaimer
+The maps and data, contained on DeKalb County’s Geographic Information System (GIS) are subject to constant change.
+While DeKalb County strives to provide accurate and up-to-date information, the information is provided “as is” without warranty,
+representation or guarantee of any kind as to the content, sequence, accuracy, timeliness or completeness of any of the database
+information provided herein.  DeKalb County explicitly disclaims all representations and warranties, including, without limitation,
+the implied warranties of merchantability and fitness for a particular purpose.  In no event shall DeKalb County be liable for any
+special, indirect, or consequential damages whatsoever resulting from loss of use, data, or profits, whether in an action of contract,
+negligence, or other actions, arising out of or in connection with the use of the maps and/or data herein provided.  The maps and
+data are for illustration purposes only and should not be relied upon for any reason. The maps and data are not suitable for
+site-specific decision-making nor should it be construed or used as a legal description.  The areas depicted by maps and data are
+approximate, and are not necessarily accurate to surveying or engineering standards.
+Super Commissioner Districts
+6
+7
+Austin (DUN)
+Dunwoody
+Library
+(DUN)
+Cross
+Keys High
+(BHAVN)
+Woodward
+(BHAVN)
+Flat
+Shoals
+Parkway
+Chapel
+Hill Elem
+Kelley
+Chapel Road
+Mathis - Bob
+Mathis Elem
+Wesley
+Chapel
+Library
+Johnson
+Estates
+(ATL)
+Flat Shoals
+Library
+Rainbow Elem
+Hambrick Elem
+Memorial
+South
+Dunaire Elem
+Dresden
+Elem (CHA)
+Oak Grove
+Elem
+Knollwood
+Candler
+Rowland
+Elem
+Rowland Road
+Snapfinger
+Elem
+Toney Elem
+Glenwood Road
+Wadsworth
+Oakcliff Elem
+Doraville
+North
+(DOR)
+Doraville
+South (DOR)
+Warren Tech
+Winters
+Chapel
+(DUN)
+Kingsley
+Elem (DUN)
+Tilly Mill Road
+(DUN)
+North
+Peachtree
+(DUN)
+Georgetown
+(DUN)
+Peachtree
+Middle
+(DUN)
+Chamblee
+(CHA)
+Covington
+Brookhaven
+(BHAVN)
+Ashford Park
+Elem (BHAVN)
+Silver Lake
+(ATL & BHAVN)
+Montclair
+Elem
+(BHAVN)
+Wynbrooke
+Elem
+Stone
+Mountain
+Elem
+Briarwood
+(BHAVN)
+Hugh Howell
+(TUC)
+Smoke Rise
+(TUC)
+Stone
+Mountain
+(STO)
+Stone
+Mountain
+Champion (STO)
+Stone
+Mill Elem
+White Oak
+Miller -
+Eldridge L.
+Miller Elem
+Stone Mountain
+Middle (TUC)
+Idlewood
+Elem (TUC)
+North
+Hairston
+Harris -
+Margaret
+Harris Ed
+Henderson
+Mill
+Peachcrest
+Snapfinger
+Road
+Briarcliff
+Lavista
+Briar Vista
+Elem (UNI
+& ATL)
+Avondale
+(AVO)
+Glennwood
+(DEC)
+Lavista Road
+Coralwood
+Panola Road
+(STCRST)
+Miller Grove
+High (STCRST)
+Woodridge
+Elem
+Pleasantdale
+Road
+Tucker
+Library
+(TUC)
+Lithonia
+High (UNI
+& STCRST)
+Shamrock
+Austin Drive
+Clairemont
+East (DEC)
+Ashford
+Dunwoody
+Road (BHAVN)
+Ashford
+Parkside (BHAVN)
+Montgomery
+Elem (BHAVN)
+Dunwoody 2
+(DUN)
+Mt.Vernon
+West (DUN)
+Dunwoody
+(DUN)
+Fernbank
+Candler
+Park (ATL)
+Lin - Mary Lin
+Elem
+(ATL)
+Ponce de
+Leon (DEC)
+Decatur
+(DEC)
+Brockett
+(TUC)
+Brockett Elem (TUC)
+Stonecrest
+Library
+(STCRST)
+South Deshon
+Stephenson
+Middle
+Evansdale
+Elem
+Redan Elem
+Stephenson
+High
+Shadow
+Rock Elem
+Princeton
+Elem (UNI
+& STCRST)
+Rock
+Chapel
+Elem
+Redan-Trotti
+Library (UNI
+& STCRST)
+Sagamore
+Hills Elem
+Columbia Elem
+Flat Shoals
+Columbia
+Middle
+Glenhaven
+Coan
+Recreation
+Center (ATL)
+Burgess
+Elem
+(ATL)
+Flat Rock
+Elem
+Candler -
+Murphey Candler
+Elem (STCRST)
+Harris -
+Narvie J.
+Harris Elem
+Redan Road
+Panola
+Cedar
+Grove
+South
+Bouldercrest
+Road
+Marbut Elem
+Clifton
+Meadowview
+Canby
+Lane Elem
+Freedom
+Middle
+Miller
+Grove (UNI
+& STCRST)
+Crossroads
+Redan Middle
+Young Road
+Panola
+Way Elem
+Livsey Elem
+Cedar Grove
+Middle
+Cedar
+Grove Elem
+McWilliams
+(STCRST)
+Fairington
+Elem
+Emory
+South (UNI
+& ATL)
+Salem Middle
+(STCRST)
+Miller Grove
+Road (STCRST)
+Snapfinger
+Road South
+(UNI & STCRST)
+Browns Mill
+Elem (UNI
+& STCRST)
+Oak View
+Elem
+Kelley
+Lake Elem
+Embry Hills
+Lakeside High
+Hawthorne
+Elem
+McNair HIgh
+Columbia
+Drive
+Snapfinger
+Road North
+Bethune
+Middle
+Flat
+Shoals
+Elem
+Briarlake
+Elem
+Emory Road
+Medlock
+Druid Hills
+Oakhurst
+(DEC)
+Rockbridge
+Elem
+Flakes Mill
+Jolly Elem
+Pine
+Lake (PIN)
+Allgood Elem
+Lithonia
+(LIT)
+Stoneview
+Elem (UNI
+& STCRST)
+Clairemont West
+(DEC)
+Covington
+Hwy
+Midway
+Gresham Road
+Huntley
+Hills Elem
+(CHA)
+Valley Brook
+Clarkston
+Community
+Center (CLA)
+South
+Hairston
+Clairmont
+Road
+Winnona
+Park (DEC)
+Scott
+Chesnut
+Elem
+(DUN)
+Kittredge
+Elem (BHAVN)
+Skyland
+(BHAVN)
+Avondale High
+Chamblee 2
+(CHA)
+Mount Vernon
+East (DUN)
+McNair
+Terry Mill
+North Decatur
+Shaw Elem
+-Robert
+Shaw Elem
+Tucker (TUC)
+Montreal
+(TUC)
+Piney
+Grove
+Indian
+Creek
+Northlake
+McLendon
+Midvale
+Elem (TUC)
+East Lake
+(ATL)
+McNair
+Academy
+Metropolitan
+(ATL)
+Boulevard
+(ATL)
+Rock
+Chapel
+Road
+Midvale Road
+Woodrow Road
+(STCRST)
+Clarkston
+(CLA)
+Rockbridge
+Road
+Rehoboth
+Avondale
+Estates
+Stone
+Mountain
+Clarkston
+Doraville
+Lithonia
+Tucker
+Pine
+Lake
+Stonecrest
+Chamblee
+Atlanta
+Dunwoody
+Decatur
+Brookhaven
+285
+78
+85
+285
+285
+285
+20
+285
+285
+285
+675
+N Arca
+dia
+Ave
+Northla
+k
+e
+Pkwy
+Snapfin
+g
+er
+Woods
+D
+r
+Dek
+alb
+A
+v
+e
+Young Rd
+Glenwood Rd
+D
+resden Dr
+W
+esl
+ey Chapel
+R
+d
+Boulde
+rcrest
+Rd
+La
+w
+ren
+c
+eville
+H
+w
+y
+Mayn
+a
+rd Te
+r
+Pa
+n
+ol
+a
+Rd
+McPherson
+Ave
+Bro
+ckett R
+d
+S
+Ca
+n
+dler
+S
+t
+Church St
+Hugh Howel
+l
+Rd
+Glenwood Rd
+Pl
+e
+a
+sa
+n
+td
+al
+e
+R
+d
+Fla
+t Shoal
+s
+Ave
+Bo
+u
+ldercrest
+D
+r
+Main St
+N Des
+hong Rd
+Zonolite Rd
+Erskine Rd
+Cl
+if
+ton
+C
+h
+ur
+ch
+R
+d
+L
+are
+do
+Dr
+Rock
+b
+ri
+d
+g
+e Rd
+Hosea L Williams Dr
+Du
+nw
+oo
+dy Cl
+u
+b D
+r
+E Mou
+ntain
+St
+Ston
+e
+Mou
+ntain St
+Cl
+a
+i
+r
+mon
+t
+Rd
+Coving
+ton Rd
+Glenwood Ave
+J
+ohn
+s
+on
+Ferry
+R
+d
+N
+Hairsto
+n
+R
+d
+Peachtree
+Industrial Blvd
+Co
+o
+le
+dge
+Rd
+Old
+R
+ai
+n
+b
+o
+w
+Dr
+Main
+St
+As
+hf
+ord Du
+nw
+o
+ody
+R
+d
+Brockett
+R
+d
+W
+Po
+n
+c
+e
+D
+e Leon Ave
+Kl
+o
+n
+dik
+e
+R
+d
+Winters
+Chapel Rd
+Roc
+kbrid
+ge R
+d
+Browns Mill Rd
+Appling Pl
+B
+riar
+cliff Rd
+C
+lift
+o
+n Springs
+Rd
+S
+napfi
+nge
+r Rd
+Cla
+r
+e
+ndon
+A
+ve
+N S
+ha
+llo
+wfor
+d Rd
+S Co
+lumbia D
+r
+Woodrow Dr
+Ken
+s
+ington
+R
+d
+Winters
+Cha
+pel Rd
+Unio
+n Grove
+R
+d
+Clair
+emont A
+v
+e
+2nd
+A
+v
+e
+N Stone Mountain
+Lithonia Rd
+Northla
+ke
+P
+kwy
+Wyman St SE
+Candler
+Rd
+E
+T
+rinity
+Pl
+S
+Hai
+rst
+on R
+d
+Bri
+a
+r
+w
+ood
+Rd
+W College Ave
+Commer
+c
+e
+Dr
+Dr
+esden
+D
+r
+M
+ontreal R
+d
+E
+Flat Shoals
+P
+k
+w
+y
+S McDonough St
+Katie K
+e
+rr
+Dr
+N Avondale
+Rd
+E College
+Ave
+New Peachtr
+e
+e R
+d
+R
+obe
+rts Dr
+Tilly
+M
+il
+l
+R
+d
+N P
+e
+achtr
+e
+e R
+d
+Oakdale Rd
+Ch
+u
+r
+c
+h
+S
+t
+N Decatur Rd
+O
+ld S
+ton
+e
+M
+ou
+n
+t
+a
+in Rd
+Oakda
+le
+Rd
+Max
+C
+lel
+and
+Blv
+d
+R
+ock
+b
+ri
+dge R
+d
+Valley
+B
+r
+o
+o
+k
+Rd
+W Howard
+Ave
+Old Covington
+Hwy SW
+Tucker
+N
+orcross Rd
+Moreland A
+ve NE
+N D
+e
+s
+h
+o
+n
+Rd
+Ch
+amb
+lee
+D
+u
+nwo
+ody Rd
+Br
+i
+arcliff R
+d
+Covington Hwy
+E
+Pon
+c
+e De
+L
+e
+on Ave
+N
+C
+la
+r
+en
+d
+o
+n
+A
+v
+e
+L
+avista Rd
+M
+cDani
+el Mill
+R
+d
+Northcres
+t Rd
+Peach
+t
+re
+e
+Industria
+l Bl
+v
+d
+Flowers Rd
+H
+en
+de
+rson
+M
+ill Rd
+Whitefoord
+Ave SE
+As
+hf
+ord
+D
+u
+n
+woo
+d
+y
+R
+d
+Alston Dr
+Lilburn S
+t
+one
+Mountain
+Rd
+Chamblee Tucker Rd
+Ro
+b
+ert
+E Lee Bl
+v
+d
+Co
+m
+merce Dr
+Church St
+Pleasant Hill Rd
+P
+a
+n
+t
+h
+ersvil
+l
+e
+R
+d
+Winters
+Chapel
+Connec
+tor
+N De
+catur Rd
+Peachtree Ind
+Boulevard Access Rd NB
+Lake
+Hearn Dr
+N Druid Hills Rd
+Clairmont
+Rd
+Shallowford Ter
+U
+n
+ion Grove Rd
+R
+ockland Rd
+2nd Ave SE
+A
+shford
+Dunwo
+o
+d
+y
+Rd SB
+Moreland Ave SE
+Mercer
+University Dr
+S
+Deshon Rd
+Morelan
+d
+Ave
+W
+M
+ount
+a
+in
+S
+t
+Chamblee
+Tucker Rd
+Clair
+m
+ont Rd
+E La
+k
+e
+Dr
+Ced
+ar Grove Rd
+Memorial Dr
+Cli
+ft
+on
+R
+d
+Cand
+ler
+R
+d SE
+P
+anol
+a
+Rd
+R
+iver Rd
+T
+u
+rner H
+il
+l
+R
+d
+Dunwoody
+Club Dr
+P
+o
+n
+ce D
+e L
+e
+on A
+v
+e
+E Roxbo
+ro
+Rd
+Mount V
+ernon Rd
+Spence
+Ave SE
+C
+o
+lu
+m
+b
+i
+a
+D
+r
+Evan
+s
+M
+ill R
+d
+Scott Blvd
+S
+wift St
+Snap
+fin
+ger Rd
+Johns
+on
+R
+d
+2nd
+Ave NE
+Whitefoord Ave NE
+S Ston
+e M
+o
+untain
+Lithon
+i
+a R
+d
+Allendale
+Dr
+N
+or
+thcrest
+Rd
+Dekalb
+In
+d
+u
+st
+r
+i
+a
+l
+Wa
+y
+N Main St
+E Howar
+d
+Ave
+Northeast
+Expy
+Flat Shoals Rd
+N Ind
+i
+an Creek
+D
+r
+Holcombe Rd
+Er
+s
+kine Rd
+J
+e
+fferson
+Da
+vis Dr
+S
+D
+e
+s
+h
+on Rd
+International
+Park Dr
+P
+eacht
+r
+e
+e
+R
+d
+E Lake
+Rd
+Lit
+honia Industria
+l
+Blv
+d
+Candler
+Rd NE
+Spaldi
+ng Dr
+Flak
+es
+M
+il
+l Rd
+Sams
+Xing
+P
+e
+r
+imeter
+Ce
+n
+ter Pk
+w
+y
+P
+eri
+m
+e
+ter C
+t
+r W
+Bailey
+S
+t
+Oakcliff Rd
+W
+Trinity
+Pl
+Centerville
+Hwy
+Linecrest Rd
+S
+ha
+llo
+w
+ford
+R
+d
+Spence
+Ave NE
+West
+Side Pl
+Redan Rd
+Peachtree
+Blvd
+H
+a
+m
+mond Dr
+A
+shford
+Dunwo
+o
+dy Rd
+Pe
+a
+chtree Ind
+B
+oule
+va
+r
+d Ac
+cess Rd SB
+A
+shford D
+un
+wood
+y
+Rd
+North
+e
+a
+st
+E
+xp
+y
+M
+o
+u
+n
+tain Industrial
+B
+l
+v
+d
+Long
+m
+ire Way
+Ma
+ll Pkw
+y
+Pe
+ri
+m
+et
+e
+r
+S
+u
+m
+m
+it
+P
+k
+w
+y
+Big Miller
+Grove Wa
+y
+S Stone
+M
+oun
+tain
+Lithonia R
+d
+Rainbow Dr
+Arcadia
+Ave
+Bu
+ford Hw
+y
+Rock Chapel
+Rd
+M
+o
+tors Industri
+al
+W
+ay
+P
+arkl
+a
+ke
+Dr
+Constitution Rd
+Snapfinger Wood
+s Dr
+Co
+n
+tine
+n
+tal Way
+L
+ithonia Industrial Blvd
+0
+1
+2
+3
+4
+0.5
+Miles
+Highway / Interstate
+Major Roads
+Local Streets
+Voting Precincts
+Municipal Boundary
+Super Commissioner District 6
+Super Commissioner District 7

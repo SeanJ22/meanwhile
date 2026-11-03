@@ -1,0 +1,894 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-cx-local-2026-dekalb-commission-district-2",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:dekalb/commission_district:2",
+          "divisionVintage": "2026",
+          "title": "County Commissioner — District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "For County Commissioner - District 2\n(Vote for One)\nBen Pepper Republican\nMichelle Long Spears (I) Democrat\nWrite-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://dekalbcountyga.gov/government/board-of-commissioners",
+              "sourceOrg": "DeKalb County Board of Commissioners",
+              "collectedAt": "2026-11-03T08:48:13.047170+00:00",
+              "verifiedAt": "2026-11-03T08:48:13.047170+00:00",
+              "quote": "Comprised of seven commissioners, the Board represents residents across five districts and two super districts. Every citizen in DeKalb County is represented by two commissioners, one district commissioner and one super district commissioner."
+            },
+            {
+              "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-01/20250509_Commissioner.pdf",
+              "sourceOrg": "DeKalb County Geographic Information System Department",
+              "collectedAt": "2026-11-03T08:45:46.761221+00:00",
+              "verifiedAt": "2026-11-03T08:45:46.761221+00:00",
+              "quote": "Commissioner District 2"
+            }
+          ],
+          "scopeNote": "Complete printed named office block on physical page2 of the official November3,2026 county composite. Every name, printed party, incumbent(I) marker and voting limit retained. Generic Write-in blanks are not people. Exact geographic Commissioner District2 electorate; no countywide fallback."
+        },
+        {
+          "id": "ga-cx-local-2026-dekalb-commission-district-3",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:dekalb/commission_district:3",
+          "divisionVintage": "2026",
+          "title": "County Commissioner — District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "For County Commissioner - District 3\n(Vote for One)\nAndrea Bass Smith Republican\nKeyanna Jones Moore Democrat\nWrite-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://dekalbcountyga.gov/government/board-of-commissioners",
+              "sourceOrg": "DeKalb County Board of Commissioners",
+              "collectedAt": "2026-11-03T08:48:13.047170+00:00",
+              "verifiedAt": "2026-11-03T08:48:13.047170+00:00",
+              "quote": "Comprised of seven commissioners, the Board represents residents across five districts and two super districts. Every citizen in DeKalb County is represented by two commissioners, one district commissioner and one super district commissioner."
+            },
+            {
+              "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-01/20250509_Commissioner.pdf",
+              "sourceOrg": "DeKalb County Geographic Information System Department",
+              "collectedAt": "2026-11-03T08:45:46.761221+00:00",
+              "verifiedAt": "2026-11-03T08:45:46.761221+00:00",
+              "quote": "Commissioner District 3"
+            }
+          ],
+          "scopeNote": "Complete printed named office block on physical page2 of the official November3,2026 county composite. Every name, printed party, incumbent(I) marker and voting limit retained. Generic Write-in blanks are not people. Exact geographic Commissioner District3 electorate; no countywide fallback."
+        },
+        {
+          "id": "ga-cx-local-2026-dekalb-commission-district-7",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:dekalb/commission_district:7",
+          "divisionVintage": "2026",
+          "title": "County Commissioner — District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "For County Commissioner - District 7\n(Vote for One)\nLaDena Bolton (I) Democrat\nWrite-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://dekalbcountyga.gov/government/board-of-commissioners",
+              "sourceOrg": "DeKalb County Board of Commissioners",
+              "collectedAt": "2026-11-03T08:48:13.047170+00:00",
+              "verifiedAt": "2026-11-03T08:48:13.047170+00:00",
+              "quote": "Comprised of seven commissioners, the Board represents residents across five districts and two super districts. Every citizen in DeKalb County is represented by two commissioners, one district commissioner and one super district commissioner."
+            },
+            {
+              "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-01/20250509_SuperCommissioner.pdf",
+              "sourceOrg": "DeKalb County Geographic Information System Department",
+              "collectedAt": "2026-11-03T08:45:46.765270+00:00",
+              "verifiedAt": "2026-11-03T08:45:46.765270+00:00",
+              "quote": "Super Commissioner District 7"
+            }
+          ],
+          "scopeNote": "Complete printed named office block on physical page2 of the official November3,2026 county composite. Every name, printed party, incumbent(I) marker and voting limit retained. Generic Write-in blanks are not people. Exact geographic Super Commissioner District7 electorate, one of two superdistricts covering separate portions of DeKalb; no countywide fallback."
+        },
+        {
+          "id": "ga-cx-local-2026-dekalb-soil-water-supervisor",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:dekalb",
+          "divisionVintage": "2026",
+          "title": "DeKalb County Soil and Water Conservation District Supervisor",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "For DeKalb County Soil and Water\nConservation District Supervisor\n(Vote for Two)\nJan Dunaway (I)\nCarol Hayes (I)"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-ii-conservation-districts",
+              "sourceOrg": "Georgia Soil and Water Conservation Commission",
+              "collectedAt": "2026-11-03T08:48:13.757296+00:00",
+              "verifiedAt": "2026-11-03T08:48:13.757296+00:00",
+              "quote": "Dekalb County SWCD\nDeKalb County\nSupervisors\nJan Dunaway\nCarol Hayes"
+            }
+          ],
+          "scopeNote": "Complete printed named office block on physical page2 of the official November3,2026 county composite. Every name, printed party, incumbent(I) marker and voting limit retained. Generic Write-in blanks are not people. The ballot names the DeKalb County district supervisor field; state conservation commission expressly identifies DeKalb County SWCD, DeKalb County, and both incumbent supervisors. County electorate is the named single-county district, not a substitute for a multicounty district."
+        },
+        {
+          "id": "ga-cx-local-2026-brookhaven-council-district-2-special-unexpired-jen-owens",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:brookhaven/council_district:2",
+          "divisionVintage": "2026",
+          "title": "Brookhaven City Council — District 2 (Unexpired term of Jen Owens, resigned)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Special Election\nCity of Brookhaven\nFor City Council - District 2\n(To Fill the Unexpired Term of Jen Owens, Resigned)\n(Vote for One)\nConor Sen\nWrite-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.legis.ga.gov/Legislation/20112012/127755.pdf",
+              "sourceOrg": "Georgia General Assembly — Brookhaven charter §2.01(b)(3)",
+              "collectedAt": "2026-11-03T08:55:36.379214+00:00",
+              "verifiedAt": "2026-11-03T08:55:36.379214+00:00",
+              "quote": "(3)  One councilmember shall be elected from each of the four council districts.  Each\nperson desiring to offer as a candidate for councilmember shall designate the council\ndistrict for which he or she is offering.  Councilmembers shall be elected by a majority\nvote of the qualified electors of the respective council districts voting at the elections of\nthe city."
+            },
+            {
+              "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/6b393fc6e9ec4783bf6fc0bb0f200afd/data",
+              "sourceOrg": "City of Brookhaven — current district map",
+              "collectedAt": "2026-11-03T08:51:52.473255+00:00",
+              "verifiedAt": "2026-11-03T08:51:52.473255+00:00",
+              "quote": "City Council District 2"
+            }
+          ],
+          "scopeNote": "Complete printed named office block on physical page2 of the official November3,2026 county composite. Every name, printed party, incumbent(I) marker and voting limit retained. Generic Write-in blanks are not people. Only electors of Brookhaven Council District2 vote. The founding charter separately requires district voting and candidate residency; the current city-linked July27,2026 District2 map controls geography. Official municipal qualifying page lists ConorJ.Sen; printed sample display ConorSen is retained."
+        },
+        {
+          "id": "ga-cx-local-2026-doraville-council-district-2-post-2-special-unexpired-carrie-armistead",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:doraville",
+          "divisionVintage": "2026",
+          "title": "Doraville City Council — District 2, Post 2 At Large (Unexpired term of Carrie Armistead, resigned)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Special Election\nCity of Doraville\nFor City Council\nDistrict 2, Post 2 At Large\n(To Fill the Unexpired Term of Carrie Armistead,\nResigned) (Vote for One)\nSchuyler \"Sky\" Clark\nTammi Bailey Fults\nTom Hart\nBrian Kyser\nAngie Riley Tooley\nWrite-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://gov.georgia.gov/document/2022-signed-legislation/sb-621/download",
+              "sourceOrg": "Governor of Georgia — signed2022 SB621, §2",
+              "collectedAt": "2026-11-03T08:48:11.241362+00:00",
+              "verifiedAt": "2026-11-03T08:48:11.241362+00:00",
+              "quote": "The councilmembers elected from Posts 1 and 2 of Districts 1 and 2 shall be elected\nby majority vote of the qualified electors of the city voting at large; and"
+            }
+          ],
+          "scopeNote": "Complete printed named office block on physical page3 of the official November3,2026 county composite. Every name, printed party, incumbent(I) marker and voting limit retained. Generic Write-in blanks are not people. District2 is the residence seat for Post2, elected by all qualified city voters under signed2022 SB621. The AtLarge wording is retained; do not narrow the electorate to District2 or to only the DeKalb portion of the cross-county municipality."
+        },
+        {
+          "id": "ga-cx-local-2026-pine-lake-mayor-special-unexpired-brandy-hall",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:pine_lake",
+          "divisionVintage": "2026",
+          "title": "Pine Lake Mayor (Unexpired term of Brandy Hall, resigned)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Special Election\nCity of Pine Lake\nFor Mayor\n(To Fill the Unexpired Term of Brandy Hall, Resigned)\n(Vote for One)\nJeff Goldberg\nWrite-in:"
+          },
+          "sources": [],
+          "scopeNote": "Complete printed named office block on physical page3 of the official November3,2026 county composite. Every name, printed party, incumbent(I) marker and voting limit retained. Generic Write-in blanks are not people. Whole City of Pine Lake electorate for this named mayor/council special-election vacancy; no countywide fallback."
+        },
+        {
+          "id": "ga-cx-local-2026-pine-lake-council-special-unexpired-jeff-goldberg",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:pine_lake",
+          "divisionVintage": "2026",
+          "title": "Pine Lake City Council (Unexpired term of Jeff Goldberg, resigned)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "For City Council\n(To Fill the Unexpired Term of Jeff Goldberg,\nResigned) (Vote for One)\nJames Paproski\nWrite-in:"
+          },
+          "sources": [],
+          "scopeNote": "Complete printed named office block on physical page3 of the official November3,2026 county composite. Every name, printed party, incumbent(I) marker and voting limit retained. Generic Write-in blanks are not people. Whole City of Pine Lake electorate for this named mayor/council special-election vacancy; no countywide fallback."
+        },
+        {
+          "id": "ga-cx-local-2026-stonecrest-council-district-2-special-unexpired-terry-fye",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:stonecrest/council_district:2",
+          "divisionVintage": "2026",
+          "title": "Stonecrest City Councilmember — District Post 2 (Unexpired term of Terry Fye, resigned)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Special Election\nCity of Stonecrest\nFor City Councilmember\nDistrict Post 2\n(To Fill the Unexpired Term of Terry Fye, Resigned)\n(Vote for One)\nTelessa Ammons\nYuvette Hudson\nBruce McColumn Sr.\nWrite-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.stonecrestga.gov/DocumentCenter/View/1943",
+              "sourceOrg": "City of Stonecrest — 2026 Special Municipal Election Notice",
+              "collectedAt": "2026-11-03T08:49:19.196266+00:00",
+              "verifiedAt": "2026-11-03T08:49:19.196266+00:00",
+              "quote": "the public is hereby notified\nthat the City of Stonecrest, Georgia, will have a Special Election on\nNovember 3, 2026, for the purpose of electing one (1) City Council\nMember, for District 2 in the City of Stonecrest."
+            }
+          ],
+          "scopeNote": "Complete printed named office block on physical page3 of the official November3,2026 county composite. Every name, printed party, incumbent(I) marker and voting limit retained. Generic Write-in blanks are not people. Exact Stonecrest Council District2 / DistrictPost2 electorate. Current city elections page links its council district GIS application; the city-owned feature query returns exactly District2. No whole-city fallback."
+        },
+        {
+          "id": "ga-cx-local-2026-tucker-sb622-annexation",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:dekalb/special_district:tucker_sb622_annexation_referendum_2026",
+          "divisionVintage": "CENSUS2020_SB622_2026",
+          "title": "City of Tucker Annexation — Senate Bill 622 (Act No. 704)",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "measureTextUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Special Election\nCity of Tucker\nCity of Tucker Annexation\nSenate Bill 622\nAct No. 704\n\"Shall the Act which annexes certain land\ninto the City of Tucker be approved?\"\nYes\nNo"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.tuckerga.gov/tucker-together/",
+              "sourceOrg": "City of Tucker",
+              "collectedAt": "2026-11-03T08:48:12.596210+00:00",
+              "verifiedAt": "2026-11-03T08:48:12.596210+00:00",
+              "quote": "Only registered voters who physically reside within the proposed SB 622 annexation boundary lines are eligible to vote on this ballot measure."
+            },
+            {
+              "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-11/2026%20SB%20622%20Call%20Tucker%20Referendum-FINAL.pdf",
+              "sourceOrg": "DeKalb County Board of Registration and Elections",
+              "collectedAt": "2026-11-03T08:48:12.841817+00:00",
+              "verifiedAt": "2026-11-03T08:48:12.841817+00:00",
+              "quote": "NOTICE IS HEREBY GIVEN that on November 3, 2026, an election will be held in the district described\nby Senate Bill 622, at which time there will be submitted to qualiﬁed voters for their determination\nthe question of whether to annex certain land into the City of Tucker."
+            },
+            {
+              "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/sb-622/download",
+              "sourceOrg": "Governor of Georgia — signed2026 SB622, §1.02A",
+              "collectedAt": "2026-11-03T08:49:18.549309+00:00",
+              "verifiedAt": "2026-11-03T08:49:18.549309+00:00",
+              "quote": "Plan Name: Tucker-Annex-2025    \nPlan Type: Local\nDistrict ANNEX\nCounty DeKalb GA \nVTD Briarlake Elem\nBlock 021703 \n1013           \nVTD Midvale Road\nBlock 021820 \n1000 1001 1002 1004 1005 1006 2007"
+            }
+          ],
+          "scopeNote": "Genuinely new question after all45 current recursively enumerated CX-VOTES GA inputs and every held/local packet. Only voters in the proposed annexation territory participate, not current Tucker city, TuckerCDP or all DeKalb. Signed law enumerates exactly eight2020 Census blocks; native Census2020 polygon query returns all eight. Current city map separately labels the proposed area. Full printed question and Yes/No choices retained. No official explanatory statement is printed, so none is authored."
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ga-cx-local-2026-dekalb-commission-district-2:ben-pepper",
+          "contestId": "ga-cx-local-2026-dekalb-commission-district-2",
+          "givenName": "",
+          "familyName": "Ben Pepper",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Ben Pepper Republican"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-dekalb-commission-district-2:michelle-long-spears",
+          "contestId": "ga-cx-local-2026-dekalb-commission-district-2",
+          "givenName": "",
+          "familyName": "Michelle Long Spears",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Michelle Long Spears (I) Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-dekalb-commission-district-3:andrea-bass-smith",
+          "contestId": "ga-cx-local-2026-dekalb-commission-district-3",
+          "givenName": "",
+          "familyName": "Andrea Bass Smith",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Andrea Bass Smith Republican"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-dekalb-commission-district-3:keyanna-jones-moore",
+          "contestId": "ga-cx-local-2026-dekalb-commission-district-3",
+          "givenName": "",
+          "familyName": "Keyanna Jones Moore",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Keyanna Jones Moore Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-dekalb-commission-district-7:ladena-bolton",
+          "contestId": "ga-cx-local-2026-dekalb-commission-district-7",
+          "givenName": "",
+          "familyName": "LaDena Bolton",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "LaDena Bolton (I) Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-dekalb-soil-water-supervisor:jan-dunaway",
+          "contestId": "ga-cx-local-2026-dekalb-soil-water-supervisor",
+          "givenName": "",
+          "familyName": "Jan Dunaway",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Jan Dunaway (I)"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-dekalb-soil-water-supervisor:carol-hayes",
+          "contestId": "ga-cx-local-2026-dekalb-soil-water-supervisor",
+          "givenName": "",
+          "familyName": "Carol Hayes",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Carol Hayes (I)"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-brookhaven-council-district-2-special-unexpired-jen-owens:conor-sen",
+          "contestId": "ga-cx-local-2026-brookhaven-council-district-2-special-unexpired-jen-owens",
+          "givenName": "",
+          "familyName": "Conor Sen",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Conor Sen"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-doraville-council-district-2-post-2-special-unexpired-carrie-armistead:schuyler-sky-clark",
+          "contestId": "ga-cx-local-2026-doraville-council-district-2-post-2-special-unexpired-carrie-armistead",
+          "givenName": "",
+          "familyName": "Schuyler \"Sky\" Clark",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Schuyler \"Sky\" Clark"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-doraville-council-district-2-post-2-special-unexpired-carrie-armistead:tammi-bailey-fults",
+          "contestId": "ga-cx-local-2026-doraville-council-district-2-post-2-special-unexpired-carrie-armistead",
+          "givenName": "",
+          "familyName": "Tammi Bailey Fults",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Tammi Bailey Fults"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-doraville-council-district-2-post-2-special-unexpired-carrie-armistead:tom-hart",
+          "contestId": "ga-cx-local-2026-doraville-council-district-2-post-2-special-unexpired-carrie-armistead",
+          "givenName": "",
+          "familyName": "Tom Hart",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Tom Hart"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-doraville-council-district-2-post-2-special-unexpired-carrie-armistead:brian-kyser",
+          "contestId": "ga-cx-local-2026-doraville-council-district-2-post-2-special-unexpired-carrie-armistead",
+          "givenName": "",
+          "familyName": "Brian Kyser",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Brian Kyser"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-doraville-council-district-2-post-2-special-unexpired-carrie-armistead:angie-riley-tooley",
+          "contestId": "ga-cx-local-2026-doraville-council-district-2-post-2-special-unexpired-carrie-armistead",
+          "givenName": "",
+          "familyName": "Angie Riley Tooley",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Angie Riley Tooley"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-pine-lake-mayor-special-unexpired-brandy-hall:jeff-goldberg",
+          "contestId": "ga-cx-local-2026-pine-lake-mayor-special-unexpired-brandy-hall",
+          "givenName": "",
+          "familyName": "Jeff Goldberg",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Jeff Goldberg"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-pine-lake-council-special-unexpired-jeff-goldberg:james-paproski",
+          "contestId": "ga-cx-local-2026-pine-lake-council-special-unexpired-jeff-goldberg",
+          "givenName": "",
+          "familyName": "James Paproski",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "James Paproski"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-stonecrest-council-district-2-special-unexpired-terry-fye:telessa-ammons",
+          "contestId": "ga-cx-local-2026-stonecrest-council-district-2-special-unexpired-terry-fye",
+          "givenName": "",
+          "familyName": "Telessa Ammons",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Telessa Ammons"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-stonecrest-council-district-2-special-unexpired-terry-fye:yuvette-hudson",
+          "contestId": "ga-cx-local-2026-stonecrest-council-district-2-special-unexpired-terry-fye",
+          "givenName": "",
+          "familyName": "Yuvette Hudson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Yuvette Hudson"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-stonecrest-council-district-2-special-unexpired-terry-fye:bruce-mccolumn-sr",
+          "contestId": "ga-cx-local-2026-stonecrest-council-district-2-special-unexpired-terry-fye",
+          "givenName": "",
+          "familyName": "Bruce McColumn Sr.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Bruce McColumn Sr."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ga-cx-local-2026-tucker-sb622-annexation#question",
+          "contestId": "ga-cx-local-2026-tucker-sb622-annexation",
+          "questionText": "Shall the Act which annexes certain land into the City of Tucker be approved?",
+          "officialStatement": null,
+          "choices": [
+            "Yes",
+            "No"
+          ],
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Board of Registration and Elections",
+            "collectedAt": "2026-11-03T08:45:46.738076+00:00",
+            "verifiedAt": "2026-11-03T08:45:46.738076+00:00",
+            "quote": "Special Election\nCity of Tucker\nCity of Tucker Annexation\nSenate Bill 622\nAct No. 704\n\"Shall the Act which annexes certain land\ninto the City of Tucker be approved?\"\nYes\nNo"
+          }
+        }
+      ],
+      "heldContests": [],
+      "filingCandidacies": [],
+      "absences": [],
+      "districtMemberships": [],
+      "scopedCoverageNotes": [
+        {
+          "id": "ga-cx-local-2026-dekalb-coverage",
+          "note": "Complete current county-linked12-page November3,2026 composite booklet: pages1–5 print the ballot fields and pages6–12 attach constitutional text/summaries. Its notice says it contains all contests for the election in DeKalb County, including contests a reader may be ineligible to vote on. All9 local candidate blocks18 choices and one genuinely new Tucker annexation question are prepared. No November judicial or school-board candidate block appears in this published composite; no May/June nonpartisan field is invented. This is complete published-composite coverage, not proof of each precinct-style inventory or later amendments. Atlanta/Decatur school systems remain distinct from DeKalb County School District; no school electorate is widened. Existing ESPLOST, Brookhaven homestead question, constitutional questions and explanations remain unchanged outside changed input IDs. Generic Write-in blanks are omitted as people; named declared-write-in certification and separate withdrawal/cancellation inventory have not been acquired."
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:06:54.226357+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+        "finalUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+        "httpStatus": 200,
+        "rawHash": "6f83a84d6f4a90948920499e7149efb5db0134ae90551b9adb6a7b6c0a82ae52",
+        "retrievedAt": "2026-11-03T08:45:46.738076+00:00",
+        "publisher": "DeKalb County Board of Registration and Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current county election homepage directly links this native12-page November3,2026 General/Special Election SAMPLE BALLOT composite. All9 local candidate blocks18 names on physical pages2–3 and one new Tucker annexation block on page5 are complete and visually checked. Full native text plus separately arranged exact local block extraction retained; watermark alone excluded from block text. Other printed fields and existing measures are preservation-only."
+      },
+      {
+        "requestedUrl": "https://dekalbcountyga.gov/departments/voter-registration-and-elections",
+        "finalUrl": "https://dekalbcountyga.gov/departments/voter-registration-and-elections",
+        "httpStatus": 200,
+        "rawHash": "af5a128fa1d4acf6cd0cacb03cc6bbe272126c095a4759bbccd4f1c50fa1d928",
+        "retrievedAt": "2026-11-03T08:45:12.389235+00:00",
+        "publisher": "DeKalb County Board of Registration and Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official elections page identifies November3General/SpecialElection and links exact English sample booklet, proposed-annexation call, schoolESPLOST call and current district maps. Precinct-specific MVP instructions do not require or authorize personal voter lookup; none submitted."
+      },
+      {
+        "requestedUrl": "https://dekalbcountyga.gov/government/board-of-commissioners",
+        "finalUrl": "https://dekalbcountyga.gov/government/board-of-commissioners",
+        "httpStatus": 200,
+        "rawHash": "041887965352fa911aff70388de6ddfd322e44d65bb5999d9b4fa54728267a69",
+        "retrievedAt": "2026-11-03T08:48:13.047170+00:00",
+        "publisher": "DeKalb County Board of Registration and Elections",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official county page distinguishes five districts and two superdistricts, with every citizen represented by one of each; District7 is not automatically countywide."
+      },
+      {
+        "requestedUrl": "https://dekalbcountyga.gov/sites/default/files/2026-01/20250509_Commissioner.pdf",
+        "finalUrl": "https://dekalbcountyga.gov/sites/default/files/2026-01/20250509_Commissioner.pdf",
+        "httpStatus": 200,
+        "rawHash": "d1424f27c7a1f3470a775120e7d45ff5c9e37c329ae7e8a50e5672b62c6acfa8",
+        "retrievedAt": "2026-11-03T08:45:46.761221+00:00",
+        "publisher": "DeKalb County Board of Registration and Elections",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current county-linked20250509 map delineates geographic Commissioner Districts1–5; exact District2 and3 reader registry joins remain pending."
+      },
+      {
+        "requestedUrl": "https://dekalbcountyga.gov/sites/default/files/2026-01/20250509_SuperCommissioner.pdf",
+        "finalUrl": "https://dekalbcountyga.gov/sites/default/files/2026-01/20250509_SuperCommissioner.pdf",
+        "httpStatus": 200,
+        "rawHash": "d3c0ba9cb126f9eaa083d6a024f916ce9b1d21ea2a4eeb1d76a53946f1a42985",
+        "retrievedAt": "2026-11-03T08:45:46.765270+00:00",
+        "publisher": "DeKalb County Board of Registration and Elections",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current county-linked20250509 map delineates two separate Super Commissioner Districts6 and7;7 is not the whole county."
+      },
+      {
+        "requestedUrl": "https://www.brookhavenga.gov/224/Elections-Qualifying-Reports",
+        "finalUrl": "https://www.brookhavenga.gov/224/Elections-Qualifying-Reports",
+        "httpStatus": 200,
+        "rawHash": "392abd16922346b6e51e5cf3bff8c4b8e08ce749d2d12b82ec0944a9f3f6545c",
+        "retrievedAt": "2026-11-03T08:48:11.253308+00:00",
+        "publisher": "City of Brookhaven",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current city special-election notice and qualifying page corroborates November3District2vacancy; filing displayConorJ.Sen differs from printed sampleConorSen. Sample display controls; no fabricated candidate or personal address quote."
+      },
+      {
+        "requestedUrl": "https://www.brookhavenga.gov/824/City-Council-Districts",
+        "finalUrl": "https://www.brookhavenga.gov/227/City-Council-Districts",
+        "httpStatus": 200,
+        "rawHash": "7617c245a16c6d75766bd081ca69c36249ba28ecec16e313b36dd73c16cd60e9",
+        "retrievedAt": "2026-11-03T08:51:00.092120+00:00",
+        "publisher": "City of Brookhaven",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official current city district-map page links exact city-owned District2 PDF item; July2026 map is newer than unchecked county legacy geometry."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/6b393fc6e9ec4783bf6fc0bb0f200afd/data",
+        "finalUrl": "https://www.arcgis.com/itemdata/92d347a7683b26a11dab76ccf9a5cac2/6b393fc6e9ec4783bf6fc0bb0f200afd/District2.pdf?response-cache-control=max-age%3D0%2C%20s-maxage%3D600%2C%20v%3D1785168318000&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIClLDnW0aZvyEqoHY1RG1%2BhaP1z%2F%2Fd2wX7mzX7KtDKT%2FAiEA6XjN3wDlkvHAzdjs%2F5ceK%2Fe1f9x%2BZ0BIZ5hZ6adVIhQqugUIkf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2MDQ3NTgxMDI2NjUiDLu6NsWX0P7SoVijmiqOBZtr5Y6MaaZrQ2g5I7ka1EydUaw5b57KEBd6W96Est76jn9Wst8pzeN15ooUblBd7k0vX8ccEjsNHHIZm3cYYRJ9wbk0gDv67TX8WT3bfdYRTBGSylx2AiYeqEVhcOTDNd%2B0wZsBwGlN6K0iehH0b%2BXCPixDvBQ0NEb7wn21ZrkVrQLjeBhV%2BsFAI3tJp3BLRMbGpwWpImkbIsh4csSJ3PWwTWil7FV6m53moRhcYyYm6RIBcvOnE7XOML1DUwXsEQbSBhV%2B7O%2FK6GpJL1M6fvIgft41nCWoq4EGNQsJOrubRLbtxjVcPzthhsOs%2FLUlz4fOMLMhy6DXE5XWWlb2AUBnZmi3HOmpg76I%2BekcsRyMdv4CEbAhzqJtH001WMgE%2BzxOWhr5wMNzIY7TbCkgDs%2FeUFvbRN7a2OIHdao0Dzl262CpEBT2FzOSPlAsydhzeozMReZWHsGYeDF1WIW3M4ed8G6pKQlTbI%2BDPszt6DPQLSqAxFyh9sULTksM3kNmyccehnwxzfoj1GLelYHf59wwG5SC8WImdfFoCBfCXZTGWki2E2ddHwiewo0aU3theRyyHnJIrn%2FzjWTIYEI2T%2FrlMGMYJ3td3krfSxmNCYSofnxkhZSxt6Qu8YuNbrmTKtI0bOkCqKq95mJ%2FRlTPqkX6IFjPA1kopFXb0CRm6U%2FKtdenLOiTcFZY2hNX3iToc%2BxZmd%2BwF6VBZE8O0GIUI%2FHP%2Bp1nvsBRgZggzm9PzXcsTTn1Z3bLCF44qxupY048s0jGfpnlrZeb9twmrjupIx%2Bjg5E72%2BcoPpxVB3hfVOl6ZtVTeTSvCmS9mxRPoesBL2iut8ezTMs9zvERVOK7D%2FfeX6bt4gn82sjaBb8SQzDIm6bXBjqxAbILwM1bYO7YI2Ywvq9puaVeu%2B9s4i4B2aHFId3VGWHdMfCWZWMXv1HKbRS9ORVc%2BDPNXz4yYXUHNKI0VrluC7iFtMQU5d3maPzX9Xem9FsuodqbGcMgih8RBJnvFSDQSowNqxo8Xj14mlNNPQN%2B5mIHISd5Soa%2Bouy8d062PC1OvfmE2FlBvjvcBX9tuFx8jWTR2XFqNZCxKWYmCsttp1i4hAu9YBuQGInECr5mu1NUJQ%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T085152Z&X-Amz-SignedHeaders=host&X-Amz-Credential=ASIAYZTTEKKEWSWEFMHU%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Expires=600&X-Amz-Signature=2fc527de99bda49eaba4137cd35a13a932aa2629d6cfd9c902c94acd371d26e6",
+        "httpStatus": 200,
+        "rawHash": "3086cd44477e900c92667c32a3105e2a5ca7fe13a658d5403293e08821b7eb47",
+        "retrievedAt": "2026-11-03T08:51:52.473255+00:00",
+        "publisher": "City of Brookhaven",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Native image-only District2 PDF linked by current city page, createdJuly27,2026. Native extraction empty. Exact title visually transcribed and separately hashed; never represented as native text. Current city map controls geographic scope."
+      },
+      {
+        "requestedUrl": "https://www.legis.ga.gov/Legislation/20112012/127755.pdf",
+        "finalUrl": "https://www.legis.ga.gov/api/legislation/document/20112012/127755",
+        "httpStatus": 200,
+        "rawHash": "249e92440ab9241556199dc270dc9af58b5f28eea919095e08622a669093e580",
+        "retrievedAt": "2026-11-03T08:55:36.379214+00:00",
+        "publisher": "Georgia General Assembly",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official General Assembly publishedHB636/AP charter §2.01(b)(3) explicitly distinguishes district voting from candidate residency. Founding charter supplies election method; current city-linkedJuly2026 map supplies boundaries. Old2010 block descriptions are not used as current polygons."
+      },
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2022-signed-legislation/sb-621/download",
+        "finalUrl": "https://gov.georgia.gov/document/2022-signed-legislation/sb-621/download",
+        "httpStatus": 200,
+        "rawHash": "0e11aada5edb438d50ba38b42b3c4c26aa8b589ee44e62c4fae28ed8ea4b389f",
+        "retrievedAt": "2026-11-03T08:48:11.241362+00:00",
+        "publisher": "Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Governor-published signed2022SB621 §2 expressly elects Posts1and2 of both districts by qualified city electors voting at large. Post2District2 is a residence seat, not a restricted voter district. Exact statutory body extraction removes marginal line numbers, separately from full native text."
+      },
+      {
+        "requestedUrl": "https://www.stonecrestga.gov/211/Elections",
+        "finalUrl": "https://www.stonecrestga.gov/211/Elections",
+        "httpStatus": 200,
+        "rawHash": "e185f2461a9f1f50231e47d49be608ef1f24508f056073cd94294bd1e5cb0563",
+        "retrievedAt": "2026-11-03T08:48:11.269220+00:00",
+        "publisher": "City of Stonecrest",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current city elections page identifiesNovember3District2special election and links city-owned council-district GIS application."
+      },
+      {
+        "requestedUrl": "https://www.stonecrestga.gov/DocumentCenter/View/1943",
+        "finalUrl": "https://www.stonecrestga.gov/DocumentCenter/View/1943/2026-PUBLIC-NOTICE-OF-ELECTION-City-Stonecrest-F?bidId=",
+        "httpStatus": 200,
+        "rawHash": "98542bc58edf3e3c52aaad38ac9fd7dae5115d6676846c0d8b713f793d1cb340",
+        "retrievedAt": "2026-11-03T08:49:19.196266+00:00",
+        "publisher": "City of Stonecrest",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current municipal election notice establishesNovember3,2026special election forDistrict2. Public city-hall contact address is not a filed residential address."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/cd7e36c295ef445c94a9eaf889286c16/data?f=json",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/cd7e36c295ef445c94a9eaf889286c16/data?f=json",
+        "httpStatus": 200,
+        "rawHash": "7b57485045fdd9f02da998c2e2b8867843700d2c8bdab1b06cf588c1a66c43f7",
+        "retrievedAt": "2026-11-03T08:49:18.537291+00:00",
+        "publisher": "City of Stonecrest",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Public application configuration directly linked by current city elections page identifies the actual official council webmap item. No personal location search performed."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/01775094145c42039fc8c125e80e79e2/data?f=json",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/01775094145c42039fc8c125e80e79e2/data?f=json",
+        "httpStatus": 200,
+        "rawHash": "f91ba9e881156d6e686a368a2470015319daf9bb7bb79445e74f5e33675d8373",
+        "retrievedAt": "2026-11-03T08:50:21.357244+00:00",
+        "publisher": "City of Stonecrest",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current city-owned official council webmap directly identifies its City_Council_view layer. Mask/parcels layers not used for candidate electorate."
+      },
+      {
+        "requestedUrl": "https://services8.arcgis.com/2Oj4p0oK7rnTYNHA/arcgis/rest/services/City_Council_view/FeatureServer/0?f=pjson",
+        "finalUrl": "https://services8.arcgis.com/2Oj4p0oK7rnTYNHA/arcgis/rest/services/City_Council_view/FeatureServer/0?f=pjson",
+        "httpStatus": 200,
+        "rawHash": "106d7791d8edb1893df267d000627101efb359a3e28c6791f2ff40b5e519cb54",
+        "retrievedAt": "2026-11-03T08:50:59.865205+00:00",
+        "publisher": "City of Stonecrest",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official city-owned council layer metadata for the current linked webmap."
+      },
+      {
+        "requestedUrl": "https://services8.arcgis.com/2Oj4p0oK7rnTYNHA/arcgis/rest/services/City_Council_view/FeatureServer/0/query?where=DISTRICTID%3D%272%27&outFields=OBJECTID%2CDISTRICTID%2CNAME&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services8.arcgis.com/2Oj4p0oK7rnTYNHA/arcgis/rest/services/City_Council_view/FeatureServer/0/query?where=DISTRICTID%3D%272%27&outFields=OBJECTID%2CDISTRICTID%2CNAME&returnGeometry=true&outSR=4326&f=geojson",
+        "httpStatus": 200,
+        "rawHash": "dc36ff4eb98eedb4402b687dae904e20f5326629dfa214d5bbfe9192d9a69c47",
+        "retrievedAt": "2026-11-03T08:52:47.533712+00:00",
+        "publisher": "City of Stonecrest",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Native public query of city-owned current linked council layer returns exactlyDistrict2 polygon and district name, without personal addresses or voter identity. Reader registry binding remains pending."
+      },
+      {
+        "requestedUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-ii-conservation-districts",
+        "finalUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-ii-conservation-districts",
+        "httpStatus": 200,
+        "rawHash": "c86f6530271347c7cc8c6f6126b6c331eba9d682a6b88505fac232528333bf95",
+        "retrievedAt": "2026-11-03T08:48:13.757296+00:00",
+        "publisher": "Georgia Soil and Water Conservation Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "State conservation commission explicitly listsDeKalbCountySWCD, DeKalbCounty, JanDunaway andCarolHayes; corroborates the named county field."
+      },
+      {
+        "requestedUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/find-my-swcd",
+        "finalUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/find-my-swcd",
+        "httpStatus": 200,
+        "rawHash": "0d906e626e8ee70c39948bb76b506fc01dc66175ae6c77ada9467ffb9d9df585",
+        "retrievedAt": "2026-11-03T08:50:22.038109+00:00",
+        "publisher": "Georgia Soil and Water Conservation Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official statewide conservation-district listing identifiesDeKalbCounty as a distinct single-county conservation district; not a multicounty fallback."
+      },
+      {
+        "requestedUrl": "https://www.tuckerga.gov/tucker-together/",
+        "finalUrl": "https://www.tuckerga.gov/tucker-together/",
+        "httpStatus": 200,
+        "rawHash": "f706f6c412606c4d1ca78bbd6d7c9ed62319b5920b2c9106be604b8b1cb4139d",
+        "retrievedAt": "2026-11-03T08:48:12.596210+00:00",
+        "publisher": "City of Tucker",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official city FAQ expressly limits eligibility to registered residents physically inside proposedSB622annexation boundaries; existingcity/postalTucker/CDP are not eligible substitutes."
+      },
+      {
+        "requestedUrl": "https://dekalbcountyga.gov/sites/default/files/2026-11/2026%20SB%20622%20Call%20Tucker%20Referendum-FINAL.pdf",
+        "finalUrl": "https://dekalbcountyga.gov/sites/default/files/2026-11/2026%20SB%20622%20Call%20Tucker%20Referendum-FINAL.pdf",
+        "httpStatus": 200,
+        "rawHash": "10b11f7c6c1d1f3fbd5585a7e3598334261743c3a814028c493fc909f722869c",
+        "retrievedAt": "2026-11-03T08:48:12.841817+00:00",
+        "publisher": "DeKalb County Board of Registration and Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official countyJuly30,2026 election call, currently linked inNovember2026, establishesNovember3special referendum within the district described bySB622. Full question and contingentJanuary1,2027effective date preserved."
+      },
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/sb-622/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/sb-622/download",
+        "httpStatus": 200,
+        "rawHash": "5c242841894365ef22afb2cd540d80fbb1bc624d07b17d1b6e1f8a853d312e16",
+        "retrievedAt": "2026-11-03T08:49:18.549309+00:00",
+        "publisher": "Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Governor-published signed2026SB622, AS PASSED, exact planTucker-Annex-2025DistrictANNEX enumerates eight2020Censusblocks and electors of territory sought to be annexed. The source is preserved as published; printed sample/call establishesAct704/current ballot."
+      },
+      {
+        "requestedUrl": "https://www.tuckerga.gov/wp-content/uploads/2026/09/sb622-map-updated.jpg",
+        "finalUrl": "https://www.tuckerga.gov/wp-content/uploads/2026/09/sb622-map-updated.jpg",
+        "httpStatus": 200,
+        "rawHash": "0851dd6b3a305439cb8dd544505137924b910ab5ef3272e9bed05be0bac7d53a",
+        "retrievedAt": "2026-11-03T08:49:18.545240+00:00",
+        "publisher": "City of Tucker",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current city-linked September2026 nativeJPEG clearly delineates proposed annexation area separately from existingTucker and unincorporatedDeKalb. Visual labels transcribed into separately hashed text; JPEG bytes never called text."
+      },
+      {
+        "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/Census2020/tigerWMS_Census2020/MapServer?f=pjson",
+        "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/Census2020/tigerWMS_Census2020/MapServer?f=pjson",
+        "httpStatus": 200,
+        "rawHash": "28b3ec5ccfd4deb8e6fa7a8dc6887b665d39d896275b76656db79ccb9452014f",
+        "retrievedAt": "2026-11-03T08:59:09.594081+00:00",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Native Census Bureau Census2020 service metadata identifiesCensusBlocks layer10;2020vintage required by the signed law."
+      },
+      {
+        "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/Census2020/tigerWMS_Census2020/MapServer/10/query?where=GEOID+IN+%28%27130890217031013%27%2C%27130890218201000%27%2C%27130890218201001%27%2C%27130890218201002%27%2C%27130890218201004%27%2C%27130890218201005%27%2C%27130890218201006%27%2C%27130890218202007%27%29&outFields=GEOID%2CSTATE%2CCOUNTY%2CTRACT%2CBLOCK&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/Census2020/tigerWMS_Census2020/MapServer/10/query?where=GEOID+IN+%28%27130890217031013%27%2C%27130890218201000%27%2C%27130890218201001%27%2C%27130890218201002%27%2C%27130890218201004%27%2C%27130890218201005%27%2C%27130890218201006%27%2C%27130890218202007%27%29&outFields=GEOID%2CSTATE%2CCOUNTY%2CTRACT%2CBLOCK&returnGeometry=true&outSR=4326&f=geojson",
+        "httpStatus": 200,
+        "rawHash": "5fd78561c20922a8dd15aa482bbd170c5d0617f1e49a409ea7eeea9a442695df",
+        "retrievedAt": "2026-11-03T08:59:29.860484+00:00",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Native Census Bureau public query of2020block layer returns exactly all8GEOIDs derived from the signedlaw state13county089tract/block descriptions. Every geometry is a polygon. This is exact geography evidence; application reader binding not performed."
+      }
+    ]
+  }
+}

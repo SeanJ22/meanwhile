@@ -1,0 +1,40 @@
+{
+  "tucker": {
+    "ocdId": "ocd-division/country:us/state:ga/county:dekalb/special_district:tucker_sb622_annexation_referendum_2026",
+    "censusVintage": "2020",
+    "blockGeoids": [
+      "130890217031013",
+      "130890218201000",
+      "130890218201001",
+      "130890218201002",
+      "130890218201004",
+      "130890218201005",
+      "130890218201006",
+      "130890218202007"
+    ],
+    "lawPlanQuote": "Plan Name: Tucker-Annex-2025    \nPlan Type: Local\nDistrict ANNEX\nCounty DeKalb GA \nVTD Briarlake Elem\nBlock 021703 \n1013           \nVTD Midvale Road\nBlock 021820 \n1000 1001 1002 1004 1005 1006 2007",
+    "lawSourceFile": "sources/5c242841894365ef22afb2cd540d80fbb1bc624d07b17d1b6e1f8a853d312e16.source",
+    "censusPolygonSourceFile": "sources/5fd78561c20922a8dd15aa482bbd170c5d0617f1e49a409ea7eeea9a442695df.source",
+    "currentCityMapFile": "sources/0851dd6b3a305439cb8dd544505137924b910ab5ef3272e9bed05be0bac7d53a.source",
+    "boundary": "Union of exactly eight listed2020Censusblocks, unincorporatedDeKalb on electionday; no wholeprecinct/municipal fallback."
+  },
+  "stonecrestDistrict2": {
+    "nativePolygonSourceFile": "sources/dc36ff4eb98eedb4402b687dae904e20f5326629dfa214d5bbfe9192d9a69c47.source",
+    "officialAppConfigurationFile": "sources/7b57485045fdd9f02da998c2e2b8867843700d2c8bdab1b06cf588c1a66c43f7.source",
+    "officialWebmapFile": "sources/f91ba9e881156d6e686a368a2470015319daf9bb7bb79445e74f5e33675d8373.source"
+  },
+  "brookhavenDistrict2": {
+    "primaryCurrentCityMapFile": "sources/3086cd44477e900c92667c32a3105e2a5ca7fe13a658d5403293e08821b7eb47.source",
+    "mapCreationDate": "2026-07-27",
+    "rejectedUnverifiedLegacyPolygonFile": "sources/d1718906d1d1a9570fbbf0c7de6c7ca97d755c5d486eecca9595fa167416a44c.source"
+  },
+  "commissionDistricts": {
+    "primaryCurrentCountyMapFile": "sources/d1424f27c7a1f3470a775120e7d45ff5c9e37c329ae7e8a50e5672b62c6acfa8.source",
+    "primaryCurrentSuperdistrictMapFile": "sources/d3c0ba9cb126f9eaa083d6a024f916ce9b1d21ea2a4eeb1d76a53946f1a42985.source",
+    "unverifiedLegacyFeatureFiles": [
+      "sources/76baa29e3849f8a5e22f5d29907781a3eb9514407ba05865a4cf981b75f5e213.source",
+      "sources/26f43a957d2abcfe067140dae7ac63922ca4dd85df2d094b9ed034f0ec86d6fb.source"
+    ]
+  },
+  "readerBindingPerformed": false
+}

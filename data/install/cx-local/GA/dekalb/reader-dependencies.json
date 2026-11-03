@@ -1,0 +1,56 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:ga/county:dekalb/commission_district:2",
+    "status": "EXACT_DISTRICT_ID_CURRENT_READER_JOIN_PENDING",
+    "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+    "boundarySourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-01/20250509_Commissioner.pdf",
+    "readerDependency": "Use the exact current county-linked20250509 Commissioner District2 polygon, not the whole county. Legacy public ElectedOfficials geometry has manual LASTUPDATE values2013 and is not treated as verified2026 boundary parity."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ga/county:dekalb/commission_district:3",
+    "status": "EXACT_DISTRICT_ID_CURRENT_READER_JOIN_PENDING",
+    "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+    "boundarySourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-01/20250509_Commissioner.pdf",
+    "readerDependency": "Use the exact current county-linked20250509 Commissioner District3 polygon, not the whole county. Legacy public ElectedOfficials geometry has manual LASTUPDATE values2013 and is not treated as verified2026 boundary parity."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ga/county:dekalb/commission_district:7",
+    "status": "EXACT_DISTRICT_ID_CURRENT_READER_JOIN_PENDING",
+    "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+    "boundarySourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-01/20250509_SuperCommissioner.pdf",
+    "readerDependency": "Use the exact current county-linked20250509 Super Commissioner District7 polygon, not the whole county. Legacy public ElectedOfficials geometry has manual LASTUPDATE values2013 and is not treated as verified2026 boundary parity."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ga/place:brookhaven/council_district:2",
+    "status": "EXACT_CITY_COUNCIL_DISTRICT_READER_JOIN_PENDING",
+    "boundarySourceUrl": "https://www.arcgis.com/sharing/rest/content/items/6b393fc6e9ec4783bf6fc0bb0f200afd/data",
+    "readerDependency": "Use current city-owned July2026 map/geometry for Brookhaven District2 only. The county legacy GIS feature has LASTUPDATE2022 and unconfirmed parity with the city map, so it is not installed as a current polygon. Never use whole Brookhaven."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ga/place:stonecrest/council_district:2",
+    "status": "EXACT_CITY_COUNCIL_DISTRICT_READER_JOIN_PENDING",
+    "boundarySourceUrl": "https://services8.arcgis.com/2Oj4p0oK7rnTYNHA/arcgis/rest/services/City_Council_view/FeatureServer/0/query?where=DISTRICTID%3D%272%27&outFields=OBJECTID%2CDISTRICTID%2CNAME&returnGeometry=true&outSR=4326&f=geojson",
+    "officialLinkingUrl": "https://www.stonecrestga.gov/211/Elections",
+    "readerDependency": "Bind only the current city-owned District2 polygon from the linked official council GIS application. Do not widen to Stonecrest city or similarly numbered county commission district."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ga/county:dekalb/special_district:tucker_sb622_annexation_referendum_2026",
+    "status": "EXACT_LEGAL_CENSUS2020_BLOCK_TERRITORY_READER_JOIN_PENDING",
+    "legalPlan": "Tucker-Annex-2025 — District ANNEX — signed2026 SB622, Act704",
+    "censusVintage": "2020",
+    "censusBlockGeoids": [
+      "130890217031013",
+      "130890218201000",
+      "130890218201001",
+      "130890218201002",
+      "130890218201004",
+      "130890218201005",
+      "130890218201006",
+      "130890218202007"
+    ],
+    "lawSourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/sb-622/download",
+    "nativeCensusPolygonSourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/Census2020/tigerWMS_Census2020/MapServer/10/query?where=GEOID+IN+%28%27130890217031013%27%2C%27130890218201000%27%2C%27130890218201001%27%2C%27130890218201002%27%2C%27130890218201004%27%2C%27130890218201005%27%2C%27130890218201006%27%2C%27130890218202007%27%29&outFields=GEOID%2CSTATE%2CCOUNTY%2CTRACT%2CBLOCK&returnGeometry=true&outSR=4326&f=geojson",
+    "currentCityMapSourceUrl": "https://www.tuckerga.gov/wp-content/uploads/2026/09/sb622-map-updated.jpg",
+    "readerDependency": "Bind the union of exactly these eight2020 Census block polygons. No whole-Tucker, same-named postal/CDP, whole-precinct or countywide substitute. The proposed territory is unincorporated on election day; approval would take effectJanuary1,2027."
+  }
+]

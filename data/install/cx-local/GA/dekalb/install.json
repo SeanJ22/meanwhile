@@ -1,0 +1,199 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "GA",
+  "county": "DeKalb",
+  "countyFips": "13089",
+  "populationRank": 87,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:GA",
+  "inputDirectory": "ballot-input",
+  "operation": "Data-only complete published current county-composite local candidate blocks plus new exact-territory Tucker annexation question. River merges latestGAdata and binds precise district applicability. No production writes/publication.",
+  "counts": {
+    "candidateFields": 9,
+    "printedCandidateChoices": 18,
+    "newMeasureFields": 1,
+    "totalChangedContests": 10,
+    "heldFields": 0,
+    "declaredWriteInFilings": 0,
+    "declaredWriteInCertificationAcquired": false,
+    "samplePdfFiles": 1,
+    "samplePhysicalPages": 12,
+    "localCandidatePhysicalPages": [
+      2,
+      3
+    ],
+    "newQuestionPhysicalPages": [
+      5
+    ],
+    "preparedNestedInputsCompared": 45,
+    "baselineMeasuresPreserved": 6,
+    "preparedLocalQuestionsConfirmedUnchanged": 2,
+    "readerDistrictDependencies": 6,
+    "exactTuckerCensus2020Blocks": 8,
+    "sourceCaptures": 32
+  },
+  "subjects": [
+    {
+      "id": "ga-cx-local-2026-dekalb-commission-district-2",
+      "title": "County Commissioner \u2014 District 2",
+      "ocdId": "ocd-division/country:us/state:ga/county:dekalb/commission_district:2",
+      "candidates": 2,
+      "physicalPage": 2,
+      "rectangle": [
+        392,
+        146,
+        558,
+        225
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "ga-cx-local-2026-dekalb-commission-district-3",
+      "title": "County Commissioner \u2014 District 3",
+      "ocdId": "ocd-division/country:us/state:ga/county:dekalb/commission_district:3",
+      "candidates": 2,
+      "physicalPage": 2,
+      "rectangle": [
+        392,
+        226,
+        558,
+        307
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "ga-cx-local-2026-dekalb-commission-district-7",
+      "title": "County Commissioner \u2014 District 7",
+      "ocdId": "ocd-division/country:us/state:ga/county:dekalb/commission_district:7",
+      "candidates": 1,
+      "physicalPage": 2,
+      "rectangle": [
+        392,
+        307,
+        558,
+        371
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "ga-cx-local-2026-dekalb-soil-water-supervisor",
+      "title": "DeKalb County Soil and Water Conservation District Supervisor",
+      "ocdId": "ocd-division/country:us/state:ga/county:dekalb",
+      "candidates": 2,
+      "physicalPage": 2,
+      "rectangle": [
+        392,
+        371,
+        558,
+        447
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "ga-cx-local-2026-brookhaven-council-district-2-special-unexpired-jen-owens",
+      "title": "Brookhaven City Council \u2014 District 2 (Unexpired term of Jen Owens, resigned)",
+      "ocdId": "ocd-division/country:us/state:ga/place:brookhaven/council_district:2",
+      "candidates": 1,
+      "physicalPage": 2,
+      "rectangle": [
+        392,
+        447,
+        558,
+        559
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "ga-cx-local-2026-doraville-council-district-2-post-2-special-unexpired-carrie-armistead",
+      "title": "Doraville City Council \u2014 District 2, Post 2 At Large (Unexpired term of Carrie Armistead, resigned)",
+      "ocdId": "ocd-division/country:us/state:ga/place:doraville",
+      "candidates": 5,
+      "physicalPage": 3,
+      "rectangle": [
+        55,
+        54,
+        219,
+        244
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "ga-cx-local-2026-pine-lake-mayor-special-unexpired-brandy-hall",
+      "title": "Pine Lake Mayor (Unexpired term of Brandy Hall, resigned)",
+      "ocdId": "ocd-division/country:us/state:ga/place:pine_lake",
+      "candidates": 1,
+      "physicalPage": 3,
+      "rectangle": [
+        55,
+        244,
+        219,
+        355
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "ga-cx-local-2026-pine-lake-council-special-unexpired-jeff-goldberg",
+      "title": "Pine Lake City Council (Unexpired term of Jeff Goldberg, resigned)",
+      "ocdId": "ocd-division/country:us/state:ga/place:pine_lake",
+      "candidates": 1,
+      "physicalPage": 3,
+      "rectangle": [
+        55,
+        355,
+        219,
+        428
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "ga-cx-local-2026-stonecrest-council-district-2-special-unexpired-terry-fye",
+      "title": "Stonecrest City Councilmember \u2014 District Post 2 (Unexpired term of Terry Fye, resigned)",
+      "ocdId": "ocd-division/country:us/state:ga/place:stonecrest/council_district:2",
+      "candidates": 3,
+      "physicalPage": 3,
+      "rectangle": [
+        225,
+        54,
+        389,
+        211
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "ga-cx-local-2026-tucker-sb622-annexation",
+      "title": "City of Tucker Annexation \u2014 Senate Bill 622 (Act No. 704)",
+      "ocdId": "ocd-division/country:us/state:ga/county:dekalb/special_district:tucker_sb622_annexation_referendum_2026",
+      "physicalPage": 5,
+      "type": "MEASURE",
+      "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf"
+    }
+  ],
+  "coverageLimitations": [
+    "Complete currently published12-page county composite, not each precinct-style inventory. County expressly warns some contests are inapplicable to a given voter.",
+    "Precise commission2/3/superdistrict7, Brookhaven2 andStonecrest2reader joins remain dependencies. No geographic district widened to county/city.",
+    "DoravillePost2 elected citywide by signed2022SB621; residencyDistrict2 is not its voter boundary.",
+    "No November school-board or judicial field in this published composite. Do not copy May/June nonpartisan elections intoNovember or substitute county school electorate forAtlanta/Decatur.",
+    "TuckerSB622question only for eight proposed-annexation Census2020blocks, not existingTucker city or countywide; exactCensuspolygons retained.",
+    "Named write-in and separate withdrawal/cancellation certification not acquired; generic blanks do not create people/statuses.",
+    "All existing federal/statewide/legislative contests and existing measures/explanations remain unchanged."
+  ],
+  "sourceSupport": "source-support.json",
+  "readerDependencies": "reader-dependencies.json",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 32 captured sources and 29 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "focusedValidation": "focused-validation.json",
+  "reviewFiles": [
+    "sample-field-review.json",
+    "prepared-id-review.json",
+    "geography-review.json",
+    "candidate-status-review.json",
+    "existing-measure-confirmations.json"
+  ],
+  "validationDescription": "validation.json"
+}

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T09:06:53.669725+00:00",
+  "preparedAt": "2026-11-03T09:11:11.469894+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -2104,6 +2104,20 @@
       ]
     },
     {
+      "state": "GA",
+      "county": "DeKalb",
+      "populationRank": 87,
+      "manifest": "GA/dekalb/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 9,
+      "measureContests": 1,
+      "candidacies": 18,
+      "newContests": 10,
+      "refreshedContests": 0,
+      "sourceInputSha256": "06807e3cd3b1e581f0bf2a371ab9f218a2a9f6db42b0e1198cbb08092fa5a582",
+      "coverage": "See per-county manifest for exact source and reader scope."
+    },
+    {
       "state": "UT",
       "county": "Utah County",
       "populationRank": 88,
@@ -2197,17 +2211,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 83,
-    "packetsPrepared": 84,
-    "candidateAndRetentionContests": 4143,
-    "measureContests": 115,
-    "candidacyEntries": 9348,
-    "newContestEntriesAgainstCheckedInBaseline": 3479,
-    "distinctPreparedContestIds": 4164,
-    "distinctPreparedCandidateIds": 9163,
-    "distinctNewContestsAgainstCheckedInBaseline": 3433,
+    "countiesPrepared": 84,
+    "packetsPrepared": 85,
+    "candidateAndRetentionContests": 4152,
+    "measureContests": 116,
+    "candidacyEntries": 9366,
+    "newContestEntriesAgainstCheckedInBaseline": 3489,
+    "distinctPreparedContestIds": 4174,
+    "distinctPreparedCandidateIds": 9181,
+    "distinctNewContestsAgainstCheckedInBaseline": 3443,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 85
+    "distinctCountyHandoffs": 86
   },
   "remainingWork": [
     {

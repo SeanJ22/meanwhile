@@ -1,0 +1,27 @@
+{
+  "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+  "sourceRawSha256": "6f83a84d6f4a90948920499e7149efb5db0134ae90551b9adb6a7b6c0a82ae52",
+  "confirmations": [
+    {
+      "contestId": "ga-local-2026:dekalb-esplost",
+      "preparedInputPath": "data/install/cx-votes/GA/explainer-expansion/dekalb-esplost/ballot-input/ga.json",
+      "preparedInputRef": "79402c8d32e5a7f2daca15219e21ce512de7cfe0",
+      "preparedInputSha256": "70d8b4f88c476bae5640840e2979ed13f680740d9175f79bd99aa38d316be3f7",
+      "samplePhysicalPage": 4,
+      "fullQuestionNormalizedLiteralMatch": true,
+      "questionTextSha256": "fb77c53ecb0bdcac76c8ba20b9a6c718a36c82e49d1c21596cc1be0739e9f7dc",
+      "action": "SOURCE_CONFIRMATION_ONLY_EXISTING_QUESTION_AND_EXPLANATION_UNCHANGED"
+    },
+    {
+      "contestId": "ga-local-2026:brookhaven-senior-disabled-exemption",
+      "preparedInputPath": "data/install/cx-votes/GA/explainer-expansion/brookhaven-homestead/ballot-input/ga.json",
+      "preparedInputRef": "79402c8d32e5a7f2daca15219e21ce512de7cfe0",
+      "preparedInputSha256": "cfc9f2a2bd129a23c6bc55c31288d828c2074d8c40151db7220e1e4abf490d05",
+      "samplePhysicalPage": 5,
+      "fullQuestionNormalizedLiteralMatch": true,
+      "questionTextSha256": "9cb59aeacac36b43692fcf70c6c0d9a190b605d5c25662890568eaaca4be0194",
+      "action": "SOURCE_CONFIRMATION_ONLY_EXISTING_QUESTION_AND_EXPLANATION_UNCHANGED"
+    }
+  ],
+  "preservation": "Full question text matches the current sample after whitespace normalization. Existing official statements/explanations and IDs are untouched; no measure refresh enters ballot-input."
+}

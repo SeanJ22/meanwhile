@@ -1,0 +1,293 @@
+{
+  "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+  "sourceSha256": "6f83a84d6f4a90948920499e7149efb5db0134ae90551b9adb6a7b6c0a82ae52",
+  "physicalPages": 12,
+  "completePublishedComposite": true,
+  "precinctStyleInventoryAcquired": false,
+  "candidateBlocks": [
+    {
+      "suffix": "commission-district-2",
+      "physicalPage": 2,
+      "rectangle": [
+        392,
+        146,
+        558,
+        225
+      ],
+      "title": "County Commissioner — District 2",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Ben Pepper",
+          "partyLabel": "Republican",
+          "incumbent": null,
+          "sourceQuote": "Ben Pepper Republican"
+        },
+        {
+          "name": "Michelle Long Spears",
+          "partyLabel": "Democrat",
+          "incumbent": true,
+          "sourceQuote": "Michelle Long Spears (I) Democrat"
+        }
+      ],
+      "electingScope": "commission:2",
+      "sourceQuote": "For County Commissioner - District 2\n(Vote for One)\nBen Pepper Republican\nMichelle Long Spears (I) Democrat\nWrite-in:",
+      "visualReview": "Full physical-page raster visually checked against the native text. Complete header, special-election vacancy, voting limit and every named candidate retained. SAMPLE watermark alone excluded."
+    },
+    {
+      "suffix": "commission-district-3",
+      "physicalPage": 2,
+      "rectangle": [
+        392,
+        226,
+        558,
+        307
+      ],
+      "title": "County Commissioner — District 3",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Andrea Bass Smith",
+          "partyLabel": "Republican",
+          "incumbent": null,
+          "sourceQuote": "Andrea Bass Smith Republican"
+        },
+        {
+          "name": "Keyanna Jones Moore",
+          "partyLabel": "Democrat",
+          "incumbent": null,
+          "sourceQuote": "Keyanna Jones Moore Democrat"
+        }
+      ],
+      "electingScope": "commission:3",
+      "sourceQuote": "For County Commissioner - District 3\n(Vote for One)\nAndrea Bass Smith Republican\nKeyanna Jones Moore Democrat\nWrite-in:",
+      "visualReview": "Full physical-page raster visually checked against the native text. Complete header, special-election vacancy, voting limit and every named candidate retained. SAMPLE watermark alone excluded."
+    },
+    {
+      "suffix": "commission-district-7",
+      "physicalPage": 2,
+      "rectangle": [
+        392,
+        307,
+        558,
+        371
+      ],
+      "title": "County Commissioner — District 7",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "LaDena Bolton",
+          "partyLabel": "Democrat",
+          "incumbent": true,
+          "sourceQuote": "LaDena Bolton (I) Democrat"
+        }
+      ],
+      "electingScope": "supercommission:7",
+      "sourceQuote": "For County Commissioner - District 7\n(Vote for One)\nLaDena Bolton (I) Democrat\nWrite-in:",
+      "visualReview": "Full physical-page raster visually checked against the native text. Complete header, special-election vacancy, voting limit and every named candidate retained. SAMPLE watermark alone excluded."
+    },
+    {
+      "suffix": "soil-water-supervisor",
+      "physicalPage": 2,
+      "rectangle": [
+        392,
+        371,
+        558,
+        447
+      ],
+      "title": "DeKalb County Soil and Water Conservation District Supervisor",
+      "voteFor": 2,
+      "candidates": [
+        {
+          "name": "Jan Dunaway",
+          "partyLabel": null,
+          "incumbent": true,
+          "sourceQuote": "Jan Dunaway (I)"
+        },
+        {
+          "name": "Carol Hayes",
+          "partyLabel": null,
+          "incumbent": true,
+          "sourceQuote": "Carol Hayes (I)"
+        }
+      ],
+      "electingScope": "county",
+      "sourceQuote": "For DeKalb County Soil and Water\nConservation District Supervisor\n(Vote for Two)\nJan Dunaway (I)\nCarol Hayes (I)",
+      "visualReview": "Full physical-page raster visually checked against the native text. Complete header, special-election vacancy, voting limit and every named candidate retained. SAMPLE watermark alone excluded."
+    },
+    {
+      "suffix": "brookhaven-council-district-2-special-unexpired-jen-owens",
+      "physicalPage": 2,
+      "rectangle": [
+        392,
+        447,
+        558,
+        559
+      ],
+      "title": "Brookhaven City Council — District 2 (Unexpired term of Jen Owens, resigned)",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Conor Sen",
+          "partyLabel": null,
+          "incumbent": null,
+          "sourceQuote": "Conor Sen"
+        }
+      ],
+      "electingScope": "brookhaven:2",
+      "sourceQuote": "Special Election\nCity of Brookhaven\nFor City Council - District 2\n(To Fill the Unexpired Term of Jen Owens, Resigned)\n(Vote for One)\nConor Sen\nWrite-in:",
+      "visualReview": "Full physical-page raster visually checked against the native text. Complete header, special-election vacancy, voting limit and every named candidate retained. SAMPLE watermark alone excluded."
+    },
+    {
+      "suffix": "doraville-council-district-2-post-2-special-unexpired-carrie-armistead",
+      "physicalPage": 3,
+      "rectangle": [
+        55,
+        54,
+        219,
+        244
+      ],
+      "title": "Doraville City Council — District 2, Post 2 At Large (Unexpired term of Carrie Armistead, resigned)",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Schuyler \"Sky\" Clark",
+          "partyLabel": null,
+          "incumbent": null,
+          "sourceQuote": "Schuyler \"Sky\" Clark"
+        },
+        {
+          "name": "Tammi Bailey Fults",
+          "partyLabel": null,
+          "incumbent": null,
+          "sourceQuote": "Tammi Bailey Fults"
+        },
+        {
+          "name": "Tom Hart",
+          "partyLabel": null,
+          "incumbent": null,
+          "sourceQuote": "Tom Hart"
+        },
+        {
+          "name": "Brian Kyser",
+          "partyLabel": null,
+          "incumbent": null,
+          "sourceQuote": "Brian Kyser"
+        },
+        {
+          "name": "Angie Riley Tooley",
+          "partyLabel": null,
+          "incumbent": null,
+          "sourceQuote": "Angie Riley Tooley"
+        }
+      ],
+      "electingScope": "doraville",
+      "sourceQuote": "Special Election\nCity of Doraville\nFor City Council\nDistrict 2, Post 2 At Large\n(To Fill the Unexpired Term of Carrie Armistead,\nResigned) (Vote for One)\nSchuyler \"Sky\" Clark\nTammi Bailey Fults\nTom Hart\nBrian Kyser\nAngie Riley Tooley\nWrite-in:",
+      "visualReview": "Full physical-page raster visually checked against the native text. Complete header, special-election vacancy, voting limit and every named candidate retained. SAMPLE watermark alone excluded."
+    },
+    {
+      "suffix": "pine-lake-mayor-special-unexpired-brandy-hall",
+      "physicalPage": 3,
+      "rectangle": [
+        55,
+        244,
+        219,
+        355
+      ],
+      "title": "Pine Lake Mayor (Unexpired term of Brandy Hall, resigned)",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Jeff Goldberg",
+          "partyLabel": null,
+          "incumbent": null,
+          "sourceQuote": "Jeff Goldberg"
+        }
+      ],
+      "electingScope": "pine_lake",
+      "sourceQuote": "Special Election\nCity of Pine Lake\nFor Mayor\n(To Fill the Unexpired Term of Brandy Hall, Resigned)\n(Vote for One)\nJeff Goldberg\nWrite-in:",
+      "visualReview": "Full physical-page raster visually checked against the native text. Complete header, special-election vacancy, voting limit and every named candidate retained. SAMPLE watermark alone excluded."
+    },
+    {
+      "suffix": "pine-lake-council-special-unexpired-jeff-goldberg",
+      "physicalPage": 3,
+      "rectangle": [
+        55,
+        355,
+        219,
+        428
+      ],
+      "title": "Pine Lake City Council (Unexpired term of Jeff Goldberg, resigned)",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "James Paproski",
+          "partyLabel": null,
+          "incumbent": null,
+          "sourceQuote": "James Paproski"
+        }
+      ],
+      "electingScope": "pine_lake",
+      "sourceQuote": "For City Council\n(To Fill the Unexpired Term of Jeff Goldberg,\nResigned) (Vote for One)\nJames Paproski\nWrite-in:",
+      "visualReview": "Full physical-page raster visually checked against the native text. Complete header, special-election vacancy, voting limit and every named candidate retained. SAMPLE watermark alone excluded."
+    },
+    {
+      "suffix": "stonecrest-council-district-2-special-unexpired-terry-fye",
+      "physicalPage": 3,
+      "rectangle": [
+        225,
+        54,
+        389,
+        211
+      ],
+      "title": "Stonecrest City Councilmember — District Post 2 (Unexpired term of Terry Fye, resigned)",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Telessa Ammons",
+          "partyLabel": null,
+          "incumbent": null,
+          "sourceQuote": "Telessa Ammons"
+        },
+        {
+          "name": "Yuvette Hudson",
+          "partyLabel": null,
+          "incumbent": null,
+          "sourceQuote": "Yuvette Hudson"
+        },
+        {
+          "name": "Bruce McColumn Sr.",
+          "partyLabel": null,
+          "incumbent": null,
+          "sourceQuote": "Bruce McColumn Sr."
+        }
+      ],
+      "electingScope": "stonecrest:2",
+      "sourceQuote": "Special Election\nCity of Stonecrest\nFor City Councilmember\nDistrict Post 2\n(To Fill the Unexpired Term of Terry Fye, Resigned)\n(Vote for One)\nTelessa Ammons\nYuvette Hudson\nBruce McColumn Sr.\nWrite-in:",
+      "visualReview": "Full physical-page raster visually checked against the native text. Complete header, special-election vacancy, voting limit and every named candidate retained. SAMPLE watermark alone excluded."
+    }
+  ],
+  "newQuestion": {
+    "physicalPage": 5,
+    "rectangle": [
+      55,
+      250,
+      219,
+      400
+    ],
+    "sourceQuote": "Special Election\nCity of Tucker\nCity of Tucker Annexation\nSenate Bill 622\nAct No. 704\n\"Shall the Act which annexes certain land\ninto the City of Tucker be approved?\"\nYes\nNo"
+  },
+  "classification": {
+    "federalCandidateFields": 4,
+    "statewideCandidateFields": 10,
+    "stateLegislativeCandidateFields": 23,
+    "localCandidateFields": 9,
+    "localNamedChoices": 18,
+    "printedNovemberJudicialFields": 0,
+    "printedNovemberSchoolBoardCandidateFields": 0,
+    "constitutionalMeasuresPreserved": 3,
+    "preparedLocalMeasuresPreserved": 2,
+    "newLocalMeasures": 1
+  },
+  "scope": "The composite expressly contains all election contests inDeKalbCounty but some are inapplicable to a given voter. All printed office blocks reviewed, no May/June school/judicial race inserted. This is published-composite coverage, not an assertion that unacquired precinct styles or postpublication changes cannot exist. County school system and Atlanta/Decatur independent school systems are not interchangeable."
+}

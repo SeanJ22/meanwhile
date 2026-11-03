@@ -1,0 +1,366 @@
+[
+  {
+    "contestId": "wi-wec-2026-city-of-hudson-fire-department-staffing-referendum",
+    "sourceRow": 13,
+    "reportedBallotPosition": "940000",
+    "reportedReferendumName": "City of Hudson Fire Department Staffing Referendum",
+    "reportedJurisdiction": "CITY OF HUDSON - ST. CROIX COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "Under state law, the increase in the levy of the City of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 0.872%, which results in a levy of $13,335,657. Shall the City of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving emergency services with 9 additional full-time fire staff and ongoing Hudson Fire Department expenses, by a total of 9.698%, which results in a levy of $14,628,943 and on ongoing basis, include the increase of $1,293,285.68 for each fiscal year going forward?",
+    "excerptFile": "excerpts/e4d027cfd67c262fd7f501720d64b734590c8655c30be4a759b15984b02bb8b9.txt",
+    "excerptSha256": "e4d027cfd67c262fd7f501720d64b734590c8655c30be4a759b15984b02bb8b9",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "Under state law, the increase in the levy of the City of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 0.872%, which results in a levy of $13,335,657. Shall the City of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving emergency services with 9 additional full-time fire staff and ongoing Hudson Fire Department expenses, by a total of 9.698%, which results in a levy of $14,628,943 and on ongoing basis, include the increase of $1,293,285.68 for each fiscal year going forward?"
+      ],
+      "yesMeans": [
+        "Under state law, the increase in the levy of the City of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 0.872%, which results in a levy of $13,335,657. Shall the City of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving emergency services with 9 additional full-time fire staff and ongoing Hudson Fire Department expenses, by a total of 9.698%, which results in a levy of $14,628,943 and on ongoing basis, include the increase of $1,293,285.68 for each fiscal year going forward?"
+      ],
+      "noMeans": [
+        "Under state law, the increase in the levy of the City of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 0.872%, which results in a levy of $13,335,657. Shall the City of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving emergency services with 9 additional full-time fire staff and ongoing Hudson Fire Department expenses, by a total of 9.698%, which results in a levy of $14,628,943 and on ongoing basis, include the increase of $1,293,285.68 for each fiscal year going forward?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact proposed change, all numeric terms and prerequisites",
+      "Yes/No directions, no unsupported consequence or recommendation",
+      "Exact named electorate and held Census division, no county/state widening"
+    ],
+    "limitations": []
+  },
+  {
+    "contestId": "wi-wec-2026-city-of-muskego-levy-increase-referendum",
+    "sourceRow": 16,
+    "reportedBallotPosition": "940000",
+    "reportedReferendumName": "City of Muskego Levy Increase Referendum",
+    "reportedJurisdiction": "CITY OF MUSKEGO - WAUKESHA COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "Under state law, the increase in the levy of the City of Muskego for the tax to be imposed for the next fiscal year, 2027, is limited to 1.593%, which results in a levy of $14,732,877.00. Shall the City of Muskego be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving public safety services in the City of Muskego, which, are the City’s Police, Fire, EMS, Rescue, and Public Works services, including staffing and support for those services, by a total of 40.047%, which results in a levy of $20,632,877.00, and on an ongoing basis, include the increase of $5,900,000.00 for each fiscal year going forward?",
+    "excerptFile": "excerpts/71b985139ccb504897f4677e2f8e6cec763ce8378aa6481b5b9ac4bb2ad165e6.txt",
+    "excerptSha256": "71b985139ccb504897f4677e2f8e6cec763ce8378aa6481b5b9ac4bb2ad165e6",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "Under state law, the increase in the levy of the City of Muskego for the tax to be imposed for the next fiscal year, 2027, is limited to 1.593%, which results in a levy of $14,732,877.00. Shall the City of Muskego be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving public safety services in the City of Muskego, which, are the City’s Police, Fire, EMS, Rescue, and Public Works services, including staffing and support for those services, by a total of 40.047%, which results in a levy of $20,632,877.00, and on an ongoing basis, include the increase of $5,900,000.00 for each fiscal year going forward?"
+      ],
+      "yesMeans": [
+        "Under state law, the increase in the levy of the City of Muskego for the tax to be imposed for the next fiscal year, 2027, is limited to 1.593%, which results in a levy of $14,732,877.00. Shall the City of Muskego be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving public safety services in the City of Muskego, which, are the City’s Police, Fire, EMS, Rescue, and Public Works services, including staffing and support for those services, by a total of 40.047%, which results in a levy of $20,632,877.00, and on an ongoing basis, include the increase of $5,900,000.00 for each fiscal year going forward?"
+      ],
+      "noMeans": [
+        "Under state law, the increase in the levy of the City of Muskego for the tax to be imposed for the next fiscal year, 2027, is limited to 1.593%, which results in a levy of $14,732,877.00. Shall the City of Muskego be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving public safety services in the City of Muskego, which, are the City’s Police, Fire, EMS, Rescue, and Public Works services, including staffing and support for those services, by a total of 40.047%, which results in a levy of $20,632,877.00, and on an ongoing basis, include the increase of $5,900,000.00 for each fiscal year going forward?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact proposed change, all numeric terms and prerequisites",
+      "Yes/No directions, no unsupported consequence or recommendation",
+      "Exact named electorate and held Census division, no county/state widening"
+    ],
+    "limitations": []
+  },
+  {
+    "contestId": "wi-wec-2026-city-of-new-berlin-public-safety-referendum",
+    "sourceRow": 17,
+    "reportedBallotPosition": "940000",
+    "reportedReferendumName": "City of New Berlin Public Safety Referendum",
+    "reportedJurisdiction": "CITY OF NEW BERLIN - WAUKESHA COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "Under state law, the increase in the levy of the City of New Berlin for the tax to be imposed for the next fiscal year, 2027, is limited to 0.762%, which results in a levy of $38,484,163. Shall the City of New Berlin be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, and on an ongoing basis, for the purpose of increasing staffing in the police and fire departments and to purchase an additional vehicle and equipment to support those additional personnel, by a total of 8.11%, which results in a levy of $41,606,312, and on an ongoing basis, include the increase of $3,122,149.00 in the base levy for each fiscal year going forward?",
+    "excerptFile": "excerpts/7ca712bcb32d16155bf74599a135e0fc7e1e2edce4950cc710834c8ad78dcf3e.txt",
+    "excerptSha256": "7ca712bcb32d16155bf74599a135e0fc7e1e2edce4950cc710834c8ad78dcf3e",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "Under state law, the increase in the levy of the City of New Berlin for the tax to be imposed for the next fiscal year, 2027, is limited to 0.762%, which results in a levy of $38,484,163. Shall the City of New Berlin be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, and on an ongoing basis, for the purpose of increasing staffing in the police and fire departments and to purchase an additional vehicle and equipment to support those additional personnel, by a total of 8.11%, which results in a levy of $41,606,312, and on an ongoing basis, include the increase of $3,122,149.00 in the base levy for each fiscal year going forward?"
+      ],
+      "yesMeans": [
+        "Under state law, the increase in the levy of the City of New Berlin for the tax to be imposed for the next fiscal year, 2027, is limited to 0.762%, which results in a levy of $38,484,163. Shall the City of New Berlin be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, and on an ongoing basis, for the purpose of increasing staffing in the police and fire departments and to purchase an additional vehicle and equipment to support those additional personnel, by a total of 8.11%, which results in a levy of $41,606,312, and on an ongoing basis, include the increase of $3,122,149.00 in the base levy for each fiscal year going forward?"
+      ],
+      "noMeans": [
+        "Under state law, the increase in the levy of the City of New Berlin for the tax to be imposed for the next fiscal year, 2027, is limited to 0.762%, which results in a levy of $38,484,163. Shall the City of New Berlin be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, and on an ongoing basis, for the purpose of increasing staffing in the police and fire departments and to purchase an additional vehicle and equipment to support those additional personnel, by a total of 8.11%, which results in a levy of $41,606,312, and on an ongoing basis, include the increase of $3,122,149.00 in the base levy for each fiscal year going forward?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact proposed change, all numeric terms and prerequisites",
+      "Yes/No directions, no unsupported consequence or recommendation",
+      "Exact named electorate and held Census division, no county/state widening"
+    ],
+    "limitations": []
+  },
+  {
+    "contestId": "wi-wec-2026-city-of-plymouth-levy-increase-referendum",
+    "sourceRow": 18,
+    "reportedBallotPosition": "940000",
+    "reportedReferendumName": "City of Plymouth Levy Increase Referendum",
+    "reportedJurisdiction": "CITY OF PLYMOUTH - SHEBOYGAN COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "Under state law, the increase in the levy of the City of Plymouth for the tax to be imposed for the next fiscal year, 2027, is limited to 2.046%, which results in a levy of $5,769,712. Shall the City of Plymouth be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of funding three additional police officers and related equipment and wage adjustments in the Police Department, by a total of 10.399%, which results in a levy of $6,369,712 and on an ongoing basis, include the increase of $600,000 for each fiscal year going forward?",
+    "excerptFile": "excerpts/5666c2f6a585c92674f322df36b1554403323641e0234d55260b225a36ecd339.txt",
+    "excerptSha256": "5666c2f6a585c92674f322df36b1554403323641e0234d55260b225a36ecd339",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "Under state law, the increase in the levy of the City of Plymouth for the tax to be imposed for the next fiscal year, 2027, is limited to 2.046%, which results in a levy of $5,769,712. Shall the City of Plymouth be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of funding three additional police officers and related equipment and wage adjustments in the Police Department, by a total of 10.399%, which results in a levy of $6,369,712 and on an ongoing basis, include the increase of $600,000 for each fiscal year going forward?"
+      ],
+      "yesMeans": [
+        "Under state law, the increase in the levy of the City of Plymouth for the tax to be imposed for the next fiscal year, 2027, is limited to 2.046%, which results in a levy of $5,769,712. Shall the City of Plymouth be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of funding three additional police officers and related equipment and wage adjustments in the Police Department, by a total of 10.399%, which results in a levy of $6,369,712 and on an ongoing basis, include the increase of $600,000 for each fiscal year going forward?"
+      ],
+      "noMeans": [
+        "Under state law, the increase in the levy of the City of Plymouth for the tax to be imposed for the next fiscal year, 2027, is limited to 2.046%, which results in a levy of $5,769,712. Shall the City of Plymouth be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of funding three additional police officers and related equipment and wage adjustments in the Police Department, by a total of 10.399%, which results in a levy of $6,369,712 and on an ongoing basis, include the increase of $600,000 for each fiscal year going forward?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact proposed change, all numeric terms and prerequisites",
+      "Yes/No directions, no unsupported consequence or recommendation",
+      "Exact named electorate and held Census division, no county/state widening"
+    ],
+    "limitations": []
+  },
+  {
+    "contestId": "wi-wec-2026-lafayette-county-capital-expenditures-referendum-question-1",
+    "sourceRow": 46,
+    "reportedBallotPosition": "930001",
+    "reportedReferendumName": "Lafayette County Capital Expenditures Referendum - QUESTION 1",
+    "reportedJurisdiction": "LAFAYETTE COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "QUESTION 1: “Should the Lafayette County Board of Supervisors authorize and approve the County incurring capital expenditures associated with the construction of a new nursing home, borrowing funds to support the capital expenditures and levying a property tax to support the debt service payments that will be above the allowable levy limit established in state law?”",
+    "excerptFile": "excerpts/42b3764eb73a8c7fca2a91f8b0f601fa16c027d66ec11de68a1ef5cd07447213.txt",
+    "excerptSha256": "42b3764eb73a8c7fca2a91f8b0f601fa16c027d66ec11de68a1ef5cd07447213",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "QUESTION 1: “Should the Lafayette County Board of Supervisors authorize and approve the County incurring capital expenditures associated with the construction of a new nursing home, borrowing funds to support the capital expenditures and levying a property tax to support the debt service payments that will be above the allowable levy limit established in state law?”"
+      ],
+      "yesMeans": [
+        "QUESTION 1: “Should the Lafayette County Board of Supervisors authorize and approve the County incurring capital expenditures associated with the construction of a new nursing home, borrowing funds to support the capital expenditures and levying a property tax to support the debt service payments that will be above the allowable levy limit established in state law?”"
+      ],
+      "noMeans": [
+        "QUESTION 1: “Should the Lafayette County Board of Supervisors authorize and approve the County incurring capital expenditures associated with the construction of a new nursing home, borrowing funds to support the capital expenditures and levying a property tax to support the debt service payments that will be above the allowable levy limit established in state law?”"
+      ]
+    },
+    "materialConditionsChecked": [
+      "No borrowing maximum, tax amount or repayment term is specified; none invented",
+      "Question asks whether County Board should approve package; no unsupported binding/advisory legal classification",
+      "Construction, capital borrowing and taxes above legal levy limit all retained"
+    ],
+    "limitations": []
+  },
+  {
+    "contestId": "wi-wec-2026-lafayette-county-levy-increase-referendum-question-2",
+    "sourceRow": 47,
+    "reportedBallotPosition": "930002",
+    "reportedReferendumName": "Lafayette County Levy Increase Referendum - QUESTION 2",
+    "reportedJurisdiction": "LAFAYETTE COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "QUESTION 2: “Under state law, the increase in the levy of the County of Lafayette for the tax to be imposed for the next fiscal year, 2027, is limited to 1.088%, which results in an estimated levy of $10,087,262. Shall the County of Lafayette be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying a portion of the cost to operate and maintain Lafayette Manor, by an estimated total of 4.957% which results in a levy of $10,587,262, and include the increase of $500,000 for fiscal years 2028 through 2031?”",
+    "excerptFile": "excerpts/29c2ff7d4087f05d33c324896a34532dcd210515908ab53bb3e9d92733f0657e.txt",
+    "excerptSha256": "29c2ff7d4087f05d33c324896a34532dcd210515908ab53bb3e9d92733f0657e",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "QUESTION 2: “Under state law, the increase in the levy of the County of Lafayette for the tax to be imposed for the next fiscal year, 2027, is limited to 1.088%, which results in an estimated levy of $10,087,262. Shall the County of Lafayette be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying a portion of the cost to operate and maintain Lafayette Manor, by an estimated total of 4.957% which results in a levy of $10,587,262, and include the increase of $500,000 for fiscal years 2028 through 2031?”"
+      ],
+      "yesMeans": [
+        "QUESTION 2: “Under state law, the increase in the levy of the County of Lafayette for the tax to be imposed for the next fiscal year, 2027, is limited to 1.088%, which results in an estimated levy of $10,087,262. Shall the County of Lafayette be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying a portion of the cost to operate and maintain Lafayette Manor, by an estimated total of 4.957% which results in a levy of $10,587,262, and include the increase of $500,000 for fiscal years 2028 through 2031?”"
+      ],
+      "noMeans": [
+        "QUESTION 2: “Under state law, the increase in the levy of the County of Lafayette for the tax to be imposed for the next fiscal year, 2027, is limited to 1.088%, which results in an estimated levy of $10,087,262. Shall the County of Lafayette be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying a portion of the cost to operate and maintain Lafayette Manor, by an estimated total of 4.957% which results in a levy of $10,587,262, and include the increase of $500,000 for fiscal years 2028 through 2031?”"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Estimated 2027 statutory/base/proposed percentages and dollar levies retained",
+      "Additional500k continues2028–2031, not permanently",
+      "Funds only portion of operating/maintenance cost; capital question separate"
+    ],
+    "limitations": []
+  },
+  {
+    "contestId": "wi-wec-2026-rusk-county-jail-referendum",
+    "sourceRow": 72,
+    "reportedBallotPosition": "930000",
+    "reportedReferendumName": "Rusk County Jail Referendum",
+    "reportedJurisdiction": "RUSK COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "Shall Rusk County, Wisconsin, be authorized to issue general obligation bonds in an amount approximately $32,321,829.46 for the purpose of constructing, furnishing, and equipping a new county jail facility?",
+    "excerptFile": "excerpts/8d2a5e29b257774edc4fa627d88d011422179d79648ad72676c2196cda76eea2.txt",
+    "excerptSha256": "8d2a5e29b257774edc4fa627d88d011422179d79648ad72676c2196cda76eea2",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Rusk County, Wisconsin, be authorized to issue general obligation bonds in an amount approximately $32,321,829.46 for the purpose of constructing, furnishing, and equipping a new county jail facility?"
+      ],
+      "yesMeans": [
+        "Shall Rusk County, Wisconsin, be authorized to issue general obligation bonds in an amount approximately $32,321,829.46 for the purpose of constructing, furnishing, and equipping a new county jail facility?"
+      ],
+      "noMeans": [
+        "Shall Rusk County, Wisconsin, be authorized to issue general obligation bonds in an amount approximately $32,321,829.46 for the purpose of constructing, furnishing, and equipping a new county jail facility?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Official amount approximately$32,321,829.46, rendered approximately$32.32million; not falsely described as maximum",
+      "Construction,furnishing,equipping all retained; no invented term or tax rate"
+    ],
+    "limitations": []
+  },
+  {
+    "contestId": "wi-wec-2026-exceed-revenue-limits",
+    "sourceRow": 86,
+    "reportedBallotPosition": "940015",
+    "reportedReferendumName": "Exceed Revenue Limits",
+    "reportedJurisdiction": "TOWN OF GRAND RAPIDS - WOOD COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "Question: Under state law, the increase in the levy of the Town of Grand Rapids for the tax to be imposed for the next fiscal year, 2027, is limited to .949% (based on actual data or the Town's best estimate), which results in a levy of $1,888,036. Shall the Town of Grand Rapids be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of maintaining and providing general town operations and public safety services, including police protection, fire protection, and emergency services, by a total of 15.890%, which results in a levy of $2,188,036, and on an ongoing basis, include the increase of $300,000 for each fiscal year going forward?",
+    "excerptFile": "excerpts/57ee1baa3c4269236ec1d27ab6d4466b84e4c5f838c3c6b8df03dc5762540c19.txt",
+    "excerptSha256": "57ee1baa3c4269236ec1d27ab6d4466b84e4c5f838c3c6b8df03dc5762540c19",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "Question: Under state law, the increase in the levy of the Town of Grand Rapids for the tax to be imposed for the next fiscal year, 2027, is limited to .949% (based on actual data or the Town's best estimate), which results in a levy of $1,888,036. Shall the Town of Grand Rapids be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of maintaining and providing general town operations and public safety services, including police protection, fire protection, and emergency services, by a total of 15.890%, which results in a levy of $2,188,036, and on an ongoing basis, include the increase of $300,000 for each fiscal year going forward?"
+      ],
+      "yesMeans": [
+        "Question: Under state law, the increase in the levy of the Town of Grand Rapids for the tax to be imposed for the next fiscal year, 2027, is limited to .949% (based on actual data or the Town's best estimate), which results in a levy of $1,888,036. Shall the Town of Grand Rapids be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of maintaining and providing general town operations and public safety services, including police protection, fire protection, and emergency services, by a total of 15.890%, which results in a levy of $2,188,036, and on an ongoing basis, include the increase of $300,000 for each fiscal year going forward?"
+      ],
+      "noMeans": [
+        "Question: Under state law, the increase in the levy of the Town of Grand Rapids for the tax to be imposed for the next fiscal year, 2027, is limited to .949% (based on actual data or the Town's best estimate), which results in a levy of $1,888,036. Shall the Town of Grand Rapids be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of maintaining and providing general town operations and public safety services, including police protection, fire protection, and emergency services, by a total of 15.890%, which results in a levy of $2,188,036, and on an ongoing basis, include the increase of $300,000 for each fiscal year going forward?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact proposed change, all numeric terms and prerequisites",
+      "Yes/No directions, no unsupported consequence or recommendation",
+      "Exact named electorate and held Census division, no county/state widening"
+    ],
+    "limitations": []
+  },
+  {
+    "contestId": "wi-wec-2026-town-of-hayward-exceed-levy-limit-referendum",
+    "sourceRow": 88,
+    "reportedBallotPosition": "940000",
+    "reportedReferendumName": "Town of Hayward Exceed Levy Limit Referendum",
+    "reportedJurisdiction": "TOWN OF HAYWARD - SAWYER COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "“Under state law, the increase in the levy of the Town of Hayward for the tax to be imposed for the next fiscal year, 2027, is limited to 1.511%, which results in a levy of $825,008. Shall the Town of Hayward be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the new construction of fire and highway departments and refurbishing of existing Town Hall, by a total of 53.8% which results in a levy of $1,268,902, and on an ongoing basis include an increase of $443,894 for each fiscal year beginning in 2027 through 2046.”",
+    "excerptFile": "excerpts/99bc26fd88dc1180da65a44827173c6fcfdf113ef1191803e68b90d27f3e766e.txt",
+    "excerptSha256": "99bc26fd88dc1180da65a44827173c6fcfdf113ef1191803e68b90d27f3e766e",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "“Under state law, the increase in the levy of the Town of Hayward for the tax to be imposed for the next fiscal year, 2027, is limited to 1.511%, which results in a levy of $825,008. Shall the Town of Hayward be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the new construction of fire and highway departments and refurbishing of existing Town Hall, by a total of 53.8% which results in a levy of $1,268,902, and on an ongoing basis include an increase of $443,894 for each fiscal year beginning in 2027 through 2046.”"
+      ],
+      "yesMeans": [
+        "“Under state law, the increase in the levy of the Town of Hayward for the tax to be imposed for the next fiscal year, 2027, is limited to 1.511%, which results in a levy of $825,008. Shall the Town of Hayward be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the new construction of fire and highway departments and refurbishing of existing Town Hall, by a total of 53.8% which results in a levy of $1,268,902, and on an ongoing basis include an increase of $443,894 for each fiscal year beginning in 2027 through 2046.”"
+      ],
+      "noMeans": [
+        "“Under state law, the increase in the levy of the Town of Hayward for the tax to be imposed for the next fiscal year, 2027, is limited to 1.511%, which results in a levy of $825,008. Shall the Town of Hayward be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the new construction of fire and highway departments and refurbishing of existing Town Hall, by a total of 53.8% which results in a levy of $1,268,902, and on an ongoing basis include an increase of $443,894 for each fiscal year beginning in 2027 through 2046.”"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Annual increase ends2046; not described as permanent despite phrase ongoingbasis",
+      "Town government/cousub, not CityofHayward",
+      "All3physicalprojectpurposes and exact2027 normal/proposed levy figures retained"
+    ],
+    "limitations": []
+  },
+  {
+    "contestId": "wi-wec-2026-town-of-hudson-tax-levy-for-emergency-services-referendum",
+    "sourceRow": 89,
+    "reportedBallotPosition": "940222",
+    "reportedReferendumName": "Town of Hudson Tax Levy for Emergency Services Referendum",
+    "reportedJurisdiction": "TOWN OF HUDSON - ST. CROIX COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "Under state law, the increase in the levy of the Town of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 1.079%, which results in a levy of $1,314,542. Shall the Town of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying the increased costs of emergency services imposed by our contract with the City of Hudson, which has decided to add 9 full time firefighters and other associated expenses to reduce response times and provide improved emergency services, by a total of 37.474%, which results in a levy of $1,807,154, and on an ongoing basis, include the increase of $492,612 for each fiscal year going forward?",
+    "excerptFile": "excerpts/270496ad284c125fe04cbfe072ded43fadcf822270c2848f4cd841c2726bd5b9.txt",
+    "excerptSha256": "270496ad284c125fe04cbfe072ded43fadcf822270c2848f4cd841c2726bd5b9",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "Under state law, the increase in the levy of the Town of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 1.079%, which results in a levy of $1,314,542. Shall the Town of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying the increased costs of emergency services imposed by our contract with the City of Hudson, which has decided to add 9 full time firefighters and other associated expenses to reduce response times and provide improved emergency services, by a total of 37.474%, which results in a levy of $1,807,154, and on an ongoing basis, include the increase of $492,612 for each fiscal year going forward?"
+      ],
+      "yesMeans": [
+        "Under state law, the increase in the levy of the Town of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 1.079%, which results in a levy of $1,314,542. Shall the Town of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying the increased costs of emergency services imposed by our contract with the City of Hudson, which has decided to add 9 full time firefighters and other associated expenses to reduce response times and provide improved emergency services, by a total of 37.474%, which results in a levy of $1,807,154, and on an ongoing basis, include the increase of $492,612 for each fiscal year going forward?"
+      ],
+      "noMeans": [
+        "Under state law, the increase in the levy of the Town of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 1.079%, which results in a levy of $1,314,542. Shall the Town of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying the increased costs of emergency services imposed by our contract with the City of Hudson, which has decided to add 9 full time firefighters and other associated expenses to reduce response times and provide improved emergency services, by a total of 37.474%, which results in a levy of $1,807,154, and on an ongoing basis, include the increase of $492,612 for each fiscal year going forward?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "TownofHudson exactcousub; distinct fromCityofHudson question",
+      "City hires9firefighters; town pays contract costs, not falsely claimedtownhires9",
+      "All annual amounts/rates/ongoingduration retained; no guaranteedresponse-timeprediction"
+    ],
+    "limitations": []
+  },
+  {
+    "contestId": "wi-wec-2026-town-of-waldwick-exceed-levy-limit-referendum",
+    "sourceRow": 92,
+    "reportedBallotPosition": "940000",
+    "reportedReferendumName": "Town of Waldwick Exceed Levy Limit Referendum",
+    "reportedJurisdiction": "TOWN OF WALDWICK - IOWA COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "Under state law, the increase in the levy of the Town of Waldwick for the tax to be imposed for the next fiscal year, 2026, is limited to 1.115%, which results in a levy of $169,408. Shall the Town of Waldwick be allowed to exceed this limit and increase the levy for the next fiscal year, 2026, for hiring a full-time patrolman, by a total of 47.2%, which results in a levy of $249,408, for an ongoing basis, including the increase of $80,000 for each fiscal year going forward?",
+    "excerptFile": "excerpts/d15f072fce74f67c63ffb15468d8e56a11254d25319bf353f3c596ef2ef7ec2f.txt",
+    "excerptSha256": "d15f072fce74f67c63ffb15468d8e56a11254d25319bf353f3c596ef2ef7ec2f",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "Under state law, the increase in the levy of the Town of Waldwick for the tax to be imposed for the next fiscal year, 2026, is limited to 1.115%, which results in a levy of $169,408. Shall the Town of Waldwick be allowed to exceed this limit and increase the levy for the next fiscal year, 2026, for hiring a full-time patrolman, by a total of 47.2%, which results in a levy of $249,408, for an ongoing basis, including the increase of $80,000 for each fiscal year going forward?"
+      ],
+      "yesMeans": [
+        "Under state law, the increase in the levy of the Town of Waldwick for the tax to be imposed for the next fiscal year, 2026, is limited to 1.115%, which results in a levy of $169,408. Shall the Town of Waldwick be allowed to exceed this limit and increase the levy for the next fiscal year, 2026, for hiring a full-time patrolman, by a total of 47.2%, which results in a levy of $249,408, for an ongoing basis, including the increase of $80,000 for each fiscal year going forward?"
+      ],
+      "noMeans": [
+        "Under state law, the increase in the levy of the Town of Waldwick for the tax to be imposed for the next fiscal year, 2026, is limited to 1.115%, which results in a levy of $169,408. Shall the Town of Waldwick be allowed to exceed this limit and increase the levy for the next fiscal year, 2026, for hiring a full-time patrolman, by a total of 47.2%, which results in a levy of $249,408, for an ongoing basis, including the increase of $80,000 for each fiscal year going forward?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Literal question specifies2026; not silently changedto2027",
+      "Patrolman job duties not specified, so not translated as policeofficer",
+      "All normal/proposed2026 rates/dollarlevies and ongoing80k retained"
+    ],
+    "limitations": [
+      "WEC names2026 while other2026electionlevyquestions name2027. Exactpublished2026 preserved; no inferred correction."
+    ]
+  }
+]

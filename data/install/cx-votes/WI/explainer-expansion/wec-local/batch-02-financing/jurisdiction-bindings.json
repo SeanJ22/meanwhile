@@ -1,0 +1,178 @@
+[
+  {
+    "contestId": "wi-wec-2026-city-of-hudson-fire-department-staffing-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/place:hudson",
+      "place",
+      "5536250",
+      "Hudson city"
+    ],
+    "officialNamedElectorate": "City of Hudson Fire Department Staffing Referendum",
+    "officialReportedJurisdiction": "CITY OF HUDSON - ST. CROIX COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-city-of-muskego-levy-increase-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/place:muskego",
+      "place",
+      "5555275",
+      "Muskego city"
+    ],
+    "officialNamedElectorate": "City of Muskego Levy Increase Referendum",
+    "officialReportedJurisdiction": "CITY OF MUSKEGO - WAUKESHA COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-city-of-new-berlin-public-safety-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/place:new_berlin",
+      "place",
+      "5556375",
+      "New Berlin city"
+    ],
+    "officialNamedElectorate": "City of New Berlin Public Safety Referendum",
+    "officialReportedJurisdiction": "CITY OF NEW BERLIN - WAUKESHA COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-city-of-plymouth-levy-increase-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/place:plymouth",
+      "place",
+      "5563700",
+      "Plymouth city"
+    ],
+    "officialNamedElectorate": "City of Plymouth Levy Increase Referendum",
+    "officialReportedJurisdiction": "CITY OF PLYMOUTH - SHEBOYGAN COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-lafayette-county-capital-expenditures-referendum-question-1",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:lafayette",
+      "county",
+      "55065",
+      "Lafayette County"
+    ],
+    "officialNamedElectorate": "Lafayette County Capital Expenditures Referendum - QUESTION 1",
+    "officialReportedJurisdiction": "LAFAYETTE COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-lafayette-county-levy-increase-referendum-question-2",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:lafayette",
+      "county",
+      "55065",
+      "Lafayette County"
+    ],
+    "officialNamedElectorate": "Lafayette County Levy Increase Referendum - QUESTION 2",
+    "officialReportedJurisdiction": "LAFAYETTE COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-rusk-county-jail-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:rusk",
+      "county",
+      "55107",
+      "Rusk County"
+    ],
+    "officialNamedElectorate": "Rusk County Jail Referendum",
+    "officialReportedJurisdiction": "RUSK COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-exceed-revenue-limits",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:wood/place:grand_rapids_town",
+      "cousub",
+      "5514130125",
+      "Grand Rapids town"
+    ],
+    "officialNamedElectorate": "Exceed Revenue Limits",
+    "officialReportedJurisdiction": "TOWN OF GRAND RAPIDS - WOOD COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-town-of-hayward-exceed-levy-limit-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:sawyer/place:hayward_town",
+      "cousub",
+      "5511333475",
+      "Hayward town"
+    ],
+    "officialNamedElectorate": "Town of Hayward Exceed Levy Limit Referendum",
+    "officialReportedJurisdiction": "TOWN OF HAYWARD - SAWYER COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-town-of-hudson-tax-levy-for-emergency-services-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:st_croix/place:hudson_town",
+      "cousub",
+      "5510936275",
+      "Hudson town"
+    ],
+    "officialNamedElectorate": "Town of Hudson Tax Levy for Emergency Services Referendum",
+    "officialReportedJurisdiction": "TOWN OF HUDSON - ST. CROIX COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-town-of-waldwick-exceed-levy-limit-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:iowa/place:waldwick_town",
+      "cousub",
+      "5504983150",
+      "Waldwick town"
+    ],
+    "officialNamedElectorate": "Town of Waldwick Exceed Levy Limit Referendum",
+    "officialReportedJurisdiction": "TOWN OF WALDWICK - IOWA COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  }
+]

@@ -1,0 +1,624 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-wec-2026-burnett-decreasing-county-board-members-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:burnett",
+          "divisionVintage": "2026",
+          "title": "Burnett County — County board size",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Question: Shall the Board of Supervisors of Burnett County be decreased from 21 members to 15 members?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-eagle-river-term-limits-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/place:eagle_river",
+          "divisionVintage": "2026",
+          "title": "Eagle River city — Mayor and alderperson term limits",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "QUESTION 1: Shall the City of Eagle River adopt a charter ordinance creating Section 2-105 of the Eagle River Municipal Code to establish term limits for the offices of Mayor and Alderperson by: 1. Limiting service as Mayor or Alderperson to four consecutive two-year terms; 2. Requiring a six-year period before a person who has served four consecutive terms may again serve in the same office; 3. Prohibiting a person who has served four consecutive terms as Mayor from immediately serving as an Alderperson, and prohibiting a person who has served four consecutive terms as an Alderperson from immediately serving as Mayor; and 4. Counting terms served both before and after enactment of the ordinance when applying these term limits."
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-eau-claire-citizens-advisory-healthcare-action-committee-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/place:eau_claire",
+          "divisionVintage": "2026",
+          "title": "Eau Claire city — Healthcare advisory committee",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "QUESTION: \"Shall an ordinance be enacted creating Chapter 2.53 of the Code of Ordinances of the City of Eau Claire creating the Citizens' Advisory Healthcare Action Committee?\""
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-fountain-city-treasurer-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/place:fountain_city",
+          "divisionVintage": "2026",
+          "title": "Fountain City city — Administrator-treasurer office",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Should the City of Fountain City Charter Ordinance 2026-02 to abolish the office of treasurer and to establish the office of Administrator-Treasurer be approved?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-janesville-direct-legislation-petition-on-gm-jatco-site-development-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/place:janesville",
+          "divisionVintage": "2026",
+          "title": "Janesville city — Voter approval for major GM/JATCO site projects",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Should approval of proposed development agreements, development projects, sales, and leases of the GM/JATCO sites for projects exceeding $450 million in project costs be decided by a majority vote of the electors?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-la-crosse-citizens-advisory-healthcare-action-committee",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/place:la_crosse",
+          "divisionVintage": "2026",
+          "title": "La Crosse city — Healthcare advisory committee",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Citizens’ Advisory Healthcare Action Committee. Shall the City establish a Citizens’ Advisory Healthcare Action Committee to develop a biennial Healthcare Action Plan and provide a public process for community input on healthcare?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-arland-zoning-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:barron/place:arland_town",
+          "divisionVintage": "2026",
+          "title": "Arland town — County zoning ordinances",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "DO YOU SUPPORT THE TOWN OF ARLAND ADOPTING THE BARRON COUNTY GENERAL ZONING ORDINANCES?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-caucus-to-paper-nomination",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:wood/place:auburndale_town",
+          "divisionVintage": "2026",
+          "title": "Auburndale town — Nonpartisan primary nominations",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Shall all candidates in the town of Auburndale for elective town offices be nominated at a nonpartisan primary?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-corning-clerk-appointment-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:lincoln/place:corning_town",
+          "divisionVintage": "2026",
+          "title": "Corning town — Appointed town clerk",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Shall the person holding the office of Corning Town Clerk in the Town of Corning be appointed by the Town Board?\""
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-harrison-lincoln-county-advisory-zoning-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:lincoln/place:harrison_town",
+          "divisionVintage": "2026",
+          "title": "Harrison town — Advisory county zoning question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Advisory Referendum Question - \"Should the Town Board of the Town of Harrison adopt the Lincoln County Zoning Ordinance to govern land use and zoning development within the Town?\""
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-meenon-clerk-appointment-referendum-question-1",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:burnett/place:meenon_town",
+          "divisionVintage": "2026",
+          "title": "Meenon town — Question 1 — Appointed town clerk",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Shall the person holding the office of town clerk in the Town of Meenon be appointed by the town board rather than being elected by the town electors?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-meenon-treasurer-appointment-referendum-question-2",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:burnett/place:meenon_town",
+          "divisionVintage": "2026",
+          "title": "Meenon town — Question 2 — Appointed town treasurer",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Shall the person holding the office of town treasurer in the Town of Meenon be appointed by the town board rather than being elected by the town electors?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-village-of-necedah-term-limit-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/place:necedah",
+          "divisionVintage": "2026",
+          "title": "Necedah village — Village office term limits",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Question: Shall the Village of Necedah adopt the proposed Charter Ordinance, without alteration, to establish a limit of two consecutive 2-year terms of office for Village Trustees and Village President?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-wec-2026-burnett-decreasing-county-board-members-referendum:measure",
+          "contestId": "wi-wec-2026-burnett-decreasing-county-board-members-referendum",
+          "questionText": "Question: Shall the Board of Supervisors of Burnett County be decreased from 21 members to 15 members?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Question: Shall the Board of Supervisors of Burnett County be decreased from 21 members to 15 members?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-eagle-river-term-limits-referendum:measure",
+          "contestId": "wi-wec-2026-city-of-eagle-river-term-limits-referendum",
+          "questionText": "QUESTION 1: Shall the City of Eagle River adopt a charter ordinance creating Section 2-105 of the Eagle River Municipal Code to establish term limits for the offices of Mayor and Alderperson by: 1. Limiting service as Mayor or Alderperson to four consecutive two-year terms; 2. Requiring a six-year period before a person who has served four consecutive terms may again serve in the same office; 3. Prohibiting a person who has served four consecutive terms as Mayor from immediately serving as an Alderperson, and prohibiting a person who has served four consecutive terms as an Alderperson from immediately serving as Mayor; and 4. Counting terms served both before and after enactment of the ordinance when applying these term limits.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "QUESTION 1: Shall the City of Eagle River adopt a charter ordinance creating Section 2-105 of the Eagle River Municipal Code to establish term limits for the offices of Mayor and Alderperson by: 1. Limiting service as Mayor or Alderperson to four consecutive two-year terms; 2. Requiring a six-year period before a person who has served four consecutive terms may again serve in the same office; 3. Prohibiting a person who has served four consecutive terms as Mayor from immediately serving as an Alderperson, and prohibiting a person who has served four consecutive terms as an Alderperson from immediately serving as Mayor; and 4. Counting terms served both before and after enactment of the ordinance when applying these term limits."
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-eau-claire-citizens-advisory-healthcare-action-committee-referendum:measure",
+          "contestId": "wi-wec-2026-city-of-eau-claire-citizens-advisory-healthcare-action-committee-referendum",
+          "questionText": "QUESTION: \"Shall an ordinance be enacted creating Chapter 2.53 of the Code of Ordinances of the City of Eau Claire creating the Citizens' Advisory Healthcare Action Committee?\"",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "QUESTION: \"Shall an ordinance be enacted creating Chapter 2.53 of the Code of Ordinances of the City of Eau Claire creating the Citizens' Advisory Healthcare Action Committee?\""
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-fountain-city-treasurer-referendum:measure",
+          "contestId": "wi-wec-2026-city-of-fountain-city-treasurer-referendum",
+          "questionText": "Should the City of Fountain City Charter Ordinance 2026-02 to abolish the office of treasurer and to establish the office of Administrator-Treasurer be approved?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Should the City of Fountain City Charter Ordinance 2026-02 to abolish the office of treasurer and to establish the office of Administrator-Treasurer be approved?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-janesville-direct-legislation-petition-on-gm-jatco-site-development-referendum:measure",
+          "contestId": "wi-wec-2026-city-of-janesville-direct-legislation-petition-on-gm-jatco-site-development-referendum",
+          "questionText": "Should approval of proposed development agreements, development projects, sales, and leases of the GM/JATCO sites for projects exceeding $450 million in project costs be decided by a majority vote of the electors?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Should approval of proposed development agreements, development projects, sales, and leases of the GM/JATCO sites for projects exceeding $450 million in project costs be decided by a majority vote of the electors?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-la-crosse-citizens-advisory-healthcare-action-committee:measure",
+          "contestId": "wi-wec-2026-city-of-la-crosse-citizens-advisory-healthcare-action-committee",
+          "questionText": "Citizens’ Advisory Healthcare Action Committee. Shall the City establish a Citizens’ Advisory Healthcare Action Committee to develop a biennial Healthcare Action Plan and provide a public process for community input on healthcare?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Citizens’ Advisory Healthcare Action Committee. Shall the City establish a Citizens’ Advisory Healthcare Action Committee to develop a biennial Healthcare Action Plan and provide a public process for community input on healthcare?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-arland-zoning-referendum:measure",
+          "contestId": "wi-wec-2026-town-of-arland-zoning-referendum",
+          "questionText": "DO YOU SUPPORT THE TOWN OF ARLAND ADOPTING THE BARRON COUNTY GENERAL ZONING ORDINANCES?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "DO YOU SUPPORT THE TOWN OF ARLAND ADOPTING THE BARRON COUNTY GENERAL ZONING ORDINANCES?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-caucus-to-paper-nomination:measure",
+          "contestId": "wi-wec-2026-caucus-to-paper-nomination",
+          "questionText": "Shall all candidates in the town of Auburndale for elective town offices be nominated at a nonpartisan primary?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Shall all candidates in the town of Auburndale for elective town offices be nominated at a nonpartisan primary?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-corning-clerk-appointment-referendum:measure",
+          "contestId": "wi-wec-2026-town-of-corning-clerk-appointment-referendum",
+          "questionText": "Shall the person holding the office of Corning Town Clerk in the Town of Corning be appointed by the Town Board?\"",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Shall the person holding the office of Corning Town Clerk in the Town of Corning be appointed by the Town Board?\""
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-harrison-lincoln-county-advisory-zoning-referendum:measure",
+          "contestId": "wi-wec-2026-town-of-harrison-lincoln-county-advisory-zoning-referendum",
+          "questionText": "Advisory Referendum Question - \"Should the Town Board of the Town of Harrison adopt the Lincoln County Zoning Ordinance to govern land use and zoning development within the Town?\"",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Advisory Referendum Question - \"Should the Town Board of the Town of Harrison adopt the Lincoln County Zoning Ordinance to govern land use and zoning development within the Town?\""
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-meenon-clerk-appointment-referendum-question-1:measure",
+          "contestId": "wi-wec-2026-town-of-meenon-clerk-appointment-referendum-question-1",
+          "questionText": "Shall the person holding the office of town clerk in the Town of Meenon be appointed by the town board rather than being elected by the town electors?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Shall the person holding the office of town clerk in the Town of Meenon be appointed by the town board rather than being elected by the town electors?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-meenon-treasurer-appointment-referendum-question-2:measure",
+          "contestId": "wi-wec-2026-town-of-meenon-treasurer-appointment-referendum-question-2",
+          "questionText": "Shall the person holding the office of town treasurer in the Town of Meenon be appointed by the town board rather than being elected by the town electors?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Shall the person holding the office of town treasurer in the Town of Meenon be appointed by the town board rather than being elected by the town electors?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-village-of-necedah-term-limit-referendum:measure",
+          "contestId": "wi-wec-2026-village-of-necedah-term-limit-referendum",
+          "questionText": "Question: Shall the Village of Necedah adopt the proposed Charter Ordinance, without alteration, to establish a limit of two consecutive 2-year terms of office for Village Trustees and Village President?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:30:34.600477+00:00",
+            "quote": "Question: Shall the Village of Necedah adopt the proposed Charter Ordinance, without alteration, to establish a limit of two consecutive 2-year terms of office for Village Trustees and Village President?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-wec-2026-burnett-decreasing-county-board-members-referendum",
+          "whatItDoes": "Reduce the Burnett County Board of Supervisors from 21 members to 15.",
+          "yesMeans": "Approve reducing the board to 15 members.",
+          "noMeans": "Reject the proposed reduction from 21 to 15 members.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-city-of-eagle-river-term-limits-referendum",
+          "whatItDoes": "Set a limit of four consecutive two-year terms as mayor or alderperson, counting terms served before and after the ordinance. After four consecutive terms, a person would have to wait six years to serve in that same office again and could not immediately switch between mayor and alderperson.",
+          "yesMeans": "Approve all of those term-limit, waiting-period and office-switching rules.",
+          "noMeans": "Reject this proposed set of term-limit rules.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-city-of-eau-claire-citizens-advisory-healthcare-action-committee-referendum",
+          "whatItDoes": "Add Chapter 2.53 to the city’s ordinances to create a Citizens’ Advisory Healthcare Action Committee.",
+          "yesMeans": "Approve the ordinance creating the committee.",
+          "noMeans": "Reject this proposed ordinance creating the committee.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-city-of-fountain-city-treasurer-referendum",
+          "whatItDoes": "Approve Charter Ordinance 2026-02 to abolish the city treasurer’s office and establish an administrator-treasurer office.",
+          "yesMeans": "Approve replacing the treasurer’s office with an administrator-treasurer office.",
+          "noMeans": "Reject this proposed charter ordinance.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-city-of-janesville-direct-legislation-petition-on-gm-jatco-site-development-referendum",
+          "whatItDoes": "Require a majority vote of city electors to approve proposed development agreements, development projects, sales and leases at the GM/JATCO sites for projects costing more than $450 million.",
+          "yesMeans": "Approve requiring a majority vote of city electors for those proposed agreements, projects, sales and leases above $450 million.",
+          "noMeans": "Reject this proposed voter-approval requirement.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-city-of-la-crosse-citizens-advisory-healthcare-action-committee",
+          "whatItDoes": "Create a Citizens’ Advisory Healthcare Action Committee to develop a healthcare action plan every two years and provide a public process for community input on healthcare.",
+          "yesMeans": "Approve creating the committee for those planning and public-input purposes.",
+          "noMeans": "Reject this proposed committee.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-town-of-arland-zoning-referendum",
+          "whatItDoes": "Ask whether the town should adopt Barron County’s general zoning ordinances.",
+          "yesMeans": "Support adopting the county’s general zoning ordinances in the town.",
+          "noMeans": "Oppose adopting those county zoning ordinances.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-caucus-to-paper-nomination",
+          "whatItDoes": "Use a nonpartisan primary to nominate all candidates for elected town offices.",
+          "yesMeans": "Approve nominating all candidates for elected town offices through a nonpartisan primary.",
+          "noMeans": "Reject this proposed nomination system.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-town-of-corning-clerk-appointment-referendum",
+          "whatItDoes": "Have the Town Board appoint the person who holds the Corning town clerk’s office.",
+          "yesMeans": "Approve having the Town Board appoint the town clerk.",
+          "noMeans": "Reject this proposed appointment system.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-town-of-harrison-lincoln-county-advisory-zoning-referendum",
+          "whatItDoes": "Ask for nonbinding advice on whether the Town Board should adopt Lincoln County’s zoning ordinance to govern land use and zoning development in the town.",
+          "yesMeans": "Advise the Town Board to adopt the county zoning ordinance.",
+          "noMeans": "Advise the Town Board against adopting the county zoning ordinance.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-town-of-meenon-clerk-appointment-referendum-question-1",
+          "whatItDoes": "Have the Town Board appoint the town clerk instead of having town voters elect the clerk.",
+          "yesMeans": "Approve appointment of the town clerk by the Town Board.",
+          "noMeans": "Keep election of the town clerk by town voters.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-town-of-meenon-treasurer-appointment-referendum-question-2",
+          "whatItDoes": "Have the Town Board appoint the town treasurer instead of having town voters elect the treasurer.",
+          "yesMeans": "Approve appointment of the town treasurer by the Town Board.",
+          "noMeans": "Keep election of the town treasurer by town voters.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-village-of-necedah-term-limit-referendum",
+          "whatItDoes": "Adopt the proposed charter ordinance, without changes, to limit the village president and village trustees to two consecutive two-year terms.",
+          "yesMeans": "Approve adopting that ordinance and its term limits.",
+          "noMeans": "Reject this proposed charter ordinance.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:30:34.600477+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:WI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:30:34.600477+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+        "finalUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+        "publisher": "Wisconsin Elections Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:22:34.321774+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+        "reviewedEvidence": "Complete saved public deterministic-reader extraction of official WEC XLSX workbook, including all108table rows and exact SheboyganFalls actualquestion. rawHash identifies these exact59580UTF8source-text bytes, not original workbook bytes. HTTP200 records reader capture success; native government fetch returned403 and origin status is not claimed. Full canonical official URL, reader metadata and hashScope retained. Exact DPI Nov3,2026 row51 independently confirms election, school,65.7M and material purposes. No model or paid provider calls.",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+        "captureMetadata": {
+          "provider": "Jina public deterministic Reader (plain source extraction, no AI summarizer or paid model)",
+          "readerUrl": "https://r.jina.ai/https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "actualReaderHttpStatus": 200,
+          "originHttpStatus": null,
+          "nativeGovernmentFetchHttpStatus": 403,
+          "nativeGovernmentFetchCapturedAt": "2026-11-03T07:22:25.078705+00:00",
+          "reportedUrlSource": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "reportedNumberOfPages": 1,
+          "reportedPublishedTime": "2026-10-06T20:13:53Z",
+          "savedCompleteResponseBytes": 59580,
+          "sourceTableRows": 108,
+          "captureSuccessStatusDoesNotClaimOriginHttpStatus": true
+        }
+      }
+    ]
+  }
+}

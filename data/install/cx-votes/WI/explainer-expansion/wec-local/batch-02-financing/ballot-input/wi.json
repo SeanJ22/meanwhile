@@ -1,0 +1,536 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-wec-2026-city-of-hudson-fire-department-staffing-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/place:hudson",
+          "divisionVintage": "2026",
+          "title": "Hudson city — Ongoing fire-service levy increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Under state law, the increase in the levy of the City of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 0.872%, which results in a levy of $13,335,657. Shall the City of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving emergency services with 9 additional full-time fire staff and ongoing Hudson Fire Department expenses, by a total of 9.698%, which results in a levy of $14,628,943 and on ongoing basis, include the increase of $1,293,285.68 for each fiscal year going forward?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-muskego-levy-increase-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/place:muskego",
+          "divisionVintage": "2026",
+          "title": "Muskego city — Ongoing public-safety levy increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Under state law, the increase in the levy of the City of Muskego for the tax to be imposed for the next fiscal year, 2027, is limited to 1.593%, which results in a levy of $14,732,877.00. Shall the City of Muskego be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving public safety services in the City of Muskego, which, are the City’s Police, Fire, EMS, Rescue, and Public Works services, including staffing and support for those services, by a total of 40.047%, which results in a levy of $20,632,877.00, and on an ongoing basis, include the increase of $5,900,000.00 for each fiscal year going forward?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-new-berlin-public-safety-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/place:new_berlin",
+          "divisionVintage": "2026",
+          "title": "New Berlin city — Ongoing public-safety levy increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Under state law, the increase in the levy of the City of New Berlin for the tax to be imposed for the next fiscal year, 2027, is limited to 0.762%, which results in a levy of $38,484,163. Shall the City of New Berlin be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, and on an ongoing basis, for the purpose of increasing staffing in the police and fire departments and to purchase an additional vehicle and equipment to support those additional personnel, by a total of 8.11%, which results in a levy of $41,606,312, and on an ongoing basis, include the increase of $3,122,149.00 in the base levy for each fiscal year going forward?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-plymouth-levy-increase-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/place:plymouth",
+          "divisionVintage": "2026",
+          "title": "Plymouth city — Ongoing police-service levy increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Under state law, the increase in the levy of the City of Plymouth for the tax to be imposed for the next fiscal year, 2027, is limited to 2.046%, which results in a levy of $5,769,712. Shall the City of Plymouth be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of funding three additional police officers and related equipment and wage adjustments in the Police Department, by a total of 10.399%, which results in a levy of $6,369,712 and on an ongoing basis, include the increase of $600,000 for each fiscal year going forward?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-lafayette-county-capital-expenditures-referendum-question-1",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:lafayette",
+          "divisionVintage": "2026",
+          "title": "Lafayette County — Question 1 — New nursing-home financing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "QUESTION 1: “Should the Lafayette County Board of Supervisors authorize and approve the County incurring capital expenditures associated with the construction of a new nursing home, borrowing funds to support the capital expenditures and levying a property tax to support the debt service payments that will be above the allowable levy limit established in state law?”"
+          }
+        },
+        {
+          "id": "wi-wec-2026-lafayette-county-levy-increase-referendum-question-2",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:lafayette",
+          "divisionVintage": "2026",
+          "title": "Lafayette County — Question 2 — Five-year Lafayette Manor operating levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "QUESTION 2: “Under state law, the increase in the levy of the County of Lafayette for the tax to be imposed for the next fiscal year, 2027, is limited to 1.088%, which results in an estimated levy of $10,087,262. Shall the County of Lafayette be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying a portion of the cost to operate and maintain Lafayette Manor, by an estimated total of 4.957% which results in a levy of $10,587,262, and include the increase of $500,000 for fiscal years 2028 through 2031?”"
+          }
+        },
+        {
+          "id": "wi-wec-2026-rusk-county-jail-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:rusk",
+          "divisionVintage": "2026",
+          "title": "Rusk County — New county jail borrowing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Shall Rusk County, Wisconsin, be authorized to issue general obligation bonds in an amount approximately $32,321,829.46 for the purpose of constructing, furnishing, and equipping a new county jail facility?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-exceed-revenue-limits",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:wood/place:grand_rapids_town",
+          "divisionVintage": "2026",
+          "title": "Grand Rapids town — Ongoing town operations and safety levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Question: Under state law, the increase in the levy of the Town of Grand Rapids for the tax to be imposed for the next fiscal year, 2027, is limited to .949% (based on actual data or the Town's best estimate), which results in a levy of $1,888,036. Shall the Town of Grand Rapids be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of maintaining and providing general town operations and public safety services, including police protection, fire protection, and emergency services, by a total of 15.890%, which results in a levy of $2,188,036, and on an ongoing basis, include the increase of $300,000 for each fiscal year going forward?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-hayward-exceed-levy-limit-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:sawyer/place:hayward_town",
+          "divisionVintage": "2026",
+          "title": "Hayward town — Fire, highway and Town Hall levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "“Under state law, the increase in the levy of the Town of Hayward for the tax to be imposed for the next fiscal year, 2027, is limited to 1.511%, which results in a levy of $825,008. Shall the Town of Hayward be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the new construction of fire and highway departments and refurbishing of existing Town Hall, by a total of 53.8% which results in a levy of $1,268,902, and on an ongoing basis include an increase of $443,894 for each fiscal year beginning in 2027 through 2046.”"
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-hudson-tax-levy-for-emergency-services-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:st_croix/place:hudson_town",
+          "divisionVintage": "2026",
+          "title": "Hudson town — Ongoing contracted emergency-service levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Under state law, the increase in the levy of the Town of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 1.079%, which results in a levy of $1,314,542. Shall the Town of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying the increased costs of emergency services imposed by our contract with the City of Hudson, which has decided to add 9 full time firefighters and other associated expenses to reduce response times and provide improved emergency services, by a total of 37.474%, which results in a levy of $1,807,154, and on an ongoing basis, include the increase of $492,612 for each fiscal year going forward?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-waldwick-exceed-levy-limit-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:iowa/place:waldwick_town",
+          "divisionVintage": "2026",
+          "title": "Waldwick town — Ongoing patrolman staffing levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Under state law, the increase in the levy of the Town of Waldwick for the tax to be imposed for the next fiscal year, 2026, is limited to 1.115%, which results in a levy of $169,408. Shall the Town of Waldwick be allowed to exceed this limit and increase the levy for the next fiscal year, 2026, for hiring a full-time patrolman, by a total of 47.2%, which results in a levy of $249,408, for an ongoing basis, including the increase of $80,000 for each fiscal year going forward?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-wec-2026-city-of-hudson-fire-department-staffing-referendum:measure",
+          "contestId": "wi-wec-2026-city-of-hudson-fire-department-staffing-referendum",
+          "questionText": "Under state law, the increase in the levy of the City of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 0.872%, which results in a levy of $13,335,657. Shall the City of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving emergency services with 9 additional full-time fire staff and ongoing Hudson Fire Department expenses, by a total of 9.698%, which results in a levy of $14,628,943 and on ongoing basis, include the increase of $1,293,285.68 for each fiscal year going forward?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Under state law, the increase in the levy of the City of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 0.872%, which results in a levy of $13,335,657. Shall the City of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving emergency services with 9 additional full-time fire staff and ongoing Hudson Fire Department expenses, by a total of 9.698%, which results in a levy of $14,628,943 and on ongoing basis, include the increase of $1,293,285.68 for each fiscal year going forward?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-muskego-levy-increase-referendum:measure",
+          "contestId": "wi-wec-2026-city-of-muskego-levy-increase-referendum",
+          "questionText": "Under state law, the increase in the levy of the City of Muskego for the tax to be imposed for the next fiscal year, 2027, is limited to 1.593%, which results in a levy of $14,732,877.00. Shall the City of Muskego be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving public safety services in the City of Muskego, which, are the City’s Police, Fire, EMS, Rescue, and Public Works services, including staffing and support for those services, by a total of 40.047%, which results in a levy of $20,632,877.00, and on an ongoing basis, include the increase of $5,900,000.00 for each fiscal year going forward?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Under state law, the increase in the levy of the City of Muskego for the tax to be imposed for the next fiscal year, 2027, is limited to 1.593%, which results in a levy of $14,732,877.00. Shall the City of Muskego be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of improving public safety services in the City of Muskego, which, are the City’s Police, Fire, EMS, Rescue, and Public Works services, including staffing and support for those services, by a total of 40.047%, which results in a levy of $20,632,877.00, and on an ongoing basis, include the increase of $5,900,000.00 for each fiscal year going forward?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-new-berlin-public-safety-referendum:measure",
+          "contestId": "wi-wec-2026-city-of-new-berlin-public-safety-referendum",
+          "questionText": "Under state law, the increase in the levy of the City of New Berlin for the tax to be imposed for the next fiscal year, 2027, is limited to 0.762%, which results in a levy of $38,484,163. Shall the City of New Berlin be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, and on an ongoing basis, for the purpose of increasing staffing in the police and fire departments and to purchase an additional vehicle and equipment to support those additional personnel, by a total of 8.11%, which results in a levy of $41,606,312, and on an ongoing basis, include the increase of $3,122,149.00 in the base levy for each fiscal year going forward?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Under state law, the increase in the levy of the City of New Berlin for the tax to be imposed for the next fiscal year, 2027, is limited to 0.762%, which results in a levy of $38,484,163. Shall the City of New Berlin be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, and on an ongoing basis, for the purpose of increasing staffing in the police and fire departments and to purchase an additional vehicle and equipment to support those additional personnel, by a total of 8.11%, which results in a levy of $41,606,312, and on an ongoing basis, include the increase of $3,122,149.00 in the base levy for each fiscal year going forward?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-city-of-plymouth-levy-increase-referendum:measure",
+          "contestId": "wi-wec-2026-city-of-plymouth-levy-increase-referendum",
+          "questionText": "Under state law, the increase in the levy of the City of Plymouth for the tax to be imposed for the next fiscal year, 2027, is limited to 2.046%, which results in a levy of $5,769,712. Shall the City of Plymouth be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of funding three additional police officers and related equipment and wage adjustments in the Police Department, by a total of 10.399%, which results in a levy of $6,369,712 and on an ongoing basis, include the increase of $600,000 for each fiscal year going forward?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Under state law, the increase in the levy of the City of Plymouth for the tax to be imposed for the next fiscal year, 2027, is limited to 2.046%, which results in a levy of $5,769,712. Shall the City of Plymouth be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of funding three additional police officers and related equipment and wage adjustments in the Police Department, by a total of 10.399%, which results in a levy of $6,369,712 and on an ongoing basis, include the increase of $600,000 for each fiscal year going forward?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-lafayette-county-capital-expenditures-referendum-question-1:measure",
+          "contestId": "wi-wec-2026-lafayette-county-capital-expenditures-referendum-question-1",
+          "questionText": "QUESTION 1: “Should the Lafayette County Board of Supervisors authorize and approve the County incurring capital expenditures associated with the construction of a new nursing home, borrowing funds to support the capital expenditures and levying a property tax to support the debt service payments that will be above the allowable levy limit established in state law?”",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "QUESTION 1: “Should the Lafayette County Board of Supervisors authorize and approve the County incurring capital expenditures associated with the construction of a new nursing home, borrowing funds to support the capital expenditures and levying a property tax to support the debt service payments that will be above the allowable levy limit established in state law?”"
+          }
+        },
+        {
+          "id": "wi-wec-2026-lafayette-county-levy-increase-referendum-question-2:measure",
+          "contestId": "wi-wec-2026-lafayette-county-levy-increase-referendum-question-2",
+          "questionText": "QUESTION 2: “Under state law, the increase in the levy of the County of Lafayette for the tax to be imposed for the next fiscal year, 2027, is limited to 1.088%, which results in an estimated levy of $10,087,262. Shall the County of Lafayette be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying a portion of the cost to operate and maintain Lafayette Manor, by an estimated total of 4.957% which results in a levy of $10,587,262, and include the increase of $500,000 for fiscal years 2028 through 2031?”",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "QUESTION 2: “Under state law, the increase in the levy of the County of Lafayette for the tax to be imposed for the next fiscal year, 2027, is limited to 1.088%, which results in an estimated levy of $10,087,262. Shall the County of Lafayette be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying a portion of the cost to operate and maintain Lafayette Manor, by an estimated total of 4.957% which results in a levy of $10,587,262, and include the increase of $500,000 for fiscal years 2028 through 2031?”"
+          }
+        },
+        {
+          "id": "wi-wec-2026-rusk-county-jail-referendum:measure",
+          "contestId": "wi-wec-2026-rusk-county-jail-referendum",
+          "questionText": "Shall Rusk County, Wisconsin, be authorized to issue general obligation bonds in an amount approximately $32,321,829.46 for the purpose of constructing, furnishing, and equipping a new county jail facility?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Shall Rusk County, Wisconsin, be authorized to issue general obligation bonds in an amount approximately $32,321,829.46 for the purpose of constructing, furnishing, and equipping a new county jail facility?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-exceed-revenue-limits:measure",
+          "contestId": "wi-wec-2026-exceed-revenue-limits",
+          "questionText": "Question: Under state law, the increase in the levy of the Town of Grand Rapids for the tax to be imposed for the next fiscal year, 2027, is limited to .949% (based on actual data or the Town's best estimate), which results in a levy of $1,888,036. Shall the Town of Grand Rapids be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of maintaining and providing general town operations and public safety services, including police protection, fire protection, and emergency services, by a total of 15.890%, which results in a levy of $2,188,036, and on an ongoing basis, include the increase of $300,000 for each fiscal year going forward?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Question: Under state law, the increase in the levy of the Town of Grand Rapids for the tax to be imposed for the next fiscal year, 2027, is limited to .949% (based on actual data or the Town's best estimate), which results in a levy of $1,888,036. Shall the Town of Grand Rapids be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of maintaining and providing general town operations and public safety services, including police protection, fire protection, and emergency services, by a total of 15.890%, which results in a levy of $2,188,036, and on an ongoing basis, include the increase of $300,000 for each fiscal year going forward?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-hayward-exceed-levy-limit-referendum:measure",
+          "contestId": "wi-wec-2026-town-of-hayward-exceed-levy-limit-referendum",
+          "questionText": "“Under state law, the increase in the levy of the Town of Hayward for the tax to be imposed for the next fiscal year, 2027, is limited to 1.511%, which results in a levy of $825,008. Shall the Town of Hayward be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the new construction of fire and highway departments and refurbishing of existing Town Hall, by a total of 53.8% which results in a levy of $1,268,902, and on an ongoing basis include an increase of $443,894 for each fiscal year beginning in 2027 through 2046.”",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "“Under state law, the increase in the levy of the Town of Hayward for the tax to be imposed for the next fiscal year, 2027, is limited to 1.511%, which results in a levy of $825,008. Shall the Town of Hayward be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the new construction of fire and highway departments and refurbishing of existing Town Hall, by a total of 53.8% which results in a levy of $1,268,902, and on an ongoing basis include an increase of $443,894 for each fiscal year beginning in 2027 through 2046.”"
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-hudson-tax-levy-for-emergency-services-referendum:measure",
+          "contestId": "wi-wec-2026-town-of-hudson-tax-levy-for-emergency-services-referendum",
+          "questionText": "Under state law, the increase in the levy of the Town of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 1.079%, which results in a levy of $1,314,542. Shall the Town of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying the increased costs of emergency services imposed by our contract with the City of Hudson, which has decided to add 9 full time firefighters and other associated expenses to reduce response times and provide improved emergency services, by a total of 37.474%, which results in a levy of $1,807,154, and on an ongoing basis, include the increase of $492,612 for each fiscal year going forward?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Under state law, the increase in the levy of the Town of Hudson for the tax to be imposed for the next fiscal year, 2027, is limited to 1.079%, which results in a levy of $1,314,542. Shall the Town of Hudson be allowed to exceed this limit and increase the levy for the next fiscal year, 2027, for the purpose of paying the increased costs of emergency services imposed by our contract with the City of Hudson, which has decided to add 9 full time firefighters and other associated expenses to reduce response times and provide improved emergency services, by a total of 37.474%, which results in a levy of $1,807,154, and on an ongoing basis, include the increase of $492,612 for each fiscal year going forward?"
+          }
+        },
+        {
+          "id": "wi-wec-2026-town-of-waldwick-exceed-levy-limit-referendum:measure",
+          "contestId": "wi-wec-2026-town-of-waldwick-exceed-levy-limit-referendum",
+          "questionText": "Under state law, the increase in the levy of the Town of Waldwick for the tax to be imposed for the next fiscal year, 2026, is limited to 1.115%, which results in a levy of $169,408. Shall the Town of Waldwick be allowed to exceed this limit and increase the levy for the next fiscal year, 2026, for hiring a full-time patrolman, by a total of 47.2%, which results in a levy of $249,408, for an ongoing basis, including the increase of $80,000 for each fiscal year going forward?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:34:23.732186+00:00",
+            "quote": "Under state law, the increase in the levy of the Town of Waldwick for the tax to be imposed for the next fiscal year, 2026, is limited to 1.115%, which results in a levy of $169,408. Shall the Town of Waldwick be allowed to exceed this limit and increase the levy for the next fiscal year, 2026, for hiring a full-time patrolman, by a total of 47.2%, which results in a levy of $249,408, for an ongoing basis, including the increase of $80,000 for each fiscal year going forward?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-wec-2026-city-of-hudson-fire-department-staffing-referendum",
+          "whatItDoes": "Let the city exceed its 2027 property-tax levy limit to fund nine additional full-time fire staff and ongoing Fire Department expenses. The normal limit allows a 0.872% increase and a $13,335,657 levy; the proposal raises that levy by 9.698%, producing a $14,628,943 levy. The additional $1,293,285.68 would be included each year going forward.",
+          "yesMeans": "Approve that ongoing levy increase for additional fire staff and Fire Department expenses.",
+          "noMeans": "Reject this proposed authorization to exceed the levy limit.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:34:23.732186+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-city-of-muskego-levy-increase-referendum",
+          "whatItDoes": "Let the city exceed its 2027 property-tax levy limit for police, fire, emergency medical, rescue and public works services, including staffing and support. The normal limit allows a 1.593% increase and a $14,732,877 levy; the proposal raises that levy by 40.047%, producing a $20,632,877 levy. The additional $5.9 million would be included each year going forward.",
+          "yesMeans": "Approve that ongoing $5.9 million yearly levy increase for those services.",
+          "noMeans": "Reject this proposed authorization to exceed the levy limit.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:34:23.732186+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-city-of-new-berlin-public-safety-referendum",
+          "whatItDoes": "Let the city exceed its 2027 property-tax levy limit to add police and fire staff and buy an additional vehicle and equipment for them. The normal limit allows a 0.762% increase and a $38,484,163 levy; the proposal raises that levy by 8.11%, producing a $41,606,312 levy. The additional $3,122,149 would be added to the base levy each year going forward.",
+          "yesMeans": "Approve that ongoing $3,122,149 yearly levy increase for additional police and fire staff, a vehicle and equipment.",
+          "noMeans": "Reject this proposed authorization to exceed the levy limit.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:34:23.732186+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-city-of-plymouth-levy-increase-referendum",
+          "whatItDoes": "Let the city exceed its 2027 property-tax levy limit to fund three additional police officers, related equipment and Police Department wage adjustments. The normal limit allows a 2.046% increase and a $5,769,712 levy; the proposal raises that levy by 10.399%, producing a $6,369,712 levy. The additional $600,000 would be included each year going forward.",
+          "yesMeans": "Approve that ongoing $600,000 yearly levy increase for police staffing, equipment and wage adjustments.",
+          "noMeans": "Reject this proposed authorization to exceed the levy limit.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:34:23.732186+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-lafayette-county-capital-expenditures-referendum-question-1",
+          "whatItDoes": "Ask whether the County Board should approve capital spending to construct a new nursing home, borrow money for that spending and levy property taxes above the state limit to make the debt payments.",
+          "yesMeans": "Support the County Board approving those construction costs, borrowing and property taxes for debt payments.",
+          "noMeans": "Oppose that proposed construction-financing package.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:34:23.732186+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-lafayette-county-levy-increase-referendum-question-2",
+          "whatItDoes": "Let the county exceed its property-tax levy limit to pay part of the cost of operating and maintaining Lafayette Manor. For 2027, the normal limit allows a 1.088% increase and an estimated $10,087,262 levy; the proposal raises that levy by an estimated 4.957%, producing a $10,587,262 levy. The additional $500,000 would also be included in fiscal years 2028 through 2031.",
+          "yesMeans": "Approve the $500,000 yearly levy increase for Lafayette Manor in 2027 through 2031.",
+          "noMeans": "Reject this proposed authorization to exceed the levy limit.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:34:23.732186+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-rusk-county-jail-referendum",
+          "whatItDoes": "Allow the county to issue approximately $32.32 million in general obligation bonds to construct, furnish and equip a new county jail.",
+          "yesMeans": "Authorize that approximately $32.32 million bond issue for the new jail.",
+          "noMeans": "Reject this proposed bond issue.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:34:23.732186+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-exceed-revenue-limits",
+          "whatItDoes": "Let the town exceed its 2027 property-tax levy limit for general town operations and public safety, including police, fire protection and emergency services. The normal limit allows a 0.949% increase and a $1,888,036 levy; the proposal raises that levy by 15.890%, producing a $2,188,036 levy. The additional $300,000 would be included each year going forward.",
+          "yesMeans": "Approve that ongoing $300,000 yearly levy increase for town operations and public safety.",
+          "noMeans": "Reject this proposed authorization to exceed the levy limit.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:34:23.732186+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-town-of-hayward-exceed-levy-limit-referendum",
+          "whatItDoes": "Let the town exceed its property-tax levy limit for construction of fire and highway facilities and refurbishment of the existing Town Hall. For 2027, the normal limit allows a 1.511% increase and a $825,008 levy; the proposal raises that levy by 53.8%, producing a $1,268,902 levy. The additional $443,894 would be included each year from 2027 through 2046.",
+          "yesMeans": "Approve the $443,894 yearly levy increase for those facilities from 2027 through 2046.",
+          "noMeans": "Reject this proposed authorization to exceed the levy limit.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:34:23.732186+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-town-of-hudson-tax-levy-for-emergency-services-referendum",
+          "whatItDoes": "Let the town exceed its 2027 property-tax levy limit to pay higher emergency-service costs under its contract with the City of Hudson, which is adding nine full-time firefighters and associated expenses. The normal limit allows a 1.079% increase and a $1,314,542 levy; the proposal raises that levy by 37.474%, producing a $1,807,154 levy. The additional $492,612 would be included each year going forward.",
+          "yesMeans": "Approve that ongoing $492,612 yearly levy increase for the town’s contracted emergency services.",
+          "noMeans": "Reject this proposed authorization to exceed the levy limit.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:34:23.732186+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-town-of-waldwick-exceed-levy-limit-referendum",
+          "whatItDoes": "Let the town exceed its property-tax levy limit to hire a full-time patrolman. The question names fiscal year 2026: the normal limit allows a 1.115% increase and a $169,408 levy; the proposal raises that levy by 47.2%, producing a $249,408 levy. The additional $80,000 would be included each year going forward.",
+          "yesMeans": "Approve that ongoing $80,000 yearly levy increase to hire a full-time patrolman.",
+          "noMeans": "Reject this proposed authorization to exceed the levy limit.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:34:23.732186+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:WI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:34:23.732186+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+        "finalUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+        "publisher": "Wisconsin Elections Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:22:34.321774+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+        "reviewedEvidence": "Complete saved public deterministic-reader extraction of official WEC XLSX workbook, including all108table rows and exact SheboyganFalls actualquestion. rawHash identifies these exact59580UTF8source-text bytes, not original workbook bytes. HTTP200 records reader capture success; native government fetch returned403 and origin status is not claimed. Full canonical official URL, reader metadata and hashScope retained. Exact DPI Nov3,2026 row51 independently confirms election, school,65.7M and material purposes. No model or paid provider calls.",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+        "captureMetadata": {
+          "provider": "Jina public deterministic Reader (plain source extraction, no AI summarizer or paid model)",
+          "readerUrl": "https://r.jina.ai/https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "actualReaderHttpStatus": 200,
+          "originHttpStatus": null,
+          "nativeGovernmentFetchHttpStatus": 403,
+          "nativeGovernmentFetchCapturedAt": "2026-11-03T07:22:25.078705+00:00",
+          "reportedUrlSource": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "reportedNumberOfPages": 1,
+          "reportedPublishedTime": "2026-10-06T20:13:53Z",
+          "savedCompleteResponseBytes": 59580,
+          "sourceTableRows": 108,
+          "captureSuccessStatusDoesNotClaimOriginHttpStatus": true
+        }
+      }
+    ]
+  }
+}

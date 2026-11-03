@@ -1,0 +1,210 @@
+[
+  {
+    "contestId": "wi-wec-2026-burnett-decreasing-county-board-members-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:burnett",
+      "county",
+      "55013",
+      "Burnett County"
+    ],
+    "officialNamedElectorate": "Burnett Decreasing County Board Members Referendum",
+    "officialReportedJurisdiction": "BURNETT COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-city-of-eagle-river-term-limits-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/place:eagle_river",
+      "place",
+      "5521625",
+      "Eagle River city"
+    ],
+    "officialNamedElectorate": "City of Eagle River Term Limits Referendum",
+    "officialReportedJurisdiction": "CITY OF EAGLE RIVER - VILAS COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-city-of-eau-claire-citizens-advisory-healthcare-action-committee-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/place:eau_claire",
+      "place",
+      "5522300",
+      "Eau Claire city"
+    ],
+    "officialNamedElectorate": "City of Eau Claire Citizens' Advisory Healthcare Action Committee Referendum",
+    "officialReportedJurisdiction": "CITY OF EAU CLAIRE - MULTIPLE COUNTIES",
+    "basis": "WEC explicitly identifies CITYOFEAUCLAIRE-MULTIPLECOUNTIES. Exact held statewide incorporated-place division5522300 covers the entire named city, including both county portions; no single-county restriction is applied.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-city-of-fountain-city-treasurer-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/place:fountain_city",
+      "place",
+      "5526850",
+      "Fountain City city"
+    ],
+    "officialNamedElectorate": "City of Fountain City Treasurer Referendum",
+    "officialReportedJurisdiction": "CITY OF FOUNTAIN CITY - BUFFALO COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-city-of-janesville-direct-legislation-petition-on-gm-jatco-site-development-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/place:janesville",
+      "place",
+      "5537825",
+      "Janesville city"
+    ],
+    "officialNamedElectorate": "City of Janesville Direct Legislation Petition on GM/JATCO Site Development Referendum",
+    "officialReportedJurisdiction": "CITY OF JANESVILLE - ROCK COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-city-of-la-crosse-citizens-advisory-healthcare-action-committee",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/place:la_crosse",
+      "place",
+      "5540775",
+      "La Crosse city"
+    ],
+    "officialNamedElectorate": "City of La Crosse Citizens' Advisory Healthcare Action Committee",
+    "officialReportedJurisdiction": "CITY OF LA CROSSE - LA CROSSE COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-town-of-arland-zoning-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:barron/place:arland_town",
+      "cousub",
+      "5500502775",
+      "Arland town"
+    ],
+    "officialNamedElectorate": "Town of Arland Zoning Referendum",
+    "officialReportedJurisdiction": "TOWN OF ARLAND - BARRON COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-caucus-to-paper-nomination",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:wood/place:auburndale_town",
+      "cousub",
+      "5514103800",
+      "Auburndale town"
+    ],
+    "officialNamedElectorate": "Caucus to Paper Nomination",
+    "officialReportedJurisdiction": "TOWN OF AUBURNDALE - WOOD COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-town-of-corning-clerk-appointment-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:lincoln/place:corning_town",
+      "cousub",
+      "5506917125",
+      "Corning town"
+    ],
+    "officialNamedElectorate": "Town of Corning Clerk Appointment Referendum",
+    "officialReportedJurisdiction": "TOWN OF CORNING - LINCOLN COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-town-of-harrison-lincoln-county-advisory-zoning-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:lincoln/place:harrison_town",
+      "cousub",
+      "5506932875",
+      "Harrison town"
+    ],
+    "officialNamedElectorate": "Town of Harrison - Lincoln County Advisory Zoning Referendum",
+    "officialReportedJurisdiction": "TOWN OF HARRISON - LINCOLN COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-town-of-meenon-clerk-appointment-referendum-question-1",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:burnett/place:meenon_town",
+      "cousub",
+      "5501350650",
+      "Meenon town"
+    ],
+    "officialNamedElectorate": "Town of Meenon Clerk Appointment Referendum - Question 1",
+    "officialReportedJurisdiction": "TOWN OF MEENON - BURNETT COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-town-of-meenon-treasurer-appointment-referendum-question-2",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/county:burnett/place:meenon_town",
+      "cousub",
+      "5501350650",
+      "Meenon town"
+    ],
+    "officialNamedElectorate": "Town of Meenon Treasurer Appointment Referendum - Question 2",
+    "officialReportedJurisdiction": "TOWN OF MEENON - BURNETT COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-village-of-necedah-term-limit-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/place:necedah",
+      "place",
+      "5555700",
+      "Necedah village"
+    ],
+    "officialNamedElectorate": "Village of Necedah Term Limit Referendum",
+    "officialReportedJurisdiction": "VILLAGE OF NECEDAH - JUNEAU COUNTY",
+    "basis": "Official WEC question names this exact city, town, village or county electorate. Held Census registration division name, government type and county match; municipalities use statewide place geometry where incorporated, towns exact named county subdivision. No new aliases, inferred boundaries, or address overrides.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:milwaukee"
+    ]
+  }
+]

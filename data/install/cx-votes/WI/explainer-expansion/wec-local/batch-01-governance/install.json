@@ -1,0 +1,53 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "WI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WI",
+  "inputDirectory": "ballot-input",
+  "sourceSupport": "source-support.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "sourceCaptures": "source-captures.json",
+  "coverage": {
+    "newExplainedMeasures": 13,
+    "wecSourceRows": [
+      6,
+      10,
+      11,
+      12,
+      14,
+      15,
+      83,
+      84,
+      85,
+      87,
+      90,
+      91,
+      98
+    ],
+    "officialWecTableDenominator": 108,
+    "stateLocalComplete": false,
+    "separateNonWecLocalAbsenceClaim": false
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "WI",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "sourceStorage": "Reuse complete exact source-text artifact from sibling dpi-follow-up-south/batch08; native403 and reader200 capture-only metadata retained. No original workbook byte/hash claim.",
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

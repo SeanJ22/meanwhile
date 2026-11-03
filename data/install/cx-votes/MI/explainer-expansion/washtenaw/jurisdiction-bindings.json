@@ -1,0 +1,170 @@
+[
+  {
+    "contestId": "mi-cx-2026-ann-arbor-streets",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:ann_arbor",
+      "place",
+      "2603000",
+      "Ann Arbor city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-ann-arbor-new-sidewalks",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:ann_arbor",
+      "place",
+      "2603000",
+      "Ann Arbor city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-ann-arbor-petition-signatures",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:ann_arbor",
+      "place",
+      "2603000",
+      "Ann Arbor city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-ann-arbor-term-start",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:ann_arbor",
+      "place",
+      "2603000",
+      "Ann Arbor city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-ann-arbor-electric-utility",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:ann_arbor",
+      "place",
+      "2603000",
+      "Ann Arbor city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-dexter-permanent-park",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:dexter",
+      "place",
+      "2622160",
+      "Dexter city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-milan-fire-assessment",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:milan",
+      "place",
+      "2653920",
+      "Milan city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-ypsilanti-nonpartisan",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:ypsilanti",
+      "place",
+      "2689140",
+      "Ypsilanti city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-ypsilanti-police-budget",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:ypsilanti",
+      "place",
+      "2689140",
+      "Ypsilanti city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-augusta-fire-increase",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:washtenaw/place:augusta_charter_township",
+      "cousub",
+      "2616104180",
+      "Augusta charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-manchester-fire-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:washtenaw/place:manchester_township",
+      "cousub",
+      "2616150680",
+      "Manchester township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-northfield-fire-rescue",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:washtenaw/place:northfield_township",
+      "cousub",
+      "2616158280",
+      "Northfield township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-scio-roads",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:washtenaw/place:scio_township",
+      "cousub",
+      "2616171940",
+      "Scio township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  },
+  {
+    "contestId": "mi-cx-2026-clinton-schools-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:clinton_community_schools",
+      "unsd",
+      "2610050",
+      "Clinton Community Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcity,county-qualified township, or existing unique schooldistrict; crosscountyMilanwholecitynotcountyportion; SchoolcraftCollege not confusedwithSchoolcraftK12."
+  }
+]

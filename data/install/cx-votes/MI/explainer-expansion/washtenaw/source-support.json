@@ -1,0 +1,792 @@
+[
+  {
+    "contestId": "mi-cx-2026-ann-arbor-streets",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "City of Ann Arbor\n                                          Proposal A\n Charter Amendment Tax for Street, Bridge, and Sidewalk Repair and Replacement\nShall the Charter be amended to authorize a new tax up to 2.125 mills for street and bridge\nrepair and for sidewalk repair and construction for 2027 through 2032 to replace the\npreviously authorized tax up to 2.125 mills for street and bridge repair and for sidewalk\nrepair and construction for 2022 through 2026, which will raise in the first year of levy the\n\festimated revenue of $19,236,316? In accordance with State law, a portion of the millage\nmay be subject to capture by the Ann Arbor Downtown Development Authority and the\nWashtenaw County Brownfield Redevelopment Authority.",
+    "fields": {
+      "whatItDoes": [
+        "City of Ann Arbor\n                                          Proposal A\n Charter Amendment Tax for Street, Bridge, and Sidewalk Repair and Replacement\nShall the Charter be amended to authorize a new tax up to 2.125 mills for street and bridge\nrepair and for sidewalk repair and construction for 2027 through 2032 to replace the\npreviously authorized tax up to 2.125 mills for street and bridge repair and for sidewalk\nrepair and construction for 2022 through 2026, which will raise in the first year of levy the\n\festimated revenue of $19,236,316? In accordance with State law, a portion of the millage\nmay be subject to capture by the Ann Arbor Downtown Development Authority and the\nWashtenaw County Brownfield Redevelopment Authority."
+      ],
+      "yesMeans": [
+        "City of Ann Arbor\n                                          Proposal A\n Charter Amendment Tax for Street, Bridge, and Sidewalk Repair and Replacement\nShall the Charter be amended to authorize a new tax up to 2.125 mills for street and bridge\nrepair and for sidewalk repair and construction for 2027 through 2032 to replace the\npreviously authorized tax up to 2.125 mills for street and bridge repair and for sidewalk\nrepair and construction for 2022 through 2026, which will raise in the first year of levy the\n\festimated revenue of $19,236,316? In accordance with State law, a portion of the millage\nmay be subject to capture by the Ann Arbor Downtown Development Authority and the\nWashtenaw County Brownfield Redevelopment Authority."
+      ],
+      "noMeans": [
+        "City of Ann Arbor\n                                          Proposal A\n Charter Amendment Tax for Street, Bridge, and Sidewalk Repair and Replacement\nShall the Charter be amended to authorize a new tax up to 2.125 mills for street and bridge\nrepair and for sidewalk repair and construction for 2027 through 2032 to replace the\npreviously authorized tax up to 2.125 mills for street and bridge repair and for sidewalk\nrepair and construction for 2022 through 2026, which will raise in the first year of levy the\n\festimated revenue of $19,236,316? In accordance with State law, a portion of the millage\nmay be subject to capture by the Ann Arbor Downtown Development Authority and the\nWashtenaw County Brownfield Redevelopment Authority."
+      ]
+    },
+    "physicalPages": [
+      1,
+      2
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-ann-arbor-new-sidewalks",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "Proposal B\n            Charter Amendment Tax for the Construction of New Sidewalks\nShall the Charter be amended to authorize a tax up to 0.20 mills for the construction of new\nsidewalks for 2027 through 2032, to replace the previously authorized tax up to 0.20 mills\nfor the construction of new sidewalks for 2021 through 2026, which will raise in the first\nyear of levy the estimated revenue of $1,809,900? In accordance with State law, a portion\nof the millage may be subject to capture by the Ann Arbor Downtown Development\nAuthority and the Washtenaw County Brownfield Redevelopment Authority.",
+    "fields": {
+      "whatItDoes": [
+        "Proposal B\n            Charter Amendment Tax for the Construction of New Sidewalks\nShall the Charter be amended to authorize a tax up to 0.20 mills for the construction of new\nsidewalks for 2027 through 2032, to replace the previously authorized tax up to 0.20 mills\nfor the construction of new sidewalks for 2021 through 2026, which will raise in the first\nyear of levy the estimated revenue of $1,809,900? In accordance with State law, a portion\nof the millage may be subject to capture by the Ann Arbor Downtown Development\nAuthority and the Washtenaw County Brownfield Redevelopment Authority."
+      ],
+      "yesMeans": [
+        "Proposal B\n            Charter Amendment Tax for the Construction of New Sidewalks\nShall the Charter be amended to authorize a tax up to 0.20 mills for the construction of new\nsidewalks for 2027 through 2032, to replace the previously authorized tax up to 0.20 mills\nfor the construction of new sidewalks for 2021 through 2026, which will raise in the first\nyear of levy the estimated revenue of $1,809,900? In accordance with State law, a portion\nof the millage may be subject to capture by the Ann Arbor Downtown Development\nAuthority and the Washtenaw County Brownfield Redevelopment Authority."
+      ],
+      "noMeans": [
+        "Proposal B\n            Charter Amendment Tax for the Construction of New Sidewalks\nShall the Charter be amended to authorize a tax up to 0.20 mills for the construction of new\nsidewalks for 2027 through 2032, to replace the previously authorized tax up to 0.20 mills\nfor the construction of new sidewalks for 2021 through 2026, which will raise in the first\nyear of levy the estimated revenue of $1,809,900? In accordance with State law, a portion\nof the millage may be subject to capture by the Ann Arbor Downtown Development\nAuthority and the Washtenaw County Brownfield Redevelopment Authority."
+      ]
+    },
+    "physicalPages": [
+      2
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-ann-arbor-petition-signatures",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "Proposal C\n Amendment to Modify the Method for Counting Signatures of Nomination Petitions\nShall Section 13.9 of the City Charter be amended to specify that if an individual signs\nmultiple candidates' nomination petitions for a single elected office, only the earliest-dated\nsignature shall count, and that if two or more signatures bear the same date, none of those\nsignatures shall count? Currently, if an individual signs multiple candidates' nomination\npetitions for a single office, every signature of that individual is disregarded, regardless of\ndate.",
+    "fields": {
+      "whatItDoes": [
+        "Proposal C\n Amendment to Modify the Method for Counting Signatures of Nomination Petitions\nShall Section 13.9 of the City Charter be amended to specify that if an individual signs\nmultiple candidates' nomination petitions for a single elected office, only the earliest-dated\nsignature shall count, and that if two or more signatures bear the same date, none of those\nsignatures shall count? Currently, if an individual signs multiple candidates' nomination\npetitions for a single office, every signature of that individual is disregarded, regardless of\ndate."
+      ],
+      "yesMeans": [
+        "Proposal C\n Amendment to Modify the Method for Counting Signatures of Nomination Petitions\nShall Section 13.9 of the City Charter be amended to specify that if an individual signs\nmultiple candidates' nomination petitions for a single elected office, only the earliest-dated\nsignature shall count, and that if two or more signatures bear the same date, none of those\nsignatures shall count? Currently, if an individual signs multiple candidates' nomination\npetitions for a single office, every signature of that individual is disregarded, regardless of\ndate."
+      ],
+      "noMeans": [
+        "Proposal C\n Amendment to Modify the Method for Counting Signatures of Nomination Petitions\nShall Section 13.9 of the City Charter be amended to specify that if an individual signs\nmultiple candidates' nomination petitions for a single elected office, only the earliest-dated\nsignature shall count, and that if two or more signatures bear the same date, none of those\nsignatures shall count? Currently, if an individual signs multiple candidates' nomination\npetitions for a single office, every signature of that individual is disregarded, regardless of\ndate."
+      ]
+    },
+    "physicalPages": [
+      2
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-ann-arbor-term-start",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "Proposal D\n            Amendment to Modify the Terms of Office for Elected Officials\nShall Section 12.4 of the City Charter be amended to move the beginning of an elected\nofficer's term to noon on the first Monday of the month following the regular City election at\nwhich the officer is elected? Currently, an elected officer's term begins on the first Monday\nafter the regular City election at which the officer is elected.",
+    "fields": {
+      "whatItDoes": [
+        "Proposal D\n            Amendment to Modify the Terms of Office for Elected Officials\nShall Section 12.4 of the City Charter be amended to move the beginning of an elected\nofficer's term to noon on the first Monday of the month following the regular City election at\nwhich the officer is elected? Currently, an elected officer's term begins on the first Monday\nafter the regular City election at which the officer is elected."
+      ],
+      "yesMeans": [
+        "Proposal D\n            Amendment to Modify the Terms of Office for Elected Officials\nShall Section 12.4 of the City Charter be amended to move the beginning of an elected\nofficer's term to noon on the first Monday of the month following the regular City election at\nwhich the officer is elected? Currently, an elected officer's term begins on the first Monday\nafter the regular City election at which the officer is elected."
+      ],
+      "noMeans": [
+        "Proposal D\n            Amendment to Modify the Terms of Office for Elected Officials\nShall Section 12.4 of the City Charter be amended to move the beginning of an elected\nofficer's term to noon on the first Monday of the month following the regular City election at\nwhich the officer is elected? Currently, an elected officer's term begins on the first Monday\nafter the regular City election at which the officer is elected."
+      ]
+    },
+    "physicalPages": [
+      2
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-ann-arbor-electric-utility",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "Proposal E\n                 Creation and Governance of a Municipal Electric Utility\nShall Chapter 15 of the Charter be amended to require the City to establish a municipal\nelectric utility and governance structure therefor?",
+    "fields": {
+      "whatItDoes": [
+        "Proposal E\n                 Creation and Governance of a Municipal Electric Utility\nShall Chapter 15 of the Charter be amended to require the City to establish a municipal\nelectric utility and governance structure therefor?"
+      ],
+      "yesMeans": [
+        "Proposal E\n                 Creation and Governance of a Municipal Electric Utility\nShall Chapter 15 of the Charter be amended to require the City to establish a municipal\nelectric utility and governance structure therefor?"
+      ],
+      "noMeans": [
+        "Proposal E\n                 Creation and Governance of a Municipal Electric Utility\nShall Chapter 15 of the Charter be amended to require the City to establish a municipal\nelectric utility and governance structure therefor?"
+      ]
+    },
+    "physicalPages": [
+      2
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Question does not state a taxrate, acquisitionprice, implementationdate or governance-details; none invented.",
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-dexter-permanent-park",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "City of Dexter\n  A Proposal to Amend the Dexter City Charter Section 13.05 to Insert Language to\n                   Designate Specified Property as Public Park\nShall the Dexter City Charter Section 13.05 be amended to designate the real property\ndescribed as parcel number 08-08-06-129-016, as expanded by City Council action to\ninclude vacated Main Street and Central Street rights-of-way, as public park, and to\nmaintain the property as such in perpetuity?",
+    "fields": {
+      "whatItDoes": [
+        "City of Dexter\n  A Proposal to Amend the Dexter City Charter Section 13.05 to Insert Language to\n                   Designate Specified Property as Public Park\nShall the Dexter City Charter Section 13.05 be amended to designate the real property\ndescribed as parcel number 08-08-06-129-016, as expanded by City Council action to\ninclude vacated Main Street and Central Street rights-of-way, as public park, and to\nmaintain the property as such in perpetuity?"
+      ],
+      "yesMeans": [
+        "City of Dexter\n  A Proposal to Amend the Dexter City Charter Section 13.05 to Insert Language to\n                   Designate Specified Property as Public Park\nShall the Dexter City Charter Section 13.05 be amended to designate the real property\ndescribed as parcel number 08-08-06-129-016, as expanded by City Council action to\ninclude vacated Main Street and Central Street rights-of-way, as public park, and to\nmaintain the property as such in perpetuity?"
+      ],
+      "noMeans": [
+        "City of Dexter\n  A Proposal to Amend the Dexter City Charter Section 13.05 to Insert Language to\n                   Designate Specified Property as Public Park\nShall the Dexter City Charter Section 13.05 be amended to designate the real property\ndescribed as parcel number 08-08-06-129-016, as expanded by City Council action to\ninclude vacated Main Street and Central Street rights-of-way, as public park, and to\nmaintain the property as such in perpetuity?"
+      ]
+    },
+    "physicalPages": [
+      3
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-milan-fire-assessment",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "City of Milan\n                       Fire Services Special Assessment Proposal\nShall the City of Milan, Counties of Washtenaw and Monroe, Michigan, be authorized to\nestablish a city-wide special assessment district pursuant to Act 33, Public Acts of\nMichigan, 1951, as amended, to raise money by special assessment for the purpose of\npaying certain costs and expenses of fire services, including maintenance and operations,\nfire motor vehicles, apparatus, equipment, and housing?",
+    "fields": {
+      "whatItDoes": [
+        "City of Milan\n                       Fire Services Special Assessment Proposal\nShall the City of Milan, Counties of Washtenaw and Monroe, Michigan, be authorized to\nestablish a city-wide special assessment district pursuant to Act 33, Public Acts of\nMichigan, 1951, as amended, to raise money by special assessment for the purpose of\npaying certain costs and expenses of fire services, including maintenance and operations,\nfire motor vehicles, apparatus, equipment, and housing?"
+      ],
+      "yesMeans": [
+        "City of Milan\n                       Fire Services Special Assessment Proposal\nShall the City of Milan, Counties of Washtenaw and Monroe, Michigan, be authorized to\nestablish a city-wide special assessment district pursuant to Act 33, Public Acts of\nMichigan, 1951, as amended, to raise money by special assessment for the purpose of\npaying certain costs and expenses of fire services, including maintenance and operations,\nfire motor vehicles, apparatus, equipment, and housing?"
+      ],
+      "noMeans": [
+        "City of Milan\n                       Fire Services Special Assessment Proposal\nShall the City of Milan, Counties of Washtenaw and Monroe, Michigan, be authorized to\nestablish a city-wide special assessment district pursuant to Act 33, Public Acts of\nMichigan, 1951, as amended, to raise money by special assessment for the purpose of\npaying certain costs and expenses of fire services, including maintenance and operations,\nfire motor vehicles, apparatus, equipment, and housing?"
+      ]
+    },
+    "physicalPages": [
+      3
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "No assessmentrate, term or propertyexemption invented. Whole existingMilan city place spansbothcounties.",
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-ypsilanti-nonpartisan",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "City of Ypsilanti\n                                  Non-Partisan Elections\nIt is proposed City Charter Sections 3.01, 3.04, and 3.06 be amended to provide for\nelection of non-partisan candidates for those offices by filing of nominating petitions and\nremoval of reference to a candidate's party designation on the ballot. Shall this proposed\namendment to the Ypsilanti City Charter be adopted?",
+    "fields": {
+      "whatItDoes": [
+        "City of Ypsilanti\n                                  Non-Partisan Elections\nIt is proposed City Charter Sections 3.01, 3.04, and 3.06 be amended to provide for\nelection of non-partisan candidates for those offices by filing of nominating petitions and\nremoval of reference to a candidate's party designation on the ballot. Shall this proposed\namendment to the Ypsilanti City Charter be adopted?"
+      ],
+      "yesMeans": [
+        "City of Ypsilanti\n                                  Non-Partisan Elections\nIt is proposed City Charter Sections 3.01, 3.04, and 3.06 be amended to provide for\nelection of non-partisan candidates for those offices by filing of nominating petitions and\nremoval of reference to a candidate's party designation on the ballot. Shall this proposed\namendment to the Ypsilanti City Charter be adopted?"
+      ],
+      "noMeans": [
+        "City of Ypsilanti\n                                  Non-Partisan Elections\nIt is proposed City Charter Sections 3.01, 3.04, and 3.06 be amended to provide for\nelection of non-partisan candidates for those offices by filing of nominating petitions and\nremoval of reference to a candidate's party designation on the ballot. Shall this proposed\namendment to the Ypsilanti City Charter be adopted?"
+      ]
+    },
+    "physicalPages": [
+      3
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-ypsilanti-police-budget",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "Police Budget\nIt is proposed that City Charter Section 5.04 be amended to provide for a limit in the City\nCouncil’s provision to budgeted police expenditures above the previous year’s budgeted\npolice expenditures unless such an increase be approved by a majority of voters in a\nregular city-wide election in a ballot question pertaining to no other issue. Shall this\nproposed amendment to the Ypsilanti City Charter be adopted?",
+    "fields": {
+      "whatItDoes": [
+        "Police Budget\nIt is proposed that City Charter Section 5.04 be amended to provide for a limit in the City\nCouncil’s provision to budgeted police expenditures above the previous year’s budgeted\npolice expenditures unless such an increase be approved by a majority of voters in a\nregular city-wide election in a ballot question pertaining to no other issue. Shall this\nproposed amendment to the Ypsilanti City Charter be adopted?"
+      ],
+      "yesMeans": [
+        "Police Budget\nIt is proposed that City Charter Section 5.04 be amended to provide for a limit in the City\nCouncil’s provision to budgeted police expenditures above the previous year’s budgeted\npolice expenditures unless such an increase be approved by a majority of voters in a\nregular city-wide election in a ballot question pertaining to no other issue. Shall this\nproposed amendment to the Ypsilanti City Charter be adopted?"
+      ],
+      "noMeans": [
+        "Police Budget\nIt is proposed that City Charter Section 5.04 be amended to provide for a limit in the City\nCouncil’s provision to budgeted police expenditures above the previous year’s budgeted\npolice expenditures unless such an increase be approved by a majority of voters in a\nregular city-wide election in a ballot question pertaining to no other issue. Shall this\nproposed amendment to the Ypsilanti City Charter be adopted?"
+      ]
+    },
+    "physicalPages": [
+      3
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-augusta-fire-increase",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "Augusta Charter Township\n                    Fire Protection and Prevention Millage Increase\nShall the previous authorized increase in the tax limitation imposed under Article IX, Sec. 6,\nof the Michigan Constitution in Augusta Charter Township, of 2.0 mills ($2.00 per $1000 of\ntaxable value), be increased in an additional amount of up to 1 mill ($1.00 per $1,000 of\ntaxable value) for a total of up to 3 mills ($3.00 per $1,000 of taxable value) and levied for\nfour (4) years, 2027 through 2030 inclusive, on all taxable property within Augusta Charter\nTownship, Washtenaw County, Michigan, for the purpose of providing fire protection and\nprevention services in the Township, including but not limited to adding duty crews and\nbeing able to replace outdated equipment? This 1 mill increase will raise an estimated\n$396,610 in the first year the millage is levied.",
+    "fields": {
+      "whatItDoes": [
+        "Augusta Charter Township\n                    Fire Protection and Prevention Millage Increase\nShall the previous authorized increase in the tax limitation imposed under Article IX, Sec. 6,\nof the Michigan Constitution in Augusta Charter Township, of 2.0 mills ($2.00 per $1000 of\ntaxable value), be increased in an additional amount of up to 1 mill ($1.00 per $1,000 of\ntaxable value) for a total of up to 3 mills ($3.00 per $1,000 of taxable value) and levied for\nfour (4) years, 2027 through 2030 inclusive, on all taxable property within Augusta Charter\nTownship, Washtenaw County, Michigan, for the purpose of providing fire protection and\nprevention services in the Township, including but not limited to adding duty crews and\nbeing able to replace outdated equipment? This 1 mill increase will raise an estimated\n$396,610 in the first year the millage is levied."
+      ],
+      "yesMeans": [
+        "Augusta Charter Township\n                    Fire Protection and Prevention Millage Increase\nShall the previous authorized increase in the tax limitation imposed under Article IX, Sec. 6,\nof the Michigan Constitution in Augusta Charter Township, of 2.0 mills ($2.00 per $1000 of\ntaxable value), be increased in an additional amount of up to 1 mill ($1.00 per $1,000 of\ntaxable value) for a total of up to 3 mills ($3.00 per $1,000 of taxable value) and levied for\nfour (4) years, 2027 through 2030 inclusive, on all taxable property within Augusta Charter\nTownship, Washtenaw County, Michigan, for the purpose of providing fire protection and\nprevention services in the Township, including but not limited to adding duty crews and\nbeing able to replace outdated equipment? This 1 mill increase will raise an estimated\n$396,610 in the first year the millage is levied."
+      ],
+      "noMeans": [
+        "Augusta Charter Township\n                    Fire Protection and Prevention Millage Increase\nShall the previous authorized increase in the tax limitation imposed under Article IX, Sec. 6,\nof the Michigan Constitution in Augusta Charter Township, of 2.0 mills ($2.00 per $1000 of\ntaxable value), be increased in an additional amount of up to 1 mill ($1.00 per $1,000 of\ntaxable value) for a total of up to 3 mills ($3.00 per $1,000 of taxable value) and levied for\nfour (4) years, 2027 through 2030 inclusive, on all taxable property within Augusta Charter\nTownship, Washtenaw County, Michigan, for the purpose of providing fire protection and\nprevention services in the Township, including but not limited to adding duty crews and\nbeing able to replace outdated equipment? This 1 mill increase will raise an estimated\n$396,610 in the first year the millage is levied."
+      ]
+    },
+    "physicalPages": [
+      4
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-manchester-fire-renewal",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "Manchester Township\n                        Fire Protection Services Millage Renewal\nShall the previous voted increase in the tax limitation imposed under Article IX, Sec. 6 of\nthe Michigan Constitution in Manchester Township, of 0.6500 mills ($0.65 per $1,000 of\ntaxable value) reduced to .6444 mills by required millage rollbacks be renewed at .6444\nmills ($0.6444 per $1,000.00 of taxable value) and levied for five additional years, 2028\nthrough 2032 inclusive, for fire protection services within Manchester Township, raising an\nestimated $131,000.00 in 2028 of which a portion may be disbursed under a fire services\nagreement to another local unit(s) for fire protection services to the Township?",
+    "fields": {
+      "whatItDoes": [
+        "Manchester Township\n                        Fire Protection Services Millage Renewal\nShall the previous voted increase in the tax limitation imposed under Article IX, Sec. 6 of\nthe Michigan Constitution in Manchester Township, of 0.6500 mills ($0.65 per $1,000 of\ntaxable value) reduced to .6444 mills by required millage rollbacks be renewed at .6444\nmills ($0.6444 per $1,000.00 of taxable value) and levied for five additional years, 2028\nthrough 2032 inclusive, for fire protection services within Manchester Township, raising an\nestimated $131,000.00 in 2028 of which a portion may be disbursed under a fire services\nagreement to another local unit(s) for fire protection services to the Township?"
+      ],
+      "yesMeans": [
+        "Manchester Township\n                        Fire Protection Services Millage Renewal\nShall the previous voted increase in the tax limitation imposed under Article IX, Sec. 6 of\nthe Michigan Constitution in Manchester Township, of 0.6500 mills ($0.65 per $1,000 of\ntaxable value) reduced to .6444 mills by required millage rollbacks be renewed at .6444\nmills ($0.6444 per $1,000.00 of taxable value) and levied for five additional years, 2028\nthrough 2032 inclusive, for fire protection services within Manchester Township, raising an\nestimated $131,000.00 in 2028 of which a portion may be disbursed under a fire services\nagreement to another local unit(s) for fire protection services to the Township?"
+      ],
+      "noMeans": [
+        "Manchester Township\n                        Fire Protection Services Millage Renewal\nShall the previous voted increase in the tax limitation imposed under Article IX, Sec. 6 of\nthe Michigan Constitution in Manchester Township, of 0.6500 mills ($0.65 per $1,000 of\ntaxable value) reduced to .6444 mills by required millage rollbacks be renewed at .6444\nmills ($0.6444 per $1,000.00 of taxable value) and levied for five additional years, 2028\nthrough 2032 inclusive, for fire protection services within Manchester Township, raising an\nestimated $131,000.00 in 2028 of which a portion may be disbursed under a fire services\nagreement to another local unit(s) for fire protection services to the Township?"
+      ]
+    },
+    "physicalPages": [
+      4
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Renewal0.6444 is not described as a restorationto historical0.6500.",
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-northfield-fire-rescue",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "Northfield Township\n                   Fire Service and Medical Rescue Millage Proposal\nThis proposal will allow the Township to levy 2.5 mills (reduced to 2.4206 due to Headlee)\nto fund. fire service and medical rescue in Northfield Township for 5 years beginning\nDecember 2027, annually adjusted downward due to the Headlee Amendment.\n\nShall the limitation on the amount of taxes which may be imposed on taxable property\nwithin Northfield Township, County of Washtenaw, Michigan, be collected in an amount\nnot to exceed 2.5 mills ($2.50 on each $1,000.00 of taxable value), for a period of 5 years,\nbeginning with the 2027 Winter tax bill and ending with the 2031 Winter tax bill, inclusive,\nas a renewal of the current millage (2.4206 mills due to Headlee rollback from 2.5) which\nexpires after the 2026 Winter tax collection, to provide funds for fire services and medical\nrescue including operations, staffing, equipment purchase, and maintenance?\nIt is estimated that 2.5 mills would raise approximately $ 1,339,796.7 when first levied in\nDecember 2027.",
+    "fields": {
+      "whatItDoes": [
+        "Northfield Township\n                   Fire Service and Medical Rescue Millage Proposal\nThis proposal will allow the Township to levy 2.5 mills (reduced to 2.4206 due to Headlee)\nto fund. fire service and medical rescue in Northfield Township for 5 years beginning\nDecember 2027, annually adjusted downward due to the Headlee Amendment.\n\nShall the limitation on the amount of taxes which may be imposed on taxable property\nwithin Northfield Township, County of Washtenaw, Michigan, be collected in an amount\nnot to exceed 2.5 mills ($2.50 on each $1,000.00 of taxable value), for a period of 5 years,\nbeginning with the 2027 Winter tax bill and ending with the 2031 Winter tax bill, inclusive,\nas a renewal of the current millage (2.4206 mills due to Headlee rollback from 2.5) which\nexpires after the 2026 Winter tax collection, to provide funds for fire services and medical\nrescue including operations, staffing, equipment purchase, and maintenance?\nIt is estimated that 2.5 mills would raise approximately $ 1,339,796.7 when first levied in\nDecember 2027."
+      ],
+      "yesMeans": [
+        "Northfield Township\n                   Fire Service and Medical Rescue Millage Proposal\nThis proposal will allow the Township to levy 2.5 mills (reduced to 2.4206 due to Headlee)\nto fund. fire service and medical rescue in Northfield Township for 5 years beginning\nDecember 2027, annually adjusted downward due to the Headlee Amendment.\n\nShall the limitation on the amount of taxes which may be imposed on taxable property\nwithin Northfield Township, County of Washtenaw, Michigan, be collected in an amount\nnot to exceed 2.5 mills ($2.50 on each $1,000.00 of taxable value), for a period of 5 years,\nbeginning with the 2027 Winter tax bill and ending with the 2031 Winter tax bill, inclusive,\nas a renewal of the current millage (2.4206 mills due to Headlee rollback from 2.5) which\nexpires after the 2026 Winter tax collection, to provide funds for fire services and medical\nrescue including operations, staffing, equipment purchase, and maintenance?\nIt is estimated that 2.5 mills would raise approximately $ 1,339,796.7 when first levied in\nDecember 2027."
+      ],
+      "noMeans": [
+        "Northfield Township\n                   Fire Service and Medical Rescue Millage Proposal\nThis proposal will allow the Township to levy 2.5 mills (reduced to 2.4206 due to Headlee)\nto fund. fire service and medical rescue in Northfield Township for 5 years beginning\nDecember 2027, annually adjusted downward due to the Headlee Amendment.\n\nShall the limitation on the amount of taxes which may be imposed on taxable property\nwithin Northfield Township, County of Washtenaw, Michigan, be collected in an amount\nnot to exceed 2.5 mills ($2.50 on each $1,000.00 of taxable value), for a period of 5 years,\nbeginning with the 2027 Winter tax bill and ending with the 2031 Winter tax bill, inclusive,\nas a renewal of the current millage (2.4206 mills due to Headlee rollback from 2.5) which\nexpires after the 2026 Winter tax collection, to provide funds for fire services and medical\nrescue including operations, staffing, equipment purchase, and maintenance?\nIt is estimated that 2.5 mills would raise approximately $ 1,339,796.7 when first levied in\nDecember 2027."
+      ]
+    },
+    "physicalPages": [
+      4
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Intro mentions2.4206effective rolledrate, operativequestionauthorizesup2.5subjectHeadlee; summary preservesboth anddoesnotpromiseunchangedtaxrate.",
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-scio-roads",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "Scio Township\n       Scio Township Road, Bridge, and Culvert Improvement Millage Proposal\nShall the limitation on the amount of taxes which may be imposed each year for all\npurposes on real and personal property in Scio Township, Washtenaw County, Michigan,\nbe increased as provided in Section 6, Article IX of the Michigan Constitution by the levy\n0.5 mills ($0.50 per $1,000 of taxable value) for a period of six (6) years, beginning with the\nDecember 1, 2027 tax levy and continuing through 2032 inclusive, for the purpose of\nproviding dedicated township funding to be used to leverage other sources including\nprivate, Washtenaw County, or the state of Michigan, for the maintenance, repair,\npreservation, reconstruction, and improvement of local public roads as certified by Michigan\nDepartment of Transportation, bridges, bike lanes, crosswalks, and culverts within the\nTownship, including related engineering, inspections, drainage, and administrative costs?\nThis millage is estimated to raise approximately $984,536.00 in the first year the millage is\nlevied.",
+    "fields": {
+      "whatItDoes": [
+        "Scio Township\n       Scio Township Road, Bridge, and Culvert Improvement Millage Proposal\nShall the limitation on the amount of taxes which may be imposed each year for all\npurposes on real and personal property in Scio Township, Washtenaw County, Michigan,\nbe increased as provided in Section 6, Article IX of the Michigan Constitution by the levy\n0.5 mills ($0.50 per $1,000 of taxable value) for a period of six (6) years, beginning with the\nDecember 1, 2027 tax levy and continuing through 2032 inclusive, for the purpose of\nproviding dedicated township funding to be used to leverage other sources including\nprivate, Washtenaw County, or the state of Michigan, for the maintenance, repair,\npreservation, reconstruction, and improvement of local public roads as certified by Michigan\nDepartment of Transportation, bridges, bike lanes, crosswalks, and culverts within the\nTownship, including related engineering, inspections, drainage, and administrative costs?\nThis millage is estimated to raise approximately $984,536.00 in the first year the millage is\nlevied."
+      ],
+      "yesMeans": [
+        "Scio Township\n       Scio Township Road, Bridge, and Culvert Improvement Millage Proposal\nShall the limitation on the amount of taxes which may be imposed each year for all\npurposes on real and personal property in Scio Township, Washtenaw County, Michigan,\nbe increased as provided in Section 6, Article IX of the Michigan Constitution by the levy\n0.5 mills ($0.50 per $1,000 of taxable value) for a period of six (6) years, beginning with the\nDecember 1, 2027 tax levy and continuing through 2032 inclusive, for the purpose of\nproviding dedicated township funding to be used to leverage other sources including\nprivate, Washtenaw County, or the state of Michigan, for the maintenance, repair,\npreservation, reconstruction, and improvement of local public roads as certified by Michigan\nDepartment of Transportation, bridges, bike lanes, crosswalks, and culverts within the\nTownship, including related engineering, inspections, drainage, and administrative costs?\nThis millage is estimated to raise approximately $984,536.00 in the first year the millage is\nlevied."
+      ],
+      "noMeans": [
+        "Scio Township\n       Scio Township Road, Bridge, and Culvert Improvement Millage Proposal\nShall the limitation on the amount of taxes which may be imposed each year for all\npurposes on real and personal property in Scio Township, Washtenaw County, Michigan,\nbe increased as provided in Section 6, Article IX of the Michigan Constitution by the levy\n0.5 mills ($0.50 per $1,000 of taxable value) for a period of six (6) years, beginning with the\nDecember 1, 2027 tax levy and continuing through 2032 inclusive, for the purpose of\nproviding dedicated township funding to be used to leverage other sources including\nprivate, Washtenaw County, or the state of Michigan, for the maintenance, repair,\npreservation, reconstruction, and improvement of local public roads as certified by Michigan\nDepartment of Transportation, bridges, bike lanes, crosswalks, and culverts within the\nTownship, including related engineering, inspections, drainage, and administrative costs?\nThis millage is estimated to raise approximately $984,536.00 in the first year the millage is\nlevied."
+      ]
+    },
+    "physicalPages": [
+      5
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Leverage fundingpurpose is not a promise that otherfunds have alreadybeenobtained.",
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mi-cx-2026-clinton-schools-operating",
+    "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01",
+    "rawHash": "4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed",
+    "sourceFile": "sources/4f170be7cf6f5d184ebcc33ec594b2c5fef6de7820a2eefbc282a295f0b5f7ed.source",
+    "sourceTextFile": "sources/3e489d6e40a5f04f97e23d668638856a869599ee8320de96d0c5967fcf7ec507.txt",
+    "excerpt": "Clinton Community Schools\n                           Operating Millage Renewal Proposal\nThis proposal will allow the school district to continue to levy the statutory rate of not to\nexceed 18 mills on all property, except principal residence and other property exempted by\nlaw, required for the school district to receive its revenue per pupil foundation allowance\nand renews millage that will expire with the 2026 tax levy.\nShall the currently authorized millage rate limitation of 18.487 mills ($18.487 on each\n$1,000 of taxable valuation) on the amount of taxes which may be assessed against all\nproperty, except principal residence and other property exempted by law, in Clinton\nCommunity Schools, Lenawee and Washtenaw Counties, Michigan, be renewed for a\nperiod of 6 years, 2027 to 2032, inclusive, to provide funds for operating purposes; the\nestimate of the revenue the school district will collect if the millage is approved and 18 mills\nare levied in 2027 is approximately $1,580,000 (this is a renewal of millage that will expire\nwith the 2026 tax levy)?",
+    "fields": {
+      "whatItDoes": [
+        "Clinton Community Schools\n                           Operating Millage Renewal Proposal\nThis proposal will allow the school district to continue to levy the statutory rate of not to\nexceed 18 mills on all property, except principal residence and other property exempted by\nlaw, required for the school district to receive its revenue per pupil foundation allowance\nand renews millage that will expire with the 2026 tax levy.\nShall the currently authorized millage rate limitation of 18.487 mills ($18.487 on each\n$1,000 of taxable valuation) on the amount of taxes which may be assessed against all\nproperty, except principal residence and other property exempted by law, in Clinton\nCommunity Schools, Lenawee and Washtenaw Counties, Michigan, be renewed for a\nperiod of 6 years, 2027 to 2032, inclusive, to provide funds for operating purposes; the\nestimate of the revenue the school district will collect if the millage is approved and 18 mills\nare levied in 2027 is approximately $1,580,000 (this is a renewal of millage that will expire\nwith the 2026 tax levy)?"
+      ],
+      "yesMeans": [
+        "Clinton Community Schools\n                           Operating Millage Renewal Proposal\nThis proposal will allow the school district to continue to levy the statutory rate of not to\nexceed 18 mills on all property, except principal residence and other property exempted by\nlaw, required for the school district to receive its revenue per pupil foundation allowance\nand renews millage that will expire with the 2026 tax levy.\nShall the currently authorized millage rate limitation of 18.487 mills ($18.487 on each\n$1,000 of taxable valuation) on the amount of taxes which may be assessed against all\nproperty, except principal residence and other property exempted by law, in Clinton\nCommunity Schools, Lenawee and Washtenaw Counties, Michigan, be renewed for a\nperiod of 6 years, 2027 to 2032, inclusive, to provide funds for operating purposes; the\nestimate of the revenue the school district will collect if the millage is approved and 18 mills\nare levied in 2027 is approximately $1,580,000 (this is a renewal of millage that will expire\nwith the 2026 tax levy)?"
+      ],
+      "noMeans": [
+        "Clinton Community Schools\n                           Operating Millage Renewal Proposal\nThis proposal will allow the school district to continue to levy the statutory rate of not to\nexceed 18 mills on all property, except principal residence and other property exempted by\nlaw, required for the school district to receive its revenue per pupil foundation allowance\nand renews millage that will expire with the 2026 tax levy.\nShall the currently authorized millage rate limitation of 18.487 mills ($18.487 on each\n$1,000 of taxable valuation) on the amount of taxes which may be assessed against all\nproperty, except principal residence and other property exempted by law, in Clinton\nCommunity Schools, Lenawee and Washtenaw Counties, Michigan, be renewed for a\nperiod of 6 years, 2027 to 2032, inclusive, to provide funds for operating purposes; the\nestimate of the revenue the school district will collect if the millage is approved and 18 mills\nare levied in 2027 is approximately $1,580,000 (this is a renewal of millage that will expire\nwith the 2026 tax levy)?"
+      ]
+    },
+    "physicalPages": [
+      5
+    ],
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "0",
+        "-W",
+        "612",
+        "-H",
+        "720",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedFooterNumberBBoxPoints": [
+        312,
+        728.3207,
+        320.1093,
+        742.4722
+      ],
+      "scope": "Crop top720points on everypage. Allquestion text lies above this; standalonepagenumberfooters excluded. AnnArborA spansp1–2 and alloperativequestionlines remain."
+    },
+    "semanticConditions": [
+      "Estimated revenues and rates do not promise uniform household bills.",
+      "Full bounded question and explanations retained; no caption-only placeholder prose."
+    ],
+    "inventoryScope": "Currentlinked official6page Washtenawlist has16locals+2statewide. Fourteen directwholedivision locals here; SalineAreaFireAuthorityelectorateandSchoolcraftCollegepartialNovigeography separate.",
+    "officialLinkingEvidencePath": "official-listing-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

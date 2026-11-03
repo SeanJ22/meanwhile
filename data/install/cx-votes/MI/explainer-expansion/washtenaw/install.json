@@ -1,0 +1,127 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MI",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "mi-cx-2026-ann-arbor-streets",
+      "title": "Ann Arbor — Proposal A: Streets, bridges and sidewalks",
+      "ocdId": "ocd-division/country:us/state:mi/place:ann_arbor",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-ann-arbor-new-sidewalks",
+      "title": "Ann Arbor — Proposal B: New sidewalks",
+      "ocdId": "ocd-division/country:us/state:mi/place:ann_arbor",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-ann-arbor-petition-signatures",
+      "title": "Ann Arbor — Proposal C: Nomination petition signatures",
+      "ocdId": "ocd-division/country:us/state:mi/place:ann_arbor",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-ann-arbor-term-start",
+      "title": "Ann Arbor — Proposal D: Elected officer term start",
+      "ocdId": "ocd-division/country:us/state:mi/place:ann_arbor",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-ann-arbor-electric-utility",
+      "title": "Ann Arbor — Proposal E: Municipal electric utility",
+      "ocdId": "ocd-division/country:us/state:mi/place:ann_arbor",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-dexter-permanent-park",
+      "title": "Dexter — Permanent public park designation",
+      "ocdId": "ocd-division/country:us/state:mi/place:dexter",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-milan-fire-assessment",
+      "title": "Milan — Fire services special assessment",
+      "ocdId": "ocd-division/country:us/state:mi/place:milan",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-ypsilanti-nonpartisan",
+      "title": "Ypsilanti — Nonpartisan elections",
+      "ocdId": "ocd-division/country:us/state:mi/place:ypsilanti",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-ypsilanti-police-budget",
+      "title": "Ypsilanti — Police budget increases",
+      "ocdId": "ocd-division/country:us/state:mi/place:ypsilanti",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-augusta-fire-increase",
+      "title": "Augusta Township — Fire protection millage increase",
+      "ocdId": "ocd-division/country:us/state:mi/county:washtenaw/place:augusta_charter_township",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-manchester-fire-renewal",
+      "title": "Manchester Township — Fire services renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:washtenaw/place:manchester_township",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-northfield-fire-rescue",
+      "title": "Northfield Township — Fire and medical rescue renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:washtenaw/place:northfield_township",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-scio-roads",
+      "title": "Scio Township — Road, bridge and culvert millage",
+      "ocdId": "ocd-division/country:us/state:mi/county:washtenaw/place:scio_township",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    },
+    {
+      "id": "mi-cx-2026-clinton-schools-operating",
+      "title": "Clinton Community Schools — Operating millage renewal",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:clinton_community_schools",
+      "sourceUrl": "https://www.washtenaw.org/asset/b994f93c-638c-454d-8273-cc326a19fd01"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 14,
+    "newPlainLanguageExplanations": 14,
+    "localCompleteness": "14of16local questions in current official countyNov3list. Two regionalgeography questionsremainopen. No allMichiganlocal completeness assertion."
+  },
+  "validation": {
+    "state": "MI",
+    "newMeasures": 14,
+    "newExplanations": 14,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "recursiveGovOfficialAuthorityForRequestedAndFinalUrls": "PASS",
+    "currentRenderedNov3ExactDocumentAssociation": "PASS",
+    "nativePdfQuestionCropWithCoordinates": "PASS"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,290 @@
+[
+  {
+    "contestId": "mi-cx-2026-wayne-zoo-millage",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:wayne",
+      "county",
+      "26163",
+      "Wayne County"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-wayne-historical-museum-millage",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:wayne",
+      "county",
+      "26163",
+      "Wayne County"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-gibraltar-public-safety",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:gibraltar",
+      "place",
+      "2632020",
+      "Gibraltar city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-grosse-pointe-public-safety-assessment",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:grosse_pointe",
+      "place",
+      "2635480",
+      "Grosse Pointe city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-grosse-pointe-park-recreation",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:grosse_pointe_park",
+      "place",
+      "2635540",
+      "Grosse Pointe Park city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-lincoln-park-headlee",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:lincoln_park",
+      "place",
+      "2647800",
+      "Lincoln Park city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-riverview-golf-course-sale",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:riverview",
+      "place",
+      "2668880",
+      "Riverview city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-riverview-road-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:riverview",
+      "place",
+      "2668880",
+      "Riverview city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-rockwood-road-restoration",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:rockwood",
+      "place",
+      "2669180",
+      "Rockwood city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-southgate-term-limits",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:southgate",
+      "place",
+      "2674960",
+      "Southgate city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-southgate-bidding-thresholds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:southgate",
+      "place",
+      "2674960",
+      "Southgate city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-inkster-parks-recreation-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:inkster",
+      "place",
+      "2640680",
+      "Inkster city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-inkster-senior-services-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:inkster",
+      "place",
+      "2640680",
+      "Inkster city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-grosse-ile-bike-paths",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:wayne/place:grosse_ile_township",
+      "cousub",
+      "2616335420",
+      "Grosse Ile township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-grosse-ile-fire-equipment",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:wayne/place:grosse_ile_township",
+      "cousub",
+      "2616335420",
+      "Grosse Ile township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-grosse-ile-recreation",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:wayne/place:grosse_ile_township",
+      "cousub",
+      "2616335420",
+      "Grosse Ile township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-grosse-ile-greenways",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:wayne/place:grosse_ile_township",
+      "cousub",
+      "2616335420",
+      "Grosse Ile township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-sumpter-police-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:wayne/place:sumpter_township",
+      "cousub",
+      "2616377360",
+      "Sumpter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-dearborn-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:dearborn_city_school_district",
+      "unsd",
+      "2611600",
+      "Dearborn City School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-redford-union-operating-restoration",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:redford_union_school_district",
+      "unsd",
+      "2629460",
+      "Redford Union School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-riverview-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:riverview_community_school_district",
+      "unsd",
+      "2629910",
+      "Riverview Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-romulus-hold-harmless-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:romulus_community_schools",
+      "unsd",
+      "2630120",
+      "Romulus Community Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-taylor-operating-replacement",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:taylor_school_district",
+      "unsd",
+      "2633540",
+      "Taylor School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  },
+  {
+    "contestId": "mi-cx-2026-wyandotte-operating-restoration",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:wyandotte_city_school_district",
+      "unsd",
+      "2636540",
+      "Wyandotte City School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty/city/county-qualified township orunique schooldistrict. Genericcity/publicschool words normalized only where geographic identity isunique; fullschooldistrict notmunicipal cityboundary."
+  }
+]

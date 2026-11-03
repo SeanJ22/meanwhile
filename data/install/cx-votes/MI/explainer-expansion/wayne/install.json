@@ -1,0 +1,185 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MI",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "mi-cx-2026-wayne-zoo-millage",
+      "title": "Wayne County — Detroit Zoo millage",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-wayne-historical-museum-millage",
+      "title": "Wayne County — Historical museum millage",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-gibraltar-public-safety",
+      "title": "Gibraltar — Additional public safety millage",
+      "ocdId": "ocd-division/country:us/state:mi/place:gibraltar",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-grosse-pointe-public-safety-assessment",
+      "title": "Grosse Pointe — Police and fire special assessment",
+      "ocdId": "ocd-division/country:us/state:mi/place:grosse_pointe",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-grosse-pointe-park-recreation",
+      "title": "Grosse Pointe Park — Parks and recreation millage",
+      "ocdId": "ocd-division/country:us/state:mi/place:grosse_pointe_park",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-lincoln-park-headlee",
+      "title": "Lincoln Park — Operating millage restoration",
+      "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-riverview-golf-course-sale",
+      "title": "Riverview — Golf course land sale",
+      "ocdId": "ocd-division/country:us/state:mi/place:riverview",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-riverview-road-bonds",
+      "title": "Riverview — Road improvement bonds",
+      "ocdId": "ocd-division/country:us/state:mi/place:riverview",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-rockwood-road-restoration",
+      "title": "Rockwood — Transportation millage restoration",
+      "ocdId": "ocd-division/country:us/state:mi/place:rockwood",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-southgate-term-limits",
+      "title": "Southgate — Elected official term limits",
+      "ocdId": "ocd-division/country:us/state:mi/place:southgate",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-southgate-bidding-thresholds",
+      "title": "Southgate — Purchasing and bidding thresholds",
+      "ocdId": "ocd-division/country:us/state:mi/place:southgate",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-inkster-parks-recreation-renewal",
+      "title": "Inkster — Parks, recreation, youth and senior program renewal",
+      "ocdId": "ocd-division/country:us/state:mi/place:inkster",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-inkster-senior-services-renewal",
+      "title": "Inkster — Senior services renewal",
+      "ocdId": "ocd-division/country:us/state:mi/place:inkster",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-grosse-ile-bike-paths",
+      "title": "Grosse Ile Township — Bike path maintenance renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:grosse_ile_township",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-grosse-ile-fire-equipment",
+      "title": "Grosse Ile Township — Fire equipment renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:grosse_ile_township",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-grosse-ile-recreation",
+      "title": "Grosse Ile Township — Recreation program renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:grosse_ile_township",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-grosse-ile-greenways",
+      "title": "Grosse Ile Township — Additional greenways and open-space millage",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:grosse_ile_township",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-sumpter-police-renewal",
+      "title": "Sumpter Township — Police millage renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:sumpter_township",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-dearborn-school-bonds",
+      "title": "Dearborn Public Schools — School improvement bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:dearborn_city_school_district",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-redford-union-operating-restoration",
+      "title": "Redford Union School District — Operating millage restoration",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:redford_union_school_district",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-riverview-school-bonds",
+      "title": "Riverview Community School District — School bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:riverview_community_school_district",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-romulus-hold-harmless-renewal",
+      "title": "Romulus Community Schools — Hold-harmless operating renewal",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:romulus_community_schools",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-taylor-operating-replacement",
+      "title": "Taylor School District — Operating millage replacement",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:taylor_school_district",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    },
+    {
+      "id": "mi-cx-2026-wyandotte-operating-restoration",
+      "title": "Wyandotte City School District — Operating millage restoration",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:wyandotte_city_school_district",
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 24,
+    "newPlainLanguageExplanations": 24,
+    "localCompleteness": "24of27locals advertised in currentofficialWayneCountyproposal PDF, printedSept4. Remaining3separate. No allMichigan-local completeness claim."
+  },
+  "validation": {
+    "state": "MI",
+    "newMeasures": 24,
+    "newExplanations": 24,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "currentOfficialNov3PageLinksExactNativeProposalPdf": "PASS"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

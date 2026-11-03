@@ -1,0 +1,25 @@
+{
+  "sourceUrl": "https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-Results-Candidates/November-3rd-2026-General-Election",
+  "httpStatus": 200,
+  "sourceFile": "sources/3308c034ce135906db89dc0dae289485c603e7f98ba0535667fe319c42be4762.official-index.html",
+  "originalSourceSha256": "81fdc0fdd6933aba43eda1e1c86dd419f2684981e30de19261db1c9e987f33df",
+  "archivedSha256": "3308c034ce135906db89dc0dae289485c603e7f98ba0535667fe319c42be4762",
+  "representation": "SANITIZED_LINKING_HTML",
+  "sanitizer": "fx-cred-v1-2026-08-28",
+  "redactedClasses": [
+    "google_api_key"
+  ],
+  "linkedPdfPath": "/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+  "linkLabel": "Official Proposal List",
+  "printedListDate": "2026-09-04",
+  "coverage": {
+    "localProposalsAdvertised": 27,
+    "preparedHere": 24,
+    "remaining": [
+      "DearbornHeights general charter revision procedure",
+      "SchoolcraftCollege district has5wholemembers pluspartNovi; no fullNovi join",
+      "GrossePointePublicLibrary district needs exact territory source"
+    ]
+  },
+  "scope": "CurrentofficialNov3electionpage links datednativeproposal list; no allMichigan-local completeness claim."
+}

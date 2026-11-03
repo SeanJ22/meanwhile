@@ -1,0 +1,1171 @@
+{
+  "ballots": {
+    "MI:mi-2026-11-03": {
+      "election": {
+        "id": "mi-2026-11-03",
+        "date": "2026-11-03",
+        "name": "Michigan General Election",
+        "state": "MI"
+      },
+      "contests": [
+        {
+          "id": "mi-cx-2026-wayne-zoo-millage",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/county:wayne",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Wayne County — Detroit Zoo millage",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "WAYNE COUNTY / WAYNE COUNTY ZOOLOGICAL AUTHORITY PROPOSAL\nRenewal of Wayne County Zoological Authority Millage in Support of the Detroit Zoo\nIn 2008 and 2016, pursuant to Public Act 49 of 2008, Wayne County voters renewed a 10-year property tax millage to fund zoological services through the Wayne County Zoological Authority,\nsupporting animal care for more than 2,000 animals and 200 species, educational and senior programs, and facility maintenance at the Detroit Zoo.\n\nTo continue providing these services, the Authority seeks to renew and restore the millage to the original voter-approved rate of 0.10 mill (10 cents per $1,000 of taxable value). This proposal would\nrenew the millage at 0.0982 mill and restore the remaining 0.0018 mill that was reduced due to required rollback, for a total authorized rate of 0.10 mill on taxable real and personal property for ten\n(10) years.\n\nIf approved, the millage rate would be unchanged from those approved by voters in 2008 and 2016. Funds will be disbursed to the Authority and transferred to the Detroit Zoo as permitted by law. All\nfunds are subject to annual independent audits. It is estimated that $6,145,462 will be collected in the first year.\n\nBallot Question:\n\nDo you approve the renewal and restoration of the levy of 0.10 mill on all taxable property in Wayne County for a period of ten (10) years, from 2028 through 2037?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-wayne-historical-museum-millage",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/county:wayne",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Wayne County — Historical museum millage",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "WAYNE COUNTY / SOUTHEAST MICHIGAN PUBLIC HISTORICAL MUSEUM AUTHORITY PROPOSAL\nSoutheast Michigan Public Historical Museum Authority Millage Proposal\nThe Southeast Michigan Public Historical Museum Authority (“Authority”) is a joint authority established by Wayne and Oakland Counties (“Counties”) pursuant to Michigan Public Act 321 of the Public\nActs of 2000, as amended, and was formed to support the Charles H. Wright Museum of African American History, Detroit Historical Museum, Dossin Great Lakes Museum, and other public historical\nmuseums located in Wayne and Oakland Counties (“Historical Museums”) that provide historical museum services for students, residents and visitors of the Counties. The law allows the Authority to seek\nauthorization from the electors in each of the Counties to levy a tax of 0.2 mill (20 cents per $1,000 of taxable value) on taxable property to provide revenue for Historical Museums.\n\nIt is estimated that if approved and levied on taxable property located within Wayne County, this new millage would generate approximately $12,219,200 in 2026.\n\nIn addition to supporting the Charles H. Wright Museum of African American History, Detroit Historical Museum, and Dossin Great Lakes Museum, 15% of revenues received by the Authority from taxable\nproperty in Wayne County, after Authority administrative expenses, will be disbursed to the County of Wayne for the purposes of supporting Historical Museums in Wayne County.\n\nShall a 0.2 mill tax on all taxable property located within Wayne County be imposed by the Authority for a period of ten (10) years, being years 2026 through 2035, inclusive, to provide historical museum\nservices for the benefit of the residents of the Counties?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-gibraltar-public-safety",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:gibraltar",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Gibraltar — Additional public safety millage",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "CITY OF GIBRALTAR PROPOSAL\nCity of Gibraltar\nPublic Safety Millage Proposal\nShall the City of Gibraltar, County of Wayne, Michigan, be authorized to levy a new additional millage in an amount not to exceed 3.5 mills ($3.50 per $1,000.00 of taxable value) on all taxable real and\npersonal property in the City, for a period of five (5) years, 2027 through 2031, inclusive, for the purpose of funding police, fire, and emergency (public safety) services, including related personnel,\nbenefits, equipment, apparatus, and capital replacement? If approved and levied in full, this millage is estimated to raise approximately $672,281.68 for the City in the first calendar year of the levy\n(2027). A portion of the revenue collected may be captured by and disbursed to the City of Gibraltar Downtown Development Authority."
+          }
+        },
+        {
+          "id": "mi-cx-2026-grosse-pointe-public-safety-assessment",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:grosse_pointe",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Grosse Pointe — Police and fire special assessment",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "CITY OF GROSSE POINTE PROPOSAL\nSpecial Assessment for Police and Fire Departments\nShould the City of Grosse Pointe raise money to partially equip, maintain, and operate the City Police and Fire Departments (Public Safety) by annual special assessment levies of up to 1.25 mills ($1.25\nper $1,000 of taxable value) on all real property in the City that is not exempt from property taxes, for a period of four (4) years with the levies to be from 2026 to 2029 to provide funding for the 2027 to\n2030 calendar years? If approved and fully levied in December 2026, the estimated revenue from this special assessment collected in the first year would be approximately $613,750.00."
+          }
+        },
+        {
+          "id": "mi-cx-2026-grosse-pointe-park-recreation",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:grosse_pointe_park",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Grosse Pointe Park — Parks and recreation millage",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "CITY OF GROSSE POINTE PARK PROPOSAL\nCity of Grosse Pointe Park\nParks and Recreation Millage Proposal\nThis millage proposal would allow the City of Grosse Pointe Park to levy 0.65 Mill for the purpose of, maintaining, preserving, repairing, replacing, and extending the useful life of the parks and recreation\nfacilities located within the City of Grosse Pointe Park.\n\nShall the City of Grosse Pointe Park, Wayne County, Michigan, increase the limitation on the total amount of general ad valorem taxes which may be imposed for all purposes in Article IX, Section 6 of\nthe Michigan Constitution of 1963, as amended, by 0.65 Mill ($0.65 per $1,000.00 of taxable value) for a period of seven (7) years (2027 through 2033, inclusive), which would provide an estimated\nrevenue of $562,000.00 in its first year if approved and levied, for the purpose of, maintaining, preserving, repairing, replacing, improving, upgrading, and extending the useful life of the parks and\nrecreation facilities located within the City of Grosse Pointe Park, of which a portion will be disbursed to the City of Grosse Pointe Park Downtown Development Authority and the City of Grosse Pointe\nPark Tax Increment Financing Authority. Should the proposed millage be approved?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-lincoln-park-headlee",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lincoln Park — Operating millage restoration",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "CITY OF LINCOLN PARK PROPOSAL\nCity of Lincoln Park\nHeadlee Override Proposal\nShall a “Headlee Override” be adopted so that the current limitation on the amount of City taxes that may be levied against all taxable property in the City of Lincoln Park, Wayne County, Michigan, be\nincreased as follows:\n   •               Up to 20 mills from approximately 17.17 ($20.00 from approximately $17.17 per $1,000.00 of taxable value) for general operating expenses.\n\nIf approved and levied in its entirety, this millage would raise an estimated maximum amount of $2,420,265 for the City in 2027 by allowing the City to levy the maximum mills previously approved by the\nvoters and authorized by the City Charter and State law which have been reduced as required by the Michigan Constitution of 1963."
+          }
+        },
+        {
+          "id": "mi-cx-2026-riverview-golf-course-sale",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:riverview",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Riverview — Golf course land sale",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "City of Riverview Ballot Proposal\nShall the City of Riverview be authorized to publicly sell a portion of the City of Riverview’s Highlands Golf Course property, previously dedicated for recreational purposes, to the highest qualified bidder\nsubject to City Council’s approval, for the development of a Community Park and approximately 400 Residential Housing Units? The property to be sold is located within the Riverview Highlands Golf\nCourse and consists of not to exceed 80 acres of land (out of a total of approximately of 248.5 acres), adjacent to and west of the Forest Subdivision and north of King Road."
+          }
+        },
+        {
+          "id": "mi-cx-2026-riverview-road-bonds",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:riverview",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Riverview — Road improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "City of Riverview Bond Proposal\nShall the City of Riverview, County of Wayne, Michigan, borrow the principal sum of not to exceed Ten Million Dollars ($10,000,000) and issue its general obligation unlimited tax bonds, in one or more\nseries, payable in not to exceed ten (10) years from the date of issue of each series, for the purpose of paying the cost to acquire, construct, furnish and equip road improvements throughout the city,\nincluding water main replacements, including interests in land, necessary rights-of-way and appurtenances and attachments thereto? If approved, the estimated millage to be levied in 2027 is 2.5211\nmills ($2.5211 per $1,000 of taxable value) and the estimated simple average annual millage rate required to retire the bonds is 2.5229 mills ($2.5229 per $1,000 of taxable value)."
+          }
+        },
+        {
+          "id": "mi-cx-2026-rockwood-road-restoration",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:rockwood",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rockwood — Transportation millage restoration",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "CITY OF ROCKWOOD PROPOSAL\nHeadlee Operating Millage Restoration for Transportation Infrastructure\nShall the limitation on the total amount of taxes which may be imposed upon taxable property in the City of Rockwood be increased by restoring 1.9055 mills ($1.9055 per $1,000 of taxable value) of the\nCity's previously reduced charter-authorized operating tax levy as a new additional millage for a period of ten years, 2026 through 2035, inclusive, thereby increasing the City's maximum authorized\noperating tax levy from 15.9814 mills to 17.8869 mills, with all revenue generated from the restored 1.9055 mills to be used exclusively for the repair, maintenance, preservation, and improvement of\npublic roads, streets, bridges, sidewalks, and other transportation infrastructure?\n\nIf approved and levied, this restoration is estimated to raise approximately $102,761.42 in 2026, the first year of the levy."
+          }
+        },
+        {
+          "id": "mi-cx-2026-southgate-term-limits",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:southgate",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Southgate — Elected official term limits",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "Charter Amendment to Remove Term Limits for Elected City Officials\nShall Sections 37, and 56, of the Southgate City Charter be amended to eliminate term limits for the offices of Mayor, City Clerk, City\nTreasurer, and City Council?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-southgate-bidding-thresholds",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:southgate",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Southgate — Purchasing and bidding thresholds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "City Charter Amendment to Article 5, General Finance, to Establish Budget-Based Thresholds for Competitive Bidding and City Council Approval On Purchases, Public Improvements and Contracts\nShall the Charter of the City of Southgate be amended to require competitive bidding (sealed proposals) for City purchases, public improvements, and contracts that are 0.1% or more of the City’s\nannual operating budget; require City Council to establish annual thresholds for City Council approval of purchases, public improvements, and contracts; and provide that these thresholds may be\nadjusted each year by City Council Resolution when the City budget is adopted?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-inkster-parks-recreation-renewal",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:inkster",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Inkster — Parks, recreation, youth and senior program renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "Millage Renewal Request for the\nCity of Inkster Parks & Recreation which includes\nSenior Citizens and Youth Services\nShall the City of Inkster, Wayne County, Michigan be authorized and empowered to levy a general valorem property tax which in any one year shall not exceed 2.0 mills (2.0 mills per $1,000.00 of State\nEqualized Valuation for ten (10) years, 2027 to 2036?\n\nThe continuation of the dedicated Millage for Parks and Recreation Operations, which include Youth and Senior Programs, is up to 2.0 mills. It has been determined that up to 2.0 mills is necessary\nto operate these programs and to continue the current level of service. General Fund dollars are not available to support these programs. The average cost to a homeowner is estimated to be $54 and\nwould generate an estimated $580,000 if the maximum allowable millage is levied."
+          }
+        },
+        {
+          "id": "mi-cx-2026-inkster-senior-services-renewal",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:inkster",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Inkster — Senior services renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "Millage Renewal Request\nfor the City of Inkster\nSenior Services Operations\nShall the City of Inkster, Wayne County, Michigan be authorized and empowered to levy a general valorem property tax which in any one year shall not exceed 1.0 mills (1.0 mills per $1,000.00 of State\nEqualized Valuation for ten (10) years, 2027 to 2036?\n\nThe continuation of the dedicated Millage for Senior Services Operations is up to 1.0 mills. It has been determined that up to 1.0 mills is necessary to operate this program and to continue the current\nlevel of service. General Fund dollars are not available to support these programs. The average cost to a homeowner is estimated to be $27 and would generate an estimated $290,000 if\nthe maximum allowable amount is levied in any year."
+          }
+        },
+        {
+          "id": "mi-cx-2026-grosse-ile-bike-paths",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:grosse_ile_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Grosse Ile Township — Bike path maintenance renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "MILLAGE RENEWAL FOR BIKE PATH MAINTENANCE\nShall the expired previously voted increase in the total tax limitation imposed under Article IX, Section 6 of the Michigan Constitution in Grosse Ile Township, 0.15 mills ($0.15 per $1,000 of taxable value),\nreduced to 0.1439 mills ($0.1439 per $1,000 of taxable value) by the required millage rollbacks, be renewed at 0.1439 mills ($0.1439 per $1,000 of taxable value) and levied for a period of ten (10) years\nfrom 2026 through 2035 inclusive, to provide funds for the maintenance of bike paths in the Township, raising an estimated $119,000 in the first calendar year the millage is levied of which a portion of the\ncollection will be disbursed to the Grosse Ile Township Downtown Development Authority and the Brownfield Authority as legally required?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-grosse-ile-fire-equipment",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:grosse_ile_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Grosse Ile Township — Fire equipment renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "MILLAGE RENEWAL FOR FIRE DEPARTMENT EQUIPMENT\nShall the expired previously voted increase in the total tax limitation imposed under Article IX, Section 6 of the Michigan Constitution in Grosse Ile Township, of 0.50 mills ($0.50 per $1,000 of taxable\nvalue), reduced to 0.4818 mills ($0.4818 per $1,000 of taxable value) by the required millage rollbacks, be renewed at 0.4818 mills ($0.4818 per $1,000 of taxable value) and levied for a period of 5 years\nfrom 2026 through 2030 inclusive, to provide funds for the acquiring of fire department vehicles and other necessary fire department equipment, raising an estimated $403,000 in the first calendar year\nthe millage is levied (of which an estimated $5,750 will be disbursed to the Grosse Ile Township Downtown Development Authority and an estimated $1,800 to the Brownfield Authority as legally\nrequired)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-grosse-ile-recreation",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:grosse_ile_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Grosse Ile Township — Recreation program renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "MILLAGE RENEWAL FOR RECREATION PROGRAM\nShall the expired previously voted increase in the total tax limitation imposed under Article IX, Section 6 of the Michigan Constitution in Grosse Ile Township, 0.50 mills ($0 .50 per $1,000 of taxable\nvalue), reduced to .4818 mills ($.4818 per $1,000 of taxable value) by the required millage rollbacks, be renewed at .4818 mills ($.4818 per $1,000 of taxable value) and levied for a period of five (5) years\nfrom 2026 through 2030 inclusive, to provide funds for the operation of a Township recreation program, raising an estimated $400,000 in the first calendar year the millage is levied of which a portion of\nthe collection will be disbursed to the Grosse Ile Township Downtown Development Authority and the Brownfield Authority as legally required?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-grosse-ile-greenways",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:grosse_ile_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Grosse Ile Township — Additional greenways and open-space millage",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "NEW MILLAGE FOR GREENWAYS/OPEN SPACE\nShall Grosse Ile Township impose an increase of up to 0.10 mill ($0.10 per $1,000 of taxable value) in the total tax limitation imposed under Article IX, Section 6 of the Michigan Constitution and levy it for\na period of 3 years, 2026 through 2028 inclusive, to provide funds for the purpose of maintenance and repair of public property\nand trails designated as greenways/open space properties, which 0.10 mill increase will raise an estimated $83,614 in the first year the millage is levied, of which a small portion will be disbursed to the\nGrosse Ile Township Downtown Development Authority and Brownfield Authority as legally required?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-sumpter-police-renewal",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:sumpter_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Sumpter Township — Police millage renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "TOWNSHIP OF SUMPTER PROPOSAL\nPOLICE MILLAGE QUESTION\nPOLICE PROTECTION MILLAGE RENEWAL LANGUAGE\nShall Sumpter Township impose a levy up to 5 mills ($5.00 per $1,000 of taxable value) in the tax limitations imposed under Article IX, Sec. 6 of the Michigan constitution and levy it for 4 years, 2026\nthrough 2029 inclusive, for police protection, operations, and maintenance of the Sumpter Township police department, which 5 mills levy will raise an estimated $2,428,884 in the first year the millage is\nlevied?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-dearborn-school-bonds",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:dearborn_city_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Dearborn Public Schools — School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "DEARBORN PUBLIC SCHOOLS PROPOSAL\nDearborn Public Schools\nCounty of Wayne\nState of Michigan\nSchool Improvement Bond Proposition\n\nShall the Dearborn Public Schools, County of Wayne, State of Michigan, borrow the sum of not to exceed One Billion Five Hundred Ten Million Dollars ($1,510,000,000) and issue its general obligation\nunlimited tax bonds, in multiple series, to pay the cost of the following projects in order to implement the School District’s 2026 Facilities Master Plan which includes the construction of new preK-8 school\nbuildings, major renovations at all school buildings including the three high schools, expanding space for career education programs, safety and security measures, improving infrastructure for STEAM\nprograms, and traffic improvements:\n\n   •    Erecting and completing new school buildings and other facilities;\n   •    Remodeling, constructing additions to, equipping, re-equipping, furnishing, re-furnishing school buildings, athletic fields, playgrounds and other facilities;\n   •    Acquiring and installing instructional technology infrastructure and equipment in school buildings and other facilities; and\n   •    Preparing, developing and improving sites at school buildings, athletic fields, playgrounds and other facilities and the purchase of school buses?\n\nThe maximum number of years any series of bonds may be outstanding, exclusive of refunding, is not more than thirty (30) years; the estimated millage that will be levied to pay the proposed bonds in\nthe first year is 3.14 mills (which is equal to $3.14 per $1,000 of taxable value); and the estimated simple average annual millage that will be required to retire each series of bonds is 5.67 mills\nannually ($5.67 per $1,000 of taxable value).\n\n(Pursuant to State law, expenditure of bond proceeds must be audited, and the proceeds cannot be used for teacher, administrator or employee salaries, repair or maintenance costs or other\noperating expenses.)"
+          }
+        },
+        {
+          "id": "mi-cx-2026-redford-union-operating-restoration",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:redford_union_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Redford Union School District — Operating millage restoration",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "REDFORD UNION SCHOOL DISTRICT PROPOSAL\nRedford Union School District\nOperating Millage Proposal\nThis proposal will allow the school district to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school\ndistrict to receive its revenue per pupil foundation allowance.\n\nShall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Redford Union School District, Wayne County,\nMichigan, be increased by 12 mills ($12.00 on each $1,000 of taxable valuation) for a period of 5 years, 2026 to 2030, inclusive, to provide funds for operating purposes; the estimate of the revenue the\nschool district will collect if the millage is approved and levied in 2026 is approximately $225,346 (this millage is to restore millage lost as a result of the reduction required by the Michigan Constitution\nof 1963 and will be levied only to the extent necessary to restore that reduction)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-riverview-school-bonds",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:riverview_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Riverview Community School District — School bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "RIVERVIEW COMMUNITY SCHOOLS PROPOSAL\nRiverview Community School District\nBond Proposal\n\nShall Riverview Community School District, Wayne County, Michigan, borrow the sum of not to exceed Thirty Million Dollars ($30,000,000) and issue its general obligation unlimited tax bonds therefor, in\none or more series, for the purpose of:\n\nerecting and remodeling school buildings, facilities and additions to school buildings and facilities; equipping, re-equipping, furnishing and refurnishing school buildings and facilities; purchasing school\nbuses; acquiring and installing instructional technology; and preparing, developing, improving and equipping athletic fields, play fields, playgrounds, structures, facilities and sites?\n\n                                                                                The following is for informational purposes only:\n\nThe estimated millage that will be levied for the proposed bonds in 2027 is 1.21 mills ($1.21 on each $1,000 of taxable valuation) for a 0.00 mills net increase over the prior year’s levy. The maximum\nnumber of years the bonds of any series may be outstanding, exclusive of any refunding, is twenty-five (25) years. The estimated simple average annual millage anticipated to be required to retire this\nbond debt is 2.72 mills ($2.72 on each $1,000 of taxable valuation).\n\n(Pursuant to State law, expenditure of bond proceeds must be audited and the proceeds cannot be used for repair or maintenance costs, teacher, administrator or employee salaries, or other operating\nexpenses.)"
+          }
+        },
+        {
+          "id": "mi-cx-2026-romulus-hold-harmless-renewal",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:romulus_community_schools",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Romulus Community Schools — Hold-harmless operating renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "ROMULUS COMMUNITY SCHOOLS PROPOSAL\nRomulus Community Schools\nOperating Millage Renewal Proposal\nThis proposal will allow the school district to levy millage previously authorized to be levied on all property, except property exempted by law and renews hold harmless millage that expired with the 2026\ntax levy.\n\nShall the total limitation on the hold harmless mills used for operating purposes which may be assessed against all property, except property exempted by law, in Romulus Community Schools, Wayne\nCounty, Michigan, be increased by 2.5 mills ($2.50 on each $1,000 of taxable valuation) for a period of 10 years, 2027 to 2036, inclusive; the estimate of the revenue the school district will collect from\nhold harmless taxes authorized herein if the millage is approved and levied in 2027 is approximately $745,254 (this is a renewal of previously authorized millage that expired with the 2026 tax levy)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-taylor-operating-replacement",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:taylor_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Taylor School District — Operating millage replacement",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "TAYLOR PUBLIC SCHOOLS PROPOSAL\nTaylor School District\nOperating Millage Replacement Proposal\n\nThis proposal, if approved by the electors, would, replace, restore and extend the authority of the School District to levy the statutory limit of 18 mills on all property, except principal residences and other\nproperty exempted by law, which currently expires with the School District’s 2027 tax levy and allow the School District to continue to levy the statutory limit of 18 mills in the event of future Headlee\nrollbacks required by the Michigan Constitution of up to 2 mills. The authorization will allow the School District to continue to receive revenues at the full per pupil foundation allowance permitted by the\nState.\n\nShall the limitation on the total amount of taxes which may be assessed against all property, except principal residences and other property exempted by law, situated within the Taylor School\nDistrict, County of Wayne, State of Michigan, be increased, in the amount of 20 mills with 18 mills being the maximum allowable levy ($18.00 on each $1,000 of taxable valuation), for a period of ten (10)\nyears, 2026 to 2035, inclusive, with 17.5603 mills of the above 20 mills being a replacement of authorized millage which will otherwise expire with the 2027 tax levy and 0.4397 mills being a restoration\nof previously authorized millage lost as a result of the rollbacks required by the Michigan Constitution? This operating millage if approved and levied, would provide estimated revenues to the School\nDistrict of $420,661 during the 2026 calendar year, to be used for general operating purposes."
+          }
+        },
+        {
+          "id": "mi-cx-2026-wyandotte-operating-restoration",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:wyandotte_city_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Wyandotte City School District — Operating millage restoration",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "WYANDOTTE PUBLIC SCHOOLS PROPOSAL\nSchool District of the City of Wyandotte Operating Millage Proposal\nThis proposal will allow the school district to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district\nto receive its revenue per pupil foundation allowance.\n\nShall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in School District of the City of Wyandotte,\nWayne County, Michigan, be increased by 1.6547 mills ($1.6547 on each $1,000 of taxable valuation) for a period of 9 years, 2027 to 2035, inclusive, to provide funds for operating purposes; the\nestimate of the revenue the school district will collect if the millage is approved and levied in 2027 is approximately $0 (this millage is to restore millage lost as a result of the reduction required by the\nMichigan Constitution of 1963 and will be levied only to the extent necessary to restore that reduction)?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "mi-cx-2026-wayne-zoo-millage:measure",
+          "contestId": "mi-cx-2026-wayne-zoo-millage",
+          "questionText": "WAYNE COUNTY / WAYNE COUNTY ZOOLOGICAL AUTHORITY PROPOSAL\nRenewal of Wayne County Zoological Authority Millage in Support of the Detroit Zoo\nIn 2008 and 2016, pursuant to Public Act 49 of 2008, Wayne County voters renewed a 10-year property tax millage to fund zoological services through the Wayne County Zoological Authority,\nsupporting animal care for more than 2,000 animals and 200 species, educational and senior programs, and facility maintenance at the Detroit Zoo.\n\nTo continue providing these services, the Authority seeks to renew and restore the millage to the original voter-approved rate of 0.10 mill (10 cents per $1,000 of taxable value). This proposal would\nrenew the millage at 0.0982 mill and restore the remaining 0.0018 mill that was reduced due to required rollback, for a total authorized rate of 0.10 mill on taxable real and personal property for ten\n(10) years.\n\nIf approved, the millage rate would be unchanged from those approved by voters in 2008 and 2016. Funds will be disbursed to the Authority and transferred to the Detroit Zoo as permitted by law. All\nfunds are subject to annual independent audits. It is estimated that $6,145,462 will be collected in the first year.\n\nBallot Question:\n\nDo you approve the renewal and restoration of the levy of 0.10 mill on all taxable property in Wayne County for a period of ten (10) years, from 2028 through 2037?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "WAYNE COUNTY / WAYNE COUNTY ZOOLOGICAL AUTHORITY PROPOSAL\nRenewal of Wayne County Zoological Authority Millage in Support of the Detroit Zoo\nIn 2008 and 2016, pursuant to Public Act 49 of 2008, Wayne County voters renewed a 10-year property tax millage to fund zoological services through the Wayne County Zoological Authority,\nsupporting animal care for more than 2,000 animals and 200 species, educational and senior programs, and facility maintenance at the Detroit Zoo.\n\nTo continue providing these services, the Authority seeks to renew and restore the millage to the original voter-approved rate of 0.10 mill (10 cents per $1,000 of taxable value). This proposal would\nrenew the millage at 0.0982 mill and restore the remaining 0.0018 mill that was reduced due to required rollback, for a total authorized rate of 0.10 mill on taxable real and personal property for ten\n(10) years.\n\nIf approved, the millage rate would be unchanged from those approved by voters in 2008 and 2016. Funds will be disbursed to the Authority and transferred to the Detroit Zoo as permitted by law. All\nfunds are subject to annual independent audits. It is estimated that $6,145,462 will be collected in the first year.\n\nBallot Question:\n\nDo you approve the renewal and restoration of the levy of 0.10 mill on all taxable property in Wayne County for a period of ten (10) years, from 2028 through 2037?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-wayne-historical-museum-millage:measure",
+          "contestId": "mi-cx-2026-wayne-historical-museum-millage",
+          "questionText": "WAYNE COUNTY / SOUTHEAST MICHIGAN PUBLIC HISTORICAL MUSEUM AUTHORITY PROPOSAL\nSoutheast Michigan Public Historical Museum Authority Millage Proposal\nThe Southeast Michigan Public Historical Museum Authority (“Authority”) is a joint authority established by Wayne and Oakland Counties (“Counties”) pursuant to Michigan Public Act 321 of the Public\nActs of 2000, as amended, and was formed to support the Charles H. Wright Museum of African American History, Detroit Historical Museum, Dossin Great Lakes Museum, and other public historical\nmuseums located in Wayne and Oakland Counties (“Historical Museums”) that provide historical museum services for students, residents and visitors of the Counties. The law allows the Authority to seek\nauthorization from the electors in each of the Counties to levy a tax of 0.2 mill (20 cents per $1,000 of taxable value) on taxable property to provide revenue for Historical Museums.\n\nIt is estimated that if approved and levied on taxable property located within Wayne County, this new millage would generate approximately $12,219,200 in 2026.\n\nIn addition to supporting the Charles H. Wright Museum of African American History, Detroit Historical Museum, and Dossin Great Lakes Museum, 15% of revenues received by the Authority from taxable\nproperty in Wayne County, after Authority administrative expenses, will be disbursed to the County of Wayne for the purposes of supporting Historical Museums in Wayne County.\n\nShall a 0.2 mill tax on all taxable property located within Wayne County be imposed by the Authority for a period of ten (10) years, being years 2026 through 2035, inclusive, to provide historical museum\nservices for the benefit of the residents of the Counties?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "WAYNE COUNTY / SOUTHEAST MICHIGAN PUBLIC HISTORICAL MUSEUM AUTHORITY PROPOSAL\nSoutheast Michigan Public Historical Museum Authority Millage Proposal\nThe Southeast Michigan Public Historical Museum Authority (“Authority”) is a joint authority established by Wayne and Oakland Counties (“Counties”) pursuant to Michigan Public Act 321 of the Public\nActs of 2000, as amended, and was formed to support the Charles H. Wright Museum of African American History, Detroit Historical Museum, Dossin Great Lakes Museum, and other public historical\nmuseums located in Wayne and Oakland Counties (“Historical Museums”) that provide historical museum services for students, residents and visitors of the Counties. The law allows the Authority to seek\nauthorization from the electors in each of the Counties to levy a tax of 0.2 mill (20 cents per $1,000 of taxable value) on taxable property to provide revenue for Historical Museums.\n\nIt is estimated that if approved and levied on taxable property located within Wayne County, this new millage would generate approximately $12,219,200 in 2026.\n\nIn addition to supporting the Charles H. Wright Museum of African American History, Detroit Historical Museum, and Dossin Great Lakes Museum, 15% of revenues received by the Authority from taxable\nproperty in Wayne County, after Authority administrative expenses, will be disbursed to the County of Wayne for the purposes of supporting Historical Museums in Wayne County.\n\nShall a 0.2 mill tax on all taxable property located within Wayne County be imposed by the Authority for a period of ten (10) years, being years 2026 through 2035, inclusive, to provide historical museum\nservices for the benefit of the residents of the Counties?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-gibraltar-public-safety:measure",
+          "contestId": "mi-cx-2026-gibraltar-public-safety",
+          "questionText": "CITY OF GIBRALTAR PROPOSAL\nCity of Gibraltar\nPublic Safety Millage Proposal\nShall the City of Gibraltar, County of Wayne, Michigan, be authorized to levy a new additional millage in an amount not to exceed 3.5 mills ($3.50 per $1,000.00 of taxable value) on all taxable real and\npersonal property in the City, for a period of five (5) years, 2027 through 2031, inclusive, for the purpose of funding police, fire, and emergency (public safety) services, including related personnel,\nbenefits, equipment, apparatus, and capital replacement? If approved and levied in full, this millage is estimated to raise approximately $672,281.68 for the City in the first calendar year of the levy\n(2027). A portion of the revenue collected may be captured by and disbursed to the City of Gibraltar Downtown Development Authority.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "CITY OF GIBRALTAR PROPOSAL\nCity of Gibraltar\nPublic Safety Millage Proposal\nShall the City of Gibraltar, County of Wayne, Michigan, be authorized to levy a new additional millage in an amount not to exceed 3.5 mills ($3.50 per $1,000.00 of taxable value) on all taxable real and\npersonal property in the City, for a period of five (5) years, 2027 through 2031, inclusive, for the purpose of funding police, fire, and emergency (public safety) services, including related personnel,\nbenefits, equipment, apparatus, and capital replacement? If approved and levied in full, this millage is estimated to raise approximately $672,281.68 for the City in the first calendar year of the levy\n(2027). A portion of the revenue collected may be captured by and disbursed to the City of Gibraltar Downtown Development Authority."
+          }
+        },
+        {
+          "id": "mi-cx-2026-grosse-pointe-public-safety-assessment:measure",
+          "contestId": "mi-cx-2026-grosse-pointe-public-safety-assessment",
+          "questionText": "CITY OF GROSSE POINTE PROPOSAL\nSpecial Assessment for Police and Fire Departments\nShould the City of Grosse Pointe raise money to partially equip, maintain, and operate the City Police and Fire Departments (Public Safety) by annual special assessment levies of up to 1.25 mills ($1.25\nper $1,000 of taxable value) on all real property in the City that is not exempt from property taxes, for a period of four (4) years with the levies to be from 2026 to 2029 to provide funding for the 2027 to\n2030 calendar years? If approved and fully levied in December 2026, the estimated revenue from this special assessment collected in the first year would be approximately $613,750.00.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "CITY OF GROSSE POINTE PROPOSAL\nSpecial Assessment for Police and Fire Departments\nShould the City of Grosse Pointe raise money to partially equip, maintain, and operate the City Police and Fire Departments (Public Safety) by annual special assessment levies of up to 1.25 mills ($1.25\nper $1,000 of taxable value) on all real property in the City that is not exempt from property taxes, for a period of four (4) years with the levies to be from 2026 to 2029 to provide funding for the 2027 to\n2030 calendar years? If approved and fully levied in December 2026, the estimated revenue from this special assessment collected in the first year would be approximately $613,750.00."
+          }
+        },
+        {
+          "id": "mi-cx-2026-grosse-pointe-park-recreation:measure",
+          "contestId": "mi-cx-2026-grosse-pointe-park-recreation",
+          "questionText": "CITY OF GROSSE POINTE PARK PROPOSAL\nCity of Grosse Pointe Park\nParks and Recreation Millage Proposal\nThis millage proposal would allow the City of Grosse Pointe Park to levy 0.65 Mill for the purpose of, maintaining, preserving, repairing, replacing, and extending the useful life of the parks and recreation\nfacilities located within the City of Grosse Pointe Park.\n\nShall the City of Grosse Pointe Park, Wayne County, Michigan, increase the limitation on the total amount of general ad valorem taxes which may be imposed for all purposes in Article IX, Section 6 of\nthe Michigan Constitution of 1963, as amended, by 0.65 Mill ($0.65 per $1,000.00 of taxable value) for a period of seven (7) years (2027 through 2033, inclusive), which would provide an estimated\nrevenue of $562,000.00 in its first year if approved and levied, for the purpose of, maintaining, preserving, repairing, replacing, improving, upgrading, and extending the useful life of the parks and\nrecreation facilities located within the City of Grosse Pointe Park, of which a portion will be disbursed to the City of Grosse Pointe Park Downtown Development Authority and the City of Grosse Pointe\nPark Tax Increment Financing Authority. Should the proposed millage be approved?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "CITY OF GROSSE POINTE PARK PROPOSAL\nCity of Grosse Pointe Park\nParks and Recreation Millage Proposal\nThis millage proposal would allow the City of Grosse Pointe Park to levy 0.65 Mill for the purpose of, maintaining, preserving, repairing, replacing, and extending the useful life of the parks and recreation\nfacilities located within the City of Grosse Pointe Park.\n\nShall the City of Grosse Pointe Park, Wayne County, Michigan, increase the limitation on the total amount of general ad valorem taxes which may be imposed for all purposes in Article IX, Section 6 of\nthe Michigan Constitution of 1963, as amended, by 0.65 Mill ($0.65 per $1,000.00 of taxable value) for a period of seven (7) years (2027 through 2033, inclusive), which would provide an estimated\nrevenue of $562,000.00 in its first year if approved and levied, for the purpose of, maintaining, preserving, repairing, replacing, improving, upgrading, and extending the useful life of the parks and\nrecreation facilities located within the City of Grosse Pointe Park, of which a portion will be disbursed to the City of Grosse Pointe Park Downtown Development Authority and the City of Grosse Pointe\nPark Tax Increment Financing Authority. Should the proposed millage be approved?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-lincoln-park-headlee:measure",
+          "contestId": "mi-cx-2026-lincoln-park-headlee",
+          "questionText": "CITY OF LINCOLN PARK PROPOSAL\nCity of Lincoln Park\nHeadlee Override Proposal\nShall a “Headlee Override” be adopted so that the current limitation on the amount of City taxes that may be levied against all taxable property in the City of Lincoln Park, Wayne County, Michigan, be\nincreased as follows:\n   •               Up to 20 mills from approximately 17.17 ($20.00 from approximately $17.17 per $1,000.00 of taxable value) for general operating expenses.\n\nIf approved and levied in its entirety, this millage would raise an estimated maximum amount of $2,420,265 for the City in 2027 by allowing the City to levy the maximum mills previously approved by the\nvoters and authorized by the City Charter and State law which have been reduced as required by the Michigan Constitution of 1963.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "CITY OF LINCOLN PARK PROPOSAL\nCity of Lincoln Park\nHeadlee Override Proposal\nShall a “Headlee Override” be adopted so that the current limitation on the amount of City taxes that may be levied against all taxable property in the City of Lincoln Park, Wayne County, Michigan, be\nincreased as follows:\n   •               Up to 20 mills from approximately 17.17 ($20.00 from approximately $17.17 per $1,000.00 of taxable value) for general operating expenses.\n\nIf approved and levied in its entirety, this millage would raise an estimated maximum amount of $2,420,265 for the City in 2027 by allowing the City to levy the maximum mills previously approved by the\nvoters and authorized by the City Charter and State law which have been reduced as required by the Michigan Constitution of 1963."
+          }
+        },
+        {
+          "id": "mi-cx-2026-riverview-golf-course-sale:measure",
+          "contestId": "mi-cx-2026-riverview-golf-course-sale",
+          "questionText": "City of Riverview Ballot Proposal\nShall the City of Riverview be authorized to publicly sell a portion of the City of Riverview’s Highlands Golf Course property, previously dedicated for recreational purposes, to the highest qualified bidder\nsubject to City Council’s approval, for the development of a Community Park and approximately 400 Residential Housing Units? The property to be sold is located within the Riverview Highlands Golf\nCourse and consists of not to exceed 80 acres of land (out of a total of approximately of 248.5 acres), adjacent to and west of the Forest Subdivision and north of King Road.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "City of Riverview Ballot Proposal\nShall the City of Riverview be authorized to publicly sell a portion of the City of Riverview’s Highlands Golf Course property, previously dedicated for recreational purposes, to the highest qualified bidder\nsubject to City Council’s approval, for the development of a Community Park and approximately 400 Residential Housing Units? The property to be sold is located within the Riverview Highlands Golf\nCourse and consists of not to exceed 80 acres of land (out of a total of approximately of 248.5 acres), adjacent to and west of the Forest Subdivision and north of King Road."
+          }
+        },
+        {
+          "id": "mi-cx-2026-riverview-road-bonds:measure",
+          "contestId": "mi-cx-2026-riverview-road-bonds",
+          "questionText": "City of Riverview Bond Proposal\nShall the City of Riverview, County of Wayne, Michigan, borrow the principal sum of not to exceed Ten Million Dollars ($10,000,000) and issue its general obligation unlimited tax bonds, in one or more\nseries, payable in not to exceed ten (10) years from the date of issue of each series, for the purpose of paying the cost to acquire, construct, furnish and equip road improvements throughout the city,\nincluding water main replacements, including interests in land, necessary rights-of-way and appurtenances and attachments thereto? If approved, the estimated millage to be levied in 2027 is 2.5211\nmills ($2.5211 per $1,000 of taxable value) and the estimated simple average annual millage rate required to retire the bonds is 2.5229 mills ($2.5229 per $1,000 of taxable value).",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "City of Riverview Bond Proposal\nShall the City of Riverview, County of Wayne, Michigan, borrow the principal sum of not to exceed Ten Million Dollars ($10,000,000) and issue its general obligation unlimited tax bonds, in one or more\nseries, payable in not to exceed ten (10) years from the date of issue of each series, for the purpose of paying the cost to acquire, construct, furnish and equip road improvements throughout the city,\nincluding water main replacements, including interests in land, necessary rights-of-way and appurtenances and attachments thereto? If approved, the estimated millage to be levied in 2027 is 2.5211\nmills ($2.5211 per $1,000 of taxable value) and the estimated simple average annual millage rate required to retire the bonds is 2.5229 mills ($2.5229 per $1,000 of taxable value)."
+          }
+        },
+        {
+          "id": "mi-cx-2026-rockwood-road-restoration:measure",
+          "contestId": "mi-cx-2026-rockwood-road-restoration",
+          "questionText": "CITY OF ROCKWOOD PROPOSAL\nHeadlee Operating Millage Restoration for Transportation Infrastructure\nShall the limitation on the total amount of taxes which may be imposed upon taxable property in the City of Rockwood be increased by restoring 1.9055 mills ($1.9055 per $1,000 of taxable value) of the\nCity's previously reduced charter-authorized operating tax levy as a new additional millage for a period of ten years, 2026 through 2035, inclusive, thereby increasing the City's maximum authorized\noperating tax levy from 15.9814 mills to 17.8869 mills, with all revenue generated from the restored 1.9055 mills to be used exclusively for the repair, maintenance, preservation, and improvement of\npublic roads, streets, bridges, sidewalks, and other transportation infrastructure?\n\nIf approved and levied, this restoration is estimated to raise approximately $102,761.42 in 2026, the first year of the levy.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "CITY OF ROCKWOOD PROPOSAL\nHeadlee Operating Millage Restoration for Transportation Infrastructure\nShall the limitation on the total amount of taxes which may be imposed upon taxable property in the City of Rockwood be increased by restoring 1.9055 mills ($1.9055 per $1,000 of taxable value) of the\nCity's previously reduced charter-authorized operating tax levy as a new additional millage for a period of ten years, 2026 through 2035, inclusive, thereby increasing the City's maximum authorized\noperating tax levy from 15.9814 mills to 17.8869 mills, with all revenue generated from the restored 1.9055 mills to be used exclusively for the repair, maintenance, preservation, and improvement of\npublic roads, streets, bridges, sidewalks, and other transportation infrastructure?\n\nIf approved and levied, this restoration is estimated to raise approximately $102,761.42 in 2026, the first year of the levy."
+          }
+        },
+        {
+          "id": "mi-cx-2026-southgate-term-limits:measure",
+          "contestId": "mi-cx-2026-southgate-term-limits",
+          "questionText": "Charter Amendment to Remove Term Limits for Elected City Officials\nShall Sections 37, and 56, of the Southgate City Charter be amended to eliminate term limits for the offices of Mayor, City Clerk, City\nTreasurer, and City Council?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "Charter Amendment to Remove Term Limits for Elected City Officials\nShall Sections 37, and 56, of the Southgate City Charter be amended to eliminate term limits for the offices of Mayor, City Clerk, City\nTreasurer, and City Council?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-southgate-bidding-thresholds:measure",
+          "contestId": "mi-cx-2026-southgate-bidding-thresholds",
+          "questionText": "City Charter Amendment to Article 5, General Finance, to Establish Budget-Based Thresholds for Competitive Bidding and City Council Approval On Purchases, Public Improvements and Contracts\nShall the Charter of the City of Southgate be amended to require competitive bidding (sealed proposals) for City purchases, public improvements, and contracts that are 0.1% or more of the City’s\nannual operating budget; require City Council to establish annual thresholds for City Council approval of purchases, public improvements, and contracts; and provide that these thresholds may be\nadjusted each year by City Council Resolution when the City budget is adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "City Charter Amendment to Article 5, General Finance, to Establish Budget-Based Thresholds for Competitive Bidding and City Council Approval On Purchases, Public Improvements and Contracts\nShall the Charter of the City of Southgate be amended to require competitive bidding (sealed proposals) for City purchases, public improvements, and contracts that are 0.1% or more of the City’s\nannual operating budget; require City Council to establish annual thresholds for City Council approval of purchases, public improvements, and contracts; and provide that these thresholds may be\nadjusted each year by City Council Resolution when the City budget is adopted?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-inkster-parks-recreation-renewal:measure",
+          "contestId": "mi-cx-2026-inkster-parks-recreation-renewal",
+          "questionText": "Millage Renewal Request for the\nCity of Inkster Parks & Recreation which includes\nSenior Citizens and Youth Services\nShall the City of Inkster, Wayne County, Michigan be authorized and empowered to levy a general valorem property tax which in any one year shall not exceed 2.0 mills (2.0 mills per $1,000.00 of State\nEqualized Valuation for ten (10) years, 2027 to 2036?\n\nThe continuation of the dedicated Millage for Parks and Recreation Operations, which include Youth and Senior Programs, is up to 2.0 mills. It has been determined that up to 2.0 mills is necessary\nto operate these programs and to continue the current level of service. General Fund dollars are not available to support these programs. The average cost to a homeowner is estimated to be $54 and\nwould generate an estimated $580,000 if the maximum allowable millage is levied.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "Millage Renewal Request for the\nCity of Inkster Parks & Recreation which includes\nSenior Citizens and Youth Services\nShall the City of Inkster, Wayne County, Michigan be authorized and empowered to levy a general valorem property tax which in any one year shall not exceed 2.0 mills (2.0 mills per $1,000.00 of State\nEqualized Valuation for ten (10) years, 2027 to 2036?\n\nThe continuation of the dedicated Millage for Parks and Recreation Operations, which include Youth and Senior Programs, is up to 2.0 mills. It has been determined that up to 2.0 mills is necessary\nto operate these programs and to continue the current level of service. General Fund dollars are not available to support these programs. The average cost to a homeowner is estimated to be $54 and\nwould generate an estimated $580,000 if the maximum allowable millage is levied."
+          }
+        },
+        {
+          "id": "mi-cx-2026-inkster-senior-services-renewal:measure",
+          "contestId": "mi-cx-2026-inkster-senior-services-renewal",
+          "questionText": "Millage Renewal Request\nfor the City of Inkster\nSenior Services Operations\nShall the City of Inkster, Wayne County, Michigan be authorized and empowered to levy a general valorem property tax which in any one year shall not exceed 1.0 mills (1.0 mills per $1,000.00 of State\nEqualized Valuation for ten (10) years, 2027 to 2036?\n\nThe continuation of the dedicated Millage for Senior Services Operations is up to 1.0 mills. It has been determined that up to 1.0 mills is necessary to operate this program and to continue the current\nlevel of service. General Fund dollars are not available to support these programs. The average cost to a homeowner is estimated to be $27 and would generate an estimated $290,000 if\nthe maximum allowable amount is levied in any year.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "Millage Renewal Request\nfor the City of Inkster\nSenior Services Operations\nShall the City of Inkster, Wayne County, Michigan be authorized and empowered to levy a general valorem property tax which in any one year shall not exceed 1.0 mills (1.0 mills per $1,000.00 of State\nEqualized Valuation for ten (10) years, 2027 to 2036?\n\nThe continuation of the dedicated Millage for Senior Services Operations is up to 1.0 mills. It has been determined that up to 1.0 mills is necessary to operate this program and to continue the current\nlevel of service. General Fund dollars are not available to support these programs. The average cost to a homeowner is estimated to be $27 and would generate an estimated $290,000 if\nthe maximum allowable amount is levied in any year."
+          }
+        },
+        {
+          "id": "mi-cx-2026-grosse-ile-bike-paths:measure",
+          "contestId": "mi-cx-2026-grosse-ile-bike-paths",
+          "questionText": "MILLAGE RENEWAL FOR BIKE PATH MAINTENANCE\nShall the expired previously voted increase in the total tax limitation imposed under Article IX, Section 6 of the Michigan Constitution in Grosse Ile Township, 0.15 mills ($0.15 per $1,000 of taxable value),\nreduced to 0.1439 mills ($0.1439 per $1,000 of taxable value) by the required millage rollbacks, be renewed at 0.1439 mills ($0.1439 per $1,000 of taxable value) and levied for a period of ten (10) years\nfrom 2026 through 2035 inclusive, to provide funds for the maintenance of bike paths in the Township, raising an estimated $119,000 in the first calendar year the millage is levied of which a portion of the\ncollection will be disbursed to the Grosse Ile Township Downtown Development Authority and the Brownfield Authority as legally required?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "MILLAGE RENEWAL FOR BIKE PATH MAINTENANCE\nShall the expired previously voted increase in the total tax limitation imposed under Article IX, Section 6 of the Michigan Constitution in Grosse Ile Township, 0.15 mills ($0.15 per $1,000 of taxable value),\nreduced to 0.1439 mills ($0.1439 per $1,000 of taxable value) by the required millage rollbacks, be renewed at 0.1439 mills ($0.1439 per $1,000 of taxable value) and levied for a period of ten (10) years\nfrom 2026 through 2035 inclusive, to provide funds for the maintenance of bike paths in the Township, raising an estimated $119,000 in the first calendar year the millage is levied of which a portion of the\ncollection will be disbursed to the Grosse Ile Township Downtown Development Authority and the Brownfield Authority as legally required?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-grosse-ile-fire-equipment:measure",
+          "contestId": "mi-cx-2026-grosse-ile-fire-equipment",
+          "questionText": "MILLAGE RENEWAL FOR FIRE DEPARTMENT EQUIPMENT\nShall the expired previously voted increase in the total tax limitation imposed under Article IX, Section 6 of the Michigan Constitution in Grosse Ile Township, of 0.50 mills ($0.50 per $1,000 of taxable\nvalue), reduced to 0.4818 mills ($0.4818 per $1,000 of taxable value) by the required millage rollbacks, be renewed at 0.4818 mills ($0.4818 per $1,000 of taxable value) and levied for a period of 5 years\nfrom 2026 through 2030 inclusive, to provide funds for the acquiring of fire department vehicles and other necessary fire department equipment, raising an estimated $403,000 in the first calendar year\nthe millage is levied (of which an estimated $5,750 will be disbursed to the Grosse Ile Township Downtown Development Authority and an estimated $1,800 to the Brownfield Authority as legally\nrequired)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "MILLAGE RENEWAL FOR FIRE DEPARTMENT EQUIPMENT\nShall the expired previously voted increase in the total tax limitation imposed under Article IX, Section 6 of the Michigan Constitution in Grosse Ile Township, of 0.50 mills ($0.50 per $1,000 of taxable\nvalue), reduced to 0.4818 mills ($0.4818 per $1,000 of taxable value) by the required millage rollbacks, be renewed at 0.4818 mills ($0.4818 per $1,000 of taxable value) and levied for a period of 5 years\nfrom 2026 through 2030 inclusive, to provide funds for the acquiring of fire department vehicles and other necessary fire department equipment, raising an estimated $403,000 in the first calendar year\nthe millage is levied (of which an estimated $5,750 will be disbursed to the Grosse Ile Township Downtown Development Authority and an estimated $1,800 to the Brownfield Authority as legally\nrequired)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-grosse-ile-recreation:measure",
+          "contestId": "mi-cx-2026-grosse-ile-recreation",
+          "questionText": "MILLAGE RENEWAL FOR RECREATION PROGRAM\nShall the expired previously voted increase in the total tax limitation imposed under Article IX, Section 6 of the Michigan Constitution in Grosse Ile Township, 0.50 mills ($0 .50 per $1,000 of taxable\nvalue), reduced to .4818 mills ($.4818 per $1,000 of taxable value) by the required millage rollbacks, be renewed at .4818 mills ($.4818 per $1,000 of taxable value) and levied for a period of five (5) years\nfrom 2026 through 2030 inclusive, to provide funds for the operation of a Township recreation program, raising an estimated $400,000 in the first calendar year the millage is levied of which a portion of\nthe collection will be disbursed to the Grosse Ile Township Downtown Development Authority and the Brownfield Authority as legally required?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "MILLAGE RENEWAL FOR RECREATION PROGRAM\nShall the expired previously voted increase in the total tax limitation imposed under Article IX, Section 6 of the Michigan Constitution in Grosse Ile Township, 0.50 mills ($0 .50 per $1,000 of taxable\nvalue), reduced to .4818 mills ($.4818 per $1,000 of taxable value) by the required millage rollbacks, be renewed at .4818 mills ($.4818 per $1,000 of taxable value) and levied for a period of five (5) years\nfrom 2026 through 2030 inclusive, to provide funds for the operation of a Township recreation program, raising an estimated $400,000 in the first calendar year the millage is levied of which a portion of\nthe collection will be disbursed to the Grosse Ile Township Downtown Development Authority and the Brownfield Authority as legally required?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-grosse-ile-greenways:measure",
+          "contestId": "mi-cx-2026-grosse-ile-greenways",
+          "questionText": "NEW MILLAGE FOR GREENWAYS/OPEN SPACE\nShall Grosse Ile Township impose an increase of up to 0.10 mill ($0.10 per $1,000 of taxable value) in the total tax limitation imposed under Article IX, Section 6 of the Michigan Constitution and levy it for\na period of 3 years, 2026 through 2028 inclusive, to provide funds for the purpose of maintenance and repair of public property\nand trails designated as greenways/open space properties, which 0.10 mill increase will raise an estimated $83,614 in the first year the millage is levied, of which a small portion will be disbursed to the\nGrosse Ile Township Downtown Development Authority and Brownfield Authority as legally required?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "NEW MILLAGE FOR GREENWAYS/OPEN SPACE\nShall Grosse Ile Township impose an increase of up to 0.10 mill ($0.10 per $1,000 of taxable value) in the total tax limitation imposed under Article IX, Section 6 of the Michigan Constitution and levy it for\na period of 3 years, 2026 through 2028 inclusive, to provide funds for the purpose of maintenance and repair of public property\nand trails designated as greenways/open space properties, which 0.10 mill increase will raise an estimated $83,614 in the first year the millage is levied, of which a small portion will be disbursed to the\nGrosse Ile Township Downtown Development Authority and Brownfield Authority as legally required?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-sumpter-police-renewal:measure",
+          "contestId": "mi-cx-2026-sumpter-police-renewal",
+          "questionText": "TOWNSHIP OF SUMPTER PROPOSAL\nPOLICE MILLAGE QUESTION\nPOLICE PROTECTION MILLAGE RENEWAL LANGUAGE\nShall Sumpter Township impose a levy up to 5 mills ($5.00 per $1,000 of taxable value) in the tax limitations imposed under Article IX, Sec. 6 of the Michigan constitution and levy it for 4 years, 2026\nthrough 2029 inclusive, for police protection, operations, and maintenance of the Sumpter Township police department, which 5 mills levy will raise an estimated $2,428,884 in the first year the millage is\nlevied?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "TOWNSHIP OF SUMPTER PROPOSAL\nPOLICE MILLAGE QUESTION\nPOLICE PROTECTION MILLAGE RENEWAL LANGUAGE\nShall Sumpter Township impose a levy up to 5 mills ($5.00 per $1,000 of taxable value) in the tax limitations imposed under Article IX, Sec. 6 of the Michigan constitution and levy it for 4 years, 2026\nthrough 2029 inclusive, for police protection, operations, and maintenance of the Sumpter Township police department, which 5 mills levy will raise an estimated $2,428,884 in the first year the millage is\nlevied?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-dearborn-school-bonds:measure",
+          "contestId": "mi-cx-2026-dearborn-school-bonds",
+          "questionText": "DEARBORN PUBLIC SCHOOLS PROPOSAL\nDearborn Public Schools\nCounty of Wayne\nState of Michigan\nSchool Improvement Bond Proposition\n\nShall the Dearborn Public Schools, County of Wayne, State of Michigan, borrow the sum of not to exceed One Billion Five Hundred Ten Million Dollars ($1,510,000,000) and issue its general obligation\nunlimited tax bonds, in multiple series, to pay the cost of the following projects in order to implement the School District’s 2026 Facilities Master Plan which includes the construction of new preK-8 school\nbuildings, major renovations at all school buildings including the three high schools, expanding space for career education programs, safety and security measures, improving infrastructure for STEAM\nprograms, and traffic improvements:\n\n   •    Erecting and completing new school buildings and other facilities;\n   •    Remodeling, constructing additions to, equipping, re-equipping, furnishing, re-furnishing school buildings, athletic fields, playgrounds and other facilities;\n   •    Acquiring and installing instructional technology infrastructure and equipment in school buildings and other facilities; and\n   •    Preparing, developing and improving sites at school buildings, athletic fields, playgrounds and other facilities and the purchase of school buses?\n\nThe maximum number of years any series of bonds may be outstanding, exclusive of refunding, is not more than thirty (30) years; the estimated millage that will be levied to pay the proposed bonds in\nthe first year is 3.14 mills (which is equal to $3.14 per $1,000 of taxable value); and the estimated simple average annual millage that will be required to retire each series of bonds is 5.67 mills\nannually ($5.67 per $1,000 of taxable value).\n\n(Pursuant to State law, expenditure of bond proceeds must be audited, and the proceeds cannot be used for teacher, administrator or employee salaries, repair or maintenance costs or other\noperating expenses.)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "DEARBORN PUBLIC SCHOOLS PROPOSAL\nDearborn Public Schools\nCounty of Wayne\nState of Michigan\nSchool Improvement Bond Proposition\n\nShall the Dearborn Public Schools, County of Wayne, State of Michigan, borrow the sum of not to exceed One Billion Five Hundred Ten Million Dollars ($1,510,000,000) and issue its general obligation\nunlimited tax bonds, in multiple series, to pay the cost of the following projects in order to implement the School District’s 2026 Facilities Master Plan which includes the construction of new preK-8 school\nbuildings, major renovations at all school buildings including the three high schools, expanding space for career education programs, safety and security measures, improving infrastructure for STEAM\nprograms, and traffic improvements:\n\n   •    Erecting and completing new school buildings and other facilities;\n   •    Remodeling, constructing additions to, equipping, re-equipping, furnishing, re-furnishing school buildings, athletic fields, playgrounds and other facilities;\n   •    Acquiring and installing instructional technology infrastructure and equipment in school buildings and other facilities; and\n   •    Preparing, developing and improving sites at school buildings, athletic fields, playgrounds and other facilities and the purchase of school buses?\n\nThe maximum number of years any series of bonds may be outstanding, exclusive of refunding, is not more than thirty (30) years; the estimated millage that will be levied to pay the proposed bonds in\nthe first year is 3.14 mills (which is equal to $3.14 per $1,000 of taxable value); and the estimated simple average annual millage that will be required to retire each series of bonds is 5.67 mills\nannually ($5.67 per $1,000 of taxable value).\n\n(Pursuant to State law, expenditure of bond proceeds must be audited, and the proceeds cannot be used for teacher, administrator or employee salaries, repair or maintenance costs or other\noperating expenses.)"
+          }
+        },
+        {
+          "id": "mi-cx-2026-redford-union-operating-restoration:measure",
+          "contestId": "mi-cx-2026-redford-union-operating-restoration",
+          "questionText": "REDFORD UNION SCHOOL DISTRICT PROPOSAL\nRedford Union School District\nOperating Millage Proposal\nThis proposal will allow the school district to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school\ndistrict to receive its revenue per pupil foundation allowance.\n\nShall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Redford Union School District, Wayne County,\nMichigan, be increased by 12 mills ($12.00 on each $1,000 of taxable valuation) for a period of 5 years, 2026 to 2030, inclusive, to provide funds for operating purposes; the estimate of the revenue the\nschool district will collect if the millage is approved and levied in 2026 is approximately $225,346 (this millage is to restore millage lost as a result of the reduction required by the Michigan Constitution\nof 1963 and will be levied only to the extent necessary to restore that reduction)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "REDFORD UNION SCHOOL DISTRICT PROPOSAL\nRedford Union School District\nOperating Millage Proposal\nThis proposal will allow the school district to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school\ndistrict to receive its revenue per pupil foundation allowance.\n\nShall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Redford Union School District, Wayne County,\nMichigan, be increased by 12 mills ($12.00 on each $1,000 of taxable valuation) for a period of 5 years, 2026 to 2030, inclusive, to provide funds for operating purposes; the estimate of the revenue the\nschool district will collect if the millage is approved and levied in 2026 is approximately $225,346 (this millage is to restore millage lost as a result of the reduction required by the Michigan Constitution\nof 1963 and will be levied only to the extent necessary to restore that reduction)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-riverview-school-bonds:measure",
+          "contestId": "mi-cx-2026-riverview-school-bonds",
+          "questionText": "RIVERVIEW COMMUNITY SCHOOLS PROPOSAL\nRiverview Community School District\nBond Proposal\n\nShall Riverview Community School District, Wayne County, Michigan, borrow the sum of not to exceed Thirty Million Dollars ($30,000,000) and issue its general obligation unlimited tax bonds therefor, in\none or more series, for the purpose of:\n\nerecting and remodeling school buildings, facilities and additions to school buildings and facilities; equipping, re-equipping, furnishing and refurnishing school buildings and facilities; purchasing school\nbuses; acquiring and installing instructional technology; and preparing, developing, improving and equipping athletic fields, play fields, playgrounds, structures, facilities and sites?\n\n                                                                                The following is for informational purposes only:\n\nThe estimated millage that will be levied for the proposed bonds in 2027 is 1.21 mills ($1.21 on each $1,000 of taxable valuation) for a 0.00 mills net increase over the prior year’s levy. The maximum\nnumber of years the bonds of any series may be outstanding, exclusive of any refunding, is twenty-five (25) years. The estimated simple average annual millage anticipated to be required to retire this\nbond debt is 2.72 mills ($2.72 on each $1,000 of taxable valuation).\n\n(Pursuant to State law, expenditure of bond proceeds must be audited and the proceeds cannot be used for repair or maintenance costs, teacher, administrator or employee salaries, or other operating\nexpenses.)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "RIVERVIEW COMMUNITY SCHOOLS PROPOSAL\nRiverview Community School District\nBond Proposal\n\nShall Riverview Community School District, Wayne County, Michigan, borrow the sum of not to exceed Thirty Million Dollars ($30,000,000) and issue its general obligation unlimited tax bonds therefor, in\none or more series, for the purpose of:\n\nerecting and remodeling school buildings, facilities and additions to school buildings and facilities; equipping, re-equipping, furnishing and refurnishing school buildings and facilities; purchasing school\nbuses; acquiring and installing instructional technology; and preparing, developing, improving and equipping athletic fields, play fields, playgrounds, structures, facilities and sites?\n\n                                                                                The following is for informational purposes only:\n\nThe estimated millage that will be levied for the proposed bonds in 2027 is 1.21 mills ($1.21 on each $1,000 of taxable valuation) for a 0.00 mills net increase over the prior year’s levy. The maximum\nnumber of years the bonds of any series may be outstanding, exclusive of any refunding, is twenty-five (25) years. The estimated simple average annual millage anticipated to be required to retire this\nbond debt is 2.72 mills ($2.72 on each $1,000 of taxable valuation).\n\n(Pursuant to State law, expenditure of bond proceeds must be audited and the proceeds cannot be used for repair or maintenance costs, teacher, administrator or employee salaries, or other operating\nexpenses.)"
+          }
+        },
+        {
+          "id": "mi-cx-2026-romulus-hold-harmless-renewal:measure",
+          "contestId": "mi-cx-2026-romulus-hold-harmless-renewal",
+          "questionText": "ROMULUS COMMUNITY SCHOOLS PROPOSAL\nRomulus Community Schools\nOperating Millage Renewal Proposal\nThis proposal will allow the school district to levy millage previously authorized to be levied on all property, except property exempted by law and renews hold harmless millage that expired with the 2026\ntax levy.\n\nShall the total limitation on the hold harmless mills used for operating purposes which may be assessed against all property, except property exempted by law, in Romulus Community Schools, Wayne\nCounty, Michigan, be increased by 2.5 mills ($2.50 on each $1,000 of taxable valuation) for a period of 10 years, 2027 to 2036, inclusive; the estimate of the revenue the school district will collect from\nhold harmless taxes authorized herein if the millage is approved and levied in 2027 is approximately $745,254 (this is a renewal of previously authorized millage that expired with the 2026 tax levy)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "ROMULUS COMMUNITY SCHOOLS PROPOSAL\nRomulus Community Schools\nOperating Millage Renewal Proposal\nThis proposal will allow the school district to levy millage previously authorized to be levied on all property, except property exempted by law and renews hold harmless millage that expired with the 2026\ntax levy.\n\nShall the total limitation on the hold harmless mills used for operating purposes which may be assessed against all property, except property exempted by law, in Romulus Community Schools, Wayne\nCounty, Michigan, be increased by 2.5 mills ($2.50 on each $1,000 of taxable valuation) for a period of 10 years, 2027 to 2036, inclusive; the estimate of the revenue the school district will collect from\nhold harmless taxes authorized herein if the millage is approved and levied in 2027 is approximately $745,254 (this is a renewal of previously authorized millage that expired with the 2026 tax levy)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-taylor-operating-replacement:measure",
+          "contestId": "mi-cx-2026-taylor-operating-replacement",
+          "questionText": "TAYLOR PUBLIC SCHOOLS PROPOSAL\nTaylor School District\nOperating Millage Replacement Proposal\n\nThis proposal, if approved by the electors, would, replace, restore and extend the authority of the School District to levy the statutory limit of 18 mills on all property, except principal residences and other\nproperty exempted by law, which currently expires with the School District’s 2027 tax levy and allow the School District to continue to levy the statutory limit of 18 mills in the event of future Headlee\nrollbacks required by the Michigan Constitution of up to 2 mills. The authorization will allow the School District to continue to receive revenues at the full per pupil foundation allowance permitted by the\nState.\n\nShall the limitation on the total amount of taxes which may be assessed against all property, except principal residences and other property exempted by law, situated within the Taylor School\nDistrict, County of Wayne, State of Michigan, be increased, in the amount of 20 mills with 18 mills being the maximum allowable levy ($18.00 on each $1,000 of taxable valuation), for a period of ten (10)\nyears, 2026 to 2035, inclusive, with 17.5603 mills of the above 20 mills being a replacement of authorized millage which will otherwise expire with the 2027 tax levy and 0.4397 mills being a restoration\nof previously authorized millage lost as a result of the rollbacks required by the Michigan Constitution? This operating millage if approved and levied, would provide estimated revenues to the School\nDistrict of $420,661 during the 2026 calendar year, to be used for general operating purposes.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "TAYLOR PUBLIC SCHOOLS PROPOSAL\nTaylor School District\nOperating Millage Replacement Proposal\n\nThis proposal, if approved by the electors, would, replace, restore and extend the authority of the School District to levy the statutory limit of 18 mills on all property, except principal residences and other\nproperty exempted by law, which currently expires with the School District’s 2027 tax levy and allow the School District to continue to levy the statutory limit of 18 mills in the event of future Headlee\nrollbacks required by the Michigan Constitution of up to 2 mills. The authorization will allow the School District to continue to receive revenues at the full per pupil foundation allowance permitted by the\nState.\n\nShall the limitation on the total amount of taxes which may be assessed against all property, except principal residences and other property exempted by law, situated within the Taylor School\nDistrict, County of Wayne, State of Michigan, be increased, in the amount of 20 mills with 18 mills being the maximum allowable levy ($18.00 on each $1,000 of taxable valuation), for a period of ten (10)\nyears, 2026 to 2035, inclusive, with 17.5603 mills of the above 20 mills being a replacement of authorized millage which will otherwise expire with the 2027 tax levy and 0.4397 mills being a restoration\nof previously authorized millage lost as a result of the rollbacks required by the Michigan Constitution? This operating millage if approved and levied, would provide estimated revenues to the School\nDistrict of $420,661 during the 2026 calendar year, to be used for general operating purposes."
+          }
+        },
+        {
+          "id": "mi-cx-2026-wyandotte-operating-restoration:measure",
+          "contestId": "mi-cx-2026-wyandotte-operating-restoration",
+          "questionText": "WYANDOTTE PUBLIC SCHOOLS PROPOSAL\nSchool District of the City of Wyandotte Operating Millage Proposal\nThis proposal will allow the school district to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district\nto receive its revenue per pupil foundation allowance.\n\nShall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in School District of the City of Wyandotte,\nWayne County, Michigan, be increased by 1.6547 mills ($1.6547 on each $1,000 of taxable valuation) for a period of 9 years, 2027 to 2035, inclusive, to provide funds for operating purposes; the\nestimate of the revenue the school district will collect if the millage is approved and levied in 2027 is approximately $0 (this millage is to restore millage lost as a result of the reduction required by the\nMichigan Constitution of 1963 and will be levied only to the extent necessary to restore that reduction)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+            "sourceOrg": "Wayne County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:54.350518+00:00",
+            "verifiedAt": "2026-11-03T05:50:40.417586+00:00",
+            "quote": "WYANDOTTE PUBLIC SCHOOLS PROPOSAL\nSchool District of the City of Wyandotte Operating Millage Proposal\nThis proposal will allow the school district to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district\nto receive its revenue per pupil foundation allowance.\n\nShall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in School District of the City of Wyandotte,\nWayne County, Michigan, be increased by 1.6547 mills ($1.6547 on each $1,000 of taxable valuation) for a period of 9 years, 2027 to 2035, inclusive, to provide funds for operating purposes; the\nestimate of the revenue the school district will collect if the millage is approved and levied in 2027 is approximately $0 (this millage is to restore millage lost as a result of the reduction required by the\nMichigan Constitution of 1963 and will be levied only to the extent necessary to restore that reduction)?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "mi-cx-2026-wayne-zoo-millage",
+          "whatItDoes": "Renews 0.0982 mill and restores 0.0018 mill for a total 0.10 mill property tax supporting the Detroit Zoo for 2028–2037. Estimated first-year collections are $6,145,462. Funds go through the Zoological Authority and are subject to annual independent audits.",
+          "yesMeans": "Approve the renewal and restoration to 0.10 mill.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "c83c02ee701482e61c3f7217a3fee3e8c70dceaf3cf42ce7dff74c3a9ed25357",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-wayne-historical-museum-millage",
+          "whatItDoes": "Adds a 0.2 mill tax on taxable Wayne County property for 2026–2035 for historical museum services, including the Charles H. Wright, Detroit Historical and Dossin Great Lakes museums. Estimated 2026 collections are $12,219,200; after authority administration costs, 15% of Wayne County revenue returns to the county to support historical museums.",
+          "yesMeans": "Approve the ten-year historical museum tax.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "3b6303626c35e5443c7e71129cd9d79baa11b13656f4cacc783de3c0b53cc588",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-gibraltar-public-safety",
+          "whatItDoes": "Adds up to 3.5 mills on taxable real and personal property for 2027–2031 for police, fire and emergency services, personnel, benefits, equipment and capital replacement. Estimated first-year revenue at the full rate is $672,281.68; some revenue may be captured by the Downtown Development Authority.",
+          "yesMeans": "Approve the five-year additional public safety millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "d987cfeb1f4d350e2cecbe93ed3237f1cfe3e50ff2efa7739bf91eb102e0ca28",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-grosse-pointe-public-safety-assessment",
+          "whatItDoes": "Authorizes annual special assessments up to 1.25 mills on nonexempt real property to equip, maintain and operate police and fire services. Levies run 2026–2029 to fund 2027–2030. The estimated first-year revenue if fully levied in December 2026 is $613,750.",
+          "yesMeans": "Approve the four-year special assessment.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "ac64f8ebea8d6f120b407d98d7a94fb04175fc9b4138833bba103d599d624e9a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-grosse-pointe-park-recreation",
+          "whatItDoes": "Adds 0.65 mill for 2027–2033 to maintain, repair, improve and extend the life of parks and recreation facilities. Estimated first-year revenue is $562,000; a portion is disbursed to the Downtown Development and Tax Increment Financing authorities.",
+          "yesMeans": "Approve the seven-year parks and recreation millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "2462c95d68a64959845fbe19ac348fdc08b8fa9bc9628262968e41f9a675035b",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-lincoln-park-headlee",
+          "whatItDoes": "Restores the city’s operating-tax limit from about 17.17 mills to up to 20 mills by overriding required Headlee reductions. The official question estimates $2,420,265 in 2027 revenue from this restored authority.",
+          "yesMeans": "Approve restoration of the operating-tax limit to 20 mills.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "03a5cecbd10da216b5cf3da9c6f7eb46293203f942ba3ffa8f9ca89e03fa5bcf",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-riverview-golf-course-sale",
+          "whatItDoes": "Authorizes a public sale of up to 80 acres of the approximately 248.5-acre Highlands Golf Course to the highest qualified bidder, subject to City Council approval, for a community park and about 400 housing units. The portion is west of the Forest Subdivision and north of King Road.",
+          "yesMeans": "Authorize the proposed land sale under the stated conditions.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "32937ff470f592ce1a9fd1a879655569b4d160f9702e741a2392e47e9b6c9bbb",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-riverview-road-bonds",
+          "whatItDoes": "Authorizes up to $10 million in general-obligation unlimited-tax bonds for city road improvements, including water-main replacements, land and rights-of-way. Each series may run no more than ten years. Estimated tax rates are 2.5211 mills in 2027 and a 2.5229 mill simple annual average to repay the bonds.",
+          "yesMeans": "Authorize the road-improvement bonds.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "1b95acff2766f7b1f416be2071d7e43f62d8a5c343eca1a6b1f9b1cf185dd448",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-rockwood-road-restoration",
+          "whatItDoes": "Restores 1.9055 mills for 2026–2035, raising the authorized city operating-tax limit from 15.9814 to 17.8869 mills. Revenue from the restored portion is dedicated exclusively to roads, streets, bridges, sidewalks and transportation infrastructure. Estimated 2026 revenue is $102,761.42.",
+          "yesMeans": "Approve the restored millage and transportation dedication.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "8160c3eb4bd23f83e6be8d6514ba69bd0e6f120198fd2e6de197aea90ad63395",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-southgate-term-limits",
+          "whatItDoes": "Removes charter term limits for the mayor, city clerk, city treasurer and City Council.",
+          "yesMeans": "Remove the stated term limits.",
+          "noMeans": "Keep those term limits.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "59dd0c7e888d052f9acfce5e0b98219697007ad7a89e5c59e6f12fcec6d9e8cf",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-southgate-bidding-thresholds",
+          "whatItDoes": "Requires sealed competitive bids for purchases, public improvements and contracts costing 0.1% or more of the annual city operating budget. Council must set annual thresholds for its own approval of transactions and may adjust them by resolution when adopting the budget.",
+          "yesMeans": "Adopt the budget-based bidding rule and annual approval thresholds.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "0b4ae6d7e6db09d4ad7a192d401cb0c47fea038888a0e863d9f695501b95fad9",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-inkster-parks-recreation-renewal",
+          "whatItDoes": "Renews up to 2 mills annually for 2027–2036 for parks and recreation operations, including youth and senior programs. The official estimate is $580,000 in revenue if the maximum is levied and an average homeowner cost of $54.",
+          "yesMeans": "Renew the ten-year parks and recreation millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "9f193f00011677157b33d90af1b43adf9a604910d79b1f73c711810a05fc7051",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-inkster-senior-services-renewal",
+          "whatItDoes": "Renews up to 1 mill annually for 2027–2036 for senior services operations. The official estimate is $290,000 in revenue if the maximum is levied and an average homeowner cost of $27.",
+          "yesMeans": "Renew the ten-year senior services millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "d504671162037b2f257239432fed16c60bd77284ad48858eae9e283a92dee154",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-grosse-ile-bike-paths",
+          "whatItDoes": "Renews the rolled-back 0.1439 mill rate for 2026–2035 to maintain township bike paths. Estimated first-year revenue is $119,000; portions go to the Downtown Development and Brownfield authorities as legally required.",
+          "yesMeans": "Renew the ten-year bike path millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "65f4cdff9c8dccd0c97c0ff5f9b1a72b1cde4280410aa494a6a8e258483e45d3",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-grosse-ile-fire-equipment",
+          "whatItDoes": "Renews the rolled-back 0.4818 mill rate for 2026–2030 for fire vehicles and equipment. Estimated first-year revenue is $403,000, including about $5,750 disbursed to the Downtown Development Authority and $1,800 to the Brownfield Authority.",
+          "yesMeans": "Renew the five-year fire equipment millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "9cacb0d371d14c21452866a1e0c287f2aefa47a89e214d215d86f8b729780300",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-grosse-ile-recreation",
+          "whatItDoes": "Renews the rolled-back 0.4818 mill rate for 2026–2030 to operate the township recreation program. Estimated first-year revenue is $400,000; portions go to the Downtown Development and Brownfield authorities as legally required.",
+          "yesMeans": "Renew the five-year recreation millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "aa546f40a2cce397f36e61360f89659d227dc8d68f9aedc0b00614563f32b72a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-grosse-ile-greenways",
+          "whatItDoes": "Adds up to 0.10 mill for 2026–2028 to maintain and repair public greenways, open-space property and trails. Estimated first-year revenue is $83,614; a small portion goes to the Downtown Development and Brownfield authorities as legally required.",
+          "yesMeans": "Approve the three-year additional greenways millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "e26679390e441e1037286e4a08807794a2d3f7399d9bda6b4c3e013af3d93d27",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-sumpter-police-renewal",
+          "whatItDoes": "Renews up to 5 mills for 2026–2029 for police protection and Police Department operations and maintenance. Estimated first-year revenue is $2,428,884.",
+          "yesMeans": "Renew the four-year police millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "03e9256dd4cec7cf215b505005c59000b54bd5484eae557b0c9929d730004305",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-dearborn-school-bonds",
+          "whatItDoes": "Authorizes up to $1.51 billion in bonds for new and renovated schools, facilities, safety/security, technology, sites and buses under the facilities plan. Each series may last up to 30 years. Estimated millage is 3.14 in the first year and a 5.67 annual average. Audited bond proceeds cannot fund salaries, repairs, maintenance or other operating expenses.",
+          "yesMeans": "Authorize the school-improvement bonds.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "3aef2c9d819bd4ce45bb0a94bc9439d83b00f402cb7c9879b0ba5a945189a3a8",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-redford-union-operating-restoration",
+          "whatItDoes": "Authorizes 12 mills of restoration authority for 2026–2030, levied only as needed to restore constitutional rollbacks and maintain the 18 mill statutory operating rate. Principal residences and other legally exempt property are excluded. Estimated 2026 revenue from the proposal is $225,346.",
+          "yesMeans": "Approve the limited restoration authority.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "8f84f57e3f70163b6122fd6752057d325c68fa2b50d280b042ec4d30e94d1406",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-riverview-school-bonds",
+          "whatItDoes": "Authorizes up to $30 million in bonds for school buildings, equipment, technology, buses, athletic and play facilities and sites. Each series may last up to 25 years. Estimated 2027 millage is 1.21, with no net increase over the prior year; estimated average repayment millage is 2.72. Proceeds are audited and cannot fund salaries, repairs, maintenance or operating expenses.",
+          "yesMeans": "Authorize the school bonds.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "aecfe8b859d779469b25f716051d99756d912ebd987c11df3e57b74e780571ce",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-romulus-hold-harmless-renewal",
+          "whatItDoes": "Renews 2.5 mills of hold-harmless operating authority for 2027–2036 on all property except property exempted by law. The previous authorization expires with the 2026 levy. Estimated 2027 revenue is $745,254.",
+          "yesMeans": "Renew the ten-year hold-harmless operating millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "13a41200ee070a3fde37edbad096c80124ca65e552dd73c78bd73bd14eafd2f3",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-taylor-operating-replacement",
+          "whatItDoes": "Replaces, restores and extends operating authority for 2026–2035. Although 20 mills are authorized, no more than 18 may be levied, with two mills available for future rollbacks. Principal residences and legally exempt property are excluded. The proposal replaces 17.5603 mills and restores 0.4397 mill; its official 2026 revenue estimate is $420,661.",
+          "yesMeans": "Approve the replacement and restoration authority within the 18 mill levy cap.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "0656d16b78e5da2ea3a4983bab511226c9274fa2c7fb029fc467b1351eb148aa",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-wyandotte-operating-restoration",
+          "whatItDoes": "Authorizes 1.6547 mills of restoration authority for 2027–2035, levied only as necessary to restore constitutional rollbacks and maintain the 18 mill statutory operating rate. Principal residences and other legally exempt property are excluded. The official question estimates $0 in 2027 collections from this additional authority.",
+          "yesMeans": "Approve the limited restoration authority.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+          "sourceHash": "c35c50bed55ec3bf138c89e37c5097f8aed0579fdc1ac25a1a241e8f4b469836",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:50:40.417586+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:50:40.417586+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html",
+        "finalUrl": "https://www.michigan.gov/en/sos/elections",
+        "httpStatus": 200,
+        "rawHash": "bde7723f4daec94b6b3782a4f6cf02401230a149d4515b1520481437d6f2abd1",
+        "retrievedAt": "2026-10-14T05:03:33.557Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official election office page links the 2026 November General Candidate Listing and 2026 November ballot questions."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+        "finalUrl": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+        "httpStatus": 200,
+        "rawHash": "e3551674a96aebc1d295336d857a9b626ab38177823ed5357214a40b038b1938",
+        "retrievedAt": "2026-10-14T05:03:43.920Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official Candidate Listing for All State and Judicial Offices, General Election, Tuesday November 3, 2026. All rows in each requested whole-territory contest were converted; explicit DISQ and WITHD entries were excluded. Report footer states 721 candidates as of September 4, 2026."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/Elections/Home/Documents/2026-November-ballot-questions.pdf?rev=ba2a4778632f4f55bbc8c6f226ab3ecc",
+        "finalUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/Elections/Home/Documents/2026-November-ballot-questions.pdf?rev=ba2a4778632f4f55bbc8c6f226ab3ecc",
+        "httpStatus": 200,
+        "rawHash": "e0fa010de925dc001a47515a55ada7c71047dc937f5f1cefa069b06aef568686",
+        "retrievedAt": "2026-10-14T05:03:44.127Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official November 2026 ballot questions, Proposal 2026-1 dated July 24 and Proposal 2026-2 dated August 17. Wording converted directly from the saved PDF bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-Article-XII-3",
+        "finalUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-Article-XII-3",
+        "httpStatus": 200,
+        "rawHash": "561b66d08060caba2262661c2a8a4b8e02b6ce84064111cacfa4f32723d60881",
+        "retrievedAt": "2026-10-14T05:07:20.622Z",
+        "publisher": "Michigan Legislature",
+        "reviewedEvidence": "Michigan Constitution Article XII section 3 provides the full official constitutional-convention provision behind Proposal 2026-1."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/BSC-Announcements/Michiganders-for-Money-out-of-Politics.pdf?rev=71d0eaf58ceb4a1c93e7f680806cbd84&hash=1CB996D1E127BAF36241FFD81844279D",
+        "finalUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/BSC-Announcements/Michiganders-for-Money-out-of-Politics.pdf?rev=71d0eaf58ceb4a1c93e7f680806cbd84&hash=1CB996D1E127BAF36241FFD81844279D",
+        "httpStatus": 200,
+        "rawHash": "95c47e8a792802bbced0e8d6871d16994807805786c59afb2cd6f11c8cb363eb",
+        "retrievedAt": "2026-10-14T05:04:52.410Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official Bureau of Elections copy of the Michiganders for Money out of Politics initiated-law petition provides the full proposed law for Proposal 2026-2."
+      },
+      {
+        "requestedUrl": "https://legislature.mi.gov/Laws/MCL?objectName=mcl-600-302",
+        "finalUrl": "https://legislature.mi.gov/Laws/MCL?objectName=mcl-600-302",
+        "httpStatus": 200,
+        "rawHash": "b37356932946f44160bb76b767c05040c48a6f3af32eb93de0c02cbc048401ff",
+        "retrievedAt": "2026-10-21T00:53:08.019909+00:00",
+        "publisher": "Michigan Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/mi-appeals-district-law.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes."
+      },
+      {
+        "requestedUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-5.pdf",
+        "finalUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-5.pdf",
+        "httpStatus": 200,
+        "rawHash": "53f3bfb81d2d8dad16507df86a090fac40d5e438cc14c97aae20ce00b96375f1",
+        "retrievedAt": "2026-10-21T01:00:10.908866+00:00",
+        "publisher": "Michigan Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/mi-circuit-law-pdf.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes."
+      },
+      {
+        "requestedUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "finalUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "httpStatus": 200,
+        "rawHash": "792cb163e130b9e5534f3f4a35f9ee2c5cafe81dec6f6914f90bbced43e9426d",
+        "retrievedAt": "2026-10-21T01:00:10.737388+00:00",
+        "publisher": "Michigan Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/mi-district-law-pdf.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes."
+      },
+      {
+        "requestedUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+        "finalUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+        "httpStatus": 200,
+        "rawHash": "91f22983a5d13b03836b25f3039d48496c807192b6ba1e427bccf6f1f6410429",
+        "retrievedAt": "2026-11-03T05:41:54.350518+00:00",
+        "publisher": "Wayne County Michigan Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native8page officialNov3,2026 proposal list, datedSept4 andlinked fromcurrentofficial electionpage.24 directwholedivision locals reviewed. School18millcaps/nonhomesteadexemptions, actualrenewalrates, restorationcushions, bondlimits/audits/spendingprohibitions, earmarks andtaxcaptures preserved. Charterrevisionneeds separateprocesssource; college/libraryscope separate. No statewide/local statewide completeness claim."
+      }
+    ]
+  }
+}

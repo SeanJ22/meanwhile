@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "co-chaffee-county-fire-protection-district-2026-buena-vista-inclusion-6a",
+    "title": "Chaffee County Fire Protection District — Buena Vista Inclusion",
+    "officialNumber": "6A",
+    "ocdId": null,
+    "attachment": "UNRESOLVED_EXACT_PROPOSED_INCLUSION_TERRITORY",
+    "scopeNote": "Real property inside BuenaVista that lies outside the existing fire district on November3,2026. Do not substitute the entire town or existing district. Exact current town-minus-district official territory and source-backed reader attachment required.",
+    "questionText": "Shall the following described area become a part of the Chaffee County Fire Protection District upon the following conditions, if any? Description of Area: All real property located in the Town of Buena Vista, Colorado that on November 3, 2026 is not located within the jurisdictional boundaries of the Chaffee County Fire Protection District. Subject to the Following Condition: On or before July 15, 2026, the Buena Vista Board of Trustees has adopted a Resolution committing to reduce the property tax rate the Town assesses each year by the 3.936 mills that Chaffee County Fire Protection District currently assesses.",
+    "sourceUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/BV-fire-inclusion.pdf",
+    "measureRecord": {
+      "contestId": "co-chaffee-county-fire-protection-district-2026-buena-vista-inclusion-6a",
+      "whatItDoes": "Include all real property inside Buena Vista that is outside Chaffee County Fire Protection District on November 3, 2026. Inclusion is conditional on the town board having adopted, by July 15, 2026, a resolution committing to reduce the town’s annual property-tax rate by 3.936 mills, the fire district’s rate stated in the question.",
+      "yesMeans": "Support inclusion of the specified currently outside-district property if the stated town tax-reduction condition is met.",
+      "noMeans": "Do not include this proposed area through this question.",
+      "parts": [],
+      "sourceUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/BV-fire-inclusion.pdf",
+      "sourceHash": "88263b695bbf93196cfae94778f8958ab98a70c0aaed912cdf3ffbb70f6ab480",
+      "sourceHashKind": "HELD_TEXT",
+      "writtenAt": "2026-11-03T08:51:57.923182+00:00",
+      "citation": "measure-source"
+    }
+  }
+]

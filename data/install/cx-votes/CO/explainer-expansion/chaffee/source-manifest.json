@@ -1,0 +1,13 @@
+[
+  {
+    "url": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+    "sourceOrg": "Chaffee County Clerk and Recorder",
+    "rawHash": "c6b63474c047f95571a79121e957d4c73f190302dd41378ad76fad2466cd4fe9",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete captured public-reader UTF8 PDF-text response, not original government PDF bytes.",
+    "savedFile": "sources/c6b63474c047f95571a79121e957d4c73f190302dd41378ad76fad2466cd4fe9.capture.txt",
+    "savedSha256": "c6b63474c047f95571a79121e957d4c73f190302dd41378ad76fad2466cd4fe9",
+    "originalPdfHash": null,
+    "captureMetadataFile": "sources/capture-metadata.json"
+  }
+]

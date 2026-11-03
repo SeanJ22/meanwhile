@@ -1,0 +1,16 @@
+{
+  "requestedUrl": "https://r.jina.ai/https://chaffeeclerk.colorado.gov/sample-ballots",
+  "retrievedAt": "2026-11-03T08:15:56.819799+00:00",
+  "finalUrl": "https://r.jina.ai/https://chaffeeclerk.colorado.gov/sample-ballots",
+  "httpStatus": 200,
+  "contentType": "text/plain; charset=utf-8",
+  "sha256": "7bdd9d64b7976c354326a05430600e977029692db97fe044b5a7b2d5feb7ba04",
+  "bytes": 5872,
+  "rawFormat": "CAPTURED_SOURCE_TEXT",
+  "file": "chaffee-samples-reader-index.txt",
+  "provider": "Jina public deterministic reader",
+  "canonicalOfficialSourceURL": "https://chaffeeclerk.colorado.gov/sample-ballots",
+  "readerHTTPStatus": 200,
+  "originHttpStatus": null,
+  "hashScope": "Complete public-reader UTF8 response, not original government HTML/PDF bytes."
+}

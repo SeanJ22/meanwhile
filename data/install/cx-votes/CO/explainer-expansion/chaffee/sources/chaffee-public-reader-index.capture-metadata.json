@@ -1,0 +1,18 @@
+{
+  "requestedUrl": "https://r.jina.ai/https://chaffeeclerk.colorado.gov/elections/elections-general-information",
+  "retrievedAt": "2026-11-03T08:14:16.042494+00:00",
+  "finalUrl": "https://r.jina.ai/https://chaffeeclerk.colorado.gov/elections/elections-general-information",
+  "httpStatus": 200,
+  "contentType": "text/plain; charset=utf-8",
+  "sha256": "96f21bd0889506c8fa89de4dbb0b0c63fa9e437bf9cc633b18ac6b83ee1bd427",
+  "bytes": 7095,
+  "rawFormat": "CAPTURED_SOURCE_TEXT",
+  "file": "chaffee-public-reader-index.txt",
+  "provider": "Jina public deterministic reader",
+  "canonicalOfficialSourceURL": "https://chaffeeclerk.colorado.gov/elections/elections-general-information",
+  "readerHTTPStatus": 200,
+  "originHttpStatus": null,
+  "nativeGovernmentAttemptStatus": 403,
+  "reportedURLSource": "https://chaffeeclerk.colorado.gov/elections/elections-general-information",
+  "hashScope": "Complete public-reader UTF8 response, not original government HTML or PDF bytes."
+}

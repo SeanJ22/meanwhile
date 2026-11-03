@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "co-salida-2026-publishing-ordinances-by-title",
+    "whatItDoes": "Allow Salida to satisfy the cited state ordinance-publication requirements by publishing only an ordinance’s title instead of printing its full text.",
+    "yesMeans": "Allow the city to publish ordinances by title only for these legal publication requirements.",
+    "noMeans": "Keep the full-text publication requirement described in the question.",
+    "parts": [],
+    "sourceUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+    "sourceHash": "68afaf6b38fc005722877aa74178381f1bd12cbca84cd359fa64b08a147b50bf",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T08:51:57.918331+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-chaffee-county-fire-protection-district-2026-buena-vista-inclusion-6a",
+    "whatItDoes": "Include all real property inside Buena Vista that is outside Chaffee County Fire Protection District on November 3, 2026. Inclusion is conditional on the town board having adopted, by July 15, 2026, a resolution committing to reduce the town’s annual property-tax rate by 3.936 mills, the fire district’s rate stated in the question.",
+    "yesMeans": "Support inclusion of the specified currently outside-district property if the stated town tax-reduction condition is met.",
+    "noMeans": "Do not include this proposed area through this question.",
+    "parts": [],
+    "sourceUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/BV-fire-inclusion.pdf",
+    "sourceHash": "88263b695bbf93196cfae94778f8958ab98a70c0aaed912cdf3ffbb70f6ab480",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T08:51:57.923182+00:00",
+    "citation": "measure-source"
+  }
+]

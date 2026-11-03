@@ -1,0 +1,25 @@
+{
+  "state": "CO",
+  "county": "chaffee",
+  "preparedAttachedMeasures": 1,
+  "pendingExactTerritory": 1,
+  "officialCurrentSourceUnion": 3,
+  "heldTextRecordHashes": "PASS",
+  "completeCapturedTextHashes": "PASS",
+  "literalQuotesChecked": 6,
+  "actualCurrentReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/place:salida",
+      "completeExplainers": 1
+    }
+  ],
+  "countyAndStateNotWidened": "PASS",
+  "credentialScan": {
+    "scannedFiles": 25,
+    "confirmed": 0
+  },
+  "productionWrites": 0,
+  "appChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Complete government PDF text captured through public reader; original PDF byte hashes and origin HTTP status are not claimed. Root semantic review and River data install/live checks remain."
+}

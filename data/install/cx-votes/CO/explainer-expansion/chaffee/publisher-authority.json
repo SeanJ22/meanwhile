@@ -1,0 +1,33 @@
+{
+  "officialCountyPublisher": "Chaffee County Clerk and Recorder",
+  "officialIndexURL": "https://chaffeeclerk.colorado.gov/sample-ballots",
+  "indexCaptureMetadata": {
+    "requestedUrl": "https://r.jina.ai/https://chaffeeclerk.colorado.gov/sample-ballots",
+    "retrievedAt": "2026-11-03T08:15:56.819799+00:00",
+    "finalUrl": "https://r.jina.ai/https://chaffeeclerk.colorado.gov/sample-ballots",
+    "httpStatus": 200,
+    "contentType": "text/plain; charset=utf-8",
+    "sha256": "7bdd9d64b7976c354326a05430600e977029692db97fe044b5a7b2d5feb7ba04",
+    "bytes": 5872,
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "file": "chaffee-samples-reader-index.txt",
+    "provider": "Jina public deterministic reader",
+    "canonicalOfficialSourceURL": "https://chaffeeclerk.colorado.gov/sample-ballots",
+    "readerHTTPStatus": 200,
+    "originHttpStatus": null,
+    "hashScope": "Complete public-reader UTF8 response, not original government HTML/PDF bytes."
+  },
+  "sourceFormats": "Full public-reader responses retained as CAPTURED_SOURCE_TEXT; no original HTML/PDF byte claim.",
+  "stateDirectorySource": "sources/co-sos-county-offices.sanitized.html",
+  "stateDirectoryMetadata": {
+    "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+    "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+    "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+    "httpStatus": 200,
+    "contentType": "text/html",
+    "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+    "bytes": 46150,
+    "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+    "file": "co-sos-county-offices.html"
+  }
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "contestId": "co-salida-2026-publishing-ordinances-by-title",
+    "sourceUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+    "rawHash": "c6b63474c047f95571a79121e957d4c73f190302dd41378ad76fad2466cd4fe9",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official PDF extraction text; not original PDF bytes",
+    "sourceFile": "sources/c6b63474c047f95571a79121e957d4c73f190302dd41378ad76fad2466cd4fe9.capture.txt",
+    "sourceTextFile": "sources/c6b63474c047f95571a79121e957d4c73f190302dd41378ad76fad2466cd4fe9.capture.txt",
+    "originalPdfHash": null,
+    "sourceHash": "68afaf6b38fc005722877aa74178381f1bd12cbca84cd359fa64b08a147b50bf",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-salida-2026-publishing-ordinances-by-title.txt",
+    "subjectQuote": "Shall the City of Salida publish ordinances by title only rather than by publishing ordinances in full to satisfy the ordinance publication requirements in Colorado Revised Statutes 31-16-105 and 31-16-106?",
+    "retrievedAt": "2026-11-03T08:27:48.907030+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Salida publish ordinances by title only rather than by publishing ordinances in full to satisfy the ordinance publication requirements in Colorado Revised Statutes 31-16-105 and 31-16-106?"
+      ],
+      "yesMeans": [
+        "Shall the City of Salida publish ordinances by title only rather than by publishing ordinances in full to satisfy the ordinance publication requirements in Colorado Revised Statutes 31-16-105 and 31-16-106?"
+      ],
+      "noMeans": [
+        "Shall the City of Salida publish ordinances by title only rather than by publishing ordinances in full to satisfy the ordinance publication requirements in Colorado Revised Statutes 31-16-105 and 31-16-106?"
+      ]
+    },
+    "reviewNotes": [
+      "The official title identifies this question under§3; no unprinted number is invented. No unsupported promise about where or how the full text would otherwise be available is added."
+    ]
+  },
+  {
+    "contestId": "co-chaffee-county-fire-protection-district-2026-buena-vista-inclusion-6a",
+    "sourceUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/BV-fire-inclusion.pdf",
+    "rawHash": "e4454f130f7d906b6832255b69906ea4c9ace51126685eb8f99e5830c1ee14c2",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceHash": "88263b695bbf93196cfae94778f8958ab98a70c0aaed912cdf3ffbb70f6ab480",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-chaffee-county-fire-protection-district-2026-buena-vista-inclusion-6a.txt",
+    "sourceFile": "sources/chaffee-style-1.captured-text.txt.gz",
+    "subjectQuote": "Ballot Issue 6A Buena Vista Inclusion",
+    "retrievedAt": "2026-11-03T08:27:48.913114+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the following described area become a part of the Chaffee County Fire Protection District upon the following conditions, if any? Description of Area: All real property located in the Town of Buena Vista, Colorado that on November 3, 2026 is not located within the jurisdictional boundaries of the Chaffee County Fire Protection District. Subject to the Following Condition: On or before July 15, 2026, the Buena Vista Board of Trustees has adopted a Resolution committing to reduce the property tax rate the Town assesses each year by the 3.936 mills that Chaffee County Fire Protection District currently assesses."
+      ],
+      "yesMeans": [
+        "Shall the following described area become a part of the Chaffee County Fire Protection District upon the following conditions, if any? Description of Area: All real property located in the Town of Buena Vista, Colorado that on November 3, 2026 is not located within the jurisdictional boundaries of the Chaffee County Fire Protection District. Subject to the Following Condition: On or before July 15, 2026, the Buena Vista Board of Trustees has adopted a Resolution committing to reduce the property tax rate the Town assesses each year by the 3.936 mills that Chaffee County Fire Protection District currently assesses."
+      ],
+      "noMeans": [
+        "Shall the following described area become a part of the Chaffee County Fire Protection District upon the following conditions, if any? Description of Area: All real property located in the Town of Buena Vista, Colorado that on November 3, 2026 is not located within the jurisdictional boundaries of the Chaffee County Fire Protection District. Subject to the Following Condition: On or before July 15, 2026, the Buena Vista Board of Trustees has adopted a Resolution committing to reduce the property tax rate the Town assesses each year by the 3.936 mills that Chaffee County Fire Protection District currently assesses."
+      ]
+    },
+    "reviewNotes": [
+      "The deadline in the condition is past, but the source retains it as a condition. No unsupported assertion that the town adopted the resolution is made.",
+      "Tax-rate reduction is a commitment, not a promise that every household bill is unchanged. Proposed territory excludes property already in the district."
+    ]
+  }
+]

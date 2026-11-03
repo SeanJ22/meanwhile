@@ -1,0 +1,18 @@
+{
+  "officialUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+  "provider": "Jina public deterministic reader",
+  "rawFormat": "CAPTURED_SOURCE_TEXT",
+  "hashScope": "Complete captured public-reader UTF8 PDF-text response, not original government PDF bytes.",
+  "coverage": "Five current official sample styles checked; three local questions. This first publication row covers the complete ordinance-publication question. Proposed fire inclusion is held separately, and zoning ordinance text is still being acquired.",
+  "requests": [
+    {
+      "capturedAt": "2026-11-03T08:27:48.907030+00:00",
+      "readerURL": "https://r.jina.ai/https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+      "readerHTTPStatus": 200,
+      "originHttpStatus": null,
+      "reportedOfficialURL": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "nativeGovernmentAttempt": "Official index and County.pdf sample returned403; no origin status claimed for this specific Salida.pdf capture."
+    }
+  ]
+}

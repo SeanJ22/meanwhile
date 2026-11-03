@@ -1,0 +1,102 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-salida-2026-publishing-ordinances-by-title",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:salida",
+          "divisionVintage": "2026",
+          "title": "City of Salida — Publishing Ordinances by Title",
+          "type": "MEASURE",
+          "measureTextUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the City of Salida publish ordinances by title only rather than by publishing ordinances in full to satisfy the ordinance publication requirements in Colorado Revised Statutes 31-16-105 and 31-16-106?",
+            "sourceOrg": "Chaffee County Clerk and Recorder",
+            "sourceUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+            "collectedAt": "2026-11-03T08:27:48.907030+00:00",
+            "verifiedAt": "2026-11-03T08:51:57.918331+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-salida-2026-publishing-ordinances-by-title#question",
+          "contestId": "co-salida-2026-publishing-ordinances-by-title",
+          "questionText": "Shall the City of Salida publish ordinances by title only rather than by publishing ordinances in full to satisfy the ordinance publication requirements in Colorado Revised Statutes 31-16-105 and 31-16-106?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the City of Salida publish ordinances by title only rather than by publishing ordinances in full to satisfy the ordinance publication requirements in Colorado Revised Statutes 31-16-105 and 31-16-106?",
+            "sourceOrg": "Chaffee County Clerk and Recorder",
+            "sourceUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+            "collectedAt": "2026-11-03T08:27:48.907030+00:00",
+            "verifiedAt": "2026-11-03T08:51:57.918331+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-salida-2026-publishing-ordinances-by-title",
+          "whatItDoes": "Allow Salida to satisfy the cited state ordinance-publication requirements by publishing only an ordinance’s title instead of printing its full text.",
+          "yesMeans": "Allow the city to publish ordinances by title only for these legal publication requirements.",
+          "noMeans": "Keep the full-text publication requirement described in the question.",
+          "parts": [],
+          "sourceUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+          "sourceHash": "68afaf6b38fc005722877aa74178381f1bd12cbca84cd359fa64b08a147b50bf",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:51:57.918331+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:51:57.918331+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+        "finalUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+        "publisher": "Chaffee County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:27:48.907030+00:00",
+        "httpStatus": 200,
+        "originHttpStatus": null,
+        "rawHash": "c6b63474c047f95571a79121e957d4c73f190302dd41378ad76fad2466cd4fe9",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete captured public-reader UTF8 PDF-text response, not original government PDF bytes.",
+        "captureMetadata": {
+          "officialUrl": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+          "provider": "Jina public deterministic reader",
+          "rawFormat": "CAPTURED_SOURCE_TEXT",
+          "hashScope": "Complete captured public-reader UTF8 PDF-text response, not original government PDF bytes.",
+          "coverage": "Five current official sample styles checked; three local questions. This first publication row covers the complete ordinance-publication question. Proposed fire inclusion is held separately, and zoning ordinance text is still being acquired.",
+          "requests": [
+            {
+              "capturedAt": "2026-11-03T08:27:48.907030+00:00",
+              "readerURL": "https://r.jina.ai/https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+              "readerHTTPStatus": 200,
+              "originHttpStatus": null,
+              "reportedOfficialURL": "https://chaffeeclerk.colorado.gov/sites/g/files/lrnvjt2971/files/documents/Salida.pdf",
+              "sourceFormat": "CAPTURED_SOURCE_TEXT",
+              "nativeGovernmentAttempt": "Official index and County.pdf sample returned403; no origin status claimed for this specific Salida.pdf capture."
+            }
+          ]
+        },
+        "reviewedEvidence": "Successful complete official county sample PDF text capture through Jina public deterministic reader. HTTP200 is the reader capture status; origin HTTP status and original PDF bytes/hash are not claimed. Native official index and County.pdf route returned403. Exact literal question, official2026election association and existing Salida city division verified. Explanation awaits root independent review."
+      }
+    ]
+  }
+}

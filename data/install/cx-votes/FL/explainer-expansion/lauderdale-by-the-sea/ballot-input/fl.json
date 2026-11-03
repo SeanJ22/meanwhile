@@ -1,0 +1,1045 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea",
+          "divisionVintage": "2026",
+          "title": "Lauderdale-by-the-Sea Question 1 — Petition certification deadlines",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "The Town Charter establishes short timeframes for certifying citizen-initiated petitions for the repeal or amendment of ordinances. The proposed amendment would extend certification deadlines and clarify whether time periods are measured in calendar days or business days. Shall the Town Charter be amended to extend petition certification deadlines and clarify time calculations?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea",
+          "divisionVintage": "2026",
+          "title": "Lauderdale-by-the-Sea Question 2 — Mayor terms and term limits",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "The Town Charter establishes three two-year terms for the Mayor-Commissioner. This amendment aligns the Mayor-Commissioner and Commissioner term limits by changing the term length to four years and the number of terms to two terms, revising the maximum term limit accordingly, and clarifying application to the Mayor-Commissioner term ending in November 2028. Shall the Town Charter be amended to change the Mayor-Commissioner’s term to a maximum of two four-year terms, effective November 2028?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea",
+          "divisionVintage": "2026",
+          "title": "Lauderdale-by-the-Sea Question 3 — Moving from mayor to commissioner",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "The Town Charter allows Commissioners to run for Mayor-Commissioner at the conclusion of their term, but the Mayor-Commissioner is not similarly allowed to run for Commissioner at the conclusion of his or her term. Shall the Town Charter be amended to allow a person who has served as Mayor-Commissioner to run for and serve as a Commissioner at the conclusion of their service as Mayor-Commissioner, if permissible under the maximum term limits?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea",
+          "divisionVintage": "2026",
+          "title": "Lauderdale-by-the-Sea Question 4 — Filling vacancies despite a service break",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "Shall the Town Charter be amended to clarify that the Town Commission may appoint a qualified person to fill a vacancy in the office of Mayor-Commissioner or Commissioner, even if that person would otherwise be required by the Town Charter to take a two-year break in service, potentially increasing the number of persons available for appointment?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea",
+          "divisionVintage": "2026",
+          "title": "Lauderdale-by-the-Sea Question 5 — Current Commission districts",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "The Town has used the same northern and southern Commission district boundaries since 2004. Shall the Town Charter be amended to establish the current district boundaries in the Town Charter, including the existing boundary at the portion of the Village of Sea Ranch Lakes bordering the Atlantic Ocean to preserve the current district boundaries?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-6",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea",
+          "divisionVintage": "2026",
+          "title": "Lauderdale-by-the-Sea Question 6 — Forfeiture of office",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "Shall the Town Charter be amended to clarify standards for forfeiture of office of Commission members by tying qualifications to existing Charter provisions, requiring ethics-based removal to be determined under state law by the Florida Commission on Ethics, requiring incapacity determinations to be supported by medical certification or court order, allowing absences to be excused by majority vote, and excusing the Commission from voting on removals already mandated by other governmental authorities?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-7",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea",
+          "divisionVintage": "2026",
+          "title": "Lauderdale-by-the-Sea Question 7 — State election, notice and audit law",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "The proposed amendment would promote consistency with state law by providing that all general laws of the State of Florida governing municipal elections apply to the Town, aligning the deadline for the Town’s annual financial audit with the deadline in state law, and allowing legal notices to be published on publicly accessible websites as provided in state law. Shall the Town Charter incorporate Florida laws governing municipal elections, public notices, and audits?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-8",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea",
+          "divisionVintage": "2026",
+          "title": "Lauderdale-by-the-Sea Question 8 — Residency, election transition and wording",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "The proposed amendment would revise the Town Charter to correct errors, improve clarity, resolve inconsistencies in terminology and in timelines, and update references to reflect current Florida law. Shall the Town Charter be amended to correct errors, resolve inconsistencies, and update provisions to reflect current law?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-1:measure",
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-1",
+          "questionText": "The Town Charter establishes short timeframes for certifying citizen-initiated petitions for the repeal or amendment of ordinances. The proposed amendment would extend certification deadlines and clarify whether time periods are measured in calendar days or business days. Shall the Town Charter be amended to extend petition certification deadlines and clarify time calculations?",
+          "officialStatement": "Sec. 4.4. Filing Procedure\n(1) Certificate of Clerk; amendment. Within thirty (30) calendar days after an initiative petition is filed or within ten (10) business days after a petition for repeal or amendment of an ordinance is filed, the Clerk shall complete a certificate as to its sufficiency (the \"Certificate\"). Grounds for insufficiency are only those specified in Sec. 4.3 of this Article. If insufficient, the Certificate shall specify the particulars of the deficiency. A copy of the Certificate shall be promptly sent to the petitioners' committee by hand delivery or registered mail. A petition certified insufficient for lack of the required number of valid signatures may be amended once if the petitioners' committee files a notice of intention to amend it with the Clerk within two business days after receiving the copy of the Certificate and files a supplementary petition upon additional papers within fourteen (14) calendar days after receiving the copy of the Certificate. Such supplementary petition shall comply with the requirements of Sec. 4.3 of this Article. Within five business days after a supplementary petition is filed, the Clerk shall complete a Certificate as to the sufficiency of the petition, as amended, and shall promptly send a copy of such Certificate to the petitioners' committee by registered mail or hand delivery as in the case of an original petition. If a petition or amended petition is certified sufficient, or if a petition or amended petition is certified insufficient and the petitioners' committee does not elect to amend or request Commission review under subsection (2) of this Section 4.4 within the time required, the Clerk shall promptly present the Certificate to the Commission and such Certificate shall then be a final determination as to the sufficiency of the petition.",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "The Town Charter establishes short timeframes for certifying citizen-initiated petitions for the repeal or amendment of ordinances. The proposed amendment would extend certification deadlines and clarify whether time periods are measured in calendar days or business days. Shall the Town Charter be amended to extend petition certification deadlines and clarify time calculations?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-2:measure",
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-2",
+          "questionText": "The Town Charter establishes three two-year terms for the Mayor-Commissioner. This amendment aligns the Mayor-Commissioner and Commissioner term limits by changing the term length to four years and the number of terms to two terms, revising the maximum term limit accordingly, and clarifying application to the Mayor-Commissioner term ending in November 2028. Shall the Town Charter be amended to change the Mayor-Commissioner’s term to a maximum of two four-year terms, effective November 2028?",
+          "officialStatement": "Sec. 6.1. Mayor-Commissioner and Commissioners; term of office; election; transition\n(1) Beginning with the regular election to be held on the second Tuesday in the month of March, 2008, and every two (2) years thereafter, a Mayor-Commissioner shall be elected for a term of two (2) years until his successor is elected and qualifies. Beginning with the regular election to be held in November 2028, and in every regular election thereafter, a Mayor-Commissioner shall be elected for a term of four (4) years and shall serve until a successor is elected and qualifies. For the purpose of calculating eligibility under this section, any person who has served as Mayor-Commissioner immediately prior to November 2028 shall be deemed to have served one term under this section.\nSec. 6.3. - Qualifications of members of Town Commission\n(3) No person may be a candidate for Mayor-Commissioner, nor may be appointed to fill a vacancy as the Mayor-Commissioner, if that person has served during each of the two preceding consecutive Mayor-Commissioner terms as a Mayor-Commissioner, without a two year break in service.\n(6) No person may be a candidate for Mayor-Commissioner or Town Commissioner, nor may be appointed to fill a vacancy as the Mayor-Commissioner or Town Commissioner, if that person has consecutively served sixteen (16) years in any combination of offices without a two year break in service.",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "The Town Charter establishes three two-year terms for the Mayor-Commissioner. This amendment aligns the Mayor-Commissioner and Commissioner term limits by changing the term length to four years and the number of terms to two terms, revising the maximum term limit accordingly, and clarifying application to the Mayor-Commissioner term ending in November 2028. Shall the Town Charter be amended to change the Mayor-Commissioner’s term to a maximum of two four-year terms, effective November 2028?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-3:measure",
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-3",
+          "questionText": "The Town Charter allows Commissioners to run for Mayor-Commissioner at the conclusion of their term, but the Mayor-Commissioner is not similarly allowed to run for Commissioner at the conclusion of his or her term. Shall the Town Charter be amended to allow a person who has served as Mayor-Commissioner to run for and serve as a Commissioner at the conclusion of their service as Mayor-Commissioner, if permissible under the maximum term limits?",
+          "officialStatement": "Sec. 6.3. - Qualifications of members of Town Commission\n(2) No person may be a candidate for Commissioner, nor may be appointed to fill a vacancy as a Commissioner, if that person has served during both of the two preceding consecutive Commission terms for that seat as a Commissioner, without a two year break in service.",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "The Town Charter allows Commissioners to run for Mayor-Commissioner at the conclusion of their term, but the Mayor-Commissioner is not similarly allowed to run for Commissioner at the conclusion of his or her term. Shall the Town Charter be amended to allow a person who has served as Mayor-Commissioner to run for and serve as a Commissioner at the conclusion of their service as Mayor-Commissioner, if permissible under the maximum term limits?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-4:measure",
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-4",
+          "questionText": "Shall the Town Charter be amended to clarify that the Town Commission may appoint a qualified person to fill a vacancy in the office of Mayor-Commissioner or Commissioner, even if that person would otherwise be required by the Town Charter to take a two-year break in service, potentially increasing the number of persons available for appointment?",
+          "officialStatement": "Sec. 6.3. - Qualifications of members of Town Commission\n2) No person may be a candidate for Commissioner if that person has served during both of the two preceding consecutive Commission terms for that seat as a Commissioner, or a Mayor-Commissioner or both, without a two year break in service.\n(3) No person may be a candidate for Mayor-Commissioner if that person has served during each of the three preceding consecutive Mayor-Commissioner terms as a Mayor-Commissioner.\n(4) Service of one year or less of a term by a person who had not previously served as either a Commissioner or Mayor-Commissioner shall not be considered for purposes of term limits.\n(5) Service for purposes of term limits shall be determined as of the time the person would take office.\n(6) No person may be a candidate for Mayor-Commissioner or Town Commissioner if that person has consecutively served fourteen (14) years in any combination of offices without a two year break in service.\nSec. 6.8. - Filling of vacancies\nA vacancy on the Town Commission, including the office of Mayor-Commissioner, shall be filled in the following manner: (1) If there are less than one hundred eighty (180) days remaining in the unexpired term, or if there are less than one hundred eighty (180) days before the next federal, state, county or Town election, the remaining Commissioners, including the Mayor-Commissioner, shall, by majority vote, appoint a successor within thirty (30) days of the occurrence of the vacancy from among all qualified applicants. The person or persons so appointed must possess all of the required qualifications to be a member of the Town Commission, except that the Town Commission may appoint a qualified person to fill a vacancy in the office of Mayor-Commissioner or Commissioner even if that person would otherwise be required by the Town Charter to take a 2-year break in service. The Commissioner or Mayor-Commissioner appointed by the Town Commission to fill the vacancy as specified herein shall serve only until the next federal, state, county, or Town election. Further, the Commissioner or Mayor-Commissioner elected at such election shall serve only the unexpired term of the Commissioner or Mayor-Commissioner whose position became vacant.",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "Shall the Town Charter be amended to clarify that the Town Commission may appoint a qualified person to fill a vacancy in the office of Mayor-Commissioner or Commissioner, even if that person would otherwise be required by the Town Charter to take a two-year break in service, potentially increasing the number of persons available for appointment?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-5:measure",
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-5",
+          "questionText": "The Town has used the same northern and southern Commission district boundaries since 2004. Shall the Town Charter be amended to establish the current district boundaries in the Town Charter, including the existing boundary at the portion of the Village of Sea Ranch Lakes bordering the Atlantic Ocean to preserve the current district boundaries?",
+          "officialStatement": "Sec. 6.1. Mayor-Commissioner and Commissioners; term of office; election; transition\n(5) In the event no candidate qualifies for election for any designated Town Commission seat within the first ten (10) calendar days of the qualifying period, then any qualified person who resides anywhere in the Town may qualify for such seat. Thereafter, if no person qualifies for such seat, a vacancy shall be declared and filled in accordance with this Charter.\n(6) The Town Commission adopted by Ordinance the creation and establishment of the boundaries of the initial northern and southern Town Commission seat districts, effective for the elections to be held in the Town commencing in March, 2006. The boundaries of these districts remain unchanged, and follow the jurisdictional boundaries of the Town. The northern district is separated from the southern district by the portion of the Village of Sea Ranch Lakes that borders on the Atlantic Ocean, as depicted on a map maintained by the Town Clerk.",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "The Town has used the same northern and southern Commission district boundaries since 2004. Shall the Town Charter be amended to establish the current district boundaries in the Town Charter, including the existing boundary at the portion of the Village of Sea Ranch Lakes bordering the Atlantic Ocean to preserve the current district boundaries?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-6:measure",
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-6",
+          "questionText": "Shall the Town Charter be amended to clarify standards for forfeiture of office of Commission members by tying qualifications to existing Charter provisions, requiring ethics-based removal to be determined under state law by the Florida Commission on Ethics, requiring incapacity determinations to be supported by medical certification or court order, allowing absences to be excused by majority vote, and excusing the Commission from voting on removals already mandated by other governmental authorities?",
+          "officialStatement": "Sec. 6.6. - Forfeiture of office.\nA Commission member, or the Mayor-Commissioner, is subject to penalties including forfeiture of office if :\n(1) The Commissioner or Mayor-Commissioner no longer meets any of the qualifications explicitly listed in Sections 6.3 and 6.4 of this Charter;\n(2) The Florida Commission on Ethics issues a final order, after exhaustion of all appeals, that the Commissioner or Mayor-Commissioner has violated the Florida Code of Ethics for Public Officers and Employees and imposes removal from office under applicable state law;\n(3) The Commissioner or Mayor-Commissioner is convicted of a felony while in office;\n(4) The Commissioner or Mayor-Commissioner fails to attend four (4) consecutive regular meetings of the Town Commission without being excused by the Town Commission by formal action entered upon the minutes; or\n(5) The Commissioner or Mayor-Commissioner becomes physically or mentally incapable of performing the essential duties of the office for a continuous period exceeding three (3) months, as certified by a licensed medical professional, or confirmed by a final order of a court of competent jurisdiction.\nIn all matters under this Section, except in granting excused absences, the Town Commission shall act by unanimous vote of the remaining members. The Commissioner or Mayor-Commissioner subject to potential forfeiture shall not vote on any matter pertaining to their own removal. Nothing in this section shall be construed to limit the authority of the Governor under the Florida Constitution to suspend or remove a municipal officer.\nSec. 6.7. - Forfeiture hearing and process.\nA member of the Town Commission charged with conduct constituting grounds for forfeiture of his office shall be entitled to a public hearing on demand, and notice of such hearing shall be published in one or more newspapers of general circulation in the Town at least thirty days before the scheduled hearing. . For forfeiture not automatically imposed by state law or a final order by a court of competent jurisdiction, the Town Commission shall conduct the hearing and act as the adjudicating body. The Commissioner in question shall have the burden of establishing good cause for absence; provided, however, that any Commissioner may at any time during any duly held meeting move to establish good cause for his or her absence or the absence of any other Commissioner, from any past, present, or future meeting(s), which motion, if carried, shall be conclusive. A Commissioner who is subject to a forfeiture hearing for his/her office, shall not vote on any such matters. Any discretionary forfeiture by the Town Commission that a Commissioner or the Mayor-Commissioner has forfeited his or her office shall be made by resolution approved by a unanimous vote of the remaining members of the Town Commission. All votes and other acts of the Commissioner in question prior to the effective date of such resolution shall be valid regardless of the grounds of forfeiture. For removals mandated by a governmental authority other than the Town, the Town Commission shall implement the removal without vote.",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "Shall the Town Charter be amended to clarify standards for forfeiture of office of Commission members by tying qualifications to existing Charter provisions, requiring ethics-based removal to be determined under state law by the Florida Commission on Ethics, requiring incapacity determinations to be supported by medical certification or court order, allowing absences to be excused by majority vote, and excusing the Commission from voting on removals already mandated by other governmental authorities?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-7:measure",
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-7",
+          "questionText": "The proposed amendment would promote consistency with state law by providing that all general laws of the State of Florida governing municipal elections apply to the Town, aligning the deadline for the Town’s annual financial audit with the deadline in state law, and allowing legal notices to be published on publicly accessible websites as provided in state law. Shall the Town Charter incorporate Florida laws governing municipal elections, public notices, and audits?",
+          "officialStatement": "ARTICLE V. TOWN OFFICERS AND EMPLOYEES\nSec. 5.5. Town Manager—Powers and duties\nThe Town Manager shall be responsible to the Town Commission for the proper administration of all affairs of the Town coming under the Town Manager's jurisdiction, and the Town Manager's powers are and they shall be:\n* * *\n(10) To prepare and submit to the Town Commission an annual financial audit of its accounts and records, completed no later than nine (9) months after the end of its fiscal year by an independent certified public accountant retained by the Town Commission and paid from its public funds.\n* * *\nSec. 6.4. Qualifications of candidates; notice of candidacy; payment of fee\nAny individual who possesses the qualifications as provided in this Charter, may be a candidate for the office of Mayor-Commissioner or Commissioner by filing a verified notice of candidacy for Town Commission with the Town Clerk. Such notice shall be in the following form:\nNOTICE OF CANDIDACY FOR TOWN COMMISSIONER OR MAYOR-COMMISSIONER\nI, _______ (Name of Candidate) _______, residing at _______________ (Residence Address of Candidate), Lauderdale-By-The-Sea, Broward County, Florida, do hereby give notice of my candidacy for the office of Town Commissioner/Mayor-Commissioner of the Town of Lauderdale-By-The-Sea, Florida, in the forthcoming election to be held in said Town on _______ (Date of Primary) _______. I do further state that I am a citizen of the United States of America, and a resident of the Town of Lauderdale-By-The-Sea; that I have resided in the Town of Lauderdale-By-The-Sea for the six (6) months immediately preceding the date of the election to be held; and that I have fully satisfied all conditions precedent to such candidacy, pursuant to the provisions of the laws of the State of Florida and the Town Charter.\n__________________\n(Candidate's Signature)\nSTATE OF FLORIDA\nCOUNTY OF BROWARD\nBefore me, the undersigned authority, this day personally appeared _____________ (Name of Candidate) who, upon being duly sworn, deposed and said: that he/she is the candidate referred to in the foregoing Notice; that he/she is familiar with the contents of said Notice, and that the facts and matters therein stated are true; and that he/she did sign said Notice for the purpose therein specified.\n_______________\n(Candidate)\nSworn to and subscribed before me, this the _______ day of _______, 20___.\n__________________\nNotary Public, State of Florida\nMy commission expires: _______\nThe individual who files the notice as prescribed, and who pays the qualifying fee as prescribed, if otherwise found to be qualified, shall be entitled to have his/her name printed upon the official ballot at such town election. All general laws of the state relating to municipal elections, as amended from time to time, are adopted and shall govern elections for the Town.\nSec. 6.7. Forfeiture hearing and process\nA member of the Town Commission charged with conduct constituting grounds for forfeiture of his office shall be entitled to a public hearing on demand, and notice of such hearing shall be published at least thirty days before the scheduled hearing in accordance with F.S. ch. 50, or any other method of publication expressly authorized by Florida law and consistent with the Town Charter, or any other applicable authority. The Town Commission shall be the sole judge of the qualifications of its members and shall hear all questions relating to forfeiture of a Commissioner's or Mayor-Commissioner's office, including whether or not good cause for absence has been, or may be, established. The Commissioner in question shall have the burden of establishing good cause for absence; provided, however, that any Commissioner may at any time during any duly held meeting move to establish good cause for his or her absence or the absence of any other Commissioner, from any past, present, or future meeting(s), which motion, if carried, shall be conclusive. A Commissioner whose qualifications are in question, or who is otherwise subject to forfeiture of his/her office, shall not vote on any such matters. Any final determination by the Town Commission that a Commissioner or the Mayor-Commissioner has forfeited his or her office shall be made by resolution approved by a unanimous vote of the remaining members of the Town Commission. All votes and other acts of the Commissioner in question prior to the effective date of such resolution shall be valid regardless of the grounds of forfeiture.",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "The proposed amendment would promote consistency with state law by providing that all general laws of the State of Florida governing municipal elections apply to the Town, aligning the deadline for the Town’s annual financial audit with the deadline in state law, and allowing legal notices to be published on publicly accessible websites as provided in state law. Shall the Town Charter incorporate Florida laws governing municipal elections, public notices, and audits?"
+          }
+        },
+        {
+          "id": "fl-2026-lauderdale-by-the-sea-charter-8:measure",
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-8",
+          "questionText": "The proposed amendment would revise the Town Charter to correct errors, improve clarity, resolve inconsistencies in terminology and in timelines, and update references to reflect current Florida law. Shall the Town Charter be amended to correct errors, resolve inconsistencies, and update provisions to reflect current law?",
+          "officialStatement": "Resolve conflicting language about how to measure the minimum residency for a candidate for Town office, by consolidating all references to this topic in the Elections article of the charter and retaining the current standard there, which is 6 months prior to the date of the election, removing conflicting provisions in Section 3.3, and relocating the remainder of Section 3.3 to Section 6.3(7).\nARTICLE III. ADMINISTRATION AND LEGISLATION\nSec. 3.3. Reserved\nARTICLE VI. ELECTIONS\nSec. 6.3. Qualifications of members of Town Commission\n(7) Once elected, a Commissioner from an election district shall remain a resident of the election district during his or her term of office. Any Commissioner who shall cease to possess the qualifications for district residency shall forthwith forfeit his or her office, except a Commissioner holding office will not have his/her term cut short by the establishment of or subsequent change of district boundary lines.\n2. Correct statutory references to reflect changes in the Florida Statutes over time.\nSec. 4.5. Action on petitions.\nAction by Town Commission. When an initiative petition or a petition for the repeal or amendment of an existing ordinance has been finally determined to be sufficient, the Town Commission shall promptly consider or reconsider the ordinance. Whether or not the Commission approves at first reading an initiated ordinance, or the repeal or amendment, as proposed, of a referred ordinance, the Commission shall proceed to a second reading at its next scheduled meeting, and shall otherwise comply with all requirements under Sec. 166.041 F. S. for public notice and public hearings prior to the adoption of an ordinance. If the Commission fails to adopt a proposed initiative ordinance without any change in substance within forty-five (45) calendar days, or fails to repeal or amend a referred ordinance in accordance with the initiative petition within thirty (30) calendar days, it shall submit the proposed or referred ordinance to the registered voters of the Town by referendum vote at an election. The referendum vote by registered Town voters shall constitute an \"additional requirement for the enactment of ordinances\" as specified in Section 166.041 F.S., in lieu of and as a greater, increased requirement than the affirmative majority vote of the governing body referred to in Sec. 166.041 F. S. If the Commission fails to act on a proposed initiative ordinance or a referred ordinance within the time period specified in this paragraph, the Commission shall be deemed to have failed to adopt the proposed initiative ordinance or failed to repeal or amend the referred ordinance on the last day that the Commission was authorized to act on such matter. In that event, the Commission shall nevertheless comply with the public notice and public hearing requirements of Sec. 166.04 F.S. relative to the ordinance in question.\n3. Clarify how the change in the municipal election date from March to November affects the application of the term limits for elected officials, and correct a related reference.\nARTICLE VI. ELECTIONS\nSec. 6.1. Mayor-Commissioner and Commissioners; term of office; election; transition\n(4) All elections for the position of Town Commissioner or Mayor-Commissioner shall be held on the same date as the November election date of each even-numbered year, or as provided for by law. The terms of office of the Mayor who was elected in 2024 and of the Seat 1 and Seat 2 Town Commissioners who were elected in the municipal general election of March 2022 shall expire when their successors are sworn in after the general election in November of 2026. The terms of office of the Seat 3 and Seat 4 Town Commissioners who were elected in the municipal general election of March 2024 shall expire when their successors are sworn in after the general election in November of 2028. Notwithstanding any other provision of this Charter, the extension or adjustment of any elected official’s term of office resulting from the Town’s change of municipal election dates from March to November in 2024 shall be deemed solely for the purpose of aligning the Town’s election cycle. Any additional months served as a result of such alignment shall not: (i) be considered a separate term, (ii) be deemed to constitute the commencement of a new term, (iii) be counted for purposes of calculating term limits, or (iv) require or trigger a special election. Service during such alignment period shall be treated as part of the originally elected term.\nSec. 6.3. - Qualifications of members of Town Commission.\n(1) To be eligible to hold the office of Mayor-Commissioner or Commissioner of the Town of Lauderdale-By-The-Sea, or to qualify for candidacy for Mayor-Commissioner or Commissioner, the individual shall be a bona fide resident and citizen of the Town of Lauderdale-By-The-Sea, shall have resided in the said town for the six (6) months immediately preceding the date of election, shall be a registered voter pursuant to Florida law, and shall be otherwise qualified as provided for in the Charter.\n(2) No person may appear on a ballot for Commissioner, nor may be appointed to fill a vacancy as a Commissioner, if that person has served during both of the two preceding consecutive Commission terms for that seat as a Commissioner, or a Mayor-Commissioner or both, without a two year break in service.\n(3) No person may appear on a ballot for Mayor-Commissioner, nor may be appointed to fill a vacancy as the Mayor-Commissioner, if that person has served during each of the three preceding consecutive Mayor-Commissioner terms as a Mayor-Commissioner.\n(4) Service of one year or less of a term by a person who had not previously served as either a Commissioner or Mayor-Commissioner shall not be considered for purposes of term limits.\n(5) Service for purposes of term limits shall be determined as of the time the person would take office.\n(6) No person may appear on a ballot for Mayor-Commissioner or Town Commissioner, nor may be appointed to fill a vacancy as the Mayor-Commissioner or Town Commissioner, if that person has consecutively served fourteen (14) years in any combination of offices without a two year break in service.",
+          "provenance": {
+            "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+            "sourceOrg": "Town of Lauderdale-by-the-Sea",
+            "collectedAt": "2026-11-03T10:09:37.310392+00:00",
+            "verifiedAt": "2026-11-03T10:17:35.881Z",
+            "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+            "quote": "The proposed amendment would revise the Town Charter to correct errors, improve clarity, resolve inconsistencies in terminology and in timelines, and update references to reflect current Florida law. Shall the Town Charter be amended to correct errors, resolve inconsistencies, and update provisions to reflect current law?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-1",
+          "whatItDoes": "Gives the Town Clerk 30 calendar days to certify an initiative petition instead of 20, and ten business days to certify a petition to repeal or amend an ordinance instead of five. It clarifies two business days to notify the Clerk of an intent to file the one allowed correction for insufficient signatures,14 calendar days to file the supplement, and five business days for the Clerk to certify a supplementary petition. The signature and petition requirements would still apply.",
+          "yesMeans": "Approve the longer certification periods and clarified calendar-day and business-day deadlines.",
+          "noMeans": "Reject the proposed petition-deadline changes.",
+          "parts": [],
+          "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "sourceHash": "a397f3bda13ba58ff8eb18e1337226ed8be4a72b6f051fa0fbf6e130d51d0743",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:17:35.881Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-2",
+          "whatItDoes": "Changes the mayor-commissioner’s term from two years to four beginning with the November 2028 regular election, with a limit of two consecutive mayoral terms unless there is a two-year break. It increases the combined consecutive-service limit for mayor and commissioner from 14 to 16 years before a two-year break is required. For the new limits, anyone serving as mayor immediately before November 2028 would count as having served one mayoral term.",
+          "yesMeans": "Approve four-year mayoral terms beginning in 2028, the two-term limit and related transition and combined-service rules.",
+          "noMeans": "Reject these proposed mayoral-term and term-limit changes.",
+          "parts": [],
+          "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "sourceHash": "032364a90a873ba131963367535e912dff8199802a54229cb75069041a2347d0",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:17:35.881Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-3",
+          "whatItDoes": "Allows a mayor-commissioner to run for and serve as a commissioner at the end of mayoral service without that mayoral service alone triggering the two-year break for a Commission seat. The existing restriction based on two preceding consecutive Commission terms for that seat and the applicable overall term limits would still apply.",
+          "yesMeans": "Approve allowing movement from mayor to commissioner subject to the remaining term limits.",
+          "noMeans": "Reject this proposed change to eligibility after mayoral service.",
+          "parts": [],
+          "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "sourceHash": "ca1b9063bd292e73ee97de706a1ff0b4a235760a658acbdf6ab6f05a1936e1f5",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:17:35.881Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-4",
+          "whatItDoes": "Allows the Commission to appoint an otherwise qualified person to a mayoral or Commission vacancy even when the Charter would ordinarily require that person to take a two-year service break. For the appointment procedure shown, fewer than 180 days must remain in the term or before the next federal, state, county or town election; the remaining members appoint by majority vote within 30 days. The appointee serves only until that election, and its winner serves the rest of the original term.",
+          "yesMeans": "Approve the two-year-break exception for qualified vacancy appointees under the stated procedure.",
+          "noMeans": "Reject the proposed exception for vacancy appointments.",
+          "parts": [],
+          "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "sourceHash": "09422e799d3b345fe3b4a382c3735109f619086f975ecdcc7a66ed2b56f44aa7",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:17:35.881Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-5",
+          "whatItDoes": "Writes the existing northern and southern Commission districts into the Charter, using town boundaries and the oceanfront portion of Sea Ranch Lakes that separates the districts, as shown on the Town Clerk’s map. The district boundaries would stay the same. It removes obsolete instructions to have a university draw districts in 2004 and 2012. The fallback allowing any qualified town resident to qualify for a seat if no candidate does so in the first ten calendar days remains.",
+          "yesMeans": "Approve placing the current district boundaries in the Charter.",
+          "noMeans": "Reject this proposed district-description update.",
+          "parts": [],
+          "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "sourceHash": "1ef385d3dda7165a9fb2416e224de6cc28bd11d10462ff02635e34764466f225",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:17:35.881Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-6",
+          "whatItDoes": "Ties loss of qualifications to the Charter’s listed eligibility rules. Ethics-based removal would require a final Florida Commission on Ethics order imposing removal after all appeals are exhausted. Incapacity would require more than three continuous months and certification by a licensed medical professional or a final court order. Felony conviction while in office and four consecutive unexcused regular-meeting absences remain grounds. The remaining members would act unanimously on discretionary forfeiture, while absences could be excused by majority vote; the affected member cannot vote on removal. A hearing is available on demand. Removal already mandated by another governmental authority would be implemented without a Commission vote.",
+          "yesMeans": "Approve the revised grounds, evidence and procedures for forfeiture of office.",
+          "noMeans": "Reject these proposed forfeiture-of-office changes.",
+          "parts": [],
+          "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "sourceHash": "968d04d523a236004fb4b501561f0b38379280363307b21753b39e9fd1b50e5a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:17:35.881Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-7",
+          "whatItDoes": "Makes Florida’s general municipal-election laws, as amended over time, govern town elections. It extends the annual financial-audit deadline from six to nine months after the fiscal year ends; the audit must still be done by an independent certified public accountant retained by the Commission. It permits forfeiture-hearing notices through publication methods authorized by Florida law, including qualifying public websites, while keeping at least 30 days’ notice.",
+          "yesMeans": "Approve the state-law election and notice provisions and nine-month audit deadline.",
+          "noMeans": "Reject these proposed election, notice and audit changes.",
+          "parts": [],
+          "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "sourceHash": "c6f1a5fd0507ba5010b4286b3867c3252550f072fda8f157ccfb274871cb17af",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:17:35.881Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-lauderdale-by-the-sea-charter-8",
+          "whatItDoes": "Consolidates candidate-residency rules in the Elections article using six months before the election, removing conflicting language measured before qualifying. Commissioners must keep district residence, with existing protection against losing a current term because district lines change. It clarifies that extra months from the March-to-November election transition in 2024 remain part of the original term, do not count toward term limits and do not trigger a special election. It changes term-limit wording from being a candidate to appearing on a ballot and updates statutory and petition-process references.",
+          "yesMeans": "Approve the residency clarification, election-transition treatment and related wording and reference changes.",
+          "noMeans": "Reject this group of Charter revisions.",
+          "parts": [],
+          "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+          "sourceHash": "adb4987d3ddd863fa81e90415b723075a4189baa2b8940d70e29fad4945201d1",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:17:35.881Z",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:17:35.881Z",
+    "reviewedBy": "CX-VOTES direct official primary question and complete legal-redline reading; no provider calls",
+    "sources": [
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "finalUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:24.342Z",
+        "httpStatus": 200,
+        "rawHash": "461c5f7f145c4ab962a4e76b8de144a9b125bef5b751606c94187a35216604db",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.831Z",
+        "httpStatus": 200,
+        "rawHash": "71e1eca18215e9ee481414b3cc0b128de7d20ed9cc36669a75e9a8c3a81576a7",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.107Z",
+        "httpStatus": 200,
+        "rawHash": "0b453293300bf92b94865c7146e759916b97124ee3bb11645088bc73e5935372",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.804Z",
+        "httpStatus": 200,
+        "rawHash": "7084e3d9008cc6d85dc3775970c414d4386d6677c86e4e8b987b2446a64733fe",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.657Z",
+        "httpStatus": 200,
+        "rawHash": "801c72e16e7689e15c639c9c42902fe7ee42bebf7cfcc3229a50b507fabcad0e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.522Z",
+        "httpStatus": 200,
+        "rawHash": "b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.411Z",
+        "httpStatus": 200,
+        "rawHash": "409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.089Z",
+        "httpStatus": 200,
+        "rawHash": "b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.650Z",
+        "httpStatus": 200,
+        "rawHash": "51f53116d8cf9b79bdce23bdfaeb5c3adb169c4997ba004c3fe24b5717ef9a67",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.046Z",
+        "httpStatus": 200,
+        "rawHash": "7816bec8439edb080760b6087c817e308285694c6a96dd5f6cffa4b71c610e63",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.983Z",
+        "httpStatus": 200,
+        "rawHash": "9cccd61589f047f607ab0cef93dc3b036e66f122a538b8048198ccaac76dfc3d",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.627Z",
+        "httpStatus": 200,
+        "rawHash": "7d4fae7a6b646c9aad9ee64076e4b19673e89058f6457c740cc00af0ccb060e3",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.857Z",
+        "httpStatus": 200,
+        "rawHash": "e8940328a2726451d3bfc28468d01bbe248646e534c4bc78ab5947d915008ba8",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.586Z",
+        "httpStatus": 200,
+        "rawHash": "e2c15bd5ee4bd642102cfbf42fc00f1d8a485bd6dc5ac31c3af7f2ec92d9a90e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.410Z",
+        "httpStatus": 200,
+        "rawHash": "6afcea8c86d61743d068f146ad619c062ea5f5eb48f3d6bc1c1b076738c1b456",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Replayed all 55 complete local referendum questions from official master pages 19–73, exact printed local candidate names and vote limits. Only established county-wide, municipal mayor and at-large scopes projected; district or residential-area offices remain separate."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021 states that the eleventh judicial circuit is composed of Miami-Dade County."
+      },
+      {
+        "requestedUrl": "https://www.cityofdoral.com/Government-Center",
+        "finalUrl": "https://www.cityofdoral.com/Government-Center",
+        "publisher": "Doral municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.249835+00:00",
+        "httpStatus": 200,
+        "rawHash": "7317cec4d40d5774e58bc9aa89d10eba291594e209cf46427cd809478ef91cb0",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.hialeahfl.gov/169/Overview",
+        "finalUrl": "https://www.hialeahfl.gov/169/Overview",
+        "publisher": "Hialeah municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:57.558631+00:00",
+        "httpStatus": 200,
+        "rawHash": "f77c0a81537d4374f5d20fe5aaa4dd5bbff508906fe412e3dc867a5c449aca4e",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "finalUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "publisher": "Sunny Isles Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.487943+00:00",
+        "httpStatus": 200,
+        "rawHash": "9588e6970eb91e57b1a03f53a424d05a2719b0f801fc4237653d448b2011d914",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "finalUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "publisher": "Pinecrest municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.918266+00:00",
+        "httpStatus": 200,
+        "rawHash": "f617a5044e79bd05292353baf3bcc3b21664e1ec2dff43231eb9be57373303bb",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "finalUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "publisher": "Cutler Bay municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:08.208099+00:00",
+        "httpStatus": 200,
+        "rawHash": "42754b1b79830d6242643460bc1c2a5914875860e655d9b937c77735c8c2cdd3",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.southmiamifl.gov/113/Mayor-Commission",
+        "finalUrl": "https://www.somifl.gov/m/directory/department?did=4",
+        "publisher": "South Miami municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:38:24.121063+00:00",
+        "httpStatus": 200,
+        "rawHash": "59685f13e13e578856153d4f1b723fd9eaa8c8e3b276ab62680dea10f2da39d2",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "finalUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "publisher": "North Miami Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:09.096471+00:00",
+        "httpStatus": 200,
+        "rawHash": "355afb41eb88ee7b54b7e4e07b1e0cc5f32f653ee25c368db261666bb3e4ecf9",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "All 20 circuit definitions parsed from Florida Statutes 26.021 and matched to all 67 unique existing county divisions. Each entire county belongs to exactly one circuit."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:49:15.305881+00:00",
+        "httpStatus": 200,
+        "rawHash": "93e42cdfca0f35640ee35ade7c87eb72c5feed5c043eb63eba64ff7964454e61",
+        "reviewedEvidence": "All six appellate districts parsed from Florida Statutes 35.02–35.044, collectively covering all 20 circuits. Combined with section 26.021, this establishes 67 exact whole-county appellate memberships. No partial county is inferred."
+      },
+      {
+        "requestedUrl": "https://www.coralgables.com/department/city-commission",
+        "finalUrl": "https://www.coralgables.com/department/city-commission",
+        "publisher": "Coral Gables municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:22.085521+00:00",
+        "httpStatus": 200,
+        "rawHash": "11e14ae71de08a1d7ceb3e57fc8af4b43b9e7489ab56704e0a731631f5df8069",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "publisher": "Miami-Dade County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:20.904818+00:00",
+        "httpStatus": 200,
+        "rawHash": "29c71144edc323aa0a563ce0e6dd00be68b181a5fe004cb149204f241c67efe6",
+        "reviewedEvidence": "Official current map establishes COMMISSION DISTRICT 5; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "finalUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "publisher": "Miami-Dade County Public Schools",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:24.308954+00:00",
+        "httpStatus": 200,
+        "rawHash": "0eb0b12fa5a301c0056c7d7fe71109f8ef0fe704ccb4cb7988c2706697fa2894",
+        "reviewedEvidence": "Official current map establishes School Board District 1; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Both exact printed runoff candidate names and the vote-for-one instruction replayed."
+      },
+      {
+        "requestedUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "finalUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.016645+00:00",
+        "httpStatus": 200,
+        "rawHash": "94bf152e683cf32ecfecf5d5502831a021b510841ac56086978e00f10caed793",
+        "reviewedEvidence": "Current municipal election authority confirms November 3, 2026 runoff for Residential Area Seat 4, four-year term, both candidates, and that residential council seats are elected by their area."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.258159+00:00",
+        "httpStatus": 200,
+        "rawHash": "cc75a68c2dcbeab0a7c84a992e49b9e87c1b3971cc9c0138373922d38ca9e13b",
+        "reviewedEvidence": "Official 2026 election notice supplies the complete metes-and-bounds description of Residential Area Seat 4. Current exact canonical council_district:4 ID checked without widening to the city."
+      },
+      {
+        "requestedUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "finalUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:34:08.006625+00:00",
+        "httpStatus": 200,
+        "rawHash": "f313b7d7cca721df7b8aa8c019c8c55af2025365fba51dbe92c13cda323d8af0",
+        "reviewedEvidence": "Current official city district-map index independently identifies the Seat 4 map URL; current 2026 election notice supplies the full scope description."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.205430+00:00",
+        "httpStatus": 200,
+        "rawHash": "337f466ef1d36c5b46a86fe794603be15da79acd3bdab85665d229d82be662a3",
+        "reviewedEvidence": "Exact county clerk, county mayor, Circuit 9 Group 1 candidate lists and full school-tax question from the official November 3 composite. Composite explicitly warns that individual ballots contain only applicable races."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.426510+00:00",
+        "httpStatus": 200,
+        "rawHash": "6f930af9b78938006f90cd7709c19612dbe8d475768ea57702999fd705656d97",
+        "reviewedEvidence": "All 330 full official November precinct ballot styles replayed. Each imported countywide candidate and the complete English school-tax question occurs in every style. Soil, district commissioner, school-board district and CDD races are not widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021(9) explicitly establishes exactly Orange and Osceola as whole-county members of Circuit 9. Canonical circuit_court:9 is independently verified in the complete current OCD registry."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:52:21.487981+00:00",
+        "httpStatus": 200,
+        "rawHash": "a6115b68fd504b0888871f511a995069a222f7963dc7b7ba1cb6550800d092f0",
+        "reviewedEvidence": "Certified general roster contains 31 unopposed core entries: 28 State House, two State Senate, and one U.S. House. These certified records are preserved, with explicit unopposed context; the roster is not a printed-ballot denominator."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.142032+00:00",
+        "httpStatus": 200,
+        "rawHash": "2c2313f00a088cbd5944809556aea809cdf2c55a870c898ea57516aeeee8706e",
+        "reviewedEvidence": "Florida Statutes 101.151(7) explicitly excludes unopposed candidates, except justices or judges seeking retention, from the general election ballot. No certified record is deleted or hidden."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:38.531872+00:00",
+        "httpStatus": 200,
+        "rawHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+        "reviewedEvidence": "All seven imported candidate contests replayed with all 17 exact printed names and vote limits; full English text of all three countywide referendum questions. CDD races and the Country Run special-tax-district question are excluded pending exact scope proof."
+      },
+      {
+        "requestedUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "finalUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "publisher": "Hillsborough County",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.047821+00:00",
+        "httpStatus": 200,
+        "rawHash": "e1169c9218a554ba7dbdcfffa09131652efcec8d1ff0c8f2d762f241da819cd8",
+        "reviewedEvidence": "Current official board directory explicitly labels Districts 5 and 7 countywide, while identifying the separate District 1 and District 3 offices. Current canonical partial districts 1/3 are preserved precisely."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218/School-Board-Fact-Sheet-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:01:43.394502+00:00",
+        "httpStatus": 200,
+        "rawHash": "29baa4e03d2c374559e75ab57bb99c4d93c3a2e32a7537986a5b2d7e49eb16c1",
+        "reviewedEvidence": "Official 2026 School Board qualifying/electorate table explicitly labels District 6 countywide and Districts 2/4 single-member; four-year term is stated. This is county-specific and is not inferred for other Florida school boards."
+      },
+      {
+        "requestedUrl": "https://www.templeterrace.gov/791/Elections",
+        "finalUrl": "https://www.templeterrace.gov/791/Elections",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:02:17.706255+00:00",
+        "httpStatus": 200,
+        "rawHash": "9d30404e4c48d4da070f39c70d22d3e28522b16eab461dba49585bbd4c7dd65f",
+        "reviewedEvidence": "Current November 3 municipal election page lists the complete five qualified candidates for three council positions."
+      },
+      {
+        "requestedUrl": "https://templeterrace.gov/Archive.aspx?ADID=8463",
+        "finalUrl": "https://templeterrace.gov/ArchiveCenter/ViewFile/Item/8463",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:43.873527+00:00",
+        "httpStatus": 200,
+        "rawHash": "ae5239fbb9b5dfbcce7f1b51e25adb51efda52d837d9376a04f1e6b52c43f22d",
+        "reviewedEvidence": "Official annual city report explicitly establishes four-year at-large council elections. Current 2026 city election notice confirms the same undivided council contest and five qualified names; county sample provides vote-for-three instruction."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1083",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1083/11-03-26-Lee-County-BOCC-Single-Member-Districts-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "042efe9a7a27eafbc0291f58a937a9fa7fe9ceb1d7aff8156e43f4f4cf5ec50c",
+        "retrievedAt": "2026-11-03T03:44:05.111851+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1080",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1080/11-03-26-Lee-County-BOCC-CharterAmendment-TERM-LIMITS-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "658c18689bd8ad5d6feea2cd24327895d4867dc9afdc8e61238b104a29db1bea",
+        "retrievedAt": "2026-11-03T03:44:44.506753+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1086/11-03-26-TFMB-Charter-Amendment-Referendums-ENG?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+        "retrievedAt": "2026-11-03T03:44:05.112178+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1092",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1092/11-03-26-Lee-County-Mosquito-FMB-Mosquito-Control-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20",
+        "retrievedAt": "2026-11-03T03:44:05.112573+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1093",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1093/11-03-26-Iona-McGregor-FMB-Fire-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba",
+        "retrievedAt": "2026-11-03T03:44:05.314059+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816",
+        "finalUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816/General-Election---November-3-2026---State-Representative-District-53-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hernando County official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:36.276054+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "finalUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "publisher": "Duval County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:45.933140+00:00",
+        "httpStatus": 200,
+        "rawHash": "1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "finalUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "publisher": "Walton County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:32.531103+00:00",
+        "httpStatus": 200,
+        "rawHash": "1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "publisher": "Leon County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:39.125912+00:00",
+        "httpStatus": 200,
+        "rawHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "reviewedEvidence": "Complete native2026GeneralElectionGuide. Page7has five county charter amendments, two school-district tax questions and one nonbinding county advisory question. Eight bounded question fields extracted and checked; original bytes and source images retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903470+00:00",
+        "httpStatus": 200,
+        "rawHash": "73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12",
+        "reviewedEvidence": "Leon County Ordinance26-08; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903771+00:00",
+        "httpStatus": 200,
+        "rawHash": "282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9",
+        "reviewedEvidence": "Leon County Ordinance26-12; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "publisher": "Leon County Board of County Commissioners and School Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.904280+00:00",
+        "httpStatus": 200,
+        "rawHash": "6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766",
+        "reviewedEvidence": "Leon County Resolution26-32 and attached School Board resolution; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:07:27.875535+00:00",
+        "httpStatus": 200,
+        "rawHash": "a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1",
+        "reviewedEvidence": "Leon County Ordinance 26-06; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.895395+00:00",
+        "httpStatus": 200,
+        "rawHash": "335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a",
+        "reviewedEvidence": "Leon County Ordinance 26-05; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.896140+00:00",
+        "httpStatus": 200,
+        "rawHash": "c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141",
+        "reviewedEvidence": "Leon County Ordinance 26-07; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:18.595782+00:00",
+        "httpStatus": 200,
+        "rawHash": "771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c",
+        "reviewedEvidence": "Leon County Resolution 26-08; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+        "finalUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+        "publisher": "Town of Lauderdale-by-the-Sea",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:09:37.310392+00:00",
+        "httpStatus": 200,
+        "rawHash": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+        "reviewedEvidence": "Current official.gov primary publication explicitly lists all eight November3questions, full redlined operative provisions and May26adoption. Full native HTML capture identity and complete sanitized representation retained truthfully."
+      }
+    ]
+  }
+}

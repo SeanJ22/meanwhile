@@ -1,0 +1,79 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T10:17:35.881Z",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-lauderdale-by-the-sea-charter-1",
+      "title": "Lauderdale-by-the-Sea Question 1 — Petition certification deadlines",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea"
+    },
+    {
+      "id": "fl-2026-lauderdale-by-the-sea-charter-2",
+      "title": "Lauderdale-by-the-Sea Question 2 — Mayor terms and term limits",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea"
+    },
+    {
+      "id": "fl-2026-lauderdale-by-the-sea-charter-3",
+      "title": "Lauderdale-by-the-Sea Question 3 — Moving from mayor to commissioner",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea"
+    },
+    {
+      "id": "fl-2026-lauderdale-by-the-sea-charter-4",
+      "title": "Lauderdale-by-the-Sea Question 4 — Filling vacancies despite a service break",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea"
+    },
+    {
+      "id": "fl-2026-lauderdale-by-the-sea-charter-5",
+      "title": "Lauderdale-by-the-Sea Question 5 — Current Commission districts",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea"
+    },
+    {
+      "id": "fl-2026-lauderdale-by-the-sea-charter-6",
+      "title": "Lauderdale-by-the-Sea Question 6 — Forfeiture of office",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea"
+    },
+    {
+      "id": "fl-2026-lauderdale-by-the-sea-charter-7",
+      "title": "Lauderdale-by-the-Sea Question 7 — State election, notice and audit law",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea"
+    },
+    {
+      "id": "fl-2026-lauderdale-by-the-sea-charter-8",
+      "title": "Lauderdale-by-the-Sea Question 8 — Residency, election transition and wording",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea"
+    }
+  ],
+  "operation": "Merge eight source-verified town-wide Charter questions and neutral explanations while preserving prior candidate and measure facts.",
+  "coverageLimit": "All eight questions and full operative legal redlines on the current official Town publication. Other Broward municipal inventories continue.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T10:18:32.365Z",
+    "preparedRecords": 8,
+    "originalSourceHash": "PASS; native full primary HTML identity verified, complete sanitized copy stored with separate truthful native/stored hashes",
+    "exactSupportQuotes": "PASS; every quoted field is present in its complete relevant question and legal-text excerpt",
+    "sourceSemanticReading": "PASS; all eight full official HTML questions/legal redlines read, deleted tags distinguished from additions. Preserves30calendar/10business petition periods, one correction and2business/14calendar/5business deadlines;2028mayor transition and16year combined limit; remaining term limits;180day/30day majority vacancy procedure and election endpoint; unchanged districts; final ethics appeal, licensed medical/court incapacity, four unexcused meetings, hearing and removal-vote conditions; nine-month audit and30day notice; six-month election-based residence and alignment-month term-limit treatment. Neutral yes/no; no predicted benefit claims.",
+    "primaryPublisher": "Direct official Town.gov current eight-question publication explicitly states May26,2026adoption. Full operative redlines published as native HTML; no PDF or signature claim made.",
+    "normalPublicationAdmission": "PASS; exact-byte receipt for every projected source URL",
+    "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "98e206f206c74e37d7c48361aa0de1879abf3d9158a384fc672d0c36ae70b767",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

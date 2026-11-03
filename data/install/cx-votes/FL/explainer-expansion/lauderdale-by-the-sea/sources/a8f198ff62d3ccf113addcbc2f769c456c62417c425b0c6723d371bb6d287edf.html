@@ -1,0 +1,2620 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+<!-- Google Tag Manager for GA4 -->
+				<script>(function(w,d,s,l,i){w.GAMeasurementID='G-4FP2SMMVL8';w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','cpDataLayerGA4','GTM-K73C5PS');</script>
+				<!-- End Google Tag Manager for GA4 -->
+				<script type='text/javascript'>
+					var enableTelemetry = 'false'
+					var aiConfig = {
+					instrumentationKey: '1cde048e-3185-4906-aa46-c92a7312b60f'						
+					}
+					var appInsights = window.appInsights || function (a) { function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement('script'); b.src = a.url || 'https://js.monitor.azure.com/scripts/a/ai.0.js', d.getElementsByTagName('script')[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ['Event', 'Exception', 'Metric', 'PageView', 'Trace', 'Dependency']; f.length;)b('track' + f.pop()); if (b('setAuthenticatedUserContext'), b('clearAuthenticatedUserContext'), b('startTrackEvent'), b('stopTrackEvent'), b('startTrackPage'), b('stopTrackPage'), b('flush'), !a.disableExceptionTracking) { f = 'onerror', b('_' + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c['_' + f](a, b, d, e, h), i } } return c }(aiConfig);
+					window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length;
+					// Add telemetry initializer
+					appInsights.queue.push(function() {
+						appInsights.context.addTelemetryInitializer(function(envelope) {
+							var telemetryItem = envelope.data.baseData;
+							// To check the telemetry item’s type:
+							if (!false)
+							{
+								//If the telemetry is not enabled, we still want to capture Google map custom event, so only allow that
+								if (envelope.name.indexOf('.Event') == -1)
+									return false;
+							}
+						});
+					});						
+					appInsights.trackPageView();
+				</script>
+	<script>
+		function populateAntiForgery(token) {
+			var input = document.createElement("input");
+			input.name = "__RequestVerificationToken";
+			input.type = "hidden";
+			input.value = token;
+			var absPat = /^https?:\/\/|^\/\//i;
+			var forms = document.getElementsByTagName("form");
+			for (var i = 0; i < forms.length; i++) {
+				if (forms[i].method == "post" &&
+					!forms[i].querySelector('[name="__RequestVerificationToken"]') &&
+					!absPat.test(forms[i].getAttribute("action"))) {
+					forms[i].appendChild(input.cloneNode());
+				}
+			}
+		}
+
+		function getAntiForgeryToken(callback, error) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/antiforgery");
+			xhr.addEventListener("load", function() {
+				try {
+					if (this.status !== 200) {
+						throw Error("Invalid status. Could not retrieve antiforgery token.");
+					}
+					var obj = JSON.parse(this.responseText);
+					callback(obj.token);
+				} catch (e) {
+					typeof error === "function" && error(e);
+				}
+			});
+			xhr.send();
+		}
+
+		getAntiForgeryToken(function(token) {
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded" 
+				|| document.readyState === "interactive") {
+				populateAntiForgery(token);
+				return;
+			}
+			document.addEventListener("DOMContentLoaded", function() {
+				populateAntiForgery(token);
+			}, false);
+		}, console.error);
+	</script>
+			
+
+	<script type="text/javascript">
+		window.departmentHeader = {};
+		window.pageSectionTracker = {};
+		window.isResponsiveEnabled = true;
+		window.isRemoveSetHeights= false;
+		if (window.isRemoveSetHeights) {
+			document.documentElement.className += ' removeSetHeights';
+		}
+		window.mainMenuMediaQuery = 'screen and (max-width: 40em)';
+		window.isMobileBrowserIncludingTablets = false;
+		window.fixedResponsiveMenu = false;
+		window.fullWidthResponsiveMenu = false;
+		window.responsiveMenuHeight = '';
+		window.responsiveMenuFontSize = '';
+		window.isContentAdvisor = false;
+		(function () {
+			window.setSizeCookie = function () {
+				document.cookie = "dpi=" + window.devicePixelRatio + "; path=/";
+				document.cookie = "viewportWidth=" + window.innerWidth + "; path=/";
+				document.cookie = "viewportHeight=" + window.innerHeight + "; path=/";
+				if (screen && screen.width && screen.height) {
+					document.cookie = "screenWidth=" + screen.width + "; path=/";
+					document.cookie = "screenHeight=" + screen.height + "; path=/";
+				}
+				document.cookie = "responsiveGhost=1; path=/";
+			};
+
+			setSizeCookie();
+		}());
+	</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script async src="https://docaccess.com/docbox.js"></script>
+	<meta name="google-site-verification" content="v7haJJT0duJKGrsBUTslvYsNXFPkve3FEJdjOfXGvKk" />
+
+<!-- Favicon MetaTags -->
+<link rel='icon' type='image/png' sizes='192x192' href='/DocumentCenter/View/578'>
+
+<link rel='icon' type='image/png' sizes='256x256' href='/DocumentCenter/View/579'>
+<link rel='apple-touch-icon' sizes='120x120' href='/DocumentCenter/View/580'>
+<link rel='icon' type='image/png' sizes='16x16' href='/DocumentCenter/View/581'>
+<link rel='icon' type='image/png' sizes='32x32' href='/DocumentCenter/View/582'>
+<meta rel='msapplication-config' content='/DocumentCenter/View/583'>
+<link rel='icon' type='image/png' sizes='150x150' href='/DocumentCenter/View/583'>
+<link rel='mask-icon' href='/DocumentCenter/View/585'>
+<link rel='shortcut icon' href='/DocumentCenter/View/586'>
+<link rel='manifest' href='/DocumentCenter/View/587'>
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">
+<!-- End Favicon MetaTags -->
+
+	<meta name="category0" content="Home" />
+<meta name="category1" content="Government" />
+<meta name="category2" content="Town Election" />
+<meta name="category3" content="2026 Election Charter Amendment Questions" />
+
+	
+	<meta name="theme-color" content="rgb(33, 124, 156)">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+		<title>2026 Election Charter Amendment Questions  | Lauderdale-By-The-Sea, FL</title>
+
+		<meta name="description" content="">
+			<script src="/Assets/Scripts/jQuery/jquery-3.7.1.min.js"></script>
+	<script src="/Assets/Scripts/jQuery/jquery-migrate-3.6.0.min.js" type="text/javascript"></script>
+	
+
+	<!--[if IE 6]><script language="JavaScript" type="text/javascript"> var isie6 = true; </script><![endif]-->
+	<!--[if IE 7]><script language="JavaScript" type="text/javascript"> var isie7 = true; </script><![endif]-->
+	<!--[if IE 8]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<!--[if IE 9]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<script type="text/javascript"><!--
+	var intCountryCode = 840;
+	var order = '';
+//--></script>
+	
+	<link href="/-2140275272.css" rel="stylesheet" type="text/css" />	<link href="/-15783359.css" rel="stylesheet" type="text/css" />
+
+	<link rel="stylesheet" type="text/css" href="/Assets/Styles/Print.css" media="print">
+	<script type="text/javascript">
+		window.Pages = window.Pages || {};
+		// FrontEnd RWD initialization
+		window.Pages.rwdReady = $.Deferred();
+		window.Pages.toolBarDeferred = $.Deferred();
+		window.Pages.rwdSetupComplete = $.Deferred();
+		window.Pages.megaMenuLoaded = $.Deferred();
+		window.Pages.angularToolbarComplete = $.Deferred();
+		window.Pages.frontEndToolbarComplete = $.Deferred();
+	</script>
+	<!--CPHeadContent-->
+	<script src="/739942322.js" type="text/javascript"></script>
+	
+	
+	
+	
+
+
+
+
+	<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="/App_Themes/ie8.css"><![endif]-->
+	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/App_Themes/ie7.css"><![endif]-->
+	<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="/App_Themes/ie6.css"><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="/Scripts/html5.js"></script><![endif]-->
+
+	<script type="text/javascript">
+		setEditorVariables(false, 840);
+		function getPrintPreviewType() { return 0; } function printPreview() {pPreview(getPrintPreviewType()); }
+	</script>
+	<script src="/Assets/Scripts/AlpineJS/3.14.1/alpine.min.js" type="text/javascript" defer="defer"></script>
+</head>
+<body class="wide " >
+
+    <script>jQuery(document).click(function (event) {
+	var target = jQuery(event.target);
+	if (target.attr('src') && target.parents('.image').length && target.parents('.widget').length) {
+		var text = target.attr('title');
+		
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Image',
+				eventAction: 'Image - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.is('button') || target.hasClass('button') || target.parents().hasClass('button')) {
+		var text = "";
+		if (target.parents('.button')[0]) {
+			text = target.parents('.button').first().text();
+		} else if (target.text().length) {
+			text = target.text();
+		} else if (target.attr('title').length) {
+			text = target.attr('title');
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Button - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetCustomHtml').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Custom Html',
+				eventAction: 'Custom Html Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.editor').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Editor',
+				eventAction: 'Editor Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.GraphicLinks').length) {
+		var text = "";
+		var targetGraphicLink = target;
+		if (target.hasClass('widgetGraphicLinksLink')) {
+			targetGraphicLink = jQuery(target.children()[0]);
+		}
+		if (targetGraphicLink.hasClass('text')) {
+			text = targetGraphicLink.text();
+		} else if (targetGraphicLink.attr('src').length) {
+			if (targetGraphicLink.attr('alt').length) {
+				text = targetGraphicLink.attr('alt');
+			} else {
+				text = targetGraphicLink.attr('src');
+			}
+		} else {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Graphic Links',
+				eventAction: 'Graphic Link - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.InfoAdvanced').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Info Advanced',
+				eventAction: 'Info Advanced Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.list').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'List',
+				eventAction: 'List Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.megaMenuItem').length || target.parents('.topMenuItem').length) {
+		var megaMenuText = jQuery('.topMenuItem.mouseover').find('span').text();
+		var breadCrumbs = [];
+		jQuery('.breadCrumbs > li').each(function () {
+			 breadCrumbs.push(this.textContent);
+		});
+		var pageTitle = breadCrumbs.join('>');
+		var subTitleText = target.parents('.megaMenuItem').children('.widgetTitle').children().text();
+		var text = "";
+		if (pageTitle) {
+			text += pageTitle + " | ";
+		} else {
+			text += document.title + ' - ';
+		}
+		if (target.text() == "" && megaMenuText == "") {
+			text += "N/A";
+		} else if (target.text().length && megaMenuText.length) {
+			if (megaMenuText == target.text()) {
+				text += megaMenuText;
+			} else {
+				text += megaMenuText + " - " + subTitleText + " - " + target.text();
+			}
+		} else if (target.text() == "") {
+			text += megaMenuText;
+		} else {
+			text += target.text();
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Mega Menu',
+				eventAction: 'Mega Menu : ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetNewsFlash').length && target.parents('.widgetItem').length) {
+		var text = jQuery(target.parents('.widgetItem')[0]).find('.widgetTitle').children().text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'News Flash',
+				eventAction: 'News Flash - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.hasClass('widgetQuickLinksLink') || target.find('.widgetQuickLinksLink').length) {
+		var text = target.text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Quick Links',
+				eventAction: 'Quick Links - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.attr('src') && target.parents('.cpSlideshow').length) {
+		var text = target.attr('title');
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Slideshow',
+				eventAction: 'Slideshow - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetText').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Text',
+				eventAction: 'Text Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+});</script>
+	<div id="popoverModal" class="cp-PopOver cp-PopOver--modal cp-AdminWrap" style="position: fixed; display: none;">
+	<div class="cp-PopOver-header">
+		<h3 class="cp-PopOver-title"></h3>
+		<button class="cp-Btn cp-PopOver-close" onclick="closePopOverModal(event)">
+			<svg class="cp-Icon--close" alt="close" title="close">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconClose"></use>
+			</svg>
+		</button>
+	</div>
+	<div id="cpPopOverBody" class="cp-PopOver-body">
+		<form id="cpPopOverForm" name="cpPopOverForm" novalidate></form>
+	</div>
+	<div id="cpPopOverFooter" class="cp-PopOver-footer">
+		<div class="cp-BtnGroup" id="actionButtons">
+			<!-- Action buttons will be dynamically added here -->
+		</div>
+	</div>
+</div>
+    <div id="fb-root"></div>
+<div id=skipToContentLinks>
+<a href="#cc144ea7a2-9feb-4d7c-ba95-2b779ed821cf" target="_self" class="skipToContentLink">Skip to Main Content</a>
+</div>
+    <form id="frmReferenceFormForTelerikEditorDialogs"></form>
+
+        <input type="hidden" id="GoogleMapsKey" value="__SOURCE_CREDENTIAL_REDACTED__" />
+
+
+
+    <input type="hidden" id="cpcDomain" value="https://cp-civicplusuniversity2.civicplus.com">
+    <input type="hidden" id="hdnStructureID" value="7" />
+    <input type="hidden" id="hdnContentCollectionID" value="64708f5d-319a-4e48-ac83-eb496db9d2b7" />
+    <input type="hidden" id="hdnWorkingCopyID" value="7d7556f1-b217-4852-8363-7b7bdb8b159e" />
+    <input type="hidden" id="hdnThemeID" value="18" />
+    <input type="hidden" id="pageIsFrontEnd" value="true" />
+    <input type="hidden" id="pageModuleID" />
+    <input type="hidden" id="pagePageID" value="660" />
+
+    <div id="stickyPlaceholder"></div>
+    <div id="outer-wrap" class="outer-wrap">
+        <div id="inner-wrap" class="inner-wrap">
+                <div id="divToolbars" class="cpToolbars newCP mui-fixed" style="">
+                    
+
+
+
+                </div>
+            <div id="bodyWrapper">
+                <div id="mainNavHolderMobile" class="mainNavHolderMobile"></div>
+                
+<div data-cpRole="structuralContainer" id="bodyContainerTS">
+<!-- Header Container --><header data-cpRole="structuralContainer" id="headerContainerTS" class="fixedTopTS">
+<div class="siteWrap10" id="flexHeaderTS"><div data-cpRole="structuralContainer" id="logoWraperContainerTS">
+<div data-cpRole="banner" id="bannerLogoTS" class="bannerLogoTS empty">
+
+
+
+
+				<a id="bannerLogoTS-54" style="			display: block; text-align: center;
+" class="bannerObject" href="/" target="_self"><img alt="Lauderdale By The Sea Florida Homepage" class="bannerObject" height="204" src="/ImageRepository/Document?documentID=2787" width="619" /></a>
+</div>
+</div><nav data-cpRole="nav" id="mainNav" class="siteNav mainNav" role="navigation">
+<ol id="mainNavMenu" data-parent="1" class="rootNavMenu" role="menu"><!--
+--><li id="MainItem27" class="topMenuItem" role="none" data-pageid="27" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu27" id = "mainNavGovernment" class="navMainItem mainNavItem mainNavItem1 " href="/27/Government" target = "_self" >   Government  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem101" class="topMenuItem" role="none" data-pageid="101" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu101" id = "mainNavServices" class="navMainItem mainNavItem mainNavItem2 " href="/101/Services" target = "_self" >   Services  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem31" class="topMenuItem" role="none" data-pageid="31" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu31" id = "mainNavResidents" class="navMainItem mainNavItem mainNavItem3 " href="/31/Residents" target = "_self" >   Residents  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem35" class="topMenuItem" role="none" data-pageid="35" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu35" id = "mainNavBusiness" class="navMainItem mainNavItem mainNavItem4 " href="/35/Business" target = "_self" >   Business  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem9" class="topMenuItem" role="none" data-pageid="9" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu9" id = "mainNavABOUTTOWN" class="navMainItem mainNavItem mainNavItem5 " href="/9/ABOUT-TOWN" target = "_self" >   ABOUT TOWN  </a>			<!--
+			--><!--
+			--></li><!---->
+</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupMenu() {
+				const menuID = 'mainNavMenu';
+				const menuType = MAIN_MENU;
+
+				//setup menu manager properties for main menu
+				if (!menuManager.mobileMainNav && true)
+					menuManager.adjustMainItemsWidth('#' + menuID);
+				menuManager.isMainMenuEditable = false;
+				menuManager.mainMenuMaxSubMenuLevels = 4;
+				menuManager.setMOMMode(2, menuType);
+
+				//Init main menu
+				const setupDraggable = menuManager.isMainMenuEditable;
+				const urlToGetHiddenMenus = '/Pages/MenuMain/HiddenMainSubMenus?pageID=1&moduleID=&themeID=18&menuContainerID=mainNav';
+
+				menuManager.setupMenu(menuID, 'mainNav', menuType, setupDraggable, urlToGetHiddenMenus);
+				menuManager.mainMenuInit = true;
+				menuManager.mainMenuTextResizer = false;
+				if (1.00 > 0)
+					menuManager.mainMenuTextResizerRatio = 1.00;
+				if (window.isResponsiveEnabled)
+					menuManager.mainMenuReady.resolve();
+
+			}
+
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded"
+				|| document.readyState === "interactive") {
+				setupMenu();
+				return;
+			}
+
+			document.addEventListener("DOMContentLoaded", setupMenu);
+		})();
+	</script>
+
+
+<aside data-cpRole="megaMenu" id="megaMenu" class="megaMenu" style="display: none;"><input type="hidden" id="megaMenuPopupDirection" value="0"><input type="hidden" id="megaMenuWidthReference" value="0"><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu27" class="contentTop mainNavMegaMenu megaMenuContainer pageID_27 hidden" data-orientation="horizontal">	<div id="cc4c58c6db-3ba2-4fa5-aecc-66bda6bf2f27" data-containerid="4c58c6db-3ba2-4fa5-aecc-66bda6bf2f27" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu101" class="contentTop mainNavMegaMenu megaMenuContainer pageID_101 hidden" data-orientation="horizontal">	<div id="cc31b42007-d625-4aee-b2a7-5052f5911902" data-containerid="31b42007-d625-4aee-b2a7-5052f5911902" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu31" class="contentTop mainNavMegaMenu megaMenuContainer pageID_31 hidden" data-orientation="horizontal">	<div id="ccdfec8f11-91b1-4f25-904e-79b0a31f57aa" data-containerid="dfec8f11-91b1-4f25-904e-79b0a31f57aa" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu35" class="contentTop mainNavMegaMenu megaMenuContainer pageID_35 hidden" data-orientation="horizontal">	<div id="cc928908a5-3aaa-4a54-ac7a-2a105511e734" data-containerid="928908a5-3aaa-4a54-ac7a-2a105511e734" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu9" class="contentTop mainNavMegaMenu megaMenuContainer pageID_9 hidden" data-orientation="horizontal">	<div id="cc537b8b31-0552-4672-9baf-2c056215dd89" data-containerid="537b8b31-0552-4672-9baf-2c056215dd89" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside></aside></nav><div data-cpRole="contentContainer" id="searchTS1">	<div id="ccbde0989e-13d9-4d17-b11a-f675129e4dc8" data-containerid="bde0989e-13d9-4d17-b11a-f675129e4dc8" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="a859121b-f605-41c0-8d26-c71e178f1ed5">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id127c3c93-7c79-4cce-aa48-71e5650b9cf9" style="" data-widgetcontainerid="127c3c93-7c79-4cce-aa48-71e5650b9cf9">	
+<div data-widget-id="05414acf-0e24-437b-9927-a57ac4207d98" data-widget-controller-path="/Layout/WidgetSearch">
+	
+	<script defer type="text/javascript" src="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.js"></script>
+	<script defer src="/Areas/Layout/Assets/Scripts/Search.js" type="text/javascript"></script>
+	<script defer type="text/javascript">
+
+		$(document).ready(function () {
+			try {
+				// Minimum characters required before performing a search/autocomplete
+				var minPrefixLength = 3;
+				var autoCompleteDebounceDelay = 500;
+				var searchFieldSelector = "#searchField" + '05414acf-0e24-437b-9927-a57ac4207d98';
+				var checkboxSelector = "#ysnSearchOnlyDept" + '05414acf-0e24-437b-9927-a57ac4207d98';
+				var buttonSelector = ".widgetSearchButton" + '05414acf-0e24-437b-9927-a57ac4207d98';
+				var autoCompleteCache = {};
+				var autoCompleteCacheKeys = [];
+				var autoCompleteCacheLimit = 25;
+				var currentAutoCompleteRequest = null;
+				var currentAutoCompleteRequestKey = null;
+				var autoCompleteDebounceTimer = null;
+				var autoCompleteDebounceKey = null;
+				var pendingAutoCompleteResponses = [];
+
+				function normalizeAutoCompleteTerm(term) {
+					return $.trim((term || "") + "").replace(/\s+/g, " ");
+				}
+
+				function shouldSearch(term) {
+					return normalizeAutoCompleteTerm(term).length >= minPrefixLength;
+				}
+
+				function getAutoCompleteUrl() {
+					return '/Search/AutoComplete' + ($(checkboxSelector).is(':checked') || false? '?departmentId=0' : '');
+				}
+
+				function getAutoCompleteCacheKey(requestUrl, term) {
+					return requestUrl + "|" + term.toLowerCase();
+				}
+
+				function cacheAutoCompleteResult(cacheKey, data) {
+					if (!Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+						autoCompleteCacheKeys.push(cacheKey);
+						if (autoCompleteCacheKeys.length > autoCompleteCacheLimit) {
+							delete autoCompleteCache[autoCompleteCacheKeys.shift()];
+						}
+					}
+					autoCompleteCache[cacheKey] = data;
+				}
+
+				function respondToPendingAutoComplete(data) {
+					var responses = pendingAutoCompleteResponses;
+					pendingAutoCompleteResponses = [];
+					for (var i = 0; i < responses.length; i++) {
+						responses[i](data);
+					}
+				}
+
+				function cancelPendingAutoComplete() {
+					clearTimeout(autoCompleteDebounceTimer);
+					autoCompleteDebounceKey = null;
+					if (currentAutoCompleteRequest != null) {
+						currentAutoCompleteRequest.abort();
+						currentAutoCompleteRequest = null;
+					}
+					currentAutoCompleteRequestKey = null;
+					respondToPendingAutoComplete([]);
+				}
+
+				function createWidgetAutoCompleteSource(options) {
+					return function (request, response) {
+						var term = normalizeAutoCompleteTerm(request.term);
+						if (!options.shouldSearch(term)) {
+							response([]);
+							return;
+						}
+
+						var requestUrl = options.url();
+						var cacheKey = getAutoCompleteCacheKey(requestUrl, term);
+						if (Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+							response(autoCompleteCache[cacheKey]);
+							if (options.success) {
+								options.success(autoCompleteCache[cacheKey]);
+							}
+							return;
+						}
+
+						if (currentAutoCompleteRequestKey === cacheKey || autoCompleteDebounceKey === cacheKey) {
+							pendingAutoCompleteResponses.push(response);
+							return;
+						}
+
+						cancelPendingAutoComplete();
+						autoCompleteDebounceKey = cacheKey;
+						pendingAutoCompleteResponses.push(response);
+						autoCompleteDebounceTimer = setTimeout(function () {
+							autoCompleteDebounceKey = null;
+							currentAutoCompleteRequestKey = cacheKey;
+							currentAutoCompleteRequest = $.ajax({
+								url: requestUrl,
+								dataType: "json",
+								timeout: options.timeout,
+								data: {
+									term: term,
+								},
+								success: function (data) {
+									if (currentAutoCompleteRequestKey === cacheKey) {
+										cacheAutoCompleteResult(cacheKey, data);
+										respondToPendingAutoComplete(data);
+										if (options.success) {
+											options.success(data);
+										}
+									}
+								},
+								error: function (xmlhttprequest, textstatus, message) {
+									if (textstatus === "abort") {
+										return;
+									}
+
+									if (options.error) {
+										options.error(xmlhttprequest, textstatus, message);
+									}
+
+									respondToPendingAutoComplete([]);
+								},
+								complete: function (xmlhttprequest) {
+									if (currentAutoCompleteRequest === xmlhttprequest) {
+										currentAutoCompleteRequest = null;
+										currentAutoCompleteRequestKey = null;
+									}
+								}
+							});
+						}, options.delay);
+					};
+				}
+
+				// click handler for search buttons
+				$(buttonSelector).click(function (e) {
+					e.preventDefault();
+					var $btn = $(this);
+					var $field = $btn.siblings(".widgetSearchBox");
+					var term = $field.val() + "";
+					if (!shouldSearch(term)) {
+						// do nothing until user types enough characters
+						$field.focus();
+						return;
+					}
+
+					if ($(checkboxSelector).is(':checked') || false)
+					{
+						doWidgetSearch($.trim(term), Number(0));
+					}
+					else {
+						doWidgetSearch($.trim(term), 0);
+					}
+				});
+
+				// enter key handler for the search field
+				$(searchFieldSelector).keypress(function (e) {
+					var code = e.which || e.keyCode;
+					if (code === 13) {
+						e.preventDefault();
+						var $this = $(this);
+						var term = $this.val() + "";
+						if (!shouldSearch(term)) {
+							// do nothing until user types enough characters
+							$this.focus();
+							return false;
+						}
+
+						if ($(checkboxSelector).is(':checked') || false) {
+							doWidgetSearch($.trim(term), Number(0));
+						} else {
+							doWidgetSearch($.trim(term), 0);
+						}
+						return false;
+					}
+					return true;
+				});
+
+				// autocomplete: set minLength and guard source
+				if (true) {
+					var $searchField = $(searchFieldSelector).autocomplete({
+						minLength: minPrefixLength,
+						source: createWidgetAutoCompleteSource({
+							delay: autoCompleteDebounceDelay,
+							timeout: 10000,
+							shouldSearch: shouldSearch,
+							url: getAutoCompleteUrl,
+							success: function () {
+								$('.autoCompleteError').remove();
+							},
+							error: function (xmlhttprequest, textstatus, message) {
+								if (textstatus === "timeout") {
+									if ($(searchFieldSelector).siblings('.autoCompleteError').length == 0)
+										$('<span class="autoCompleteError"><p class="alert error">Search autocomplete is currently not responding. Please try again later.</p></span>').insertAfter($(searchFieldSelector));
+								}
+							}
+						}),
+						html: true,
+						delay: 0,
+						select: function (event, ui) {
+							$(this).val(ui.item.value);
+							$(this).next().click();
+						}
+					});
+
+					$searchField.data("ui-autocomplete")._renderItem = function (ul, item) {
+						return $("<li class=\"itemList\"></li>")
+							.data("ui-autocomplete-item", item)
+							.append("<a>" + item.label + "</a>")
+							.appendTo(ul);
+					};
+				}
+
+				// keep searchBtnApplyQuery consistent with prefix rule
+				window.searchBtnApplyQuery = function() {
+					var $field = $(searchFieldSelector);
+					var term = $field.val() + "";
+					if (shouldSearch(term)) {
+						// update href for the icon/button (if present)
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "/Search?searchPhrase=" + encodeURIComponent($.trim(term));
+					} else {
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "#";
+					}
+				};
+			}
+			catch(e) {} //we're going to eat this error. Autocomplete won't work but we dont wan't to break anything else on the page.
+		});
+	</script>
+
+	<section id="widgetPreviewSearch" class="widget widgetSearch skin66 widgetOptionSet58" style="display: block;" aria-label="Search">
+				<!-- For the button right and inside -->
+		<div class="widgetBody buttonRightInside">
+			<input class="widgetSearchBox widgetSearchBox05414acf-0e24-437b-9927-a57ac4207d98" cp5ph="true" id="searchField05414acf-0e24-437b-9927-a57ac4207d98" name="searchField" onchange="searchBtnApplyQuery();" placeholder="Search..." type="text" value="" />
+						<a href="/Search/Results" id="btnSearchIcon" class="widgetSearchButton widgetSearchButton05414acf-0e24-437b-9927-a57ac4207d98" role="button"><img alt="Search-1" class="imageHover" data-hover="/ImageRepository/Document?documentID=2790" data-image="/ImageRepository/Document?documentID=2791" src="/ImageRepository/Document?documentID=2791" /></a>
+
+			<label class="searchLabel" aria-hidden="true" for="searchField05414acf-0e24-437b-9927-a57ac4207d98">Search</label>
+		</div>
+
+	</section>
+
+
+<style scoped>
+	  
+		.widgetSearch ::-webkit-input-placeholder {
+		color: #000;
+	  }
+		.widgetSearch :-moz-placeholder { /* Firefox 18- */
+	   color: #000;
+	}
+		.widgetSearch ::-moz-placeholder {  /* Firefox 19+ */
+	   color: #000;
+	}
+	.widgetSearch :-ms-input-placeholder {
+	   color: #000;
+	}
+	
+
+	.widgetSearch .widgetBody .widgetSearchBox05414acf-0e24-437b-9927-a57ac4207d98
+	{
+		color: #000;
+		font-family: Montserrat;
+font-weight: 500;
+text-transform: uppercase;
+height: 65px;
+font-size: 1em;
+border-radius: 3px;
+border: 1px solid #54b8db;
+background: #54b8db;
+padding: 0 80px 0 20px;
+box-shadow: 0px 0px 9px 0px rgba(0, 126, 148, 0.41);
+	}
+	.widgetSearch .widgetBody .widgetSearchButton05414acf-0e24-437b-9927-a57ac4207d98
+	{
+		margin: 5px; padding-top: .50em; 
+padding-right: .75em;
+	}
+	.widgetSearch .widgetSearch-onlyDept05414acf-0e24-437b-9927-a57ac4207d98
+	{
+		display: inline-block;
+		color: #333;
+		
+		
+		 padding-top: 10px;
+	}
+	#ysnSearchOnlyDept05414acf-0e24-437b-9927-a57ac4207d98
+	{
+		position: relative;
+		top: .125em;
+	}
+
+</style>
+
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.css">
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.theme.min.css">
+
+
+
+<script type="text/javascript">
+	//Updates search icons href to have the correct queryString
+	function searchBtnApplyQuery() {
+		document.getElementById("btnSearchIcon").href = "/Search?searchPhrase=" + document.getElementById("searchField05414acf-0e24-437b-9927-a57ac4207d98").value;
+	}
+</script>
+
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</header><!-- Banner --><div data-cpRole="structuralContainer" id="bannerContainerTS" class="noOverflowTS">
+<div data-cpRole="banner" id="banner1"><div data-cpRole="structuralContainer" id="bannerSizingTS">
+<div data-cpRole="structuralContainer" id="bannerSearchTS">
+<div class="siteWrap8"><div data-cpRole="contentContainer" id="welcomeTS">	<div id="cc4eba84dc-4c72-4655-b48a-71f1fc077cdb" data-containerid="4eba84dc-4c72-4655-b48a-71f1fc077cdb" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</div></div>
+</div>
+</div>
+
+
+
+
+		<div id="banner1-55" style="display: none"></div>
+			<script type="text/javascript">
+				$(window).on("load", function () {
+					$.when(window.Pages.rwdSetupComplete)
+						.done(function () {
+							renderBanner('banner1-55',
+								'banner1',
+								{"BannerOptionID":55,"ThemeID":18,"SlotName":"banner1","Name":"Default","IsDefault":true,"BannerMode":1,"SlideShowSlideTiming":"5","SlideshowTransition":0,"SlideShowTransitionTiming":"1","ImageScale":false,"ImageAlignment":2,"ImageScroll":true,"MuteSound":true,"VideoType":0,"Status":40,"SlideshowControlsPosition":0,"SlideshowControlsAlignment":0,"SlideshowBannerControlsColorScheme":0,"DisplayVideoPauseButton":false,"VideoPauseButtonAlignment":1,"VideoPauseButtonControlsAlignment":0,"VideoPauseButtonStyle":"#FFFFFF","VideoPauseButtonBackgroundStyle":"#000000","VideoPauseButtonAlignmentClass":"alignRight viewport","DisplaySlideshowPauseButton":false,"SlideshowControlsColor":"#FFFFFF","SlideshowControlsBackgroundColor":"#000000","SlideshowPauseButtonClass":"isHidden","BannerImages":[{"BannerImageID":123,"BannerOptionID":55,"FileName":"/ImageRepository/Document?documentID=437","Height":591,"Width":1952,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":1,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":null}],"BannerVideos":[{"BannerVideoID":2,"BannerOptionID":55,"VideoFileName":"","ImageFileName":"EmptyBannerBkg202409171523203125.png","IsLink":false,"LinkAddress":null,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","VideoFileID":"00000000-0000-0000-0000-000000000000","ImageFileID":"00000000-0000-0000-0000-000000000000","VideoWidth":0,"VideoHeight":0,"ImageWidth":0,"ImageHeight":0,"LinkedVideoUrl":"","RecordStatus":0,"AltText":null}],"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/"},
+								{"BannerImageID":123,"BannerOptionID":55,"FileName":"/ImageRepository/Document?documentID=437","Height":591,"Width":1952,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":1,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":null},
+								'/App_Themes/Interior/Images/',
+								'<img alt="" class="bannerObject" src="/ImageRepository/Document?documentID=437" />');
+						});
+				});
+			</script>
+
+</div>
+</div><!-- Content container --><div data-cpRole="structuralContainer" id="backgroundOverlayTS">
+<div data-cpRole="structuralContainer" id="mainContainerTS">
+<div class="siteWrap4"><div data-cpRole="structuralContainer" id="mainWrapTS" class="mainWrap" role="main">
+<div data-cpRole="structuralContainer" id="siteSidebarTS" class="siteSidebar">
+<aside data-cpRole="contentContainer" id="sidebarContainer1TS">	<div id="ccb9e309f3-447d-453b-8786-10a2ac07e81d" data-containerid="b9e309f3-447d-453b-8786-10a2ac07e81d" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><nav data-cpRole="nav" id="secondaryNav" class="siteNav secondaryNav">
+
+
+
+
+
+	<ol role="menu" id="secondaryMenusecondaryNav" data-parent="554" class="rootNavMenu accordionNav">
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem555" data-pageid="555">
+		<div class="accordionNavItem">
+			<a href="/555/Town-Campaign-Finance-Reports" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Town Campaign Finance Reports</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="Town Campaign Finance Reports Submenu" aria-expanded="false" aria-controls="submenu-lvl1-555"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-555" style="display: none;" data-parent="555">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem647" data-pageid="647">
+			<div class="accordionNavItem">
+				<a href="/647/2026-Town-Campaign-Finance-Reports" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">2026 Town Campaign Finance Reports</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem645" data-pageid="645">
+			<div class="accordionNavItem">
+				<a href="/645/2025-Town-Campaign-Finance-Reports" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">2025 Town Campaign Finance Reports</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem602" data-pageid="602">
+			<div class="accordionNavItem">
+				<a href="/602/2024-Town-Campaign-Finance-Reports" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">2024 Town Campaign Finance Reports</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem606" data-pageid="606">
+			<div class="accordionNavItem">
+				<a href="/606/2022-Town-Campaign-Finance-Reports" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">2022 Town Campaign Finance Reports</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem600" data-pageid="600">
+		<div class="accordionNavItem">
+			<a href="/600/Candidate-Qualifying-Forms" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Candidate Qualifying Forms</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="Candidate Qualifying Forms Submenu" aria-expanded="false" aria-controls="submenu-lvl1-600"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-600" style="display: none;" data-parent="600">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem652" data-pageid="652">
+			<div class="accordionNavItem">
+				<a href="/652/2026-Candidate-Qualifying-Forms" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">2026 Candidate Qualifying Forms</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem651" data-pageid="651">
+			<div class="accordionNavItem">
+				<a href="/651/2024-Candidate-Qualifying-Forms" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">2024 Candidate Qualifying Forms</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem607" data-pageid="607">
+		<div class="accordionNavItem">
+			<a href="/607/Qualified-Candidate-Contact-Information" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Qualified Candidate Contact Information</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem661" data-pageid="661">
+		<div class="accordionNavItem">
+			<a href="https://fl.omniballot.us/sites/12011/default/app/sb/vr" target="_blank" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">View Your Sample Ballot</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem660" data-pageid="660">
+		<div class="accordionNavItem">
+			<a href="/660/2026-Election-Charter-Amendment-Question" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">2026 Election Charter Amendment Questions</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem655" data-pageid="655">
+		<div class="accordionNavItem">
+			<a href="https://browardvotes.gov/voters/vote-mail-information" target="_blank" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Vote By Mail</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem656" data-pageid="656">
+		<div class="accordionNavItem">
+			<a href="https://browardvotes.gov/voters/early-voting-drop-boxes" target="_blank" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Early Voting &amp; Drop Boxes</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="Early Voting &amp; Drop Boxes Submenu" aria-expanded="false" aria-controls="submenu-lvl1-656"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-656" style="display: none;" data-parent="656">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem658" data-pageid="658">
+			<div class="accordionNavItem">
+				<a href="https://browardvotes.gov/sites/default/files/november-early-voting-locations.pdf" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">November Election Early Voting Sites</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem599" data-pageid="599">
+		<div class="accordionNavItem">
+			<a href="/DocumentCenter/View/2435/LBTS-Distric-Map" target="_blank" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">District Map</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem595" data-pageid="595">
+		<div class="accordionNavItem">
+			<a href="https://library.municode.com/fl/lauderdale-by-the-sea/codes/code_of_ordinances?nodeId=PTICH_ARTVIEL" target="_blank" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Town Charter ARTICLE VI.-ELECTIONS</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem596" data-pageid="596">
+		<div class="accordionNavItem">
+			<a href="https://registertovoteflorida.gov/home" target="_blank" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Broward County Register to Vote</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem597" data-pageid="597">
+		<div class="accordionNavItem">
+			<a href="https://www.browardvotes.gov/Voter-Information/Precinct-Finder" target="_blank" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Polling Locations</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem653" data-pageid="653">
+		<div class="accordionNavItem">
+			<a href="/DocumentCenter/View/3215/LBTS-Election-Signage-Regulations" target="_blank" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">LBTS Election Sign Regulations</a>
+		</div>
+			</li>
+
+	</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupSecondaryMenuProperties() {
+				//setup menu manager properties for secondary menu
+				menuManager.isSideMenuEditable = false;
+				menuManager.sideMenuMaxSubMenuLevels = 4;
+				menuManager.sideMenuHasCustomLinks = false;
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupSecondaryMenuProperties, { once: true });
+				return;
+			}
+
+			setupSecondaryMenuProperties();
+		})();
+	</script>
+
+	<script type="text/javascript">
+		(function () {
+			function setupAccordionSecondaryNav() {
+				var $menuContainer = $('#secondaryNav');
+
+				$menuContainer.find('*[id^="SideItem"]').each(function () {
+					var ids = $('[id="' + this.id + '"]');
+					if (ids.length > 1)
+						$.each(ids, function (index, value) {
+							value.id = value.id + '_' + index;
+						});
+				});
+
+				$menuContainer.find('.hasAccordionChildren .openAccordionNav').off('click.secondaryNav').on('click.secondaryNav', function (e) {
+					e.preventDefault();
+					showHideAccordionMenuForSecondaryNav($(this));
+				});
+
+				$menuContainer.find(".grippy").each(function () {
+					menuManager.setupDraggableElement($(this), SIDE_MENU, '#secondaryNav');
+				});
+
+				$menuContainer.find("li").each(function () {
+					menuManager.setupDroppableAccordionElement($(this), SIDE_MENU);
+				});
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupAccordionSecondaryNav, { once: true });
+				return;
+			}
+
+			setupAccordionSecondaryNav();
+		})();
+	</script>
+
+
+
+</nav><aside data-cpRole="contentContainer" id="sidebarContainer2TS">	<div id="ccdfbae5ed-5ff4-403b-927a-3d130f427c50" data-containerid="dfbae5ed-5ff4-403b-927a-3d130f427c50" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div><div data-cpRole="structuralContainer" id="outerContentWrapTS" class="outerContentWrap">
+<div data-cpRole="structuralContainer" id="contentWrapTS" class="contentWrap">
+<div data-cpRole="breadCrumbs" id="breadCrumbs" class="breadCrumbContainer">		<ol class="semanticList breadCrumbs">
+			<li><a class="breadCrumb" href="/">Home</a></li><li><a class="breadCrumb" href="/27/Government">Government</a></li><li><a class="breadCrumb" href="/554/Town-Election">Town Election</a></li><li id="currentBCPage" data-pageid="660"><a href class="breadCrumb" aria-current="page">2026 Election Charter Amendment Questions</a></li>
+		</ol>
+
+	   
+    
+</div><div data-cpRole="mainContentContainer" id="moduleContent">
+	
+	<div id="page" class="moduleContentNew">
+		
+
+	<input id="hdnPageID" name="hdnPageID" type="hidden" value="660" />
+	<input id="hdnParentID" name="hdnParentID" type="hidden" value="554" />
+	<input id="hdnVersionID" name="hdnVersionID" type="hidden" value="8741" />
+	<input id="pageMenuTitle" name="pageMenuTitle" type="hidden" value="2026 Election Charter Amendment Questions" />
+	<input id="pageShowFeatureColumn" name="pageShowFeatureColumn" type="hidden" value="False" />
+	<input id="hdnIsLayoutPage" name="hdnIsLayoutPage" type="hidden" value="False" />
+	<input id="hdnPageStatus" name="hdnPageStatus" type="hidden" value="Published" />
+
+				<h1 id="versionHeadLine" class="headline">
+
+2026 Election Charter Amendment Questions 		</h1>
+	
+		<div id="cc144ea7a2-9feb-4d7c-ba95-2b779ed821cf" data-containerid="144ea7a2-9feb-4d7c-ba95-2b779ed821cf" class="pageContent cpGrid cpGrid24"  >
+			
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="5e94a2a3-3aa6-409b-bd36-2cb1dad89116">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last ide85f321c-712b-49f0-acb7-12a71c71ba87" style="" data-widgetcontainerid="e85f321c-712b-49f0-acb7-12a71c71ba87">	
+<div class="widget editor pageStyles narrow" id="divEditor3beed38a-303f-4632-afcb-41e62d42f647" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p data-pasted="true">At the November 3, 2026, General Election, Lauderdale-By-The-Sea voters will consider eight proposed amendments to the Town Charter.</p><p>The proposed Charter amendments were developed following the Town Commission&rsquo;s review and consideration of the recommendations of the Charter Review Board. The ordinance proposing the amendments passed first reading on May 12, 2026, and was passed and adopted by the Town Commission on May 26, 2026, for placement on the November ballot.&nbsp;</p><p style="font-size: 16px; line-height: 115%; font-family:;">Proposed additions to existing Town Charter text are indicated by <span style="text-decoration: underline;">underline</span>; proposed deletions from existing Town Charter text are indicated by <s>strikethrough ,&nbsp;</s>and all changes are highlighted in <span style="background:yellow;">yellow</span>.&nbsp;</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '3beed38a-303f-4632-afcb-41e62d42f647'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="cd91fc82-ca3e-4a95-9b73-4980e0565a6d">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id601cb635-15c0-44a2-b339-b4ee112f845b" style="" data-widgetcontainerid="601cb635-15c0-44a2-b339-b4ee112f845b">	
+
+	<div id="divTabbed80921b21-f104-40f9-97e8-06345a80eb7d" class="widget widgetTabbed narrow skin62 accordionTabs" data-widgetid="80921b21-f104-40f9-97e8-06345a80eb7d">
+
+		<div class="cpTabPanels">
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab80921b21-f104-40f9-97e8-06345a80eb7d_0" class="tabButton" id="tabBtnNarrow80921b21-f104-40f9-97e8-06345a80eb7d_0" role="button" aria-controls="tab80921b21-f104-40f9-97e8-06345a80eb7d_0" aria-expanded="false" ><span class="tabName editable" data-sequence="0" data-tabname="EXTEND AND CLARIFY CHARTER TIMEFRAMES FOR CERTIFICATION OF CITIZEN PETITIONS RELATED TO ORDINANCES " contenteditable="false">EXTEND AND CLARIFY CHARTER TIMEFRAMES FOR CERTIFICATION OF CITIZEN PETITIONS RELATED TO ORDINANCES </span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab80921b21-f104-40f9-97e8-06345a80eb7d_0" role="region" aria-labelledby="tabBtn80921b21-f104-40f9-97e8-06345a80eb7d_0" >
+
+<div class="widget editor pageStyles narrow" id="divEditora5f41c28-a910-4ec2-a4bf-86c42a25e1d5" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1" style="margin-left:0in;">Ballot Question</h2><p style="margin-left:0in;" data-pasted="true">The Town Charter establishes short timeframes for certifying citizen-initiated petitions for the repeal or amendment of ordinances. The proposed amendment would extend certification deadlines and clarify whether time periods are measured in calendar days or business days.</p><p style="margin-left:0in;">Shall the Town Charter be amended to extend petition certification deadlines and clarify time calculations?&nbsp;<br><br>YES [ ]<br>NO [ ]</p><h2 class="subhead1" style="margin-left:0in;"><strong>What would change?</strong></h2><p style="font-family:;;">The amendment would revise the time available to the Town Clerk to review and certify certain citizen petitions seeking to amend the Town Code of Ordinances.</p><h2 class="subhead1"><strong>Proposed Revisions to the Town Charter&nbsp;</strong></h2><h3 class="subhead2" style="margin-left:0in;"><strong>Sec. 4.4. Filing Procedure</strong></h3><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(1) <em>Certificate of Clerk</em>; <em>amendment</em>. Within <s><span style="background:yellow;">20</span></s> <span style="text-decoration: underline;"><span style="background:yellow;">thirty (30) calendar</span></span> days after an initiative petition is filed or within <s><span style="background:yellow;">five</span></s> <span style="text-decoration: underline;"><span style="background:yellow;">ten (10) business</span></span> days after a petition for repeal or amendment of an ordinance is filed, the Clerk shall complete a certificate as to its sufficiency (the &quot;Certificate&quot;). Grounds for insufficiency are only those specified in Sec. 4.3 of this Article. If insufficient, the Certificate shall specify the particulars of the deficiency. A copy of the Certificate shall be promptly sent to the petitioners&apos; committee by hand delivery or registered mail. A petition certified insufficient for lack of the required number of valid signatures may be amended once if the petitioners&apos; committee files a notice of intention to amend it with the Clerk within two business days after receiving the copy of the Certificate and files a supplementary petition upon additional papers within fourteen (14) calendar days after receiving the copy of the Certificate. Such supplementary petition shall comply with the requirements of Sec. 4.3 of this Article. Within five business days after a supplementary petition is filed, the Clerk shall complete a Certificate as to the sufficiency of the petition, as amended, and shall promptly send a copy of such Certificate to the petitioners&apos; committee by registered mail or hand delivery as in the case of an original petition. If a petition or amended petition is certified sufficient, or if a petition or amended petition is certified insufficient and the petitioners&apos; committee does not elect to amend or request Commission review under subsection (2) of this Section 4.4 within the time required, the Clerk shall promptly present the Certificate to the Commission and such Certificate shall then be a final determination as to the sufficiency of the petition.</p><p style="margin-left:0in;"><strong>&nbsp;</strong></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'a5f41c28-a910-4ec2-a4bf-86c42a25e1d5'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab80921b21-f104-40f9-97e8-06345a80eb7d_1" class="tabButton" id="tabBtnNarrow80921b21-f104-40f9-97e8-06345a80eb7d_1" role="button" aria-controls="tab80921b21-f104-40f9-97e8-06345a80eb7d_1" aria-expanded="false" ><span class="tabName editable" data-sequence="1" data-tabname="ESTABLISH TWO FOUR-YEAR MAYOR-COMMISSIONER TERMS" contenteditable="false">ESTABLISH TWO FOUR-YEAR MAYOR-COMMISSIONER TERMS</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab80921b21-f104-40f9-97e8-06345a80eb7d_1" role="region" aria-labelledby="tabBtn80921b21-f104-40f9-97e8-06345a80eb7d_1" >
+
+<div class="widget editor pageStyles narrow" id="divEditorb83ebe99-ca96-4b46-8370-89caf872b8ca" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1" style="margin-left:0in;">Ballot Question</h2><p style="margin-left:0in;" data-pasted="true">The Town Charter establishes three two-year terms for the Mayor-Commissioner. This amendment aligns the Mayor-Commissioner and Commissioner term limits by changing the term length to four years and the number of terms to two terms, revising the maximum term limit accordingly, and clarifying application to the Mayor-Commissioner term ending in November 2028.&nbsp;</p><p style="margin-left:0in;">Shall the Town Charter be amended to change the Mayor-Commissioner&rsquo;s term to a maximum of two four-year terms, effective November 2028?<br><br>YES [ ]<br data-pasted="true">NO [ ]</p><h2 class="subhead1" style="margin-left:0in;" data-pasted="true"><strong>What would change?</strong></h2><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">The amendment would change the Mayor-Commissioner&apos;s term from two years to four years and establish a maximum of two four-year terms.</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">The change would take effect beginning with the regular election in November 2028. The amendment also establishes how the term ending in November 2028 will be treated for purposes of calculating eligibility under the new term limits.</p><h2 class="subhead1"><strong>Proposed Revisions to the Town Charter</strong></h2><h3 class="subhead2" style="margin-left:0in;"><strong>Sec. 6.1. Mayor-Commissioner and Commissioners; term of office; election; transition</strong></h3><div style="margin-left:0in;" data-pasted="true"><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(1) Beginning with the regular election to be held on the second Tuesday in the month of March, 2008, and every two (2) years thereafter, a Mayor-Commissioner shall be elected for a term of two (2) years until his successor is elected and qualifies. <span style="text-decoration: underline;"><span style="background:yellow;">Beginning with the regular election to be held in November 2028, and in every regular election thereafter, a Mayor-Commissioner shall be elected for a term of four (4) years and shall serve until a successor is elected and qualifies. For the purpose of calculating eligibility under this section, any person who has served as Mayor-Commissioner immediately prior to November 2028 shall be deemed to have served one term under this section.</span></span></p><h3 class="subhead2"><strong>Sec. 6.3. - Qualifications of members of Town Commission&nbsp;</strong></h3><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(3) No person may be a candidate for Mayor-Commissioner, nor may be appointed to fill a vacancy as the Mayor-Commissioner, if that person has served during each of the <s><span style="background:yellow;">three</span></s><span style="text-decoration: underline;"><span style="background:yellow;">two</span></span> preceding consecutive Mayor-Commissioner terms as a Mayor-Commissioner<span style="background:yellow;">, without a two year break in service</span>.</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(6) No person may be a candidate for Mayor-Commissioner or Town Commissioner, nor may be appointed to fill a vacancy as the Mayor-Commissioner or Town Commissioner, if that person has consecutively served <s><span style="background:yellow;">fourteen (14)</span></s> <span style="text-decoration: underline;"><span style="background:yellow;">sixteen (16)</span></span> years in any combination of offices without a two year break in service.</p></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'b83ebe99-ca96-4b46-8370-89caf872b8ca'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab80921b21-f104-40f9-97e8-06345a80eb7d_2" class="tabButton" id="tabBtnNarrow80921b21-f104-40f9-97e8-06345a80eb7d_2" role="button" aria-controls="tab80921b21-f104-40f9-97e8-06345a80eb7d_2" aria-expanded="false" ><span class="tabName editable" data-sequence="2" data-tabname="ALLOW MAYOR-COMMISSIONER TO RUN FOR COMMISSIONER AT THE CONCLUSION OF THEIR SERVICE AS MAYOR-COMMISSIONER " contenteditable="false">ALLOW MAYOR-COMMISSIONER TO RUN FOR COMMISSIONER AT THE CONCLUSION OF THEIR SERVICE AS MAYOR-COMMISSIONER </span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab80921b21-f104-40f9-97e8-06345a80eb7d_2" role="region" aria-labelledby="tabBtn80921b21-f104-40f9-97e8-06345a80eb7d_2" >
+
+<div class="widget editor pageStyles narrow" id="divEditoracd5fb8c-6f39-4b2d-8ddb-4006218a31eb" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1">Ballot Question</h2><p data-pasted="true">The Town Charter allows Commissioners to run for Mayor-Commissioner at the conclusion of their term, but the Mayor-Commissioner is not similarly allowed to run for Commissioner at the conclusion of his or her term.&nbsp;</p><p>Shall the Town Charter be amended to allow a person who has served as Mayor-Commissioner to run for and serve as a Commissioner at the conclusion of their service as Mayor-Commissioner, if permissible under the maximum term limits?&nbsp;<br><br>YES [ ]<br data-pasted="true">NO [ ]</p><h2 class="subhead1"><strong>What would change?</strong></h2><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">The amendment would allow a person who has served as Mayor-Commissioner to subsequently run for and serve as a Town Commissioner, provided the person remains eligible under the Charter&apos;s maximum term limits.</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">The proposed change would create similar opportunities for movement between the Mayor-Commissioner and Commissioner offices.</p><h2 class="subhead1"><strong>Proposed Revisions to the Town Charter</strong></h2><h3 class="subhead2"><strong>Sec. 6.3. - Qualifications of members of Town Commission</strong></h3><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(2) No person may be a candidate for Commissioner, nor may be appointed to fill a vacancy as a Commissioner, if that person has served during both of the two preceding consecutive Commission terms for that seat as a Commissioner, <s><span style="background:yellow;">or a Mayor-Commissioner or both,</span>&nbsp;</s>without a two year break in service.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'acd5fb8c-6f39-4b2d-8ddb-4006218a31eb'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab80921b21-f104-40f9-97e8-06345a80eb7d_3" class="tabButton" id="tabBtnNarrow80921b21-f104-40f9-97e8-06345a80eb7d_3" role="button" aria-controls="tab80921b21-f104-40f9-97e8-06345a80eb7d_3" aria-expanded="false" ><span class="tabName editable" data-sequence="3" data-tabname="ALLOW APPOINTMENTS FOR COMMISSION VACANCIES WITHOUT A TWO-YEAR BREAK IN SERVICE " contenteditable="false">ALLOW APPOINTMENTS FOR COMMISSION VACANCIES WITHOUT A TWO-YEAR BREAK IN SERVICE </span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab80921b21-f104-40f9-97e8-06345a80eb7d_3" role="region" aria-labelledby="tabBtn80921b21-f104-40f9-97e8-06345a80eb7d_3" >
+
+<div class="widget editor pageStyles narrow" id="divEditorfde054ff-9029-4f9c-99fb-380c96b97089" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1">Ballot Question</h2><p>Shall the Town Charter be amended to clarify that the Town Commission may appoint a qualified person to fill a vacancy in the office of Mayor-Commissioner or Commissioner, even if that person would otherwise be required by the Town Charter to take a two-year break in service, potentially increasing the number of persons available for appointment?&nbsp;<br><br>YES [ ]<br data-pasted="true">NO [ ]</p><h2 class="subhead1"><strong>What would change?</strong></h2><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">The amendment would allow the Town Commission to appoint a qualified person to fill a vacancy in the office of Mayor-Commissioner or Commissioner, even if that person would otherwise be required to take a two-year break in service. The change would apply to appointments made to fill vacancies.</p><h2 class="subhead1" data-pasted="true">Proposed Revisions to Town Charter</h2><h3 class="subhead2" role="heading" aria-level="2"><strong>Sec. 6</strong><strong>.3. - Qualifications of members of Town Commission</strong></h3><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">2) No person may be a candidate for Commissioner<s><span style="background:yellow;">, nor may be appointed to fill a vacancy as a Commissioner,</span></s> if that person has served during both of the two preceding consecutive Commission terms for that seat as a Commissioner, or a Mayor-Commissioner or both, without a two year break in service.</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(3) No person may be a candidate for Mayor-Commissioner<s><span style="background:yellow;">, nor may be appointed to fill a vacancy as the Mayor-Commissioner,</span></s> if that person has served during each of the three preceding consecutive Mayor-Commissioner terms as a Mayor-Commissioner.</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(4) Service of one year or less of a term by a person who had not previously served as either a Commissioner or Mayor-Commissioner shall not be considered for purposes of term limits.</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(5) Service for purposes of term limits shall be determined as of the time the person would take office.</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(6) No person may be a candidate for Mayor-Commissioner or Town Commissioner<s><span style="background:yellow;">, nor may be appointed to fill a vacancy as the Mayor-Commissioner or Town Commissioner,</span></s> if that person has consecutively served fourteen (14) years in any combination of offices without a two year break in service.</p><h3 class="subhead2" data-pasted="true" role="heading" aria-level="2">Sec. 6.8. - Filling of vacancies</h3><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">A vacancy on the Town Commission, including the office of Mayor-Commissioner, shall be filled in the following manner: (1) If there are less than one hundred eighty (180) days remaining in the unexpired term, or if there are less than one hundred eighty (180) days before the next federal, state, county or Town election, the remaining Commissioners, including the Mayor-Commissioner, shall, by majority vote, appoint a successor within thirty (30) days of the occurrence of the vacancy from among all qualified applicants. The person or persons so appointed must possess all of the required qualifications to be a member of the Town Commission, <span style="text-decoration: underline;"><span style="background:yellow;">except that the Town Commission may appoint a qualified person to fill a vacancy in the office of Mayor-Commissioner or Commissioner even if that person would otherwise be required by the Town Charter to take a 2-year break in service</span></span>. The Commissioner or Mayor-Commissioner appointed by the Town Commission to fill the vacancy as specified herein shall serve only until the next federal, state, county, or Town election. Further, the Commissioner or Mayor-Commissioner elected at such election shall serve only the unexpired term of the Commissioner or Mayor-Commissioner whose position became vacant.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'fde054ff-9029-4f9c-99fb-380c96b97089'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab80921b21-f104-40f9-97e8-06345a80eb7d_4" class="tabButton" id="tabBtnNarrow80921b21-f104-40f9-97e8-06345a80eb7d_4" role="button" aria-controls="tab80921b21-f104-40f9-97e8-06345a80eb7d_4" aria-expanded="false" ><span class="tabName editable" data-sequence="4" data-tabname="ESTABLISH CURRENT COMMISSION DISTRICT BOUNDARIES " contenteditable="false">ESTABLISH CURRENT COMMISSION DISTRICT BOUNDARIES </span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab80921b21-f104-40f9-97e8-06345a80eb7d_4" role="region" aria-labelledby="tabBtn80921b21-f104-40f9-97e8-06345a80eb7d_4" >
+
+<div class="widget editor pageStyles narrow" id="divEditor1b64bf76-e7f0-44ed-b55f-aa2b10f468ee" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1">Ballot Question</h2><p>The Town has used the same northern and southern Commission district boundaries since 2004. Shall the Town Charter be amended to establish the current district boundaries in the Town Charter, including the existing boundary at the portion of the Village of Sea Ranch Lakes bordering the Atlantic Ocean to preserve the current district boundaries?&nbsp;</p><p>YES [ ]<br data-pasted="true">NO [ ]</p><h2 class="subhead1">What would change?</h2><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">The amendment would place the Town&apos;s existing northern and southern Commission district boundaries directly into the Town Charter.</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">The Town has used the same district boundaries since 2004. The proposed amendment would codify those existing boundaries in the Charter, including the existing boundary associated with the portion of the Village of Sea Ranch Lakes bordering the Atlantic Ocean.</p><h2 class="subhead1">Proposed Revisions to Town Charter</h2><h3 class="subhead2" role="heading" aria-level="2">Sec. 6.1. Mayor-Commissioner and Commissioners; term of office; election; transition</h3><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;"><s><span style="background-color: yellow;">(5) The geographic boundary for the northern and southern districts shall be designated, prepared and identified no later than the first of September, 2004, and again in 2012 through a contract entered into by the Town with an accredited four (4) year college or university located within the state of Florida for the purpose of identifying and designating the northern and southern election districts within the Town. The Town Commission district boundaries shall be of equal population, compact, proportional, and logically related to the natural internal boundaries of the neighborhoods within the Town. The principal of nondiscrimination and one person/one vote shall be adhered to strictly.</span></s></p><p style="margin-top: 2pt; margin-right: 0in; margin-bottom: 6pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;"><span style="background: yellow;">(<s>6</s><span style="text-decoration: underline;">5</span>)</span> In the event no candidate qualifies for election for any designated Town Commission seat within the first ten (10) calendar days of the qualifying period, then any qualified person who resides anywhere in the Town may qualify for such seat. Thereafter, if no person qualifies for such seat, a vacancy shall be declared and filled in accordance with this Charter.&nbsp;</p><p style="margin-top: 2pt; margin-right: 0in; margin-bottom: 6pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;"><span style="background: yellow;">(<s>7</s><span style="text-decoration: underline;">6</span>)</span> The Town Commission <s><span style="background:yellow;">shall</span></s> adopt<span style="text-decoration: underline;"><span style="background:yellow;">ed</span></span> by Ordinance the creation and establishment of the boundaries of the initial northern and southern Town Commission seat districts<span style="text-decoration: underline;"><span style="background:yellow;">,</span></span><span style="background:yellow;">&nbsp;<s>no later than January 1, 2005. The Ordinance shall provide for the implementation of said election districts to be&nbsp;</s></span>effective for the elections to be held in the Town commencing in March, 2006. <span style="text-decoration: underline;"><span style="background:yellow;">The boundaries of these districts remain unchanged, and follow the jurisdictional boundaries of the Town. The northern district is separated from the southern district by the portion of the Village of Sea Ranch Lakes that borders on the Atlantic Ocean, as depicted on a map maintained by the Town Clerk</span></span><span style="background:yellow;">.</span>&nbsp;</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '1b64bf76-e7f0-44ed-b55f-aa2b10f468ee'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab80921b21-f104-40f9-97e8-06345a80eb7d_5" class="tabButton" id="tabBtnNarrow80921b21-f104-40f9-97e8-06345a80eb7d_5" role="button" aria-controls="tab80921b21-f104-40f9-97e8-06345a80eb7d_5" aria-expanded="false" ><span class="tabName editable" data-sequence="5" data-tabname="REVISE AND CLARIFY STANDARDS FOR FORFEITURE OF OFFICES OF COMMISSIONER AND MAYOR-COMMISSIONER " contenteditable="false">REVISE AND CLARIFY STANDARDS FOR FORFEITURE OF OFFICES OF COMMISSIONER AND MAYOR-COMMISSIONER </span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab80921b21-f104-40f9-97e8-06345a80eb7d_5" role="region" aria-labelledby="tabBtn80921b21-f104-40f9-97e8-06345a80eb7d_5" >
+
+<div class="widget editor pageStyles narrow" id="divEditorf4ef0c00-5cb8-4f2b-bb3f-1d23199259f9" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1">Ballot Question</h2><p>Shall the Town Charter be amended to clarify standards for forfeiture of office of Commission members by tying qualifications to existing Charter provisions, requiring ethics-based removal to be determined under state law by the Florida Commission on Ethics, requiring incapacity determinations to be supported by medical certification or court order, allowing absences to be excused by majority vote, and excusing the Commission from voting on removals already mandated by other governmental authorities?&nbsp;<br><br>YES [ ]<br data-pasted="true">NO [ ]</p><h2 class="subhead1" data-pasted="true"><strong>What would change?</strong></h2><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">The amendment would revise and clarify the circumstances and procedures concerning forfeiture of a Commissioner&apos;s or Mayor-Commissioner&apos;s office.</p><h2 class="subhead1">Proposed Revisions to Town Charter</h2><h3 class="subhead2"><strong>Sec. 6.6. - Forfeiture of office.</strong></h3><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">A Commission member, or the Mayor-Commissioner, is subject to penalties including forfeiture of office if <s><span style="background:yellow;">the person</span></s><span style="background:yellow;">:</span></p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 0in; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;margin-left:48px;">(1) <s><span style="background:yellow;">Lacks, at any time during a term of office, any qualification for the office prescribed by this Charter or general law&nbsp;</span></s><span style="text-decoration: underline;"><span style="background:yellow;">The Commissioner or Mayor-Commissioner no longer meets any of the qualifications explicitly listed in Sections 6.3 and 6.4 of this Charter</span></span><span style="background:yellow;">;</span></p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 0in; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;margin-left:48px;">(2) <s><span style="background:yellow;">Violates any standard of conduct or code of ethics established by law for public officials</span></s> <span style="text-decoration: underline;"><span style="background:yellow;">The Florida Commission on Ethics issues a final order, after exhaustion of all appeals, that the Commissioner or Mayor-Commissioner has violated the Florida Code of Ethics for Public Officers and Employees and imposes removal from office under applicable state law</span></span>;</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 0in; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;margin-left:48px;">(3) <span style="text-decoration: underline;"><span style="background:yellow;">The Commissioner or Mayor-Commissioner i</span></span><s><span style="background:yellow;">I</span></s>s convicted of a felony while in office;</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 0in; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;margin-left:48px;">(4) <span style="text-decoration: underline;"><span style="background:yellow;">The Commissioner or Mayor-Commissioner f</span></span><s><span style="background:yellow;">F</span></s>ails to attend four (4) consecutive regular meetings of the Town Commission without being excused by the Town Commission by formal action entered upon the minutes; or</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 0in; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;margin-left:48px;">(5) <s><span style="background:yellow;">Becomes incapable of performing the duties of the office for a period of more than three (3) months</span></s><span style="background:yellow;">&nbsp;<span style="text-decoration: underline;">The Commissioner or Mayor-Commissioner becomes physically or mentally incapable of performing the essential duties of the office for a continuous period exceeding three (3) months, as certified by a licensed medical professional, or confirmed by a final order of a court of competent jurisdiction.</span></span></p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 0in; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;"><s><span style="background-color: yellow;">In all circumstances arising under this section, the Town Commission shall be the judge of its own membership&nbsp;</span></s><span style="text-decoration: underline;"><span style="background-color: yellow;">In all matters under this Section, except in granting excused absences, the Town Commission shall act by unanimous vote of the remaining members. The Commissioner or Mayor-Commissioner subject to potential forfeiture shall not vote on any matter pertaining to their own removal. Nothing in this section shall be construed to limit the authority of the Governor under the Florida Constitution to suspend or remove a municipal officer.</span></span></p><h3 class="subhead2"><br></h3><h3 class="subhead2" data-pasted="true"><strong>Sec. 6.7. - Forfeiture hearing and process.</strong></h3><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 0in; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">A member of the Town Commission charged with conduct constituting grounds for forfeiture of his office shall be entitled to a public hearing on demand, and notice of such hearing shall be published in one or more newspapers of general circulation in the Town at least thirty days before the scheduled hearing. <s><span style="background:yellow;">The Town Commission shall be the sole judge of the qualifications of its members and shall hear all questions relating to forfeiture of a Commissioner&apos;s or Mayor-Commissioner&apos;s office, including whether or not good cause for absence has been, or may be, established</span></s>. <span style="text-decoration: underline;"><span style="background: yellow;">For forfeiture not automatically imposed by state law or a final order by a court of competent jurisdiction, the Town Commission shall conduct the hearing and act as the adjudicating body<em>.</em></span></span>&nbsp; The Commissioner in question shall have the burden of establishing good cause for absence; provided, however, that any Commissioner may at any time during any duly held meeting move to establish good cause for his or her absence or the absence of any other Commissioner, from any past, present, or future meeting(s), which motion, if carried, shall be conclusive. A Commissioner <s><span style="background:yellow;">whose qualifications are in question, or</span></s> who is <s><span style="background:yellow;">otherwise</span>&nbsp;</s>subject to <span style="text-decoration: underline;"><span style="background:yellow;">a</span>&nbsp;</span>forfeiture <span style="text-decoration: underline;"><span style="background:yellow;">hearing for&nbsp;</span></span><s><span style="background:yellow;">of</span></s> his/her office, shall not vote on any such matters. Any <s><span style="background:yellow;">final determination</span></s><span style="background:yellow;">&nbsp;<span style="text-decoration: underline;">discretionary forfeiture</span></span> by the Town Commission that a Commissioner or the Mayor-Commissioner has forfeited his or her office shall be made by resolution approved by a unanimous vote of the remaining members of the Town Commission. All votes and other acts of the Commissioner in question prior to the effective date of such resolution shall be valid regardless of the grounds of forfeiture. <span style="text-decoration: underline;"><span style="background:yellow;">For removals mandated by a governmental authority other than the Town, the Town Commission shall implement the removal without vote.</span></span></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'f4ef0c00-5cb8-4f2b-bb3f-1d23199259f9'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab80921b21-f104-40f9-97e8-06345a80eb7d_6" class="tabButton" id="tabBtnNarrow80921b21-f104-40f9-97e8-06345a80eb7d_6" role="button" aria-controls="tab80921b21-f104-40f9-97e8-06345a80eb7d_6" aria-expanded="false" ><span class="tabName editable" data-sequence="6" data-tabname="INCORPORATE STATE LAW GOVERNING ELECTIONS, PUBLIC NOTICES, AND AUDITS " contenteditable="false">INCORPORATE STATE LAW GOVERNING ELECTIONS, PUBLIC NOTICES, AND AUDITS </span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab80921b21-f104-40f9-97e8-06345a80eb7d_6" role="region" aria-labelledby="tabBtn80921b21-f104-40f9-97e8-06345a80eb7d_6" >
+
+<div class="widget editor pageStyles narrow" id="divEditor28fb06d9-4fa5-4763-b30c-c3fcafdf7ee9" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1">Ballot Question</h2><p data-pasted="true">The proposed amendment would promote consistency with state law by providing that all general laws of the State of Florida governing municipal elections apply to the Town, aligning the deadline for the Town&rsquo;s annual financial audit with the deadline in state law, and allowing legal notices to be published on publicly accessible websites as provided in state law.</p><p>Shall the Town Charter incorporate Florida laws governing municipal elections, public notices, and audits?&nbsp;<br><br>YES [ ]&nbsp;<br>NO [ ]</p><h2 class="subhead1">What would change?</h2><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">The amendment would update the Charter to provide greater consistency with current Florida law.</p><h2 class="subhead1">Proposed Revisions to Town Charter&nbsp;</h2><h3 class="subhead2">ARTICLE V. TOWN OFFICERS AND EMPLOYEES</h3><h3 class="subhead2"><strong>Sec. 5.5. Town Manager&mdash;Powers and duties</strong></h3><p style="margin-top: 2pt; margin-right: 0in; margin-bottom: 6pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif; text-indent: 23.75pt;">The Town Manager shall be responsible to the Town Commission for the proper administration of all affairs of the Town coming under the Town Manager&apos;s jurisdiction, and the Town Manager&apos;s powers are and they shall be:&nbsp;</p><p style='margin-top:2.0pt;margin-right:0in;margin-bottom:6.0pt;margin-left:.25in;line-height:115%;font-size:16px;font-family:"Aptos",sans-serif;text-align:center;'><span style='font-family:"Times New Roman",serif;'>* * *</span></p><p style="margin-top: 2pt; margin-right: 0in; margin-bottom: 6pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif; text-indent: -23.75pt;margin-left:63px;">(10) To prepare and submit to the Town Commission an annual financial audit of its accounts and records, completed no later than <s><span style="background:yellow;">six (6)</span></s> <span style="text-decoration: underline;"><span style="background:yellow;">nine (9)</span></span> months after the end of its fiscal year by an independent certified public accountant retained by the Town Commission and paid from its public funds.&nbsp;</p><p style='margin-top:2.0pt;margin-right:0in;margin-bottom:6.0pt;margin-left:.25in;line-height:115%;font-size:16px;font-family:"Aptos",sans-serif;text-align:center;'><span style='font-family:"Times New Roman",serif;'>* * *</span></p><h3 class="subhead2" data-pasted="true"><strong>Sec. 6.4. Qualifications of candidates; notice of candidacy; payment of fee</strong></h3><p>Any individual who possesses the qualifications as provided in this Charter, may be a candidate for the office of Mayor-Commissioner or Commissioner by filing a verified notice of candidacy for Town Commission with the Town Clerk. Such notice shall be in the following form:&nbsp;</p><p>NOTICE OF CANDIDACY FOR TOWN COMMISSIONER OR MAYOR-COMMISSIONER&nbsp;</p><p>I, _______ (Name of Candidate) _______, residing at _______________ (Residence Address of Candidate), Lauderdale-By-The-Sea, Broward County, Florida, do hereby give notice of my candidacy for the office of Town Commissioner/Mayor-Commissioner of the Town of Lauderdale-By-The-Sea, Florida, in the forthcoming election to be held in said Town on _______ (Date of Primary) _______. I do further state that I am a citizen of the United States of America, and a resident of the Town of Lauderdale-By-The-Sea; that I have resided in the Town of Lauderdale-By-The-Sea for the six (6) months immediately preceding the date of the election to be held; and that I have fully satisfied all conditions precedent to such candidacy, pursuant to the provisions of the laws of the State of Florida and the Town Charter.&nbsp;<br>__________________&nbsp;<br>(Candidate&apos;s Signature)&emsp;&nbsp;</p><p>STATE OF FLORIDA&nbsp;<br>COUNTY OF BROWARD&nbsp;</p><p>Before me, the undersigned authority, this day personally appeared _____________ (Name of Candidate) who, upon being duly sworn, deposed and said: that he/she is the candidate referred to in the foregoing Notice; that he/she is familiar with the contents of said Notice, and that the facts and matters therein stated are true; and that he/she did sign said Notice for the purpose therein specified.&nbsp;<br>_______________&nbsp;<br>(Candidate)&emsp;&emsp;&emsp;&nbsp;</p><p>Sworn to and subscribed before me, this the _______ day of _______, 20___.&nbsp;</p><p>__________________&nbsp;<br>Notary Public, State of Florida</p><p>&nbsp;</p><p>My commission expires: _______&nbsp;</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">The individual who files the notice as prescribed, and who pays the qualifying fee as prescribed, if otherwise found to be qualified, shall be entitled to have his/her name printed upon the official ballot at such town election. <span style="text-decoration: underline;"><span style="background:yellow;">All general laws of the state relating to municipal elections, as amended from time to time, are adopted and shall govern elections for the Town.</span></span></p><h3 class="subhead2" data-pasted="true"><strong>Sec. 6.7. Forfeiture hearing and process</strong></h3><p style="margin-top: 2pt; margin-right: 0in; margin-bottom: 6pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif; text-indent: 23.75pt;">A member of the Town Commission charged with conduct constituting grounds for forfeiture of his office shall be entitled to a public hearing on demand, and notice of such hearing shall be published <s><span style="background:yellow;">in one or more newspapers</span></s><span style="background:yellow;">&nbsp;<s>of general circulation in the Town</s></span><s>&nbsp;</s>at least thirty days before the scheduled hearing <span style="text-decoration: underline;"><span style="background:yellow;">in accordance with F.S. ch. 50, or any other method of publication expressly authorized by Florida law and consistent with the Town Charter, or any other applicable authority.</span></span> The Town Commission shall be the sole judge of the qualifications of its members and shall hear all questions relating to forfeiture of a Commissioner&apos;s or Mayor-Commissioner&apos;s office, including whether or not good cause for absence has been, or may be, established. The Commissioner in question shall have the burden of establishing good cause for absence; provided, however, that any Commissioner may at any time during any duly held meeting move to establish good cause for his or her absence or the absence of any other Commissioner, from any past, present, or future meeting(s), which motion, if carried, shall be conclusive. A Commissioner whose qualifications are in question, or who is otherwise subject to forfeiture of his/her office, shall not vote on any such matters. Any final determination by the Town Commission that a Commissioner or the Mayor-Commissioner has forfeited his or her office shall be made by resolution approved by a unanimous vote of the remaining members of the Town Commission. All votes and other acts of the Commissioner in question prior to the effective date of such resolution shall be valid regardless of the grounds of forfeiture.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '28fb06d9-4fa5-4763-b30c-c3fcafdf7ee9'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab80921b21-f104-40f9-97e8-06345a80eb7d_7" class="tabButton" id="tabBtnNarrow80921b21-f104-40f9-97e8-06345a80eb7d_7" role="button" aria-controls="tab80921b21-f104-40f9-97e8-06345a80eb7d_7" aria-expanded="false" ><span class="tabName editable" data-sequence="7" data-tabname="CORRECT ERRORS, RESOLVE INCONSISTENCIES, AND UPDATE PROVISIONS TO CLEAN UP CHARTER LANGUAGE " contenteditable="false">CORRECT ERRORS, RESOLVE INCONSISTENCIES, AND UPDATE PROVISIONS TO CLEAN UP CHARTER LANGUAGE </span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab80921b21-f104-40f9-97e8-06345a80eb7d_7" role="region" aria-labelledby="tabBtn80921b21-f104-40f9-97e8-06345a80eb7d_7" >
+
+<div class="widget editor pageStyles narrow" id="divEditorf6b1a1c1-47ca-446f-8b81-80410c0c050d" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1">Ballot Question</h2><p data-pasted="true">The proposed amendment would revise the Town Charter to correct errors, improve clarity, resolve inconsistencies in terminology and in timelines, and update references to reflect current Florida law.&nbsp;</p><p>Shall the Town Charter be amended to correct errors, resolve inconsistencies, and update provisions to reflect current law?&nbsp;</p><p><span style="font-size: 15.2px;">YES [ ]<br data-pasted="true">NO [ ]</span></p><h2 class="subhead1" aria-hidden="true" tabindex="-1"><br></h2><h2 class="subhead1">What would change?</h2><p style="font-family:;;">This amendment would make a number of technical and housekeeping revisions throughout the Charter. These changes are intended to resolve current conflicts in the Charter&rsquo;s language, and improve the accuracy and readability of the Charter without creating a separate substantive policy change.</p><h2 class="subhead1">Proposed Revisions to Town Charter</h2><div style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:115%;font-size:16px;font-family:"Aptos",sans-serif;' data-pasted="true"><ol style="margin-bottom:0in;list-style-type: decimal;"><li style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:115%;font-size:16px;font-family:"Aptos",sans-serif;'><em><span style='font-family:"Times New Roman",serif;'>Resolve conflicting language about how to measure the minimum residency for a candidate for Town office, by consolidating all references to this topic in the Elections article of the charter and retaining the current standard there, which is 6 months prior to the date of the election, removing conflicting provisions in Section 3.3, and relocating the remainder of Section 3.3 to Section 6.3(7).</span></em></li></ol></div><h3 class="subhead2" aria-level="2"><span style="font-size: 15.2px;">ARTICLE III. ADMINISTRATION AND LEGISLATION</span></h3><h3 class="subhead2" aria-level="2"><span style="font-size: 15.2px;"><strong>Sec. 3.3. <span style='font-size:16px;line-height:115%;font-family:"Aptos",sans-serif;background:yellow;' data-pasted="true"><s>Qualifications of members</s></span>Reserved</strong></span></h3><p style="margin-top: 2pt; margin-right: 0in; margin-bottom: 6pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif; text-indent: 23.75pt;"><s><span style="background-color: yellow;">Only qualified electors who have resided in the Town of Lauderdale-By-The-Sea for at least six (6) months immediately prior to qualifying preceding the date of election for office and who shall have attained the age of eighteen (18) years of age on or before the date the candidate files and qualifies in accordance with this Charter as a candidate for office, shall be eligible to hold the office of Commissioner.&nbsp;</span></s></p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif; text-indent: 23.75pt;"><s><span style="background-color: yellow;">Each Commissioner and candidate for Commissioner shall be elected from the election district in which he or she is domiciled for at least six (6) months immediately prior to qualifying for such office, by the greatest number of votes of all registered electors residing within the Town. Once elected, a Commissioner from an election district shall remain a domiciliary of the election district during his or her term of office. Any Commissioner who shall cease to possess the qualifications required herein shall forthwith forfeit his or her office, except a Commissioner holding office will not have his/her term cut short by the establishment of or subsequent change of district boundary lines.</span></s></p><p style='margin-top:6.0pt;margin-right:0in;margin-bottom:12.0pt;margin-left:0in;line-height:115%;font-size:16px;font-family:"Aptos",sans-serif;text-align:center;' data-pasted="true"><a href="https://library.municode.com/fl/lauderdale-by-the-sea/codes/code_of_ordinances?nodeId=PTICH_ARTVIEL_S6.7FOHEPR"><strong><span style='font-family:"Times New Roman",serif;'>ARTICLE VI. ELECTIONS</span></strong></a></p><p style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:115%;font-size:16px;font-family:"Aptos",sans-serif;text-align:center;'><br></p><h3 class="subhead2" aria-level="2">Sec. 6.3. Qualifications of members of Town Commission&nbsp;</h3><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;"><span style="background: yellow;">(7) Once elected, a Commissioner from an election district shall remain a resident of the election district during his or her term of office. Any Commissioner who shall cease to possess the qualifications for district residency shall forthwith forfeit his or her office, except a Commissioner holding office will not have his/her term cut short by the establishment of or subsequent change of district boundary lines</span>.&nbsp;</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;"><br></p><p style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:115%;font-size:16px;font-family:"Aptos",sans-serif;' data-pasted="true"><em><span style='font-family:"Times New Roman",serif;'>2. Correct statutory references to reflect changes in the Florida Statutes over time.</span></em></p><h3 class="subhead2" data-pasted="true" aria-level="2">Sec. 4.5. Action on petitions.</h3><div style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:115%;font-size:16px;font-family:"Aptos",sans-serif;' data-pasted="true"><ol style="margin-left: 68px ;"><li style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;"><em>Action by Town Commission.</em> When an initiative petition or a petition for the repeal or amendment of an existing ordinance has been finally determined to be sufficient, the Town Commission shall promptly consider or reconsider the ordinance. Whether or not the Commission approves at first reading an initiated ordinance, or the repeal or amendment, as proposed, of a referred ordinance, the Commission shall proceed to a second reading at its next scheduled meeting, and shall otherwise comply with all requirements under Sec. 166.041 F. S. for public notice and public hearings prior to the adoption of an ordinance. If the Commission fails to adopt a proposed initiative ordinance without any change in substance within forty-five (45) calendar days, or fails to repeal or amend a referred ordinance in accordance with the initiative petition within thirty (30) calendar days, it shall submit the proposed or referred ordinance to the registered voters of the Town by referendum vote at an election. The referendum vote by registered Town voters shall constitute an &quot;additional requirement for the enactment of ordinances&quot; as specified in <s><span style="background:yellow;">paragraph (6) of</span></s> Section 166.041 F.S., in lieu of and as a greater, increased requirement than the affirmative majority vote of the governing body referred to in <s><span style="background:yellow;">paragraph (4) of</span></s> Sec. 166.041 F. S. If the Commission fails to act on a proposed initiative ordinance or a referred ordinance within the time period specified in this paragraph, the Commission shall be deemed to have failed to adopt the proposed initiative ordinance or failed to repeal or amend the referred ordinance on the last day that the Commission was authorized to act on such matter. In that event, the Commission shall nevertheless comply with the public notice and public hearing requirements of Sec. 166.04 F.S. relative to the ordinance in question.&nbsp;</li></ol></div><p style='margin-top:2.0pt;margin-right:0in;margin-bottom:6.0pt;margin-left:0in;line-height:115%;font-size:16px;font-family:"Aptos",sans-serif;' data-pasted="true"><em><span style='font-family:"Times New Roman",serif;'>3. Clarify how the change in the municipal election date from March to November affects the application of the term limits for elected officials, and correct a related reference.</span></em></p><h3 class="subhead2" data-pasted="true" aria-level="2">ARTICLE VI. ELECTIONS</h3><h3 class="subhead2" aria-level="2"><strong>Sec. 6.1. Mayor-Commissioner and Commissioners; term of office; election; transition</strong></h3><p style="margin-top: 2pt; margin-right: 0in; margin-bottom: 6pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif; text-indent: -22.3pt;margin-left:59px;">(4) All elections for the position of Town Commissioner or Mayor-Commissioner shall be held on the same date as the November election date of each even-numbered year, or as provided for by law. The terms of office of the Mayor who was elected in 2024 and of the Seat 1 and Seat 2 Town Commissioners who were elected in the municipal general election of March 2022 shall expire when their successors are sworn in after the general election in November of 2026. The terms of office of the Seat 3 and Seat 4 Town Commissioners who were elected in the municipal general election of March 2024 shall expire when their successors are sworn in after the general election in November of 2028. <span style="text-decoration: underline;"><span style="background:yellow;">Notwithstanding any other provision of this Charter, the extension or adjustment of any elected official&rsquo;s term of office resulting from the Town&rsquo;s change of municipal election dates from March to November in 2024 shall be deemed solely for the purpose of aligning the Town&rsquo;s election cycle. Any additional months served as a result of such alignment shall not: (i) be considered a separate term, (ii) be deemed to constitute the commencement of a new term, (iii) be counted for purposes of calculating term limits, or (iv) require or trigger a special election. Service during such alignment period shall be treated as part of the originally elected term.</span></span></p><h3 class="subhead2" data-pasted="true" aria-level="2">Sec. 6.3. - Qualifications of members of Town Commission.</h3><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(1) To be eligible to hold the office of Mayor-Commissioner or Commissioner of the Town of Lauderdale-By-The-Sea, or to qualify for candidacy for Mayor-Commissioner or Commissioner, the individual shall be a bona fide resident and citizen of the Town of Lauderdale-By-The-Sea, shall have resided in the said town for the six (6) months immediately preceding the date of election, shall be a registered voter pursuant to Florida law, and shall be otherwise qualified as provided for in the Charter.</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;"><span style='font-family:"Times New Roman",serif;'>(2) No person may&nbsp;</span><s><span style='font-family:"Times New Roman",serif;background:yellow;'>be a candidate</span></s><span style='font-family:"Times New Roman",serif;background:yellow;'>&nbsp;<span style="text-decoration: underline;">appear on a ballot</span></span><span style="text-decoration: underline;">&nbsp;</span><span style='font-family:"Times New Roman",serif;'>for Commissioner, nor may be appointed to fill a vacancy as a Commissioner, if that person has served during both of the two preceding consecutive Commission terms for that seat as a Commissioner, or a Mayor-Commissioner or both, without a two year break in service.</span></p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(3) No person may <s>&nbsp;<span style="background:yellow;">be a candidate</span></s><span style="background: yellow;">&nbsp;<span style="text-decoration: underline;">appear on a ballot</span></span> for Mayor-Commissioner, nor may be appointed to fill a vacancy as the Mayor-Commissioner, if that person has served during each of the three preceding consecutive Mayor-Commissioner terms as a Mayor-Commissioner.</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(4) Service of one year or less of a term by a person who had not previously served as either a Commissioner or Mayor-Commissioner shall not be considered for purposes of term limits.</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(5) Service for purposes of term limits shall be determined as of the time the person would take office.</p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 8pt; line-height: 115%; font-size: 16px; font-family: Aptos, sans-serif;">(6) No person may<s>&nbsp;<span style="background:yellow;">be a candidate</span></s><span style="background:yellow;">&nbsp;<span style="text-decoration: underline;">appear on a ballot</span></span><span style="text-decoration: underline;">&nbsp;</span>for Mayor-Commissioner or Town Commissioner, nor may be appointed to fill a vacancy as the Mayor-Commissioner or Town Commissioner, if that person has consecutively served fourteen (14) years in any combination of offices without a two year break in service.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'f6b1a1c1-47ca-446f-8b81-80410c0c050d'));
+	});
+</script>
+</div>
+
+				</div>
+					</div>
+	</div>
+	<script type="text/javascript">
+
+		//If responsive not enabled, execute this after a timeout
+		if(!isResponsiveEnabled)
+		{
+			window.setTimeout(function(){
+				var tabbedWidgetID = 'divTabbed80921b21-f104-40f9-97e8-06345a80eb7d';
+				typeof setTabbedWidgetsTabHeight === "function" && setTabbedWidgetsTabHeight(tabbedWidgetID);
+			}, 1500);
+		}
+
+		function reinitCarousels() {
+			if (window.carouselsToInit) {
+				for (var i = 0; i < window.carouselsToInit.length; i++) {
+					carouselsToInit[i]();
+				}
+			}
+		}
+		function sizeTabbedContent(element){
+			if(window.Pages){
+				if(window.Pages.onResizeHandlers){
+					var setTabbedInterval = setInterval(function () {
+						window.Pages.onResizeHandlers.forEach(function(car){car();});
+					}, 25)
+
+
+					setTimeout(function () {
+						clearInterval(setTabbedInterval);
+						if ($.cookie("enableLiveEdit") === "true") {
+							setInterval(function () {
+								window.Pages.onResizeHandlers.forEach(function(car){car();});
+							}, 2000);
+						}
+					}, 2500);
+					element.onclick="window.setTimeout(function(){reinitCarousels();},2);"
+				}
+			}
+		}
+
+		function adjustTab(e) {
+			e.preventDefault();
+			window.setTimeout(function(){
+				reinitCarousels();
+			}, 2);
+			sizeTabbedContent(this);
+		}
+
+		var tabButtons = document.querySelectorAll("#divTabbed80921b21-f104-40f9-97e8-06345a80eb7d .tabButton");
+
+		tabButtons.forEach(function (tabButton) {
+			tabButton.addEventListener("click", adjustTab);
+		});
+
+	</script>
+
+
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+		</div>
+
+	</div>
+
+	
+	<div class="newCP">
+
+	</div>
+</div>
+</div><aside data-cpRole="contentContainer" id="featureColumn" class="secondaryContent">	<div id="cc28d11c5d-8234-44b4-9d5e-6b8dc5609678" data-containerid="28d11c5d-8234-44b4-9d5e-6b8dc5609678" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div>
+</div></div>
+</div>
+</div><!-- GBs --><div data-cpRole="structuralContainer" id="gbsContainerTS">
+<div class="siteWrap4"><div data-cpRole="contentContainer" id="gbsTS">	<div id="cc40ac7181-ae0c-452a-bdf4-e18191aa7ec8" data-containerid="40ac7181-ae0c-452a-bdf4-e18191aa7ec8" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="45">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col8 first" style="" data-widgetcontainerid="db6d38fa-1bcf-49a2-a67f-e4d32d476c5b">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last id121e8840-a051-4ccc-a6be-39048b3b3047" style="" data-widgetcontainerid="121e8840-a051-4ccc-a6be-39048b3b3047">	
+<div data-widget-id="ab1686b9-b331-4251-8e2d-10d00d9871c9" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetab1686b9-b331-4251-8e2d-10d00d9871c9" class="widget widgetGraphicLinks skin65 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:2em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/172/Parking" target="_self" class="fancyButton fancyButton193 " >
+		<span>
+			<span><span class="text">PARKING<br><span class="textStyle2">Permits &amp; Tickets</span></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton193.fancyButton:link,.fancyButton193.fancyButton:visited, .fancyButton193div.fancyButton{
+	width: 180px;
+	background-image: url('/ImageRepository/Document?documentID=2797');
+	background-repeat: no-repeat;
+	background-position: center top;
+margin: auto;
+transition: background-image .2s ease;
+background-size: 145px;}
+.fancyButton193.fancyButton:hover,.fancyButton193.fancyButton:focus,.fancyButton193.fancyButton:active,.fancyButton193.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+.fancyButton193.fancyButton:link > span,.fancyButton193.fancyButton:visited > span, .fancyButton193div.fancyButton > span{
+}
+.fancyButton193.fancyButton:hover > span,.fancyButton193.fancyButton:focus > span,.fancyButton193.fancyButton:active > span,.fancyButton193.fancyButton.hover > span{
+}
+.fancyButton193.fancyButton .text{
+	color: #333;
+	font-size: 1em;
+	font-family: "Montserrat";
+	text-align: center;
+	padding-top: 200px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 200px;
+	background-image: url('/ImageRepository/Document?documentID=2808');
+	background-repeat: no-repeat;
+	background-position: center top;
+
+
+}
+.fancyButton193.fancyButton:hover .text,.fancyButton193.fancyButton:focus .text,.fancyButton193.fancyButton:active .text,.fancyButton193.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=2809');
+	background-repeat: no-repeat;
+	background-position: center top;
+
+
+}
+.fancyButton193.fancyButton .textStyle2{
+	color: #333;
+	font-size: .9em;
+	font-family: Open Sans;
+	font-style: normal;
+	text-decoration: none;
+
+}
+.fancyButton193.fancyButton:hover .textStyle2, .fancyButton193.fancyButton.hover .textStyle2{
+	text-decoration: underline;
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://www.lauderdalebythesea-fl.gov/152/Building-Division" target="_self" class="fancyButton fancyButton194 " >
+		<span>
+			<span><span class="text"><span style="font-size: 1em;">BUILDING PERMITS<br></span><span class="textStyle2">Development Services</span><br></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton194.fancyButton:link,.fancyButton194.fancyButton:visited, .fancyButton194div.fancyButton{
+	width: 180px;
+	background-image: url('/ImageRepository/Document?documentID=2800');
+	background-repeat: no-repeat;
+	background-position: center top;
+margin: auto;
+transition: background-image .2s ease;
+background-size: 145px;}
+.fancyButton194.fancyButton:hover,.fancyButton194.fancyButton:focus,.fancyButton194.fancyButton:active,.fancyButton194.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+.fancyButton194.fancyButton:link > span,.fancyButton194.fancyButton:visited > span, .fancyButton194div.fancyButton > span{
+}
+.fancyButton194.fancyButton:hover > span,.fancyButton194.fancyButton:focus > span,.fancyButton194.fancyButton:active > span,.fancyButton194.fancyButton.hover > span{
+}
+.fancyButton194.fancyButton .text{
+	color: #333;
+	font-size: 1em;
+	font-family: "Montserrat";
+	text-align: center;
+	padding-top: 200px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 200px;
+	background-image: url('/ImageRepository/Document?documentID=2802');
+	background-repeat: no-repeat;
+	background-position: center top;
+transition: background-image .3s ease;
+}
+.fancyButton194.fancyButton:hover .text,.fancyButton194.fancyButton:focus .text,.fancyButton194.fancyButton:active .text,.fancyButton194.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=2803');
+	background-repeat: no-repeat;
+	background-position: center top;
+transition: background-image .3s ease;
+}
+.fancyButton194.fancyButton .textStyle1{
+	color: #333;
+	font-size: .8em;
+	font-family: Arial;
+	font-style: normal;
+	text-decoration: none;
+
+}
+.fancyButton194.fancyButton:hover .textStyle1, .fancyButton194.fancyButton.hover .textStyle1{
+	text-decoration: none;
+
+}
+.fancyButton194.fancyButton .textStyle2{
+	color: #333;
+	font-size: .9em;
+	font-family: Open Sans;
+	font-style: normal;
+	text-decoration: none;
+
+}
+.fancyButton194.fancyButton:hover .textStyle2, .fancyButton194.fancyButton.hover .textStyle2{
+	text-decoration: underline;
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col8" style="" data-widgetcontainerid="998a993d-5a5f-49c3-91bf-b603c9ad8ead">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last id67a36648-11fc-489f-b98e-82c2aae27538" style="" data-widgetcontainerid="67a36648-11fc-489f-b98e-82c2aae27538">	
+<div data-widget-id="d352e4a8-4c88-47b9-a297-168720597d52" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetd352e4a8-4c88-47b9-a297-168720597d52" class="widget widgetGraphicLinks skin65 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:2em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/129/Town-Agendas" target="_self" class="fancyButton fancyButton195 " >
+		<span>
+			<span><span class="text">MEETINGS<br><span class="textStyle1">Agendas &amp; Videos</span></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton195.fancyButton:link,.fancyButton195.fancyButton:visited, .fancyButton195div.fancyButton{
+	width: 180px;
+	background-image: url('/ImageRepository/Document?documentID=2799');
+	background-repeat: no-repeat;
+	background-position: center top;
+margin: auto;
+transition: background-image .2s ease;
+background-size: 145px;}
+.fancyButton195.fancyButton:hover,.fancyButton195.fancyButton:focus,.fancyButton195.fancyButton:active,.fancyButton195.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+.fancyButton195.fancyButton:link > span,.fancyButton195.fancyButton:visited > span, .fancyButton195div.fancyButton > span{
+}
+.fancyButton195.fancyButton:hover > span,.fancyButton195.fancyButton:focus > span,.fancyButton195.fancyButton:active > span,.fancyButton195.fancyButton.hover > span{
+}
+.fancyButton195.fancyButton .text{
+	color: #333;
+	font-size: 1em;
+	font-family: "Montserrat";
+	text-align: center;
+	padding-top: 200px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 200px;
+	background-image: url('/ImageRepository/Document?documentID=2806');
+	background-repeat: no-repeat;
+	background-position: center top;
+transition: background-image .3s ease;
+}
+.fancyButton195.fancyButton:hover .text,.fancyButton195.fancyButton:focus .text,.fancyButton195.fancyButton:active .text,.fancyButton195.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=2807');
+	background-repeat: no-repeat;
+	background-position: center top;
+transition: background-image .3s ease;
+}
+.fancyButton195.fancyButton .textStyle1{
+	color: #333;
+	font-size: .9em;
+	font-family: Open Sans;
+	font-style: normal;
+	text-decoration: none;
+
+}
+.fancyButton195.fancyButton:hover .textStyle1, .fancyButton195.fancyButton.hover .textStyle1{
+	text-decoration: underline;
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/235/Circuit-By-The-Sea" target="_self" class="fancyButton fancyButton196 " >
+		<span>
+			<span><span class="text">COMMUNITY SHUTTLES<br><span class="textStyle1">Circuit-By-The-Sea</span></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton196.fancyButton:link,.fancyButton196.fancyButton:visited, .fancyButton196div.fancyButton{
+	width: 180px;
+	background-image: url('/ImageRepository/Document?documentID=2798');
+	background-repeat: no-repeat;
+	background-position: center top;
+margin: auto;
+transition: background-image .2s ease;
+background-size: 145px;}
+.fancyButton196.fancyButton:hover,.fancyButton196.fancyButton:focus,.fancyButton196.fancyButton:active,.fancyButton196.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+.fancyButton196.fancyButton:link > span,.fancyButton196.fancyButton:visited > span, .fancyButton196div.fancyButton > span{
+}
+.fancyButton196.fancyButton:hover > span,.fancyButton196.fancyButton:focus > span,.fancyButton196.fancyButton:active > span,.fancyButton196.fancyButton.hover > span{
+}
+.fancyButton196.fancyButton .text{
+	color: #333;
+	font-size: 1em;
+	font-family: "Montserrat";
+	text-align: center;
+	padding-top: 200px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 200px;
+	background-image: url('/ImageRepository/Document?documentID=2804');
+	background-repeat: no-repeat;
+	background-position: center top;
+transition: background-image .3s ease;
+}
+.fancyButton196.fancyButton:hover .text,.fancyButton196.fancyButton:focus .text,.fancyButton196.fancyButton:active .text,.fancyButton196.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=2805');
+	background-repeat: no-repeat;
+	background-position: center top;
+transition: background-image .3s ease;
+}
+.fancyButton196.fancyButton .textStyle1{
+	color: #333;
+	font-size: .9em;
+	font-family: Open Sans;
+	font-style: normal;
+	text-decoration: none;
+
+}
+.fancyButton196.fancyButton:hover .textStyle1, .fancyButton196.fancyButton.hover .textStyle1{
+	text-decoration: underline;
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col8 last" style="" data-widgetcontainerid="3a5fe329-8417-4af3-88b3-30d188a287f5">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last idf4a597d2-0688-48ec-8f99-36ee1610cd4e" style="" data-widgetcontainerid="f4a597d2-0688-48ec-8f99-36ee1610cd4e">	
+<div data-widget-id="5bdb0b7d-6af5-4b4e-a9c5-6544f4446dac" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget5bdb0b7d-6af5-4b4e-a9c5-6544f4446dac" class="widget widgetGraphicLinks skin65 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:2em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/318/Staff-Directory" target="_self" class="fancyButton fancyButton197 " >
+		<span>
+			<span><span class="text">STAFF DIRECTORY<br><span class="textStyle1">Contact Information</span></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton197.fancyButton:link,.fancyButton197.fancyButton:visited, .fancyButton197div.fancyButton{
+	width: 180px;
+	background-image: url('/ImageRepository/Document?documentID=2801');
+	background-repeat: no-repeat;
+	background-position: center top;
+margin: auto;
+transition: background-image .2s ease;
+background-size: 145px;}
+.fancyButton197.fancyButton:hover,.fancyButton197.fancyButton:focus,.fancyButton197.fancyButton:active,.fancyButton197.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+.fancyButton197.fancyButton:link > span,.fancyButton197.fancyButton:visited > span, .fancyButton197div.fancyButton > span{
+}
+.fancyButton197.fancyButton:hover > span,.fancyButton197.fancyButton:focus > span,.fancyButton197.fancyButton:active > span,.fancyButton197.fancyButton.hover > span{
+}
+.fancyButton197.fancyButton .text{
+	color: #333;
+	font-size: 1em;
+	font-family: "Montserrat";
+	text-align: center;
+	padding-top: 200px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 200px;
+	background-image: url('/ImageRepository/Document?documentID=2810');
+	background-repeat: no-repeat;
+	background-position: center top;
+transition: background-image .3s ease;
+}
+.fancyButton197.fancyButton:hover .text,.fancyButton197.fancyButton:focus .text,.fancyButton197.fancyButton:active .text,.fancyButton197.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=2811');
+	background-repeat: no-repeat;
+	background-position: center top;
+transition: background-image .3s ease;
+}
+.fancyButton197.fancyButton .textStyle1{
+	color: #333;
+	font-size: .9em;
+	font-family: Open Sans;
+	font-style: normal;
+	text-decoration: none;
+
+}
+.fancyButton197.fancyButton:hover .textStyle1, .fancyButton197.fancyButton.hover .textStyle1{
+	text-decoration: underline;
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- Calendar/Carousel --><!-- <div data-cpRole="structuralContainer" id="homeContainer1">
+    <div class="siteWrap4">
+      <div data-cpRole="contentContainer" id="homeContent1a"></div>
+    </div>
+  </div> --><!-- Footer --><div data-cpRole="structuralContainer" id="footerOverlayTS">
+<footer data-cpRole="structuralContainer" id="footerContainerTS">
+<div class="siteWrap3"><div data-cpRole="contentContainer" id="footerTS">	<div id="cce4227882-a272-4237-ad79-3d3092d5a62a" data-containerid="e4227882-a272-4237-ad79-3d3092d5a62a" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="45">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col6 first" style="" data-widgetcontainerid="fe91b197-9705-4bde-9e12-1ef910a4ddb3">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col6 first last idb1fb6e15-e37a-4a04-b23e-73ae5cb91fd4" style="" data-widgetcontainerid="b1fb6e15-e37a-4a04-b23e-73ae5cb91fd4">	
+	<div data-widget-id="83cc1bec-a572-41d1-b95b-813d589afac0" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink83cc1bec-a572-41d1-b95b-813d589afac0" class="widget widgetQuickLinks skin64 widgetOptionSet47 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader83cc1bec-a572-41d1-b95b-813d589afac0">
+			<header class="widgetHeader" id="quickLinksHeader83cc1bec-a572-41d1-b95b-813d589afac0">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=17" >Quick Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://browardcountylegalnotices.com/158/Lauderdale-by-the-Sea" target="_self" aria-label="Online Legal Notices - Home - Popular Links" rel="">Online Legal Notices</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.lauderdalebythesea-fl.gov/554/Town-Election" target="_self" aria-label="Town Election - Home - Popular Links" rel="">Town Election</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.lauderdalebythesea-fl.gov/257/Town-Employment" target="_self" aria-label="Town Employment - Home - Popular Links" rel="">Town Employment</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.discoverlbts.com/events/" target="_self" aria-label="Town Events - Home - Popular Links" rel="">Town Events</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/266/Forms-Documents" target="_self" aria-label="Town Documents - Home - Popular Links" rel="">Town Documents</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.youtube.com/channel/UCv4Xj7aFgs61CP7pxtGftsA" target="_self" aria-label="Town YouTube Channel - Home - Popular Links" rel="">Town YouTube Channel</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col6" style="" data-widgetcontainerid="09d59443-eb45-4d48-8c91-b2564ca12412">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col6 first last id74dc9612-750c-498b-b520-0f944b28ada9" style="" data-widgetcontainerid="74dc9612-750c-498b-b520-0f944b28ada9">	
+	<div data-widget-id="7707012a-7b3b-4328-a37f-2a87b3802a74" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink7707012a-7b3b-4328-a37f-2a87b3802a74" class="widget widgetQuickLinks skin64 widgetOptionSet47 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader7707012a-7b3b-4328-a37f-2a87b3802a74">
+			<header class="widgetHeader" id="quickLinksHeader7707012a-7b3b-4328-a37f-2a87b3802a74">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=16" >Site Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/" target="_self" aria-label="Home - Footer - Site Links" rel="">Home</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/sitemap" target="_self" aria-label="Site Map - Footer - Site Links" rel="">Site Map</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/318/Staff-Directory" target="_self" aria-label="Contact Us - Footer - Site Links" rel="">Contact Us</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.lauderdalebythesea-fl.gov/385/Website-Accessibility" target="_self" aria-label="Accessibility - Footer - Site Links" rel="">Accessibility</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/site/copyright" target="_self" aria-label="Copyright Notices - Footer - Site Links" rel="">Copyright Notices</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/182/Town-Clerk" target="_self" aria-label="Public Records &amp; Email Policy - Footer - Site Links" rel="">Public Records & Email Policy</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col6" style="" data-widgetcontainerid="8ce2c2ab-8155-4a63-a06e-b769a2ad6c61">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col6 first last idb3643c7c-f05a-4895-ae0d-e5a013c8e610" style="" data-widgetcontainerid="b3643c7c-f05a-4895-ae0d-e5a013c8e610">	
+    <div data-widget-id="fcca55c7-ab7a-4bdc-99e4-20bdd8e41aae" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdvfcca55c7-ab7a-4bdc-99e4-20bdd8e41aae" class="widget widgetInfoAdvanced skin64 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="headerfcca55c7-ab7a-4bdc-99e4-20bdd8e41aae">
+			<header class="widgetHeader" id="headerfcca55c7-ab7a-4bdc-99e4-20bdd8e41aae">
+		<div class="">
+					<h3 >Contact Us</h3>
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><span class="widgetTitle" style="font-size: 12pt;">4501 North Ocean Drive</span></p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><span style="font-size: 12pt;">Lauderdale-By-The-Sea, FL 33308</span></p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><span style="font-size: 12pt;">Phone: </span><span style="font-size: 12pt;"><a href="tel: 954-640-4200">954-640-4200</a></span></p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><span style="font-size: 12pt;">Town Hall Hours:&nbsp;</span><br><span style="font-size: 12pt;">Monday through Friday</span><br><span style="font-size: 12pt;">8:30 am to 4:30 pm</span></p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdvfcca55c7-ab7a-4bdc-99e4-20bdd8e41aae .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="cd935b17-fd66-4431-bd54-9e09c400c4e8">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last id346536d7-6964-4630-a8cf-e1dcf79f1a66" style="" data-widgetcontainerid="346536d7-6964-4630-a8cf-e1dcf79f1a66">	
+
+<div class="widget widgetSpacer" id="12b9c83a-08d1-426b-8501-b90018362f49"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col5 last" style="" data-widgetcontainerid="837c4205-9ad5-4ba6-bb1d-8445a219c742">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col5 first last id7a48cb57-dbdb-43b7-bb1d-29ac0aa68857" style="" data-widgetcontainerid="7a48cb57-dbdb-43b7-bb1d-29ac0aa68857">	
+    <div data-widget-id="74305d19-87f3-414e-9c13-ef9543aaa045" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdv74305d19-87f3-414e-9c13-ef9543aaa045" class="widget widgetInfoAdvanced skin66 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-label="Info Advanced">
+			<header class="widgetHeader" id="header74305d19-87f3-414e-9c13-ef9543aaa045">
+		<div class="">
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><a href="/"><img src="/ImageRepository/Document?documentId=2792" class="fr-dib" alt="Lauderdale By The Sea Florida Homepage"></a></p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdv74305d19-87f3-414e-9c13-ef9543aaa045 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col5 first last id1070b1ba-2e5c-431b-b795-f22c4b9fb2ea" style="" data-widgetcontainerid="1070b1ba-2e5c-431b-b795-f22c4b9fb2ea">	
+<div data-widget-id="610166dd-0840-4bb5-9032-43a3f114ccf6" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget610166dd-0840-4bb5-9032-43a3f114ccf6" class="widget widgetGraphicLinks skin68 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:2em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid5 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="https://www.facebook.com/lbtsgov " target="_self">
+
+<img src="/ImageRepository/Document?documentID=2819" 
+     class="graphicButtonLink" alt="Facebook" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=2819'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=2819'"
+     onfocus="this.src='/ImageRepository/Document?documentID=2819'" 
+	onblur="this.src='/ImageRepository/Document?documentID=2819'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="https://x.com/LBTSgov" target="_self">
+
+<img src="/ImageRepository/Document?documentID=2815" 
+     class="graphicButtonLink" alt="X" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=2815'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=2815'"
+     onfocus="this.src='/ImageRepository/Document?documentID=2815'" 
+	onblur="this.src='/ImageRepository/Document?documentID=2815'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="https://www.instagram.com/discoverlbts/" target="_self">
+
+<img src="/ImageRepository/Document?documentID=2816" 
+     class="graphicButtonLink" alt="Instagram" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=2816'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=2816'"
+     onfocus="this.src='/ImageRepository/Document?documentID=2816'" 
+	onblur="this.src='/ImageRepository/Document?documentID=2816'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</footer>
+</div><!-- Powered By --><div data-cpRole="structuralContainer" id="poweredByContainerTS">
+<div class="siteWrap3"><div data-cpRole="contentContainer" id="poweredByTS">	<div id="cc154065c5-639d-4289-b16f-910f7d600e3d" data-containerid="154065c5-639d-4289-b16f-910f7d600e3d" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="69e58261-77e1-4cd0-bdff-7ef884aa691c">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idb3f419a8-96fb-4377-9437-503300494ae7" style="" data-widgetcontainerid="b3f419a8-96fb-4377-9437-503300494ae7">	
+ 
+	<div data-widget-id='ae297ddb-95e2-46a5-a50d-6f8fb15f69d7' data-moduleName="customHtml" id='widgetCustomHtmlae297ddb-95e2-46a5-a50d-6f8fb15f69d7' class="widget widgetCustomHtml skin66 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBodyae297ddb-95e2-46a5-a50d-6f8fb15f69d7">
+		<div id="customHtmlae297ddb-95e2-46a5-a50d-6f8fb15f69d7"><div><style>
+  /* CP icon */
+  .cpBylineIconTS {
+    color: #fff;
+  }
+  /* CP Text */
+  .cpBylineTextTS,
+  .cpBylineTextTS a:link {
+    color: #fff;
+  }
+
+  .cpBylineTS {
+    text-align: center;
+  }
+  
+  .cpBylineIconTS {
+    fill: currentColor;
+    width: 39px;
+    height: 26px;
+    display: inline;
+    vertical-align: middle;
+  }
+</style>
+
+<div class="widgetItem cpBylineTS">
+  <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 100 100" class="cpBylineIconTS">
+    <path class="c" d="M73.4,23.2h-19v16.7h19c2.8,0,5,2.2,5,5c0,2.8-2.2,5-5,5h-19v28.4h5.5l11.3-11.7h2.2c11.9,0,21.6-9.7,21.6-21.6C95,33,85.3,23.2,73.4,23.2"></path>
+    <path class="p" d="M45.8,66.5H26.6C14.7,66.5,5,56.8,5,44.9C5,33,14.7,23.2,26.6,23.2h19.1v16.7H26.6c-2.8,0-5,2.2-5,5c0,2.8,2.2,5,5,5h19.1V66.5z"></path>
+  </svg>
+  <span class="cpBylineTextTS">Government Websites by <a href="https://connect.civicplus.com/referral">CivicPlus&reg;</a></span>
+</div>
+</div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+<link href="/745732998.css" rel="stylesheet" type="text/css" />
+
+<div id="SplashMessageWrapper" class="cp-Splash-wrapper">
+	<div role="dialog" aria-labelledby="cp-Splash-title" aria-describedby="editorContentDesc" aria-modal="true" tabindex="-1" id="SplashMessage" class="hidden cp-Splash cp-Splash--modal is-open">
+		<div class="cp-Splash-header">
+			<h2 class="cp-Splash-title" id="cp-Splash-title">Loading</h2>
+			<button class="cp-Splash-Btn cp-Splash-close" aria-label="Close this modal" title="Close this window">
+				<svg id="iconClose" viewBox="0 0 25 25">
+					<polygon style="fill:currentcolor"
+							 points="18.806,6.98 18.075,6.248 12.532,11.792 6.989,6.248 6.257,6.98 11.786,12.508 6.212,18.084 6.943,18.815 12.532,13.224 18.12,18.815 18.851,18.084 13.277,12.508"></polygon>
+				</svg>
+			</button>
+		</div>
+		<div class="cp-Splash-body">
+			<div class="cp-Splash-Prose editorContent fr-view" id="editorContentDesc">
+				<!-- Content from the Froala Editor will go here. -->
+				Loading
+			</div>
+		</div>
+		<div class="cp-Splash-footer">
+			<button class="cp-Splash-Btn cp-Splash-Btn--NoShow">Do Not Show Again</button>
+			<button class="cp-Splash-Btn cp-Splash-Btn--Close">Close</button>
+		</div>
+	</div>
+</div>
+
+<script src="/Assets/Scripts/APIClient.js"></script>
+<script src="/Assets/Mystique/Shared/Scripts/Moment/Moment.min.js"></script>
+<script src="/Assets/Scripts/SplashModal/SplashModalRender.js"></script>
+<script>
+
+		$(document).ready(function () {
+			var filter = {
+				targetId: '660',
+				targetType: 1
+			}
+
+			new SplashModalRender().triggerRender(filter);
+		});
+</script>
+
+
+	
+	
+	
+	
+
+
+
+	<script type="text/javascript">function dynamicStretchContainers () {Core.Layout.stretchContainers('#featureColumn');}</script>
+
+
+
+
+
+
+    <script src="/-1442400649.js" type="text/javascript"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-80973677-1"></script>
+
+<script>
+
+window.dataLayer = window.dataLayer || [];
+
+function gtag(){dataLayer.push(arguments);}
+
+gtag('js', new Date());
+
+gtag('config', 'UA-80973677-1');
+
+</script>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QLM0G1CPB9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QLM0G1CPB9');
+</script>
+
+<!-- Fixed Nav Adjustment -->
+<script>
+  function getValueTS(elem, attr) {
+    const val = elem.css(attr);
+    if (val === undefined) return undefined;
+    const num = parseInt(val, 10);
+    if (num === NaN) return undefined;
+    return num;
+  }
+
+  function clampTS(number, min, max) {
+    return Math.min(Math.max(number, min), max);
+  }
+
+  function isPageEditingTS() {
+    return (
+      $("#doneEditing").length > 0 || // In live edit
+      typeof DesignCenter !== "undefined" // In theme manager
+    );
+  }
+
+  const bgColorRegexTS = /rgba\((\d+), (\d+), (\d+), (\d*\.?\d*)\)/;
+  function isTransparentTS(elem) {
+    const bg = elem.css('background-color');
+    if (typeof bg !== "string" || !bg.startsWith('rgba(')) return false;
+    const matchState = bg.match(bgColorRegexTS);
+    if (!matchState || matchState.length !== 5) return false;
+    const alpha = parseFloat(matchState[4], 10);
+    if (!(alpha >= 0 && alpha < 1)) return false;
+    return true;
+  }
+
+  function iterateLeftpads(cb) {
+    const containersTS = $("[class^='siteWrap'],[class*=' siteWrap']");
+    for (let i = 0; i < containersTS.length; i++) {
+      const containerTS = containersTS[i];
+      // Skip the body container and anything with data-skip-leftpad
+      if (
+        containerTS.id !== "bodyContainerTS" &&
+        containerTS.getAttribute('data-skip-leftpad') === null
+      ) {
+        cb(containerTS);
+      }
+    }
+  }
+
+  const anchor = $("#divToolbars");
+  const bodyContainerTS = $("#bodyContainerTS");
+
+  // Outer banner padding (push banner down)
+  const outerSizingTS = $("#bannerContainerTS");
+  // Inner banner padding (push banner content down) - Transparent header OR on attaching headers
+  const innerSizingTS = $("#bannerSizingTS");
+
+  const forceUnfixClassTS = "forceUnfixTS";
+
+  const fixedTopTS = $(".fixedTopTS");
+  const fixedBottomTS = $(".fixedBottomTS");
+  const fixedLeftTS = $(".fixedLeftTS");
+
+  var initialTopTS;
+  var topAttachTS;
+  if (fixedTopTS && fixedTopTS.length === 1) {
+    initialTopTS = getValueTS(fixedTopTS, 'top');
+    const attachment = fixedTopTS.attr('data-attach');
+    if (attachment) topAttachTS = $("#" + attachment);
+    if (!topAttachTS || topAttachTS.length !== 1) topAttachTS = undefined;
+  }
+
+  function resizeAdjustmentTS() {
+    const editing = isPageEditingTS();
+
+    // Fixed top script
+    (function () {
+      if (!fixedTopTS || fixedTopTS.length !== 1 || initialTopTS === undefined) return;
+
+      if (editing) {
+        fixedTopTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedTopTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      const topPosition = fixedTopTS.css('position');
+      if (topPosition === 'fixed') {
+        if (topAttachTS) {
+          scrollAdjustmentTS();
+        } else {
+          const anchorHeight = anchor.outerHeight() - 1;
+          fixedTopTS.css('top', anchorHeight + initialTopTS);
+        }
+      } else {
+        fixedTopTS.css('top', initialTopTS);
+      }
+
+      if (topPosition === 'fixed' || topPosition === 'absolute') {
+        // Bump the banner content down
+        if (isTransparentTS(fixedTopTS)) {
+          innerSizingTS.css('padding-top', initialTopTS + fixedTopTS.outerHeight());
+          outerSizingTS.css('padding-top', '');
+
+          try {
+            window.Pages.onResizeHandlersExecute();
+          } catch (e) { }
+        } else {
+          outerSizingTS.css('padding-top', fixedTopTS.outerHeight());
+          innerSizingTS.css('padding-top', '');
+        }
+      } else {
+        innerSizingTS.css('padding-top', '');
+        outerSizingTS.css('padding-top', '');
+      }
+    })();
+
+    // Fixed bottom script
+    (function () {
+      if (!fixedBottomTS || fixedBottomTS.length === 0) return;
+
+      // If the widget has gone narrow, force unfix
+      if (editing || fixedBottomTS.outerHeight() > 200) {
+        fixedBottomTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedBottomTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedBottomTS.css('position') === 'fixed') {
+        bodyContainerTS.css('padding-bottom', fixedBottomTS.outerHeight());
+      } else {
+        bodyContainerTS.css('padding-bottom', '');
+      }
+    })();
+
+    // Fixed left script
+    (function () {
+      if (!fixedLeftTS || fixedLeftTS.length === 0) return;
+
+      if (editing) {
+        fixedLeftTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedLeftTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedLeftTS.css('position') === 'fixed') {
+        const anchorHeight = anchor.outerHeight() - 1;
+        fixedLeftTS.css('top', anchorHeight);
+        const leftBoundingTS = fixedLeftTS[0].getBoundingClientRect();
+        iterateLeftpads(function (containerTS) {
+          const containerBoundingTS = containerTS.getBoundingClientRect();
+          if (containerBoundingTS.left <= leftBoundingTS.right) {
+            $(containerTS).css('padding-left', leftBoundingTS.width + 16);
+          }
+        });
+      } else {
+        fixedLeftTS.css('top', '');
+        iterateLeftpads(function (containerTS) {
+          $(containerTS).css('padding-left', '');
+        });
+      }
+    })();
+  }
+
+  function scrollAdjustmentTS() {
+    if (!fixedTopTS || fixedTopTS.length !== 1 || !topAttachTS || topAttachTS.length !== 1) return;
+    const topPosition = fixedTopTS.css('position');
+    if (topPosition === 'fixed' || topPosition === 'absolute') {
+      const anchorBounding = anchor[0].getBoundingClientRect();
+      const attachBounding = topAttachTS[0].getBoundingClientRect();
+      const scrollTop = $(window).scrollTop();
+
+      fixedTopTS.css('top', Math.max(anchorBounding.bottom - 1, attachBounding.bottom));
+    } else {
+      fixedTopTS.css('top', initialTopTS);
+    }
+  }
+
+  $(window).load(function () {
+    setTimeout(function () {
+      try {
+        resizeAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    }, 350);
+
+    $(window).scroll(function () {
+      try {
+        scrollAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    var adjustTimeoutTS;
+    $(window).resize(function () {
+      clearTimeout(adjustTimeoutTS);
+      adjustTimeoutTS = setTimeout(function () {
+        try {
+          resizeAdjustmentTS();
+        } catch (e) {
+          console.error(e);
+        }
+      }, 350);
+    });
+
+    $.when(window.Pages.angularToolbarComplete).done(function () {
+      try {
+        resizeAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  });
+</script>
+<!-- End Fixed Nav Adjustment -->
+
+<script type="text/javascript">!function(){var b=function(){window.__AudioEyeSiteHash = "7158c3602f4cbf1e5333cb55b15679cf"; var a=document.createElement("script");a.src="https://wsmcdn.audioeye.com/aem.js";a.type="text/javascript";a.setAttribute("async","");document.getElementsByTagName("body")[0].appendChild(a)};"complete"!==document.readyState?window.addEventListener?window.addEventListener("load",b):window.attachEvent&&window.attachEvent("onload",b):b()}();</script><!-- AudioEye --> <script type="text/javascript">!function(){var b=function(){window.__AudioEyeSiteHash="7158c3602f4cbf1e5333cb55b15679cf";var a=document.createElement("script");a.src="https://wsmcdn.audioeye.com/aem.js";a.type="text/javascript";a.setAttribute("async","");document.getElementsByTagName("body")[0].appendChild(a)};"complete"!==document.readyState?window.addEventListener?window.addEventListener("load",b):window.attachEvent&&window.attachEvent("onload",b):b()}();</script> <!-- End AudioEye -->
+
+
+    <script type="text/javascript">
+        $(function () {
+            document.cookie = "responsiveGhost=0; path=/";
+        });
+        $(window).on("load", function () {
+            $('body').addClass('doneLoading').removeClass('hideContent');
+
+            if ($('#404Content').length > 0)
+                $('div#bodyWrapper').css('padding', '0px');
+        });
+    </script>
+
+    <noscript>
+        <style>
+            body.hideContent {
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
+
+        
+<div style="display: none;">
+	<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+
+		<symbol id="iconArrow--left" viewbox="0 0 25 25">
+			<title>Arrow Left</title>
+			<polygon style="fill:currentcolor" points="18.044,25 19.498,23.545 8.409,12.454 19.408,1.455 17.954,0 5.502,12.452"></polygon>
+		</symbol>
+
+		<symbol id="iconArrow--right" viewbox="0 0 25 25">
+			<title>Arrow Right</title>
+			<polygon style="fill:currentcolor" points="6.957,0 5.502,1.455 16.591,12.546 5.592,23.545 7.047,25 19.498,12.548"></polygon>
+		</symbol>
+
+	</svg>
+</div>
+    <script type="text/javascript">loadCSS('//fonts.googleapis.com/css?family=Montserrat:100,100italic,200,200italic,300,300italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic,italic,regular|Muli:800,regular|Open+Sans:regular|Poppins:regular|');</script>
+    
+
+    <div class="hidden activeWidgetSkinComponentsOnPageJson">[]</div>
+        <div style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="iconSlideshowArrowLeft" viewBox="0 0 22.68 40">
+                    <title>Slideshow Left Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M20,40a2.67,2.67,0,0,1-1.9-.79L.79,21.9a2.68,2.68,0,0,1,0-3.79L18.1.79a2.68,2.68,0,1,1,3.79,3.79L6.47,20,21.89,35.42A2.68,2.68,0,0,1,20,40Z"></path>
+                    </g>
+                </symbol>
+                <symbol id="iconSlideshowArrowRight" viewBox="0 0 22.68 40">
+                    <title>Slideshow Right Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M2.68,0a2.67,2.67,0,0,1,1.9.79L21.89,18.1a2.68,2.68,0,0,1,0,3.79L4.58,39.21A2.68,2.68,0,0,1,.79,35.42L16.21,20,.79,4.58A2.68,2.68,0,0,1,2.68,0Z"></path>
+                    </g>
+                </symbol>
+            </svg>
+        </div>
+    
+	
+	
+
+    <div id="root-picker-outlet"></div>
+</body>
+</html>

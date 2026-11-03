@@ -1,0 +1,89 @@
+{
+  "preparedAt": "2026-11-03T10:17:35.881Z",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/a8f198ff62d3ccf113addcbc2f769c456c62417c425b0c6723d371bb6d287edf.html",
+      "sha256": "a8f198ff62d3ccf113addcbc2f769c456c62417c425b0c6723d371bb6d287edf",
+      "bytes": 155616,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.lauderdalebythesea-fl.gov/660/2026-Election-Charter-Amendment-Question",
+      "retrievedAt": "2026-11-03T10:09:37.310392+00:00",
+      "nativeCaptureSha256": "55d49954d16754a345e5de80b8c2086b9086d6059e5eb1217234bf44a07d743a",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized primary current official Town publication, all eight ballot questions and full legal redlines, with explicit May26,2026adoption statement. Native and stored hashes are distinct identities."
+    },
+    {
+      "file": "sources/8d1a40b8182b8e7910f76538b1a1c9ac05150fbe2fe7a92c23c2708a40928e66.txt",
+      "sha256": "8d1a40b8182b8e7910f76538b1a1c9ac05150fbe2fe7a92c23c2708a40928e66",
+      "bytes": 4689,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_FULL_LEGAL_REDLINE",
+      "derivedFrom": "sources/a8f198ff62d3ccf113addcbc2f769c456c62417c425b0c6723d371bb6d287edf.html",
+      "htmlNodeId": "tab80921b21-f104-40f9-97e8-06345a80eb7d_0",
+      "extractionMethod": "Native primary HTML text, whitespace normalized. Official statement is the proposed text after excluding only native s/strike/del deleted elements; full original redline text including deleted and added passages is separately retained in this excerpt and complete HTML. No paraphrase inserted into source quotes."
+    },
+    {
+      "file": "sources/cbb844b1cc7df9c65bba47d72b6dd4f3048591fa793dc10997141500dddf3794.txt",
+      "sha256": "cbb844b1cc7df9c65bba47d72b6dd4f3048591fa793dc10997141500dddf3794",
+      "bytes": 4282,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_FULL_LEGAL_REDLINE",
+      "derivedFrom": "sources/a8f198ff62d3ccf113addcbc2f769c456c62417c425b0c6723d371bb6d287edf.html",
+      "htmlNodeId": "tab80921b21-f104-40f9-97e8-06345a80eb7d_1",
+      "extractionMethod": "Native primary HTML text, whitespace normalized. Official statement is the proposed text after excluding only native s/strike/del deleted elements; full original redline text including deleted and added passages is separately retained in this excerpt and complete HTML. No paraphrase inserted into source quotes."
+    },
+    {
+      "file": "sources/18dbcadab16407ce6400f0619c5d192963766180cde4433e6cbe75682ea91aa9.txt",
+      "sha256": "18dbcadab16407ce6400f0619c5d192963766180cde4433e6cbe75682ea91aa9",
+      "bytes": 1999,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_FULL_LEGAL_REDLINE",
+      "derivedFrom": "sources/a8f198ff62d3ccf113addcbc2f769c456c62417c425b0c6723d371bb6d287edf.html",
+      "htmlNodeId": "tab80921b21-f104-40f9-97e8-06345a80eb7d_2",
+      "extractionMethod": "Native primary HTML text, whitespace normalized. Official statement is the proposed text after excluding only native s/strike/del deleted elements; full original redline text including deleted and added passages is separately retained in this excerpt and complete HTML. No paraphrase inserted into source quotes."
+    },
+    {
+      "file": "sources/e1026bac6ba39dacd6ac269e7d2cb26adf53ea90316919f877a70600de7d62cd.txt",
+      "sha256": "e1026bac6ba39dacd6ac269e7d2cb26adf53ea90316919f877a70600de7d62cd",
+      "bytes": 5796,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_FULL_LEGAL_REDLINE",
+      "derivedFrom": "sources/a8f198ff62d3ccf113addcbc2f769c456c62417c425b0c6723d371bb6d287edf.html",
+      "htmlNodeId": "tab80921b21-f104-40f9-97e8-06345a80eb7d_3",
+      "extractionMethod": "Native primary HTML text, whitespace normalized. Official statement is the proposed text after excluding only native s/strike/del deleted elements; full original redline text including deleted and added passages is separately retained in this excerpt and complete HTML. No paraphrase inserted into source quotes."
+    },
+    {
+      "file": "sources/19b89749baa003963d7a14426e6c8c5004d1739e329b57cf853cbc08e2035220.txt",
+      "sha256": "19b89749baa003963d7a14426e6c8c5004d1739e329b57cf853cbc08e2035220",
+      "bytes": 3986,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_FULL_LEGAL_REDLINE",
+      "derivedFrom": "sources/a8f198ff62d3ccf113addcbc2f769c456c62417c425b0c6723d371bb6d287edf.html",
+      "htmlNodeId": "tab80921b21-f104-40f9-97e8-06345a80eb7d_4",
+      "extractionMethod": "Native primary HTML text, whitespace normalized. Official statement is the proposed text after excluding only native s/strike/del deleted elements; full original redline text including deleted and added passages is separately retained in this excerpt and complete HTML. No paraphrase inserted into source quotes."
+    },
+    {
+      "file": "sources/39abc0c974af5d84cf06f6f0a62de1129c6c7b2147ed9b1928d5618c3178ce54.txt",
+      "sha256": "39abc0c974af5d84cf06f6f0a62de1129c6c7b2147ed9b1928d5618c3178ce54",
+      "bytes": 8288,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_FULL_LEGAL_REDLINE",
+      "derivedFrom": "sources/a8f198ff62d3ccf113addcbc2f769c456c62417c425b0c6723d371bb6d287edf.html",
+      "htmlNodeId": "tab80921b21-f104-40f9-97e8-06345a80eb7d_5",
+      "extractionMethod": "Native primary HTML text, whitespace normalized. Official statement is the proposed text after excluding only native s/strike/del deleted elements; full original redline text including deleted and added passages is separately retained in this excerpt and complete HTML. No paraphrase inserted into source quotes."
+    },
+    {
+      "file": "sources/1bed584df274d0bf3ba9c37233e9afeebd37e828af5046dffdbed7ed7360638b.txt",
+      "sha256": "1bed584df274d0bf3ba9c37233e9afeebd37e828af5046dffdbed7ed7360638b",
+      "bytes": 10186,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_FULL_LEGAL_REDLINE",
+      "derivedFrom": "sources/a8f198ff62d3ccf113addcbc2f769c456c62417c425b0c6723d371bb6d287edf.html",
+      "htmlNodeId": "tab80921b21-f104-40f9-97e8-06345a80eb7d_6",
+      "extractionMethod": "Native primary HTML text, whitespace normalized. Official statement is the proposed text after excluding only native s/strike/del deleted elements; full original redline text including deleted and added passages is separately retained in this excerpt and complete HTML. No paraphrase inserted into source quotes."
+    },
+    {
+      "file": "sources/8e5fb6c7073a7d1aa3d00b8d83e04a9c756b32c3a9d4680a39acf81deecf18c6.txt",
+      "sha256": "8e5fb6c7073a7d1aa3d00b8d83e04a9c756b32c3a9d4680a39acf81deecf18c6",
+      "bytes": 14712,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_FULL_LEGAL_REDLINE",
+      "derivedFrom": "sources/a8f198ff62d3ccf113addcbc2f769c456c62417c425b0c6723d371bb6d287edf.html",
+      "htmlNodeId": "tab80921b21-f104-40f9-97e8-06345a80eb7d_7",
+      "extractionMethod": "Native primary HTML text, whitespace normalized. Official statement is the proposed text after excluding only native s/strike/del deleted elements; full original redline text including deleted and added passages is separately retained in this excerpt and complete HTML. No paraphrase inserted into source quotes."
+    }
+  ]
+}

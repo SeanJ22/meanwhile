@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-11-03T06:27:14.287Z",
+  "state": "WA",
+  "sources": 9,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 69,
+  "newContests": 23,
+  "refreshedContests": 5,
+  "candidacies": 41,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 151,
+  "unrelatedCandidateCoreFieldsPreserved": 265,
+  "unrelatedCandidateAliasEnrichments": 265,
+  "unmatchedReaderDivisionCount": 4,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+    "ocd-division/country:us/state:wa/county:pierce/council_district:1",
+    "ocd-division/country:us/state:wa/county:pierce/council_district:5",
+    "ocd-division/country:us/state:wa/county:pierce/council_district:7"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+    "ocd-division/country:us/state:wa/county:pierce/council_district:1",
+    "ocd-division/country:us/state:wa/county:pierce/council_district:5",
+    "ocd-division/country:us/state:wa/county:pierce/council_district:7"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

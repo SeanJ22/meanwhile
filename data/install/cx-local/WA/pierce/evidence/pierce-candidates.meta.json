@@ -1,0 +1,9 @@
+{
+  "url": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+  "finalUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+  "status": 200,
+  "fetchedAt": "2026-11-03T06:14:05.508727+00:00",
+  "sha256": "2faaa47274da36f349973978828a8cd04118c08821ddb85511f823c463f915d4",
+  "bytes": 164709,
+  "contentType": "text/html; charset=utf-8"
+}

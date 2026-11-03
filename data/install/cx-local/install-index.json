@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:21:54.960707+00:00",
+  "preparedAt": "2026-11-03T06:27:19.666599+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1384,6 +1384,27 @@
         ],
         "boundarySupplement": "Exact adopted native official polygons supplied for 13 currently prepared district IDs. Registry joins and live reader verification remain River work; no electorate widened."
       }
+    },
+    {
+      "state": "WA",
+      "county": "Pierce",
+      "populationRank": 60,
+      "manifest": "WA/pierce/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 28,
+      "measureContests": 0,
+      "candidacies": 41,
+      "newContests": 23,
+      "refreshedContests": 5,
+      "sourceInputSha256": "257c9cb0611a341f372932077f5723dee1287eea1fb3f63f289d81348b0cc138",
+      "coverage": [
+        "All23 local candidate fields31 printed names in current official native4-page Pierce composite are complete, with5 shared held Supreme Court fields10 names also refreshed. Every one of those28 full fields41 names/parties/terms matches current native state filing list election899 county27 (all80 source rows Active). All printed single-candidate fields remain ordinary candidates, never inferred declared elected.",
+        "Six Southeast Electoral District fields/seven names exactly reuse the King prepared contest and candidacy IDs. Pierce native sample, current state list and county pamphlet agree; pamphlet pages28\u201331 explicitly identify these as King County District Court judges. Exact full official Southeast geometry is reused without clipping to county boundaries. Applicable Pierce areas do not authorize a whole-Pierce membership.",
+        "Court of Appeals DivisionII District1 Position2 has one printed candidate, Meng Li Che. RCW2.06.020(2)(a) explicitly makes this district Pierce County; its electorate is the exact county division. Pierce County District Court positions1\u20138 remain county offices, distinct from named Southeast Electoral District and Tacoma Municipal Court. Council districts1/5/7 keep exact district OCD IDs pending reader joins.",
+        "Candidate-only packet. The complete sample also contains7 Pierce charter amendments and7 other local measures (plus3 held statewide initiatives); raw source text and a separate inventory are preserved, without adding optional measures or changing held legislative/measures data.",
+        "No current separate qualified-write-in supplement was acquired. State filing source has Active rows but no separate write-in qualification certification, so absence is not asserted. Generic blank optional write-in spaces identify no people. No cancelled/declared-elected office or withdrawn identity is inferred from one-name fields or missing supplementary records.",
+        "All current sources are original native PDF/HTML bytes with exact hashes/extraction; no voter identity or personal-address lookup was used. Shared King geometry and identities remain data prepared for River; reader application joins and source-based qualified-write-in updates remain explicit. No git or production operation."
+      ]
     }
   ],
   "sourceReviewCounties": [
@@ -1409,17 +1430,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 53,
-    "packetsPrepared": 54,
-    "candidateAndRetentionContests": 2860,
+    "countiesPrepared": 54,
+    "packetsPrepared": 55,
+    "candidateAndRetentionContests": 2888,
     "measureContests": 112,
-    "candidacyEntries": 6375,
-    "newContestEntriesAgainstCheckedInBaseline": 2339,
-    "distinctPreparedContestIds": 2937,
-    "distinctPreparedCandidateIds": 6295,
-    "distinctNewContestsAgainstCheckedInBaseline": 2325,
+    "candidacyEntries": 6416,
+    "newContestEntriesAgainstCheckedInBaseline": 2362,
+    "distinctPreparedContestIds": 2959,
+    "distinctPreparedCandidateIds": 6329,
+    "distinctNewContestsAgainstCheckedInBaseline": 2342,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 54
+    "distinctCountyHandoffs": 55
   },
   "remainingWork": [
     {

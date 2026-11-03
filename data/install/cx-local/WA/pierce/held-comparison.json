@@ -1,0 +1,198 @@
+[
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-auditor",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-prosecuting-attorney",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-1",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-5",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-7",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "wa-sos-2026-general-4a01ae3c96851c17",
+    "identitySource": "data/ballot/2026-general/wa.json",
+    "preservedCandidateIds": [
+      "wa-sos-2026-general-4a01ae3c96851c17-cf7107801c56",
+      "wa-sos-2026-general-4a01ae3c96851c17-52877884e207"
+    ],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "wa-sos-2026-general-e6141c106be4832c",
+    "identitySource": "data/ballot/2026-general/wa.json",
+    "preservedCandidateIds": [
+      "wa-sos-2026-general-e6141c106be4832c-2bf2bb6e61c0",
+      "wa-sos-2026-general-e6141c106be4832c-3a2654c1526e"
+    ],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "wa-sos-2026-general-b2c297f9a98570f8",
+    "identitySource": "data/ballot/2026-general/wa.json",
+    "preservedCandidateIds": [
+      "wa-sos-2026-general-b2c297f9a98570f8-5c36aa787201",
+      "wa-sos-2026-general-b2c297f9a98570f8-79412eca913e"
+    ],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "wa-sos-2026-general-5ab3d81746ef7ce9",
+    "identitySource": "data/ballot/2026-general/wa.json",
+    "preservedCandidateIds": [
+      "wa-sos-2026-general-5ab3d81746ef7ce9-29a99e8d0958",
+      "wa-sos-2026-general-5ab3d81746ef7ce9-336378b519c8"
+    ],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "wa-sos-2026-general-2b3d94ad4f312ba5",
+    "identitySource": "data/ballot/2026-general/wa.json",
+    "preservedCandidateIds": [
+      "wa-sos-2026-general-2b3d94ad4f312ba5-f39340090271",
+      "wa-sos-2026-general-2b3d94ad4f312ba5-bf2143c326aa"
+    ],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-court-of-appeals-division-2-district-1-judge-position-no-2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-1",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-3",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-4",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-5",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-6",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-7",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-8",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-1",
+    "identitySource": "data/install/cx-local/WA/king/ballot-input/wa.json",
+    "preservedCandidateIds": [
+      "cx-local-wa-king-2026-district-court-southeast-position-1-leah-taguba"
+    ],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-2",
+    "identitySource": "data/install/cx-local/WA/king/ballot-input/wa.json",
+    "preservedCandidateIds": [
+      "cx-local-wa-king-2026-district-court-southeast-position-2-matthew-york"
+    ],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-3",
+    "identitySource": "data/install/cx-local/WA/king/ballot-input/wa.json",
+    "preservedCandidateIds": [
+      "cx-local-wa-king-2026-district-court-southeast-position-3-tricia-grove-johnson"
+    ],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-4",
+    "identitySource": "data/install/cx-local/WA/king/ballot-input/wa.json",
+    "preservedCandidateIds": [
+      "cx-local-wa-king-2026-district-court-southeast-position-4-corinna-harn"
+    ],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-5",
+    "identitySource": "data/install/cx-local/WA/king/ballot-input/wa.json",
+    "preservedCandidateIds": [
+      "cx-local-wa-king-2026-district-court-southeast-position-5-joshua-c-harris",
+      "cx-local-wa-king-2026-district-court-southeast-position-5-heather-m-barker"
+    ],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-6",
+    "identitySource": "data/install/cx-local/WA/king/ballot-input/wa.json",
+    "preservedCandidateIds": [
+      "cx-local-wa-king-2026-district-court-southeast-position-6-rhonda-laumann"
+    ],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-1",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-3",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "namesAndPartiesMatchCurrentNativeSampleAndStateList": true
+  }
+]

@@ -1,0 +1,527 @@
+
+
+	RCW 2.06.020: 
+
+    
+    
+    
+    
+
+    
+    
+
+    
+    
+        if (typeof jQuery == "undefined") {
+            document.write(unescape("%3Cscript src='https://app.leg.wa.gov/assets/javascript/framework/jquery/jquery-1.9.1.min.js' type='text/javascript'%3E%3C/script%3E"));
+        }
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-172L1S6XYR');
+    
+    
+
+    
+        
+    
+    
+        
+        
+    
+        
+            
+                
+                     Menu
+                
+            
+            
+                
+                    
+                        
+                    
+                
+                
+                    
+                        
+                            Website Search Term
+                            
+                            Search 
+                        
+                    
+                
+            
+        
+    
+    
+        
+            
+                Menu
+            
+            
+                
+                    
+                    Menu
+                
+            
+        
+        
+            
+                
+                    Website Search Term
+                    
+                    Search 
+                
+            
+        
+        
+            
+                
+                    Bills, meetings, and session
+                    
+                
+                
+                    Bills, meetings, and session
+                    
+                
+                    
+                        
+                            
+                                
+                                    Bills
+                                    
+                                
+                            
+                            How to track a billHow to comment on a billHelp with billsData and statisticsPrefiled bills for 2025
+                        
+                    
+                    
+                        
+                            Meeting schedules
+                            
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Session
+                                    
+                                
+                            
+                            How to testify at a committee meetingSession documents
+                        
+                    
+                    
+                        
+                            Initiatives and referenda
+                            
+                        
+                    
+                
+            
+            
+                
+                    State laws and rules
+                    
+                
+                
+                    State laws and rules
+                    
+                
+                    
+                        
+                            Washington State Constitution
+                            
+                        
+                    
+                    
+                        
+                            
+                                
+                                    State laws (RCW)
+                                    
+                                
+                            
+                            Session lawsPast versions of state lawsHelp with state laws
+                        
+                    
+                    
+                        
+                            
+                                
+                                    State rules (WAC)
+                                    
+                                
+                            
+                            Past versions of state rules
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Washington State Register
+                                    
+                                
+                            
+                            Rule-making helpRule-making activity
+                        
+                    
+                    
+                        
+                            Rule Drafting Service (RDS)
+                            
+                        
+                    
+                
+            
+            
+                
+                    Learn and participate
+                    
+                
+                
+                    Learn and participate
+                    
+                
+                    
+                        
+                            
+                                
+                                    Civic education programs
+                                    
+                                
+                            
+                            Page ProgramInternship ProgramLegislative Scholar Program
+                        
+                    
+                    
+                        
+                            How a bill becomes a law
+                            
+                        
+                    
+                    
+                        
+                            How to participate in the lawmaking process
+                            
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Educational resources
+                                    
+                                
+                            
+                            Classroom and learning materialsLegislative documents in alphabetical orderPension educationState symbolsCivics organizations
+                        
+                    
+                    
+                        
+                            State budgets (fiscal.wa.gov)
+                            
+                        
+                    
+                    
+                        
+                            Glossary of legislative terms
+                            
+                        
+                    
+                
+            
+            
+                
+                    Legislators
+                    
+                
+                
+                    Legislators
+                    
+                
+                    
+                        
+                            District Finder
+                            
+                        
+                    
+                    
+                        
+                            Legislator directories
+                            
+                        
+                    
+                    
+                        
+                            How to send a message to a legislator
+                            
+                        
+                    
+                    
+                        
+                            
+                                
+                                    House and Senate class photos
+                                    
+                                
+                            
+                            House Class PhotosSenate Class Photos
+                        
+                    
+                
+            
+            
+                
+                    About the Legislature
+                    
+                
+                
+                    About the Legislature
+                    
+                
+                    
+                        
+                            
+                                
+                                    House of Representatives
+                                    
+                                
+                            
+                            House AdministrationOffice of Program Research
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Senate
+                                    
+                                
+                            
+                            Senate Committee ServicesSchedulesLeadershipAdministration
+                        
+                    
+                    
+                        
+                            Committees
+                            
+                        
+                    
+                    
+                        
+                            Legislative Information Center
+                            
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Legislative agencies
+                                    
+                                
+                            
+                            Joint Legislative Audit and Review Committee (JLARC)Joint Transportation Committee (JTC)Legislative Ethics Board (LEB)Legislative Evaluation and Accountability Program (LEAP) CommitteeLegislative Service Center (LEG-TECH)Legislative Support Services (LSS)Office of the Code Reviser (CRO)Office of State Legislative Labor Relations (OSLLR)Office of the State Actuary (OSA)
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Legislative procedures
+                                    
+                                
+                            
+                            House rulesSenate rulesJoint rulesReed's RulesSenate emergency parliamentary rulesSenate committee room rulesCode Reviser's Office ProceduresEthics Board rulesWashington State Constitution
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Ethics
+                                    
+                                
+                            
+                            Ethics advisory opinionsEthics complaint opinionsEthics alertsEthics reportsEthics complaint form
+                        
+                    
+                    
+                        
+                            
+                                
+                                    History of the Legislature
+                                    
+                                
+                            
+                            Enabling ActTerritorial historySenate PresidentsPreserving Capitol furniture
+                        
+                    
+                
+            
+        
+        
+    
+
+
+
+        
+            
+                
+                    Home
+                     / State laws and rules
+                     / RCWs / Title 2 / Chapter 2.06 / Section 2.06.020
+                
+                
+                    Print
+                
+            
+            
+
+    
+        
+        
+
+            
+	
+                2.06.010  << 
+                2.06.020 >>  
+                2.06.022
+                
+            
+
+
+            
+            
+            
+
+                
+	
+                    
+                        PDF
+                        RCW  2.06.020
+                    
+                    Divisions—Locations—Judges enumerated—Districts.
+                
+
+            
+                
+                
+                
+            
+
+            
+
+            
+
+            
+            The court shall have three divisions, one of which shall be headquartered in Seattle, one of which shall be headquartered in Spokane, and one of which shall be headquartered in Tacoma:(1) The first division shall have twelve judges from three districts, as follows:(a) District 1 shall consist of King county and shall have eight judges;(b) District 2 shall consist of Snohomish county and shall have two judges; and(c) District 3 shall consist of Island, San Juan, Skagit, and Whatcom counties and shall have two judges.(2) The second division shall have eight judges from the following districts:(a) District 1 shall consist of Pierce county and shall have three judges;(b) District 2 shall consist of Clallam, Grays Harbor, Jefferson, Kitsap, Mason, and Thurston counties and shall have three judges;(c) District 3 shall consist of Clark, Cowlitz, Lewis, Pacific, Skamania, and Wahkiakum counties and shall have two judges.(3) The third division shall have five judges from the following districts:(a) District 1 shall consist of Ferry, Lincoln, Okanogan, Pend Oreille, Spokane, and Stevens counties and shall have two judges;(b) District 2 shall consist of Adams, Asotin, Benton, Columbia, Franklin, Garfield, Grant, Walla Walla, and Whitman counties and shall have one judge;(c) District 3 shall consist of Chelan, Douglas, Kittitas, Klickitat, and Yakima counties and shall have two judges.[ 2009 c 77 s 1;  1999 c 75 s 1;  1993 c 420 s 1;  1989 c 328 s 10;  1977 ex.s. c 49 s 1;  1969 ex.s. c 221 s 2.]Notes:Rules of court: Cf. RAP 4.1(b).Judicial position contingent on funding—2009 c 77: "The judicial position created by *section 1, chapter 77, Laws of 2009 shall become effective only if that position is specifically funded and is referenced by division and district in an omnibus appropriations act." [ 2009 c 77 s 2.]*Reviser's note: The judicial position created by section 1, chapter 77, Laws of 2009 was not referenced in a 2009 omnibus appropriations act.Effective date—1993 c 420: "This act is necessary for the immediate preservation of the public peace, health, or safety, or support of the state government and its existing public institutions, and shall take effect immediately [May 15, 1993]." [ 1993 c 420 s 3.]Intent—1989 c 328: See note following RCW  2.08.061.Appointments to positions created by the amendment to this section by 1977 ex.s. c 49 s 1: RCW  2.06.075.
+            
+	
+            
+        
+
+        
+        
+    
+
+        
+
+        
+    
+        
+            
+                Legislative questions or comments
+                
+                    Call the Legislative Hotline
+                    1-800-562-6000
+                    TTY for deaf/hard of hearing: 1-800-833-6388
+                
+                Learn more about the Legislative Hotline
+            
+            
+                
+                    
+                        
+                            
+                                Studies, audits, and reports
+                                
+                                    
+                                        Performance audits
+                                    
+                                    
+                                        Actuarial reporting
+                                    
+                                    
+                                        Transportation studies and reports
+                                    
+                                    
+                                        Reports from outside organizations
+                                    
+                                    
+                                        Investigation reports
+                                    
+                                
+                            
+                        
+                    
+                    
+                        
+                            
+                                Accessibility
+                            
+                            
+                                Jobs
+                            
+                            
+                                
+                                    Public records requests
+                                
+                            
+                            Site help
+                            
+                                Contact us
+                            
+                            
+                                Email updates (GovDelivery)
+                            
+                        
+                    
+                
+            
+        
+    
+
+
+    
+        
+            
+                
+                    
+                        
+                            
+                        
+                    
+                    Disclaimer
+                    Privacy Notice
+                
+            
+             Copyright 2025. All Rights Reserved.
+        
+    
+
+    
+

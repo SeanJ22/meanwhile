@@ -1,0 +1,1781 @@
+{
+  "ballots": {
+    "WA:wa-2026-general": {
+      "election": {
+        "id": "wa-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WA"
+      },
+      "contests": [
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-auditor",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+          "divisionVintage": "2026",
+          "title": "Pierce County Auditor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Auditor\nLinda Farmer\nDamon Townsend"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-prosecuting-attorney",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+          "divisionVintage": "2026",
+          "title": "Pierce County Prosecuting Attorney",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Prosecuting Attorney\nCoreen Schnepf\nBryan Chushcoff"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-council-district-no-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce/council_district:1",
+          "divisionVintage": "2026",
+          "title": "Pierce County Council District No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "County Council District No. 1\n(Prefers Republican Party)\nJerome O'Leary\n(Prefers Democratic Party)\nKelsey Barrans"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-council-district-no-5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce/council_district:5",
+          "divisionVintage": "2026",
+          "title": "Pierce County Council District No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "County Council District No. 5\n(Prefers Democratic Party)\nBryan Yambe\n(Prefers Republican Party)\nBettina Gese"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-council-district-no-7",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce/council_district:7",
+          "divisionVintage": "2026",
+          "title": "Pierce County Council District No. 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "County Council District No. 7\n(Prefers Democratic Party)\nBrenda Lykins\n(Prefers Republican Party)\nMike Solan"
+          }
+        },
+        {
+          "id": "wa-sos-2026-general-4a01ae3c96851c17",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "divisionVintage": "2026",
+          "title": "Supreme Court, Justice Position #01",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 1\nTwo Year Unexpired Term\nColleen Melody\nScott Edwards"
+          }
+        },
+        {
+          "id": "wa-sos-2026-general-e6141c106be4832c",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "divisionVintage": "2026",
+          "title": "Supreme Court, Justice Position #03",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 3\nDavid Stevens\nJaime Michelle Hawk"
+          }
+        },
+        {
+          "id": "wa-sos-2026-general-b2c297f9a98570f8",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "divisionVintage": "2026",
+          "title": "Supreme Court, Justice Position #04",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 4\nIan Birk\nSean O'Donnell"
+          }
+        },
+        {
+          "id": "wa-sos-2026-general-5ab3d81746ef7ce9",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "divisionVintage": "2026",
+          "title": "Supreme Court, Justice Position #05",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 5\nTwo Year Unexpired Term\nTheo Angelis\nDave Larson"
+          }
+        },
+        {
+          "id": "wa-sos-2026-general-2b3d94ad4f312ba5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "divisionVintage": "2026",
+          "title": "Supreme Court, Justice Position #07",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 7\nDebra L. Stephens\nTodd A. Bloom"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-court-of-appeals-division-2-district-1-judge-position-no-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+          "divisionVintage": "2026",
+          "title": "Pierce Court of Appeals Division 2 District 1, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 6,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Court of Appeals - Div. 2 Dist. 1\nPosition No. 2\nMeng Li Che"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+              "sourceOrg": "Washington State Legislature",
+              "collectedAt": "2026-11-03T06:13:51.754815+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "District 1 shall consist of Pierce county and shall have three judges;"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+          "divisionVintage": "2026",
+          "title": "Pierce County District Court, Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 1\nKevin A. McCann"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+          "divisionVintage": "2026",
+          "title": "Pierce County District Court, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 2\nClaire Sussman"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-3",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+          "divisionVintage": "2026",
+          "title": "Pierce County District Court, Judge Position No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 3\nLizanne Padula"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-4",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+          "divisionVintage": "2026",
+          "title": "Pierce County District Court, Judge Position No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 4\nNeil Horibe"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+          "divisionVintage": "2026",
+          "title": "Pierce County District Court, Judge Position No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 5\nDwayne Christopher"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-6",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+          "divisionVintage": "2026",
+          "title": "Pierce County District Court, Judge Position No. 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 6\nKarl Williams"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-7",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+          "divisionVintage": "2026",
+          "title": "Pierce County District Court, Judge Position No. 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 7\nPam Nogueira\nMike Sommerfeld"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-8",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+          "divisionVintage": "2026",
+          "title": "Pierce County District Court, Judge Position No. 8",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 8\nSven Nelson\nJames Armstrong"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court — Southeast Electoral District, Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact King shared Southeast electorate/identities and full official geometry reused; applicable Pierce portions are not broadened to the county.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 1\nLeah Taguba"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court — Southeast Electoral District, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact King shared Southeast electorate/identities and full official geometry reused; applicable Pierce portions are not broadened to the county.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 2\nMatthew York"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-3",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court — Southeast Electoral District, Judge Position No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact King shared Southeast electorate/identities and full official geometry reused; applicable Pierce portions are not broadened to the county.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 3\nTricia Grove Johnson"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-4",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court — Southeast Electoral District, Judge Position No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact King shared Southeast electorate/identities and full official geometry reused; applicable Pierce portions are not broadened to the county.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 4\nCorinna Harn"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court — Southeast Electoral District, Judge Position No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact King shared Southeast electorate/identities and full official geometry reused; applicable Pierce portions are not broadened to the county.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 5\nJoshua C. Harris\nHeather M. Barker"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-6",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court — Southeast Electoral District, Judge Position No. 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact King shared Southeast electorate/identities and full official geometry reused; applicable Pierce portions are not broadened to the county.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 6\nRhonda Laumann"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:tacoma",
+          "divisionVintage": "2026",
+          "title": "Tacoma Municipal Court, Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 1\nDee Sonntag"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:tacoma",
+          "divisionVintage": "2026",
+          "title": "Tacoma Municipal Court, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 2\nSergio C. Flores"
+          }
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-3",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:tacoma",
+          "divisionVintage": "2026",
+          "title": "Tacoma Municipal Court, Judge Position No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Every printed name and party preference independently compared with current state election899 county27 list. Exact office electorate; blank write-in spaces are not named candidates.",
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 3\nSteven J. Krupa"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-auditor-linda-farmer",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-auditor",
+          "givenName": "",
+          "familyName": "Linda Farmer",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Auditor\nLinda Farmer\nDamon Townsend"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Linda Farmer"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-auditor-damon-townsend",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-auditor",
+          "givenName": "",
+          "familyName": "Damon Townsend",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Auditor\nLinda Farmer\nDamon Townsend"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Damon Townsend"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-prosecuting-attorney-coreen-schnepf",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-prosecuting-attorney",
+          "givenName": "",
+          "familyName": "Coreen Schnepf",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Prosecuting Attorney\nCoreen Schnepf\nBryan Chushcoff"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Coreen Schnepf"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-prosecuting-attorney-bryan-chushcoff",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-prosecuting-attorney",
+          "givenName": "",
+          "familyName": "Bryan Chushcoff",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Prosecuting Attorney\nCoreen Schnepf\nBryan Chushcoff"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Bryan Chushcoff"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-council-district-no-1-jerome-o-leary",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-1",
+          "givenName": "",
+          "familyName": "Jerome O'Leary",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "County Council District No. 1\n(Prefers Republican Party)\nJerome O'Leary\n(Prefers Democratic Party)\nKelsey Barrans"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Jerome O'Leary"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-council-district-no-1-kelsey-barrans",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-1",
+          "givenName": "",
+          "familyName": "Kelsey Barrans",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "County Council District No. 1\n(Prefers Republican Party)\nJerome O'Leary\n(Prefers Democratic Party)\nKelsey Barrans"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Kelsey Barrans"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-council-district-no-5-bryan-yambe",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-5",
+          "givenName": "",
+          "familyName": "Bryan Yambe",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "County Council District No. 5\n(Prefers Democratic Party)\nBryan Yambe\n(Prefers Republican Party)\nBettina Gese"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Bryan Yambe"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-council-district-no-5-bettina-gese",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-5",
+          "givenName": "",
+          "familyName": "Bettina Gese",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "County Council District No. 5\n(Prefers Democratic Party)\nBryan Yambe\n(Prefers Republican Party)\nBettina Gese"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Bettina Gese"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-council-district-no-7-brenda-lykins",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-7",
+          "givenName": "",
+          "familyName": "Brenda Lykins",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "County Council District No. 7\n(Prefers Democratic Party)\nBrenda Lykins\n(Prefers Republican Party)\nMike Solan"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Brenda Lykins"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-council-district-no-7-mike-solan",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-7",
+          "givenName": "",
+          "familyName": "Mike Solan",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "County Council District No. 7\n(Prefers Democratic Party)\nBrenda Lykins\n(Prefers Republican Party)\nMike Solan"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Mike Solan"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-4a01ae3c96851c17-cf7107801c56",
+          "contestId": "wa-sos-2026-general-4a01ae3c96851c17",
+          "familyName": "Melody",
+          "givenName": "Colleen",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 1\nTwo Year Unexpired Term\nColleen Melody\nScott Edwards"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Colleen Melody"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-4a01ae3c96851c17-52877884e207",
+          "contestId": "wa-sos-2026-general-4a01ae3c96851c17",
+          "familyName": "Edwards",
+          "givenName": "Scott",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 1\nTwo Year Unexpired Term\nColleen Melody\nScott Edwards"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Scott Edwards"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-e6141c106be4832c-2bf2bb6e61c0",
+          "contestId": "wa-sos-2026-general-e6141c106be4832c",
+          "familyName": "Stevens",
+          "givenName": "David",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 3\nDavid Stevens\nJaime Michelle Hawk"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "David Stevens"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-e6141c106be4832c-3a2654c1526e",
+          "contestId": "wa-sos-2026-general-e6141c106be4832c",
+          "familyName": "Hawk",
+          "givenName": "Jaime Michelle",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 3\nDavid Stevens\nJaime Michelle Hawk"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Jaime Michelle Hawk"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-b2c297f9a98570f8-5c36aa787201",
+          "contestId": "wa-sos-2026-general-b2c297f9a98570f8",
+          "familyName": "Birk",
+          "givenName": "Ian",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 4\nIan Birk\nSean O'Donnell"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Ian Birk"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-b2c297f9a98570f8-79412eca913e",
+          "contestId": "wa-sos-2026-general-b2c297f9a98570f8",
+          "familyName": "O'Donnell",
+          "givenName": "Sean",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 4\nIan Birk\nSean O'Donnell"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Sean O'Donnell"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-5ab3d81746ef7ce9-29a99e8d0958",
+          "contestId": "wa-sos-2026-general-5ab3d81746ef7ce9",
+          "familyName": "Angelis",
+          "givenName": "Theo",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 5\nTwo Year Unexpired Term\nTheo Angelis\nDave Larson"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Theo Angelis"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-5ab3d81746ef7ce9-336378b519c8",
+          "contestId": "wa-sos-2026-general-5ab3d81746ef7ce9",
+          "familyName": "Larson",
+          "givenName": "Dave",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 5\nTwo Year Unexpired Term\nTheo Angelis\nDave Larson"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Dave Larson"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-2b3d94ad4f312ba5-f39340090271",
+          "contestId": "wa-sos-2026-general-2b3d94ad4f312ba5",
+          "familyName": "Stephens",
+          "givenName": "Debra L.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 7\nDebra L. Stephens\nTodd A. Bloom"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Debra L. Stephens"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-2b3d94ad4f312ba5-bf2143c326aa",
+          "contestId": "wa-sos-2026-general-2b3d94ad4f312ba5",
+          "familyName": "Bloom",
+          "givenName": "Todd A.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Justice Position No. 7\nDebra L. Stephens\nTodd A. Bloom"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Todd A. Bloom"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-court-of-appeals-division-2-district-1-judge-position-no-2-meng-li-che",
+          "contestId": "cx-local-wa-pierce-2026-pierce-court-of-appeals-division-2-district-1-judge-position-no-2",
+          "givenName": "",
+          "familyName": "Meng Li Che",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Court of Appeals - Div. 2 Dist. 1\nPosition No. 2\nMeng Li Che"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Meng Li Che"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-1-kevin-a-mccann",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-1",
+          "givenName": "",
+          "familyName": "Kevin A. McCann",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 1\nKevin A. McCann"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Kevin A. McCann"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-2-claire-sussman",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-2",
+          "givenName": "",
+          "familyName": "Claire Sussman",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 2\nClaire Sussman"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Claire Sussman"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-3-lizanne-padula",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-3",
+          "givenName": "",
+          "familyName": "Lizanne Padula",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 3\nLizanne Padula"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Lizanne Padula"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-4-neil-horibe",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-4",
+          "givenName": "",
+          "familyName": "Neil Horibe",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 4\nNeil Horibe"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Neil Horibe"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-5-dwayne-christopher",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-5",
+          "givenName": "",
+          "familyName": "Dwayne Christopher",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 5\nDwayne Christopher"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Dwayne Christopher"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-6-karl-williams",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-6",
+          "givenName": "",
+          "familyName": "Karl Williams",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 6\nKarl Williams"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Karl Williams"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-7-pam-nogueira",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-7",
+          "givenName": "",
+          "familyName": "Pam Nogueira",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 7\nPam Nogueira\nMike Sommerfeld"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Pam Nogueira"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-7-mike-sommerfeld",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-7",
+          "givenName": "",
+          "familyName": "Mike Sommerfeld",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 7\nPam Nogueira\nMike Sommerfeld"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Mike Sommerfeld"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-8-sven-nelson",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-8",
+          "givenName": "",
+          "familyName": "Sven Nelson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 8\nSven Nelson\nJames Armstrong"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Sven Nelson"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-8-james-armstrong",
+          "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-8",
+          "givenName": "",
+          "familyName": "James Armstrong",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 8\nSven Nelson\nJames Armstrong"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "James Armstrong"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-1-leah-taguba",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-1",
+          "givenName": "",
+          "familyName": "Leah Taguba",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 1\nLeah Taguba"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Leah Taguba"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-2-matthew-york",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-2",
+          "givenName": "",
+          "familyName": "Matthew York",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 2\nMatthew York"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Matthew York"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-3-tricia-grove-johnson",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-3",
+          "givenName": "",
+          "familyName": "Tricia Grove Johnson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 3\nTricia Grove Johnson"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Tricia Grove Johnson"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-4-corinna-harn",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-4",
+          "givenName": "",
+          "familyName": "Corinna Harn",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 4\nCorinna Harn"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Corinna Harn"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-5-joshua-c-harris",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-5",
+          "givenName": "",
+          "familyName": "Joshua C. Harris",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 5\nJoshua C. Harris\nHeather M. Barker"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Joshua C. Harris"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-5-heather-m-barker",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-5",
+          "givenName": "",
+          "familyName": "Heather M. Barker",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 5\nJoshua C. Harris\nHeather M. Barker"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Heather M. Barker"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-6-rhonda-laumann",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-6",
+          "givenName": "",
+          "familyName": "Rhonda Laumann",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Judge Position No. 6\nRhonda Laumann"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Rhonda Laumann"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-1-dee-sonntag",
+          "contestId": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-1",
+          "givenName": "",
+          "familyName": "Dee Sonntag",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 1\nDee Sonntag"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Dee Sonntag"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-2-sergio-c-flores",
+          "contestId": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-2",
+          "givenName": "",
+          "familyName": "Sergio C. Flores",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 2\nSergio C. Flores"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Sergio C. Flores"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-3-steven-j-krupa",
+          "contestId": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-3",
+          "givenName": "",
+          "familyName": "Steven J. Krupa",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+            "sourceOrg": "Pierce County Auditor, Elections Division",
+            "collectedAt": "2026-11-03T06:12:36.702015+00:00",
+            "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+            "quote": "Position No. 3\nSteven J. Krupa"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T06:14:05.508727+00:00",
+              "verifiedAt": "2026-11-03T06:18:16.624921+00:00",
+              "quote": "Steven J. Krupa"
+            }
+          ]
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "text": "All23 local candidate fields31 printed names in current official native4-page Pierce composite are complete, with5 shared held Supreme Court fields10 names also refreshed. Every one of those28 full fields41 names/parties/terms matches current native state filing list election899 county27 (all80 source rows Active). All printed single-candidate fields remain ordinary candidates, never inferred declared elected.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:pierce"
+            ]
+          }
+        },
+        {
+          "text": "Six Southeast Electoral District fields/seven names exactly reuse the King prepared contest and candidacy IDs. Pierce native sample, current state list and county pamphlet agree; pamphlet pages28–31 explicitly identify these as King County District Court judges. Exact full official Southeast geometry is reused without clipping to county boundaries. Applicable Pierce areas do not authorize a whole-Pierce membership.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:pierce"
+            ]
+          }
+        },
+        {
+          "text": "Court of Appeals DivisionII District1 Position2 has one printed candidate, Meng Li Che. RCW2.06.020(2)(a) explicitly makes this district Pierce County; its electorate is the exact county division. Pierce County District Court positions1–8 remain county offices, distinct from named Southeast Electoral District and Tacoma Municipal Court. Council districts1/5/7 keep exact district OCD IDs pending reader joins.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:pierce"
+            ]
+          }
+        },
+        {
+          "text": "Candidate-only packet. The complete sample also contains7 Pierce charter amendments and7 other local measures (plus3 held statewide initiatives); raw source text and a separate inventory are preserved, without adding optional measures or changing held legislative/measures data.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:pierce"
+            ]
+          }
+        },
+        {
+          "text": "No current separate qualified-write-in supplement was acquired. State filing source has Active rows but no separate write-in qualification certification, so absence is not asserted. Generic blank optional write-in spaces identify no people. No cancelled/declared-elected office or withdrawn identity is inferred from one-name fields or missing supplementary records.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:pierce"
+            ]
+          }
+        },
+        {
+          "text": "All current sources are original native PDF/HTML bytes with exact hashes/extraction; no voter identity or personal-address lookup was used. Shared King geometry and identities remain data prepared for River; reader application joins and source-based qualified-write-in updates remain explicit. No git or production operation.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:pierce"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:18:16.624921+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+        "finalUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+        "rawHash": "52a03c3390651dcac390c1178246eec72ef177cff2f4008b58ef471faf9c7104",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:12:36.702015+00:00",
+        "publisher": "Pierce County Auditor, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official four-page November3,2026 General Election Provisional/Sample Ballot linked directly from county current-election homepage. All28 local/shared judicial candidate blocks41 names independently matched current state county-filtered filing list. Rectangles preserve complete native local blocks; no OCR, generic blanks omitted. All original federal/legislative and14 local measure text retained as evidence, not installed in candidate-only packet. Page3 visually checked."
+      },
+      {
+        "requestedUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+        "finalUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+        "rawHash": "2faaa47274da36f349973978828a8cd04118c08821ddb85511f823c463f915d4",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:14:05.508727+00:00",
+        "publisher": "Washington Secretary of State, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native public state list explicitly selected election899 GENERAL2026 November3 and county27 Pierce.80 rows are Active. Contact columns omitted from exact cell-text excerpt. All28 local/shared judicial fields41 names and exact printed party preferences, terms and names match current sample. The filing list does not establish a separate current qualified-write-in certification."
+      },
+      {
+        "requestedUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161295/General-2026-VP_FINAL",
+        "finalUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161295/General-2026-VP_FINAL",
+        "rawHash": "91c2894e9833999aca1866dba9bb08a6243657fc093c69d7bc53544fe478908d",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:12:38.585172+00:00",
+        "publisher": "Pierce County Auditor, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current native40-page county local pamphlet, linked directly from current county homepage. Pages28–31 explicitly identify Southeast Electoral District candidates as King County District Court judges, corroborating exact shared King IDs/electorate. Candidate statements are secondary context, never a reason to infer party preference/incumbency/contact facts."
+      },
+      {
+        "requestedUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161277/Nov-2026-Election-at-a-Glance",
+        "finalUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161277/Nov-2026-Election-at-a-Glance",
+        "rawHash": "8ccbd66addf47432a3b34ec8ab013a974d56f58fa227a34a277643d53c645ea0",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:12:36.962064+00:00",
+        "publisher": "Pierce County Auditor, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current native November3 election-at-a-glance inventory corroborates county/judicial office categories and7 noncounty local measures; source coverage evidence."
+      },
+      {
+        "requestedUrl": "https://www.piercecountywa.gov/328/Elections",
+        "finalUrl": "https://www.piercecountywa.gov/328/Elections",
+        "rawHash": "6a35e2bc28ec40cf2e857bf3f6059fb5a253185b1b057e509bbe31461f44ed18",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:12:17.884407+00:00",
+        "publisher": "Pierce County Auditor, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official county elections homepage directly links exact current sample, local pamphlet, state pamphlet and election-at-a-glance; source-authority chain."
+      },
+      {
+        "requestedUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+        "finalUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+        "rawHash": "b5df2ebf80eefede2d1aa37f0380b6e1885e226ea7cb100c0ad0308de5eca76c",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:13:51.754815+00:00",
+        "publisher": "Washington State Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "RCW2.06.020 DivisionII subsection(2)(a): District1 shall consist of Pierce county and shall have three judges. Exact appeals electorate is county Pierce, not all DivisionII."
+      },
+      {
+        "requestedUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+        "finalUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+        "rawHash": "88684e7fa20713d02dcd81ae69ec017ee943a9e7fe658f7a680c2dfc8e1a51e9",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:58:10.127090+00:00",
+        "publisher": "King County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official DistrictCourt of KingCounty GIS catalog states these are divisions for purposes of election, defines Northeast NE,Southeast SE,Shoreline SH,Southwest SW,West W and links exact ArcGIS feature service. Metadata lastmodifiedAugust26,2026. Administrative courthouse divisions are not substituted for electoral districts.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0?f=pjson",
+        "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0?f=pjson",
+        "rawHash": "e1a581c8474107c5815a9e9f12e7b961ba980c155ebe247dee0749169b822106",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:59:10.506717+00:00",
+        "publisher": "King County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official-linked GIS FeatureLayer KingCountyDistrictCourts exposes polygon geometry and juddst/NAME fields. Used to map each exact named electoral district to its source-backed division identity.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+        "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+        "rawHash": "d724914e1e85b4a126bb1d5882c681fe4f153197d890e969d24f0de9d852aa0b",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:59:10.507653+00:00",
+        "publisher": "King County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official-linked current GeoJSON response contains all5 electoral polygons, exact official codes NE,SE,SH,SW,W and names. Geometry is preserved without widening or county clipping; Southeast includes applicable PierceCounty areas. Source-backed precise OCD identities prepared with matching source feature; reader installation remains River dependency.",
+        "reviewOutcome": "SUPPORTED"
+      }
+    ]
+  }
+}

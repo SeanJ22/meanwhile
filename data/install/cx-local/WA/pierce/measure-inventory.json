@@ -1,0 +1,22 @@
+{
+  "installed": false,
+  "countyCharterAmendments": [
+    "52",
+    "53",
+    "54",
+    "55",
+    "56",
+    "57",
+    "58"
+  ],
+  "otherLocalFields": [
+    "Pierce Transit Proposition1",
+    "Tacoma Safe Homes for All Initiative1",
+    "Milton Proposition1",
+    "South Prairie Proposition1",
+    "Yelm Community Schools Proposition1",
+    "Auburn School District408 Proposition1",
+    "Fire Protection District14 Proposition1"
+  ],
+  "sourceTextRetained": true
+}

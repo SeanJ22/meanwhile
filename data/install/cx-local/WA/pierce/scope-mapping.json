@@ -1,0 +1,198 @@
+[
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-auditor",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-prosecuting-attorney",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": false,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-5",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce/council_district:5",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": false,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-7",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce/council_district:7",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": false,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "wa-sos-2026-general-4a01ae3c96851c17",
+    "ocdId": "ocd-division/country:us/state:wa",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "wa-sos-2026-general-e6141c106be4832c",
+    "ocdId": "ocd-division/country:us/state:wa",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "wa-sos-2026-general-b2c297f9a98570f8",
+    "ocdId": "ocd-division/country:us/state:wa",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "wa-sos-2026-general-5ab3d81746ef7ce9",
+    "ocdId": "ocd-division/country:us/state:wa",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "wa-sos-2026-general-2b3d94ad4f312ba5",
+    "ocdId": "ocd-division/country:us/state:wa",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-court-of-appeals-division-2-district-1-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-3",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-4",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-5",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-6",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-7",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-8",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-3",
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-4",
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-5",
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-6",
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/place:tacoma",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/place:tacoma",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-3",
+    "ocdId": "ocd-division/country:us/state:wa/place:tacoma",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false
+  }
+]

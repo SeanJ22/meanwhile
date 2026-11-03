@@ -1,0 +1,201 @@
+District Court of King County - GIS Data Catalog
+GIS Data Catalog
+GIS Data Catalog Home
+District Court of King County
+District Court of King County
+District Court of King County
+View in GIS Open Data
+Learn how to use GIS Open Data 🗺
+This map visualizes the selected dataset. Text summary, description, and attribute information are available elsewhere on this page.
+Use this Data
+Links
+How to use in ArcGIS Pro
+help
+Copy Item URL
+Copied Item URL ✔
+Copy Item Id
+Copied Item Id ✔
+Copy Service URL
+Copied Service URL ✔
+Sharing Status
+Public
+Summary
+Describes District Court divisions of King County for purposes of election.
+The district court divisions are subject to redistricting (RCW 3.38.010).
+In 2006 this data layer changed to the 5 district court divisions of King County from the previous 3.
+The boundaries are defined along precinct boundaries (KCC 1.12.050) and an ordinance is submitted to the King County Council when precinct boundary changes alter District Court boundary definitions.
+Description
+District court divisions of King County.
+Layer information
+Layer Name
+juddst_area
+Subject Category
+Districts
+Title
+District Court of King County
+Feature Count
+5
+Feature Type
+Polygon
+Next Update
+As needed
+Spatial reference
+EPSG:2926
+Control ID
+409
+Place Keywords
+Washington State, Pacific NW, King County, WA
+Theme Keywords
+District, Juddst, Levy And Taxation
+Supplemental Information
+None
+Table Preview
+Full Screen
+Attribute information
+Shape
+From ESRI
+Description
+Feature Geometry
+Domain
+Coordinates defining the features
+OBJECTID
+From ESRI
+Description
+Internal feature number.
+Domain
+Sequential unique whole numbers that are automatically generated.
+JUDDST
+From King County
+Description
+Abbreviated name
+Domain
+SH - Abbreviated name/code for Shoreline division
+W - Abbreviated name/code for West division
+SW - Abbreviated name/code for Southwest division
+SE - Abbreviated name/code for Southeast division
+NE - Abbreviated name/code for Northeast division
+NAME
+No Source Noted
+Description
+Name of District
+Domain
+Shoreline division - Name of district division
+West division - Name of district division
+Southwest division - Name of district division
+Southeast division - Name of district division
+Northeast division - Name of district division
+Shape.STArea()
+From SQL Server
+Description
+Returns the area of a geometry instance in square units, based on the spatial reference identifier (SRID) of the geometry.
+Domain
+Double
+Shape.STLength()
+From SQL Server
+Description
+Returns the total length of the elements in a geometry instance.
+Domain
+Double
+Contact information
+Maintained by
+Elections
+Primary
+Katrina Sroufe
+katrina.sroufe@kingcounty.gov
+Terms of Use
+License
+Terms of use and copyright
+This map visualizes the selected dataset. Text summary, description, and attribute information are available elsewhere on this page.
+Use this Data
+Links
+How to use in ArcGIS Pro
+help
+Copy Item URL
+Copied Item URL ✔
+Copy Item Id
+Copied Item Id ✔
+Copy Service URL
+Copied Service URL ✔
+Sharing Status
+Public
+Summary
+Describes District Court divisions of King County for purposes of election.
+The district court divisions are subject to redistricting (RCW 3.38.010).
+In 2006 this data layer changed to the 5 district court divisions of King County from the previous 3.
+The boundaries are defined along precinct boundaries (KCC 1.12.050) and an ordinance is submitted to the King County Council when precinct boundary changes alter District Court boundary definitions.
+Description
+District court divisions of King County.
+Contact information
+Maintained by
+Elections
+Primary
+Katrina Sroufe
+katrina.sroufe@kingcounty.gov
+Terms of use and copyright
+License
+Terms of use and copyright
+Change history
+3/10/2026
+Post entire district set after annual precinct alterations
+11/24/2025
+Keep GIS data and election management system data in sync
+4/29/2025
+Keep GIS data and election management system data in sync
+3/4/2025
+Post entire district set after annual precinct alterations
+11/25/2024
+Post entire district set after Nov.
+5th, 2024 General Election.
+9/3/2024
+Keep GIS data and election management system data in sync
+4/2/2024
+Keep GIS data and election management system data in sync
+12/12/2023
+Post entire district set after Nov.
+7, 2023 General Election.
+5/12/2023
+Keep GIS data and election management system data in sync
+3/7/2023
+Post entire District set after annual precinct alterations
+8/25/2022
+Post entire District set prior to General Election
+3/14/2022
+Post entire District set after annual precinct alterations
+11/9/2021
+Post entire district set after Nov.
+2, 2021 General Election.
+3/8/2021
+Post entire District set after annual precinct alterations
+8/31/2020
+Keep GIS data and election management system data in sync
+4/15/2020
+Post entire district set after precinct alterations
+12/18/2019
+Post entire district set after Nov.
+5, 2019 General Election.
+8/21/2019
+Keep GIS data and election management system data in sync
+3/13/2019
+Post entire district set after precinct alterations
+12/12/2018
+Post entire district set after Nov.
+6, 2018 General Election.
+3/21/2018
+Post entire district set after precinct alterations
+12/19/2017
+Post entire district set after Nov.
+7, 2017 General Election.
+9/28/2017
+Post entire district set prior to Nov.
+7, 2017 General Election.
+4/18/2017
+Post entire District set after annual precinct alterations
+9/13/2016
+Post entire District set prior to General Election
+9/1/2012
+Convert and update metadata
+Update 27
+Post entire District set after annual precinct alterations
+Accessibility
+Terms of use and copyright
+© King County, WA 2026

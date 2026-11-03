@@ -1,0 +1,13 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+    "officialName": "Southeast Electoral District",
+    "officialCode": "SE",
+    "officialFeatureOBJECTID": 2,
+    "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "catalogUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+    "sourceBackedIdentity": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "SOURCE_GEOMETRY_PREPARED_NOT_INSTALLED"
+  }
+]

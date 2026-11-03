@@ -1,0 +1,121 @@
+{
+  "checkedAt": "2026-11-03T06:21:06.004883+00:00",
+  "nativeCurrentSample": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+  "currentLinkingPage": "https://www.piercecountywa.gov/328/Elections",
+  "scope": "Native current four-page general sample, all23 local candidate fields31 printed names and5 held Supreme fields10 names; all41 independently agree with28 complete current state-list fields.",
+  "sourceListSelectedElection": 899,
+  "sourceListSelectedCounty": 27,
+  "sourceStatus": "80 Active rows; all80 names appear in current native sample, local/shared judicial41 prepared.",
+  "sharedSoutheast": "Six fields/seven names exactly reuse King IDs. Current Pierce pamphlet pages28\u201331 explicitly identify King County judges; exact full source geometry includes applicable Pierce parts, no county clipping or whole-Pierce membership.",
+  "courtOfAppealsElectorate": "RCW2.06.020(2)(a) District1 consists of Pierce County; Position2 scoped to county, distinct from King DivisionI District1.",
+  "sourceGaps": [
+    "Current separate qualified-write-in certification not acquired; absence not inferred.",
+    "Three Pierce council district joins and shared Southeast reader geometry join pending installation.",
+    "Fourteen local measure fields preserved in raw source/inventory, not added to candidate packet."
+  ],
+  "statusRows": "No named write-in, cancellation, withdrawal or declared-elected status invented. Fifteen printed one-name fields stay ordinary.",
+  "voterIdentityRequested": false,
+  "productionWrites": false,
+  "captures": [
+    {
+      "capture": "pierce-2026.meta.json",
+      "url": "https://www.piercecountywa.gov/8980/_2026",
+      "finalUrl": "https://www.piercecountywa.gov/8980/_2026",
+      "status": 200,
+      "fetchedAt": "2026-11-03T06:12:17.772883+00:00",
+      "sha256": "45403d49bf4f4c3acd76b5910905848dc2f6828caefc0fbf89ef934d76f9a7bf",
+      "bytes": 99279,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "capture": "pierce-campaign-current.meta.json",
+      "url": "https://www.piercecountywa.gov/329/Information-for-Candidates",
+      "finalUrl": "https://www.piercecountywa.gov/329/Information-for-Candidates",
+      "status": 200,
+      "fetchedAt": "2026-11-03T06:14:03.450220+00:00",
+      "sha256": "36853f9345765e17ae70708d6005875381f1715cf38a0f2a3e45083ac7a5d5f8",
+      "bytes": 100086,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "capture": "pierce-campaign.meta.json",
+      "url": "https://www.piercecountywa.gov/329/Candidates",
+      "finalUrl": "https://www.piercecountywa.gov/329/Information-for-Candidates",
+      "status": 200,
+      "fetchedAt": "2026-11-03T06:13:52.068281+00:00",
+      "sha256": "96cafdf14cc260b940b143a37d4144a2a9e2f9ec2afa8382dd779c0b32dfb04e",
+      "bytes": 100086,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "capture": "pierce-candidates.meta.json",
+      "url": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+      "finalUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+      "status": 200,
+      "fetchedAt": "2026-11-03T06:14:05.508727+00:00",
+      "sha256": "2faaa47274da36f349973978828a8cd04118c08821ddb85511f823c463f915d4",
+      "bytes": 164709,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "capture": "pierce-court-geography.meta.json",
+      "url": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+      "finalUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+      "status": 200,
+      "fetchedAt": "2026-11-03T06:13:51.754815+00:00",
+      "sha256": "b5df2ebf80eefede2d1aa37f0380b6e1885e226ea7cb100c0ad0308de5eca76c",
+      "bytes": 112208,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "capture": "pierce-glance.meta.json",
+      "url": "https://www.piercecountywa.gov/DocumentCenter/View/161277/Nov-2026-Election-at-a-Glance",
+      "finalUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161277/Nov-2026-Election-at-a-Glance",
+      "status": 200,
+      "fetchedAt": "2026-11-03T06:12:36.962064+00:00",
+      "sha256": "8ccbd66addf47432a3b34ec8ab013a974d56f58fa227a34a277643d53c645ea0",
+      "bytes": 262006,
+      "contentType": "application/pdf"
+    },
+    {
+      "capture": "pierce-home.meta.json",
+      "url": "https://www.piercecountywa.gov/328/Elections",
+      "finalUrl": "https://www.piercecountywa.gov/328/Elections",
+      "status": 200,
+      "fetchedAt": "2026-11-03T06:12:17.884407+00:00",
+      "sha256": "6a35e2bc28ec40cf2e857bf3f6059fb5a253185b1b057e509bbe31461f44ed18",
+      "bytes": 110355,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "capture": "pierce-pamphlet.meta.json",
+      "url": "https://www.piercecountywa.gov/DocumentCenter/View/161295/General-2026-VP_FINAL",
+      "finalUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161295/General-2026-VP_FINAL",
+      "status": 200,
+      "fetchedAt": "2026-11-03T06:12:38.585172+00:00",
+      "sha256": "91c2894e9833999aca1866dba9bb08a6243657fc093c69d7bc53544fe478908d",
+      "bytes": 7904050,
+      "contentType": "application/pdf"
+    },
+    {
+      "capture": "pierce-sample.meta.json",
+      "url": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+      "finalUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+      "status": 200,
+      "fetchedAt": "2026-11-03T06:12:36.702015+00:00",
+      "sha256": "52a03c3390651dcac390c1178246eec72ef177cff2f4008b58ef471faf9c7104",
+      "bytes": 110242,
+      "contentType": "application/pdf"
+    },
+    {
+      "capture": "pierce-state-pamphlet.meta.json",
+      "url": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%2009%20-%20Pierce.pdf",
+      "finalUrl": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%2009%20-%20Pierce.pdf",
+      "status": 200,
+      "fetchedAt": "2026-11-03T06:12:38.699645+00:00",
+      "sha256": "67c6ba51eb4c22443cc047dd4529b64acc07fa111ee8424bf639bbba1e69ad61",
+      "bytes": 6433445,
+      "contentType": "application/pdf"
+    }
+  ]
+}

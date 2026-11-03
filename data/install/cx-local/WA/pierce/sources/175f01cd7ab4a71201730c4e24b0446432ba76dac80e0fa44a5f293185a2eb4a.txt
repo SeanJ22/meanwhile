@@ -1,0 +1,961 @@
+GENERAL 2026 (11/03/2026) (General)
+Pierce
+Congressional
+Congressional District 6
+U.S. Representative
+Regular
+2
+Emily Randall
+5/6/2026 11:44:20 AM
+DEMOCRATIC
+Active
+
+1
+
+Congressional
+Congressional District 6
+U.S. Representative
+Regular
+2
+Teresa Fox
+5/5/2026 1:03:46 PM
+REPUBLICAN
+Active
+
+2
+
+Congressional
+Congressional District 8
+U.S. Representative
+Regular
+2
+Kim Schrier
+5/5/2026 4:07:11 PM
+DEMOCRATIC
+Active
+
+1
+
+Congressional
+Congressional District 8
+U.S. Representative
+Regular
+2
+Spencer Meline
+5/4/2026 6:20:15 PM
+REPUBLICAN
+Active
+
+2
+
+Congressional
+Congressional District 10
+U.S. Representative
+Regular
+2
+Marilyn Strickland
+5/4/2026 8:29:26 AM
+DEMOCRATIC
+Active
+
+1
+
+Congressional
+Congressional District 10
+U.S. Representative
+Regular
+2
+Chris D. Chung
+5/5/2026 12:58:48 PM
+REPUBLICAN
+Active
+
+2
+
+Legislative
+Legislative District 2
+State Representative Pos. 1
+Regular
+2
+Andrew Barkis
+5/7/2026 10:19:33 AM
+REPUBLICAN
+Active
+
+1
+
+Legislative
+Legislative District 2
+State Representative Pos. 1
+Regular
+2
+William Dehnel
+5/4/2026 9:38:21 AM
+LABOR DEMOCRAT
+Active
+
+2
+
+Legislative
+Legislative District 2
+State Representative Pos. 2
+Regular
+2
+Matt Marshall
+5/4/2026 8:30:35 AM
+REPUBLICAN
+Active
+
+1
+
+Legislative
+Legislative District 2
+State Representative Pos. 2
+Regular
+2
+Angela Taylor
+5/4/2026 8:22:50 AM
+DEMOCRATIC
+Active
+
+2
+
+Legislative
+Legislative District 25
+State Representative Pos. 1
+Regular
+2
+Michael Keaton
+5/4/2026 8:09:04 AM
+REPUBLICAN
+Active
+
+1
+
+Legislative
+Legislative District 25
+State Representative Pos. 1
+Regular
+2
+David Berg
+5/4/2026 8:06:42 AM
+DEMOCRATIC
+Active
+
+2
+
+Legislative
+Legislative District 25
+State Representative Pos. 2
+Regular
+2
+Cyndy Jacobsen
+5/4/2026 9:16:32 AM
+REPUBLICAN
+Active
+
+1
+
+Legislative
+Legislative District 25
+State Representative Pos. 2
+Regular
+2
+Jenn Marie Strickling
+5/4/2026 8:06:49 AM
+DEMOCRATIC
+Active
+
+2
+
+Legislative
+Legislative District 26
+State Senator
+Regular
+4
+Deborah Krishnadasan
+5/4/2026 8:04:18 AM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 26
+State Senator
+Regular
+4
+Gary Parker
+5/4/2026 12:34:28 PM
+REPUBLICAN
+Active
+
+2
+
+Legislative
+Legislative District 26
+State Representative Pos. 1
+Regular
+2
+David Olson
+5/4/2026 8:56:46 AM
+REPUBLICAN
+Active
+
+1
+
+Legislative
+Legislative District 26
+State Representative Pos. 1
+Regular
+2
+Adison Richards
+5/4/2026 11:04:44 AM
+DEMOCRATIC
+Active
+
+2
+
+Legislative
+Legislative District 26
+State Representative Pos. 2
+Regular
+2
+Katy Cornell
+5/4/2026 10:02:20 AM
+REPUBLICAN
+Active
+
+1
+
+Legislative
+Legislative District 26
+State Representative Pos. 2
+Regular
+2
+Renee Hernandez Greenfield
+5/4/2026 8:20:12 PM
+DEMOCRATIC
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 27
+State Representative Pos. 1
+Regular
+2
+Laurie Jinkins
+5/4/2026 9:09:35 AM
+DEMOCRATIC
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 27
+State Representative Pos. 1
+Regular
+2
+Carole Sue Braaten
+5/8/2026 4:17:47 PM
+REPUBLICAN
+Active
+
+2
+
+Legislative
+Legislative District 27
+State Representative Pos. 2
+Regular
+2
+Jake Fey
+5/4/2026 2:21:04 PM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 28
+State Representative Pos. 1
+Regular
+2
+Mari Leavitt
+5/4/2026 8:14:27 AM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 28
+State Representative Pos. 1
+Regular
+2
+Kathy Richardson
+5/7/2026 8:04:00 PM
+REPUBLICAN
+Active
+
+2
+
+Legislative
+Legislative District 28
+State Representative Pos. 2
+Regular
+2
+Dan Bronoske
+5/4/2026 8:08:28 AM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 28
+State Representative Pos. 2
+Regular
+2
+Kerry Hills
+8/18/2026 4:07:09 PM
+NONPARTISAN
+Active
+
+2
+
+Legislative
+Legislative District 29
+State Senator
+Regular
+4
+Sharlett Mena
+5/4/2026 8:46:59 AM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 29
+State Senator
+Regular
+4
+David Anderson
+5/8/2026 2:16:45 PM
+DEMOCRATIC
+Active
+
+2
+
+Legislative
+Legislative District 29
+State Representative Pos. 1
+Regular
+2
+Krista Perez
+5/4/2026 8:18:06 AM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 29
+State Representative Pos. 1
+Regular
+2
+Melanie Morgan
+5/4/2026 8:09:34 AM
+DEMOCRATIC
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 29
+State Representative Pos. 2
+Regular
+2
+Joe Bushnell
+5/4/2026 8:43:55 AM
+DEMOCRATIC
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 29
+State Representative Pos. 2
+Regular
+2
+Patrick Stickney
+5/4/2026 8:07:55 AM
+DEMOCRATIC
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 31
+State Senator
+Regular
+4
+Phil Fortunato
+5/4/2026 12:51:14 PM
+REPUBLICAN
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 31
+State Senator
+Regular
+4
+Tamara Stramel
+5/4/2026 8:40:01 AM
+DEMOCRATIC
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 31
+State Representative Pos. 1
+Regular
+2
+Drew Stokesbary
+5/4/2026 8:04:05 AM
+REPUBLICAN
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 31
+State Representative Pos. 1
+Regular
+2
+Stephen Szczurko-Walton
+5/6/2026 6:43:14 AM
+DEMOCRATIC
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 31
+State Representative Pos. 2
+Regular
+2
+Joshua Penner
+5/6/2026 2:32:17 PM
+REPUBLICAN
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 31
+State Representative Pos. 2
+Regular
+2
+John Bielka
+5/4/2026 1:05:17 PM
+DEMOCRAT
+Active
+
+2
+
+Countywide
+County
+Auditor
+Regular
+4
+Linda Farmer
+5/4/2026 8:09:57 AM
+
+Active
+
+1
+
+Countywide
+County
+Auditor
+Regular
+4
+Damon Townsend
+5/6/2026 5:19:43 PM
+
+Active
+
+2
+
+Countywide
+County
+Prosecuting Attorney
+Regular
+4
+Coreen Schnepf
+5/4/2026 9:51:55 AM
+
+Active
+
+1
+
+Countywide
+County
+Prosecuting Attorney
+Regular
+4
+Bryan Chushcoff
+5/4/2026 1:00:07 PM
+
+Active
+
+2
+
+Council
+COUNTY COUNCIL DISTRICT NO. 1
+Council - District No. 1
+Regular
+4
+Jerome O'Leary
+5/4/2026 8:25:29 AM
+REPUBLICAN
+Active
+
+1
+
+Council
+COUNTY COUNCIL DISTRICT NO. 1
+Council - District No. 1
+Regular
+4
+Kelsey Barrans
+5/8/2026 6:25:00 AM
+DEMOCRATIC
+Active
+
+2
+
+Council
+COUNTY COUNCIL DISTRICT NO. 5
+Council - District No. 5
+Regular
+4
+Bryan Yambe
+5/4/2026 8:58:09 AM
+DEMOCRATIC
+Active
+
+1
+
+Council
+COUNTY COUNCIL DISTRICT NO. 5
+Council - District No. 5
+Regular
+4
+Bettina Gese
+5/5/2026 2:37:28 PM
+REPUBLICAN
+Active
+
+2
+
+Council
+COUNTY COUNCIL DISTRICT NO. 7
+Council - District No. 7
+Regular
+4
+Brenda Lykins
+5/4/2026 12:03:16 PM
+DEMOCRATIC
+Active
+
+1
+
+Council
+COUNTY COUNCIL DISTRICT NO. 7
+Council - District No. 7
+Regular
+4
+Mike Solan
+5/4/2026 4:37:48 PM
+REPUBLICAN
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #01
+Unexpired
+2
+Colleen Melody
+5/4/2026 10:34:39 AM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #01
+Unexpired
+2
+Scott Edwards
+5/4/2026 6:10:06 PM
+
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #03
+Regular
+6
+David Stevens
+5/4/2026 6:58:30 PM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #03
+Regular
+6
+Jaime Michelle Hawk
+5/4/2026 10:08:05 AM
+
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #04
+Regular
+6
+Ian Birk
+5/4/2026 8:08:47 AM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #04
+Regular
+6
+Sean O'Donnell
+5/4/2026 7:56:38 PM
+
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #05
+Unexpired
+2
+Theo Angelis
+5/4/2026 8:11:46 AM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #05
+Unexpired
+2
+Dave Larson
+5/4/2026 12:01:33 PM
+
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #07
+Regular
+6
+Debra L. Stephens
+5/4/2026 9:13:53 AM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #07
+Regular
+6
+Todd A. Bloom
+5/8/2026 10:50:18 AM
+
+Active
+
+2
+
+Judicial
+Court of Appeals, Division 2, District 1
+Judge Position 2
+Regular
+6
+Meng Li Che
+5/4/2026 8:59:40 AM
+
+Active
+
+1
+
+District Court
+SOUTHEAST ELECTORAL DISTRICT
+Judge Position No. 1
+Regular
+4
+Leah Taguba
+5/4/2026 9:31:59 AM
+
+Active
+
+1
+
+District Court
+SOUTHEAST ELECTORAL DISTRICT
+Judge Position No. 2
+Regular
+4
+Matthew York
+5/4/2026 8:41:21 AM
+
+Active
+
+1
+
+District Court
+SOUTHEAST ELECTORAL DISTRICT
+Judge Position No. 3
+Regular
+4
+Tricia Grove Johnson
+5/4/2026 8:10:09 AM
+
+Active
+
+1
+
+District Court
+SOUTHEAST ELECTORAL DISTRICT
+Judge Position No. 4
+Regular
+4
+Corinna Harn
+5/4/2026 8:09:52 AM
+
+Active
+
+1
+
+District Court
+SOUTHEAST ELECTORAL DISTRICT
+Judge Position No. 5
+Regular
+4
+Joshua C. Harris
+5/8/2026 5:59:40 AM
+
+Active
+
+1
+
+District Court
+SOUTHEAST ELECTORAL DISTRICT
+Judge Position No. 5
+Regular
+4
+Heather M. Barker
+5/4/2026 8:17:04 AM
+
+Active
+
+2
+
+District Court
+SOUTHEAST ELECTORAL DISTRICT
+Judge Position No. 6
+Regular
+4
+Rhonda Laumann
+5/4/2026 8:42:20 AM
+
+Active
+
+1
+
+Judicial
+District Court
+District Court No. 1
+Regular
+4
+Kevin A. McCann
+5/4/2026 8:46:46 AM
+
+Active
+
+1
+
+Judicial
+District Court
+District Court No. 2
+Regular
+4
+Claire Sussman
+5/4/2026 8:26:04 AM
+
+Active
+
+1
+
+Judicial
+District Court
+District Court No. 3
+Regular
+4
+Lizanne Padula
+5/4/2026 2:16:10 PM
+
+Active
+
+1
+
+Judicial
+District Court
+District Court No. 4
+Regular
+4
+Neil Horibe
+5/4/2026 8:16:35 AM
+
+Active
+
+1
+
+Judicial
+District Court
+District Court No. 5
+Regular
+4
+Dwayne Christopher
+5/4/2026 8:52:24 AM
+
+Active
+
+1
+
+Judicial
+District Court
+District Court No. 6
+Regular
+4
+Karl Williams
+5/4/2026 9:09:31 AM
+
+Active
+
+1
+
+Judicial
+District Court
+District Court No. 7
+Regular
+4
+Pam Nogueira
+5/8/2026 11:01:03 AM
+
+Active
+
+1
+
+Judicial
+District Court
+District Court No. 7
+Regular
+4
+Mike Sommerfeld
+5/5/2026 7:45:58 AM
+
+Active
+
+2
+
+Judicial
+District Court
+District Court No. 8
+Regular
+4
+Sven Nelson
+5/4/2026 8:23:48 AM
+
+Active
+
+1
+
+Judicial
+District Court
+District Court No. 8
+Regular
+4
+James Armstrong
+5/8/2026 4:56:53 PM
+
+Active
+
+2
+
+City/Town
+CITY OF TACOMA
+Tacoma Municipal Court Pos. 1
+Regular
+4
+Dee Sonntag
+5/4/2026 8:35:03 AM
+
+Active
+
+1
+
+City/Town
+CITY OF TACOMA
+Tacoma Municipal Court Pos. 2
+Regular
+4
+Sergio C. Flores
+5/4/2026 9:58:07 AM
+
+Active
+
+1
+
+City/Town
+CITY OF TACOMA
+Tacoma Municipal Court Pos. 3
+Regular
+4
+Steven J. Krupa
+5/4/2026 9:20:25 AM
+
+Active
+
+1

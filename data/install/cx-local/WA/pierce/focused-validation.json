@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-03T06:20:00.279441+00:00",
+  "sourceHashes": "PASS_NATIVE_ORIGINAL_BYTES",
+  "primaryAndSecondaryQuotes": "PASS",
+  "exactQuotesChecked": 111,
+  "all80StateListNamesPresentInCurrentSample": true,
+  "completeLocalAndSharedJudicialFields": 28,
+  "candidateRows": 41,
+  "candidateOnlyLocalFields": 23,
+  "candidateOnlyLocalNames": 31,
+  "heldSupremeContestIdsPreserved": 5,
+  "heldSupremeCandidateIdsPreserved": 10,
+  "sharedKingSoutheastContestIdsPreserved": 6,
+  "sharedKingSoutheastCandidateIdsPreserved": 7,
+  "preciseSharedGeometryUnaltered": "PASS_FULL_SOUTHEAST_FEATURE",
+  "partyPreferences": "PASS_EXACT_SAMPLE_AND_CURRENT_STATE_LIST",
+  "singleCandidateFieldsKeptOrdinary": 15,
+  "namedWriteInSupplement": "PENDING_SOURCE_COVERAGE_NO_ABSENCE_INFERRED",
+  "unresolvedReaderDivisions": 4,
+  "productionWrites": false
+}

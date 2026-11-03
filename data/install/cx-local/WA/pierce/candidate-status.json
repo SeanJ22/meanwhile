@@ -1,0 +1,15 @@
+{
+  "sourceElectionId": 899,
+  "sourceCountyId": 27,
+  "sourceSelectedElection": "GENERAL 2026 (11/03/2026) (General)",
+  "sourceRows": 80,
+  "sourceStatusCounts": {
+    "Active": 80
+  },
+  "candidateRowsPrepared": 41,
+  "separateQualifiedWriteInCertification": "NOT_ACQUIRED_PENDING_SOURCE_COVERAGE",
+  "namedWriteInsInvented": 0,
+  "cancelledOrDeclaredElectedRowsInvented": 0,
+  "blankWriteInLinesAddedAsCandidates": 0,
+  "printedSingleCandidateFields": 15
+}

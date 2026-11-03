@@ -1,0 +1,106 @@
+[
+  {
+    "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+    "finalUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161564/Sample-Ballot",
+    "sourceCheckedAt": "2026-11-03T06:12:36.702015+00:00",
+    "sha256": "52a03c3390651dcac390c1178246eec72ef177cff2f4008b58ef471faf9c7104",
+    "sourceFile": "sources/52a03c3390651dcac390c1178246eec72ef177cff2f4008b58ef471faf9c7104.source",
+    "excerptFile": "sources/4d2b87ed72461a5def2da682554a8d169756207583d410dbd55ab5028757b753.txt",
+    "excerptSha256": "4d2b87ed72461a5def2da682554a8d169756207583d410dbd55ab5028757b753",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Original native response bytes, with separately hashed exact PDF text or DOM cell extraction.",
+    "evidence": "Current official four-page November3,2026 General Election Provisional/Sample Ballot linked directly from county current-election homepage. All28 local/shared judicial candidate blocks41 names independently matched current state county-filtered filing list. Rectangles preserve complete native local blocks; no OCR, generic blanks omitted. All original federal/legislative and14 local measure text retained as evidence, not installed in candidate-only packet. Page3 visually checked."
+  },
+  {
+    "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+    "finalUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=27",
+    "sourceCheckedAt": "2026-11-03T06:14:05.508727+00:00",
+    "sha256": "2faaa47274da36f349973978828a8cd04118c08821ddb85511f823c463f915d4",
+    "sourceFile": "sources/2faaa47274da36f349973978828a8cd04118c08821ddb85511f823c463f915d4.source",
+    "excerptFile": "sources/175f01cd7ab4a71201730c4e24b0446432ba76dac80e0fa44a5f293185a2eb4a.txt",
+    "excerptSha256": "175f01cd7ab4a71201730c4e24b0446432ba76dac80e0fa44a5f293185a2eb4a",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Original native response bytes, with separately hashed exact PDF text or DOM cell extraction.",
+    "evidence": "Native public state list explicitly selected election899 GENERAL2026 November3 and county27 Pierce.80 rows are Active. Contact columns omitted from exact cell-text excerpt. All28 local/shared judicial fields41 names and exact printed party preferences, terms and names match current sample. The filing list does not establish a separate current qualified-write-in certification."
+  },
+  {
+    "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161295/General-2026-VP_FINAL",
+    "finalUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161295/General-2026-VP_FINAL",
+    "sourceCheckedAt": "2026-11-03T06:12:38.585172+00:00",
+    "sha256": "91c2894e9833999aca1866dba9bb08a6243657fc093c69d7bc53544fe478908d",
+    "sourceFile": "sources/91c2894e9833999aca1866dba9bb08a6243657fc093c69d7bc53544fe478908d.source",
+    "excerptFile": "sources/004a9860dd5c7d3949857a0c590809c846d27503405b84c0a964132b6dcb9c71.txt",
+    "excerptSha256": "004a9860dd5c7d3949857a0c590809c846d27503405b84c0a964132b6dcb9c71",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Original native response bytes, with separately hashed exact PDF text or DOM cell extraction.",
+    "evidence": "Current native40-page county local pamphlet, linked directly from current county homepage. Pages28–31 explicitly identify Southeast Electoral District candidates as King County District Court judges, corroborating exact shared King IDs/electorate. Candidate statements are secondary context, never a reason to infer party preference/incumbency/contact facts."
+  },
+  {
+    "sourceUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161277/Nov-2026-Election-at-a-Glance",
+    "finalUrl": "https://www.piercecountywa.gov/DocumentCenter/View/161277/Nov-2026-Election-at-a-Glance",
+    "sourceCheckedAt": "2026-11-03T06:12:36.962064+00:00",
+    "sha256": "8ccbd66addf47432a3b34ec8ab013a974d56f58fa227a34a277643d53c645ea0",
+    "sourceFile": "sources/8ccbd66addf47432a3b34ec8ab013a974d56f58fa227a34a277643d53c645ea0.source",
+    "excerptFile": "sources/c1d1fcf9b1f6730eb8396ad18c01237bc80b5c64e2d747bce825768ab151b3e8.txt",
+    "excerptSha256": "c1d1fcf9b1f6730eb8396ad18c01237bc80b5c64e2d747bce825768ab151b3e8",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Original native response bytes, with separately hashed exact PDF text or DOM cell extraction.",
+    "evidence": "Current native November3 election-at-a-glance inventory corroborates county/judicial office categories and7 noncounty local measures; source coverage evidence.",
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE"
+  },
+  {
+    "sourceUrl": "https://www.piercecountywa.gov/328/Elections",
+    "finalUrl": "https://www.piercecountywa.gov/328/Elections",
+    "sourceCheckedAt": "2026-11-03T06:12:17.884407+00:00",
+    "sha256": "6a35e2bc28ec40cf2e857bf3f6059fb5a253185b1b057e509bbe31461f44ed18",
+    "sourceFile": "sources/6a35e2bc28ec40cf2e857bf3f6059fb5a253185b1b057e509bbe31461f44ed18.source",
+    "excerptFile": "sources/cdb295d969f75ef50b388b347ac5d240dc10d64abee6312c02e4798dc1024ca5.txt",
+    "excerptSha256": "cdb295d969f75ef50b388b347ac5d240dc10d64abee6312c02e4798dc1024ca5",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Original native response bytes, with separately hashed exact PDF text or DOM cell extraction.",
+    "evidence": "Current official county elections homepage directly links exact current sample, local pamphlet, state pamphlet and election-at-a-glance; source-authority chain.",
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE"
+  },
+  {
+    "sourceUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+    "finalUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+    "sourceCheckedAt": "2026-11-03T06:13:51.754815+00:00",
+    "sha256": "b5df2ebf80eefede2d1aa37f0380b6e1885e226ea7cb100c0ad0308de5eca76c",
+    "sourceFile": "sources/b5df2ebf80eefede2d1aa37f0380b6e1885e226ea7cb100c0ad0308de5eca76c.source",
+    "excerptFile": "sources/6b063fba529ad61627780387f8136c3fdc9e3f89c9382fcf4015c3701d53ff82.txt",
+    "excerptSha256": "6b063fba529ad61627780387f8136c3fdc9e3f89c9382fcf4015c3701d53ff82",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Original native response bytes, with separately hashed exact PDF text or DOM cell extraction.",
+    "evidence": "RCW2.06.020 DivisionII subsection(2)(a): District1 shall consist of Pierce county and shall have three judges. Exact appeals electorate is county Pierce, not all DivisionII."
+  },
+  {
+    "sourceUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+    "finalUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+    "sourceCheckedAt": "2026-11-03T03:58:10.127090+00:00",
+    "sha256": "88684e7fa20713d02dcd81ae69ec017ee943a9e7fe658f7a680c2dfc8e1a51e9",
+    "sourceFile": "sources/88684e7fa20713d02dcd81ae69ec017ee943a9e7fe658f7a680c2dfc8e1a51e9.source",
+    "excerptFile": "sources/09ab064b84197635e1e080c52dd6c2d44940d44b94c2eedd35b1c810485bf03d.txt",
+    "excerptSha256": "09ab064b84197635e1e080c52dd6c2d44940d44b94c2eedd35b1c810485bf03d",
+    "evidence": "Shared Southeast Electoral District precise identity/geometry reused without county clipping. Full source geometry may include Pierce portions; no whole-Pierce link is fabricated. Current official DistrictCourt of KingCounty GIS catalog states these are divisions for purposes of election, defines Northeast NE,Southeast SE,Shoreline SH,Southwest SW,West W and links exact ArcGIS feature service. Metadata lastmodifiedAugust26,2026. Administrative courthouse divisions are not substituted for electoral districts."
+  },
+  {
+    "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T03:59:10.506717+00:00",
+    "sha256": "e1a581c8474107c5815a9e9f12e7b961ba980c155ebe247dee0749169b822106",
+    "sourceFile": "sources/e1a581c8474107c5815a9e9f12e7b961ba980c155ebe247dee0749169b822106.source",
+    "excerptFile": "sources/e1a581c8474107c5815a9e9f12e7b961ba980c155ebe247dee0749169b822106.txt",
+    "excerptSha256": "e1a581c8474107c5815a9e9f12e7b961ba980c155ebe247dee0749169b822106",
+    "evidence": "Shared Southeast Electoral District precise identity/geometry reused without county clipping. Full source geometry may include Pierce portions; no whole-Pierce link is fabricated. Official-linked GIS FeatureLayer KingCountyDistrictCourts exposes polygon geometry and juddst/NAME fields. Used to map each exact named electoral district to its source-backed division identity."
+  },
+  {
+    "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T03:59:10.507653+00:00",
+    "sha256": "d724914e1e85b4a126bb1d5882c681fe4f153197d890e969d24f0de9d852aa0b",
+    "sourceFile": "sources/d724914e1e85b4a126bb1d5882c681fe4f153197d890e969d24f0de9d852aa0b.source",
+    "excerptFile": "sources/d724914e1e85b4a126bb1d5882c681fe4f153197d890e969d24f0de9d852aa0b.txt",
+    "excerptSha256": "d724914e1e85b4a126bb1d5882c681fe4f153197d890e969d24f0de9d852aa0b",
+    "evidence": "Shared Southeast Electoral District precise identity/geometry reused without county clipping. Full source geometry may include Pierce portions; no whole-Pierce link is fabricated. Full official-linked current GeoJSON response contains all5 electoral polygons, exact official codes NE,SE,SH,SW,W and names. Geometry is preserved without widening or county clipping; Southeast includes applicable PierceCounty areas. Source-backed precise OCD identities prepared with matching source feature; reader installation remains River dependency."
+  }
+]

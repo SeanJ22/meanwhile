@@ -1,0 +1,229 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "WA",
+  "county": "Pierce",
+  "countyFips": "53053",
+  "populationRank": 60,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-auditor",
+      "title": "Pierce County Auditor",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-prosecuting-attorney",
+      "title": "Pierce County Prosecuting Attorney",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-council-district-no-1",
+      "title": "Pierce County Council District No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce/council_district:1",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-council-district-no-5",
+      "title": "Pierce County Council District No. 5",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce/council_district:5",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-council-district-no-7",
+      "title": "Pierce County Council District No. 7",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce/council_district:7",
+      "candidates": 2
+    },
+    {
+      "id": "wa-sos-2026-general-4a01ae3c96851c17",
+      "title": "Supreme Court, Justice Position #01",
+      "ocdId": "ocd-division/country:us/state:wa",
+      "candidates": 2
+    },
+    {
+      "id": "wa-sos-2026-general-e6141c106be4832c",
+      "title": "Supreme Court, Justice Position #03",
+      "ocdId": "ocd-division/country:us/state:wa",
+      "candidates": 2
+    },
+    {
+      "id": "wa-sos-2026-general-b2c297f9a98570f8",
+      "title": "Supreme Court, Justice Position #04",
+      "ocdId": "ocd-division/country:us/state:wa",
+      "candidates": 2
+    },
+    {
+      "id": "wa-sos-2026-general-5ab3d81746ef7ce9",
+      "title": "Supreme Court, Justice Position #05",
+      "ocdId": "ocd-division/country:us/state:wa",
+      "candidates": 2
+    },
+    {
+      "id": "wa-sos-2026-general-2b3d94ad4f312ba5",
+      "title": "Supreme Court, Justice Position #07",
+      "ocdId": "ocd-division/country:us/state:wa",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-court-of-appeals-division-2-district-1-judge-position-no-2",
+      "title": "Pierce Court of Appeals Division 2 District 1, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-1",
+      "title": "Pierce County District Court, Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-2",
+      "title": "Pierce County District Court, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-3",
+      "title": "Pierce County District Court, Judge Position No. 3",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-4",
+      "title": "Pierce County District Court, Judge Position No. 4",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-5",
+      "title": "Pierce County District Court, Judge Position No. 5",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-6",
+      "title": "Pierce County District Court, Judge Position No. 6",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-7",
+      "title": "Pierce County District Court, Judge Position No. 7",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-8",
+      "title": "Pierce County District Court, Judge Position No. 8",
+      "ocdId": "ocd-division/country:us/state:wa/county:pierce",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southeast-position-1",
+      "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southeast-position-2",
+      "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southeast-position-3",
+      "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 3",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southeast-position-4",
+      "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 4",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southeast-position-5",
+      "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 5",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southeast-position-6",
+      "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 6",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-1",
+      "title": "Tacoma Municipal Court, Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/place:tacoma",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-2",
+      "title": "Tacoma Municipal Court, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/place:tacoma",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-3",
+      "title": "Tacoma Municipal Court, Judge Position No. 3",
+      "ocdId": "ocd-division/country:us/state:wa/place:tacoma",
+      "candidates": 1
+    }
+  ],
+  "operation": "Data-only partial candidate packet; merge latest WA while preserving exact held Supreme/King shared Southeast IDs, all unrelated legislative/measures facts, and full cross-county electorate geometry. No production publication.",
+  "coverage": [
+    "All23 local candidate fields31 printed names in current official native4-page Pierce composite are complete, with5 shared held Supreme Court fields10 names also refreshed. Every one of those28 full fields41 names/parties/terms matches current native state filing list election899 county27 (all80 source rows Active). All printed single-candidate fields remain ordinary candidates, never inferred declared elected.",
+    "Six Southeast Electoral District fields/seven names exactly reuse the King prepared contest and candidacy IDs. Pierce native sample, current state list and county pamphlet agree; pamphlet pages28\u201331 explicitly identify these as King County District Court judges. Exact full official Southeast geometry is reused without clipping to county boundaries. Applicable Pierce areas do not authorize a whole-Pierce membership.",
+    "Court of Appeals DivisionII District1 Position2 has one printed candidate, Meng Li Che. RCW2.06.020(2)(a) explicitly makes this district Pierce County; its electorate is the exact county division. Pierce County District Court positions1\u20138 remain county offices, distinct from named Southeast Electoral District and Tacoma Municipal Court. Council districts1/5/7 keep exact district OCD IDs pending reader joins.",
+    "Candidate-only packet. The complete sample also contains7 Pierce charter amendments and7 other local measures (plus3 held statewide initiatives); raw source text and a separate inventory are preserved, without adding optional measures or changing held legislative/measures data.",
+    "No current separate qualified-write-in supplement was acquired. State filing source has Active rows but no separate write-in qualification certification, so absence is not asserted. Generic blank optional write-in spaces identify no people. No cancelled/declared-elected office or withdrawn identity is inferred from one-name fields or missing supplementary records.",
+    "All current sources are original native PDF/HTML bytes with exact hashes/extraction; no voter identity or personal-address lookup was used. Shared King geometry and identities remain data prepared for River; reader application joins and source-based qualified-write-in updates remain explicit. No git or production operation."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+    "ocd-division/country:us/state:wa/county:pierce/council_district:1",
+    "ocd-division/country:us/state:wa/county:pierce/council_district:5",
+    "ocd-division/country:us/state:wa/county:pierce/council_district:7"
+  ],
+  "counts": {
+    "localCandidateContests": 23,
+    "ordinaryLocalCandidateRows": 31,
+    "sharedSupremeContestsRefreshed": 5,
+    "sharedSupremeCandidateIdsPreserved": 10,
+    "sharedKingSoutheastContests": 6,
+    "sharedKingSoutheastCandidateIdsPreserved": 7,
+    "candidateContests": 28,
+    "candidateRows": 41,
+    "newLocalContests": 17,
+    "samplePages": 4,
+    "countyPamphletPages": 40,
+    "stateCurrentCandidateListRows": 80,
+    "qualifiedWriteInsAddedAsOrdinaryCandidates": 0,
+    "unresolvedReaderDivisions": 4,
+    "measureContestsAdded": 0,
+    "legislativeContestsAdded": 0
+  },
+  "validation": {
+    "sourceBytesAndExactQuotes": "PASS: 9 native source hashes, 69 primary/111 total primary and secondary exact quotes",
+    "completeNamedCandidateBlocks": "PASS_28_COMPLETE_FIELDS_41_NAMES_NATIVE_SAMPLE_AND_CURRENT_STATE_LIST",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "sharedSupremeAndKingIds": "PASS_11_CONTESTS_17_CANDIDACIES",
+    "preciseCrossCountyGeometry": "PASS_FULL_OFFICIAL_SE_FEATURE_UNALTERED",
+    "sourceHashesAndQuotes": "PASS: 9 captured sources and 69 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "Main/River: merge with latest WA including King shared identities; join precise council/SE electorates (full SE geometry provided), verify named-write-in qualification supplement and actual reader delivery before any publication.",
+  "frozenAt": "2026-11-03T06:20:31.973Z",
+  "ballotInputSha256": "257c9cb0611a341f372932077f5723dee1287eea1fb3f63f289d81348b0cc138"
+}

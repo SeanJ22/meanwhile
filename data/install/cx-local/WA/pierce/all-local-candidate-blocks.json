@@ -1,0 +1,1369 @@
+[
+  {
+    "category": "County Auditor",
+    "position": null,
+    "pdfPage": 2,
+    "pdfRectangle": [
+      396.0,
+      267.0,
+      590.0,
+      346.0
+    ],
+    "sourceText": "Auditor\nLinda Farmer\nDamon Townsend",
+    "candidates": [
+      {
+        "name": "Linda Farmer",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Damon Townsend",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Countywide",
+        "district": "County",
+        "race": "Auditor",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Linda Farmer",
+        "filingDate": "5/4/2026 8:09:57 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Countywide",
+        "district": "County",
+        "race": "Auditor",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Damon Townsend",
+        "filingDate": "5/6/2026 5:19:43 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-auditor",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce"
+  },
+  {
+    "category": "County Prosecuting Attorney",
+    "position": null,
+    "pdfPage": 2,
+    "pdfRectangle": [
+      396.0,
+      358.0,
+      590.0,
+      436.0
+    ],
+    "sourceText": "Prosecuting Attorney\nCoreen Schnepf\nBryan Chushcoff",
+    "candidates": [
+      {
+        "name": "Coreen Schnepf",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Bryan Chushcoff",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Countywide",
+        "district": "County",
+        "race": "Prosecuting Attorney",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Coreen Schnepf",
+        "filingDate": "5/4/2026 9:51:55 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Countywide",
+        "district": "County",
+        "race": "Prosecuting Attorney",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Bryan Chushcoff",
+        "filingDate": "5/4/2026 1:00:07 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-prosecuting-attorney",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce"
+  },
+  {
+    "category": "County Council",
+    "position": 1,
+    "pdfPage": 2,
+    "pdfRectangle": [
+      396.0,
+      465.0,
+      590.0,
+      547.0
+    ],
+    "sourceText": "County Council District No. 1\n(Prefers Republican Party)\nJerome O'Leary\n(Prefers Democratic Party)\nKelsey Barrans",
+    "candidates": [
+      {
+        "name": "Jerome O'Leary",
+        "partyLabel": "Republican",
+        "samplePrintedPartyText": "(Prefers Republican Party)",
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Kelsey Barrans",
+        "partyLabel": "Democratic",
+        "samplePrintedPartyText": "(Prefers Democratic Party)",
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Council",
+        "district": "COUNTY COUNCIL DISTRICT NO. 1",
+        "race": "Council - District No. 1",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Jerome O'Leary",
+        "filingDate": "5/4/2026 8:25:29 AM",
+        "partyPreference": "REPUBLICAN",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Council",
+        "district": "COUNTY COUNCIL DISTRICT NO. 1",
+        "race": "Council - District No. 1",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Kelsey Barrans",
+        "filingDate": "5/8/2026 6:25:00 AM",
+        "partyPreference": "DEMOCRATIC",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce/council_district:1"
+  },
+  {
+    "category": "County Council",
+    "position": 5,
+    "pdfPage": 2,
+    "pdfRectangle": [
+      396.0,
+      556.0,
+      590.0,
+      638.0
+    ],
+    "sourceText": "County Council District No. 5\n(Prefers Democratic Party)\nBryan Yambe\n(Prefers Republican Party)\nBettina Gese",
+    "candidates": [
+      {
+        "name": "Bryan Yambe",
+        "partyLabel": "Democratic",
+        "samplePrintedPartyText": "(Prefers Democratic Party)",
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Bettina Gese",
+        "partyLabel": "Republican",
+        "samplePrintedPartyText": "(Prefers Republican Party)",
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Council",
+        "district": "COUNTY COUNCIL DISTRICT NO. 5",
+        "race": "Council - District No. 5",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Bryan Yambe",
+        "filingDate": "5/4/2026 8:58:09 AM",
+        "partyPreference": "DEMOCRATIC",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Council",
+        "district": "COUNTY COUNCIL DISTRICT NO. 5",
+        "race": "Council - District No. 5",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Bettina Gese",
+        "filingDate": "5/5/2026 2:37:28 PM",
+        "partyPreference": "REPUBLICAN",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-5",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce/council_district:5"
+  },
+  {
+    "category": "County Council",
+    "position": 7,
+    "pdfPage": 2,
+    "pdfRectangle": [
+      396.0,
+      646.0,
+      590.0,
+      728.0
+    ],
+    "sourceText": "County Council District No. 7\n(Prefers Democratic Party)\nBrenda Lykins\n(Prefers Republican Party)\nMike Solan",
+    "candidates": [
+      {
+        "name": "Brenda Lykins",
+        "partyLabel": "Democratic",
+        "samplePrintedPartyText": "(Prefers Democratic Party)",
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Mike Solan",
+        "partyLabel": "Republican",
+        "samplePrintedPartyText": "(Prefers Republican Party)",
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Council",
+        "district": "COUNTY COUNCIL DISTRICT NO. 7",
+        "race": "Council - District No. 7",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Brenda Lykins",
+        "filingDate": "5/4/2026 12:03:16 PM",
+        "partyPreference": "DEMOCRATIC",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Council",
+        "district": "COUNTY COUNCIL DISTRICT NO. 7",
+        "race": "Council - District No. 7",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Mike Solan",
+        "filingDate": "5/4/2026 4:37:48 PM",
+        "partyPreference": "REPUBLICAN",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-council-district-no-7",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce/council_district:7"
+  },
+  {
+    "category": "Supreme Court",
+    "position": 1,
+    "pdfPage": 2,
+    "pdfRectangle": [
+      396.0,
+      771.0,
+      590.0,
+      850.0
+    ],
+    "sourceText": "Justice Position No. 1\nTwo Year Unexpired Term\nColleen Melody\nScott Edwards",
+    "candidates": [
+      {
+        "name": "Colleen Melody",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Scott Edwards",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #01",
+        "termType": "Unexpired",
+        "termLength": "2",
+        "name": "Colleen Melody",
+        "filingDate": "5/4/2026 10:34:39 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #01",
+        "termType": "Unexpired",
+        "termLength": "2",
+        "name": "Scott Edwards",
+        "filingDate": "5/4/2026 6:10:06 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 2,
+    "termType": "Unexpired",
+    "contestId": "wa-sos-2026-general-4a01ae3c96851c17",
+    "ocdId": "ocd-division/country:us/state:wa"
+  },
+  {
+    "category": "Supreme Court",
+    "position": 3,
+    "pdfPage": 2,
+    "pdfRectangle": [
+      396.0,
+      862.0,
+      590.0,
+      940.0
+    ],
+    "sourceText": "Justice Position No. 3\nDavid Stevens\nJaime Michelle Hawk",
+    "candidates": [
+      {
+        "name": "David Stevens",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Jaime Michelle Hawk",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #03",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "David Stevens",
+        "filingDate": "5/4/2026 6:58:30 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #03",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Jaime Michelle Hawk",
+        "filingDate": "5/4/2026 10:08:05 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 6,
+    "termType": "Regular",
+    "contestId": "wa-sos-2026-general-e6141c106be4832c",
+    "ocdId": "ocd-division/country:us/state:wa"
+  },
+  {
+    "category": "Supreme Court",
+    "position": 4,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      26.0,
+      86.0,
+      216.0,
+      151.0
+    ],
+    "sourceText": "Justice Position No. 4\nIan Birk\nSean O'Donnell",
+    "candidates": [
+      {
+        "name": "Ian Birk",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Sean O'Donnell",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #04",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Ian Birk",
+        "filingDate": "5/4/2026 8:08:47 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #04",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Sean O'Donnell",
+        "filingDate": "5/4/2026 7:56:38 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 6,
+    "termType": "Regular",
+    "contestId": "wa-sos-2026-general-b2c297f9a98570f8",
+    "ocdId": "ocd-division/country:us/state:wa"
+  },
+  {
+    "category": "Supreme Court",
+    "position": 5,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      26.0,
+      160.0,
+      216.0,
+      240.0
+    ],
+    "sourceText": "Justice Position No. 5\nTwo Year Unexpired Term\nTheo Angelis\nDave Larson",
+    "candidates": [
+      {
+        "name": "Theo Angelis",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Dave Larson",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #05",
+        "termType": "Unexpired",
+        "termLength": "2",
+        "name": "Theo Angelis",
+        "filingDate": "5/4/2026 8:11:46 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #05",
+        "termType": "Unexpired",
+        "termLength": "2",
+        "name": "Dave Larson",
+        "filingDate": "5/4/2026 12:01:33 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 2,
+    "termType": "Unexpired",
+    "contestId": "wa-sos-2026-general-5ab3d81746ef7ce9",
+    "ocdId": "ocd-division/country:us/state:wa"
+  },
+  {
+    "category": "Supreme Court",
+    "position": 7,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      26.0,
+      250.0,
+      216.0,
+      328.0
+    ],
+    "sourceText": "Justice Position No. 7\nDebra L. Stephens\nTodd A. Bloom",
+    "candidates": [
+      {
+        "name": "Debra L. Stephens",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Todd A. Bloom",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #07",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Debra L. Stephens",
+        "filingDate": "5/4/2026 9:13:53 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #07",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Todd A. Bloom",
+        "filingDate": "5/8/2026 10:50:18 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 6,
+    "termType": "Regular",
+    "contestId": "wa-sos-2026-general-2b3d94ad4f312ba5",
+    "ocdId": "ocd-division/country:us/state:wa"
+  },
+  {
+    "category": "Court of Appeals Division 2 District 1",
+    "position": 2,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      26.0,
+      336.0,
+      216.0,
+      420.0
+    ],
+    "sourceText": "Court of Appeals - Div. 2 Dist. 1\nPosition No. 2\nMeng Li Che",
+    "candidates": [
+      {
+        "name": "Meng Li Che",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Court of Appeals, Division 2, District 1",
+        "race": "Judge Position 2",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Meng Li Che",
+        "filingDate": "5/4/2026 8:59:40 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 6,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-court-of-appeals-division-2-district-1-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce"
+  },
+  {
+    "category": "Pierce County District Court",
+    "position": 1,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      26.0,
+      447.0,
+      216.0,
+      516.0
+    ],
+    "sourceText": "Position No. 1\nKevin A. McCann",
+    "candidates": [
+      {
+        "name": "Kevin A. McCann",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "District Court",
+        "race": "District Court No. 1",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Kevin A. McCann",
+        "filingDate": "5/4/2026 8:46:46 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce"
+  },
+  {
+    "category": "Pierce County District Court",
+    "position": 2,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      26.0,
+      520.0,
+      216.0,
+      589.0
+    ],
+    "sourceText": "Position No. 2\nClaire Sussman",
+    "candidates": [
+      {
+        "name": "Claire Sussman",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "District Court",
+        "race": "District Court No. 2",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Claire Sussman",
+        "filingDate": "5/4/2026 8:26:04 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce"
+  },
+  {
+    "category": "Pierce County District Court",
+    "position": 3,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      26.0,
+      592.0,
+      216.0,
+      661.0
+    ],
+    "sourceText": "Position No. 3\nLizanne Padula",
+    "candidates": [
+      {
+        "name": "Lizanne Padula",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "District Court",
+        "race": "District Court No. 3",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Lizanne Padula",
+        "filingDate": "5/4/2026 2:16:10 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-3",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce"
+  },
+  {
+    "category": "Pierce County District Court",
+    "position": 4,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      26.0,
+      664.0,
+      216.0,
+      733.0
+    ],
+    "sourceText": "Position No. 4\nNeil Horibe",
+    "candidates": [
+      {
+        "name": "Neil Horibe",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "District Court",
+        "race": "District Court No. 4",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Neil Horibe",
+        "filingDate": "5/4/2026 8:16:35 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-4",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce"
+  },
+  {
+    "category": "Pierce County District Court",
+    "position": 5,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      26.0,
+      736.0,
+      216.0,
+      805.0
+    ],
+    "sourceText": "Position No. 5\nDwayne Christopher",
+    "candidates": [
+      {
+        "name": "Dwayne Christopher",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "District Court",
+        "race": "District Court No. 5",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Dwayne Christopher",
+        "filingDate": "5/4/2026 8:52:24 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-5",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce"
+  },
+  {
+    "category": "Pierce County District Court",
+    "position": 6,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      26.0,
+      808.0,
+      216.0,
+      877.0
+    ],
+    "sourceText": "Position No. 6\nKarl Williams",
+    "candidates": [
+      {
+        "name": "Karl Williams",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "District Court",
+        "race": "District Court No. 6",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Karl Williams",
+        "filingDate": "5/4/2026 9:09:31 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-6",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce"
+  },
+  {
+    "category": "Pierce County District Court",
+    "position": 7,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      26.0,
+      880.0,
+      216.0,
+      949.0
+    ],
+    "sourceText": "Position No. 7\nPam Nogueira\nMike Sommerfeld",
+    "candidates": [
+      {
+        "name": "Pam Nogueira",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Mike Sommerfeld",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "District Court",
+        "race": "District Court No. 7",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Pam Nogueira",
+        "filingDate": "5/8/2026 11:01:03 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Judicial",
+        "district": "District Court",
+        "race": "District Court No. 7",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Mike Sommerfeld",
+        "filingDate": "5/5/2026 7:45:58 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-7",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce"
+  },
+  {
+    "category": "Pierce County District Court",
+    "position": 8,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      220.0,
+      86.0,
+      394.0,
+      144.0
+    ],
+    "sourceText": "Position No. 8\nSven Nelson\nJames Armstrong",
+    "candidates": [
+      {
+        "name": "Sven Nelson",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "James Armstrong",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "District Court",
+        "race": "District Court No. 8",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Sven Nelson",
+        "filingDate": "5/4/2026 8:23:48 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Judicial",
+        "district": "District Court",
+        "race": "District Court No. 8",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "James Armstrong",
+        "filingDate": "5/8/2026 4:56:53 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-pierce-county-district-court-judge-position-no-8",
+    "ocdId": "ocd-division/country:us/state:wa/county:pierce"
+  },
+  {
+    "category": "Southeast Electoral District",
+    "position": 1,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      220.0,
+      177.0,
+      394.0,
+      245.0
+    ],
+    "sourceText": "Judge Position No. 1\nLeah Taguba",
+    "candidates": [
+      {
+        "name": "Leah Taguba",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "District Court",
+        "district": "SOUTHEAST ELECTORAL DISTRICT",
+        "race": "Judge Position No. 1",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Leah Taguba",
+        "filingDate": "5/4/2026 9:31:59 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast"
+  },
+  {
+    "category": "Southeast Electoral District",
+    "position": 2,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      220.0,
+      250.0,
+      394.0,
+      318.0
+    ],
+    "sourceText": "Judge Position No. 2\nMatthew York",
+    "candidates": [
+      {
+        "name": "Matthew York",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "District Court",
+        "district": "SOUTHEAST ELECTORAL DISTRICT",
+        "race": "Judge Position No. 2",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Matthew York",
+        "filingDate": "5/4/2026 8:41:21 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast"
+  },
+  {
+    "category": "Southeast Electoral District",
+    "position": 3,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      220.0,
+      322.0,
+      394.0,
+      390.0
+    ],
+    "sourceText": "Judge Position No. 3\nTricia Grove Johnson",
+    "candidates": [
+      {
+        "name": "Tricia Grove Johnson",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "District Court",
+        "district": "SOUTHEAST ELECTORAL DISTRICT",
+        "race": "Judge Position No. 3",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Tricia Grove Johnson",
+        "filingDate": "5/4/2026 8:10:09 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-3",
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast"
+  },
+  {
+    "category": "Southeast Electoral District",
+    "position": 4,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      220.0,
+      394.0,
+      394.0,
+      462.0
+    ],
+    "sourceText": "Judge Position No. 4\nCorinna Harn",
+    "candidates": [
+      {
+        "name": "Corinna Harn",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "District Court",
+        "district": "SOUTHEAST ELECTORAL DISTRICT",
+        "race": "Judge Position No. 4",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Corinna Harn",
+        "filingDate": "5/4/2026 8:09:52 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-4",
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast"
+  },
+  {
+    "category": "Southeast Electoral District",
+    "position": 5,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      220.0,
+      466.0,
+      394.0,
+      546.0
+    ],
+    "sourceText": "Judge Position No. 5\nJoshua C. Harris\nHeather M. Barker",
+    "candidates": [
+      {
+        "name": "Joshua C. Harris",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Heather M. Barker",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "District Court",
+        "district": "SOUTHEAST ELECTORAL DISTRICT",
+        "race": "Judge Position No. 5",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Joshua C. Harris",
+        "filingDate": "5/8/2026 5:59:40 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "District Court",
+        "district": "SOUTHEAST ELECTORAL DISTRICT",
+        "race": "Judge Position No. 5",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Heather M. Barker",
+        "filingDate": "5/4/2026 8:17:04 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-5",
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast"
+  },
+  {
+    "category": "Southeast Electoral District",
+    "position": 6,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      220.0,
+      556.0,
+      394.0,
+      624.0
+    ],
+    "sourceText": "Judge Position No. 6\nRhonda Laumann",
+    "candidates": [
+      {
+        "name": "Rhonda Laumann",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "District Court",
+        "district": "SOUTHEAST ELECTORAL DISTRICT",
+        "race": "Judge Position No. 6",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Rhonda Laumann",
+        "filingDate": "5/4/2026 8:42:20 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-king-2026-district-court-southeast-position-6",
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast"
+  },
+  {
+    "category": "Tacoma Municipal Court",
+    "position": 1,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      396.0,
+      339.0,
+      590.0,
+      404.0
+    ],
+    "sourceText": "Position No. 1\nDee Sonntag",
+    "candidates": [
+      {
+        "name": "Dee Sonntag",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "City/Town",
+        "district": "CITY OF TACOMA",
+        "race": "Tacoma Municipal Court Pos. 1",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Dee Sonntag",
+        "filingDate": "5/4/2026 8:35:03 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/place:tacoma"
+  },
+  {
+    "category": "Tacoma Municipal Court",
+    "position": 2,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      396.0,
+      412.0,
+      590.0,
+      477.0
+    ],
+    "sourceText": "Position No. 2\nSergio C. Flores",
+    "candidates": [
+      {
+        "name": "Sergio C. Flores",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "City/Town",
+        "district": "CITY OF TACOMA",
+        "race": "Tacoma Municipal Court Pos. 2",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Sergio C. Flores",
+        "filingDate": "5/4/2026 9:58:07 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/place:tacoma"
+  },
+  {
+    "category": "Tacoma Municipal Court",
+    "position": 3,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      396.0,
+      484.0,
+      590.0,
+      549.0
+    ],
+    "sourceText": "Position No. 3\nSteven J. Krupa",
+    "candidates": [
+      {
+        "name": "Steven J. Krupa",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "City/Town",
+        "district": "CITY OF TACOMA",
+        "race": "Tacoma Municipal Court Pos. 3",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Steven J. Krupa",
+        "filingDate": "5/4/2026 9:20:25 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-pierce-2026-tacoma-municipal-court-judge-position-no-3",
+    "ocdId": "ocd-division/country:us/state:wa/place:tacoma"
+  }
+]

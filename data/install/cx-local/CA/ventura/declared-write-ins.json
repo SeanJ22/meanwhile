@@ -1,0 +1,12 @@
+{
+  "status": "CURRENT_QUALIFIED_LOCAL_WRITE_IN_NAME_ROSTER_NOT_ACQUIRED",
+  "namedCandidates": [],
+  "eligibilityZeroClaim": false,
+  "genericBlankOvals": 71,
+  "ordinaryCandidatePolicy": "Printed named choices only. Blank ovals are not people; no claim that no one qualified as a write-in.",
+  "sourceNotes": [
+    "Current county election page states September 7–October 20 write-in nomination period.",
+    "Official translation guide states qualified write-in names are written in the blank spaces.",
+    "Public candidate/county/city routes were checked; no current qualified named local write-in roster was acquired."
+  ]
+}

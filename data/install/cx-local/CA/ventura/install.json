@@ -1,0 +1,486 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CA",
+  "county": "Ventura",
+  "countyFips": "06111",
+  "populationRank": 77,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "dataOnly": true,
+  "productionWrites": false,
+  "coverage": "COUNTY_COMPLETE_ORDINARY_LOCAL_NAMED_SAMPLE_FIELDS",
+  "counts": {
+    "contests": 62,
+    "candidacies": 160,
+    "newContests": 58,
+    "sharedContestIdsReused": 4,
+    "sharedCandidateIdsReused": 12,
+    "newCandidates": 148,
+    "nativeBallotTypes": 187,
+    "stagedOfficialPolygons": 51,
+    "unmatchedReaderDivisions": 56
+  },
+  "subjects": [
+    {
+      "id": "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "title": "Ventura County \u2014 County Superintendent of Schools",
+      "ocdId": "ocd-division/country:us/state:ca/county:ventura",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-fillmore-piru-memorial-district-for-director",
+      "title": "Fillmore-Piru Memorial District \u2014 Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:fillmore_piru_memorial_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1",
+      "title": "United Water Conservation District \u2014 Director, Division 1",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:united_water_conservation_district/division:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "title": "Moorpark Unified School District \u2014 Governing Board Member - Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:moorpark_unified_school_district/trustee_area:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-santa-paula-unified-school-district-for-governing-board-member-trustee-area-5-short-term",
+      "title": "Santa Paula Unified School District \u2014 Governing Board Member - Trustee Area 5 (Short Term)",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:santa_paula_unified_school_district/trustee_area:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5",
+      "title": "Ventura County Community College District \u2014 Governing Board Member - Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:ventura_county_community_college_district/trustee_area:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "title": "Ventura County Board Of Education \u2014 Governing Board Member - Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/county:ventura/school_board_district:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2",
+      "title": "Ventura County Community College District \u2014 Governing Board Member - Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:ventura_county_community_college_district/trustee_area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-5",
+      "title": "Camarillo Health Care District \u2014 Director, Zone 5",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:camarillo_health_care_district/zone:5",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-pleasant-valley-recreation-and-park-district-for-director-division-4",
+      "title": "Pleasant Valley Recreation And Park District \u2014 Director, Division 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:pleasant_valley_recreation_and_park_district/division:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-1",
+      "title": "Pleasant Valley School District \u2014 Governing Board Member - Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:pleasant_valley_elementary_school_district/trustee_area:1",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-1",
+      "title": "City Of Camarillo \u2014 Member of the City Council - District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:camarillo/council_district:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+      "title": "City Of Camarillo \u2014 Member of the City Council - District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:camarillo/council_district:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "title": "Camarillo Health Care District \u2014 Director, Zone 1 (Short Term)",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:camarillo_health_care_district/zone:1",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-3",
+      "title": "Pleasant Valley School District \u2014 Governing Board Member - Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:pleasant_valley_elementary_school_district/trustee_area:3",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-2",
+      "title": "City Of Camarillo \u2014 Member of the City Council - District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:camarillo/council_district:2",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-4",
+      "title": "Camarillo Health Care District \u2014 Director, Zone 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:camarillo_health_care_district/zone:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-2",
+      "title": "Pleasant Valley School District \u2014 Governing Board Member - Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:pleasant_valley_elementary_school_district/trustee_area:2",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-3",
+      "title": "Rio School District \u2014 Governing Board Member - Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rio_elementary_school_district/trustee_area:3",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-1",
+      "title": "Rio School District \u2014 Governing Board Member - Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rio_elementary_school_district/trustee_area:1",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "title": "Oxnard Harbor District \u2014 Harbor Commissioner",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:oxnard_harbor_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-fillmore-unified-school-district-for-governing-board-member-trustee-area-2",
+      "title": "Fillmore Unified School District \u2014 Governing Board Member - Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fillmore_unified_school_district/trustee_area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4",
+      "title": "Ventura County Board Of Education \u2014 Governing Board Member - Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/county:ventura/school_board_district:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-e",
+      "title": "Simi Valley Unified School District \u2014 Governing Board Member - Trustee Area E",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:simi_valley_unified_school_district/trustee_area:e",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-los-angeles-10652",
+      "title": "LAS VIRGENES UNIFIED SCHOOL DISTRICT Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:las_virgenes_unified_school_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-bell-canyon-community-services-district-for-director",
+      "title": "Bell Canyon Community Services District \u2014 Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:bell_canyon_community_services_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+      "title": "Member, Board of Education Area 7, County of Kern",
+      "ocdId": "ocd-division/country:us/state:ca/county:kern/school_board_district:7",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-los-angeles-10562",
+      "title": "ANTELOPE VALLEY-EAST KERN WATER AGENCY Member, Board of Directors, Division 1",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:antelope_valley_east_kern_water_agency/division:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-4",
+      "title": "Ventura Unified School District \u2014 Governing Board Member - Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:ventura_unified_school_district/trustee_area:4",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-5",
+      "title": "Ventura Unified School District \u2014 Governing Board Member - Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:ventura_unified_school_district/trustee_area:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-moorpark-for-mayor",
+      "title": "City Of Moorpark \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:moorpark",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-moorpark-for-member-of-the-city-council-district-1",
+      "title": "City Of Moorpark \u2014 Member of the City Council - District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:moorpark/council_district:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-moorpark-for-member-of-the-city-council-district-3",
+      "title": "City Of Moorpark \u2014 Member of the City Council - District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:moorpark/council_district:3",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-oxnard-school-district-for-governing-board-member-trustee-area-3",
+      "title": "Oxnard School District \u2014 Governing Board Member - Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:oxnard_elementary_school_district/trustee_area:3",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-ojai-for-mayor",
+      "title": "City Of Ojai \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:ojai",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-ojai-for-member-of-the-city-council-district-3",
+      "title": "City Of Ojai \u2014 Member of the City Council - District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:ojai/council_district:3",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-ojai-for-member-of-the-city-council-district-2",
+      "title": "City Of Ojai \u2014 Member of the City Council - District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:ojai/council_district:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-ojai-for-member-of-the-city-council-district-1",
+      "title": "City Of Ojai \u2014 Member of the City Council - District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:ojai/council_district:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-1",
+      "title": "City Of Oxnard \u2014 Member of the City Council - District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:oxnard/council_district:1",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-2",
+      "title": "City Of Oxnard \u2014 Member of the City Council - District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:oxnard/council_district:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-4",
+      "title": "Rio School District \u2014 Governing Board Member - Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rio_elementary_school_district/trustee_area:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-5",
+      "title": "City Of Oxnard \u2014 Member of the City Council - District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:oxnard/council_district:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-oxnard-school-district-for-governing-board-member-trustee-area-2",
+      "title": "Oxnard School District \u2014 Governing Board Member - Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:oxnard_elementary_school_district/trustee_area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-los-angeles-10567",
+      "title": "SANTA CLARITA VALLEY WATER AGENCY Member, Board of Directors, Division 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:santa_clarita_valley_water_agency/division:3",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-port-hueneme-for-member-of-the-city-council",
+      "title": "City Of Port Hueneme \u2014 Member of the City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:port_hueneme",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-santa-paula-for-member-of-the-city-council-district-2",
+      "title": "City Of Santa Paula \u2014 Member of the City Council - District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_paula/council_district:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-santa-paula-for-member-of-the-city-council-district-3",
+      "title": "City Of Santa Paula \u2014 Member of the City Council - District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_paula/council_district:3",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-santa-paula-for-member-of-the-city-council-district-4",
+      "title": "City Of Santa Paula \u2014 Member of the City Council - District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_paula/council_district:4",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-conejo-recreation-and-park-district-for-director-division-4",
+      "title": "Conejo Recreation And Park District \u2014 Director, Division 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:conejo_recreation_and_park_district/division:4",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+      "title": "City Of Simi Valley \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:simi_valley",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-d",
+      "title": "Simi Valley Unified School District \u2014 Governing Board Member - Trustee Area D",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:simi_valley_unified_school_district/trustee_area:d",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-4",
+      "title": "City Of Simi Valley \u2014 Member of the City Council - District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:simi_valley/council_district:4",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-1-short-term",
+      "title": "City Of Simi Valley \u2014 Member of the City Council - District 1 (Short Term)",
+      "ocdId": "ocd-division/country:us/state:ca/place:simi_valley/council_district:1",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-rancho-simi-recreation-and-park-district-for-director-division-2",
+      "title": "Rancho Simi Recreation And Park District \u2014 Director, Division 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:rancho_simi_recreation_and_park_district/division:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-2",
+      "title": "City Of Simi Valley \u2014 Member of the City Council - District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:simi_valley/council_district:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-thousand-oaks-for-member-of-the-city-council-district-3",
+      "title": "City Of Thousand Oaks \u2014 Member of the City Council - District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:thousand_oaks/council_district:3",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-thousand-oaks-for-member-of-the-city-council-district-1",
+      "title": "City Of Thousand Oaks \u2014 Member of the City Council - District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:thousand_oaks/council_district:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-thousand-oaks-for-member-of-the-city-council-district-2",
+      "title": "City Of Thousand Oaks \u2014 Member of the City Council - District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:thousand_oaks/council_district:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-1",
+      "title": "City Of San Buenaventura (City Of Ventura) \u2014 Member of the City Council - District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_buenaventura_ventura/council_district:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-6",
+      "title": "City Of San Buenaventura (City Of Ventura) \u2014 Member of the City Council - District 6",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_buenaventura_ventura/council_district:6",
+      "candidates": 6
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-5",
+      "title": "City Of San Buenaventura (City Of Ventura) \u2014 Member of the City Council - District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_buenaventura_ventura/council_district:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-4",
+      "title": "City Of San Buenaventura (City Of Ventura) \u2014 Member of the City Council - District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_buenaventura_ventura/council_district:4",
+      "candidates": 4
+    }
+  ],
+  "geographyDependencies": {
+    "file": "geography-dependencies.json",
+    "sourcePolygons": "geography-source-polygons.geojson",
+    "unmatchedReaderDivisions": [
+      "ocd-division/country:us/state:ca/county:kern/school_board_district:7",
+      "ocd-division/country:us/state:ca/county:ventura/school_board_district:2",
+      "ocd-division/country:us/state:ca/county:ventura/school_board_district:4",
+      "ocd-division/country:us/state:ca/place:camarillo/council_district:1",
+      "ocd-division/country:us/state:ca/place:camarillo/council_district:2",
+      "ocd-division/country:us/state:ca/place:camarillo/council_district:5",
+      "ocd-division/country:us/state:ca/place:moorpark/council_district:1",
+      "ocd-division/country:us/state:ca/place:moorpark/council_district:3",
+      "ocd-division/country:us/state:ca/place:ojai/council_district:1",
+      "ocd-division/country:us/state:ca/place:ojai/council_district:2",
+      "ocd-division/country:us/state:ca/place:ojai/council_district:3",
+      "ocd-division/country:us/state:ca/place:oxnard/council_district:1",
+      "ocd-division/country:us/state:ca/place:oxnard/council_district:2",
+      "ocd-division/country:us/state:ca/place:oxnard/council_district:5",
+      "ocd-division/country:us/state:ca/place:san_buenaventura_ventura/council_district:1",
+      "ocd-division/country:us/state:ca/place:san_buenaventura_ventura/council_district:4",
+      "ocd-division/country:us/state:ca/place:san_buenaventura_ventura/council_district:5",
+      "ocd-division/country:us/state:ca/place:san_buenaventura_ventura/council_district:6",
+      "ocd-division/country:us/state:ca/place:santa_paula/council_district:2",
+      "ocd-division/country:us/state:ca/place:santa_paula/council_district:3",
+      "ocd-division/country:us/state:ca/place:santa_paula/council_district:4",
+      "ocd-division/country:us/state:ca/place:simi_valley/council_district:1",
+      "ocd-division/country:us/state:ca/place:simi_valley/council_district:2",
+      "ocd-division/country:us/state:ca/place:simi_valley/council_district:4",
+      "ocd-division/country:us/state:ca/place:thousand_oaks/council_district:1",
+      "ocd-division/country:us/state:ca/place:thousand_oaks/council_district:2",
+      "ocd-division/country:us/state:ca/place:thousand_oaks/council_district:3",
+      "ocd-division/country:us/state:ca/school_district:fillmore_unified_school_district/trustee_area:2",
+      "ocd-division/country:us/state:ca/school_district:moorpark_unified_school_district/trustee_area:1",
+      "ocd-division/country:us/state:ca/school_district:oxnard_elementary_school_district/trustee_area:2",
+      "ocd-division/country:us/state:ca/school_district:oxnard_elementary_school_district/trustee_area:3",
+      "ocd-division/country:us/state:ca/school_district:pleasant_valley_elementary_school_district/trustee_area:1",
+      "ocd-division/country:us/state:ca/school_district:pleasant_valley_elementary_school_district/trustee_area:2",
+      "ocd-division/country:us/state:ca/school_district:pleasant_valley_elementary_school_district/trustee_area:3",
+      "ocd-division/country:us/state:ca/school_district:rio_elementary_school_district/trustee_area:1",
+      "ocd-division/country:us/state:ca/school_district:rio_elementary_school_district/trustee_area:3",
+      "ocd-division/country:us/state:ca/school_district:rio_elementary_school_district/trustee_area:4",
+      "ocd-division/country:us/state:ca/school_district:santa_paula_unified_school_district/trustee_area:5",
+      "ocd-division/country:us/state:ca/school_district:simi_valley_unified_school_district/trustee_area:d",
+      "ocd-division/country:us/state:ca/school_district:simi_valley_unified_school_district/trustee_area:e",
+      "ocd-division/country:us/state:ca/school_district:ventura_county_community_college_district/trustee_area:2",
+      "ocd-division/country:us/state:ca/school_district:ventura_county_community_college_district/trustee_area:5",
+      "ocd-division/country:us/state:ca/school_district:ventura_unified_school_district/trustee_area:4",
+      "ocd-division/country:us/state:ca/school_district:ventura_unified_school_district/trustee_area:5",
+      "ocd-division/country:us/state:ca/special_district:antelope_valley_east_kern_water_agency/division:1",
+      "ocd-division/country:us/state:ca/special_district:bell_canyon_community_services_district",
+      "ocd-division/country:us/state:ca/special_district:camarillo_health_care_district/zone:1",
+      "ocd-division/country:us/state:ca/special_district:camarillo_health_care_district/zone:4",
+      "ocd-division/country:us/state:ca/special_district:camarillo_health_care_district/zone:5",
+      "ocd-division/country:us/state:ca/special_district:conejo_recreation_and_park_district/division:4",
+      "ocd-division/country:us/state:ca/special_district:fillmore_piru_memorial_district",
+      "ocd-division/country:us/state:ca/special_district:oxnard_harbor_district",
+      "ocd-division/country:us/state:ca/special_district:pleasant_valley_recreation_and_park_district/division:4",
+      "ocd-division/country:us/state:ca/special_district:rancho_simi_recreation_and_park_district/division:2",
+      "ocd-division/country:us/state:ca/special_district:santa_clarita_valley_water_agency/division:3",
+      "ocd-division/country:us/state:ca/special_district:united_water_conservation_district/division:1"
+    ],
+    "readerVisibility": "UNVERIFIED_RIVER_OWNS_INSTALL_AND_EXACT_GEOGRAPHY_JOINS"
+  },
+  "sourceArchive": {
+    "manifest": "source-archive.json",
+    "file": "sources/original-samples.tar.zst",
+    "sha256": "67c2bfc0faf223af9cec5fd8575ac1004bf8b1149ce263a9397a09f0b71b4070",
+    "originalPdfMembers": 187,
+    "expandedFilesAreScratchOnly": true
+  },
+  "limits": [
+    "187 consecutive native current guides BT000001\u2013BT000187 acquired and cover dates verified. Public HEAD BT000188\u2013BT000200, 250, 300 were 404. No official complete ballot-type directory listing was acquired; county-complete ordinary local named coverage is independently supported by the official all-contest translation inventory (160 exact normalized names, both directions).",
+    "No voter identity, residence, account, authentication, or voter-specific lookup was entered. Public numbered sample files only.",
+    "Four shared LA/Kern races retain exact earlier IDs and full electorates. County service geometry for shared races would be clipped; no county clipping was substituted.",
+    "All new district/area/zone OCDs remain pending exact River registry/reader installation. Staged native source polygons are evidence, not a claim of current reader visibility.",
+    "Fillmore-Piru boundary feature is mislabeled as a different district in three official services; no conflicting polygon accepted. Conejo division-4 official GIS responses contain null geometry; district map retained but machine-readable polygon pending.",
+    "No local qualified write-in name roster or actual cancellation/declared-elected order was acquired. Generic blanks and literal NOT ON BALLOT filing-history records are separate.",
+    "Existing statewide, federal, legislative, judicial retention, and measure records are unchanged. Samples corroborate two Supreme Court and two Second District Division Six retentions already held.",
+    "Native CID font text lacks ToUnicode. Decoding uses fontTools standardGlyphOrder plus Adobe glyph-name Unicode only for CID Identity-H ArialNarrow fonts. Native original bytes are archived; rendered pages and independent official guide verify names."
+  ],
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 264 captured sources and 222 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

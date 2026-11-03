@@ -1,0 +1,166 @@
+{
+  "checkedAt": "2026-11-03T08:21:33.280192+00:00",
+  "inputs": [
+    {
+      "path": "data/ballot/2026-general/ca.json",
+      "sha256": "69b913e5515275f07fec6428f4f6459ba58770060673d1771c89f849b49e4f7c",
+      "contests": 346,
+      "candidacies": 461
+    },
+    {
+      "path": "data/install/cx-local/CA/alameda/ballot-input/ca.json",
+      "sha256": "52121dc3222a52a280208a7421806c57c48fee4738b273a4f230e3d916390587",
+      "contests": 95,
+      "candidacies": 239
+    },
+    {
+      "path": "data/install/cx-local/CA/contra-costa/ballot-input/ca.json",
+      "sha256": "223161a10ec755119dfbddc5367ad7fcd7311133cc9ac76db4013e5b3bf8c32d",
+      "contests": 71,
+      "candidacies": 184
+    },
+    {
+      "path": "data/install/cx-local/CA/fresno/ballot-input/ca.json",
+      "sha256": "f3c8eb8fad059a8d25de48bc1b611f74fecb00e79cf022f55b5fde2ccaf75360",
+      "contests": 81,
+      "candidacies": 201
+    },
+    {
+      "path": "data/install/cx-local/CA/kern/ballot-input/ca.json",
+      "sha256": "eb5576c4ab3b3c0c7f6538c61fbf7735ae683cdf4ea5a12a5f5bfc904bea5108",
+      "contests": 88,
+      "candidacies": 236
+    },
+    {
+      "path": "data/install/cx-local/CA/los-angeles/ballot-input/ca.json",
+      "sha256": "fb6dfbe9622ea91930e344cda462de383b8236f59345c1de4488c5234d7318f8",
+      "contests": 246,
+      "candidacies": 694
+    },
+    {
+      "path": "data/install/cx-local/CA/orange/ballot-input/ca.json",
+      "sha256": "d5b4fe05c314bb114d2e437b00d3049c2ea839d112dfce2950a4283fad86877c",
+      "contests": 138,
+      "candidacies": 368
+    },
+    {
+      "path": "data/install/cx-local/CA/riverside/ballot-input/ca.json",
+      "sha256": "35f2415ce2ce16c892673c0f057d65b4cadab1991e9a842c919252a219c77fe3",
+      "contests": 7,
+      "candidacies": 18
+    },
+    {
+      "path": "data/install/cx-local/CA/sacramento/ballot-input/ca.json",
+      "sha256": "8e80520c0cc751539bd563ee061508848e3b27daf3853b6593b8510a744d0ab7",
+      "contests": 68,
+      "candidacies": 175
+    },
+    {
+      "path": "data/install/cx-local/CA/san-bernardino/ballot-input/ca.json",
+      "sha256": "1f22d3116e25c5fdaaff82e93b6d87583fbff764cef89bbe3fca2298e54d0ed4",
+      "contests": 135,
+      "candidacies": 373
+    },
+    {
+      "path": "data/install/cx-local/CA/san-diego/ballot-input/ca.json",
+      "sha256": "53e5dbb4e0bcb8ce84e1131e3c6af9a9dc36bb0b22d1e2c09c9c149b1ff375c2",
+      "contests": 144,
+      "candidacies": 388
+    },
+    {
+      "path": "data/install/cx-local/CA/san-francisco/ballot-input/ca.json",
+      "sha256": "d74fd7237a9376b96f483a368439ebb886e58f4b1930127dabd6fac5f6b00caa",
+      "contests": 24,
+      "candidacies": 56
+    },
+    {
+      "path": "data/install/cx-local/CA/santa-clara/ballot-input/ca.json",
+      "sha256": "948e34f11ad31707cd59ad5953f73aab517ae279da0c6c712c952083c8406c92",
+      "contests": 73,
+      "candidacies": 209
+    }
+  ],
+  "sharedContestIdsReused": [
+    "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+    "ca-cx-local-los-angeles-10562",
+    "ca-cx-local-los-angeles-10567",
+    "ca-cx-local-los-angeles-10652"
+  ],
+  "sharedCandidateIdsReused": [
+    {
+      "contestId": "ca-cx-local-los-angeles-10652",
+      "candidateId": "ca-cx-local-los-angeles-10652-wz",
+      "printedName": "ANGELA CUTBILL",
+      "earlierName": "ANGELA CUTBILL"
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10652",
+      "candidateId": "ca-cx-local-los-angeles-10652-x2",
+      "printedName": "SANDRA POPE",
+      "earlierName": "SANDRA POPE"
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10652",
+      "candidateId": "ca-cx-local-los-angeles-10652-x3",
+      "printedName": "DALLAS LAWRENCE",
+      "earlierName": "DALLAS LAWRENCE"
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10652",
+      "candidateId": "ca-cx-local-los-angeles-10652-x4",
+      "printedName": "CORAL EDWARDSEN",
+      "earlierName": "CORAL EDWARDSEN"
+    },
+    {
+      "contestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+      "candidateId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern:lori-cisneros",
+      "printedName": "LORI CISNEROS",
+      "earlierName": "Lori Cisneros"
+    },
+    {
+      "contestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+      "candidateId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern:jeanine-adams",
+      "printedName": "JEANINE ADAMS",
+      "earlierName": "Jeanine Adams"
+    },
+    {
+      "contestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+      "candidateId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern:ernie-bell-jr",
+      "printedName": "ERNIE BELL JR.",
+      "earlierName": "Ernie Bell Jr."
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10562",
+      "candidateId": "ca-cx-local-los-angeles-10562-3d5",
+      "printedName": "LYNN ROBERT BARNES",
+      "earlierName": "Lynn Robert Barnes"
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10562",
+      "candidateId": "ca-cx-local-los-angeles-10562-3d6",
+      "printedName": "DREW MERCY",
+      "earlierName": "Drew Mercy"
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10567",
+      "candidateId": "ca-cx-local-los-angeles-10567-3db",
+      "printedName": "LYNNE PLAMBECK",
+      "earlierName": "LYNNE PLAMBECK"
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10567",
+      "candidateId": "ca-cx-local-los-angeles-10567-3dc",
+      "printedName": "KENNETH \"KEN\" PETERSEN",
+      "earlierName": "KENNETH \"KEN\" PETERSEN"
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10567",
+      "candidateId": "ca-cx-local-los-angeles-10567-3dd",
+      "printedName": "MARIA A. GUTZEIT",
+      "earlierName": "MARIA A. GUTZEIT"
+    }
+  ],
+  "newContestCount": 58,
+  "newCandidateCount": 148,
+  "identityRule": "Exact election + office + electorate + person. Shared LA/Kern identities retained; no statewide or legislative replacements."
+}

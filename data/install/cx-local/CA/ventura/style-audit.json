@@ -1,0 +1,5438 @@
+[
+  {
+    "ballotType": 1,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000001.pdf",
+    "sha256": "7d028879c00e01feda45933f6a1d366f7070a084abaa703f3ada3078b25fd76c",
+    "retrievedAt": "2026-11-03T07:48:23.935311+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 2,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000002.pdf",
+    "sha256": "4e9b4a27d5563989cf3949cc83df1731f50903c067d6d578dd4110fdcde057ba",
+    "retrievedAt": "2026-11-03T07:50:17.815702+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 3,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000003.pdf",
+    "sha256": "06005d7f35c7e84df979cadb342cddac15fdd098d61357c227a83406a66de2af",
+    "retrievedAt": "2026-11-03T07:50:14.367746+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-fillmore-piru-memorial-district-for-director",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 4,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000004.pdf",
+    "sha256": "6a329edd0352747dd52a2a2e334fee673197340d604f6bfc800bd65dbad292f3",
+    "retrievedAt": "2026-11-03T07:50:13.129702+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-fillmore-piru-memorial-district-for-director",
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 5,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000005.pdf",
+    "sha256": "61df5ba7bb441dfede73dffe6fb246ab91a2147ade2522fe7947d874fe2fe043",
+    "retrievedAt": "2026-11-03T07:50:15.289429+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-fillmore-piru-memorial-district-for-director",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 6,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000006.pdf",
+    "sha256": "a465d6abe3efa06b7db215b36699f64a07ef115257f08ee6d8fdc938d7d684bb",
+    "retrievedAt": "2026-11-03T07:48:27.045242+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-fillmore-piru-memorial-district-for-director",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 7,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000007.pdf",
+    "sha256": "d83ad147fc28309602e567ea5bc43334df516c09fae1dc9c4040bc47ecbf7335",
+    "retrievedAt": "2026-11-03T07:50:15.285557+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-fillmore-piru-memorial-district-for-director",
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 8,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000008.pdf",
+    "sha256": "20600334eadc7fb08b7065dd8b0288d422a78393cf2a22a73f09244e68f3ba16",
+    "retrievedAt": "2026-11-03T07:50:18.891694+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-santa-paula-unified-school-district-for-governing-board-member-trustee-area-5-short-term",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 9,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000009.pdf",
+    "sha256": "745289cb0a48268aa7348274029756884f20b34467b129de4d26b34d904d8f17",
+    "retrievedAt": "2026-11-03T07:50:19.945240+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-santa-paula-unified-school-district-for-governing-board-member-trustee-area-5-short-term",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 10,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000010.pdf",
+    "sha256": "28ba7874b8b0a50fc2bd8663e1f72e0607f6c10d47a3afdde5ce90409c9e2f42",
+    "retrievedAt": "2026-11-03T07:50:21.848706+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 11,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000011.pdf",
+    "sha256": "26da1a1a7e96ebc93218764d375f32c11b86a3b48ee834eb0a12974b521c8e97",
+    "retrievedAt": "2026-11-03T07:48:25.963274+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-santa-paula-unified-school-district-for-governing-board-member-trustee-area-5-short-term",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 12,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000012.pdf",
+    "sha256": "6a5a39dee6be5e74aa6c1052b90b39eeb0c717bd1e81e24353d49ecd66639fe8",
+    "retrievedAt": "2026-11-03T07:50:22.852443+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 13,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000013.pdf",
+    "sha256": "3cd23d28466a2c99c069b5d96b693a72993aa7f1f615b257c3c47920ec6aa4b0",
+    "retrievedAt": "2026-11-03T08:01:51.870234+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 14,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000014.pdf",
+    "sha256": "50fcf40101369698ba8d26e59acf45f6e305040e78971a7ef51817f94a23797a",
+    "retrievedAt": "2026-11-03T07:50:22.866231+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 15,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000015.pdf",
+    "sha256": "ce06c0ca37fb8d432a433fe14481d96df562be2ad97239fd7d49f78856d2a309",
+    "retrievedAt": "2026-11-03T07:50:24.729625+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 16,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000016.pdf",
+    "sha256": "3c1e8894385832dfef6a27cab0791e1c0c980f9b8471286dfd7cd0bb3b51bf7b",
+    "retrievedAt": "2026-11-03T07:48:28.015059+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 22,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-5",
+      "ca-cx-local-2026-ventura-pleasant-valley-recreation-and-park-district-for-director-division-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 17,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000017.pdf",
+    "sha256": "b3cc9bbc39a3870de6e8f1a22991e72a91df8bb201d936e8f9a062ecec79e639",
+    "retrievedAt": "2026-11-03T07:50:26.599373+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 18,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000018.pdf",
+    "sha256": "f94da000f6c0b2e635cf5207f8f5d6d29d4af9e680988562e4801c7441cd5a33",
+    "retrievedAt": "2026-11-03T07:50:27.542556+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 19,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000019.pdf",
+    "sha256": "bb5c272adb21151da84ee3c8278478966ff7b3dac6ead16276b104c125308f9e",
+    "retrievedAt": "2026-11-03T07:50:29.695872+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 20,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000020.pdf",
+    "sha256": "98ab53659c6380f464ae7537b4bb9c7d1970d092ef1ba8c0efb0ca328901119e",
+    "retrievedAt": "2026-11-03T07:50:28.639445+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 21,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000021.pdf",
+    "sha256": "0a33c570b6165e508df57365ad81f5edff09becb473a5a5195569ee93794dc71",
+    "retrievedAt": "2026-11-03T07:48:24.826863+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 22,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000022.pdf",
+    "sha256": "4a0d267fcd74a6ebd3f3e306d24415031f6dfc61fa3e57052f49cf55b0d46e46",
+    "retrievedAt": "2026-11-03T08:01:53.928734+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 23,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000023.pdf",
+    "sha256": "9107d6cb6d5b0750b04bd5e73d33a808d063518f937d2ca536b6bb4d42d1aa94",
+    "retrievedAt": "2026-11-03T07:50:31.498735+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 24,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000024.pdf",
+    "sha256": "1be53a8f4eb06b88f8eb37357a360ce6441c0b905245d9cd368974fc68b64c12",
+    "retrievedAt": "2026-11-03T08:01:53.037490+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 12,
+    "localNamedPhysicalOccurrences": 26,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-5",
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-pleasant-valley-recreation-and-park-district-for-director-division-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 25,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000025.pdf",
+    "sha256": "9e59681a0af5de9415bb52f1996225b3bb84c79ec7de1714846299047c69e0f0",
+    "retrievedAt": "2026-11-03T07:50:33.352007+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 22,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-5",
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 26,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000026.pdf",
+    "sha256": "b71076f05f4ed8b425a8736fabf7bb0a702c9139ec100dfc01c07972173a39e0",
+    "retrievedAt": "2026-11-03T07:48:22.794630+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 27,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000027.pdf",
+    "sha256": "3300a815e2915b466fe88dbc94dec5389872e2d53ad4aab623d6f55c7f4fabe8",
+    "retrievedAt": "2026-11-03T07:50:34.276470+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 28,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000028.pdf",
+    "sha256": "409dc57a569e4f9147d09353bd37e87a3550edaa4d6a1a0b42c35636ccf6ebe6",
+    "retrievedAt": "2026-11-03T07:50:34.268931+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 18,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-5",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 29,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000029.pdf",
+    "sha256": "2e3acf89e1123ac61f2693e4106658029c6e71ce2a907f2f7ef1d3aaa90a5c7a",
+    "retrievedAt": "2026-11-03T07:50:36.075701+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-pleasant-valley-recreation-and-park-district-for-director-division-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 30,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000030.pdf",
+    "sha256": "e5e6b1d2417733b797f1a53fafc91c185f72f20938f737d0079f1bb7b3cd894a",
+    "retrievedAt": "2026-11-03T07:50:36.077247+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 31,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000031.pdf",
+    "sha256": "75f2f12a5fee2285aa18382636de59a9b6f9c4feba49e5a2e1875be879eb7847",
+    "retrievedAt": "2026-11-03T07:48:30.003831+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-4",
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 32,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000032.pdf",
+    "sha256": "a89da163e3124739d2abcc8ace73e813d669e2d717babd5905db2649c985d10c",
+    "retrievedAt": "2026-11-03T07:50:40.050613+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 33,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000033.pdf",
+    "sha256": "9822b0476498e2d15e7661b0237ffd0279f61ca12b5928b4dc9c3cb8bcc45c16",
+    "retrievedAt": "2026-11-03T07:50:39.110770+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 34,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000034.pdf",
+    "sha256": "3a3088a8104ffe4c72d63110755f6dffd2084f57cf67da77d2050c3d75e945a4",
+    "retrievedAt": "2026-11-03T07:50:40.996401+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 35,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000035.pdf",
+    "sha256": "19f8c1c4ab1cf5d9df2d508fd5753507ff5f36b499095a98a052d3d4aaa074c5",
+    "retrievedAt": "2026-11-03T07:50:40.053063+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 36,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000036.pdf",
+    "sha256": "fc9b1c9e8c403e39f9e76ecff9436b904f5524d63628887b421283f7f5123cc9",
+    "retrievedAt": "2026-11-03T07:48:28.006865+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 37,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000037.pdf",
+    "sha256": "50dbefc0c1ed4a30d6b7470dcb1c6e15febc9bf2ae87464fac33ee48b73383e3",
+    "retrievedAt": "2026-11-03T07:50:40.040801+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 18,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-5",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 38,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000038.pdf",
+    "sha256": "59c0ef73d893f696b7fbe7d5bd069166eeb4ff85fbb9e7095b6389d86ec72099",
+    "retrievedAt": "2026-11-03T07:50:43.846604+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 39,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000039.pdf",
+    "sha256": "efa42199db66aabf036d01c675d8192e9a09b1c8caf7e07dd76f48ef90189e68",
+    "retrievedAt": "2026-11-03T07:50:44.747847+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-4",
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 40,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000040.pdf",
+    "sha256": "c170a9ec1cc19f34758c1741e43488a79b4a0ddfd6d4ddec5d967524209503f0",
+    "retrievedAt": "2026-11-03T07:50:48.565293+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 18,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-4",
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 41,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000041.pdf",
+    "sha256": "4ec97334c51ff27e59b47a10ca2d5ed05c61a086d024ecdc44de011825ced17f",
+    "retrievedAt": "2026-11-03T07:50:48.571693+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 42,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000042.pdf",
+    "sha256": "b40c5c959acc844fbaf456cf0a71371b44375d2eac31db50090adf7e3a2ae024",
+    "retrievedAt": "2026-11-03T07:50:47.635022+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 43,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000043.pdf",
+    "sha256": "e3e991c04f3086e4ea41b53b743b6637f70a58e55eb75d191293db5217007d10",
+    "retrievedAt": "2026-11-03T07:50:45.729270+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 44,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000044.pdf",
+    "sha256": "3c006d8cf4ae014f44cfe684257d8bd986baa92197970f731e1d9b914d51ccfb",
+    "retrievedAt": "2026-11-03T07:50:50.432805+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 45,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000045.pdf",
+    "sha256": "55fad346bd77602ed97451dee29437b271663855d33963ee1240a8c53a3e36bf",
+    "retrievedAt": "2026-11-03T07:50:50.436856+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-pleasant-valley-recreation-and-park-district-for-director-division-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 46,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000046.pdf",
+    "sha256": "eac447b6db5533e61700be44af4f6246704f6f245587eb8282c03bece72be2a7",
+    "retrievedAt": "2026-11-03T07:48:31.164294+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 22,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-5",
+      "ca-cx-local-2026-ventura-pleasant-valley-recreation-and-park-district-for-director-division-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 47,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000047.pdf",
+    "sha256": "893d46f6c21d6c5c18a72dc9182f57956fb4dea4de5d114e49c0b26fd75c503e",
+    "retrievedAt": "2026-11-03T07:50:53.184941+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 14,
+    "localNamedPhysicalOccurrences": 32,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-5",
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-pleasant-valley-recreation-and-park-district-for-director-division-4",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 48,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000048.pdf",
+    "sha256": "d2e8950b86fd6c00776488af2099ed72f3be10d38988292c78484da143f64500",
+    "retrievedAt": "2026-11-03T07:50:54.441433+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-4",
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 49,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000049.pdf",
+    "sha256": "94fdee44c0d4bd47c0add8b824a38b3a08bb87471c20fe1545d1e4d39442e23e",
+    "retrievedAt": "2026-11-03T07:50:55.410497+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-5",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 50,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000050.pdf",
+    "sha256": "5a5062b0ea1df1f8ee87ad60776dd5905709ffa58a59b0708b17fa986d1dc861",
+    "retrievedAt": "2026-11-03T07:50:55.413974+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 51,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000051.pdf",
+    "sha256": "a1f18bf25da7fc25b9b677014128a13a1af9cd55ceba61c9d94624a326973009",
+    "retrievedAt": "2026-11-03T07:48:32.221504+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 52,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000052.pdf",
+    "sha256": "1bfb96ecd583864b91bbe00df95330d9415b955c272008a0f8497b3a1c5bee22",
+    "retrievedAt": "2026-11-03T07:50:55.425879+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 24,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-pleasant-valley-recreation-and-park-district-for-director-division-4",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 53,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000053.pdf",
+    "sha256": "af428c3f35ba9a2e8861b1fb06d820577f871589064ebbf59dd3398f1ec3b7a1",
+    "retrievedAt": "2026-11-03T07:50:58.973014+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 54,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000054.pdf",
+    "sha256": "3b606e4b7d405406fa26500303245d43cb1a925afe5536888646b70e2d56bf9d",
+    "retrievedAt": "2026-11-03T08:01:55.100179+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 55,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000055.pdf",
+    "sha256": "31088b839d5fc21952b0219441195d2129483f7ce99fe8376169b704838bc75e",
+    "retrievedAt": "2026-11-03T07:51:01.937842+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 22,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 56,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000056.pdf",
+    "sha256": "bfcc2c6997496d51c3040685130437f0e3520581a8c0dbe859e196455725b51c",
+    "retrievedAt": "2026-11-03T07:48:33.314526+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 12,
+    "localNamedPhysicalOccurrences": 28,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-5",
+      "ca-cx-local-2026-ventura-pleasant-valley-recreation-and-park-district-for-director-division-4",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 57,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000057.pdf",
+    "sha256": "1fba91754f1491d45e6f248e019087cc329103db2c61ecbd371d398bec979b71",
+    "retrievedAt": "2026-11-03T07:51:00.996197+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-4",
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 58,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000058.pdf",
+    "sha256": "1eb48ab45daf1cfa7741558c4871ca7e00da7aa7016fe7ab828273391ce9bd5e",
+    "retrievedAt": "2026-11-03T07:51:05.746390+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 59,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000059.pdf",
+    "sha256": "5b1ef74662ece685811fd0059957862b2f1fe75c87bb5e174a3507bca6b69817",
+    "retrievedAt": "2026-11-03T07:51:02.936752+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 22,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 60,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000060.pdf",
+    "sha256": "c8e269d08453c6ed69aecc503a1b713023b25a7df82661635843cfc4c27c9ab1",
+    "retrievedAt": "2026-11-03T07:51:02.951881+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 61,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000061.pdf",
+    "sha256": "4fd718016a559d262920e04869eb7bf9f4daf7a4457d76b86d7ee7b1b36f36c3",
+    "retrievedAt": "2026-11-03T07:48:34.492479+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 62,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000062.pdf",
+    "sha256": "dc9e7e084ac8e52ebc6483af401469c6a2c19161f64221f4e4c94929f5065a4f",
+    "retrievedAt": "2026-11-03T08:01:57.639358+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 63,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000063.pdf",
+    "sha256": "a15f68c1c4fcd6906e7f23aeb6d4c679f6dcf2e9e52a19045d54213981edf05b",
+    "retrievedAt": "2026-11-03T07:51:07.561520+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 64,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000064.pdf",
+    "sha256": "b7395c7e6fe1277b69cd11cd71c8f381a2e1faada7989b03c74a2de82d582b84",
+    "retrievedAt": "2026-11-03T07:51:09.710961+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 65,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000065.pdf",
+    "sha256": "70374873f4346c4ac4e7332094e76c6f64d6f055fa79262ecc4699eac05c52e6",
+    "retrievedAt": "2026-11-03T07:51:06.691280+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 66,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000066.pdf",
+    "sha256": "d11b1894253142b413b752735652455a648db5c80a2d550fbc4f81b5ad2b9806",
+    "retrievedAt": "2026-11-03T07:48:35.525714+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 67,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000067.pdf",
+    "sha256": "63743cfefaeb0e3942c52c782121a271108cb09b846f2d1975c16ccf590b8a22",
+    "retrievedAt": "2026-11-03T07:51:11.518847+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 68,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000068.pdf",
+    "sha256": "a0462c98996e1b4c273030415c050b8b8c7871ddf8c884ef35c86602b106ed82",
+    "retrievedAt": "2026-11-03T07:51:09.819366+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 69,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000069.pdf",
+    "sha256": "1d826f95596ab62478ac4f1e915f2476dae61040f77d5006e1acfb5f16a95e9b",
+    "retrievedAt": "2026-11-03T08:01:56.725629+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 18,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 70,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000070.pdf",
+    "sha256": "9ed85e26a0ba748c1b3984a13176ef335b1030308443fd2e7f1215cd56dcf212",
+    "retrievedAt": "2026-11-03T07:51:11.521289+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-fillmore-piru-memorial-district-for-director",
+      "ca-cx-local-2026-ventura-fillmore-unified-school-district-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 71,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000071.pdf",
+    "sha256": "71e5805eba1160ae001b036a5a35e9c75c92886673dfd938b898da8f9d923034",
+    "retrievedAt": "2026-11-03T07:48:35.613646+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 22,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 72,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000072.pdf",
+    "sha256": "c2eabce5fe7bd538107c529461de8e58c6735f45a6343861abc57c158aacaf19",
+    "retrievedAt": "2026-11-03T07:51:15.312945+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 73,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000073.pdf",
+    "sha256": "7c4b9f966c6c48e74d706c5a61656d71f65ca9a8211315a4c28ee6e807d36010",
+    "retrievedAt": "2026-11-03T07:51:16.247720+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 74,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000074.pdf",
+    "sha256": "8be38594c73692654fd6a10b29ed41e659abb26a0befcd9c8b2bd741fe86d203",
+    "retrievedAt": "2026-11-03T07:51:14.417373+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 75,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000075.pdf",
+    "sha256": "3137558d24c7aad6c98a20a23527bcbd663d4f34a64db269003b40fb2e22c580",
+    "retrievedAt": "2026-11-03T07:51:16.253875+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 76,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000076.pdf",
+    "sha256": "0c60c312c5ac72face2d6acb3b76fc3225af7e06b2dcf4bb94d82dd823d41c94",
+    "retrievedAt": "2026-11-03T07:48:37.865362+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 77,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000077.pdf",
+    "sha256": "e16eef0ebe50804a7c9a5cac32e902e2a78e6303d30809c31a24571fc9f0009e",
+    "retrievedAt": "2026-11-03T07:51:18.984719+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 78,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000078.pdf",
+    "sha256": "d27acadd9ebb98b7978d1366557cb2bee255a7fd099575a82aa41543b0bf7de5",
+    "retrievedAt": "2026-11-03T08:01:58.787410+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 79,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000079.pdf",
+    "sha256": "c540bd574a580fd2d746c6ab6e364536444010a9f033680bd30522ef97423ae0",
+    "retrievedAt": "2026-11-03T07:51:22.655609+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 80,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000080.pdf",
+    "sha256": "7a541e65142cd10697aa847fd29d1c44cea403d970faac58852ab01e8b4d1606",
+    "retrievedAt": "2026-11-03T07:51:19.892615+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 81,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000081.pdf",
+    "sha256": "34ce2982969597496591638ed00c63f4aaebcb4b1f1c26e8783f1580df7ec87c",
+    "retrievedAt": "2026-11-03T07:48:38.962031+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 82,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000082.pdf",
+    "sha256": "9efb143b13306a718355ec0c0c5b1cc8187b57332cea102cefae562da3f4a7f6",
+    "retrievedAt": "2026-11-03T07:51:20.753556+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 83,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000083.pdf",
+    "sha256": "f298b1a6d58cae13ad4aa1aedcbf21aeedbf32500a33dea129b6074de0cce299",
+    "retrievedAt": "2026-11-03T07:51:25.433642+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 84,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000084.pdf",
+    "sha256": "c0cceba48bcd9ee96f98392b3c9ded9a2257d549ce4c913242b87516ff6dc996",
+    "retrievedAt": "2026-11-03T07:51:23.600556+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 85,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000085.pdf",
+    "sha256": "67f390b9ee57b4b5f4ca73340e50d98ca5f47a6834d3adacf1bdb762bed9fc4a",
+    "retrievedAt": "2026-11-03T07:51:24.501909+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 86,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000086.pdf",
+    "sha256": "a8c345f26b0339549dd33c3dce680b0422719ae5828772d1b497a1164b7f2b0b",
+    "retrievedAt": "2026-11-03T07:48:39.870291+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 18,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 87,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000087.pdf",
+    "sha256": "3510adbbcd3196402a8dea4d1c8100ab20fe2c58ed68074316d52463fa196a28",
+    "retrievedAt": "2026-11-03T07:51:27.308989+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 18,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 88,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000088.pdf",
+    "sha256": "aef98bf00703697a8e2542fc5dd045bc0944a5ad436019928ea529445845a63a",
+    "retrievedAt": "2026-11-03T08:01:58.856420+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 89,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000089.pdf",
+    "sha256": "d0a8a636b32cf6c0fbb0dcbf7e72dec5194f70aa462a3f763182868df7834546",
+    "retrievedAt": "2026-11-03T08:02:01.368441+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 90,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000090.pdf",
+    "sha256": "240b40a66b7987de67469122b2dd83d4e39c269a7d6a383070309faa52d07a81",
+    "retrievedAt": "2026-11-03T07:51:28.262567+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-e",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 91,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000091.pdf",
+    "sha256": "1514f305e555acaf92bf8471f8c606a44b291a8954d3427a9cc78effbd7bcce0",
+    "retrievedAt": "2026-11-03T07:48:39.875774+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-e",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 92,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000092.pdf",
+    "sha256": "532e2b75e94057a7c33f70fd0ac377a05f5ea4817e92b2a8a9d6b9789efe0437",
+    "retrievedAt": "2026-11-03T07:51:31.368442+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 24,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-bell-canyon-community-services-district-for-director",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4",
+      "ca-cx-local-los-angeles-10652"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 93,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000093.pdf",
+    "sha256": "c5d449331dc27a0c28f6a18292b2d6e982ff2ad22c1bd7cbf4ffba9e53934855",
+    "retrievedAt": "2026-11-03T07:51:30.425535+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 94,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000094.pdf",
+    "sha256": "1b6c2fc6b5adfcc8f82ba5da93e3e4f707b18c7bca0fde30d1f63645aab639db",
+    "retrievedAt": "2026-11-03T07:51:31.367461+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 95,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000095.pdf",
+    "sha256": "6f53f5d2b0c94ded66b2b856b499220410aa5008e0c67a36f2f93a6eb08c179e",
+    "retrievedAt": "2026-11-03T07:51:33.139105+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-los-angeles-10562"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 96,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000096.pdf",
+    "sha256": "cb1a782e8a0afc5985ce667bb8620b3ba00f1a93d83001fb2e5ce37f530d8035",
+    "retrievedAt": "2026-11-03T07:48:43.571725+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 97,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000097.pdf",
+    "sha256": "9750b50acf56240135833f967abc4fcfae8d3c568183b90545d85b7f058e7e8b",
+    "retrievedAt": "2026-11-03T07:51:35.213500+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 98,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000098.pdf",
+    "sha256": "68d5a3b81b3b35b98a1551874094bf4badede7fca8b9428aa22660422c5e15ac",
+    "retrievedAt": "2026-11-03T08:02:03.250443+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 99,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000099.pdf",
+    "sha256": "e11dfff258fbb37b3968300da73c6f06f5e759b11806acb9a485566b15c0fd8d",
+    "retrievedAt": "2026-11-03T07:51:36.182634+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 100,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000100.pdf",
+    "sha256": "8eb709201ec1cca75c0f290587f77388d24153f79e82f011317a46ceae0a5d18",
+    "retrievedAt": "2026-11-03T07:51:36.177304+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-moorpark-for-mayor",
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 101,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000101.pdf",
+    "sha256": "9f61ed689efce9a55d5af467e57efe5610b12739a705b2a59ef92f9aad5a13d6",
+    "retrievedAt": "2026-11-03T07:48:43.561321+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-moorpark-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-moorpark-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 102,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000102.pdf",
+    "sha256": "b6eaf0498436ab1e875d2ac1144a91484746dd3fa38fc6b042c3d996449ff462",
+    "retrievedAt": "2026-11-03T07:51:39.014230+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-moorpark-for-mayor",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 103,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000103.pdf",
+    "sha256": "fa07172920db9f7c99cda92000185ed9f3fc1630ab41b62063d0b88a6b2b76fe",
+    "retrievedAt": "2026-11-03T07:51:40.122017+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-moorpark-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-moorpark-for-member-of-the-city-council-district-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 104,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000104.pdf",
+    "sha256": "7b7fcd56a7d52ce36af5b756a9eff98d40045240f24431c3757b8cf66f0d0e3b",
+    "retrievedAt": "2026-11-03T07:51:40.135280+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 18,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-moorpark-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-moorpark-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 105,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000105.pdf",
+    "sha256": "4660f8fad339cb265138558be6c1400fc1edb51c9fd39529dc171ab356bd9647",
+    "retrievedAt": "2026-11-03T07:51:41.979854+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-moorpark-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-moorpark-for-member-of-the-city-council-district-3",
+      "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 106,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000106.pdf",
+    "sha256": "93cb5b677b0335667a07224f4356a38d36673e8c028653d39d8dbc7321f3118f",
+    "retrievedAt": "2026-11-03T07:48:41.699944+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 107,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000107.pdf",
+    "sha256": "4c2c24f3800faaa5b72618925dbaf92718d15fcf52f08c30b1e4273faf429d2c",
+    "retrievedAt": "2026-11-03T08:02:04.175334+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 108,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000108.pdf",
+    "sha256": "0b596cea3298f3e7d8db743c0d7a1fb4056aefe56547c217a2ba9deebf72b444",
+    "retrievedAt": "2026-11-03T08:02:05.135690+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 2,
+    "localNamedPhysicalOccurrences": 4,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 109,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000109.pdf",
+    "sha256": "d2c490e0ca5ce58d5bc9ce3f7ac355ffd4c05e3545dc3a8f9d28fcddf6745a33",
+    "retrievedAt": "2026-11-03T07:51:44.003304+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 110,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000110.pdf",
+    "sha256": "5d23a4820556101ac91fb070754b5463b71db55757d2e8a2e875f3308037b33c",
+    "retrievedAt": "2026-11-03T07:51:45.832577+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 111,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000111.pdf",
+    "sha256": "43333946e9a256902f4a8cce91b84c7b9d4746a48d60595f9412e5eadc487777",
+    "retrievedAt": "2026-11-03T07:48:42.655269+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 112,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000112.pdf",
+    "sha256": "9bacb68e73634faf7cdb30874d8ece8c3262c4f493abd175a768a270468733df",
+    "retrievedAt": "2026-11-03T07:51:46.804068+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 6,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-ojai-for-mayor",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 113,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000113.pdf",
+    "sha256": "787f8f7583adea3983a0db2e9d57b23f878e57eb2f96568ecd8114b31a76299e",
+    "retrievedAt": "2026-11-03T07:51:47.698950+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-ojai-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-ojai-for-member-of-the-city-council-district-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 114,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000114.pdf",
+    "sha256": "e442e9559c272d853e031e32ad46cb7715e7c00b0b479ac44b9ff02848dce0a2",
+    "retrievedAt": "2026-11-03T07:51:48.684885+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-ojai-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-ojai-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 115,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000115.pdf",
+    "sha256": "483e4cda9f72f2118a261651812b42bb6b390c3ea73d8e7cc3b453216c59ad55",
+    "retrievedAt": "2026-11-03T07:51:49.682238+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-ojai-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-ojai-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 116,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000116.pdf",
+    "sha256": "1441cd889c36d79a738a9dd549716f7054c4b728fc1b1a09ac0fee8002449094",
+    "retrievedAt": "2026-11-03T07:48:47.478223+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 18,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 117,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000117.pdf",
+    "sha256": "b92b37cdd7da7cf4bbeb81be840765b1427af98829569d57f637aba8b6b16e25",
+    "retrievedAt": "2026-11-03T07:51:48.691179+00:00",
+    "pdfPages": 100,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 22,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 118,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000118.pdf",
+    "sha256": "a2af05355f3adc52fe562202a60de312100989591d8c31c70dc486d996cff867",
+    "retrievedAt": "2026-11-03T07:51:53.349433+00:00",
+    "pdfPages": 92,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 22,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 119,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000119.pdf",
+    "sha256": "37310504998f9a3401834232e79b71ba16f6e0b20638e9551c015b624243037b",
+    "retrievedAt": "2026-11-03T07:51:52.349288+00:00",
+    "pdfPages": 100,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 120,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000120.pdf",
+    "sha256": "30d8a85db8f6ef1803bee74ca6939f0a457865913d57a988d12dcb8331998871",
+    "retrievedAt": "2026-11-03T07:51:55.332648+00:00",
+    "pdfPages": 100,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 121,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000121.pdf",
+    "sha256": "2f566a17a699fbeb2dc573ac23f3f4059b0f5ada2f9df7b82cf657f15bfe6931",
+    "retrievedAt": "2026-11-03T07:48:45.439715+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 122,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000122.pdf",
+    "sha256": "5b84f26c2783e71bca7ab6a44b31079e0307b9e196b8051cf97a2803f52bf6b0",
+    "retrievedAt": "2026-11-03T07:51:59.097860+00:00",
+    "pdfPages": 92,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 123,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000123.pdf",
+    "sha256": "6d23c47cfff63ce7481efdc1682d33eefdd07def28aab9abf34f4ce51fd850a3",
+    "retrievedAt": "2026-11-03T07:51:57.249495+00:00",
+    "pdfPages": 100,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 124,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000124.pdf",
+    "sha256": "a438d19b7f429bbe62f03ce9b42cfb6ff84ffef8c2c6ac080dab79f4508eeec3",
+    "retrievedAt": "2026-11-03T07:51:56.290072+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 125,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000125.pdf",
+    "sha256": "aa7e96fac1c5aeb2a0b06c37ca2225c3cd688b8ec989321cf4e90fbb00beb58a",
+    "retrievedAt": "2026-11-03T07:51:57.255463+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 126,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000126.pdf",
+    "sha256": "3a6bb29e0d18641d59b7c915a645170592881d8a4b437f2455a6e78762f1d82d",
+    "retrievedAt": "2026-11-03T07:48:46.426551+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 127,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000127.pdf",
+    "sha256": "7dc0b3125da58db9359087b57c867627256c80326c99ce21491d49d0e3094667",
+    "retrievedAt": "2026-11-03T07:52:01.201622+00:00",
+    "pdfPages": 100,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 128,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000128.pdf",
+    "sha256": "1efbf085e3420e48d9b0b9bd7e23793405a827c2fea5e089347ed9e08e340ecf",
+    "retrievedAt": "2026-11-03T07:52:02.068335+00:00",
+    "pdfPages": 100,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 129,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000129.pdf",
+    "sha256": "f746522732e20e8bfc094f69444df32093940b21e1b3c9a193f488bcda2a103c",
+    "retrievedAt": "2026-11-03T07:52:03.139893+00:00",
+    "pdfPages": 100,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 26,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 130,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000130.pdf",
+    "sha256": "993fec55a57c7469a00adb685afa20fc570e5992fbdc3e959aa69513126916c9",
+    "retrievedAt": "2026-11-03T08:02:07.565796+00:00",
+    "pdfPages": 100,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 24,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 131,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000131.pdf",
+    "sha256": "087e157672cd9a6cb6a54a73893eb9ae0dbe359ca815005e3ec5de7d579c3b8f",
+    "retrievedAt": "2026-11-03T07:48:47.479574+00:00",
+    "pdfPages": 100,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 24,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 132,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000132.pdf",
+    "sha256": "7017fc034c829ca756d47ab2c6a41c8641b2c8842aeb47d84367d83a6a391cc1",
+    "retrievedAt": "2026-11-03T07:52:05.265914+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 133,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000133.pdf",
+    "sha256": "ee24963fa3e3d4c0414d046736f4b06a0f3b8b3926f28171311ab1b03e0cd536",
+    "retrievedAt": "2026-11-03T07:52:06.184413+00:00",
+    "pdfPages": 100,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 134,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000134.pdf",
+    "sha256": "bbff3ee799b18cf1b60d13a48002c1f2f722431e517f923b6c53a5b4efb1f59c",
+    "retrievedAt": "2026-11-03T07:52:08.043160+00:00",
+    "pdfPages": 100,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 18,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 135,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000135.pdf",
+    "sha256": "39cca3f8eaa11cce4886bdbbab62f4685e52a947d58bcab1536faab944cca743",
+    "retrievedAt": "2026-11-03T07:52:06.186296+00:00",
+    "pdfPages": 92,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-oxnard-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 136,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000136.pdf",
+    "sha256": "b63fe502c1942d53028b035e94ec478d37e6482b8e8572399e2fdf8829f92667",
+    "retrievedAt": "2026-11-03T07:48:49.406471+00:00",
+    "pdfPages": 92,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 137,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000137.pdf",
+    "sha256": "21c8559ef30e8e131dfb714116e5ee971559339e776105b3946dd0a77ee64efc",
+    "retrievedAt": "2026-11-03T07:52:11.694420+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 138,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000138.pdf",
+    "sha256": "17ef8ecb552499698a9dcd967ce0ddb77544e30f52b4e35ee6e9ae6ae05ee6a0",
+    "retrievedAt": "2026-11-03T07:52:09.953809+00:00",
+    "pdfPages": 92,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-oxnard-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 139,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000139.pdf",
+    "sha256": "8c121c114a8d423cd42472821b3d9d9549b6f76ff85bc983d8658b068fd26a62",
+    "retrievedAt": "2026-11-03T07:52:10.911550+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-oxnard-school-district-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 140,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000140.pdf",
+    "sha256": "cfdf865e8dc821ff6dd56f3a22822f3bd156f12f0aab8b9b9e49575a3b4db816",
+    "retrievedAt": "2026-11-03T08:02:06.372521+00:00",
+    "pdfPages": 92,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 26,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-oxnard-school-district-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 141,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000141.pdf",
+    "sha256": "7ec760d30724ba8fabea29ed30cdfbfb9e0a627e49001dfa7d37e3d4c1f548d1",
+    "retrievedAt": "2026-11-03T07:48:49.411277+00:00",
+    "pdfPages": 92,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 24,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-oxnard-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 142,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000142.pdf",
+    "sha256": "f81132474030e5d6e98041e8e4839e55aa4b7db178a311c1e51f763d225dd713",
+    "retrievedAt": "2026-11-03T07:52:14.782646+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 143,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000143.pdf",
+    "sha256": "648df5dfa3d569123b2b6c5ddb26b33c3dbd540b4b60ef222c6f9779ce47dcb8",
+    "retrievedAt": "2026-11-03T07:52:13.834561+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 18,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-fillmore-piru-memorial-district-for-director",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-los-angeles-10567"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 144,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000144.pdf",
+    "sha256": "e10f2a79c088daea0f23693bf2f30da566b333a3d7a7a484668299f35a2549ae",
+    "retrievedAt": "2026-11-03T07:52:15.722943+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-fillmore-piru-memorial-district-for-director",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 145,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000145.pdf",
+    "sha256": "753b1b7d417d2187635f1b52d48951b7a6236e32c56e10637f5c1ce72320564f",
+    "retrievedAt": "2026-11-03T07:52:15.717065+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-fillmore-piru-memorial-district-for-director",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 146,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000146.pdf",
+    "sha256": "c5551fe2013d9974f2802bc18abc328e1e1e5079ec3689c5f9cc542307871a13",
+    "retrievedAt": "2026-11-03T07:48:51.400515+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 26,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-port-hueneme-for-member-of-the-city-council",
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 147,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000147.pdf",
+    "sha256": "99230ce081b295062e4f18451f3ade4dd67cb44ca288200a2e5b35b707602980",
+    "retrievedAt": "2026-11-03T07:52:18.474059+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 148,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000148.pdf",
+    "sha256": "331530caa2095ac11997ffd3f95f2febdde049e589a38d210682212851078334",
+    "retrievedAt": "2026-11-03T07:52:19.423978+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-santa-paula-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-santa-paula-unified-school-district-for-governing-board-member-trustee-area-5-short-term",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 149,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000149.pdf",
+    "sha256": "377dd3f1ab5a56645fd8cd9a94fd1be67063ac76e076b3925564e04ed8ad9f09",
+    "retrievedAt": "2026-11-03T07:52:19.463999+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-santa-paula-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 150,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000150.pdf",
+    "sha256": "bf3017ca9d1d188fc19054ca8a4dd6ffac490b0beebca4f0837b7f660d97c95e",
+    "retrievedAt": "2026-11-03T07:52:22.234056+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 10,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-santa-paula-for-member-of-the-city-council-district-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 151,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000151.pdf",
+    "sha256": "c424a768e8d5727d2ca807f0da819e7af84d6254261b0df53cdb2497b5a5f808",
+    "retrievedAt": "2026-11-03T07:48:52.325850+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-santa-paula-for-member-of-the-city-council-district-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 152,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000152.pdf",
+    "sha256": "1946d9ab603cb3a12d01750068db62936bcd9c5e93afed6cc188d408dda99241",
+    "retrievedAt": "2026-11-03T07:52:22.239530+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 6,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-santa-paula-for-member-of-the-city-council-district-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 153,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000153.pdf",
+    "sha256": "369557e606a4ec179b40665e06595a6934b9c9b6e82cb6cb80e8d049c3b84adc",
+    "retrievedAt": "2026-11-03T07:52:24.995257+00:00",
+    "pdfPages": 84,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-santa-paula-for-member-of-the-city-council-district-3",
+      "ca-cx-local-2026-ventura-santa-paula-unified-school-district-for-governing-board-member-trustee-area-5-short-term",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 154,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000154.pdf",
+    "sha256": "4a83ab9d1c735dd51b6ddf1dc3c7b012bb173f3d57cc65155f08527b2ea97fe0",
+    "retrievedAt": "2026-11-03T07:52:24.075418+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-conejo-recreation-and-park-district-for-director-division-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 155,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000155.pdf",
+    "sha256": "cf7a8fcdfcd643dbb66b8aa24cd2a9d2694c2c7307eeeb57822fdf725dd1f986",
+    "retrievedAt": "2026-11-03T07:52:24.993376+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 156,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000156.pdf",
+    "sha256": "39882c5b1b3954bdb5a8c6c1b037ea5b907968f7deb6008c15fd24cdb9e18d32",
+    "retrievedAt": "2026-11-03T07:48:54.260185+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 18,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 157,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000157.pdf",
+    "sha256": "09cdaddc4784b845fde857248970367655f2e8e2bfe2c7b058c25cce86f8a0d2",
+    "retrievedAt": "2026-11-03T07:52:27.753409+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 22,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-d",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 158,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000158.pdf",
+    "sha256": "619d598e278acd16d5572c46313e613db60e1586b0eb0fb04cf230ab4134a54a",
+    "retrievedAt": "2026-11-03T07:52:28.735121+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 26,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 159,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000159.pdf",
+    "sha256": "4cffc5f2a5300d7b58abec5be63d94d61a3a78da082386c591960afd0d05de7b",
+    "retrievedAt": "2026-11-03T07:52:28.740250+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 30,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-1-short-term",
+      "ca-cx-local-2026-ventura-rancho-simi-recreation-and-park-district-for-director-division-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 160,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000160.pdf",
+    "sha256": "c6973b71a9f25bccadce3f81b0bf6f25647bfa0cf90bf3655a927f8658fffdb2",
+    "retrievedAt": "2026-11-03T07:52:32.470492+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 26,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-1-short-term",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 161,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000161.pdf",
+    "sha256": "5bbf853d55e5c48c46e9f1298042a1b8a01d698c321475f83805c621440a27be",
+    "retrievedAt": "2026-11-03T07:48:53.313497+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 30,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-1-short-term",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-d",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 162,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000162.pdf",
+    "sha256": "a1d608ee8a04153e3d9707373e8fe63708c48945fbe23b6f46973ac6f8134de1",
+    "retrievedAt": "2026-11-03T08:02:08.524957+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 26,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-d",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 163,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000163.pdf",
+    "sha256": "0e5d01e5c3d2f3c8f3145f22c57da24b11cceebd91b0c5cc1c108c71761b4c8e",
+    "retrievedAt": "2026-11-03T07:52:35.387964+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 12,
+    "localNamedPhysicalOccurrences": 30,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-rancho-simi-recreation-and-park-district-for-director-division-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-e",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 164,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000164.pdf",
+    "sha256": "2b8248ef3b9f64e1fef962f4bda05b1669430c808279ec38de535b369acf8397",
+    "retrievedAt": "2026-11-03T07:52:33.481670+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 26,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-e",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 165,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000165.pdf",
+    "sha256": "65e31ea5f92c5907207bbad779f5357dd8d849a008a08d5ad7b1d372ebd4e4da",
+    "retrievedAt": "2026-11-03T07:52:31.672911+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 26,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-rancho-simi-recreation-and-park-district-for-director-division-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 166,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000166.pdf",
+    "sha256": "896545d1823cfdc86b0bc2cf54235465fb7ef84fc762efb988e36b0d0edb9600",
+    "retrievedAt": "2026-11-03T07:48:56.195916+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 12,
+    "localNamedPhysicalOccurrences": 34,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+      "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-1-short-term",
+      "ca-cx-local-2026-ventura-rancho-simi-recreation-and-park-district-for-director-division-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-e",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 167,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000167.pdf",
+    "sha256": "209cf9919d05bb627951835d68c3bc262dfeea3ac0d02f81737f99538e69c8ce",
+    "retrievedAt": "2026-11-03T07:52:37.280137+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 168,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000168.pdf",
+    "sha256": "b9142ee8ce8b1a72e79d963281d2e1e1e997c07c04ffb2b10770280c35f699bc",
+    "retrievedAt": "2026-11-03T07:52:36.254188+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 169,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000169.pdf",
+    "sha256": "1bf5db605e73e799a656aded0cf5d4198a3c9ca2d798769a070b3e4692332743",
+    "retrievedAt": "2026-11-03T07:52:38.286725+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-rancho-simi-recreation-and-park-district-for-director-division-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-los-angeles-10567"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 170,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000170.pdf",
+    "sha256": "739a25bcfb2173e43e357fe1462321b9f4f415def087aeec0f8c2b0723865276",
+    "retrievedAt": "2026-11-03T07:52:39.293613+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-rancho-simi-recreation-and-park-district-for-director-division-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 171,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000171.pdf",
+    "sha256": "d905b3949437de291c4dbb60381bac7aa5f807c4a7e350120461915d1fa9a563",
+    "retrievedAt": "2026-11-03T07:48:54.269552+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-rancho-simi-recreation-and-park-district-for-director-division-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-e",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 172,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000172.pdf",
+    "sha256": "10b74ff47801f72ec1cb29c3afe3c5f0e78c35548a85353949a4b8062ddd6b97",
+    "retrievedAt": "2026-11-03T07:52:41.030176+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-rancho-simi-recreation-and-park-district-for-director-division-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 173,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000173.pdf",
+    "sha256": "6c16534cb1d224189845fd5dc0d472897c2a8cf5f6d8a0b3fe06b05644f91401",
+    "retrievedAt": "2026-11-03T07:52:41.936703+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-thousand-oaks-for-member-of-the-city-council-district-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 174,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000174.pdf",
+    "sha256": "73be7b1d43f8e472560c70f4f01c2b8f047ae41ad8bf1cb2d2103308e976e0ca",
+    "retrievedAt": "2026-11-03T08:02:09.481785+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-thousand-oaks-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 175,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000175.pdf",
+    "sha256": "f26ba80d7ae6e929dd25fb6c2c1b486dd00f9b549d820d0b5d3e2b2244fec0eb",
+    "retrievedAt": "2026-11-03T07:52:41.934387+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 8,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-thousand-oaks-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 176,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000176.pdf",
+    "sha256": "ecf52d5ed6ca8cf0ebc06a06996200fdfaf236d53f93fdd844d440d400c29157",
+    "retrievedAt": "2026-11-03T07:48:56.200536+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 24,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-thousand-oaks-for-member-of-the-city-council-district-2",
+      "ca-cx-local-2026-ventura-conejo-recreation-and-park-district-for-director-division-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 177,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000177.pdf",
+    "sha256": "4f757f39975947f9d93ed0d3369e0693427e7363a0c4ff5bab09c89dd9302b72",
+    "retrievedAt": "2026-11-03T07:52:43.947403+00:00",
+    "pdfPages": 68,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "localCandidatePhysicalBlocks": 10,
+    "localNamedPhysicalOccurrences": 24,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-thousand-oaks-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-conejo-recreation-and-park-district-for-director-division-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 178,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000178.pdf",
+    "sha256": "56613cb885e5ccd42b23793ee07fa948a7409b3d78995e157d5a04f5d3be4af0",
+    "retrievedAt": "2026-11-03T07:52:43.946438+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-1",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 179,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000179.pdf",
+    "sha256": "0447cbdf41ef5c7abcbfd219de1bc51505c6e6d46f69fbfb1fff4ed8b3566fe8",
+    "retrievedAt": "2026-11-03T07:52:45.838460+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-6",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 180,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000180.pdf",
+    "sha256": "ede27e53c2e7f896ec391c50a4853a05344cebb866d65254c0bbb18786b08ba3",
+    "retrievedAt": "2026-11-03T07:52:46.887597+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 20,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-6",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 181,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000181.pdf",
+    "sha256": "db60c381aa852d151a6c19120f07d6161659fe20176a36663bceb3684495c5d9",
+    "retrievedAt": "2026-11-03T07:52:47.802307+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 14,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 182,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000182.pdf",
+    "sha256": "4837273edaff87ac6bae5155b779987026add6015d127558234244cdd1772a51",
+    "retrievedAt": "2026-11-03T07:52:49.610089+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 18,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-4"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 183,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000183.pdf",
+    "sha256": "9c534871a1f7cf03dd330546603582d6917b5e176170df524a72f2a4eed56c8e",
+    "retrievedAt": "2026-11-03T07:52:47.811773+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 12,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 184,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000184.pdf",
+    "sha256": "e914e0ed8351d790ff8a424b489c99bd85dcb2128f2eb678a16eb8ab8399aa42",
+    "retrievedAt": "2026-11-03T07:52:50.578557+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 16,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-4",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 185,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000185.pdf",
+    "sha256": "75169965727990f6ce2a84a3ebc02b14214b010b67995cba66354e3a27643b70",
+    "retrievedAt": "2026-11-03T07:52:51.512187+00:00",
+    "pdfPages": 76,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-5",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 186,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000186.pdf",
+    "sha256": "fe52fab447537f0b703c8e502c37b9620d7f84e88a8d8a1c816272034d7a71b6",
+    "retrievedAt": "2026-11-03T07:52:52.424110+00:00",
+    "pdfPages": 92,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67
+    ],
+    "localCandidatePhysicalBlocks": 6,
+    "localNamedPhysicalOccurrences": 24,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-6",
+      "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-3",
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools"
+    ],
+    "dateCoverCheck": "PASS"
+  },
+  {
+    "ballotType": 187,
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000187.pdf",
+    "sha256": "14e597b0bb6770ba923b389adc590d5bdf26e7dac7450e9b48ff0e825ceeedda",
+    "retrievedAt": "2026-11-03T07:52:52.427493+00:00",
+    "pdfPages": 60,
+    "physicalSamplePages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "localCandidatePhysicalBlocks": 4,
+    "localNamedPhysicalOccurrences": 8,
+    "localContestIds": [
+      "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+      "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5"
+    ],
+    "dateCoverCheck": "PASS"
+  }
+]

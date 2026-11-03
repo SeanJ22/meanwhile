@@ -1,0 +1,298 @@
+{
+ "currentVersion": 11.3,
+ "cimVersion": "3.3.0",
+ "id": 17,
+ "name": "Board of Education Trustee",
+ "type": "Feature Layer",
+ "description": "The boundary of the individual Trustee Districts was provided to the Ventura County Clerk/Recorder Elections Division. These boundaries are based on Census data from the 2020 census. The census data does not follow current GIS data for the County of Ventura. The data was used to modify the Election Precincts as maintained by the Ventura County Clerk/Recorder Elections Division. The boundary was then provided to Information Technology Services Department/GIS division to be matched up to the boundary of the School District. The interior lines were redrawn to match Election Precinct polygons. The next scheduled changes should be for the 2030 census data in 2032. The Political boundaries extends 3 miles offshore but the polygons only reflect the land area.",
+ "geometryType": "esriGeometryPolygon",
+ "sourceSpatialReference": {
+  "wkid": 102645,
+  "latestWkid": 2229,
+  "xyTolerance": 0.003280833333333333,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -117608900,
+  "falseY": -91881400,
+  "xyUnits": 3048.0060960121928,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "copyrightText": "Ventura County Clerk-Recorders \u2013 Election Division and Ventura County Information Technology Services Department \u2013 GIS Division",
+ "parentLayer": null,
+ "subLayers": [],
+ "minScale": 0,
+ "maxScale": 0,
+ "referenceScale": 0.0,
+ "drawingInfo": {
+  "renderer": {
+   "type": "simple",
+   "symbol": {
+    "type": "esriSFS",
+    "style": "esriSFSSolid",
+    "color": [
+     207,
+     246,
+     252,
+     255
+    ],
+    "outline": {
+     "type": "esriSLS",
+     "style": "esriSLSSolid",
+     "color": [
+      110,
+      110,
+      110,
+      255
+     ],
+     "width": 0.7
+    }
+   }
+  },
+  "scaleSymbols": true,
+  "transparency": 0,
+  "labelingInfo": null
+ },
+ "defaultVisibility": true,
+ "extent": {
+  "xmin": 6078784.939095974,
+  "ymin": 1539832.8477773964,
+  "xmax": 6370545.793893307,
+  "ymax": 2153455.1467770636,
+  "spatialReference": {
+   "wkid": 102645,
+   "latestWkid": 2229,
+   "xyTolerance": 0.003280833333333333,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -117608900,
+   "falseY": -91881400,
+   "xyUnits": 3048.0060960121928,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "hasAttachments": false,
+ "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+ "displayField": "name",
+ "typeIdField": null,
+ "subtypeFieldName": null,
+ "subtypeField": null,
+ "defaultSubtypeCode": null,
+ "fields": [
+  {
+   "name": "objectid",
+   "type": "esriFieldTypeOID",
+   "alias": "OBJECTID",
+   "domain": null
+  },
+  {
+   "name": "number_",
+   "type": "esriFieldTypeSmallInteger",
+   "alias": "District",
+   "domain": null
+  },
+  {
+   "name": "gr_cr_date",
+   "type": "esriFieldTypeString",
+   "alias": "Graphic Creation Date",
+   "length": 8,
+   "domain": null
+  },
+  {
+   "name": "gr_cr_user",
+   "type": "esriFieldTypeSmallInteger",
+   "alias": "Graphic Creation User",
+   "domain": null
+  },
+  {
+   "name": "gr_vd_date",
+   "type": "esriFieldTypeString",
+   "alias": "Graphic Void Date",
+   "length": 8,
+   "domain": null
+  },
+  {
+   "name": "gr_vd_user",
+   "type": "esriFieldTypeSmallInteger",
+   "alias": "Graphic Void User",
+   "domain": null
+  },
+  {
+   "name": "gr_co_date",
+   "type": "esriFieldTypeString",
+   "alias": "Graphic Correction Date",
+   "length": 8,
+   "domain": null
+  },
+  {
+   "name": "gr_co_user",
+   "type": "esriFieldTypeSmallInteger",
+   "alias": "Graphic Correction User",
+   "domain": null
+  },
+  {
+   "name": "cdist",
+   "type": "esriFieldTypeSmallInteger",
+   "alias": "College District",
+   "domain": null
+  },
+  {
+   "name": "created_date",
+   "type": "esriFieldTypeDate",
+   "alias": "CREATED_DATE",
+   "length": 8,
+   "domain": null
+  },
+  {
+   "name": "last_edited_date",
+   "type": "esriFieldTypeDate",
+   "alias": "LAST_EDITED_DATE",
+   "length": 8,
+   "domain": null
+  },
+  {
+   "name": "name",
+   "type": "esriFieldTypeString",
+   "alias": "NAME",
+   "length": 50,
+   "domain": null
+  },
+  {
+   "name": "globalid",
+   "type": "esriFieldTypeGlobalID",
+   "alias": "GLOBALID",
+   "length": 38,
+   "domain": null
+  },
+  {
+   "name": "shape",
+   "type": "esriFieldTypeGeometry",
+   "alias": "Shape",
+   "domain": null
+  },
+  {
+   "name": "st_area(shape)",
+   "type": "esriFieldTypeDouble",
+   "alias": "st_area(shape)",
+   "domain": null
+  },
+  {
+   "name": "st_length(shape)",
+   "type": "esriFieldTypeDouble",
+   "alias": "st_length(shape)",
+   "domain": null
+  }
+ ],
+ "geometryField": {
+  "name": "shape",
+  "type": "esriFieldTypeGeometry",
+  "alias": "Shape"
+ },
+ "indexes": [
+  {
+   "name": "r5067_sde_rowid_uk",
+   "fields": "objectid",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  },
+  {
+   "name": "uuid_5067",
+   "fields": "globalid",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  },
+  {
+   "name": "uuid_oid_5067",
+   "fields": "globalid,objectid",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  },
+  {
+   "name": "a4944_ix1",
+   "fields": "shape",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  }
+ ],
+ "subtypes": [],
+ "relationships": [],
+ "canModifyLayer": true,
+ "canScaleSymbols": false,
+ "hasLabels": false,
+ "capabilities": "Map,Query,Data",
+ "maxRecordCount": 2000,
+ "supportsStatistics": true,
+ "supportsExceedsLimitStatistics": true,
+ "supportsAdvancedQueries": true,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "isDataVersioned": true,
+ "ownershipBasedAccessControlForFeatures": {"allowOthersToQuery": true},
+ "useStandardizedQueries": true,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "advancedQueryCapabilities": {
+  "useStandardizedQueries": true,
+  "supportsStatistics": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true,
+  "supportsOrderBy": true,
+  "supportsDistinct": true,
+  "supportsCountDistinct": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsPagination": true,
+  "supportsLod": false,
+  "supportsQueryWithLodSR": false,
+  "supportsTrueCurve": true,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsReturningQueryExtent": true,
+  "supportsQueryWithDistance": true,
+  "supportsSqlExpression": true,
+  "supportsTimeRelation": true,
+  "supportsSqlFormat": false,
+  "supportsQueryAnalytic": true,
+  "supportsCurrentUserQueries": true
+ },
+ "supportsDatumTransformation": true,
+ "advancedQueryAnalyticCapabilities": {
+  "supportsLinearRegression": true,
+  "supportsAsync": false,
+  "supportsPercentileAnalytic": false
+ },
+ "dateFieldsTimeReference": null,
+ "preferredTimeReference": null,
+ "datesInUnknownTimezone": false,
+ "hasGeometryProperties": true,
+ "geometryProperties": {
+  "shapeAreaFieldName": "st_area(shape)",
+  "shapeLengthFieldName": "st_length(shape)",
+  "units": "esriFeet",
+  "mapUnits": {"uwkid": 9003}
+ },
+ "hasMetadata": true,
+ "isDataArchived": false,
+ "archivingInfo": {
+  "supportsQueryWithHistoricMoment": false,
+  "startArchivingMoment": -1
+ },
+ "supportsCoordinatesQuantization": true,
+ "supportsDynamicLegends": true
+}

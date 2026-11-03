@@ -1,0 +1,89 @@
+{
+  "method": "Every incoming field compared to every ready CA field for normalized full candidate-set equality or at least two shared full names, independent of title/OCD spelling. All overlaps retain the exact earlier IDs and electorates.",
+  "hits": [
+    {
+      "input": "/workspace/meanwhile/data/install/cx-local/CA/kern/ballot-input/ca.json",
+      "venturaContestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+      "earlierContestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+      "sameId": true,
+      "earlierTitle": "Member, Board of Education Area 7, County of Kern",
+      "nameIntersection": [
+        "erniebelljr",
+        "jeanineadams",
+        "loricisneros"
+      ],
+      "earlierOcdId": "ocd-division/country:us/state:ca/county:kern/school_board_district:7",
+      "venturaOcdId": "ocd-division/country:us/state:ca/county:kern/school_board_district:7"
+    },
+    {
+      "input": "/workspace/meanwhile/data/install/cx-local/CA/kern/ballot-input/ca.json",
+      "venturaContestId": "ca-cx-local-los-angeles-10562",
+      "earlierContestId": "ca-cx-local-los-angeles-10562",
+      "sameId": true,
+      "earlierTitle": "ANTELOPE VALLEY-EAST KERN WATER AGENCY Member, Board of Directors, Division 1",
+      "nameIntersection": [
+        "drewmercy",
+        "lynnrobertbarnes"
+      ],
+      "earlierOcdId": "ocd-division/country:us/state:ca/special_district:antelope_valley_east_kern_water_agency/division:1",
+      "venturaOcdId": "ocd-division/country:us/state:ca/special_district:antelope_valley_east_kern_water_agency/division:1"
+    },
+    {
+      "input": "/workspace/meanwhile/data/install/cx-local/CA/los-angeles/ballot-input/ca.json",
+      "venturaContestId": "ca-cx-local-los-angeles-10652",
+      "earlierContestId": "ca-cx-local-los-angeles-10652",
+      "sameId": true,
+      "earlierTitle": "LAS VIRGENES UNIFIED SCHOOL DISTRICT Governing Board Member",
+      "nameIntersection": [
+        "angelacutbill",
+        "coraledwardsen",
+        "dallaslawrence",
+        "sandrapope"
+      ],
+      "earlierOcdId": "ocd-division/country:us/state:ca/school_district:las_virgenes_unified_school_district",
+      "venturaOcdId": "ocd-division/country:us/state:ca/school_district:las_virgenes_unified_school_district"
+    },
+    {
+      "input": "/workspace/meanwhile/data/install/cx-local/CA/los-angeles/ballot-input/ca.json",
+      "venturaContestId": "ca-cx-local-los-angeles-10562",
+      "earlierContestId": "ca-cx-local-los-angeles-10562",
+      "sameId": true,
+      "earlierTitle": "ANTELOPE VALLEY-EAST KERN WATER AGENCY Member, Board of Directors, Division 1",
+      "nameIntersection": [
+        "drewmercy",
+        "lynnrobertbarnes"
+      ],
+      "earlierOcdId": "ocd-division/country:us/state:ca/special_district:antelope_valley_east_kern_water_agency/division:1",
+      "venturaOcdId": "ocd-division/country:us/state:ca/special_district:antelope_valley_east_kern_water_agency/division:1"
+    },
+    {
+      "input": "/workspace/meanwhile/data/install/cx-local/CA/los-angeles/ballot-input/ca.json",
+      "venturaContestId": "ca-cx-local-los-angeles-10567",
+      "earlierContestId": "ca-cx-local-los-angeles-10567",
+      "sameId": true,
+      "earlierTitle": "SANTA CLARITA VALLEY WATER AGENCY Member, Board of Directors, Division 3",
+      "nameIntersection": [
+        "kennethkenpetersen",
+        "lynneplambeck",
+        "mariaagutzeit"
+      ],
+      "earlierOcdId": "ocd-division/country:us/state:ca/special_district:santa_clarita_valley_water_agency/division:3",
+      "venturaOcdId": "ocd-division/country:us/state:ca/special_district:santa_clarita_valley_water_agency/division:3"
+    },
+    {
+      "input": "/workspace/meanwhile/data/install/cx-local/CA/san-bernardino/ballot-input/ca.json",
+      "venturaContestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+      "earlierContestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+      "sameId": true,
+      "earlierTitle": "Member, Board of Education Area 7, County of Kern",
+      "nameIntersection": [
+        "erniebelljr",
+        "jeanineadams",
+        "loricisneros"
+      ],
+      "earlierOcdId": "ocd-division/country:us/state:ca/county:kern/school_board_district:7",
+      "venturaOcdId": "ocd-division/country:us/state:ca/county:kern/school_board_district:7"
+    }
+  ],
+  "status": "PASS"
+}

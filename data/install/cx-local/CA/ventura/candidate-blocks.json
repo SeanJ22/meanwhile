@@ -1,0 +1,2658 @@
+[
+  {
+    "contestId": "ca-cx-local-2026-ventura-school-county-superintendent-of-schools",
+    "body": "SCHOOL",
+    "printedTitle": "County Superintendent of Schools",
+    "ocdId": "ocd-division/country:us/state:ca/county:ventura",
+    "voteFor": 1,
+    "candidateNames": [
+      "KAREN SHER",
+      "MAGGIE MARSCHNER"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "County Superintendent of Schools\nSuperintendente de las Escuelas del Condado\nVote for One\n/ Vote por Uno\nKAREN SHER\nGoverning Board Member Oxnard Union High\nSchool District /\nMiembra de la Junta Gobernante\nDistrito Escolar Secundarias Oxnard Union\nMAGGIE MARSCHNER\nEducator\nEducadora",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000001.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:23.935311+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "County Superintendent of Schools\nSuperintendente de las Escuelas del Condado\nVote for One\n/ Vote por Uno\nKAREN SHER\nGoverning Board Member Oxnard Union High\nSchool District /\nMiembra de la Junta Gobernante\nDistrito Escolar Secundarias Oxnard Union\nMAGGIE MARSCHNER\nEducator\nEducadora"
+    },
+    "physicalSampleOccurrences": 374,
+    "uniqueBallotTypes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184,
+      185,
+      186,
+      187
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      380.8200378417969,
+      230.5,
+      526.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-fillmore-piru-memorial-district-for-director",
+    "body": "FILLMORE-PIRU MEMORIAL DISTRICT",
+    "printedTitle": "For Director",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:fillmore_piru_memorial_district",
+    "voteFor": 2,
+    "candidateNames": [
+      "ERNEST VILLEGAS",
+      "CARINA M. FORSYTHE",
+      "DEREK FOUARGE",
+      "WILLIAM L. MORRIS III"
+    ],
+    "blankWriteInOvals": 2,
+    "ordinaryCandidateCount": 4,
+    "nativeSourceQuote": "For Director\nPara Director\nVote for no more than Two\n/ Vote por no más de Dos\nERNEST VILLEGAS\nIncumbent\nTitular\nCARINA M. FORSYTHE\nRetired Petty Officer\nOficial de la Armada Retirada\nDEREK FOUARGE\nDirector of Accounting\nDirector de Contabilidad\nWILLIAM L. MORRIS III\nIncumbent\nTitular",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000003.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:50:14.367746+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Director\nPara Director\nVote for no more than Two\n/ Vote por no más de Dos\nERNEST VILLEGAS\nIncumbent\nTitular\nCARINA M. FORSYTHE\nRetired Petty Officer\nOficial de la Armada Retirada\nDEREK FOUARGE\nDirector of Accounting\nDirector de Contabilidad\nWILLIAM L. MORRIS III\nIncumbent\nTitular"
+    },
+    "physicalSampleOccurrences": 18,
+    "uniqueBallotTypes": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      70,
+      143,
+      144,
+      145
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      596.8199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-united-water-conservation-district-for-director-division-1",
+    "body": "UNITED WATER CONSERVATION DISTRICT",
+    "printedTitle": "For Director, Division 1",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:united_water_conservation_district/division:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "GORDON E. KIMBALL",
+      "RICARDO SANDOVAL"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Director, Division 1\nPara Director, División 1\nVote for One /\nVote por Uno\nGORDON E. KIMBALL\nIncumbent\nTitular\nRICARDO SANDOVAL\nNaval Engineer Manager\nGerente de Ingeniería Naval\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000003.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:50:14.367746+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Director, Division 1\nPara Director, División 1\nVote for One /\nVote por Uno\nGORDON E. KIMBALL\nIncumbent\nTitular\nRICARDO SANDOVAL\nNaval Engineer Manager\nGerente de Ingeniería Naval\n16"
+    },
+    "physicalSampleOccurrences": 28,
+    "uniqueBallotTypes": [
+      3,
+      10,
+      11,
+      70,
+      75,
+      78,
+      144,
+      148,
+      149,
+      150,
+      151,
+      153,
+      167,
+      168
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      182.8200225830078,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-moorpark-unified-school-district-for-governing-board-member-trustee-area-1",
+    "body": "MOORPARK UNIFIED SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 1",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:moorpark_unified_school_district/trustee_area:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "KATIE CLUNEN",
+      "JUNE DUBREUIL"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 1\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 1\nVote for One /\nVote por Uno\nKATIE CLUNEN\nAttorney\nAbogada\nJUNE DUBREUIL\nReal Estate Agent\nAgente de Bienes Raíces",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000004.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:50:13.129702+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 1\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 1\nVote for One /\nVote por Uno\nKATIE CLUNEN\nAttorney\nAbogada\nJUNE DUBREUIL\nReal Estate Agent\nAgente de Bienes Raíces"
+    },
+    "physicalSampleOccurrences": 40,
+    "uniqueBallotTypes": [
+      4,
+      7,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      80,
+      82,
+      84,
+      85,
+      86,
+      87,
+      88,
+      100,
+      104,
+      105
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-santa-paula-unified-school-district-for-governing-board-member-trustee-area-5-short-term",
+    "body": "SANTA PAULA UNIFIED SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 5 (Short Term)",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:santa_paula_unified_school_district/trustee_area:5",
+    "voteFor": 1,
+    "candidateNames": [
+      "MATT KLINEFELTER",
+      "FRANCISCO SOLIS ESTRADA"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 5 (Short Term)\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 5 (Corto Plazo)\nVote for One /\nVote por Uno\nMATT KLINEFELTER\nRetired School Principal\nDirector de Escuela Jubilado\nFRANCISCO SOLIS ESTRADA",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000008.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:50:18.891694+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 5 (Short Term)\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 5 (Corto Plazo)\nVote for One /\nVote por Uno\nMATT KLINEFELTER\nRetired School Principal\nDirector de Escuela Jubilado\nFRANCISCO SOLIS ESTRADA"
+    },
+    "physicalSampleOccurrences": 10,
+    "uniqueBallotTypes": [
+      8,
+      9,
+      11,
+      148,
+      153
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      724.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-5",
+    "body": "VENTURA COUNTY COMMUNITY COLLEGE DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 5",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:ventura_county_community_college_district/trustee_area:5",
+    "voteFor": 1,
+    "candidateNames": [
+      "JOHN A. DEMERS",
+      "GABRIELA TORRES"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 5\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 5\nVote for One /\nVote por Uno\nJOHN A. DEMERS\nGroundwater Agency Executive\nEjecutivo de una Agencia de Aguas Subterráneas\nGABRIELA TORRES\nVentura County Community College District, Governing Board\nMember Area 5 /\nDistrito de Colegios Comunitarios del\nCondado de Ventura, Miembro de la Junta de Gobierno, Êrea 5",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000014.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:50:22.866231+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 5\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 5\nVote for One /\nVote por Uno\nJOHN A. DEMERS\nGroundwater Agency Executive\nEjecutivo de una Agencia de Aguas Subterráneas\nGABRIELA TORRES\nVentura County Community College District, Governing Board\nMember Area 5 /\nDistrito de Colegios Comunitarios del\nCondado de Ventura, Miembro de la Junta de Gobierno, Êrea 5"
+    },
+    "physicalSampleOccurrences": 48,
+    "uniqueBallotTypes": [
+      14,
+      15,
+      18,
+      20,
+      21,
+      61,
+      89,
+      106,
+      110,
+      111,
+      118,
+      122,
+      123,
+      124,
+      130,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      146,
+      187
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      578.3199462890625,
+      230.5,
+      742.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-2",
+    "body": "VENTURA COUNTY BOARD OF EDUCATION",
+    "printedTitle": "For Governing Board Member - Trustee Area 2",
+    "ocdId": "ocd-division/country:us/state:ca/county:ventura/school_board_district:2",
+    "voteFor": 1,
+    "candidateNames": [
+      "DEBRA MCINTYRE-SCIARRINO",
+      "MIKE TEASDALE"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 2\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 2\nVote for One /\nVote por Uno\nDEBRA MCINTYRE-SCIARRINO\nTeacher Education Administrator\nMaestra Administradora Educativa\nMIKE TEASDALE\nIncumbent\nTitular",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000016.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:28.015059+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 2\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 2\nVote for One /\nVote por Uno\nDEBRA MCINTYRE-SCIARRINO\nTeacher Education Administrator\nMaestra Administradora Educativa\nMIKE TEASDALE\nIncumbent\nTitular"
+    },
+    "physicalSampleOccurrences": 44,
+    "uniqueBallotTypes": [
+      16,
+      17,
+      24,
+      25,
+      27,
+      28,
+      29,
+      37,
+      44,
+      45,
+      46,
+      47,
+      56,
+      59,
+      71,
+      74,
+      154,
+      173,
+      174,
+      175,
+      176,
+      177
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      726.3199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-ventura-county-community-college-district-for-governing-board-member-trustee-area-2",
+    "body": "VENTURA COUNTY COMMUNITY COLLEGE DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 2",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:ventura_county_community_college_district/trustee_area:2",
+    "voteFor": 1,
+    "candidateNames": [
+      "LOU LICHTL",
+      "ROGER BOWERMAN"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 2\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 2\nVote for One /\nVote por Uno\nLOU LICHTL\nGoverning Board Member, Ventura County Community\nCollege District /\nMiembro de la Junta de Gobierno,\nDistrito de Colegios Comunitarios del Condado de Ventura\nROGER BOWERMAN\nCommunity College Professor\nProfesor de Colegio Comunitario",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000016.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:28.015059+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 2\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 2\nVote for One /\nVote por Uno\nLOU LICHTL\nGoverning Board Member, Ventura County Community\nCollege District /\nMiembro de la Junta de Gobierno,\nDistrito de Colegios Comunitarios del Condado de Ventura\nROGER BOWERMAN\nCommunity College Professor\nProfesor de Colegio Comunitario"
+    },
+    "physicalSampleOccurrences": 44,
+    "uniqueBallotTypes": [
+      16,
+      17,
+      24,
+      25,
+      27,
+      28,
+      29,
+      37,
+      44,
+      45,
+      46,
+      47,
+      56,
+      59,
+      71,
+      74,
+      154,
+      173,
+      174,
+      175,
+      176,
+      177
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      776.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-5",
+    "body": "CAMARILLO HEALTH CARE DISTRICT",
+    "printedTitle": "For Director, Zone 5",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:camarillo_health_care_district/zone:5",
+    "voteFor": 1,
+    "candidateNames": [
+      "LIAM ANDRES O'NEILL HERNANDEZ",
+      "NEAL P. DIXON",
+      "JIM RODARTE"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 3,
+    "nativeSourceQuote": "For Director, Zone 5\nPara Director, Zona 5\nVote for One /\nVote por Uno\nLIAM ANDRES O'NEILL HERNANDEZ\nNEAL P. DIXON\nPhysician/Surgeon\nMédico/Cirujano\nJIM RODARTE\nProcess Development Scientist\nCientífico de Desarrollo de Procesos",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000016.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:28.015059+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Director, Zone 5\nPara Director, Zona 5\nVote for One /\nVote por Uno\nLIAM ANDRES O'NEILL HERNANDEZ\nNEAL P. DIXON\nPhysician/Surgeon\nMédico/Cirujano\nJIM RODARTE\nProcess Development Scientist\nCientífico de Desarrollo de Procesos"
+    },
+    "physicalSampleOccurrences": 18,
+    "uniqueBallotTypes": [
+      16,
+      24,
+      25,
+      28,
+      37,
+      46,
+      47,
+      49,
+      56
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      218.82008361816406,
+      400.5,
+      402.3200378417969
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-pleasant-valley-recreation-and-park-district-for-director-division-4",
+    "body": "PLEASANT VALLEY RECREATION AND PARK DISTRICT",
+    "printedTitle": "For Director, Division 4",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:pleasant_valley_recreation_and_park_district/division:4",
+    "voteFor": 1,
+    "candidateNames": [
+      "RIANNA SMITH",
+      "ELAINE LOUISE MAGNER"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Director, Division 4\nPara Director, División 4\nVote for One /\nVote por Uno\nRIANNA SMITH\nELAINE LOUISE MAGNER\nIncumbent\nTitular\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000016.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:28.015059+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Director, Division 4\nPara Director, División 4\nVote for One /\nVote por Uno\nRIANNA SMITH\nELAINE LOUISE MAGNER\nIncumbent\nTitular\n16"
+    },
+    "physicalSampleOccurrences": 16,
+    "uniqueBallotTypes": [
+      16,
+      24,
+      29,
+      45,
+      46,
+      47,
+      52,
+      56
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      452.8200378417969,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-1",
+    "body": "PLEASANT VALLEY SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 1",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:pleasant_valley_elementary_school_district/trustee_area:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "RON SPEAKMAN",
+      "RUBEN M. RUIZ",
+      "LAURA VALDEZ"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 3,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 1\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 1\nVote for One /\nVote por Uno\nRON SPEAKMAN\nIncumbent\nTitular\nRUBEN M. RUIZ\nAttorney\nAbogado\nLAURA VALDEZ\nRetired Education Specialist\nEspecialista en Educación Jubilada",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000022.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T08:01:53.928734+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 1\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 1\nVote for One /\nVote por Uno\nRON SPEAKMAN\nIncumbent\nTitular\nRUBEN M. RUIZ\nAttorney\nAbogado\nLAURA VALDEZ\nRetired Education Specialist\nEspecialista en Educación Jubilada"
+    },
+    "physicalSampleOccurrences": 8,
+    "uniqueBallotTypes": [
+      22,
+      23,
+      36,
+      41
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-1",
+    "body": "CITY OF CAMARILLO",
+    "printedTitle": "For Member of the City Council - District 1",
+    "ocdId": "ocd-division/country:us/state:ca/place:camarillo/council_district:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "VISHNU K PATEL",
+      "DAVID TENNESSEN"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 1\nPara Miembro del Concejo Municipal -\nDistrito 1\nVote for One /\nVote por Uno\nVISHNU K PATEL\nRegistered Pharmacist\nFarmacéutico Registrado\nDAVID TENNESSEN\nIncumbent\nTitular\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000022.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T08:01:53.928734+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 1\nPara Miembro del Concejo Municipal -\nDistrito 1\nVote for One /\nVote por Uno\nVISHNU K PATEL\nRegistered Pharmacist\nFarmacéutico Registrado\nDAVID TENNESSEN\nIncumbent\nTitular\n16"
+    },
+    "physicalSampleOccurrences": 16,
+    "uniqueBallotTypes": [
+      22,
+      32,
+      40,
+      41,
+      43,
+      53,
+      58,
+      60
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      200.3200225830078,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-5",
+    "body": "CITY OF CAMARILLO",
+    "printedTitle": "For Member of the City Council - District 5",
+    "ocdId": "ocd-division/country:us/state:ca/place:camarillo/council_district:5",
+    "voteFor": 1,
+    "candidateNames": [
+      "DAVID P. SCHLANGEN",
+      "MARTHA \"MARTITA\" MARTINEZ-BRAVO"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 5\nPara Miembro del Concejo Municipal -\nDistrito 5\nVote for One /\nVote por Uno\nDAVID P. SCHLANGEN\nDirector, Pleasant Valley Recreation and Park District\nDirector del Distrito de Recreación y Parques de\nPleasant Valley\nMARTHA \"MARTITA\" MARTINEZ-BRAVO\nIncumbent\nTitular",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000024.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T08:01:53.037490+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 5\nPara Miembro del Concejo Municipal -\nDistrito 5\nVote for One /\nVote por Uno\nDAVID P. SCHLANGEN\nDirector, Pleasant Valley Recreation and Park District\nDirector del Distrito de Recreación y Parques de\nPleasant Valley\nMARTHA \"MARTITA\" MARTINEZ-BRAVO\nIncumbent\nTitular"
+    },
+    "physicalSampleOccurrences": 22,
+    "uniqueBallotTypes": [
+      24,
+      25,
+      27,
+      29,
+      42,
+      44,
+      45,
+      47,
+      52,
+      59,
+      61
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      200.32008361816406,
+      400.5,
+      368.0700378417969
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-1-short-term",
+    "body": "CAMARILLO HEALTH CARE DISTRICT",
+    "printedTitle": "For Director, Zone 1 (Short Term)",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:camarillo_health_care_district/zone:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "CRIS LOUGHRIDGE",
+      "JORDAN ROBERTS",
+      "SCOTT FRIEDMAN"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 3,
+    "nativeSourceQuote": "For Director, Zone 1 (Short Term)\nPara Director, Zona 1 (Corto Plazo)\nVote for One /\nVote por Uno\nCRIS LOUGHRIDGE\nAppointed Incumbent\nTitular Designada\nJORDAN ROBERTS\nFire Dispatch Manager\nGerente de Despacho de Bomberos\nSCOTT FRIEDMAN",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000026.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:22.794630+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Director, Zone 1 (Short Term)\nPara Director, Zona 1 (Corto Plazo)\nVote for One /\nVote por Uno\nCRIS LOUGHRIDGE\nAppointed Incumbent\nTitular Designada\nJORDAN ROBERTS\nFire Dispatch Manager\nGerente de Despacho de Bomberos\nSCOTT FRIEDMAN"
+    },
+    "physicalSampleOccurrences": 28,
+    "uniqueBallotTypes": [
+      26,
+      30,
+      33,
+      34,
+      35,
+      38,
+      42,
+      52,
+      55,
+      71,
+      72,
+      82,
+      86,
+      87
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      596.8199462890625,
+      230.5,
+      778.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-3",
+    "body": "PLEASANT VALLEY SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 3",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:pleasant_valley_elementary_school_district/trustee_area:3",
+    "voteFor": 1,
+    "candidateNames": [
+      "REBECCA \"BECKIE\" CRAMER",
+      "ROBERT EDWARD SCHWEERS",
+      "DAVE FOX"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 3,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 3\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 3\nVote for One /\nVote por Uno\nREBECCA \"BECKIE\" CRAMER\nGoverning Board Member, Pleasant Valley School District\nMiembro de la Junta de Gobierno del Distrito\nEscolar de Pleasant Valley\nROBERT EDWARD SCHWEERS\nRetired IT Director\nDirector de TI jubilado\nDAVE FOX\nRetail Manager\nGerente de Tienda Minorista",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000031.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:30.003831+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 3\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 3\nVote for One /\nVote por Uno\nREBECCA \"BECKIE\" CRAMER\nGoverning Board Member, Pleasant Valley School District\nMiembro de la Junta de Gobierno del Distrito\nEscolar de Pleasant Valley\nROBERT EDWARD SCHWEERS\nRetired IT Director\nDirector de TI jubilado\nDAVE FOX\nRetail Manager\nGerente de Tienda Minorista"
+    },
+    "physicalSampleOccurrences": 20,
+    "uniqueBallotTypes": [
+      31,
+      33,
+      35,
+      42,
+      47,
+      49,
+      52,
+      55,
+      56,
+      59
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-camarillo-for-member-of-the-city-council-district-2",
+    "body": "CITY OF CAMARILLO",
+    "printedTitle": "For Member of the City Council - District 2",
+    "ocdId": "ocd-division/country:us/state:ca/place:camarillo/council_district:2",
+    "voteFor": 1,
+    "candidateNames": [
+      "SUSAN SANTANGELO",
+      "DAN GOBER",
+      "SYLVIA C. GARCIA"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 3,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 2\nPara Miembro del Concejo Municipal -\nDistrito 2\nVote for One /\nVote por Uno\nSUSAN SANTANGELO\nCity of Camarillo Councilmember/Nurse\nConcejala de la Ciudad de Camarillo/Enfermera\nDAN GOBER\nLife Science Executive\nEjecutivo de Ciencias Biológicas\nSYLVIA C. GARCIA\nNonprofit Director\nDirectora de una Organización sin Fines de Lucro",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000031.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:30.003831+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 2\nPara Miembro del Concejo Municipal -\nDistrito 2\nVote for One /\nVote por Uno\nSUSAN SANTANGELO\nCity of Camarillo Councilmember/Nurse\nConcejala de la Ciudad de Camarillo/Enfermera\nDAN GOBER\nLife Science Executive\nEjecutivo de Ciencias Biológicas\nSYLVIA C. GARCIA\nNonprofit Director\nDirectora de una Organización sin Fines de Lucro"
+    },
+    "physicalSampleOccurrences": 14,
+    "uniqueBallotTypes": [
+      31,
+      39,
+      48,
+      51,
+      54,
+      55,
+      57
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      200.3200225830078,
+      400.5,
+      404.0700378417969
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-camarillo-health-care-district-for-director-zone-4",
+    "body": "CAMARILLO HEALTH CARE DISTRICT",
+    "printedTitle": "For Director, Zone 4",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:camarillo_health_care_district/zone:4",
+    "voteFor": 1,
+    "candidateNames": [
+      "MATTHEW FLOOD",
+      "PAULA FEINBERG"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Director, Zone 4\nPara Director, Zona 4\nVote for One /\nVote por Uno\nMATTHEW FLOOD\nRetired Navy Chief\nJefe de la Marina Retirado\nPAULA FEINBERG\nIncumbent\nTitular\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000031.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:30.003831+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Director, Zone 4\nPara Director, Zona 4\nVote for One /\nVote por Uno\nMATTHEW FLOOD\nRetired Navy Chief\nJefe de la Marina Retirado\nPAULA FEINBERG\nIncumbent\nTitular\n16"
+    },
+    "physicalSampleOccurrences": 10,
+    "uniqueBallotTypes": [
+      31,
+      39,
+      40,
+      48,
+      57
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      470.8200378417969,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-pleasant-valley-school-district-for-governing-board-member-trustee-area-2",
+    "body": "PLEASANT VALLEY SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 2",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:pleasant_valley_elementary_school_district/trustee_area:2",
+    "voteFor": 1,
+    "candidateNames": [
+      "JAIRO ARELLANO",
+      "LAURIE BOWEN",
+      "BOB RUST"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 3,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 2\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 2\nVote for One /\nVote por Uno\nJAIRO ARELLANO\nEdison Elementary Superintendent\nSuperintendente de la Escuela Primaria Edison\nLAURIE BOWEN\nRetired Teacher\nEducadora Jubilada\nBOB RUST\nIncumbent\nTitular",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000039.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:50:44.747847+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 2\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 2\nVote for One /\nVote por Uno\nJAIRO ARELLANO\nEdison Elementary Superintendent\nSuperintendente de la Escuela Primaria Edison\nLAURIE BOWEN\nRetired Teacher\nEducadora Jubilada\nBOB RUST\nIncumbent\nTitular"
+    },
+    "physicalSampleOccurrences": 8,
+    "uniqueBallotTypes": [
+      39,
+      40,
+      50,
+      58
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-3",
+    "body": "RIO SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 3",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:rio_elementary_school_district/trustee_area:3",
+    "voteFor": 1,
+    "candidateNames": [
+      "CHRISTINA D. SEGOVIA",
+      "ALFREDO GARCIA JR.",
+      "DANIEL HERNANDEZ GARCIA",
+      "ALESIA MARTIN"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 4,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 3\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 3\nVote for One /\nVote por Uno\nCHRISTINA D. SEGOVIA\nEducation Specialist\nEspecialista en Educación\nALFREDO GARCIA JR.\nBusiness Owner\nPropietario de un Negocio\nDANIEL HERNANDEZ GARCIA\nLongshoreman/Business Owner\nEstibador/Propietario de Negocio\nALESIA MARTIN\nIncumbent\nTitular",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000066.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:35.525714+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 3\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 3\nVote for One /\nVote por Uno\nCHRISTINA D. SEGOVIA\nEducation Specialist\nEspecialista en Educación\nALFREDO GARCIA JR.\nBusiness Owner\nPropietario de un Negocio\nDANIEL HERNANDEZ GARCIA\nLongshoreman/Business Owner\nEstibador/Propietario de Negocio\nALESIA MARTIN\nIncumbent\nTitular"
+    },
+    "physicalSampleOccurrences": 12,
+    "uniqueBallotTypes": [
+      66,
+      129,
+      130,
+      131,
+      133,
+      186
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      796.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-1",
+    "body": "RIO SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 1",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:rio_elementary_school_district/trustee_area:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "KHALED OMAR",
+      "JOE ESQUIVEL",
+      "FELIX EISENHAUER"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 3,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 1\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 1\nVote for One /\nVote por Uno\nKHALED OMAR\nFather/Project Manager\nPadre/Gerente de Proyectos\nJOE ESQUIVEL\nCollege Facilities Supervisor\nSupervisor de Instalaciones Universitarias\nFELIX EISENHAUER\nGoverning Board Member, Rio School District, Area 1\nMiembro de la Junta de Gobierno del Distrito\nEscolar de Río, Êrea 1",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000067.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:11.518847+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 1\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 1\nVote for One /\nVote por Uno\nKHALED OMAR\nFather/Project Manager\nPadre/Gerente de Proyectos\nJOE ESQUIVEL\nCollege Facilities Supervisor\nSupervisor de Instalaciones Universitarias\nFELIX EISENHAUER\nGoverning Board Member, Rio School District, Area 1\nMiembro de la Junta de Gobierno del Distrito\nEscolar de Río, Êrea 1"
+    },
+    "physicalSampleOccurrences": 8,
+    "uniqueBallotTypes": [
+      67,
+      69,
+      117,
+      134
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      760.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-oxnard-harbor-district-for-harbor-commissioner",
+    "body": "OXNARD HARBOR DISTRICT",
+    "printedTitle": "For Harbor Commissioner",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:oxnard_harbor_district",
+    "voteFor": 3,
+    "candidateNames": [
+      "JASON THOMAS-MA HODGE",
+      "JESS HERRERA",
+      "HEATHER SCHMIDT",
+      "MARY ANNE ROONEY"
+    ],
+    "blankWriteInOvals": 3,
+    "ordinaryCandidateCount": 4,
+    "nativeSourceQuote": "For Harbor Commissioner\nPara Comisionado del Puerto\nVote for no more than Three\n/ Vote por no más de Tres\nJASON THOMAS-MA HODGE\nOxnard Harbor District Commissioner\nComisionado del Distrito Portuario de Oxnard\nJESS HERRERA\nHarbor Commissioner\nComisionado del Puerto\nHEATHER SCHMIDT\nPublic Policy Advisor\nAsesora de Políticas Públicas\nMARY ANNE ROONEY\nOxnard Harbor District Commissioner\nComisionada del Distrito Portuario de Oxnard",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000068.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:09.819366+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Harbor Commissioner\nPara Comisionado del Puerto\nVote for no more than Three\n/ Vote por no más de Tres\nJASON THOMAS-MA HODGE\nOxnard Harbor District Commissioner\nComisionado del Distrito Portuario de Oxnard\nJESS HERRERA\nHarbor Commissioner\nComisionado del Puerto\nHEATHER SCHMIDT\nPublic Policy Advisor\nAsesora de Políticas Públicas\nMARY ANNE ROONEY\nOxnard Harbor District Commissioner\nComisionada del Distrito Portuario de Oxnard"
+    },
+    "physicalSampleOccurrences": 58,
+    "uniqueBallotTypes": [
+      68,
+      69,
+      89,
+      116,
+      117,
+      118,
+      119,
+      120,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      138,
+      139,
+      140,
+      141,
+      146,
+      147
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      596.8199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-fillmore-unified-school-district-for-governing-board-member-trustee-area-2",
+    "body": "FILLMORE UNIFIED SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 2",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:fillmore_unified_school_district/trustee_area:2",
+    "voteFor": 1,
+    "candidateNames": [
+      "JENNIE ANDRADE",
+      "JIM MILLS"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 2\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 2\nVote for One /\nVote por Uno\nJENNIE ANDRADE\nMother/Bank Manager\nMadre/Gerente de Banco\nJIM MILLS\nDesktop Support Supervisor\nSupervisor de Soporte Técnico de Escritorio",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000070.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:11.521289+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 2\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 2\nVote for One /\nVote por Uno\nJENNIE ANDRADE\nMother/Bank Manager\nMadre/Gerente de Banco\nJIM MILLS\nDesktop Support Supervisor\nSupervisor de Soporte Técnico de Escritorio"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      70
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-ventura-county-board-of-education-for-governing-board-member-trustee-area-4",
+    "body": "VENTURA COUNTY BOARD OF EDUCATION",
+    "printedTitle": "For Governing Board Member - Trustee Area 4",
+    "ocdId": "ocd-division/country:us/state:ca/county:ventura/school_board_district:4",
+    "voteFor": 1,
+    "candidateNames": [
+      "KRISTINA PINE",
+      "SCOTT DETTORRE"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 4\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 4\nVote for One /\nVote por Uno\nKRISTINA PINE\nTeacher/Mother\nMaestra/Madre\nSCOTT DETTORRE\nRetired Firefighter\nBombero Jubilado",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000073.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:16.247720+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 4\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 4\nVote for One /\nVote por Uno\nKRISTINA PINE\nTeacher/Mother\nMaestra/Madre\nSCOTT DETTORRE\nRetired Firefighter\nBombero Jubilado"
+    },
+    "physicalSampleOccurrences": 64,
+    "uniqueBallotTypes": [
+      73,
+      80,
+      81,
+      83,
+      86,
+      87,
+      88,
+      90,
+      91,
+      92,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      107,
+      145,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      170,
+      171,
+      172
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      723.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-e",
+    "body": "SIMI VALLEY UNIFIED SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area E",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:simi_valley_unified_school_district/trustee_area:e",
+    "voteFor": 1,
+    "candidateNames": [
+      "JODI C. LEWIS",
+      "RYAN ROSUCK"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area E\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico E\nVote for One /\nVote por Uno\nJODI C. LEWIS\nSenior Operations Manager\nGerente Sénior de Operaciones\nRYAN ROSUCK\nEducator/Mother\nEducadora/Madre",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000090.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:28.262567+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area E\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico E\nVote for One /\nVote por Uno\nJODI C. LEWIS\nSenior Operations Manager\nGerente Sénior de Operaciones\nRYAN ROSUCK\nEducator/Mother\nEducadora/Madre"
+    },
+    "physicalSampleOccurrences": 12,
+    "uniqueBallotTypes": [
+      90,
+      91,
+      163,
+      164,
+      166,
+      171
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      758.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-los-angeles-10652",
+    "body": "LAS VIRGENES UNIFIED SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:las_virgenes_unified_school_district",
+    "voteFor": 3,
+    "candidateNames": [
+      "ANGELA CUTBILL",
+      "SANDRA POPE",
+      "DALLAS LAWRENCE",
+      "CORAL EDWARDSEN"
+    ],
+    "blankWriteInOvals": 3,
+    "ordinaryCandidateCount": 4,
+    "nativeSourceQuote": "For Governing Board Member\nPara Miembro de la Junta Gobernante\nVote for no more than Three\n/ Vote por no más de Tres\nANGELA CUTBILL\nGoverning Board Member, Las Virgenes Unified\nSchool District /\nMiembro de la Junta de Gobierno\ndel Distrito Escolar Unificado de Las Virgenes\nSANDRA POPE\nRetired Teacher\nMaestra Jubilada\nDALLAS LAWRENCE\nGoverning Board Member, Las Virgenes Unified\nSchool District /\nMiembro de la Junta de Gobierno\ndel Distrito Escolar Unificado de Las Virgenes\nCORAL EDWARDSEN\nEducator/Parent\nEducadora/Padre",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000092.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:31.368442+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member\nPara Miembro de la Junta Gobernante\nVote for no more than Three\n/ Vote por no más de Tres\nANGELA CUTBILL\nGoverning Board Member, Las Virgenes Unified\nSchool District /\nMiembro de la Junta de Gobierno\ndel Distrito Escolar Unificado de Las Virgenes\nSANDRA POPE\nRetired Teacher\nMaestra Jubilada\nDALLAS LAWRENCE\nGoverning Board Member, Las Virgenes Unified\nSchool District /\nMiembro de la Junta de Gobierno\ndel Distrito Escolar Unificado de Las Virgenes\nCORAL EDWARDSEN\nEducator/Parent\nEducadora/Padre"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      92
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      182.8200225830078,
+      400.5,
+      476.0700378417969
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-bell-canyon-community-services-district-for-director",
+    "body": "BELL CANYON COMMUNITY SERVICES DISTRICT",
+    "printedTitle": "For Director",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:bell_canyon_community_services_district",
+    "voteFor": 2,
+    "candidateNames": [
+      "MATHEW PERELMAN",
+      "VIDA ANGIULI",
+      "OLGA DAMASCUS",
+      "CATHERINE BALIN"
+    ],
+    "blankWriteInOvals": 2,
+    "ordinaryCandidateCount": 4,
+    "nativeSourceQuote": "For Director\nPara Director\nVote for no more than Two\n/ Vote por no más de Dos\nMATHEW PERELMAN\nVIDA ANGIULI\nOLGA DAMASCUS\nCATHERINE BALIN\nHuman Resources Consultant\nConsulto de Recursos Humanos\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000092.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:31.368442+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Director\nPara Director\nVote for no more than Two\n/ Vote por no más de Dos\nMATHEW PERELMAN\nVIDA ANGIULI\nOLGA DAMASCUS\nCATHERINE BALIN\nHuman Resources Consultant\nConsulto de Recursos Humanos\n16"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      92
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      560.8199462890625,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+    "body": "KERN COUNTY BOARD OF EDUCATION",
+    "printedTitle": "For Governing Board Member - Trustee Area 7",
+    "ocdId": "ocd-division/country:us/state:ca/county:kern/school_board_district:7",
+    "voteFor": 1,
+    "candidateNames": [
+      "LORI CISNEROS",
+      "JEANINE ADAMS",
+      "ERNIE BELL JR."
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 3,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 7\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 7\nVote for One /\nVote por Uno\nLORI CISNEROS\nIncumbent\nTitular\nJEANINE ADAMS\nRealty Consultant/Mom\nAsesora Inmobiliaria/Madre\nERNIE BELL JR.\nRetired Superintendent Consultant\nSuperintendente Jubilado Consultor",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000094.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:31.367461+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 7\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 7\nVote for One /\nVote por Uno\nLORI CISNEROS\nIncumbent\nTitular\nJEANINE ADAMS\nRealty Consultant/Mom\nAsesora Inmobiliaria/Madre\nERNIE BELL JR.\nRetired Superintendent Consultant\nSuperintendente Jubilado Consultor"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      94
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      760.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-los-angeles-10562",
+    "body": "ANTELOPE VALLEY-EAST KERN WATER AGENCY",
+    "printedTitle": "For Director, Division 1",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:antelope_valley_east_kern_water_agency/division:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "LYNN ROBERT BARNES",
+      "DREW MERCY"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Director, Division 1\nPara Director, División 1\nVote for One /\nVote por Uno\nLYNN ROBERT BARNES\nDREW MERCY\nDirector, Antelope Valley-East Kern Water Agency,\nDivision 1 /\nDirector de la Agencia de Agua de\nAntelope Valley-East Kern, División 1",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000095.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:33.139105+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Director, Division 1\nPara Director, División 1\nVote for One /\nVote por Uno\nLYNN ROBERT BARNES\nDREW MERCY\nDirector, Antelope Valley-East Kern Water Agency,\nDivision 1 /\nDirector de la Agencia de Agua de\nAntelope Valley-East Kern, División 1"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      95
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      596.8199462890625,
+      230.5,
+      742.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-4",
+    "body": "VENTURA UNIFIED SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 4",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:ventura_unified_school_district/trustee_area:4",
+    "voteFor": 1,
+    "candidateNames": [
+      "JERRY DANNENBERG",
+      "MATTHEW A METCALF",
+      "AMBER THOMPSON"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 3,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 4\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 4\nVote for One /\nVote por Uno\nJERRY DANNENBERG\nIncumbent\nTitular\nMATTHEW A METCALF\nSocial Worker/Educator\nTrabajador Social/Educador\nAMBER THOMPSON\nBusiness Owner/Mother\nPropietaria de un Negocio/Madre",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000096.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:43.571725+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 4\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 4\nVote for One /\nVote por Uno\nJERRY DANNENBERG\nIncumbent\nTitular\nMATTHEW A METCALF\nSocial Worker/Educator\nTrabajador Social/Educador\nAMBER THOMPSON\nBusiness Owner/Mother\nPropietaria de un Negocio/Madre"
+    },
+    "physicalSampleOccurrences": 8,
+    "uniqueBallotTypes": [
+      96,
+      97,
+      181,
+      182
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      760.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-ventura-unified-school-district-for-governing-board-member-trustee-area-5",
+    "body": "VENTURA UNIFIED SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 5",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:ventura_unified_school_district/trustee_area:5",
+    "voteFor": 1,
+    "candidateNames": [
+      "CALVIN PETERSON",
+      "ANDREW LAFAVE"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 5\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 5\nVote for One /\nVote por Uno\nCALVIN PETERSON\nIncumbent\nTitular\nANDREW LAFAVE\nEducation Research Analyst\nAnalista de Investigación Educativa",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000099.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:36.182634+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 5\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 5\nVote for One /\nVote por Uno\nCALVIN PETERSON\nIncumbent\nTitular\nANDREW LAFAVE\nEducation Research Analyst\nAnalista de Investigación Educativa"
+    },
+    "physicalSampleOccurrences": 10,
+    "uniqueBallotTypes": [
+      99,
+      155,
+      180,
+      183,
+      184
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      724.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-moorpark-for-mayor",
+    "body": "CITY OF MOORPARK",
+    "printedTitle": "For Mayor",
+    "ocdId": "ocd-division/country:us/state:ca/place:moorpark",
+    "voteFor": 1,
+    "candidateNames": [
+      "CHRIS R. ENEGREN"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 1,
+    "nativeSourceQuote": "For Mayor\nPara Alcalde\nVote for One\n/ Vote por Uno\nCHRIS R. ENEGREN\nMayor/Brewery Owner\nAlcalde/Propietario de una Cervecería\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000100.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:36.177304+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Mayor\nPara Alcalde\nVote for One\n/ Vote por Uno\nCHRIS R. ENEGREN\nMayor/Brewery Owner\nAlcalde/Propietario de una Cervecería\n16"
+    },
+    "physicalSampleOccurrences": 12,
+    "uniqueBallotTypes": [
+      100,
+      101,
+      102,
+      103,
+      104,
+      105
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      200.82008361816406,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-moorpark-for-member-of-the-city-council-district-1",
+    "body": "CITY OF MOORPARK",
+    "printedTitle": "For Member of the City Council - District 1",
+    "ocdId": "ocd-division/country:us/state:ca/place:moorpark/council_district:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "DAVID PALOS",
+      "RENEE DELGADO"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 1\nPara Miembro del Concejo Municipal -\nDistrito 1\nVote for One /\nVote por Uno\nDAVID PALOS\nMoorpark Business Owner\nPropietario de un Negocio en Moorpark\nRENEE DELGADO\nCouncilmember/Business Owner\nConcejala/Propietaria de un Negocio\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000101.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:43.561321+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 1\nPara Miembro del Concejo Municipal -\nDistrito 1\nVote for One /\nVote por Uno\nDAVID PALOS\nMoorpark Business Owner\nPropietario de un Negocio en Moorpark\nRENEE DELGADO\nCouncilmember/Business Owner\nConcejala/Propietaria de un Negocio\n16"
+    },
+    "physicalSampleOccurrences": 4,
+    "uniqueBallotTypes": [
+      101,
+      104
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      182.3200225830078,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-moorpark-for-member-of-the-city-council-district-3",
+    "body": "CITY OF MOORPARK",
+    "printedTitle": "For Member of the City Council - District 3",
+    "ocdId": "ocd-division/country:us/state:ca/place:moorpark/council_district:3",
+    "voteFor": 1,
+    "candidateNames": [
+      "TOM MEANS"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 1,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 3\nPara Miembro del Concejo Municipal -\nDistrito 3\nVote for One /\nVote por Uno\nTOM MEANS\nIncumbent\nTitular\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000103.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:40.122017+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 3\nPara Miembro del Concejo Municipal -\nDistrito 3\nVote for One /\nVote por Uno\nTOM MEANS\nIncumbent\nTitular\n16"
+    },
+    "physicalSampleOccurrences": 4,
+    "uniqueBallotTypes": [
+      103,
+      105
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      182.3200225830078,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-oxnard-school-district-for-governing-board-member-trustee-area-3",
+    "body": "OXNARD SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 3",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:oxnard_elementary_school_district/trustee_area:3",
+    "voteFor": 1,
+    "candidateNames": [
+      "RAFAEL B. CAHUE",
+      "VERONICA ROBLES SOLIS"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 3\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 3\nVote for One /\nVote por Uno\nRAFAEL B. CAHUE\nStudent Wellness Specialist\nEspecialista en Bienestar Estudiantil\nVERONICA ROBLES SOLIS\nIncumbent\nTitular",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000109.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:44.003304+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 3\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 3\nVote for One /\nVote por Uno\nRAFAEL B. CAHUE\nStudent Wellness Specialist\nEspecialista en Bienestar Estudiantil\nVERONICA ROBLES SOLIS\nIncumbent\nTitular"
+    },
+    "physicalSampleOccurrences": 8,
+    "uniqueBallotTypes": [
+      109,
+      135,
+      138,
+      141
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      724.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-ojai-for-mayor",
+    "body": "CITY OF OJAI",
+    "printedTitle": "For Mayor",
+    "ocdId": "ocd-division/country:us/state:ca/place:ojai",
+    "voteFor": 1,
+    "candidateNames": [
+      "ANDY GILMAN"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 1,
+    "nativeSourceQuote": "For Mayor\nPara Alcalde\nVote for One\n/ Vote por Uno\nANDY GILMAN\nIncumbent\nTitular",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000112.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:46.804068+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Mayor\nPara Alcalde\nVote for One\n/ Vote por Uno\nANDY GILMAN\nIncumbent\nTitular"
+    },
+    "physicalSampleOccurrences": 8,
+    "uniqueBallotTypes": [
+      112,
+      113,
+      114,
+      115
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      578.8199462890625,
+      230.5,
+      688.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-ojai-for-member-of-the-city-council-district-3",
+    "body": "CITY OF OJAI",
+    "printedTitle": "For Member of the City Council - District 3",
+    "ocdId": "ocd-division/country:us/state:ca/place:ojai/council_district:3",
+    "voteFor": 1,
+    "candidateNames": [
+      "ANDREW K. WHITMAN"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 1,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 3\nPara Miembro del Concejo Municipal -\nDistrito 3\nVote for One /\nVote por Uno\nANDREW K. WHITMAN\nIncumbent\nTitular",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000113.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:47.698950+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 3\nPara Miembro del Concejo Municipal -\nDistrito 3\nVote for One /\nVote por Uno\nANDREW K. WHITMAN\nIncumbent\nTitular"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      113
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      686.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-ojai-for-member-of-the-city-council-district-2",
+    "body": "CITY OF OJAI",
+    "printedTitle": "For Member of the City Council - District 2",
+    "ocdId": "ocd-division/country:us/state:ca/place:ojai/council_district:2",
+    "voteFor": 1,
+    "candidateNames": [
+      "RACHEL LANG",
+      "LARRY STEINGOLD"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 2\nPara Miembro del Concejo Municipal -\nDistrito 2\nVote for One /\nVote por Uno\nRACHEL LANG\nIncumbent\nTitular\nLARRY STEINGOLD\nRetired Realty Salesperson\nVendedor de Bienes Raíces Jubilado",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000114.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:48.684885+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 2\nPara Miembro del Concejo Municipal -\nDistrito 2\nVote for One /\nVote por Uno\nRACHEL LANG\nIncumbent\nTitular\nLARRY STEINGOLD\nRetired Realty Salesperson\nVendedor de Bienes Raíces Jubilado"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      114
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      686.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-ojai-for-member-of-the-city-council-district-1",
+    "body": "CITY OF OJAI",
+    "printedTitle": "For Member of the City Council - District 1",
+    "ocdId": "ocd-division/country:us/state:ca/place:ojai/council_district:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "LESLIE C. RULE",
+      "JORDAN GARST"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 1\nPara Miembro del Concejo Municipal -\nDistrito 1\nVote for One /\nVote por Uno\nLESLIE C. RULE\nIncumbent\nTitular\nJORDAN GARST\nResearch Finance Administrator\nAdministrador de Finanzas de Investigación",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000115.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:49.682238+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 1\nPara Miembro del Concejo Municipal -\nDistrito 1\nVote for One /\nVote por Uno\nLESLIE C. RULE\nIncumbent\nTitular\nJORDAN GARST\nResearch Finance Administrator\nAdministrador de Finanzas de Investigación"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      115
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      686.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-1",
+    "body": "CITY OF OXNARD",
+    "printedTitle": "For Member of the City Council - District 1",
+    "ocdId": "ocd-division/country:us/state:ca/place:oxnard/council_district:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "EDUARDO HUERTA",
+      "BERT E. PERELLO",
+      "JOHN BARRICK"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 3,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 1\nPara Miembro del Concejo Municipal -\nDistrito 1\nVote for One /\nVote por Uno\nEDUARDO HUERTA\nHome Health Caregiver\nCuidador de Salud a Domicilio\nBERT E. PERELLO\nOxnard City Councilmember District 1\nConcejal de la Ciudad de Oxnard Distrito 1\nJOHN BARRICK\nDeputy District Attorney\nFiscal Adjunto de Distrito",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000116.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:47.478223+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 1\nPara Miembro del Concejo Municipal -\nDistrito 1\nVote for One /\nVote por Uno\nEDUARDO HUERTA\nHome Health Caregiver\nCuidador de Salud a Domicilio\nBERT E. PERELLO\nOxnard City Councilmember District 1\nConcejal de la Ciudad de Oxnard Distrito 1\nJOHN BARRICK\nDeputy District Attorney\nFiscal Adjunto de Distrito"
+    },
+    "physicalSampleOccurrences": 12,
+    "uniqueBallotTypes": [
+      116,
+      118,
+      121,
+      129,
+      140,
+      142
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      578.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-2",
+    "body": "CITY OF OXNARD",
+    "printedTitle": "For Member of the City Council - District 2",
+    "ocdId": "ocd-division/country:us/state:ca/place:oxnard/council_district:2",
+    "voteFor": 1,
+    "candidateNames": [
+      "LIZANNE NAÑEZ",
+      "GABRIEL \"GABE\" TERAN"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 2\nPara Miembro del Concejo Municipal -\nDistrito 2\nVote for One /\nVote por Uno\nLIZANNE NAÑEZ\nOxnard Businesswoman\nEmpresaria de Oxnard\nGABRIEL \"GABE\" TERAN\nCouncilmember/Educational Trainer\nConcejal/Capacitador Educativo",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000117.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:48.691179+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 2\nPara Miembro del Concejo Municipal -\nDistrito 2\nVote for One /\nVote por Uno\nLIZANNE NAÑEZ\nOxnard Businesswoman\nEmpresaria de Oxnard\nGABRIEL \"GABE\" TERAN\nCouncilmember/Educational Trainer\nConcejal/Capacitador Educativo"
+    },
+    "physicalSampleOccurrences": 12,
+    "uniqueBallotTypes": [
+      117,
+      119,
+      120,
+      131,
+      132,
+      136
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      200.3200225830078,
+      400.5,
+      368.0700378417969
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-rio-school-district-for-governing-board-member-trustee-area-4",
+    "body": "RIO SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 4",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:rio_elementary_school_district/trustee_area:4",
+    "voteFor": 1,
+    "candidateNames": [
+      "INEZ SPATES",
+      "ELEANOR TORRES"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 4\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 4\nVote for One /\nVote por Uno\nINEZ SPATES\nTeacher/Mother/Coach\nMaestra/Madre/Entrenadora\nELEANOR TORRES\nIncumbent\nTitular",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000120.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:55.332648+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 4\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 4\nVote for One /\nVote por Uno\nINEZ SPATES\nTeacher/Mother/Coach\nMaestra/Madre/Entrenadora\nELEANOR TORRES\nIncumbent\nTitular"
+    },
+    "physicalSampleOccurrences": 6,
+    "uniqueBallotTypes": [
+      120,
+      123,
+      127
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      560.3199462890625,
+      230.5,
+      724.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-oxnard-for-member-of-the-city-council-district-5",
+    "body": "CITY OF OXNARD",
+    "printedTitle": "For Member of the City Council - District 5",
+    "ocdId": "ocd-division/country:us/state:ca/place:oxnard/council_district:5",
+    "voteFor": 1,
+    "candidateNames": [
+      "NOEMI CORPUZ",
+      "GABRIELA BASUA"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 5\nPara Miembro del Concejo Municipal -\nDistrito 5\nVote for One /\nVote por Uno\nNOEMI CORPUZ\nRegistered Nurse\nEnfermera Registrada\nGABRIELA BASUA\nCity of Oxnard Councilwoman\nConcejala de la Ciudad de Oxnard",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000122.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:51:59.097860+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 5\nPara Miembro del Concejo Municipal -\nDistrito 5\nVote for One /\nVote por Uno\nNOEMI CORPUZ\nRegistered Nurse\nEnfermera Registrada\nGABRIELA BASUA\nCity of Oxnard Councilwoman\nConcejala de la Ciudad de Oxnard"
+    },
+    "physicalSampleOccurrences": 10,
+    "uniqueBallotTypes": [
+      122,
+      126,
+      135,
+      137,
+      141
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      200.3200225830078,
+      400.5,
+      368.0700378417969
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-oxnard-school-district-for-governing-board-member-trustee-area-2",
+    "body": "OXNARD SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area 2",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:oxnard_elementary_school_district/trustee_area:2",
+    "voteFor": 1,
+    "candidateNames": [
+      "JASMINE DURON",
+      "BRIAN MELANEPHY"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area 2\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 2\nVote for One /\nVote por Uno\nJASMINE DURON\nPeer Support Specialist\nEspecialista en Apoyo entre Pares\nBRIAN MELANEPHY\nIncumbent\nTitular",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000139.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:10.911550+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area 2\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico 2\nVote for One /\nVote por Uno\nJASMINE DURON\nPeer Support Specialist\nEspecialista en Apoyo entre Pares\nBRIAN MELANEPHY\nIncumbent\nTitular"
+    },
+    "physicalSampleOccurrences": 4,
+    "uniqueBallotTypes": [
+      139,
+      140
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      776.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-los-angeles-10567",
+    "body": "SANTA CLARITA VALLEY WATER AGENCY",
+    "printedTitle": "For Director, Division 3",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:santa_clarita_valley_water_agency/division:3",
+    "voteFor": 2,
+    "candidateNames": [
+      "LYNNE PLAMBECK",
+      "KENNETH \"KEN\" PETERSEN",
+      "MARIA A. GUTZEIT"
+    ],
+    "blankWriteInOvals": 2,
+    "ordinaryCandidateCount": 3,
+    "nativeSourceQuote": "For Director, Division 3\nPara Director, División 3\nVote for no more than Two /\nVote por no más de Dos\nLYNNE PLAMBECK\nNonprofit Executive Director\nDirectora Ejecutiva de una Organización Sin Fines\nde Lucro\nKENNETH \"KEN\" PETERSEN\nMember Board Of Directors, Santa Clarita Valley\nWater Agency /\nMiembro de la Junta Directiva de\nla Agencia de Agua del Valle de Santa Clarita\nMARIA A. GUTZEIT\nWater Director/Engineer\nDirectora/Ingeniera de Agua\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000143.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:13.834561+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Director, Division 3\nPara Director, División 3\nVote for no more than Two /\nVote por no más de Dos\nLYNNE PLAMBECK\nNonprofit Executive Director\nDirectora Ejecutiva de una Organización Sin Fines\nde Lucro\nKENNETH \"KEN\" PETERSEN\nMember Board Of Directors, Santa Clarita Valley\nWater Agency /\nMiembro de la Junta Directiva de\nla Agencia de Agua del Valle de Santa Clarita\nMARIA A. GUTZEIT\nWater Director/Engineer\nDirectora/Ingeniera de Agua\n16"
+    },
+    "physicalSampleOccurrences": 4,
+    "uniqueBallotTypes": [
+      143,
+      169
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      182.8200225830078,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-port-hueneme-for-member-of-the-city-council",
+    "body": "CITY OF PORT HUENEME",
+    "printedTitle": "For Member of the City Council",
+    "ocdId": "ocd-division/country:us/state:ca/place:port_hueneme",
+    "voteFor": 3,
+    "candidateNames": [
+      "LAURA HERNANDEZ",
+      "JULIO KOLLERBOHM",
+      "JAMES IMPORTANTE",
+      "STEVEN A. GAMA",
+      "MARTHA R. MCQUEEN-LEGOHN"
+    ],
+    "blankWriteInOvals": 3,
+    "ordinaryCandidateCount": 5,
+    "nativeSourceQuote": "For Member of the City Council\nPara Miembro del Concejo Municipal\nVote for no more than Three\n/ Vote por no más de Tres\nLAURA HERNANDEZ\nIncumbent\nTitular\nJULIO KOLLERBOHM\nDigital Media Manager\nGerente de Medios Públicos\nJAMES IMPORTANTE\nProgram Management Analyst\nAnalista de Programas del Condado\nSTEVEN A. GAMA\nIncumbent\nTitular\nMARTHA R. MCQUEEN-LEGOHN\nIncumbent\nTitular",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000146.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:51.400515+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council\nPara Miembro del Concejo Municipal\nVote for no more than Three\n/ Vote por no más de Tres\nLAURA HERNANDEZ\nIncumbent\nTitular\nJULIO KOLLERBOHM\nDigital Media Manager\nGerente de Medios Públicos\nJAMES IMPORTANTE\nProgram Management Analyst\nAnalista de Programas del Condado\nSTEVEN A. GAMA\nIncumbent\nTitular\nMARTHA R. MCQUEEN-LEGOHN\nIncumbent\nTitular"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      146
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      200.8200225830078,
+      400.5,
+      530.0699462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-santa-paula-for-member-of-the-city-council-district-2",
+    "body": "CITY OF SANTA PAULA",
+    "printedTitle": "For Member of the City Council - District 2",
+    "ocdId": "ocd-division/country:us/state:ca/place:santa_paula/council_district:2",
+    "voteFor": 1,
+    "candidateNames": [
+      "JENNY CROSSWHITE",
+      "JENNY YARBROUGH"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 2\nPara Miembro del Concejo Municipal -\nDistrito 2\nVote for One /\nVote por Uno\nJENNY CROSSWHITE\nCouncilmember\nConcejala\nJENNY YARBROUGH\nBusiness Owner/Mother\nPropietaria de un Negocio/Madre",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000148.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:19.423978+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 2\nPara Miembro del Concejo Municipal -\nDistrito 2\nVote for One /\nVote por Uno\nJENNY CROSSWHITE\nCouncilmember\nConcejala\nJENNY YARBROUGH\nBusiness Owner/Mother\nPropietaria de un Negocio/Madre"
+    },
+    "physicalSampleOccurrences": 4,
+    "uniqueBallotTypes": [
+      148,
+      149
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      776.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-santa-paula-for-member-of-the-city-council-district-3",
+    "body": "CITY OF SANTA PAULA",
+    "printedTitle": "For Member of the City Council - District 3",
+    "ocdId": "ocd-division/country:us/state:ca/place:santa_paula/council_district:3",
+    "voteFor": 1,
+    "candidateNames": [
+      "PEDRO A. CHAVEZ"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 1,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 3\nPara Miembro del Concejo Municipal -\nDistrito 3\nVote for One /\nVote por Uno\nPEDRO A. CHAVEZ\nCouncilmember/Executive Director\nConcejal/Director Ejecutivo",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000150.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:22.234056+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 3\nPara Miembro del Concejo Municipal -\nDistrito 3\nVote for One /\nVote por Uno\nPEDRO A. CHAVEZ\nCouncilmember/Executive Director\nConcejal/Director Ejecutivo"
+    },
+    "physicalSampleOccurrences": 6,
+    "uniqueBallotTypes": [
+      150,
+      152,
+      153
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      578.3199462890625,
+      230.5,
+      710.0699462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-santa-paula-for-member-of-the-city-council-district-4",
+    "body": "CITY OF SANTA PAULA",
+    "printedTitle": "For Member of the City Council - District 4",
+    "ocdId": "ocd-division/country:us/state:ca/place:santa_paula/council_district:4",
+    "voteFor": 1,
+    "candidateNames": [
+      "MERISA M GARCIA",
+      "ANGEL GARZA",
+      "NANCY L. GRASS",
+      "JOHN MARQUEZ"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 4,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 4\nPara Miembro del Concejo Municipal -\nDistrito 4\nVote for One /\nVote por Uno\nMERISA M GARCIA\nHuman Resources Director\nDirectora de Recursos Humanos\nANGEL GARZA\nAnalyst\nAnalista\nNANCY L. GRASS\nBusiness Owner/Educator\nPropietaria de un Negocio/Educadora\nJOHN MARQUEZ\nCommunity Volunteer\nVoluntario Comunitario",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000151.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:52.325850+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 4\nPara Miembro del Concejo Municipal -\nDistrito 4\nVote for One /\nVote por Uno\nMERISA M GARCIA\nHuman Resources Director\nDirectora de Recursos Humanos\nANGEL GARZA\nAnalyst\nAnalista\nNANCY L. GRASS\nBusiness Owner/Educator\nPropietaria de un Negocio/Educadora\nJOHN MARQUEZ\nCommunity Volunteer\nVoluntario Comunitario"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      151
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      578.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-conejo-recreation-and-park-district-for-director-division-4",
+    "body": "CONEJO RECREATION AND PARK DISTRICT",
+    "printedTitle": "For Director, Division 4",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:conejo_recreation_and_park_district/division:4",
+    "voteFor": 1,
+    "candidateNames": [
+      "TYMAEUS ORFANOS",
+      "KERRY NELSON",
+      "AMY BUSS",
+      "DANIEL EMERSON TWEDT"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 4,
+    "nativeSourceQuote": "For Director, Division 4\nPara Director, División 4\nVote for One /\nVote por Uno\nTYMAEUS ORFANOS\nWater Worker/Father\nTrabajador del Sector del Agua/Padre\nKERRY NELSON\nBusiness Owner\nPropietaria de un Negocio\nAMY BUSS\nTeacher/Parent\nMaestra/Madre\nDANIEL EMERSON TWEDT\nHome Care Aide\nAsistente de Cuidado Domiciliario\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000154.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:24.075418+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Director, Division 4\nPara Director, División 4\nVote for One /\nVote por Uno\nTYMAEUS ORFANOS\nWater Worker/Father\nTrabajador del Sector del Agua/Padre\nKERRY NELSON\nBusiness Owner\nPropietaria de un Negocio\nAMY BUSS\nTeacher/Parent\nMaestra/Madre\nDANIEL EMERSON TWEDT\nHome Care Aide\nAsistente de Cuidado Domiciliario\n16"
+    },
+    "physicalSampleOccurrences": 6,
+    "uniqueBallotTypes": [
+      154,
+      176,
+      177
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      218.82008361816406,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-simi-valley-for-mayor",
+    "body": "CITY OF SIMI VALLEY",
+    "printedTitle": "For Mayor",
+    "ocdId": "ocd-division/country:us/state:ca/place:simi_valley",
+    "voteFor": 1,
+    "candidateNames": [
+      "WAYNE HAMPTON HOLLAND, III",
+      "DEE DEE CAVANAUGH",
+      "ROBERT CLARIZIO",
+      "MIKE JUDGE",
+      "KAREEM JUBRAN"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 5,
+    "nativeSourceQuote": "For Mayor\nPara Alcalde\nVote for One\n/ Vote por Uno\nWAYNE HAMPTON HOLLAND, III\nBroadway Producer/Financier\nProductor de Broadway/Financiero\nDEE DEE CAVANAUGH\nAppointed Incumbent\nTitular Designada\nROBERT CLARIZIO\nCommunications Consultant\nConsultor de Comunicaciones\nMIKE JUDGE\nCity of Simi Valley Council Member\nConcejal de la Ciudad de Simi Valley\nKAREEM JUBRAN\nEngineer/School Trustee\nIngeniero/Fideicomisario Escolar\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000156.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:48:54.260185+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Mayor\nPara Alcalde\nVote for One\n/ Vote por Uno\nWAYNE HAMPTON HOLLAND, III\nBroadway Producer/Financier\nProductor de Broadway/Financiero\nDEE DEE CAVANAUGH\nAppointed Incumbent\nTitular Designada\nROBERT CLARIZIO\nCommunications Consultant\nConsultor de Comunicaciones\nMIKE JUDGE\nCity of Simi Valley Council Member\nConcejal de la Ciudad de Simi Valley\nKAREEM JUBRAN\nEngineer/School Trustee\nIngeniero/Fideicomisario Escolar\n16"
+    },
+    "physicalSampleOccurrences": 22,
+    "uniqueBallotTypes": [
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      200.8200225830078,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-simi-valley-unified-school-district-for-governing-board-member-trustee-area-d",
+    "body": "SIMI VALLEY UNIFIED SCHOOL DISTRICT",
+    "printedTitle": "For Governing Board Member - Trustee Area D",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:simi_valley_unified_school_district/trustee_area:d",
+    "voteFor": 1,
+    "candidateNames": [
+      "STEPHEN \"P\" PIETROLUNGO",
+      "JAMES GREENFIELD"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Governing Board Member -\nTrustee Area D\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico D\nVote for One /\nVote por Uno\nSTEPHEN \"P\" PIETROLUNGO\nAppointed Incumbent\nTitular Designado\nJAMES GREENFIELD\nSanitation Operations Manager\nGerente de Operaciones de Saneamiento",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000157.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:27.753409+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Governing Board Member -\nTrustee Area D\nPara Miembro de la Junta Gobernante -\nÊrea de Síndico D\nVote for One /\nVote por Uno\nSTEPHEN \"P\" PIETROLUNGO\nAppointed Incumbent\nTitular Designado\nJAMES GREENFIELD\nSanitation Operations Manager\nGerente de Operaciones de Saneamiento"
+    },
+    "physicalSampleOccurrences": 6,
+    "uniqueBallotTypes": [
+      157,
+      161,
+      162
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      758.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-4",
+    "body": "CITY OF SIMI VALLEY",
+    "printedTitle": "For Member of the City Council - District 4",
+    "ocdId": "ocd-division/country:us/state:ca/place:simi_valley/council_district:4",
+    "voteFor": 1,
+    "candidateNames": [
+      "IVANA CHRISTMANN",
+      "SCOTT JUCEAM",
+      "DEBRA K. DICKERSON",
+      "JOSH GRAY"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 4,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 4\nPara Miembro del Concejo Municipal -\nDistrito 4\nVote for One /\nVote por Uno\nIVANA CHRISTMANN\nBusinesswoman\nEmpresaria\nSCOTT JUCEAM\nBusinessman\nEmpresario\nDEBRA K. DICKERSON\nRetired Police Officer\nOficial de Policía Jubilada\nJOSH GRAY\nBusiness Advocate/Father\nDirector de la Cámara/Padre\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000158.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:28.735121+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 4\nPara Miembro del Concejo Municipal -\nDistrito 4\nVote for One /\nVote por Uno\nIVANA CHRISTMANN\nBusinesswoman\nEmpresaria\nSCOTT JUCEAM\nBusinessman\nEmpresario\nDEBRA K. DICKERSON\nRetired Police Officer\nOficial de Policía Jubilada\nJOSH GRAY\nBusiness Advocate/Father\nDirector de la Cámara/Padre\n16"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      158
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      452.3200378417969,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-1-short-term",
+    "body": "CITY OF SIMI VALLEY",
+    "printedTitle": "For Member of the City Council - District 1 (Short Term)",
+    "ocdId": "ocd-division/country:us/state:ca/place:simi_valley/council_district:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "JILL A. ABELE",
+      "JOSEPH D AYALA",
+      "ANTHONY THOMPSON",
+      "TODD TAYLOR"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 4,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 1 (Short Term)\nPara Miembro del Concejo Municipal -\nDistrito 1 (Corto Plazo)\nVote for One /\nVote por Uno\nJILL A. ABELE\nRetired Businessperson\nEmpresaria Jubilada\nJOSEPH D AYALA\nAppointed Incumbent\nTitular Designado\nANTHONY THOMPSON\nBusinessman/Coach/Executive\nEmpresario/Entrenador/Ejecutivo\nTODD TAYLOR\nLicensed Private Investigator\nInvestigador Privado con Licencia\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000159.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:28.740250+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 1 (Short Term)\nPara Miembro del Concejo Municipal -\nDistrito 1 (Corto Plazo)\nVote for One /\nVote por Uno\nJILL A. ABELE\nRetired Businessperson\nEmpresaria Jubilada\nJOSEPH D AYALA\nAppointed Incumbent\nTitular Designado\nANTHONY THOMPSON\nBusinessman/Coach/Executive\nEmpresario/Entrenador/Ejecutivo\nTODD TAYLOR\nLicensed Private Investigator\nInvestigador Privado con Licencia\n16"
+    },
+    "physicalSampleOccurrences": 8,
+    "uniqueBallotTypes": [
+      159,
+      160,
+      161,
+      166
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      488.3200378417969,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-rancho-simi-recreation-and-park-district-for-director-division-2",
+    "body": "RANCHO SIMI RECREATION AND PARK DISTRICT",
+    "printedTitle": "For Director, Division 2",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:rancho_simi_recreation_and_park_district/division:2",
+    "voteFor": 1,
+    "candidateNames": [
+      "MARY NORTHRUP",
+      "DAWN M. SMOLLEN"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Director, Division 2\nPara Director, División 2\nVote for One /\nVote por Uno\nMARY NORTHRUP\nWater District Clerk\nSecretaria del Distrito de Agua\nDAWN M. SMOLLEN\nBoard Trustee, Simi Valley Unified School District\nSíndica de la Junta Directiva, Distrito Escolar\nUnificado de Simi Valley",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000159.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:28.740250+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Director, Division 2\nPara Director, División 2\nVote for One /\nVote por Uno\nMARY NORTHRUP\nWater District Clerk\nSecretaria del Distrito de Agua\nDAWN M. SMOLLEN\nBoard Trustee, Simi Valley Unified School District\nSíndica de la Junta Directiva, Distrito Escolar\nUnificado de Simi Valley"
+    },
+    "physicalSampleOccurrences": 16,
+    "uniqueBallotTypes": [
+      159,
+      163,
+      165,
+      166,
+      169,
+      170,
+      171,
+      172
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      400,
+      236.8200225830078,
+      570.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-simi-valley-for-member-of-the-city-council-district-2",
+    "body": "CITY OF SIMI VALLEY",
+    "printedTitle": "For Member of the City Council - District 2",
+    "ocdId": "ocd-division/country:us/state:ca/place:simi_valley/council_district:2",
+    "voteFor": 1,
+    "candidateNames": [
+      "SAM COHEN",
+      "RICHARD PERINI"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 2\nPara Miembro del Concejo Municipal -\nDistrito 2\nVote for One /\nVote por Uno\nSAM COHEN\nEngineer/Father\nIngeniero/Padre\nRICHARD PERINI\nBusiness Owner\nPropietario de Negocio\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000162.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T08:02:08.524957+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 2\nPara Miembro del Concejo Municipal -\nDistrito 2\nVote for One /\nVote por Uno\nSAM COHEN\nEngineer/Father\nIngeniero/Padre\nRICHARD PERINI\nBusiness Owner\nPropietario de Negocio\n16"
+    },
+    "physicalSampleOccurrences": 8,
+    "uniqueBallotTypes": [
+      162,
+      163,
+      164,
+      165
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      452.3200378417969,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-thousand-oaks-for-member-of-the-city-council-district-3",
+    "body": "CITY OF THOUSAND OAKS",
+    "printedTitle": "For Member of the City Council - District 3",
+    "ocdId": "ocd-division/country:us/state:ca/place:thousand_oaks/council_district:3",
+    "voteFor": 1,
+    "candidateNames": [
+      "VICTOR HAYEK",
+      "DAVID NEWMAN"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 3\nPara Miembro del Concejo Municipal -\nDistrito 3\nVote for One /\nVote por Uno\nVICTOR HAYEK\nDeputy Superintendent\nSuperintendente Adjunto\nDAVID NEWMAN\nCity Councilmember\nConcejal de la Ciudad\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000173.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:41.936703+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 3\nPara Miembro del Concejo Municipal -\nDistrito 3\nVote for One /\nVote por Uno\nVICTOR HAYEK\nDeputy Superintendent\nSuperintendente Adjunto\nDAVID NEWMAN\nCity Councilmember\nConcejal de la Ciudad\n16"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      173
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      200.32008361816406,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-thousand-oaks-for-member-of-the-city-council-district-1",
+    "body": "CITY OF THOUSAND OAKS",
+    "printedTitle": "For Member of the City Council - District 1",
+    "ocdId": "ocd-division/country:us/state:ca/place:thousand_oaks/council_district:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "KAREN ARREOLA",
+      "MIKEY TAYLOR"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 1\nPara Miembro del Concejo Municipal -\nDistrito 1\nVote for One /\nVote por Uno\nKAREN ARREOLA\nRetired Biotech Executive\nEjecutiva de Biotecnología Jubilada\nMIKEY TAYLOR\nCouncilmember/Business Owner\nConcejal/Propietario de un Negocio\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000174.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T08:02:09.481785+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 1\nPara Miembro del Concejo Municipal -\nDistrito 1\nVote for One /\nVote por Uno\nKAREN ARREOLA\nRetired Biotech Executive\nEjecutiva de Biotecnología Jubilada\nMIKEY TAYLOR\nCouncilmember/Business Owner\nConcejal/Propietario de un Negocio\n16"
+    },
+    "physicalSampleOccurrences": 4,
+    "uniqueBallotTypes": [
+      174,
+      177
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      200.32008361816406,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-thousand-oaks-for-member-of-the-city-council-district-2",
+    "body": "CITY OF THOUSAND OAKS",
+    "printedTitle": "For Member of the City Council - District 2",
+    "ocdId": "ocd-division/country:us/state:ca/place:thousand_oaks/council_district:2",
+    "voteFor": 1,
+    "candidateNames": [
+      "KYLE ROHRBACH",
+      "GUS R. GOUGAS"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 2\nPara Miembro del Concejo Municipal -\nDistrito 2\nVote for One /\nVote por Uno\nKYLE ROHRBACH\nExecutive Producer\nProductor Ejecutivo\nGUS R. GOUGAS\nBusinessman/Business Owner\nEmpresario/Propietario de un Negocio\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000175.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:41.934387+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 2\nPara Miembro del Concejo Municipal -\nDistrito 2\nVote for One /\nVote por Uno\nKYLE ROHRBACH\nExecutive Producer\nProductor Ejecutivo\nGUS R. GOUGAS\nBusinessman/Business Owner\nEmpresario/Propietario de un Negocio\n16"
+    },
+    "physicalSampleOccurrences": 4,
+    "uniqueBallotTypes": [
+      175,
+      176
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      200.32008361816406,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-1",
+    "body": "CITY OF SAN BUENAVENTURA (CITY OF VENTURA)",
+    "printedTitle": "For Member of the City Council - District 1",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_buenaventura_ventura/council_district:1",
+    "voteFor": 1,
+    "candidateNames": [
+      "CRAWFORD COATES",
+      "LIZ CAMPOS"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 1\nPara Miembro del Concejo Municipal -\nDistrito 1\nVote for One /\nVote por Uno\nCRAWFORD COATES\nMarketing Executive/Father\nEjecutivo de Marketing/Padre\nLIZ CAMPOS\nCity of Ventura Council Member\nConcejala de la Ciudad de Ventura",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000178.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:43.946438+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 1\nPara Miembro del Concejo Municipal -\nDistrito 1\nVote for One /\nVote por Uno\nCRAWFORD COATES\nMarketing Executive/Father\nEjecutivo de Marketing/Padre\nLIZ CAMPOS\nCity of Ventura Council Member\nConcejala de la Ciudad de Ventura"
+    },
+    "physicalSampleOccurrences": 2,
+    "uniqueBallotTypes": [
+      178
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      596.3199462890625,
+      230.5,
+      760.8199462890625
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-6",
+    "body": "CITY OF SAN BUENAVENTURA (CITY OF VENTURA)",
+    "printedTitle": "For Member of the City Council - District 6",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_buenaventura_ventura/council_district:6",
+    "voteFor": 1,
+    "candidateNames": [
+      "DANNY CARRILLO",
+      "STEVEN ALMCRANTZ",
+      "NOE AGUILAR VEGA",
+      "JAMES LOUGHRIE",
+      "KEVIN JAMES DALY",
+      "KARBA ECKLEY"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 6,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 6\nPara Miembro del Concejo Municipal -\nDistrito 6\nVote for One /\nVote por Uno\nDANNY CARRILLO\nCollege Personnel Commissioner\nComisionado de Personal Universitario\nSTEVEN ALMCRANTZ\nPublic Works Inspector\nInspector de Obras Públicas\nNOE AGUILAR VEGA\nLocal Business Owner\nPropietario de un Negocio Local\nJAMES LOUGHRIE\nTeacher\nMaestro\nKEVIN JAMES DALY\nNon Profit Executive\nEjecutivo de una Organización sin Fines de Lucro\nKARBA ECKLEY\nEnergy Policy Consultant\nConsultor de Políticas Energéticas",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000179.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:45.838460+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 6\nPara Miembro del Concejo Municipal -\nDistrito 6\nVote for One /\nVote por Uno\nDANNY CARRILLO\nCollege Personnel Commissioner\nComisionado de Personal Universitario\nSTEVEN ALMCRANTZ\nPublic Works Inspector\nInspector de Obras Públicas\nNOE AGUILAR VEGA\nLocal Business Owner\nPropietario de un Negocio Local\nJAMES LOUGHRIE\nTeacher\nMaestro\nKEVIN JAMES DALY\nNon Profit Executive\nEjecutivo de una Organización sin Fines de Lucro\nKARBA ECKLEY\nEnergy Policy Consultant\nConsultor de Políticas Energéticas"
+    },
+    "physicalSampleOccurrences": 6,
+    "uniqueBallotTypes": [
+      179,
+      180,
+      186
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      60,
+      596.3199462890625,
+      230.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-5",
+    "body": "CITY OF SAN BUENAVENTURA (CITY OF VENTURA)",
+    "printedTitle": "For Member of the City Council - District 5",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_buenaventura_ventura/council_district:5",
+    "voteFor": 1,
+    "candidateNames": [
+      "VERNON ALSTOT",
+      "BILL MCREYNOLDS"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 2,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 5\nPara Miembro del Concejo Municipal -\nDistrito 5\nVote for One /\nVote por Uno\nVERNON ALSTOT\nRetired Battalion Chief\nJefe de Batallón Jubilado\nBILL MCREYNOLDS\nLand Acquisition Executive\nEjecutivo de Adquisición de Terrenos\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000181.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:47.802307+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 5\nPara Miembro del Concejo Municipal -\nDistrito 5\nVote for One /\nVote por Uno\nVERNON ALSTOT\nRetired Battalion Chief\nJefe de Batallón Jubilado\nBILL MCREYNOLDS\nLand Acquisition Executive\nEjecutivo de Adquisición de Terrenos\n16"
+    },
+    "physicalSampleOccurrences": 6,
+    "uniqueBallotTypes": [
+      181,
+      183,
+      185
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      218.3200225830078,
+      400.5,
+      1000
+    ]
+  },
+  {
+    "contestId": "ca-cx-local-2026-ventura-city-of-san-buenaventura-city-of-ventura-for-member-of-the-city-council-district-4",
+    "body": "CITY OF SAN BUENAVENTURA (CITY OF VENTURA)",
+    "printedTitle": "For Member of the City Council - District 4",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_buenaventura_ventura/council_district:4",
+    "voteFor": 1,
+    "candidateNames": [
+      "KYLE R. CLARK",
+      "SCOTT SHOEMAKE",
+      "JEANNETTE SANCHEZ-PALACIOS",
+      "RICHARD T ROSIN"
+    ],
+    "blankWriteInOvals": 1,
+    "ordinaryCandidateCount": 4,
+    "nativeSourceQuote": "For Member of the City Council -\nDistrict 4\nPara Miembro del Concejo Municipal -\nDistrito 4\nVote for One /\nVote por Uno\nKYLE R. CLARK\nSCOTT SHOEMAKE\nBusiness Owner/Clergy\nPropietario de un Negocio/Clérigo\nJEANNETTE SANCHEZ-PALACIOS\nCity of Ventura Councilmember\nConcejal de la Ciudad de Ventura\nRICHARD T ROSIN\nTeacher/Father\nMaestro/Padre\n16",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/ventura-ca.connect.clarityelections.com/SampleBallots/2026General/BT000182.pdf",
+      "sourceOrg": "Ventura County Clerk-Recorder, Registrar of Voters",
+      "collectedAt": "2026-11-03T07:52:49.610089+00:00",
+      "verifiedAt": "2026-11-03T08:21:33.280192+00:00",
+      "quote": "For Member of the City Council -\nDistrict 4\nPara Miembro del Concejo Municipal -\nDistrito 4\nVote for One /\nVote por Uno\nKYLE R. CLARK\nSCOTT SHOEMAKE\nBusiness Owner/Clergy\nPropietario de un Negocio/Clérigo\nJEANNETTE SANCHEZ-PALACIOS\nCity of Ventura Councilmember\nConcejal de la Ciudad de Ventura\nRICHARD T ROSIN\nTeacher/Father\nMaestro/Padre\n16"
+    },
+    "physicalSampleOccurrences": 4,
+    "uniqueBallotTypes": [
+      182,
+      184
+    ],
+    "allStyleNameSetParity": "PASS",
+    "allStyleVoteLimitParity": "PASS",
+    "ballotMethod": "MARK_OVAL_PLURALITY_NONPARTISAN",
+    "frameBoundingBox": [
+      230,
+      218.3200225830078,
+      400.5,
+      1000
+    ]
+  }
+]

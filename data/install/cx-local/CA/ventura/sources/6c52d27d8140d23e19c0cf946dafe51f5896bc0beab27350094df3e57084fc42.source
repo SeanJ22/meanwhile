@@ -1,0 +1,971 @@
+{
+ "currentVersion": 11.3,
+ "cimVersion": "3.3.0",
+ "serviceDescription": "Special districts provide important services throughout the State, even if you live in a city. If you live in an unincorporated area, you probably receive a number of vital services such as fire protection, water service, sewer service, and other services from districts established to provide those services. Districts are either dependent (governed by the County Board of Supervisors or a city council) or indenpendent (governed by a locally-elected board of directors, or a separate board appointed for a fixed term). They are \"special\" because they provide services to areas that require special services above and beyond the regional services typically provided by the County.",
+ "mapName": "SpecialDistricts",
+ "description": "Special districts provide important services throughout the State, even if you live in a city. If you live in an unincorporated area, you probably receive a number of vital services such as fire protection, water service, sewer service, and other services from districts established to provide those services. Districts are either dependent (governed by the County Board of Supervisors or a city council) or indenpendent (governed by a locally-elected board of directors, or a separate board appointed for a fixed term). They are \"special\" because they provide services to areas that require special services above and beyond the regional services typically provided by the County.",
+ "copyrightText": "",
+ "supportsDynamicLayers": true,
+ "layers": [
+  {
+   "id": 0,
+   "name": "Cemetery",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    1,
+    2,
+    3
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 1,
+   "name": "Bardsdale",
+   "parentLayerId": 0,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 2,
+   "name": "El Rancho Simi",
+   "parentLayerId": 0,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 3,
+   "name": "Piru",
+   "parentLayerId": 0,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 4,
+   "name": "Community Services",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    5,
+    6
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 5,
+   "name": "Bell Canyon",
+   "parentLayerId": 4,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 6,
+   "name": "Channel Islands Beach",
+   "parentLayerId": 4,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 9,
+   "name": "County Service Areas",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 10,
+   "name": "3 Foster Park",
+   "parentLayerId": 9,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 11,
+   "name": "4 Triunfo",
+   "parentLayerId": 9,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 12,
+   "name": "14 County Wide",
+   "parentLayerId": 9,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 13,
+   "name": "29 North Coast",
+   "parentLayerId": 9,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 14,
+   "name": "30 Nyeland",
+   "parentLayerId": 9,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 15,
+   "name": "32 County Wide",
+   "parentLayerId": 9,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 16,
+   "name": "34 El Rio Area",
+   "parentLayerId": 9,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 17,
+   "name": "Fire Protection",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    18
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 18,
+   "name": "Ventura County",
+   "parentLayerId": 17,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 19,
+   "name": "Groundwater Management",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    20,
+    21,
+    22
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 20,
+   "name": "Fox Canyon",
+   "parentLayerId": 19,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 21,
+   "name": "Ojai Basin",
+   "parentLayerId": 19,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 22,
+   "name": "Ventura County Watershed Protection",
+   "parentLayerId": 19,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 23,
+   "name": "Harbor",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    24
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 24,
+   "name": "Oxnard",
+   "parentLayerId": 23,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 25,
+   "name": "Health Care",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    26
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 26,
+   "name": "Camarillo",
+   "parentLayerId": 25,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 27,
+   "name": "Memorial",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    28
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 28,
+   "name": "Fillmore - Piru",
+   "parentLayerId": 27,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 29,
+   "name": "Port",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    30
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 30,
+   "name": "Ventura",
+   "parentLayerId": 29,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 31,
+   "name": "Recreation and Park",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    32,
+    33,
+    34
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 32,
+   "name": "Conejo",
+   "parentLayerId": 31,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 33,
+   "name": "Pleasant Valley",
+   "parentLayerId": 31,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 34,
+   "name": "Rancho Simi",
+   "parentLayerId": 31,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 35,
+   "name": "Resource Conservation",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    36
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 36,
+   "name": "Ventura County",
+   "parentLayerId": 35,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 37,
+   "name": "Sanitary",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    38,
+    39,
+    40,
+    41,
+    42
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 38,
+   "name": "Camarillo",
+   "parentLayerId": 37,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 39,
+   "name": "Ojai Valley",
+   "parentLayerId": 37,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 40,
+   "name": "Saticoy",
+   "parentLayerId": 37,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 41,
+   "name": "Triunfo",
+   "parentLayerId": 37,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 42,
+   "name": "Ventura Regional",
+   "parentLayerId": 37,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 43,
+   "name": "Transit",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    44
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 44,
+   "name": "Gold Coast Transit District",
+   "parentLayerId": 43,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 45,
+   "name": "Water",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 46,
+   "name": "Calleguas Municipal Water Divisions",
+   "parentLayerId": 45,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 47,
+   "name": "Calleguas Municipal",
+   "parentLayerId": 45,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 48,
+   "name": "Camrosa",
+   "parentLayerId": 45,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 49,
+   "name": "Casitas Municipal",
+   "parentLayerId": 45,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 50,
+   "name": "HIdden Valley Municipal",
+   "parentLayerId": 45,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 51,
+   "name": "Meiners Oaks",
+   "parentLayerId": 45,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 52,
+   "name": "Pleasant Valley County",
+   "parentLayerId": 45,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 53,
+   "name": "Ventura River County",
+   "parentLayerId": 45,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 54,
+   "name": "Water Conservation",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    55,
+    56
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 55,
+   "name": "Ojai",
+   "parentLayerId": 54,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 56,
+   "name": "United",
+   "parentLayerId": 54,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 57,
+   "name": "Water Drainage",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    58,
+    59
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 58,
+   "name": "Oxnard No. 1",
+   "parentLayerId": 57,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 59,
+   "name": "Oxnard No. 2",
+   "parentLayerId": 57,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 60,
+   "name": "Waterworks",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    61,
+    62,
+    63,
+    64,
+    65,
+    66
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 61,
+   "name": "1 Moorpark",
+   "parentLayerId": 60,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 62,
+   "name": "8 Simi",
+   "parentLayerId": 60,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 63,
+   "name": "16 Piru",
+   "parentLayerId": 60,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 64,
+   "name": "17 Bell Canyon",
+   "parentLayerId": 60,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 65,
+   "name": "19 Rancho Las Posas",
+   "parentLayerId": 60,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 66,
+   "name": "38 Lake Sherwood",
+   "parentLayerId": 60,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  }
+ ],
+ "tables": [],
+ "spatialReference": {
+  "wkid": 102100,
+  "latestWkid": 3857,
+  "xyTolerance": 0.001,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -20037700,
+  "falseY": -30241100,
+  "xyUnits": 1.4892314192838538E8,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "singleFusedMapCache": false,
+ "initialExtent": {
+  "xmin": -1.4088670776667718E7,
+  "ymin": 3311479.392834366,
+  "xmax": -1.2767466186093662E7,
+  "ymax": 4652752.913898152,
+  "spatialReference": {
+   "wkid": 102100,
+   "latestWkid": 3857,
+   "xyTolerance": 0.001,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -20037700,
+   "falseY": -30241100,
+   "xyUnits": 1.4892314192838538E8,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "fullExtent": {
+  "xmin": -1.3301304810712473E7,
+  "ymin": 4034165.540990883,
+  "xmax": -1.3205934129819877E7,
+  "ymax": 4151394.9458592176,
+  "spatialReference": {
+   "wkid": 102100,
+   "latestWkid": 3857,
+   "xyTolerance": 0.001,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -20037700,
+   "falseY": -30241100,
+   "xyUnits": 1.4892314192838538E8,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "datesInUnknownTimezone": false,
+ "minScale": 0,
+ "maxScale": 0,
+ "units": "esriMeters",
+ "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+ "documentInfo": {
+  "Title": "Special Districts",
+  "Author": "",
+  "Comments": "Special districts provide important services throughout the State, even if you live in a city. If you live in an unincorporated area, you probably receive a number of vital services such as fire protection, water service, sewer service, and other services from districts established to provide those services. Districts are either dependent (governed by the County Board of Supervisors or a city council) or indenpendent (governed by a locally-elected board of directors, or a separate board appointed for a fixed term). They are \"special\" because they provide services to areas that require special services above and beyond the regional services typically provided by the County.",
+  "Subject": "",
+  "Category": "",
+  "Version": "3.3.0",
+  "AntialiasingMode": "Fast",
+  "TextAntialiasingMode": "Force",
+  "Keywords": ""
+ },
+ "supportsQueryDomains": true,
+ "capabilities": "Map,Query,Data",
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "hasVersionedData": true,
+ "exportTilesAllowed": false,
+ "referenceScale": 0.0,
+ "datumTransformations": [
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108001,
+     "latestWkid": 1241,
+     "transformForward": true,
+     "name": "NAD_1927_To_NAD_1983_NADCON"
+    }
+   ]
+  },
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108001,
+     "latestWkid": 1241,
+     "transformForward": false,
+     "name": "NAD_1927_To_NAD_1983_NADCON"
+    }
+   ]
+  },
+  {
+   "geoTransforms": [
+    {
+     "wkid": 1515,
+     "latestWkid": 1515,
+     "transformForward": true,
+     "name": "NAD_1983_To_WGS_1984_5"
+    }
+   ]
+  },
+  {
+   "geoTransforms": [
+    {
+     "wkid": 1515,
+     "latestWkid": 1515,
+     "transformForward": false,
+     "name": "NAD_1983_To_WGS_1984_5"
+    }
+   ]
+  }
+ ],
+ "supportsDatumTransformation": true,
+ "archivingInfo": {"supportsHistoricMoment": false},
+ "supportsClipping": true,
+ "supportsSpatialFilter": true,
+ "supportsTimeRelation": true,
+ "supportsQueryDataElements": true,
+ "mapUnits": {"uwkid": 9001},
+ "maxRecordCount": 1000,
+ "maxImageHeight": 4096,
+ "maxImageWidth": 4096,
+ "supportedExtensions": "FeatureServer, VCGISLayerSources",
+ "resampling": false
+}

@@ -1,0 +1,12 @@
+{
+  "status": "FROZEN_DATA_ONLY",
+  "packetJsonCount": 15,
+  "ballotInputSha256": "d22a639d37c86d0718648128691e22f660a2ab035522cc042fc358c0ff5ee50f",
+  "installManifestSha256": "c9f9b5cfc7d181c865d14f9c2c8c2b354a3112a44cd1187f71a8699cfcf044e1",
+  "archiveSha256": "67c2bfc0faf223af9cec5fd8575ac1004bf8b1149ce263a9397a09f0b71b4070",
+  "helpersInsidePacket": false,
+  "expandedOriginalsInsidePacket": false,
+  "productionWrites": false,
+  "filesExcludingFreezeRecord": 360,
+  "bytesExcludingFreezeRecord": 91758350
+}

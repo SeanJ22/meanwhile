@@ -1,0 +1,1 @@
+Official district map image; inspect native source bytes and linked election page.

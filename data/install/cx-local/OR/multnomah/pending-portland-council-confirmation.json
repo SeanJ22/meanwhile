@@ -1,0 +1,609 @@
+{
+  "status": "SOURCE_CONFIRMATION_ONLY;NO_CHANGED_INPUT_FOR_THESE_TWO_FIELDS",
+  "reason": "Two certified named write-ins need supported display/classification. candidateListComplete false would cause the merger to retain the old complete contests and ignore updates. Therefore both fields remain outside input and every held record is explicitly preserved. Exact current printed blocks and named write-ins stay portable; no fake completeness.",
+  "proposedButNotSubmittedContests": [
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4",
+      "electionId": "or-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:or/place:portland/council_district:4",
+      "divisionVintage": "2026",
+      "title": "City of Portland, Councilor, District 4",
+      "type": "CANDIDACY",
+      "voteFor": null,
+      "termYears": 4,
+      "candidateListComplete": false,
+      "scopeNote": "Ranked choice voting: rank up to 6 candidates; 3 councilors elected. Fill in no more than one oval in each rank column. Certified write-in candidate: Rachelle A Dixon.",
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3",
+      "electionId": "or-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:or/place:portland/council_district:3",
+      "divisionVintage": "2026",
+      "title": "City of Portland, Councilor, District 3",
+      "type": "CANDIDACY",
+      "voteFor": null,
+      "termYears": 4,
+      "candidateListComplete": false,
+      "scopeNote": "Ranked choice voting: rank up to 6 candidates; 3 councilors elected. Fill in no more than one oval in each rank column. Certified write-in candidate: Michael A Johnson.",
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    }
+  ],
+  "proposedButNotSubmittedCandidacies": [
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4:a7133a9294c03dea",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "familyName": "Matt Schulte",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4:52b67bad9f403cba",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "familyName": "Jeremy Beausoleil Smith",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4:ac2a37779e685d7b",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "familyName": "John J Goldsmith",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4:5e2d343049eccdd9",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "familyName": "Mitch Green",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4:1be132ca0c505fce",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "familyName": "Olivia Clark",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4:aa90a1c2c90e1eea",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "familyName": "Jayne Cronlund",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4:e639e67156e807fa",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "familyName": "John McDonald",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4:014bbf6a4bbd2aa4",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "familyName": "Eric Zimmerman",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4:8512e3f34e11f18b",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "familyName": "Jamey Evenstar",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4:1b038bd244604dec",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "familyName": "Timothy (TJ) Anderson",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4:1c4315f28fed1341",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "familyName": "Eli Arnold",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-4:eb27449e86e72e25",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "familyName": "Josh Leake",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:7b49e865cc9b3d9c",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "John Sweeney",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:4dea7584b2b905d8",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Tom Sollitt",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:278dbbb6f01c3778",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Larry Kelly",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:618615ce4372b4e9",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Tiffany Koyama Lane",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:d498dec93cffac53",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Ali Beaudoin",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:019f0f9216d779f3",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Heart Free Pham",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:4e1c36faf10c9458",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Terry Parker",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:0a3b5bfe4225d30d",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Martin Ward",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:e06dc0648778ae12",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Joel Corcoran",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:3f98f5971a9e58c7",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Darren McCormick",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:08d94017adc0ed0a",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Angelita Morillo",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:de9caa30607a8e36",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Steve Novick",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:7ce998abce0708b4",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Patrick Hilton",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:53768f9ec6b2a2ef",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Matthias Hallett",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:fd98a18046bf7d0f",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Kellie Torres",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:93689a132675f0af",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Kimberly Tucker",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:8287ef13bdd484fb",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Cristal Otero",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:97301a71888d670e",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Guy Frankenstein",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:aab8145a6451181e",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Keir Legree",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:6f28119fc3b8098f",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Esther León",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    },
+    {
+      "id": "ba01-or-city-of-portland-councilor-district-3:8e9db846c8d27b50",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "familyName": "Kenneth (Kent) R Landgraver III",
+      "givenName": "",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      }
+    }
+  ],
+  "preprintedNames": 33,
+  "pendingSpellingCorrection": "Esther Leon in held core versus Esther León on actual current sample, same candidate ID. Source correction deliberately not applied until whole-field named-write-in representation is ready."
+}

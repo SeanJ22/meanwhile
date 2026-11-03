@@ -1,0 +1,565 @@
+{
+ "currentVersion": 11.5,
+ "cimVersion": "3.5.0",
+ "id": 0,
+ "name": "Soil Water Conservation District Boundary_WM",
+ "type": "Feature Layer",
+ "description": "<DIV STYLE=\"text-align:Left;font-size:12pt\"><DIV><DIV><P STYLE=\"margin:0 0 11 0;\"><SPAN>This theme depicts of the legal jurisdiction of each of Oregon's Soil and Water Conservation Districts (<\/SPAN><A href=\"http://www.oregon.gov/ODA/programs/NaturalResources/SWCD/Pages/SWCD.aspx\" STYLE=\"text-decoration:underline;\"><SPAN>SWCD<\/SPAN><\/A><SPAN>). <\/SPAN><\/P><P STYLE=\"margin:0 0 11 0;\"><SPAN STYLE=\"font-weight:bold;\">Attributes last updated as of February 1, 2025<\/SPAN><\/P><P STYLE=\"margin:0 0 11 0;\"><SPAN STYLE=\"font-size:10pt\">This is a cartographic representation of the legal description and is not the legal description.<\/SPAN><\/P><P STYLE=\"margin:0 0 11 0;\"><SPAN /><\/P><P><SPAN /><\/P><\/DIV><\/DIV><\/DIV>",
+ "geometryType": "esriGeometryPolygon",
+ "sourceSpatialReference": {
+  "wkid": 102100,
+  "latestWkid": 3857,
+  "xyTolerance": 0.001,
+  "zTolerance": 2,
+  "mTolerance": 2,
+  "falseX": -20037700,
+  "falseY": -30241100,
+  "xyUnits": 10000,
+  "falseZ": 0,
+  "zUnits": 1,
+  "falseM": 0,
+  "mUnits": 1
+ },
+ "spatialReference": {
+  "wkid": 102100,
+  "latestWkid": 3857,
+  "xyTolerance": 0.001,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -20037700,
+  "falseY": -30241100,
+  "xyUnits": 10000,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "copyrightText": "Oregon Department of Agriculture and each Soil and Water Conservation District",
+ "parentLayer": null,
+ "subLayers": [],
+ "minScale": 0,
+ "maxScale": 0,
+ "referenceScale": 0.0,
+ "drawingInfo": {
+  "renderer": {
+   "type": "simple",
+   "symbol": {
+    "type": "esriSFS",
+    "style": "esriSFSSolid",
+    "color": [
+     130,
+     130,
+     130,
+     0
+    ],
+    "outline": {
+     "type": "esriSLS",
+     "style": "esriSLSSolid",
+     "color": [
+      56,
+      168,
+      0,
+      255
+     ],
+     "width": 2
+    }
+   }
+  },
+  "scaleSymbols": true,
+  "transparency": 0,
+  "labelingInfo": null
+ },
+ "defaultVisibility": true,
+ "extent": {
+  "xmin": -1.38666873346E7,
+  "ymin": 5159794.219300002,
+  "xmax": -1.29646628375E7,
+  "ymax": 5818485.7751,
+  "spatialReference": {
+   "wkid": 102100,
+   "latestWkid": 3857,
+   "xyTolerance": 0.001,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -20037700,
+   "falseY": -30241100,
+   "xyUnits": 10000,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "hasAttachments": false,
+ "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+ "displayField": "SWCD_Name",
+ "typeIdField": null,
+ "subtypeFieldName": null,
+ "subtypeField": null,
+ "defaultSubtypeCode": null,
+ "fields": [
+  {
+   "name": "OBJECTID",
+   "type": "esriFieldTypeOID",
+   "alias": "OBJECTID",
+   "domain": null
+  },
+  {
+   "name": "JoinField",
+   "type": "esriFieldTypeInteger",
+   "alias": "JoinField",
+   "domain": null
+  },
+  {
+   "name": "SWCD_Name",
+   "type": "esriFieldTypeString",
+   "alias": "SWCD Name",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "SWCC_Area",
+   "type": "esriFieldTypeInteger",
+   "alias": "SWCC_Area",
+   "domain": null
+  },
+  {
+   "name": "SWCC_Member",
+   "type": "esriFieldTypeString",
+   "alias": "SWCC Member",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "Address",
+   "type": "esriFieldTypeString",
+   "alias": "Address",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "Phone_Number",
+   "type": "esriFieldTypeString",
+   "alias": "Phone Number",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "General_Contact_Email",
+   "type": "esriFieldTypeString",
+   "alias": "General Contact Email",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "Web_Page",
+   "type": "esriFieldTypeString",
+   "alias": "Web Page",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "At_Large_1",
+   "type": "esriFieldTypeString",
+   "alias": "At Large 1",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "At_Large1_Term",
+   "type": "esriFieldTypeInteger",
+   "alias": "At Large1_Term",
+   "domain": null
+  },
+  {
+   "name": "At_Large1_Election",
+   "type": "esriFieldTypeString",
+   "alias": "At Large1_Election",
+   "length": 255,
+   "domain": {
+    "type": "codedValue",
+    "name": "SWCD_Director_Elections",
+    "description": "Show what type of appointment a director has",
+    "codedValues": [
+     {
+      "name": "Elected",
+      "code": "Elected"
+     },
+     {
+      "name": "Appointed",
+      "code": "Appointed"
+     },
+     {
+      "name": "VACANT",
+      "code": "VACANT"
+     }
+    ],
+    "mergePolicy": "esriMPTDefaultValue",
+    "splitPolicy": "esriSPTDefaultValue"
+   }
+  },
+  {
+   "name": "At_Large_2",
+   "type": "esriFieldTypeString",
+   "alias": "At Large 2",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "At_Large2_Term",
+   "type": "esriFieldTypeInteger",
+   "alias": "At Large2_Term",
+   "domain": null
+  },
+  {
+   "name": "At_Large2_Election",
+   "type": "esriFieldTypeString",
+   "alias": "At Large2_Election",
+   "length": 255,
+   "domain": {
+    "type": "codedValue",
+    "name": "SWCD_Director_Elections",
+    "description": "Show what type of appointment a director has",
+    "codedValues": [
+     {
+      "name": "Elected",
+      "code": "Elected"
+     },
+     {
+      "name": "Appointed",
+      "code": "Appointed"
+     },
+     {
+      "name": "VACANT",
+      "code": "VACANT"
+     }
+    ],
+    "mergePolicy": "esriMPTDefaultValue",
+    "splitPolicy": "esriSPTDefaultValue"
+   }
+  },
+  {
+   "name": "Zone_1",
+   "type": "esriFieldTypeString",
+   "alias": "Zone 1",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "Zone1_Term",
+   "type": "esriFieldTypeInteger",
+   "alias": "Zone1_Term",
+   "domain": null
+  },
+  {
+   "name": "Zone1_Election",
+   "type": "esriFieldTypeString",
+   "alias": "Zone1_Election",
+   "length": 255,
+   "domain": {
+    "type": "codedValue",
+    "name": "SWCD_Director_Elections",
+    "description": "Show what type of appointment a director has",
+    "codedValues": [
+     {
+      "name": "Elected",
+      "code": "Elected"
+     },
+     {
+      "name": "Appointed",
+      "code": "Appointed"
+     },
+     {
+      "name": "VACANT",
+      "code": "VACANT"
+     }
+    ],
+    "mergePolicy": "esriMPTDefaultValue",
+    "splitPolicy": "esriSPTDefaultValue"
+   }
+  },
+  {
+   "name": "Zone_2",
+   "type": "esriFieldTypeString",
+   "alias": "Zone 2",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "Zone2_Term",
+   "type": "esriFieldTypeInteger",
+   "alias": "Zone2_Term",
+   "domain": null
+  },
+  {
+   "name": "Zone2_Election",
+   "type": "esriFieldTypeString",
+   "alias": "Zone2_Election",
+   "length": 255,
+   "domain": {
+    "type": "codedValue",
+    "name": "SWCD_Director_Elections",
+    "description": "Show what type of appointment a director has",
+    "codedValues": [
+     {
+      "name": "Elected",
+      "code": "Elected"
+     },
+     {
+      "name": "Appointed",
+      "code": "Appointed"
+     },
+     {
+      "name": "VACANT",
+      "code": "VACANT"
+     }
+    ],
+    "mergePolicy": "esriMPTDefaultValue",
+    "splitPolicy": "esriSPTDefaultValue"
+   }
+  },
+  {
+   "name": "Zone_3",
+   "type": "esriFieldTypeString",
+   "alias": "Zone 3",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "Zone3_Term",
+   "type": "esriFieldTypeInteger",
+   "alias": "Zone3_Term",
+   "domain": null
+  },
+  {
+   "name": "Zone3_Election",
+   "type": "esriFieldTypeString",
+   "alias": "Zone3_Election",
+   "length": 255,
+   "domain": {
+    "type": "codedValue",
+    "name": "SWCD_Director_Elections",
+    "description": "Show what type of appointment a director has",
+    "codedValues": [
+     {
+      "name": "Elected",
+      "code": "Elected"
+     },
+     {
+      "name": "Appointed",
+      "code": "Appointed"
+     },
+     {
+      "name": "VACANT",
+      "code": "VACANT"
+     }
+    ],
+    "mergePolicy": "esriMPTDefaultValue",
+    "splitPolicy": "esriSPTDefaultValue"
+   }
+  },
+  {
+   "name": "Zone_4",
+   "type": "esriFieldTypeString",
+   "alias": "Zone 4",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "Zone4_Term",
+   "type": "esriFieldTypeInteger",
+   "alias": "Zone4_Term",
+   "domain": null
+  },
+  {
+   "name": "Zone4_Election",
+   "type": "esriFieldTypeString",
+   "alias": "Zone4_Election",
+   "length": 255,
+   "domain": {
+    "type": "codedValue",
+    "name": "SWCD_Director_Elections",
+    "description": "Show what type of appointment a director has",
+    "codedValues": [
+     {
+      "name": "Elected",
+      "code": "Elected"
+     },
+     {
+      "name": "Appointed",
+      "code": "Appointed"
+     },
+     {
+      "name": "VACANT",
+      "code": "VACANT"
+     }
+    ],
+    "mergePolicy": "esriMPTDefaultValue",
+    "splitPolicy": "esriSPTDefaultValue"
+   }
+  },
+  {
+   "name": "Zone_5",
+   "type": "esriFieldTypeString",
+   "alias": "Zone 5",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "Zone5_Term",
+   "type": "esriFieldTypeInteger",
+   "alias": "Zone5_Term",
+   "domain": null
+  },
+  {
+   "name": "Zone5_Election",
+   "type": "esriFieldTypeString",
+   "alias": "Zone5_Election",
+   "length": 255,
+   "domain": {
+    "type": "codedValue",
+    "name": "SWCD_Director_Elections",
+    "description": "Show what type of appointment a director has",
+    "codedValues": [
+     {
+      "name": "Elected",
+      "code": "Elected"
+     },
+     {
+      "name": "Appointed",
+      "code": "Appointed"
+     },
+     {
+      "name": "VACANT",
+      "code": "VACANT"
+     }
+    ],
+    "mergePolicy": "esriMPTDefaultValue",
+    "splitPolicy": "esriSPTDefaultValue"
+   }
+  },
+  {
+   "name": "Tax_Base_Status",
+   "type": "esriFieldTypeString",
+   "alias": "Tax Base Status",
+   "length": 255,
+   "domain": null
+  },
+  {
+   "name": "Shape",
+   "type": "esriFieldTypeGeometry",
+   "alias": "Shape",
+   "domain": null
+  },
+  {
+   "name": "Shape.STArea()",
+   "type": "esriFieldTypeDouble",
+   "alias": "Shape.STArea()",
+   "domain": null
+  },
+  {
+   "name": "Shape.STLength()",
+   "type": "esriFieldTypeDouble",
+   "alias": "Shape.STLength()",
+   "domain": null
+  }
+ ],
+ "geometryField": {
+  "name": "Shape",
+  "type": "esriFieldTypeGeometry",
+  "alias": "Shape"
+ },
+ "indexes": [
+  {
+   "name": "R21_pk",
+   "fields": "OBJECTID",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  },
+  {
+   "name": "S10_idx",
+   "fields": "Shape",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  }
+ ],
+ "subtypes": [],
+ "relationships": [],
+ "canModifyLayer": true,
+ "canScaleSymbols": false,
+ "hasLabels": false,
+ "capabilities": "Query,Map,Data",
+ "maxRecordCount": 1000,
+ "maxSelectionCount": 2000,
+ "supportsStatistics": true,
+ "supportsExceedsLimitStatistics": true,
+ "supportsAdvancedQueries": true,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "isDataVersioned": false,
+ "ownershipBasedAccessControlForFeatures": {"allowOthersToQuery": true},
+ "useStandardizedQueries": true,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "advancedQueryCapabilities": {
+  "useStandardizedQueries": true,
+  "supportsStatistics": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true,
+  "supportsOrderBy": true,
+  "supportsDistinct": true,
+  "supportsCountDistinct": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsPagination": true,
+  "supportsLod": false,
+  "supportsQueryWithLodSR": false,
+  "supportsTrueCurve": true,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsReturningQueryExtent": true,
+  "supportsQueryWithDistance": true,
+  "supportsSqlExpression": true,
+  "supportsTimeRelation": true,
+  "supportsSqlFormat": false,
+  "supportsQueryAnalytic": true,
+  "supportsCurrentUserQueries": true
+ },
+ "supportsDatumTransformation": true,
+ "advancedQueryAnalyticCapabilities": {
+  "supportsLinearRegression": true,
+  "supportsAsync": false,
+  "supportsPercentileAnalytic": true
+ },
+ "dateFieldsTimeReference": {
+  "timeZone": "Pacific Standard Time",
+  "timeZoneIANA": "America/Los_Angeles",
+  "respectsDaylightSaving": true
+ },
+ "preferredTimeReference": null,
+ "datesInUnknownTimezone": false,
+ "hasGeometryProperties": true,
+ "geometryProperties": {
+  "shapeAreaFieldName": "Shape.STArea()",
+  "shapeLengthFieldName": "Shape.STLength()",
+  "units": "esriMeters",
+  "mapUnits": {"uwkid": 9001}
+ },
+ "hasMetadata": true,
+ "isDataArchived": false,
+ "archivingInfo": {
+  "supportsQueryWithHistoricMoment": false,
+  "startArchivingMoment": -1
+ },
+ "supportsCoordinatesQuantization": true,
+ "supportsDynamicLegends": true
+}

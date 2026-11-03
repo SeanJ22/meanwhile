@@ -1,0 +1,294 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:or/special_district:east_multnomah_soil_and_water_conservation_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_ODA_WHOLE_DISTRICT_LEGAL_JURISDICTION_CARTOGRAPHIC_REPRESENTATION",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://maps.oda.oregon.gov/arcgis/rest/services/Framework/ODA_AdminBnds_SoilWaterConservationDistrictBoundary/MapServer/0/query?where=SWCD_Name+LIKE+%27%25Multnomah%25%27&outFields=OBJECTID%2CSWCD_Name&outSR=4326&returnGeometry=true&f=geojson",
+        "sourceOrg": "Oregon Department of Agriculture GIS",
+        "collectedAt": "2026-11-03T08:53:52.733596+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "{\"OBJECTID\":13,\"SWCD_Name\":\"East Multnomah SWCD\"}"
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/special_district:west_multnomah_soil_and_water_conservation_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_ODA_WHOLE_DISTRICT_LEGAL_JURISDICTION_CARTOGRAPHIC_REPRESENTATION",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://maps.oda.oregon.gov/arcgis/rest/services/Framework/ODA_AdminBnds_SoilWaterConservationDistrictBoundary/MapServer/0/query?where=SWCD_Name+LIKE+%27%25Multnomah%25%27&outFields=OBJECTID%2CSWCD_Name&outSR=4326&returnGeometry=true&f=geojson",
+        "sourceOrg": "Oregon Department of Agriculture GIS",
+        "collectedAt": "2026-11-03T08:53:52.733596+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "{\"OBJECTID\":45,\"SWCD_Name\":\"West Multnomah SWCD\"}"
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/special_district:interlachen_water_peoples_utility_district/subdistrict:2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_COUNTY_PUBLISHED_EXACT_UTILITY_VOTER_SUBDISTRICT",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services5.arcgis.com/x7DNZL1YqNQVNykA/arcgis/rest/services/PUD/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Multnomah County Elections / official linked GIS",
+        "collectedAt": "2026-11-03T08:42:29.372607+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "{\"OBJECTID\":5,\"PUD\":\"INTERLACHEN WATER P.U.D. Sub-District 2\",\"Shape__Area\":1.7079747067327844E-05,\"Shape__Length\":0.016811894053946362}"
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/special_district:interlachen_water_peoples_utility_district/subdistrict:3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_COUNTY_PUBLISHED_EXACT_UTILITY_VOTER_SUBDISTRICT",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services5.arcgis.com/x7DNZL1YqNQVNykA/arcgis/rest/services/PUD/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Multnomah County Elections / official linked GIS",
+        "collectedAt": "2026-11-03T08:42:29.372607+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "{\"OBJECTID\":6,\"PUD\":\"INTERLACHEN WATER P.U.D. Sub-District 3\",\"Shape__Area\":1.4006056517246179E-05,\"Shape__Length\":0.015398880863736966}"
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_COUNTY_PUBLISHED_EXACT_UTILITY_VOTER_SUBDISTRICT",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services5.arcgis.com/x7DNZL1YqNQVNykA/arcgis/rest/services/PUD/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Multnomah County Elections / official linked GIS",
+        "collectedAt": "2026-11-03T08:42:29.372607+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "{\"OBJECTID\":10,\"PUD\":\"ROCKWOOD  P.U.D. D2\",\"Shape__Area\":0.00067750056723525631,\"Shape__Length\":0.17845028235089871}"
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_COUNTY_PUBLISHED_EXACT_UTILITY_VOTER_SUBDISTRICT",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services5.arcgis.com/x7DNZL1YqNQVNykA/arcgis/rest/services/PUD/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Multnomah County Elections / official linked GIS",
+        "collectedAt": "2026-11-03T08:42:29.372607+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "{\"OBJECTID\":12,\"PUD\":\"ROCKWOOD  P.U.D. D4\",\"Shape__Area\":0.00051596805087683606,\"Shape__Length\":0.19915325798163566}"
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_COUNTY_PUBLISHED_EXACT_UTILITY_VOTER_SUBDISTRICT",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services5.arcgis.com/x7DNZL1YqNQVNykA/arcgis/rest/services/PUD/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Multnomah County Elections / official linked GIS",
+        "collectedAt": "2026-11-03T08:42:29.372607+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "{\"OBJECTID\":13,\"PUD\":\"ROCKWOOD  P.U.D. D5\",\"Shape__Area\":0.00034227272954012733,\"Shape__Length\":0.10972176192710448}"
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/place:portland/council_district:3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_FULL_PORTLAND_COUNCIL_VOTER_DISTRICT",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://www.portlandmaps.com/od/rest/services/COP_OpenData_Boundary/MapServer/1413/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Multnomah County Elections / official linked GIS",
+        "collectedAt": "2026-11-03T08:42:29.375819+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "{\"OBJECTID\":3,\"DISTRICT\":\"3\",\"pop_total\":167642,\"Ideal_pop\":163125.75,\"Diff_Ideal\":4516,\"DDeviation\":2.7685696464230816,\"ODeviation\":4.9924674675825393,\"Shape_Length\":61241.450478465704,\"Shape_Area\":111000277.20048991}"
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/place:portland/council_district:4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_FULL_PORTLAND_COUNCIL_VOTER_DISTRICT",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://www.portlandmaps.com/od/rest/services/COP_OpenData_Boundary/MapServer/1413/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Multnomah County Elections / official linked GIS",
+        "collectedAt": "2026-11-03T08:42:29.375819+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "{\"OBJECTID\":4,\"DISTRICT\":\"4\",\"pop_total\":164647,\"Ideal_pop\":163125.75,\"Diff_Ideal\":1521,\"DDeviation\":0.93256276216354561,\"ODeviation\":4.9924674675825393,\"Shape_Length\":195082.51606750235,\"Shape_Area\":239309888.1202822}"
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/county:multnomah/council_district:2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_COUNTY_COMMISSION_VOTER_DISTRICT_2",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://www3.multco.us/gisagspublic/rest/services/Elections/Congress_State_Jurisdictional_Boundaries/MapServer/4/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Multnomah County Elections / official linked GIS",
+        "collectedAt": "2026-11-03T08:42:30.959276+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "{\"OBJECTID_1\":4,\"OBJECTID\":168,\"DIST_ID\":2,\"DIST_NAME\":\"D2\",\"SHAPE_Leng\":0.70101049521799996,\"District\":\"D2\",\"P1_001N\":203617,\"DX_DEV\":-240,\"P1_001N_DV\":-0.117729584954,\"P1_003N\":137983,\"P1_004N\":17844,\"P1_005N\":2689,\"P1_006N\":10102,\"P1_007N\":1270,\"P1_008N\":10982,\"P1_009N\":22747,\"Shape_Length\":0.70101049244923286,\"Shape_Area\":0.018167006685134986,\"MultCo_Commissioner\":\"Multnomah Co Commissioner District 2\"}"
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/place:fairview_4124250",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "OFFICIAL_FULL_FAIRVIEW_CITY_LIMITS_NOT_DISTINCT_FAIRVIEW_CDP",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services2.arcgis.com/McQ0OlIABe29rJJy/arcgis/rest/services/City_Limits_poly/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Multnomah County Elections / official linked GIS",
+        "collectedAt": "2026-11-03T08:42:29.358752+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "{\"FID\":16,\"AREA\":98359958.411166087,\"CITYNAME\":\"Fairview\",\"Shape__Area\":98359958.412109375,\"Shape__Length\":68978.042190295542}"
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/place:milwaukie",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "OFFICIAL_FULL_MILWAUKIE_CITY_LIMITS",
+    "sourceProofs": [
+      {
+        "sourceUrl": "https://services2.arcgis.com/McQ0OlIABe29rJJy/arcgis/rest/services/City_Limits_poly/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "sourceOrg": "Multnomah County Elections / official linked GIS",
+        "collectedAt": "2026-11-03T08:42:29.358752+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "{\"FID\":30,\"AREA\":143631494.81166866,\"CITYNAME\":\"Milwaukie\",\"Shape__Area\":143631494.81445313,\"Shape__Length\":144624.45391016646}"
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://multco.us/file/2801-1-s-non-en.pdf-2/download",
+      "sourceOrg": "Multnomah County Elections",
+      "collectedAt": "2026-11-03T08:26:16.594514+00:00",
+      "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+      "quote": "Judge of the Circuit Court, 4th\nDistrict, Position 14\nVote for One\n\n       Elizabeth Savage\n      Joseph Hagedorn\n\n\n            Write-In"
+    },
+    "readerMappingLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/place:gresham",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://multco.us/file/4701-1-s-non-en.pdf-2/download",
+      "sourceOrg": "Multnomah County Elections",
+      "collectedAt": "2026-11-03T08:26:27.323506+00:00",
+      "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+      "quote": "City of Gresham, Councilor, Position 2\n Vote for One\n       Heather Coleman-Cox\n         Will DelPlato\n\n\n               Write-In\n   Review Both Sides\n\n\n\neans, unduly influences an elector to vot\n\n\n\n\n   4701-1 S (CS 33) - EC:2088432"
+    },
+    "readerMappingLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/place:lake_oswego",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://multco.us/file/3802-1-s-non-en.pdf-2/download",
+      "sourceOrg": "Multnomah County Elections",
+      "collectedAt": "2026-11-03T08:26:19.364902+00:00",
+      "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+      "quote": "City of Lake Oswego, Councilor\nVote for Four\n      Bryan Guiney\n       Patrick Walsh\n      Suzanne Miles\n      Peren Tiemann\n       Neil Tunmore\n      Heather Ramsey\n\n\n            Write-In\n\n            Write-In\n\n            Write-In\n\n            Write-In\n\nMultnomah Soil & Water\nConservation District"
+    },
+    "readerMappingLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/place:maywood_park",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://multco.us/file/4504-1-s-non-en.pdf-2/download",
+      "sourceOrg": "Multnomah County Elections",
+      "collectedAt": "2026-11-03T08:26:24.788861+00:00",
+      "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+      "quote": "City of Maywood Park, Councilor\n Vote for Three\n  The two candidates with the most votes\n  will serve a 4-year term, the one with the\n  next-highest number of votes will serve a\n  2-year term\n\n        Kevin Bussema\n        Katy Collins\n       Winn Holly\n        Jim Akers\n         Kelly Ripley Feller\n\n\n               Write-In\n\n               Write-In\n\n               Write-In\n\n\n   Review Both Sides\n\n\n\neans, unduly influences an elector to vot\n\n\n\n\n   4504-1 S (CS 27) - EC:2088432"
+    },
+    "readerMappingLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/place:portland",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+      "sourceOrg": "Multnomah County Elections",
+      "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+      "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+      "quote": "City of Portland, Auditor\nRank up to 2 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n\n\n                                     Rank 1     Rank 2\n\nSimone Rede\n\nWrite-In\n\n\n\n\n\n                                             Review Both Sides\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+    },
+    "readerMappingLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/place:troutdale",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://multco.us/file/4905-1-s-non-en.pdf-2/download",
+      "sourceOrg": "Multnomah County Elections",
+      "collectedAt": "2026-11-03T08:26:31.415953+00:00",
+      "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+      "quote": "City of Troutdale, Councilor\n Vote for Three\n\n       Sandy Glantz\n        Sheri Winters\n        Geoffrey Wunn\n       Zach Andrews\n       Randy Lauer\n\n\n               Write-In\n\n               Write-In\n\n               Write-In\n\n\n\n\n   Review Both Sides\n\n\n\neans, unduly influences an elector to vot\n\n\n\n\n   4905-1 S (CS 53) - EC:2088432"
+    },
+    "readerMappingLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/place:wood_village",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://multco.us/file/4904-1-s-non-en.pdf-2/download",
+      "sourceOrg": "Multnomah County Elections",
+      "collectedAt": "2026-11-03T08:26:31.315242+00:00",
+      "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+      "quote": "City of Wood Village, Councilor,\nPosition 1\nVote for One\n      Charlene Gothard\n\n\n            Write-In"
+    },
+    "readerMappingLimit": null
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:or/special_district:columbia_river_peoples_utility_district/subdivision:1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_NAMED_SUBDIVISION;FULL_LEGAL_VOTER_BOUNDARY_PENDING",
+    "provenance": {
+      "sourceUrl": "https://multco.us/file/3101-4-s-non-en.pdf-0/download",
+      "sourceOrg": "Multnomah County Elections",
+      "collectedAt": "2026-11-03T08:26:17.474848+00:00",
+      "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+      "quote": "Columbia River PUD, Director,\n Subdivision 1\n Vote for One\n       Andy Krieck\n\n\n              Write-In\n\n\n\n\n\ne in any particular manner or to refrain"
+    },
+    "readerMappingLimit": "Precise cross-county Columbia River PUD Subdivision1. County PUD layer provides only local whole-district footprint; that polygon is not used as full subdivision. No county-wide fallback."
+  }
+]

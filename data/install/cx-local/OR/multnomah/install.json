@@ -1,0 +1,344 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "OR",
+  "county": "Multnomah",
+  "countyFips": "41051",
+  "populationRank": 82,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:OR",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge 35 reviewed local candidacy fields/75 preprinted names only. Reuse 21 held contest/51 candidate IDs; add 14 missing fields/24 names. Complete evidence retains all 37 fields/108 printed names; two Portland council fields/33 printed names remain source-confirmation-only with two certified named write-ins. Preserve all unrelated state/legislative/federal/court records and every measure record/explanation/analysis in latestCX-VOTES. Exact actual RCV rank/winner limits separate; Auditor/Sheriff ordinary VoteOne. Two certified named write-ins separate; affected fields outside changed input, held cores preserved. No production publication.",
+  "subjects": [
+    {
+      "id": "ba01-or-judge-of-the-circuit-court-4th-district-position-14",
+      "title": "Judge of the Circuit Court, 4th District, Position 14",
+      "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://multco.us/file/2801-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-judge-of-the-circuit-court-4th-district-position-2",
+      "title": "Judge of the Circuit Court, 4th District, Position 2",
+      "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://multco.us/file/2801-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-judge-of-the-circuit-court-4th-district-position-6",
+      "title": "Judge of the Circuit Court, 4th District, Position 6",
+      "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/2801-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-west-multnomah-soil-and-water-conservation-district-director-at-large-position-2",
+      "title": "West Multnomah Soil and Water Conservation District, Director, At-Large, Position 2",
+      "ocdId": "ocd-division/country:us/state:or/special_district:west_multnomah_soil_and_water_conservation_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/2801-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-west-multnomah-soil-and-water-conservation-district-director-zone-4",
+      "title": "West Multnomah Soil and Water Conservation District, Director, Zone 4",
+      "ocdId": "ocd-division/country:us/state:or/special_district:west_multnomah_soil_and_water_conservation_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/2801-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-west-multnomah-soil-and-water-conservation-district-director-zone-5",
+      "title": "West Multnomah Soil and Water Conservation District, Director, Zone 5",
+      "ocdId": "ocd-division/country:us/state:or/special_district:west_multnomah_soil_and_water_conservation_district",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://multco.us/file/2801-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-city-of-portland-auditor",
+      "title": "City of Portland, Auditor",
+      "ocdId": "ocd-division/country:us/state:or/place:portland",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download"
+    },
+    {
+      "id": "ba01-or-multnomah-county-auditor",
+      "title": "Multnomah County, Auditor",
+      "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download"
+    },
+    {
+      "id": "ba01-or-multnomah-county-commissioner-chair",
+      "title": "Multnomah County, Commissioner Chair",
+      "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download"
+    },
+    {
+      "id": "ba01-or-multnomah-county-sheriff",
+      "title": "Multnomah County, Sheriff",
+      "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-columbia-river-pud-director-subdivision-1",
+      "title": "Columbia River PUD, Director, Subdivision 1",
+      "ocdId": "ocd-division/country:us/state:or/special_district:columbia_river_peoples_utility_district/subdivision:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/3101-4-s-non-en.pdf-0/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-east-multnomah-soil-and-water-conservation-district-director-at-large-position-2",
+      "title": "East Multnomah Soil and Water Conservation District, Director, At-Large, Position 2",
+      "ocdId": "ocd-division/country:us/state:or/special_district:east_multnomah_soil_and_water_conservation_district",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://multco.us/file/3308-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-east-multnomah-soil-and-water-conservation-district-director-zone-3",
+      "title": "East Multnomah Soil and Water Conservation District, Director, Zone 3",
+      "ocdId": "ocd-division/country:us/state:or/special_district:east_multnomah_soil_and_water_conservation_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://multco.us/file/3308-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-multnomah-county-commissioner-district-2",
+      "title": "Multnomah County Commissioner, District 2",
+      "ocdId": "ocd-division/country:us/state:or/county:multnomah/council_district:2",
+      "type": "CANDIDACY",
+      "candidates": 7,
+      "sourceUrl": "https://multco.us/file/3308-1-rcv-non-en.pdf-0/download"
+    },
+    {
+      "id": "ba01-or-city-of-lake-oswego-councilor",
+      "title": "City of Lake Oswego, Councilor",
+      "ocdId": "ocd-division/country:us/state:or/place:lake_oswego",
+      "type": "CANDIDACY",
+      "candidates": 6,
+      "sourceUrl": "https://multco.us/file/3802-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-city-of-milwaukie-councilor-position-2",
+      "title": "City of Milwaukie, Councilor, Position 2",
+      "ocdId": "ocd-division/country:us/state:or/place:milwaukie",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://multco.us/file/4101-2-s-non-en.pdf-1/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-city-of-milwaukie-councilor-position-4",
+      "title": "City of Milwaukie, Councilor, Position 4",
+      "ocdId": "ocd-division/country:us/state:or/place:milwaukie",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/4101-2-s-non-en.pdf-1/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-city-of-milwaukie-mayor",
+      "title": "City of Milwaukie, Mayor",
+      "ocdId": "ocd-division/country:us/state:or/place:milwaukie",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://multco.us/file/4101-2-s-non-en.pdf-1/download"
+    },
+    {
+      "id": "ba01-or-city-of-maywood-park-councilor",
+      "title": "City of Maywood Park, Councilor",
+      "ocdId": "ocd-division/country:us/state:or/place:maywood_park",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://multco.us/file/4504-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-city-of-gresham-councilor-position-2",
+      "title": "City of Gresham, Councilor, Position 2",
+      "ocdId": "ocd-division/country:us/state:or/place:gresham",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://multco.us/file/4701-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-city-of-gresham-councilor-position-4",
+      "title": "City of Gresham, Councilor, Position 4",
+      "ocdId": "ocd-division/country:us/state:or/place:gresham",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://multco.us/file/4701-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-city-of-gresham-councilor-position-6",
+      "title": "City of Gresham, Councilor, Position 6",
+      "ocdId": "ocd-division/country:us/state:or/place:gresham",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://multco.us/file/4701-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-city-of-gresham-mayor",
+      "title": "City of Gresham, Mayor",
+      "ocdId": "ocd-division/country:us/state:or/place:gresham",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://multco.us/file/4701-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-rockwood-water-people-s-utility-district-director-sub-district-4",
+      "title": "Rockwood Water People's Utility District, Director, Sub-District 4",
+      "ocdId": "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:4",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/4701-3-s-non-en.pdf/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-rockwood-water-people-s-utility-district-director-sub-district-5",
+      "title": "Rockwood Water People's Utility District, Director, Sub-District 5",
+      "ocdId": "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:5",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/4703-2-s-non-en.pdf-0/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-rockwood-water-people-s-utility-district-director-sub-district-2",
+      "title": "Rockwood Water People's Utility District, Director, Sub-District 2",
+      "ocdId": "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/4806-2-s-non-en.pdf-0/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-interlachen-water-people-s-utility-district-director-sub-district-2",
+      "title": "Interlachen Water People's Utility District, Director, Sub-District 2",
+      "ocdId": "ocd-division/country:us/state:or/special_district:interlachen_water_peoples_utility_district/subdistrict:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/4902-2-s-non-en.pdf-0/download"
+    },
+    {
+      "id": "cx-local-or-multnomah-2026-interlachen-water-people-s-utility-district-director-sub-district-3",
+      "title": "Interlachen Water People's Utility District, Director, Sub-District 3",
+      "ocdId": "ocd-division/country:us/state:or/special_district:interlachen_water_peoples_utility_district/subdistrict:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/4902-3-s-non-en.pdf-0/download"
+    },
+    {
+      "id": "ba01-or-city-of-fairview-councilor-position-4",
+      "title": "City of Fairview, Councilor, Position 4",
+      "ocdId": "ocd-division/country:us/state:or/place:fairview_4124250",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/4903-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-city-of-fairview-councilor-position-5",
+      "title": "City of Fairview, Councilor, Position 5",
+      "ocdId": "ocd-division/country:us/state:or/place:fairview_4124250",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/4903-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-city-of-fairview-councilor-position-6",
+      "title": "City of Fairview, Councilor, Position 6",
+      "ocdId": "ocd-division/country:us/state:or/place:fairview_4124250",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://multco.us/file/4903-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-city-of-fairview-mayor",
+      "title": "City of Fairview, Mayor",
+      "ocdId": "ocd-division/country:us/state:or/place:fairview_4124250",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/4903-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-city-of-wood-village-councilor-position-1",
+      "title": "City of Wood Village, Councilor, Position 1",
+      "ocdId": "ocd-division/country:us/state:or/place:wood_village",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/4904-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-city-of-wood-village-councilor-position-4",
+      "title": "City of Wood Village, Councilor, Position 4",
+      "ocdId": "ocd-division/country:us/state:or/place:wood_village",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://multco.us/file/4904-1-s-non-en.pdf-2/download"
+    },
+    {
+      "id": "ba01-or-city-of-troutdale-councilor",
+      "title": "City of Troutdale, Councilor",
+      "ocdId": "ocd-division/country:us/state:or/place:troutdale",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://multco.us/file/4905-1-s-non-en.pdf-2/download"
+    }
+  ],
+  "coverage": {
+    "preparedContests": 35,
+    "preparedPreprintedNames": 75,
+    "sourceLocalFields": 37,
+    "sourcePreprintedNames": 108,
+    "pendingSourceConfirmationFields": 2,
+    "pendingPreprintedNames": 33,
+    "heldContestsRefreshed": 21,
+    "heldCandidateIdsReused": 51,
+    "newContests": 14,
+    "newCandidateIds": 24,
+    "ordinaryVoteForFields": 32,
+    "preparedRankedChoiceFields": 3,
+    "sourceRankedChoiceFields": 5,
+    "certifiedNamedWriteInsSeparate": 2,
+    "allPublishedActualPdfs": 269,
+    "actualPhysicalPages": 538,
+    "standardPdfs": 146,
+    "rcvBookletPdfs": 123,
+    "completeLocalFieldOccurrences": 1406,
+    "preparedExactElectorates": 18,
+    "allSourceElectorates": 20,
+    "preciseSourceGeometryFeatures": 12,
+    "missingReaderDistrictIds": 9,
+    "ancillaryMissingReaderDistrictIds": 2,
+    "fullLegalVoterPolygonsPending": 1,
+    "sourceCaptures": 297,
+    "newMeasures": 0,
+    "absencesCreated": 0
+  },
+  "summary": "Complete 269-native-actual-PDF/538-page published county census: 37 local fields/108 preprinted choices, plus two separate certified Portland write-ins. Input prepares 35 fields/75 names; both Portland council fields stay unchanged pending write-in class. Includes three Milwaukie fields omitted by earlier master report. Twelve precise geometry features; complete Columbia River Subdivision 1 polygon remains pending.",
+  "missingReaderDistrictIds": [
+    "ocd-division/country:us/state:or/county:multnomah/council_district:2",
+    "ocd-division/country:us/state:or/special_district:columbia_river_peoples_utility_district/subdivision:1",
+    "ocd-division/country:us/state:or/special_district:east_multnomah_soil_and_water_conservation_district",
+    "ocd-division/country:us/state:or/special_district:interlachen_water_peoples_utility_district/subdistrict:2",
+    "ocd-division/country:us/state:or/special_district:interlachen_water_peoples_utility_district/subdistrict:3",
+    "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:2",
+    "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:4",
+    "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:5",
+    "ocd-division/country:us/state:or/special_district:west_multnomah_soil_and_water_conservation_district"
+  ],
+  "nextOwner": "River: latest-state merge, precise reader district/geometry integration, supported certified write-in class, remaining full cross-county Columbia River Subdivision1 boundary. Preserve every unrelated question/analysis/explanation.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 297 captured sources and 114 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

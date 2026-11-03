@@ -1,0 +1,38 @@
+{
+  "status": "SEPARATE_CERTIFIED_WRITE_IN_STATUSES_PENDING_SUPPORTED_READER_CANDIDATE_CLASS",
+  "records": [
+    {
+      "name": "Michael A Johnson",
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "ocdId": "ocd-division/country:us/state:or/place:portland/council_district:3",
+      "status": "CERTIFIED_NAMED_WRITE_IN_NOT_PREPRINTED",
+      "certifiedDate": "2026-10-28",
+      "ordinaryPreprintedCandidacyCreated": false,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/portland_certified_write-ins_nov2026/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:37:46.374078+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "Michael A Johnson"
+      }
+    },
+    {
+      "name": "Rachelle A Dixon",
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "ocdId": "ocd-division/country:us/state:or/place:portland/council_district:4",
+      "status": "CERTIFIED_NAMED_WRITE_IN_NOT_PREPRINTED",
+      "certifiedDate": "2026-10-28",
+      "ordinaryPreprintedCandidacyCreated": false,
+      "provenance": {
+        "sourceUrl": "https://multco.us/file/portland_certified_write-ins_nov2026/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:37:46.374078+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "Rachelle A Dixon"
+      }
+    }
+  ],
+  "knownCertifiedNames": 2,
+  "ordinaryCandidaciesCreated": 0,
+  "limit": "October28 native Portland certification acquired. Preprinted-name census covers every actual sample. No blanket assertion that other filing officers certified zero named write-ins. Both affected fields are outside changed input; their current printed facts and proposed false completeness flags are source-confirmation data only until supported named-write-in integration. Held cores remain byte-for-byte preserved. Blank write-in slots are not people."
+}

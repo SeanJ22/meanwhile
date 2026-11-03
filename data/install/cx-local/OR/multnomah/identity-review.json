@@ -1,0 +1,592 @@
+{
+  "heldBaselineSha256": "fbef8d3b5c28cd1cf8542a36eb53f1d6d9810cd30adeac30358bb8ceb4e1b05c",
+  "identityInputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "sha256": "fbef8d3b5c28cd1cf8542a36eb53f1d6d9810cd30adeac30358bb8ceb4e1b05c"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-OR-563382d4e/ballot-input__or.json",
+      "sha256": "c6627ccf78f6e3f5b791011f17b17d557c3c461277c196ca29d6471e1089baa2"
+    }
+  ],
+  "records": [
+    {
+      "contestId": "ba01-or-judge-of-the-circuit-court-4th-district-position-14",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-judge-of-the-circuit-court-4th-district-position-2",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-judge-of-the-circuit-court-4th-district-position-6",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-west-multnomah-soil-and-water-conservation-district-director-at-large-position-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-west-multnomah-soil-and-water-conservation-district-director-zone-4",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-west-multnomah-soil-and-water-conservation-district-director-zone-5",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-portland-auditor",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-multnomah-county-auditor",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-multnomah-county-commissioner-chair",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-multnomah-county-sheriff",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-portland-councilor-district-4",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "PENDING_SOURCE_CONFIRMATION_NOT_IN_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-columbia-river-pud-director-subdivision-1",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-east-multnomah-soil-and-water-conservation-district-director-at-large-position-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-east-multnomah-soil-and-water-conservation-district-director-zone-3",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-multnomah-county-commissioner-district-2",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-lake-oswego-councilor",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-city-of-milwaukie-councilor-position-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-city-of-milwaukie-councilor-position-4",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-city-of-milwaukie-mayor",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-portland-councilor-district-3",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "PENDING_SOURCE_CONFIRMATION_NOT_IN_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-maywood-park-councilor",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-gresham-councilor-position-2",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-gresham-councilor-position-4",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-gresham-councilor-position-6",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-gresham-mayor",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-rockwood-water-people-s-utility-district-director-sub-district-4",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-rockwood-water-people-s-utility-district-director-sub-district-5",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-rockwood-water-people-s-utility-district-director-sub-district-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-interlachen-water-people-s-utility-district-director-sub-district-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "cx-local-or-multnomah-2026-interlachen-water-people-s-utility-district-director-sub-district-3",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-fairview-councilor-position-4",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-fairview-councilor-position-5",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-fairview-councilor-position-6",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-fairview-mayor",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-wood-village-councilor-position-1",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-wood-village-councilor-position-4",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "contestId": "ba01-or-city-of-troutdale-councilor",
+      "identityStatus": "REUSE_EXACT_HELD_CONTEST_AND_CANDIDATE_IDS",
+      "identitySource": "/workspace/meanwhile/data/ballot/2026-general/or.json",
+      "projectionStatus": "IN_CHANGED_INPUT"
+    }
+  ],
+  "sourceBackedCorrections": [
+    {
+      "kind": "ACTUAL_PRINTED_INCUMBENT_LABEL",
+      "id": "ba01-or-judge-of-the-circuit-court-4th-district-position-6:bb57240d2c17c271",
+      "field": "incumbent",
+      "before": null,
+      "after": true,
+      "authority": {
+        "sourceUrl": "https://multco.us/file/2801-1-s-non-en.pdf-2/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.594514+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "Judge of the Circuit Court, 4th\nDistrict, Position 6\nVote for One\n\n      Sonia A Montalbano\n          Incumbent\n\n            Write-In\n\nMultnomah Soil & Water\nConservation District"
+      },
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "kind": "HELD_CONTEST_SOURCE_BACKED_REFRESH",
+      "id": "ba01-or-city-of-portland-auditor",
+      "field": "scopeNote",
+      "before": null,
+      "after": "Ranked choice voting: rank up to 2 candidates; 1 candidate elected. Fill in no more than one oval in each rank column.",
+      "authority": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Auditor\nRank up to 2 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n\n\n                                     Rank 1     Rank 2\n\nSimone Rede\n\nWrite-In\n\n\n\n\n\n                                             Review Both Sides\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      },
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "kind": "HELD_CONTEST_SOURCE_BACKED_REFRESH",
+      "id": "ba01-or-multnomah-county-auditor",
+      "field": "voteFor",
+      "before": null,
+      "after": 1,
+      "authority": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "Multnomah County, Auditor\nVote for One\nThis is not a ranked choice voting contest. Ranked choice\nvoting is used for Multnomah County contests only when\nthere are two or more filed candidates.\n\nNicole Pexton\n\nWrite-In"
+      },
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "kind": "HELD_CONTEST_SOURCE_BACKED_REFRESH",
+      "id": "ba01-or-multnomah-county-auditor",
+      "field": "scopeNote",
+      "before": null,
+      "after": "Vote for one. This is not a ranked choice voting contest; Multnomah County uses ranked choice voting only when there are two or more filed candidates.",
+      "authority": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "Multnomah County, Auditor\nVote for One\nThis is not a ranked choice voting contest. Ranked choice\nvoting is used for Multnomah County contests only when\nthere are two or more filed candidates.\n\nNicole Pexton\n\nWrite-In"
+      },
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "kind": "HELD_CONTEST_SOURCE_BACKED_REFRESH",
+      "id": "ba01-or-multnomah-county-commissioner-chair",
+      "field": "scopeNote",
+      "before": null,
+      "after": "Ranked choice voting: rank up to 4 candidates; 1 candidate elected. Fill in no more than one oval in each rank column.",
+      "authority": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "Multnomah County Commission, Chair [1 candidate elected]\nRank up to 4 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n\n                                     Rank 1     Rank 2     Rank 3     Rank 4\n\nShannon Singleton\n\nJulia Brim-Edwards\n\nSharon Meieran\n\nWrite-In"
+      },
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "kind": "HELD_CONTEST_SOURCE_BACKED_REFRESH",
+      "id": "ba01-or-multnomah-county-sheriff",
+      "field": "voteFor",
+      "before": null,
+      "after": 1,
+      "authority": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "Multnomah County, Sheriff\nVote for One\nThis is not a ranked choice voting contest. Ranked choice\nvoting is used for Multnomah County contests only when\nthere are two or more filed candidates.\n\nNicole Morrisey O'Donnell\n\nWrite-In\n\nCity of Portland Contests"
+      },
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "kind": "HELD_CONTEST_SOURCE_BACKED_REFRESH",
+      "id": "ba01-or-multnomah-county-sheriff",
+      "field": "scopeNote",
+      "before": null,
+      "after": "Vote for one. This is not a ranked choice voting contest; Multnomah County uses ranked choice voting only when there are two or more filed candidates.",
+      "authority": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "Multnomah County, Sheriff\nVote for One\nThis is not a ranked choice voting contest. Ranked choice\nvoting is used for Multnomah County contests only when\nthere are two or more filed candidates.\n\nNicole Morrisey O'Donnell\n\nWrite-In\n\nCity of Portland Contests"
+      },
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "kind": "HELD_CONTEST_SOURCE_BACKED_REFRESH",
+      "id": "ba01-or-city-of-portland-councilor-district-4",
+      "field": "scopeNote",
+      "before": null,
+      "after": "Ranked choice voting: rank up to 6 candidates; 3 councilors elected. Fill in no more than one oval in each rank column. Certified write-in candidate: Rachelle A Dixon.",
+      "authority": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      },
+      "projectionStatus": "PENDING_NOT_APPLIED"
+    },
+    {
+      "kind": "HELD_CONTEST_SOURCE_BACKED_REFRESH",
+      "id": "ba01-or-city-of-portland-councilor-district-4",
+      "field": "candidateListComplete",
+      "before": true,
+      "after": false,
+      "authority": {
+        "sourceUrl": "https://multco.us/file/2801-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:16.595382+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 4 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nMatt Schulte\n\nJeremy Beausoleil Smith\n\nJohn J Goldsmith\n\nMitch Green\n\nOlivia Clark\n\nJayne Cronlund\n\nJohn McDonald\n\nEric Zimmerman\n\nJamey Evenstar\n\nTimothy (TJ) Anderson\n\nEli Arnold\n\nJosh Leake\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          2801-1 (CS 1) - EC:1026870"
+      },
+      "projectionStatus": "PENDING_NOT_APPLIED"
+    },
+    {
+      "kind": "HELD_CONTEST_SOURCE_BACKED_REFRESH",
+      "id": "ba01-or-multnomah-county-commissioner-district-2",
+      "field": "scopeNote",
+      "before": null,
+      "after": "Ranked choice voting: rank up to 6 candidates; 1 candidate elected. Fill in no more than one oval in each rank column.",
+      "authority": {
+        "sourceUrl": "https://multco.us/file/3308-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:18.845029+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "Multnomah County Commissioner, District 2 [1 candidate elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n\n                                     Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nBruce Broussard\n\nHerman Greene\n\nBri Williams\n\nSerena Cruz\n\nNathan Ong Norris\n\nNabil Zaghloul\n\nTony Robertson\n\nWrite-In\n\nCity of Portland Contests"
+      },
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "kind": "HELD_CONTEST_SOURCE_BACKED_REFRESH",
+      "id": "ba01-or-city-of-portland-councilor-district-3",
+      "field": "scopeNote",
+      "before": null,
+      "after": "Ranked choice voting: rank up to 6 candidates; 3 councilors elected. Fill in no more than one oval in each rank column. Certified write-in candidate: Michael A Johnson.",
+      "authority": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      },
+      "projectionStatus": "PENDING_NOT_APPLIED"
+    },
+    {
+      "kind": "HELD_CONTEST_SOURCE_BACKED_REFRESH",
+      "id": "ba01-or-city-of-portland-councilor-district-3",
+      "field": "candidateListComplete",
+      "before": true,
+      "after": false,
+      "authority": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      },
+      "projectionStatus": "PENDING_NOT_APPLIED"
+    },
+    {
+      "kind": "ACTUAL_SAMPLE_DIACRITIC",
+      "id": "ba01-or-city-of-portland-councilor-district-3:6f28119fc3b8098f",
+      "field": "familyName",
+      "before": "Esther Leon",
+      "after": "Esther León",
+      "authority": {
+        "sourceUrl": "https://multco.us/file/4104-1-rcv-non-en.pdf-0/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:20.542275+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Portland, Councilor, District 3 [3 candidates elected]\nRank up to 6 candidates in the order of your choice.\nFill in no more than 1 oval in each rank column.\n                                                Rank 1     Rank 2     Rank 3     Rank 4     Rank 5     Rank 6\n\nJohn Sweeney\n\nTom Sollitt\n\nLarry Kelly\n\nTiffany Koyama Lane\n\nAli Beaudoin\n\nHeart Free Pham\n\nTerry Parker\n\nMartin Ward\n\nJoel Corcoran\n\nDarren McCormick\n\nAngelita Morillo\n\nSteve Novick\n\nPatrick Hilton\n\nMatthias Hallett\n\nKellie Torres\n\nKimberly Tucker\n\nCristal Otero\n\nGuy Frankenstein\n\nKeir Legree\n\nEsther León\n\nKenneth (Kent) R Landgraver III\n\nWrite-In\n\nWrite-In\n\nWrite-In\n\n\n\n\n\n  Attention\nRemember to inspect your ballot for mistakes. If you make a mistake or damage your ballot, call Multnomah County\nElections at 503-988-VOTE.\n\n  Warning\nAny person who, by use of force or other means, unduly influences an elector to vote in any particular manner or to refrain\nfrom voting is subject to a fine.\n(ORS 254.470)\n\n\n                                          4104-1 (CS 4) - EC:1026870"
+      },
+      "projectionStatus": "PENDING_NOT_APPLIED"
+    },
+    {
+      "kind": "CANONICAL_FAIRVIEW_CITY_VS_DISTINCT_FAIRVIEW_CDP",
+      "id": "ba01-or-city-of-fairview-councilor-position-4",
+      "field": "ocdId",
+      "before": "ocd-division/country:us/state:or/place:fairview",
+      "after": "ocd-division/country:us/state:or/place:fairview_4124250",
+      "authority": {
+        "sourceUrl": "https://multco.us/file/4903-1-s-non-en.pdf-2/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:31.114252+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Fairview, Councilor, Position 4\nVote for One\n       Jenni Weber\n\n\n            Write-In"
+      },
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "kind": "CANONICAL_FAIRVIEW_CITY_VS_DISTINCT_FAIRVIEW_CDP",
+      "id": "ba01-or-city-of-fairview-councilor-position-5",
+      "field": "ocdId",
+      "before": "ocd-division/country:us/state:or/place:fairview",
+      "after": "ocd-division/country:us/state:or/place:fairview_4124250",
+      "authority": {
+        "sourceUrl": "https://multco.us/file/4903-1-s-non-en.pdf-2/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:31.114252+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Fairview, Councilor, Position 5\n Vote for One\n       Ted Tosterud\n\n\n               Write-In\n\n\n   Review Both Sides\n\n\n\neans, unduly influences an elector to vot\n\n\n\n\n   4903-1 S (CS 51) - EC:2088432"
+      },
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "kind": "CANONICAL_FAIRVIEW_CITY_VS_DISTINCT_FAIRVIEW_CDP",
+      "id": "ba01-or-city-of-fairview-councilor-position-6",
+      "field": "ocdId",
+      "before": "ocd-division/country:us/state:or/place:fairview",
+      "after": "ocd-division/country:us/state:or/place:fairview_4124250",
+      "authority": {
+        "sourceUrl": "https://multco.us/file/4903-1-s-non-en.pdf-2/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:31.114252+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Fairview, Councilor, Position 6\nVote for One\n     Adam Bird\n      Steven Haschke\n\n\n            Write-In\n\nMultnomah Soil & Water\nConservation District"
+      },
+      "projectionStatus": "IN_CHANGED_INPUT"
+    },
+    {
+      "kind": "CANONICAL_FAIRVIEW_CITY_VS_DISTINCT_FAIRVIEW_CDP",
+      "id": "ba01-or-city-of-fairview-mayor",
+      "field": "ocdId",
+      "before": "ocd-division/country:us/state:or/place:fairview",
+      "after": "ocd-division/country:us/state:or/place:fairview_4124250",
+      "authority": {
+        "sourceUrl": "https://multco.us/file/4903-1-s-non-en.pdf-2/download",
+        "sourceOrg": "Multnomah County Elections",
+        "collectedAt": "2026-11-03T08:26:31.114252+00:00",
+        "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+        "quote": "City of Fairview, Mayor\nVote for One\n\n      Keith A Kudrna\n\n\n            Write-In"
+      },
+      "projectionStatus": "IN_CHANGED_INPUT"
+    }
+  ],
+  "unchangedContestIds": [
+    "ballot-or-2026:us-senate",
+    "ballot-or-2026:us-house-1",
+    "ballot-or-2026:us-house-2",
+    "ballot-or-2026:us-house-3",
+    "ballot-or-2026:us-house-4",
+    "ballot-or-2026:us-house-5",
+    "ballot-or-2026:us-house-6",
+    "ballot-or-2026:governor",
+    "ballot-or-2026:state-senate-3",
+    "ballot-or-2026:state-senate-4",
+    "ballot-or-2026:state-senate-6",
+    "ballot-or-2026:state-senate-7",
+    "ballot-or-2026:state-senate-8",
+    "ballot-or-2026:state-senate-10",
+    "ballot-or-2026:state-senate-11",
+    "ballot-or-2026:state-senate-13",
+    "ballot-or-2026:state-senate-15",
+    "ballot-or-2026:state-senate-16",
+    "ballot-or-2026:state-senate-17",
+    "ballot-or-2026:state-senate-19",
+    "ballot-or-2026:state-senate-20",
+    "ballot-or-2026:state-senate-24",
+    "ballot-or-2026:state-senate-26",
+    "ballot-or-2026:state-house-1",
+    "ballot-or-2026:state-house-2",
+    "ballot-or-2026:state-house-3",
+    "ballot-or-2026:state-house-4",
+    "ballot-or-2026:state-house-5",
+    "ballot-or-2026:state-house-6",
+    "ballot-or-2026:state-house-7",
+    "ballot-or-2026:state-house-8",
+    "ballot-or-2026:state-house-9",
+    "ballot-or-2026:state-house-10",
+    "ballot-or-2026:state-house-11",
+    "ballot-or-2026:state-house-12",
+    "ballot-or-2026:state-house-13",
+    "ballot-or-2026:state-house-14",
+    "ballot-or-2026:state-house-15",
+    "ballot-or-2026:state-house-16",
+    "ballot-or-2026:state-house-17",
+    "ballot-or-2026:state-house-18",
+    "ballot-or-2026:state-house-19",
+    "ballot-or-2026:state-house-20",
+    "ballot-or-2026:state-house-21",
+    "ballot-or-2026:state-house-22",
+    "ballot-or-2026:state-house-23",
+    "ballot-or-2026:state-house-24",
+    "ballot-or-2026:state-house-25",
+    "ballot-or-2026:state-house-26",
+    "ballot-or-2026:state-house-27",
+    "ballot-or-2026:state-house-28",
+    "ballot-or-2026:state-house-29",
+    "ballot-or-2026:state-house-30",
+    "ballot-or-2026:state-house-31",
+    "ballot-or-2026:state-house-32",
+    "ballot-or-2026:state-house-33",
+    "ballot-or-2026:state-house-34",
+    "ballot-or-2026:state-house-35",
+    "ballot-or-2026:state-house-36",
+    "ballot-or-2026:state-house-37",
+    "ballot-or-2026:state-house-38",
+    "ballot-or-2026:state-house-39",
+    "ballot-or-2026:state-house-40",
+    "ballot-or-2026:state-house-41",
+    "ballot-or-2026:state-house-42",
+    "ballot-or-2026:state-house-43",
+    "ballot-or-2026:state-house-44",
+    "ballot-or-2026:state-house-45",
+    "ballot-or-2026:state-house-46",
+    "ballot-or-2026:state-house-47",
+    "ballot-or-2026:state-house-48",
+    "ballot-or-2026:state-house-49",
+    "ballot-or-2026:state-house-50",
+    "ballot-or-2026:state-house-51",
+    "ballot-or-2026:state-house-52",
+    "ballot-or-2026:state-house-53",
+    "ballot-or-2026:state-house-54",
+    "ballot-or-2026:state-house-55",
+    "ballot-or-2026:state-house-56",
+    "ballot-or-2026:state-house-57",
+    "ballot-or-2026:state-house-58",
+    "ballot-or-2026:state-house-59",
+    "ballot-or-2026:state-house-60",
+    "ba01-or-judge-of-the-circuit-court-11th-district-position-3",
+    "ba01-or-judge-of-the-circuit-court-2nd-district-position-14",
+    "ba01-or-judge-of-the-circuit-court-5th-district-position-5",
+    "ba01-or-judge-of-the-circuit-court-20th-district-position-1",
+    "ba01-or-district-attorney-curry-county",
+    "ba01-or-district-attorney-jefferson-county",
+    "ba01-or-district-attorney-lake-county",
+    "ba01-or-city-of-portland-councilor-district-3",
+    "ba01-or-city-of-portland-councilor-district-4",
+    "ba01-or-city-of-portland-measure-26-267-amends-charter-portland-residents-decide-2-of-city-s-annual-discretionary-budget",
+    "ba01-or-city-of-troutdale-measure-26-265-five-year-local-option-levy-for-police-fire-911-operations",
+    "ba01-or-city-of-troutdale-measure-26-266-advisory-vote-should-troutdale-create-a-municipal-police-department"
+  ],
+  "operation": "Reuse exact21 held office and51 held candidate IDs in changed input. Preserve both other held Portland council fields and33 candidate cores, all unrelated records and attached question analyses/explanations. Sonia A Montalbano printed incumbent label corrected. Esther León diacritic is pending with the two source-confirmation-only Portland fields. Preserve held Chair title as alias of actual Commission Chair; do not mint duplicate. No incoming measure."
+}

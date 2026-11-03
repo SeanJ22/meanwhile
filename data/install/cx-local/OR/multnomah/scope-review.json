@@ -1,0 +1,95 @@
+{
+  "swcdVoterRule": {
+    "sourceUrl": "https://www.oregon.gov/oda/Documents/Publications/NaturalResources/SWCD-Elections-Instructions-Packet.pdf",
+    "sourceOrg": "Oregon Department of Agriculture",
+    "collectedAt": "2026-11-03T08:51:51.269359+00:00",
+    "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+    "quote": "(4) Candidates nominated for director from a specific zone shall be voted on by all electors within the district."
+  },
+  "swcdNativeAuthority": "2026 instruction packet contains current ORS568.560. Legislature HTML/PDF native requests returned403; neither failed response is evidence.",
+  "swcdCompleteStyleParity": [
+    {
+      "district": "ocd-division/country:us/state:or/special_district:east_multnomah_soil_and_water_conservation_district",
+      "allActualStandardSamples": 119,
+      "fields": [
+        "East Multnomah Soil and Water Conservation District, Director, At-Large, Position 2",
+        "East Multnomah Soil and Water Conservation District, Director, Zone 3"
+      ],
+      "allPositionStyleSetsIdentical": true
+    },
+    {
+      "district": "ocd-division/country:us/state:or/special_district:west_multnomah_soil_and_water_conservation_district",
+      "allActualStandardSamples": 27,
+      "fields": [
+        "West Multnomah Soil and Water Conservation District, Director, At-Large, Position 2",
+        "West Multnomah Soil and Water Conservation District, Director, Zone 4",
+        "West Multnomah Soil and Water Conservation District, Director, Zone 5"
+      ],
+      "allPositionStyleSetsIdentical": true
+    }
+  ],
+  "pudVoterRule": {
+    "sourceUrl": "https://multco.us/info/running-peoples-utility-district-board",
+    "sourceOrg": "Multnomah County Elections",
+    "collectedAt": "2026-11-03T08:30:47.993413+00:00",
+    "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+    "quote": "Positions are elected by voters registered in the sub-district."
+  },
+  "columbiaVoterRule": {
+    "sourceUrl": "https://www.crpud.net/my-pud/rates-policies/general-terms-and-conditions/",
+    "sourceOrg": "Columbia River People’s Utility District",
+    "collectedAt": "2026-11-03T08:50:39.581315+00:00",
+    "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+    "quote": "The five-member governing body of the PUD. Board members are elected by the registered voters residing in the sub-divisions within the PUD’s political boundary."
+  },
+  "columbiaMultnomahTerritory": {
+    "sourceUrl": "https://multco.us/info/running-peoples-utility-district-board",
+    "sourceOrg": "Multnomah County Elections",
+    "collectedAt": "2026-11-03T08:30:47.993413+00:00",
+    "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+    "quote": "A portion of Columbia People’s Utility District, Sub-District 1 is located in Multnomah County."
+  },
+  "rockwoodUnexpiredTerm": {
+    "sourceUrl": "https://multco.us/info/notice-pud-candidate-election-november-2026-general-election",
+    "sourceOrg": "Multnomah County Elections",
+    "collectedAt": "2026-11-03T08:37:46.376478+00:00",
+    "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+    "quote": "Sub-District 4, 2-year unexpired term ending on December 31, 2028"
+  },
+  "fourthJudicialDistrict": {
+    "sourceUrl": "https://www.courts.oregon.gov/courts/multnomah/Pages/default.aspx",
+    "sourceOrg": "Oregon Judicial Department",
+    "collectedAt": "2026-11-03T08:52:59.677315+00:00",
+    "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+    "quote": "Welcome to the Multnomah County Circuit Court, Fourth Judicial District."
+  },
+  "all146StandardSamplesContainAll3JudicialFields": true,
+  "milwaukie": {
+    "printedSample": {
+      "sourceUrl": "https://multco.us/file/4101-2-s-non-en.pdf-1/download",
+      "sourceOrg": "Multnomah County Elections",
+      "collectedAt": "2026-11-03T08:26:20.115853+00:00",
+      "verifiedAt": "2026-11-03T09:03:59.185756+00:00",
+      "quote": "Official Ballot\nMultnomah County, OR\nNovember 3, 2026"
+    },
+    "all3FieldsSameActualStyle": true,
+    "sourceNames": [
+      "sample-055"
+    ],
+    "fullCityPolygonSupplied": true,
+    "officialCountyCommissionUnionIntersectionDegreesSquared": 1.2695496811215316e-06,
+    "countyFractionOfCityGeometry": 0.0008271049896718758,
+    "interpretation": "Current county sample expressly prints all3 Milwaukie city fields. Official city-limit polygon intersects current official county commission extent. Citywide identity retained; no county-scoped substitute."
+  },
+  "rockwoodRegistryAlias": {
+    "registeredParentId": "ocd-division/country:us/state:or/special_district:rockwood_water_district",
+    "registryLabel": "Rockwood Water District",
+    "printedLegalName": "Rockwood Water People's Utility District",
+    "officialCountyLayerLabels": [
+      "ROCKWOOD  P.U.D. D2",
+      "ROCKWOOD  P.U.D. D4",
+      "ROCKWOOD  P.U.D. D5"
+    ],
+    "rule": "Subdistrict voter geometry exact; parent registry alias retained for identity consistency."
+  }
+}

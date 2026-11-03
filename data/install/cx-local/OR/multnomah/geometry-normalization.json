@@ -1,0 +1,28 @@
+{
+  "rawSourcesUnchanged": true,
+  "derivedRepairs": [
+    {
+      "ocdId": "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:4",
+      "sourceValidity": "Ring Self-intersection[-122.49761062603 45.5274170385655]",
+      "sourceSignedPlanarArea": 0.0005159680473326142,
+      "sourceAbsolutePlanarArea": 0.0005159680473326142,
+      "derivedArea": 0.0005159680473326136,
+      "relativeAbsoluteAreaDifference": 1.0506485605944734e-15,
+      "sourceGeometryType": "Polygon",
+      "derivedGeometryType": "Polygon",
+      "sourceAndDerivedRingBoundaryEquivalent": true
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:or/place:portland/council_district:4",
+      "sourceValidity": "Hole lies outside shell[-122.615857642108 45.4626394837313]",
+      "sourceSignedPlanarArea": -0.013532442540057737,
+      "sourceAbsolutePlanarArea": 0.013532442540057737,
+      "derivedArea": 0.0135324425400577,
+      "relativeAbsoluteAreaDifference": 2.691989482879971e-15,
+      "sourceGeometryType": "MultiPolygon",
+      "derivedGeometryType": "Polygon",
+      "sourceAndDerivedRingBoundaryEquivalent": true
+    }
+  ],
+  "limit": "ODA metadata describes cartographic legal-jurisdiction representation, not legal description itself. Utility subdistrict geometry is current county election source. Columbia River full cross-county Subdivision1 remains pending."
+}

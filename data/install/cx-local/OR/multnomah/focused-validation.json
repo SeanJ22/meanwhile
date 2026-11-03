@@ -1,0 +1,106 @@
+{
+  "genericBallotProblems": [],
+  "missingRequiredFields": [],
+  "semantics": [],
+  "retrievalSucceeded": true,
+  "authority": {
+    "ok": true,
+    "contract": {
+      "id": "official-ballot-authorities",
+      "publisher": "Exact official election authorities in the saved-source receipt",
+      "trust": "T2_AUTHORITATIVE_DOCUMENT",
+      "sourceClass": "MULTI_PUBLISHER_PRIMARY",
+      "routePrefixes": [],
+      "jurisdictions": [
+        "US",
+        "US-AL",
+        "US-AK",
+        "US-AZ",
+        "US-AR",
+        "US-CA",
+        "US-CO",
+        "US-CT",
+        "US-DE",
+        "US-DC",
+        "US-FL",
+        "US-GA",
+        "US-HI",
+        "US-ID",
+        "US-IL",
+        "US-IN",
+        "US-IA",
+        "US-KS",
+        "US-KY",
+        "US-LA",
+        "US-ME",
+        "US-MD",
+        "US-MA",
+        "US-MI",
+        "US-MN",
+        "US-MS",
+        "US-MO",
+        "US-MT",
+        "US-NE",
+        "US-NV",
+        "US-NH",
+        "US-NJ",
+        "US-NM",
+        "US-NY",
+        "US-NC",
+        "US-ND",
+        "US-OH",
+        "US-OK",
+        "US-OR",
+        "US-PA",
+        "US-RI",
+        "US-SC",
+        "US-SD",
+        "US-TN",
+        "US-TX",
+        "US-UT",
+        "US-VT",
+        "US-VA",
+        "US-WA",
+        "US-WV",
+        "US-WI",
+        "US-WY",
+        "US-AS",
+        "US-GU",
+        "US-MP",
+        "US-PR",
+        "US-VI"
+      ],
+      "recordClasses": [
+        "BALLOT_CANDIDACY"
+      ],
+      "competentFacts": [
+        "election",
+        "contest",
+        "filed candidate name",
+        "party",
+        "seat count"
+      ],
+      "expectedIdentifierKeys": [
+        "contest_id",
+        "candidacy_id"
+      ],
+      "expectedTemporalFields": [
+        "source_through",
+        "collected_at"
+      ],
+      "horizonSemantics": "Each state/election key carries independently verified contests and candidates. Partial lists establish no absence; authoritative complete successor lists can replace their own candidate set.",
+      "parserVersion": "ballot-contests/1",
+      "freshnessExpectation": "Recheck saved election lists inside the BALLOT_CONTEST freshness window; source gaps remain owed.",
+      "absencePolicy": {
+        "kind": "NEVER_FROM_ZERO"
+      },
+      "routineAutoPromotion": false,
+      "manualReceiptPromotion": {
+        "allowedSourceClasses": [
+          "ELECTION_AUTHORITY",
+          "OFFICIAL_PUBLISHER"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-03T09:04:06.466Z",
+  "latestCxVotesRef": "563382d4ef9e3040934b795c2581d3e796131d31",
+  "latestCxVotesLayerThenLocalMerge": "PASS",
+  "incomingFieldsAdmittedAndExact": 35,
+  "incomingCandidateIdsAndCoreAdmittedAndExact": 75,
+  "fairviewScopeCorrectionsApplied": 4,
+  "portlandCouncilFieldsExplicitlyOutsideInputAndPreserved": 2,
+  "portlandCouncilCandidateCoresExplicitlyPreserved": 33,
+  "unrelatedLatestLayerContestsPreserved": 95,
+  "allLatestQuestionsPreserved": 3,
+  "allLatestMeasureRecordAnalysisExplanationRowsPreserved": 3,
+  "allKnownNonmeasureAttachmentsUnchanged": true,
+  "productionWrites": false
+}

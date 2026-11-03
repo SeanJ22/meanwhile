@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<!-- SE2022  -->
+<!-- DO NOT ALTER OR DETACH FROM SITE DEFINITION WITHOUT CONSULTING NIC CREATIVE SERVICES -->
+
+
+<!-- Legacy Controls -->
+
+<!-- Necessary to use TemplateSettings -->
+
+<!-- HTML -->
+
+<html lang='en-us'>
+<!-- HEAD -->
+<head>
+                <script src="https://kit.fontawesome.com/49bde766de.js" crossorigin="anonymous"></script>
+        
+
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+    <title>
+	Oregon Judicial Department : Multnomah Home : Multnomah County Circuit Court : State of Oregon
+</title>
+        
+
+        <meta name="application-name" content="Multnomah Home : Oregon Judicial Department" />
+        <meta name="description" content="Multnomah Home" />
+        <meta name="keywords" content="Multnomah Home, &quot;Multnomah Home, Multnomah Court, &quot;Multnomah Court&quot;, Parking, &quot;Multnomah Parking&quot;, TriMet Citations, &quot;TriMet Citations&quot;, Traffic, &quot;Multnomah Traffic&quot;, MCJRP, STOP, START, DISP" />
+        
+
+        <meta name="GENERATOR" content="Microsoft SharePoint" />
+        <meta name="progid" content="SharePoint.WebPartPage.Document" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="google-translate-customization" content="d78d477bc586dd01-66d24054f200e54f-g61435a41cc4d65c3-e" />
+
+
+        
+            
+            <link rel="canonical" href="https://www.courts.oregon.gov/courts/multnomah/pages/default.aspx" />
+            
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/apple-touch-icon-57x57.png?v=10062026" rel="apple-touch-icon-precomposed" sizes="57x57" />
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/apple-touch-icon-60x60.png?v=10062026" rel="apple-touch-icon-precomposed" sizes="60x60" />
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/apple-touch-icon-72x72.png?v=10062026" rel="apple-touch-icon-precomposed" sizes="72x72" />
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/apple-touch-icon-114x114.png?v=10062026" rel="apple-touch-icon-precomposed" sizes="114x114" />
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/apple-touch-icon-120x120.png?v=10062026" rel="apple-touch-icon-precomposed" sizes="120x120" />
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/apple-touch-icon-144x144.png?v=10062026" rel="apple-touch-icon-precomposed" sizes="144x144" />
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/apple-touch-icon-152x152.png?v=10062026" rel="apple-touch-icon-precomposed" sizes="152x152" />
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/favicon-16x16.png?v=10062026" rel="icon" type="image/png" sizes="16x16" />
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/favicon-32x32.png?v=10062026" rel="icon" type="image/png" sizes="32x32" />
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/favicon-96x96.png?v=10062026" rel="icon" type="image/png" sizes="96x96" />
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/favicon-128.png?v=10062026" rel="icon" type="image/png" sizes="128x128" />
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/favicon-196x196.png?v=10062026" rel="icon" type="image/png" sizes="196x196" />
+            <link href="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/favicon.ico?v=10062026" rel="shortcut icon" />
+            <meta content="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/mstile-70x70.png?v=10062026" name="msapplication-square70x70logo" />
+            <meta content="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/mstile-150x150.png?v=10062026" name="msapplication-square150x150logo" />
+            <meta content="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/mstile-310x310.png?v=10062026" name="msapplication-square310x310logo" />
+            <meta content="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/mstile-144x144.png?v=10062026" name="msapplication-TileImage" />
+            <meta content="https://orcdn.govstatus.site/Application/CDN/Enterprise/images/icons/favicons/mstile-310x150.png?v=10062026" name="msapplication-wide310x150logo" />
+            
+            
+            <meta content="#344032" name="msapplication-TileColor" />
+            <meta content="#222222" name="theme-color" />
+            <meta content="#344032" name="msapplication-navbutton-color" />
+            <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style" />
+            
+            <meta name="google-site-verification" content="xPsnypiJQzrcAduzxdPcyTtE6ca7SloqVzlWbC_OugQ">
+        
+	
+	
+
+
+        <!-- CSS -->
+        <link href="/courts/multnomah/_layouts/15/OID.SharePoint.StarterTemplate/styles/icon-animations.css" rel="stylesheet" />
+      
+        <link href="https://orcdn.govstatus.site/Application/CDN/Assets/bundle.min.css?b=jasny-bootstrapCss,font-awesome5Css,font-awesome5ShimCss,material-design-iconsCss,twitter-bootstrapCss,sp_2022Css,dataTables_bsCss,fed-assets_datepickerCss&v=10062026" rel="stylesheet" type="text/css">
+
+        <link type="text/css" href="/courts/multnomah/_layouts/15/OID.SharePoint.StarterTemplate/styles/markup-styles.css" rel="stylesheet" />
+
+        <link rel="stylesheet" type="text/css" href="/Style%20Library/css/agency.css?v=10062026" />
+        <!-- / CSS -->
+        
+
+        <!-- SCRIPTS -->
+        <script type="text/javascript">
+            var _fV4UI = true; // SharePoint 2016 UI flag
+            var oregonSharePointTemplateV4xEditMode = false;
+            var oregonSharePointTemplateV4xStaging = false;
+        </script>
+
+        <script type="text/javascript" src="/_vti_bin/OID.SharePoint.StarterTemplate/languageresources.svc/en-us/?v=10062026/"></script>
+
+        <script type="text/javascript">// <![CDATA[ 
+
+var g_SPOffSwitches={};
+// ]]>
+</script>
+<script type="text/javascript" src="/_layouts/15/1033/initstrings.js?rev=PwfqGMCAYeGaq4UXoAzNyA%3D%3DTAG0"></script>
+<script type="text/javascript" src="/_layouts/15/init.js?rev=DYE3cedRmoawSt01VBdEbg%3D%3DTAG0"></script>
+<script src="/_layouts/15/init.js?rev=DYE3cedRmoawSt01VBdEbg%3D%3DTAG0"></script>
+<script type="text/javascript" src="/ScriptResource.axd?d=NJmAwtEo3Ipnlaxl6CMhvgm07cJ35NzHMlAy8o0R7yhTrCWP70hlj1LMxYJeSRZMooY-xphv1ieMkEIEoVaKuU87li7nHV7EtAVyE951NZn6OYrjmBMjZeyruxMMIirMNxvjy9GJGPxd19RsTLyRTHhxrJ8x4kMbgvmaSHabuJE1&amp;t=ffffffffbec1863d"></script>
+<script type="text/javascript" src="/_layouts/15/blank.js?rev=E5awR%2Bfykt6gXvqtGE19XA%3D%3DTAG0"></script>
+<script type="text/javascript" src="/ScriptResource.axd?d=dwY9oWetJoJoVpgL6Zq8ONAZPXIJrH4fO0hDHsS2J5EKTPUmWqjfbvS7Aggf4DMoAh-Ts3J7xsRURValEQN29Chk6gee4YQpyEfSQwuVjZUgWQx0GScgUwf6B36dzWmTQylmvcGb4XftU5osbwKH65KHdt3lVCijnu15vvmpE981&amp;t=ffffffffbec1863d"></script>
+<script type="text/javascript">RegisterSod("require.js", "\u002f_layouts\u002f15\u002frequire.js?rev=bv3fWJhk0uFGpVwBxnZKNQ\u00253D\u00253DTAG0");</script>
+<script type="text/javascript">RegisterSod("strings.js", "\u002f_layouts\u002f15\u002f1033\u002fstrings.js?rev=tob137cgLCsvzDNjZIOCNQ\u00253D\u00253DTAG0");</script>
+<script type="text/javascript">RegisterSod("sp.res.resx", "\u002f_layouts\u002f15\u002f1033\u002fsp.res.js?rev=FnWveYddVjlqQYS2ZBOOzA\u00253D\u00253DTAG0");</script>
+<script type="text/javascript">RegisterSod("sp.runtime.js", "\u002f_layouts\u002f15\u002fsp.runtime.js?rev=gn1bgwGnSSrUbvO1caHCZQ\u00253D\u00253DTAG0");RegisterSodDep("sp.runtime.js", "sp.res.resx");</script>
+<script type="text/javascript">RegisterSod("sp.js", "\u002f_layouts\u002f15\u002fsp.js?rev=PMf7njZbc8Nm3GKFDpwANA\u00253D\u00253DTAG0");RegisterSodDep("sp.js", "sp.runtime.js");RegisterSodDep("sp.js", "sp.ui.dialog.js");RegisterSodDep("sp.js", "sp.res.resx");</script>
+<script type="text/javascript">RegisterSod("sp.init.js", "\u002f_layouts\u002f15\u002fsp.init.js?rev=KQnMQPWHD\u00252BSGM95KBVXUJg\u00253D\u00253DTAG0");</script>
+<script type="text/javascript">RegisterSod("sp.ui.dialog.js", "\u002f_layouts\u002f15\u002fsp.ui.dialog.js?rev=1z5KO1B3h6J\u00252B\u00252FkJjbDQCbg\u00253D\u00253DTAG0");RegisterSodDep("sp.ui.dialog.js", "sp.init.js");RegisterSodDep("sp.ui.dialog.js", "sp.res.resx");</script>
+<script type="text/javascript">RegisterSod("core.js", "\u002f_layouts\u002f15\u002fcore.js?rev=vtdjq\u00252FlvuyzKJJob1Dc1SQ\u00253D\u00253DTAG0");RegisterSodDep("core.js", "strings.js");</script>
+<script type="text/javascript">RegisterSod("browserScript", "\u002f_layouts\u002f15\u002fnon_ie.js?rev=H1GnnHRdOMP52x4IRrWVuQ\u00253D\u00253DTAG0");RegisterSodDep("browserScript", "strings.js");</script>
+<script type="text/javascript">RegisterSod("sp.core.js", "\u002f_layouts\u002f15\u002fsp.core.js?rev=gUVctsjfaq\u00252F1h8zQ6UNkFw\u00253D\u00253DTAG0");RegisterSodDep("sp.core.js", "strings.js");RegisterSodDep("sp.core.js", "sp.init.js");RegisterSodDep("sp.core.js", "core.js");</script>
+<script type="text/javascript">RegisterSod("mQuery.js", "\u002f_layouts\u002f15\u002fmquery.js?rev=YiFSlddzACF6APr5AV8JLA\u00253D\u00253DTAG0");</script>
+<script type="text/javascript">RegisterSod("sharing.js", "\u002f_layouts\u002f15\u002fsharing.js?rev=hJGnqDBFlr\u00252FbOXAgOAhAyw\u00253D\u00253DTAG0");RegisterSodDep("sharing.js", "strings.js");RegisterSodDep("sharing.js", "mQuery.js");RegisterSodDep("sharing.js", "clienttemplates.js");RegisterSodDep("sharing.js", "core.js");</script>
+<script type="text/javascript">RegisterSod("clienttemplates.js", "\u002f_layouts\u002f15\u002fclienttemplates.js?rev=pY197cLBjyA9E5D15QUTVw\u00253D\u00253DTAG0");</script>
+<script type="text/javascript">RegisterSod("inplview", "\u002f_layouts\u002f15\u002finplview.js?rev=ApSfwlQx8y\u00252BHO0akuk0N5Q\u00253D\u00253DTAG0");RegisterSodDep("inplview", "strings.js");RegisterSodDep("inplview", "core.js");RegisterSodDep("inplview", "clienttemplates.js");RegisterSodDep("inplview", "sp.js");</script>
+<script src="https://orcdn.govstatus.site/Application/CDN/Enterprise/scripts/sharepoint/oregon-sharepoint.js?v=10062026"></script><script type="text/javascript">oregon.sharePoint.templateV4x = oregon.sharePoint.templateV4x || {}; oregon.sharePoint.templateV4x.editMode = oregonSharePointTemplateV4xEditMode; oregon.sharePoint.templateV4x.staging = oregonSharePointTemplateV4xStaging;</script>
+
+        
+        <script src="https://orcdn.govstatus.site/Application/CDN/Enterprise/scripts/sharepoint/2022/theming.js?v=10062026"></script><!--added at 03162026-->
+
+        
+
+        
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-8VWBKP4KJ1"></script>
+		<script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+
+            window.__orSharePointTemplateV4xDefaultAnalyticsId = 'G-8VWBKP4KJ1';
+            
+
+            gtag('config', window.__orSharePointTemplateV4xDefaultAnalyticsId, { groups: 'default' });
+
+            
+        </script>
+        <!-- Google Tag Manager -->
+        <script>
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window, document, 'script', 'dataLayer','GTM-KKRH76')
+        </script>
+        <!-- End Google Tag Manager -->
+        
+
+        <script>
+            oregon.sharePoint.template = {
+                theme: 'cascades'
+            }
+        </script>
+        
+        
+        <link href="/courts/multnomah/_layouts/15/OID.SharePoint.StarterTemplate/styles/styles.min.css" rel="stylesheet" />
+       
+        
+        <script src="https://orcdn.govstatus.site/Application/CDN/Enterprise/scripts/sharepoint/2022/page-head.js?v=10062026"></script>
+        
+        
+
+        
+        <script>window.gtranslateSettings = {"default_language":"en-us" ? "en-us" : "en","languages":"Yes" == "Yes" ? "zh-CN$en-us$ko$ru$es$vi".split("$").map(x => x === "en-us" ? "en" : x) : ["af","sq","am","ar","hy","az","eu","be","bn","bs","bg","ca","ny","zh-CN","zh-TW","co","hr","cs","da","nls","en","eo","et","fi","fr","fy","gl","ka","de","el","gu","ht","ha","haw","iw","hi","hmn","hu","is","ig","id","ga","it","ja","kn","kk","km","rw","ko","ku","ky","lo","la","lv","lt","lb","mk","mg","ms","ml","mt","mi","mr","mn","my","ne","no","or","ps","fa","pl","pt","pa","ro","ru","sm","gd","sr","st","sn","sd","si","sk","sl","so","es","su","sw","sv","tl","tg","ta","tt","te","th","tr","tk","uk","ur","ug","uz","vi","cy","xh","yi","yo","zu"],"wrapper_selector":"Yes" == "Yes" ? "#languageDiv" : "#google_translate_element","select_language_label":"Languages"}
+            document.addEventListener('DOMContentLoaded', function () {
+			    document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.usa-language__link');
+    const menu = document.getElementById('language-options');
+
+    // Click on the button: toggle
+    if (btn) {
+        e.preventDefault();
+
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+
+        btn.setAttribute('aria-expanded', !expanded);
+        menu.hidden = expanded;
+
+        return;
+    }
+
+    // Click outside the menu: collapse
+    if (menu) {
+        if (!menu.contains(e.target)) {
+        document
+            .querySelector('.usa-language__link')
+            ?.setAttribute('aria-expanded', 'false');
+
+        menu.hidden = true;
+    }
+    }
+});
+		   } );
+
+        </script>
+        <script src='https://orcdn.govstatus.site/Application/CDN/Enterprise/scripts/sharepoint/translate-uswsd.js?v=10062026' defer></script>
+        <style>
+        #languageDiv {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        #languageDiv a {
+            font-size: 14px;
+        }
+        #languageDiv .fa-globe {
+            margin-right: 3px;
+            margin-left: 3px;
+        }
+        #language-options {
+            position: absolute;
+            z-index: 1032;
+            background: white;
+            color: #181818;
+            list-style: none;
+            padding: 12px 8px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e5e5;
+            max-height: 90vh;
+            overflow-y: auto;
+            min-width: 240px;
+            max-width: calc(100vw - 20px);
+        }
+        .usa-button, .usa-button:hover {
+            background: none;
+            border: none;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .usa-language__submenu-item {
+            margin-bottom: 3px;
+        }
+        .usa-language__primary {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+        .usa-language-container {
+            position: relative;
+        }
+        #language-options:not(.translated-rtl #language-options) {
+            right: 0;
+        }
+        .translated-rtl #language-options {
+            left: 0;
+        }
+        @media (max-width: 600px) {
+            #languages-label {
+                display: none;
+            }
+        }
+        #google_translate_element {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        </style>
+       
+        
+
+        
+        <script src="https://orcdn.govstatus.site/Application/CDN/Assets/bundle.min.js?b=jquery,moment.js,dataTables_bs,fed-assets_datepicker,datatables_vsfonts,knockout&v=10062026"></script><script src="/courts/multnomah/_layouts/15/OID.SharePoint.StarterTemplate/scripts/data-tables-web-part.js"></script><!-- Script below added for SiteImprove Features - By Tyler Tech 10/4/2024 -->
+<script async src="https://siteimproveanalytics.com/js/siteanalyze_6283848.js"></script>
+    <!-- / SCRIPTS -->
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css" /></head>
+<!-- / HEAD -->
+
+<!-- BODY -->
+<body id="top" class="sp2022 v4_x v4_11 v4_11_3 oregon-judicial-department multnomah-county-circuit-court agency-left-nav courts-multnomah-pages-default-aspx or-has-side-navigation or-small-header form-mode-display user-anonymous" onload="if (typeof(_spBodyOnLoadWrapper) != 'undefined') _spBodyOnLoadWrapper();">
+    <script type="text/javascript">oregon.sharePoint.templateV4x.bodyElementCreated();</script>
+
+    <!-- FORM -->
+    <form method="post" action="./default.aspx" onsubmit="javascript:return WebForm_OnSubmit();" id="aspnetForm">
+<div class="aspNetHidden">
+<input type="hidden" name="_wpcmWpid" id="_wpcmWpid" value="" />
+<input type="hidden" name="wpcmVal" id="wpcmVal" value="" />
+<input type="hidden" name="MSOWebPartPage_PostbackSource" id="MSOWebPartPage_PostbackSource" value="" />
+<input type="hidden" name="MSOTlPn_SelectedWpId" id="MSOTlPn_SelectedWpId" value="" />
+<input type="hidden" name="MSOTlPn_View" id="MSOTlPn_View" value="0" />
+<input type="hidden" name="MSOTlPn_ShowSettings" id="MSOTlPn_ShowSettings" value="False" />
+<input type="hidden" name="MSOGallery_SelectedLibrary" id="MSOGallery_SelectedLibrary" value="" />
+<input type="hidden" name="MSOGallery_FilterString" id="MSOGallery_FilterString" value="" />
+<input type="hidden" name="MSOTlPn_Button" id="MSOTlPn_Button" value="none" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__REQUESTDIGEST" id="__REQUESTDIGEST" value="noDigest" />
+<input type="hidden" name="MSOSPWebPartManager_DisplayModeName" id="MSOSPWebPartManager_DisplayModeName" value="Browse" />
+<input type="hidden" name="MSOSPWebPartManager_ExitingDesignMode" id="MSOSPWebPartManager_ExitingDesignMode" value="false" />
+<input type="hidden" name="MSOWebPartPage_Shared" id="MSOWebPartPage_Shared" value="" />
+<input type="hidden" name="MSOLayout_LayoutChanges" id="MSOLayout_LayoutChanges" value="" />
+<input type="hidden" name="MSOLayout_InDesignMode" id="MSOLayout_InDesignMode" value="" />
+<input type="hidden" name="_wpSelected" id="_wpSelected" value="" />
+<input type="hidden" name="_wzSelected" id="_wzSelected" value="" />
+<input type="hidden" name="MSOSPWebPartManager_OldDisplayModeName" id="MSOSPWebPartManager_OldDisplayModeName" value="Browse" />
+<input type="hidden" name="MSOSPWebPartManager_StartWebPartEditingName" id="MSOSPWebPartManager_StartWebPartEditingName" value="false" />
+<input type="hidden" name="MSOSPWebPartManager_EndWebPartEditing" id="MSOSPWebPartManager_EndWebPartEditing" value="false" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZE5Krk5qm2xaJHfIBYCTn0HcItjG9wyIKV_8iwxUSbgMo2LqLSTPNedtzTQloihdpg2&amp;t=639190653332169432" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+//<![CDATA[
+var MSOWebPartPageFormName = 'aspnetForm';
+var g_presenceEnabled = true;
+var g_wsaEnabled = false;
+
+var g_correlationId = '972c4ba2-e390-c03f-5d20-faaa1dfd7002';
+var g_wsaQoSEnabled = false;
+var g_wsaQoSDataPoints = [];
+var g_wsaRUMEnabled = false;
+var g_wsaLCID = 1033;
+var g_wsaListTemplateId = 850;
+var g_wsaSiteTemplateId = 'STS#0';
+var _spPageContextInfo={"webServerRelativeUrl":"/courts/multnomah","webAbsoluteUrl":"https://www.courts.oregon.gov/courts/multnomah","viewId":"","listId":"{daf07f7a-cb02-4be7-963a-899b8136631e}","listPermsMask":{"High":16,"Low":196673},"listUrl":"/courts/multnomah/Pages","listTitle":"Pages","listBaseTemplate":850,"viewOnlyExperienceEnabled":false,"blockDownloadsExperienceEnabled":false,"idleSessionSignOutEnabled":false,"cdnPrefix":"","siteAbsoluteUrl":"https://www.courts.oregon.gov","siteId":"{cafd47d4-eb4a-4312-9944-42cf9dfacf77}","showNGSCDialogForSyncOnTS":false,"supportPoundStorePath":true,"supportPercentStorePath":true,"siteSubscriptionId":null,"CustomMarkupInCalculatedFieldDisabled":true,"AllowCustomMarkupInCalculatedField":false,"peoplePickerAutoSearchDelayMilliseconds":0,"peoplePickerRequireExplicitSearch":false,"isSPO":false,"farmLabel":null,"serverRequestPath":"/courts/multnomah/Pages/default.aspx","layoutsUrl":"_layouts/15","webId":"{e67ef099-6e37-4eac-a257-3d9b75137b99}","webTitle":"Multnomah County Circuit Court","webTemplate":"1","webTemplateConfiguration":"STS#0","webDescription":"4th Judicial District","tenantAppVersion":"0","isAppWeb":false,"webLogoUrl":"_layouts/15/images/siteicon.png","webLanguage":1033,"currentLanguage":1033,"currentUICultureName":"en-US","currentCultureName":"en-US","currentCultureLCID":1033,"spDocIntelligence":{"isEnabled":false,"isDocSummarizeEnabled":false,"isDocTranslateEnabled":false},"env":null,"nid":0,"fid":0,"serverTime":"2026-11-03T08:53:01.9322665Z","siteClientTag":"25$$16.0.20326.20190","crossDomainPhotosEnabled":false,"openInClient":false,"Has2019Era":true,"webUIVersion":15,"webPermMasks":{"High":16,"Low":196673},"pageListId":"{daf07f7a-cb02-4be7-963a-899b8136631e}","pageItemId":1,"pagePermsMask":{"High":16,"Low":196673},"pagePersonalizationScope":1,"userEmail":"","userId":0,"userLoginName":null,"userDisplayName":null,"isAnonymousUser":true,"isAnonymousGuestUser":false,"isEmailAuthenticationGuestUser":false,"isExternalGuestUser":false,"sideBysideToken":"","systemUserKey":null,"alertsEnabled":true,"siteServerRelativeUrl":"/","allowSilverlightPrompt":"True","themeCacheToken":"/courts/multnomah::1:","themedCssFolderUrl":null,"themedImageFileNames":null,"modernThemingEnabled":true,"isSiteAdmin":false,"ExpFeatures":[480216468,1884350801,1158731092,62197791,538521105,335811073,4194306,34614301,268500996,-1946025984,28445328,-2147475455,134291456,65544,288,950272,1282,808326148,134217873,0,0,-1073217536,545285252,18350656,-467402752,6291457,-2147483644,1074794496,-1728053184,1845537108,622628,4102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"IsHybridEnabled":false,"SPOnPremFlights":[1635110,1608625,1615140,1554278,1536594,1451530,1437361,1293572,1281075,1266854,1262861,1263396,1245315,1242554,1241972,1232868,1227765,1225014,1220075,1218539,1175952,1174945,1165662,1159162,1149960,1149522,1113916,1111397,1101858,1099085,1086764,1080816,1079075,1075954,1073830,1073759,95255,1062921,1055593,1052809,1043614,1041859,1040063,1039112,1036486,1035189,1033993,1030381,1030382,1030364,1030362,1029854,1029586,1029565,1029556,1029555,1028671,1025113,1021288,1021275,1021274,1021272,1020637,1020043,1018275,1018016,1012433,1011886,1010592,1009740,1009585,1008744,1007603,1004459,1003886,1002806,1001164,116041,114176,114166,112973,108499,108186,107054,100994,100425,99885,99722,96075,94920],"InternalValidAuthorities":["intranet.oregon.gov","intranet.oregon.gov","sos.oregon.gov","www.oregon.gov","www-auth.oregon.gov","www.oregon.gov","www-auth.oregon.gov","prod-agency.oregon.gov","prod-agency.oregon.gov"],"CorrelationId":"972c4ba2-e390-c03f-5d20-faaa1dfd7002","hasManageWebPermissions":false,"isNoScriptEnabled":false,"groupId":null,"groupHasHomepage":true,"groupHasQuickLaunchConversationsLink":false,"departmentId":null,"hubSiteId":null,"hasPendingWebTemplateExtension":false,"isHubSite":false,"isWebWelcomePage":false,"siteClassification":"","hideSyncButtonOnODB":false,"showNGSCDialogForSyncOnODB":false,"sitePagesEnabled":false,"sitePagesFeatureVersion":0,"suiteNavInfo":{"suiteBarBackground":null,"suiteBarText":null,"suiteNavAccentColor":null,"suiteNavAllowCustom":false,"suiteNavAllowOverwrite":false,"suiteNavBrandingLogoNavigationUrl":null,"suiteNavBrandingLogoTitle":null,"suiteNavBrandingLogoUrl":null,"suiteNavBrandingText":null},"DesignPackageId":"00000000-0000-0000-0000-000000000000","groupType":null,"groupColor":"#0273eb","siteColor":"#0273eb","headerEmphasis":0,"navigationInfo":null,"guestsEnabled":false,"MenuData":{"SignInUrl":"/courts/multnomah/_layouts/15/Authenticate.aspx?Source=%2Fcourts%2Fmultnomah%2FPages%2Fdefault%2Easpx"},"RecycleBinItemCount":-1,"PublishingFeatureOn":true,"PreviewFeaturesEnabled":false,"disableAppViews":false,"disableFlows":false,"serverRedirectedUrl":null,"formDigestValue":"0x9760323364429A5AE6903C4DE39636A552D7396B07FBDB622D1B1FA9DF9771BFCAF0212541F0D74A8778FEE653EC90C0098E4D2838276A7CB8EE6515EFC40B8D,03 Nov 2026 08:53:01 -0000","maximumFileSize":15360,"formDigestTimeoutSeconds":1800,"canUserCreateMicrosoftForm":false,"canUserCreateVisioDrawing":true,"readOnlyState":null,"isTenantDevSite":false,"preferUserTimeZone":false,"userTimeZoneData":null,"userTime24":false,"userFirstDayOfWeek":null,"webTimeZoneData":null,"webTime24":false,"webFirstDayOfWeek":null,"isSelfServiceSiteCreationEnabled":null,"alternateWebAppHost":"","aadTenantId":"","aadUserId":"","aadInstanceUrl":"","msGraphEndpointUrl":"https://","allowInfectedDownload":true};_spPageContextInfo.updateFormDigestPageLoaded=new Date();_spPageContextInfo.clientServerTimeDelta=new Date(_spPageContextInfo.serverTime)-new Date();if(typeof(define)=='function'){define('SPPageContextInfo',[],function(){return _spPageContextInfo;});}document.onreadystatechange=fnRemoveAllStatus; function fnRemoveAllStatus(){removeAllStatus(true)};Flighting.ExpFeatures = [480216468,1884350801,1158731092,62197791,538521105,335811073,4194306,34614301,268500996,-1946025984,28445328,-2147475455,134291456,65544,288,950272,1282,808326148,134217873,0,0,-1073217536,545285252,18350656,-467402752,6291457,-2147483644,1074794496,-1728053184,1845537108,622628,4102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];var _spWebPartComponents = new Object();//]]>
+</script>
+
+<script src="/_layouts/15/blank.js?rev=E5awR%2Bfykt6gXvqtGE19XA%3D%3DTAG0" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(DeferWebFormInitCallback) == 'function') DeferWebFormInitCallback();function WebForm_OnSubmit() {
+UpdateFormDigest('\u002fcourts\u002fmultnomah', 1440000);if (typeof(_spFormOnSubmitWrapper) != 'undefined') {return _spFormOnSubmitWrapper();} else {return true;};
+return true;
+}
+//]]>
+</script>
+
+
+        
+
+        <!-- SP2016 RIBBON - DO NOT TOUCH -->
+        <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ctl00$ScriptManager', 'aspnetForm', [], [], [], 90, 'ctl00$ctl00');
+//]]>
+</script>
+
+        
+
+        
+        <!-- / SP2016 RIBBON - DO NOT TOUCH -->
+
+        <!-- STICKY NAV WRAPPER BEGIN -->
+        <div class="or-navbar-sticky-placeholder"></div>
+       
+        <div class="or-navbar-sticky-wrapper">
+
+            <!-- SKIP TO MAIN -->
+            <a id="skipToMain" class="sr-only sr-only-focusable" href="#main">
+                <span class="skiplink-text">Skip to main content</span>
+            </a><!--  added at 06012026 -->
+
+             <!--  added at 05132026 -->
+            <!--  added at 05182026 -->
+            <!-- / SKIP TO MAIN -->
+
+            <!-- STATE-WIDE ALERTS -->
+            <div id="StateWideAlertPlaceholder" class="or-state-alert-placeholder">
+            </div>
+            <!-- / STATE-WIDE ALERTS -->
+
+            <div class="or-official" role="region" aria-label="Oregon Official Navigation">
+                <p>
+                    <img src="https://images.oregon.gov/Portal/Images/Flags/oregon-flag.jpg" alt="Oregon State Flag" />
+                    <span class="hidden-phone hidden-xs">An official website of the State of Oregon
+                         <span class="sr-only">Learn</span>
+                        <a class="btn btn-link" aria-haspopup="dialog" href="#or-official-modal"
+                            role="button" data-toggle="modal">How you know »</a>
+                        <span class="sr-only">(how to identify a Oregon.gov website)</span>
+                    </span>
+                    <a href="#or-official-modal" role="button" data-toggle="modal" class="hidden-tablet hidden-desktop visible-xs-inline">An official website of the State of Oregon »
+                    </a>
+                </p>
+                <div id="languageDiv" class="or-navbar-translate-button-wrapper or-navbar-translation-wrapper or-navbar-translation-wrapper list-unstyled notranslate"  style=""></div>
+            </div>
+            
+            <!-- PORTAL BAR -->
+            <div class="or-navbar">
+                <!-- NAV BRAND -->
+                <a class="or-navbar-brand" href="/"><img src="/PublishingImages/OJD_banner_logo.png" alt="Oregon Judicial Department Logo"></a>
+                <!-- / NAV BRAND -->
+
+                <!-- NAV TOGGLE -->
+                <button type="button" class="or-navbar-toggle-button hidden-sm hidden-md hidden-lg" id="hamburgerMenuButton" data-target=".or-navigation" data-toggle="offcanvas" data-canvas="body">
+                    
+                    <span class="fa fa-bars notranslate"></span>
+                    <span class="sr-only">Toggle Main Menu</span>
+                </button>
+                <!-- / NAV TOGGLE -->
+
+                <!-- TOP NAVIGATION -->
+
+                <!-- top navigation publishing data source -->
+                
+
+                
+                    <!-- top navigation menu (set to use the new Simple Rendering) -->
+                    <nav id="ctl00_ctl00_TopNavigationPlaceHolder_OregonTopNavigation" aria-label="Main Navigation" class="or-navigation navbar-offcanvas navmenu-fixed-right offcanvas">
+	<div class="or-navigation-label visible-xs">
+		Main Navigation
+	</div><ul class="or-navigation-list">
+		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="#">How Do I?&nbsp;<span class="material-icons md-18 notranslate" aria-hidden="true">&#xe5c5;</span></a><ul class="dropdown-menu">
+			<li><a href="/programs/interpreters/want-to-be">Become an Interpreter</a></li><li><a href="/how/Pages/file.aspx">File a Case</a></li><li><a href="/how/Pages/find.aspx">Find a Case or Court Record</a></li><li><a href="/courts">Find a Court</a></li><li><a href="/Pages/fees.aspx">Find a Court Fee</a></li><li><a href="/services/online/Pages/records-calendars.aspx">Find a Court Date</a></li><li><a href="/rules/Pages/default.aspx">Find Court Rules</a></li><li><a href="/programs/family/marriage/Pages/default.aspx">Find Divorce Information</a></li><li><a href="/services/online/Pages/RemoteHearings.aspx">Find Information About a Remote Hearing</a></li><li><a href="/how/Pages/jury.aspx">Find Juror Information</a></li><li><a href="/programs/family/domestic-violence/Pages/restraining.aspx">Get a Restraining Order</a></li><li><a href="/how/Pages/payment.aspx">Make a Payment</a></li><li><a href="/services/ada/Pages/default.aspx">Request ADA Accommodation</a></li><li><a href="/Pages/interpreter_request.aspx" target="_blank">Request an Interpreter<span class="sr-only"> (Opens in new window)</span></a></li><li><a href="/Pages/text-message-overview.aspx">Sign-up For Text Message Hearing Notifications</a></li><li><a href="/courts/Pages/pro-tem.aspx">Apply To Become a Pro Tem and/or Reference Judge</a></li>
+		</ul></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="#">Online Services&nbsp;<span class="material-icons md-18 notranslate" aria-hidden="true">&#xe5c5;</span></a><ul class="dropdown-menu">
+			<li><a href="/services/online">Online Services Home</a></li><li><a href="/services/online/Pages/appellate-efile.aspx">Appellate eFile</a></li><li><a href="/services/online/Pages/live-stream.aspx">Live Stream Proceedings</a></li><li><a href="/services/online/Pages/ojcin.aspx">OJCIN Online</a></li><li><a href="/services/online/Pages/epay.aspx">OJD Courts ePay</a></li><li><a href="/services/online/Pages/efile.aspx">OJD eFile</a></li><li><a href="/services/online/Pages/iforms.aspx">OJD iForms (Interactive Forms)</a></li><li><a href="/services/online/Pages/records-calendars.aspx">OJD Records and Calendar Search</a></li><li><a href="/services/online/Pages/online-legal-service-posting.aspx">Online Legal Service Posting</a></li><li><a href="/services/online/Pages/RemoteHearings.aspx">Remote Hearings</a></li>
+		</ul></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="#">Forms/Rules/Fees&nbsp;<span class="material-icons md-18 notranslate" aria-hidden="true">&#xe5c5;</span></a><ul class="dropdown-menu">
+			<li><a href="/forms">Forms Center</a></li><li><a href="/rules">Rules Center</a></li><li><a href="/Pages/fees.aspx">Court Fees</a></li>
+		</ul></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="#">Self-Help&nbsp;<span class="material-icons md-18 notranslate" aria-hidden="true">&#xe5c5;</span></a><ul class="dropdown-menu">
+			<li><a href="/help">Self-Help Center</a></li><li><a href="/programs/family/marriage">Divorce, Separation, Annulment</a></li><li><a href="/programs/family/domestic-violence">Protective (Restraining) Orders</a></li><li><a href="/programs/family/Pages/default.aspx">Family Law</a></li><li><a href="/programs/family/courtinfo/Pages/default.aspx">Free Help for Family Law Cases</a></li>
+		</ul></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="#">Opinions &amp; Law Library&nbsp;<span class="material-icons md-18 notranslate" aria-hidden="true">&#xe5c5;</span></a><ul class="dropdown-menu">
+			<li><a href="/publications/sc/Pages/default.aspx">Supreme Court Opinions</a></li><li><a href="/publications/coa/Pages/default.aspx">Court of Appeals Opinions</a></li><li><a href="/publications/tax/Pages/default.aspx">Tax Court Decisions</a></li><li><a href="https://soll.libguides.com" target="_blank">Law Library<span class="sr-only"> (Opens in new window)</span></a></li><li><a href="/publications/other/Pages/default.aspx">Other Publications</a></li>
+		</ul></li><li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="#">Programs &amp; Committees&nbsp;<span class="material-icons md-18 notranslate" aria-hidden="true">&#xe5c5;</span></a><ul class="dropdown-menu">
+			<li><a href="/programs">Programs &amp; Committees Home</a></li><li><a href="/programs/ADR">Alternative Dispute Resolution</a></li><li><a href="/courts/appellate">Appellate Court Records</a></li><li><a href="/programs/BehavioralHealth/Pages/default.aspx">Behavioral Health</a></li><li><a href="/programs/csr">Certified Shorthand Reporters</a></li><li><a href="/programs/crb/Pages/default.aspx">Citizen Review Board</a></li><li><a href="/programs/cjfd/Pages/default.aspx">Commission on Judicial Fitness and Disability</a></li><li><a href="/languages">Court Language Access Services</a></li><li><a href="/programs/interpreters">Current &amp; Prospective Interpreters</a></li><li><a href="/programs/family">Family Law</a></li><li><a href="/programs/inclusion">Inclusion &amp; Fairness</a></li><li><a href="/programs/jurytaskforce">Jury Task Force</a></li><li><a href="/programs/Juvenile">Juvenile Court Program</a></li><li><a href="/programs/Ombudsman/Pages/default.aspx">Omsbudsman</a></li><li><a href="/programs/pretrial/Pages/default.aspx">Pretrial Programs</a></li><li><a href="/programs/rcsc/Pages/default.aspx">Remote Child Support Court</a></li><li><a href="/programs/treatmentcourts/Pages/default.aspx">Treatment Courts</a></li><li><a href="/programs/tribalstateforensicbehavioralhealthtaskforce">Tribal and State Forensic Behavioral Health Task Force</a></li><li><a href="/programs/utcr">Uniform Trial Court Rules &amp; Committee</a></li>
+		</ul></li>
+	</ul>
+</nav>
+                
+                <!-- / TOP NAVIGATION -->
+              
+                <!-- SEARCH BUTTON -->
+                <div class="or-navbar-search-wrapper" role="search" id="searchBar">
+                    <button class="search-button" aria-label="Search" aria-expanded="false">
+                        
+                        <span class="or-navbar-search-input-icon fal fa-search notranslate" aria-hidden="true"></span>
+                        
+                    </button>
+                </div>
+                <!-- / SEARCH BUTTON -->
+            </div>
+            <!-- / PORTAL BAR -->
+        </div>
+        <!-- / STICK NAV WRAPPER -->
+        <!-- SEARCH BAR OPEN-->
+        <div class="or-navbar-search-input-wrapper" role="search" aria-hidden="true">
+            <label class="or-navbar-search-label" for="oregonSearchBar">Search this site</label>
+            <input id="oregonSearchBar" class="or-navbar-search-input" placeholder="Search" aria-label="Search this website" type="search" data-gtm-form-interact-field id="0" tabindex="-1">
+            <button class="or-navbar-search-submit-button" aria-label="Submit Search" type="button" tabindex="-1">
+                <span class="fal fa-search notranslate" aria-hidden="true"></span>
+                <span class="sr-only">Submit</span>
+            </button>
+            <button class="or-navbar-search-close-button" aria-label="Close Search" type="button" tabindex="-1">
+
+                <span class="fal fa-times fa-material-shim notranslate" aria-hidden="true"></span>
+
+                <span class="sr-only">close</span>
+            </button>
+        </div>
+        <!-- / SEARCH BAR OPEN-->
+
+        <!-- HEADER / BANNER  -->
+        
+            <header class="or-header container-fluid" id="header">
+                <div class="or-header-overlay">
+                </div>
+                <div class="or-header-content">
+                    
+                        <div class="or-header-content-row">
+                            <a href="/" class="or-header-content-cell or-header-logo-link" title="Back to Home" id="headerLogo">
+                                <div class="or-header-logo-wrapper">
+                                    
+                                    <div class="or-header-logo">
+                                        <span class="sr-only">Back to Home</span>
+                                    </div>
+                                    
+                                </div>
+                            </a>
+                            <a href="/courts/multnomah" class="or-header-content-cell or-header-title-link" title="Multnomah County Circuit Court">
+                                <div class="or-header-title">
+                                    <span class="or-header-site-title">
+                                        Multnomah County Circuit Court
+                                    </span>
+                                    <small class="or-header-site-description">
+                                        4th Judicial District
+                                    </small>
+                                </div>
+                            </a>
+                        </div>
+
+                        
+                    
+
+
+                    
+                        <nav class="breadcrumbs" aria-label="breadcrumbs">
+                            <p class="sr-only">You are here:</p>
+                            
+                                <ol class="breadcrumb or-breadcrumbs">
+	<li class="home"><a href="/Pages/default.aspx" aria-label="Home - Oregon Judicial Department"><span class="fa fa-home md-18" aria-hidden="true"></span><span>Oregon Judicial Department</span></a></li><li><a href="/courts/Pages/default.aspx" aria-label="Oregon State Courts">Oregon State Courts</a></li><li class="active">Multnomah County Circuit Court</li>
+</ol>
+                            
+                        </nav>
+                    
+
+                </div>
+            </header>
+        
+        <!-- HEADER / BANNER -->
+
+        <!-- SITE WIDE ALERT -->
+        
+            <div id="agencyWideAlert"></div>
+        
+        <!-- / SITE WIDE ALERT -->
+
+        <!-- CHECK OUT INDICATOR -->
+        
+        <!-- / CHECK OUT INDICATOR -->
+
+        <!-- MAIN -->
+        <!--PAGEWATCH-->
+        <main class="main" id="main" tabindex="-1">
+            <div class="container">
+
+                
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <!-- Must reside outside the <h1> tag, as divs are not allowed in <h1>'s -->
+                            <h1 class="or-page-title">
+                                
+                                Multnomah Home
+                            </h1>
+                            <div class="form-group or-show-if-side-navigation">
+                                <button class="btn btn-default btn-block hidden-md hidden-lg hidden-xl" type="button" data-toggle="offcanvas" data-target="#OregonSideNavigation" data-canvas="body"><span class="fa fa-bars notranslate" aria-hidden="true"></span> <span>Site Navigation</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                    
+
+                        <div class="row">
+
+                        <div class="col-md-3">
+                            <!-- side navigation publishing data source -->
+                            
+
+                            <!-- side navigation menu -->
+                            <nav id="OregonSideNavigation" aria-label="Site Navigation" class="or-side-navigation navmenu navmenu-default navmenu-fixed-left offcanvas-sm">
+	<ul class="nav">
+		<li class="or-side-navigation-current"><a href="/courts/multnomah/Pages/default.aspx" aria-current="page">Multnomah Home</a></li><li class=""><a href="/courts/multnomah/records/Pages/default.aspx">Court Records</a></li><li class="or-side-navigation-parent"><a href="/courts/multnomah/go/Pages/default.aspx">Going to Court</a><div>
+			<ul class="or-side-navigation-submenu list-unstyled">
+				<li class=""><a href="/courts/multnomah/go/Pages/ada.aspx">Accessibility</a></li><li class=""><a href="/courts/multnomah/go/Pages/civil.aspx">Civil</a></li><li class=""><a href="/courts/multnomah/go/Pages/calendars.aspx">Court Calendars and Live Stream Proceedings</a></li><li class=""><a href="/courts/multnomah/go/Pages/criminal.aspx">Criminal</a></li><li class=""><a href="/courts/multnomah/go/Pages/family.aspx">Family</a></li><li class=""><a href="/courts/multnomah/go/Pages/judges-home.aspx">Judges</a></li><li class=""><a href="/courts/multnomah/go/Pages/juvenile.aspx">Juvenile</a></li><li class=""><a href="/courts/multnomah/go/Pages/fed.aspx">Landlord/Tenant</a></li><li class=""><a href="/courts/multnomah/go/Pages/parking.aspx">Parking Citations</a></li><li class=""><a href="/courts/multnomah/go/Pages/probate.aspx">Probate</a></li><li class=""><a href="/courts/multnomah/go/Pages/rules.aspx">Rules</a></li><li class=""><a href="/courts/multnomah/go/Pages/smallclaims.aspx">Small Claims</a></li><li class=""><a href="/courts/multnomah/go/Pages/traffic.aspx">Traffic &amp; TriMet Citations</a></li><li class=""><a href="/courts/multnomah/go/Pages/care.aspx">CourtCare/Child Care</a></li>
+			</ul>
+		</div></li><li class="or-side-navigation-parent"><a href="/courts/multnomah/jury/Pages/default.aspx">Jury Duty</a><div>
+			<ul class="or-side-navigation-submenu list-unstyled">
+				<li class=""><a href="/courts/multnomah/jury/Pages/juror-response.aspx">Juror Response Form</a></li><li class=""><a href="/courts/multnomah/jury/Pages/jury-schedule.aspx">Jury Schedule</a></li><li class=""><a href="/courts/multnomah/jury/Pages/juror-resources.aspx">Juror FAQs</a></li>
+			</ul>
+		</div></li><li class="or-side-navigation-parent"><a href="/courts/multnomah/payments/Pages/default.aspx">Payments</a><div>
+			<ul class="or-side-navigation-submenu list-unstyled">
+				<li class=""><a href="/courts/multnomah/payments/Pages/faq.aspx">Payments FAQ</a></li><li class=""><a href="/courts/multnomah/payments/Pages/collections.aspx">Collections</a></li><li class=""><a href="/courts/multnomah/payments/Pages/waiver-deferrals.aspx">Fee Waiver/Fee Deferral</a></li><li class=""><a href="/courts/multnomah/payments/Pages/bail.aspx">Security Release (Bail)</a></li>
+			</ul>
+		</div></li><li class="or-side-navigation-parent"><a href="/courts/multnomah/programs-services/Pages/default.aspx">Programs &amp; Services</a><div>
+			<ul class="or-side-navigation-submenu list-unstyled">
+				<li class=""><a href="/courts/multnomah/programs-services/Pages/treatment-courts.aspx">Treatment Courts</a></li><li class=""><a href="/courts/multnomah/programs-services/Pages/clas.aspx">CLAS/Interpreter Services</a></li><li class=""><a href="/courts/multnomah/programs-services/Pages/mediation.aspx">Mediation</a></li><li class=""><a href="/courts/multnomah/programs-services/Pages/MCJRP.aspx">Multnomah County Justice Reinvestment Program (MCJRP)</a></li><li class=""><a href="/courts/multnomah/programs-services/Pages/SpecialDockets.aspx">Special Dockets</a></li><li class=""><a href="/courts/multnomah/programs-services/Pages/LegalResourceCenter.aspx">Legal Resource Center</a></li>
+			</ul>
+		</div></li><li class="or-side-navigation-parent"><a href="/courts/multnomah/help/Pages/default.aspx">Self Help</a><div>
+			<ul class="or-side-navigation-submenu list-unstyled">
+				<li class=""><a href="/courts/multnomah/help/Pages/forms.aspx">Forms</a></li>
+			</ul>
+		</div></li><li class=""><a href="/courts/multnomah/resources/Pages/default.aspx">Other Court Resources</a></li><li class=""><a href="/courts/multnomah/Pages/court-mailing-addresses.aspx">Court Mailing Addresses</a></li><li class=""><a href="/courts/multnomah/Pages/Contacts.aspx">Contacts</a></li><li class=""><a href="/courts/multnomah/Pages/Careers.aspx">Work for Our Court</a></li>
+	</ul>
+</nav>
+                        </div>
+                        <div class="col-md-9" >
+
+                    
+
+                    
+                    <!--Sharepoint's placeholder-->
+
+                    
+	
+	
+	
+	
+	
+	<div class="row">
+		<div class="col-md-12">
+			<div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField1_label" style='display:none'></div><div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField1__ControlWrapper_OregonRichHtmlField" class="ms-rtestate-field" style="display:inline" ><div class="alert alert-success" style="color&#58;black;"> 
+   <details class="ojd-accordion-item"><summary class="ojd-accordion-title"> 
+         <h2 class="h5">
+            <strong>Contact the Court by Email and Public Counter Status</strong><br></h2> 
+         <span class="icon">+</span> </summary> 
+      <div class="content"><div class="ms-rtestate-read ms-rte-wpbox"><div class="ms-rtestate-notify  ms-rtestate-read 3ad42f10-2450-401f-8497-23468a799b0c" id="div_3ad42f10-2450-401f-8497-23468a799b0c" unselectable="on"><div id="MSOZoneCell_WebPartWPQ1" class="s4-wpcell-plain ms-webpartzone-cell ms-webpart-cell-vertical-inline-table ms-webpart-cell-vertical ms-fullWidth ">
+	<div class="ms-webpart-chrome ms-webpart-chrome-vertical ms-webpart-chrome-fullWidth ">
+	<div    id="WebPartWPQ1"  class="ms-WPBody "   style="" ><div id="ctl00_ctl00_ctl40_g_3ad42f10_2450_401f_8497_23468a799b0c" class="or-dataTablesWebPart">
+		<div id="983ead08-aa05-486f-89de-989ddde6f49e">
+			<data-tables-web-part params="webPartId: &#39;g_3ad42f10_2450_401f_8497_23468a799b0c&#39;, webPartProperties: {&quot;webPartId&quot;:&quot;g_3ad42f10_2450_401f_8497_23468a799b0c&quot;,&quot;tableCaption&quot;:&quot;&quot;,&quot;dataSource&quot;:&quot;list&quot;,&quot;socrataId&quot;:&quot;&quot;,&quot;sharePointWebUrl&quot;:&quot;/courts/multnomah&quot;,&quot;sharePointListUrl&quot;:&quot;/courts/multnomah/Lists/DepartmentEmails&quot;,&quot;sharePointViewName&quot;:&quot;Display&quot;,&quot;responsiveMode&quot;:&quot;collapse&quot;,&quot;paginationEnabled&quot;:false,&quot;searchEnabled&quot;:false,&quot;sortEnabled&quot;:false,&quot;filterEnabled&quot;:false,&quot;stateSaveEnabled&quot;:false,&quot;copyButtonEnabled&quot;:false,&quot;printButtonEnabled&quot;:false,&quot;excelButtonEnabled&quot;:false,&quot;pdfButtonEnabled&quot;:false,&quot;tableBordered&quot;:true,&quot;tableStriped&quot;:true,&quot;tableCondensed&quot;:false}">
+
+			</data-tables-web-part>
+		</div><script type="text/javascript">
+			ko.applyBindings(null, document.getElementById('983ead08-aa05-486f-89de-989ddde6f49e'))
+		</script>
+	</div><div class="ms-clear"></div></div>
+</div>
+</div></div><div id="vid_3ad42f10-2450-401f-8497-23468a799b0c" unselectable="on" style="display&#58;none;"></div>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</div><p> 
+            <br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</p>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</div></details> 
+   <h2>Presiding Judge Orders<br></h2>The 
+   <a href="https&#58;//cdm17027.contentdm.oclc.org/digital/collection/p17027coll15/search">Presiding Judge Orders</a> assign actions and proceedings pending before a court to other judges of the judicial district for hearing and disposition.<br>
+   <h2>Chief Justice Order (CJO 25-018)<br></h2> The 
+   <a href="/rules/Documents/CJO_2025-018.pdf">Chief Justice Order</a> establishes interim procedures addressing immigration enforcement activities in the Oregon courts on 7/1/25. 
+   <br> 
+   <br></div> 
+<strong> 
+   <h2> 
+      <strong>
+         <i class="fa fa-map-marker" aria-hidden="true"></i>&#160;Contact &amp;&#160;Location&#160;Information&#160;</strong></h2></strong></div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField2_label" style='display:none'></div><div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField2__ControlWrapper_OregonRichHtmlField" class="ms-rtestate-field" style="display:inline" ><img alt="Map highlighting Deschutes County" src="/courts/multnomah/PublishingImages/MUL_map.png" style="margin&#58;5px;width&#58;243px;height&#58;166px;max-height&#58;100%;max-width&#58;100%;" /><br><br></div>
+		</div>
+		<div class="col-md-4">
+			<div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField3_label" style='display:none'></div><div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField3__ControlWrapper_OregonRichHtmlField" class="ms-rtestate-field" style="display:inline" ><p> 
+   <i class="fa fa-signal" aria-hidden="true"></i>&#160;<strong>Telephone</strong><br><a href="/courts/multnomah/Documents/BusinessHours.pdf">Contact information</a></p><p> 
+   <i class="fa fa-clock-o" aria-hidden="true"></i>&#160;<strong>Courthouse Hours</strong><br><a href="/courts/multnomah/Documents/BusinessHours.pdf">View Court Hours</a></p><p> 
+   <i class="fa fa-wheelchair" aria-hidden="true"></i>&#160;<strong>ADA Accommodations</strong><br><a href="/courts/multnomah/go/Pages/ada.aspx">Additional ADA information </a></p><p> 
+   <i class="fa fa-lock" aria-hidden="true"></i>&#160;<strong>Trial Court Administrator</strong><br>Barbara Marcille</p>
+<i class="fa fa-compass" aria-hidden="true"></i>&#160;<strong>Mailing </strong> 
+<strong>Address</strong>&#160;<br><a href="/courts/multnomah/Pages/court-mailing-addresses.aspx" data-or-analytics-event-attached="true">Mailing Information</a></div>
+		</div>
+		<div class="col-md-4">
+			<div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField4_label" style='display:none'></div><div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField4__ControlWrapper_OregonRichHtmlField" class="ms-rtestate-field" style="display:inline" ><div class="alert alert-success" style="color&#58;black;"> 
+   <details class="ojd-accordion-item">
+      <summary class="ojd-accordion-title"> 
+         <h2 class="h5">
+            <strong>Multnomah County Courthouse</strong><br></h2> 
+         <span class="icon">+</span> </summary> 
+      <div class="content"><p> 1200 SW 1st Ave<br>Portland, OR 97204<br><a class="btn btn-xs btn-success" role="button" href="https&#58;//www.google.com/maps/place/1200+SW+1st+Ave%2c+Portland%2c+OR+97204/%4045.5141856%2c-122.6751934%2c17z/data=%214m5%213m4%211s0x54950a0e3b1adf15&#58;0xac131ead85b66879%218m2%213d45.5141856%214d-122.6751935?hl=en" target="_blank" style="margin&#58;5px;color&#58;#ffffff;"><span class="fa fa-map-o" aria-hidden="true"></span>&#160;Map</a><br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</p>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</div></details><details class="ojd-accordion-item"><summary class="ojd-accordion-title"> 
+         <h2 class="h5">
+            <strong>Justice Center </strong><br></h2> 
+         <span class="icon">+</span> </summary> 
+      <div class="content"><p> Third Floor 
+            <br>1120 SW Third Avenue 
+            <br>Portland, Oregon 97204<br><a class="btn btn-xs btn-success" role="button" href="https&#58;//www.google.com/maps?hl=en&amp;gbv=2&amp;q=1120+SW+3th+Avenue+Portland+OR&amp;ie=UTF-8&amp;sa=N&amp;tab=il" target="_blank" style="margin&#58;5px;color&#58;#ffffff;"><span class="fa fa-map-o" aria-hidden="true"></span>&#160;Map</a><br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</p>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</div> 
+      <br></details>
+   <details class="ojd-accordion-item">
+      <summary class="ojd-accordion-title"> 
+         <h2 class="h5">
+            <strong>Juvenile Justice Center</strong><br></h2> 
+         <span class="icon">+</span></summary>
+      <div class="content">1401 NE 68th Avenue 
+         <p>Portland, OR 97213<br><a class="btn btn-xs btn-success" role="button" href="https&#58;//www.google.com/maps?hl=en&amp;gbv=2&amp;q=1401+NE+68th+Street+Portland+OR&amp;ie=UTF-8&amp;sa=N&amp;tab=il" target="_blank" style="margin&#58;5px;color&#58;#ffffff;"><span class="fa fa-map-o" aria-hidden="true"></span>&#160;Map</a><br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</p>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</div> 
+      <p></p> </details>
+   <details class="ojd-accordion-item"><summary class="ojd-accordion-title"> 
+         <h2 class="h5">
+            <strong>East County Courthouse</strong><br></h2> 
+         <span class="icon">+</span></summary></details></div></div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-6">
+			<div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField5_label" style='display:none'></div><div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField5__ControlWrapper_OregonRichHtmlField" class="ms-rtestate-field" style="display:inline" ></div>
+		</div>
+		<div class="col-sm-6">
+			<div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField6_label" style='display:none'></div><div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField6__ControlWrapper_OregonRichHtmlField" class="ms-rtestate-field" style="display:inline" ></div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField11_label" style='display:none'></div><div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField11__ControlWrapper_OregonRichHtmlField" class="ms-rtestate-field" style="display:inline" ></div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-8 col-sm-6">
+			<div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField12_label" style='display:none'></div><div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField12__ControlWrapper_OregonRichHtmlField" class="ms-rtestate-field" style="display:inline" ><div class="ms-rtestate-read ms-rte-wpbox"><div class="ms-rtestate-notify  ms-rtestate-read d1139274-ee1e-4276-855b-39133ac6834c" id="div_d1139274-ee1e-4276-855b-39133ac6834c" unselectable="on"><div id="MSOZoneCell_WebPartctl00_ctl00_ctl40_g_d1139274_ee1e_4276_855b_39133ac6834c" class="s4-wpcell-plain ms-webpartzone-cell ms-webpart-cell-vertical-inline-table ms-webpart-cell-vertical ms-fullWidth ">
+	<div class="ms-webpart-chrome ms-webpart-chrome-vertical ms-webpart-chrome-fullWidth ">
+	<div    id="WebPartctl00_ctl00_ctl40_g_d1139274_ee1e_4276_855b_39133ac6834c"  class="ms-WPBody "   allowExport="false" style="" ><div id="ctl00_ctl00_ctl40_g_d1139274_ee1e_4276_855b_39133ac6834c">
+		<DIV class="ms-rte-embedcode ms-rte-embedwp"><script type="text/javascript">
+$(document).ready(function($) { 
+        $.getScript("/Style%20Library/JS/Alerts_2026.js", function(){
+            getAlerts("Multnomah");
+        });
+});
+</script></DIV>
+	</div><div class="ms-clear"></div></div>
+</div>
+</div></div><div id="vid_d1139274-ee1e-4276-855b-39133ac6834c" unselectable="on" style="display&#58;none;"></div></div><br></div>
+		</div>
+		<div class="col-md-4 col-sm-6">
+			<div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField13_label" style='display:none'></div><div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField13__ControlWrapper_OregonRichHtmlField" class="ms-rtestate-field" style="display:inline" ></div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4 col-sm-6">
+			<div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField14_label" style='display:none'></div><div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField14__ControlWrapper_OregonRichHtmlField" class="ms-rtestate-field" style="display:inline" ><img alt="Picture of the front of the Multnomah courthouse" src="/courts/multnomah/PublishingImages/Multnomah_Courthouse.jpg" style="margin&#58;5px;width&#58;250px;height&#58;160px;max-height&#58;100%;max-width&#58;100%;" /><br></div>
+		</div>
+		<div class="col-md-8 col-sm-6">
+			<div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField15_label" style='display:none'></div><div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField15__ControlWrapper_OregonRichHtmlField" class="ms-rtestate-field" style="display:inline" ><div style="text-align&#58;left;">Welcome to the Multnomah County Circuit Court, Fourth Judicial District. We are one of the 27 Judicial Districts in the Oregon Judicial Department. The Multnomah County Circuit Court has four court locations&#58;&#160;<br></div><div style="text-align&#58;left;"><ul><li>Multnomah County Courthouse (Central Courthouse)<br></li><li>Justice Center<br></li><li>Juvenile Justice Center<br></li><li>East County Courthouse<br></li></ul></div><p>The judges and staff of the Multnomah County Circuit Court make the following pledge to each litigant, defendant, victim, witness, juror and person involved in a court proceeding&#58;<br> </p><div style="text-align&#58;left;"><p> 
+      <strong>We will listen to you.
+ 
+     &#160;</strong></p><p><strong>We will respond to your questions about court procedure.&#160;</strong></p><p><strong> 
+      We will treat you with respect.</strong> 
+   
+</p></div></div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField16_label" style='display:none'></div><div id="ctl00_ctl00_MainContentPlaceHolder_PageContentPlaceHolder_PageContentPlaceHolder_RichHtmlField16__ControlWrapper_OregonRichHtmlField" class="ms-rtestate-field" style="display:inline" ><span class="ms-rtestate-read  ms-reusableTextView" id="__publishingReusableFragment"><h3> 
+   <i class="fa fa-newspaper" aria-hidden="true">​​​​​​</i>&#160;&#160;Latest News<br></h3><p>
+   <span data-teams="true">Please visit our newsroom for the latest news and stories about Oregon's courts.</span>​<br></p> 
+<a role="button" href="https&#58;//apps.oregon.gov/oregon-newsroom/OR/OJD/Posts" class="btn btn-lg btn-primary" target="_blank" style="color&#58;#ffffff;">Go to the Newsroom</a>​ 
+<hr /><h3>
+   <i class="fa fa-cogs" aria-hidden="true"></i>&#160;&#160;Online Services and Resources</h3><div class="row"><div class="col-md-4"> 
+      <a role="button" href="/services/online/Pages/records-calendars.aspx" class="btn btn-lg btn-primary btn-block" target="_blank" style="margin-bottom&#58;5px;color&#58;#ffffff;">Find a Court Date</a><a role="button" href="/how/Pages/payment.aspx" class="btn btn-lg btn-primary btn-block" target="_blank" style="margin-bottom&#58;5px;color&#58;#ffffff;">Make a Payment</a> </div><div class="col-md-4"> 
+      <a role="button" href="/how/Pages/find.aspx" class="btn btn-lg btn-primary btn-block" target="_blank" style="margin-bottom&#58;5px;color&#58;#ffffff;">Look up a Case or Record</a><a role="button" href="/languages/english" class="btn btn-lg btn-primary btn-block" target="_blank" style="margin-bottom&#58;5px;color&#58;#ffffff;">Interpreter Services</a> </div>​ 
+   <div class="col-md-4"> 
+      <a role="button" href="/how/Pages/file.aspx" class="btn btn-lg btn-primary btn-block" target="_blank" style="margin-bottom&#58;5px;color&#58;#ffffff;">File a Case</a><a role="button" href="/services/online/Pages/iforms.aspx" class="btn btn-lg btn-primary btn-block" target="_blank" style="margin-bottom&#58;5px;color&#58;#ffffff;">Interactive Forms</a> </div></div>​</span>
+<br></div>
+		</div>
+	</div>
+		
+
+
+
+                    
+                        </div></div>
+                    
+                
+
+                
+                    
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="disqus_thread"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!--/PAGEWATCH-->
+        <!-- / MAIN -->
+
+        <!-- FOOTER -->
+        
+            <footer class="footer" id="footer">
+                <div class="container">
+                    
+                        <h2 class="sr-only">
+	Footer
+</h2><div class="row">
+	<div class="col-sm-3">
+		<h3>
+			Site Information
+		</h3><ul class="list-unstyled">
+<li><a href="/about/Pages/jobs.aspx">Job Opportunities</a></li>
+<li><a href="https://orjudicial.sharepoint.com/SitePages/Home.aspx">Judge & Employee Sign In</a></li>
+<li><a href="/Pages/faq.aspx">FAQs</a></li>
+<li><a href="/Pages/policies.aspx">Policies</a></li>
+<li><a href="/Pages/privacy.aspx">Privacy</a></li>
+<li><a href="/Pages/sitemap.aspx">Site Map</a></li></ul>
+	</div><div class="col-sm-3">
+		<h3>
+			Accessibility and Language Access
+		</h3><br>
+<h4>Language Access</h4>
+<ul class="list-unstyled">
+<li><a href="https://www.courts.oregon.gov/Pages/interpreter_request.aspx">Request an Interpreter</a></li>
+<li><a href="/languages/korean">한국어 (Korean)</a></li>
+<li><a href="/languages/russian">Pусский (Russian)</a></li>
+<li><a href="/languages/spanish">Español (Spanish)</a></li>
+<li><a href="/languages/chinese">繁體中文 (Traditional Chinese)</a></li>
+<li><a href="/languages/vietnamese">Việt (Vietnamese)</a></li>
+<li><a href="/languages/Pages/ContactUs.aspx">Contact Language Access Services</a></li></ul>
+<br/>
+<h4>Accessibility</h4>
+<ul class="list-unstyled">
+<li><a href="/services/ada/Pages/WebAccessibility.aspx">Website Accessibility</a></li>
+<li><a href="/services/ada/Pages/default.aspx">ADA</a></li>
+</ul>
+
+	</div><div class="col-sm-3">
+		<h3>
+			Administration &amp; Contact Us
+		</h3><h4>Administration</h4>
+<ul class="list-unstyled">
+<li><a href="/about">About Us</a></li>
+<li><a href="/about/Pages/holidays.aspx">Court Hours &amp; Holidays</a></li>
+<li><a href="/about/Pages/osca.aspx">Office of the State Court Administrator</a></li>
+<li><a href="/news/Pages/default.aspx">News & Media Resources</a></li>
+<li><a href="/about/Pages/records-request.aspx">Public Records Requests</a></li>
+<li><a href="/about/Pages/reports-measures.aspx">Reports, Stats &amp; Performance Measures</a></li>
+</ul>
+<br/>
+<h4>Contact</h4>
+<p>For questions about your case, jury duty, payments, or other business at a specific court:<br/>
+<a href="/courts">Contact the Courts</a></p>
+<br/>
+<p>For questions about Oregon’s state court system:<br/>
+<a href="/about/Pages/osca.aspx">Office of the State Court Administrator</a></p>
+<br/>
+<p><a href="/Pages/website-comments.aspx">Submit Website Feedback</a></p>
+	</div><div class="col-sm-3">
+		<h3>
+			About Oregon
+		</h3><nav aria-label="Statewide Links" class="or-footer-statewide-links"></nav>
+	</div>
+</div>
+                    
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="#top"><span class="fa fa-arrow-up md-18 notranslate" aria-hidden="true"></span>&nbsp;Back to Top</a><br />
+                            <br />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="or-footer-agency-info" role="contentinfo">
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-3" hidden>
+                            <div class="translator">
+                                <div id="google_translate_element">
+                                <span class="fa fas fa-fw fa-globe" aria-hidden="true"></span>&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        
+        <!-- / FOOTER -->
+
+        
+        <div id="or-official-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="or-official-modal-label">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close dialog" style="opacity:1">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 id="or-official-modal-label" class="modal-title">How to recognize an official Oregon website</h3>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div>
+                            <div class="or-official-icon">
+                                <span class="or-official-icon-text">.gov</span>
+                            </div>
+                            <h4>Official websites use .gov</h4>
+                            <p>A .gov website belongs to an official government organization in the United&nbsp;States.</p>
+                        </div>
+                        <div>
+                            <div class="or-official-icon">
+                                <span class="fa fa-lock" aria-hidden="true"></span>
+                            </div>
+                            <h4>Secure .gov websites use&nbsp;HTTPS</h4>
+                            <p>A lock icon ( <span class="fa fa-lock" aria-hidden="true"></span>) or https:// means you’ve safely connected to the .gov website.</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <p class="text-center">Only share sensitive information on official, secure websites.</p>
+                        <button href="#" class="btn btn-default btn-block" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+
+        <!-- SP2016 RIBBON - DO NOT TOUCH -->
+        
+        <!-- / SP2016 RIBBON - DO NOT TOUCH -->
+
+        <!-- Submit button for section 508 -->
+        <button class="sr-only" disabled type="submit" role="region" aria-label="Section 508 Hidden Submit">Hidden Submit</button>
+
+        <div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="BAB98CB3" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var _spFormDigestRefreshInterval = 1440000;var _fV4UI = true;
+function _RegisterWebPartPageCUI()
+{
+    var initInfo = {editable: false,isEditMode: false,allowWebPartAdder: false,listId: "{daf07f7a-cb02-4be7-963a-899b8136631e}",itemId: 1,recycleBinEnabled: true,enableMinorVersioning: true,enableModeration: false,forceCheckout: true,rootFolderUrl: "\u002fcourts\u002fmultnomah\u002fPages",itemPermissions:{High:16,Low:196673}};
+    SP.Ribbon.WebPartComponent.registerWithPageManager(initInfo);
+    var wpcomp = SP.Ribbon.WebPartComponent.get_instance();
+    var hid;
+    hid = document.getElementById("_wpSelected");
+    if (hid != null)
+    {
+        var wpid = hid.value;
+        if (wpid.length > 0)
+        {
+            var zc = document.getElementById(wpid);
+            if (zc != null)
+                wpcomp.selectWebPart(zc, false);
+        }
+    }
+    hid = document.getElementById("_wzSelected");
+    if (hid != null)
+    {
+        var wzid = hid.value;
+        if (wzid.length > 0)
+        {
+            wpcomp.selectWebPartZone(null, wzid);
+        }
+    }
+};
+function __RegisterWebPartPageCUI() {
+ExecuteOrDelayUntilScriptLoaded(_RegisterWebPartPageCUI, "sp.ribbon.js");}
+_spBodyOnLoadFunctionNames.push("__RegisterWebPartPageCUI");var __wpmExportWarning='This Web Part Page has been personalized. As a result, one or more Web Part properties may contain confidential information. Make sure the properties contain information that is safe for others to read. After exporting this Web Part, view properties in the Web Part description file (.WebPart) by using a text editor such as Microsoft Notepad.';var __wpmCloseProviderWarning='You are about to close this Web Part.  It is currently providing data to other Web Parts, and these connections will be deleted if this Web Part is closed.  To close this Web Part, click OK.  To keep this Web Part, click Cancel.';var __wpmDeleteWarning='You are about to permanently delete this Web Part.  Are you sure you want to do this?  To delete this Web Part, click OK.  To keep this Web Part, click Cancel.';//]]>
+</script>
+</form>
+    <!-- / FORM -->
+
+    
+
+    <!-- SP2016 & V4.X-SPECIFIC SCRIPTS -->
+    <script src="https://orcdn.govstatus.site/Application/CDN/Assets/bundle.min.js?b=modernizr,jasny-bootstrap,js.cookie,outdated-browser,statewide-links,twitter-bootstrap,sp_2022&v=10062026"></script>
+    
+    
+    
+    <div>
+                    
+                 </div><div>
+            
+        </div><script src="/Style%20Library/js/agency.js?v=10062026"></script>
+        <script type="text/javascript">
+            var gsc_domain = /:\/\/([^\/]+)/.exec(window.location.href)[1];
+            if (!gsc_domain.includes('auth') && !gsc_domain.includes('courts.oregon.gov')) {
+                var gsc_script = document.createElement('script');
+                
+                    gsc_script.setAttribute('src', 'https://l.getsitecontrol.com/94gdzv04.js');
+                
+                document.head.appendChild(gsc_script);
+            }
+        </script>
+        
+
+    
+
+    
+
+    
+	<script type="text/javascript" src="/_layouts/15/sp.runtime.js?rev=f%2FUs8Iwv5bBzOzOarxpRRA%3D%3DTAG0"></script>
+	<script type="text/javascript" src="/_layouts/15/sp.js?rev=MTccFxfNb7P2%2FIx4JN4y1g%3D%3DTAG0"></script>
+
+
+    
+    
+    <!-- / SP2016 & V4.X-SPECIFIC SCRIPTS -->
+
+    <!-- OUTDATED BROWSER -->
+    <div id="outdated" role="complementary">
+        <p><span class="fa fa-fw fa-exclamation-triangle"></span><strong>Your browser is out-of-date!</strong> It has known <strong>security flaws</strong> and may <strong>not display all features</strong> of this and other websites. <a class="btn" id="btnUpdateBrowser" href="https://bestvpn.org/outdatedbrowser/en.html">Learn how</a></p>
+        <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+    </div>
+    <!-- / OUTDATED -->
+
+    <script type="text/javascript">
+        
+    </script>
+
+    
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setTimeout(fixARIA, 3000);
+            function fixARIA() {
+                $('table').each(function () {
+                    $(this).attr('role', 'table');
+                    $(this).find('th').attr('role', 'columnheader');
+                    $(this).find('td').attr('role', 'cell');
+                });
+            }
+
+            //setTimeout(fixtelephone, 3000);
+            //function fixtelephone() {
+            //    $(".or-tel-us").each(function () {
+            //        if (!($(this).find('a').length > 0)) {
+            //            let telephoneWrapperEl = $(this);
+            //            let telephoneNumber = telephoneWrapperEl.text();
+            //            let scrubbedTelephoneNumber = telephoneNumber.replace(/-/g, "");
+            //            let telephoneAnchorEl = $("<a href='tel:" + scrubbedTelephoneNumber + "'/>");
+            //            setTimeout(function () {
+            //                telephoneWrapperEl.wrapInner(telephoneAnchorEl);
+            //            }, 1000);
+            //            //telephoneWrapperEl.wrapInner(telephoneAnchorEl);
+            //        }
+            //    });
+            //}
+
+            $(".home>a>span:eq(0)").removeAttr("aria-hidden");
+            $(".home>a>span:eq(1)").remove();
+            if (document.getElementsByClassName('or-header-logo-custom').length > 0) {
+                var htmllogo = document.getElementsByClassName('or-header-logo-custom')[0].innerHTML;
+
+                function htmlDecode(input) {
+                    var e = document.createElement('div');
+                    e.innerHTML = input;
+                    return e.childNodes[0].nodeValue;
+                }
+                var newhtmllogo = htmllogo.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+                var html = htmlDecode(newhtmllogo);
+
+                var support = (function () {
+                    if (!window.DOMParser) return false;
+                    var parser = new DOMParser();
+                    try {
+                        parser.parseFromString('x', 'text/html');
+                    } catch (err) {
+                        return false;
+                    }
+                    return true;
+                })();
+
+                var textToHTML = function (str) {
+
+                    // check for DOMParser support
+                    if (support) {
+                        var parser = new DOMParser();
+                        var doc = parser.parseFromString(str, 'text/html');
+                        return doc.body.innerHTML;
+                    }
+
+                    // Otherwise, create div and append HTML
+                    var dom = document.createElement('div');
+                    dom.innerHTML = str;
+                    return dom;
+
+                };
+
+                document.getElementsByClassName('or-header-logo-custom')[0].innerHTML = textToHTML(html);
+                getSelectedlang();
+            }
+
+            var headerLanguageMode = 'Yes';
+            var siteLanguageMode = 'en-us';
+            if (headerLanguageMode == "Yes") {
+                var enabledLanguages = '$Chinese (Simplified) / 简体中文$English$Korean$Russian / Русский$Spanish / Español$Vietnamese / Tiếng Việt';
+                //var newenabledLanguages = enabledLanguages.replaceAll('$', '');
+                var enabledLanguagesCode = 'zh-CN$en-us$ko$ru$es$vi';
+                var lstenabledLanguages = enabledLanguages.split("$");
+                lstenabledLanguages = lstenabledLanguages.filter(item => item);
+                var lstenabledLanguagesCode = enabledLanguagesCode.split("$");
+
+                var defaultLanguage = 'en-us';
+                var lstEndLang = []
+
+                lstenabledLanguages.forEach(function (item, index) {
+                    lstEndLang.push({ 'name': item, 'value': lstenabledLanguagesCode[index] })
+
+                });
+                lstEndLang.sort(function (a, b) {
+                    var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+                    var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    // names must be equal
+                    return 0;
+                });
+                for (var key in lstEndLang) {
+                    var lng = "en|" + lstEndLang[key].value;
+                    if (!lstEndLang[key].name.includes("/")) {
+                        $(".language-dropdown-menu").append(
+                            $("<li><a class='lang-ar lang-select' data-lang='" + lstEndLang[key].value + "' href='#'>" + lstEndLang[key].name + "</a></li>")
+                        );
+                    }
+                    else {
+                        let splitlang = lstEndLang[key].name.split("/")
+                        let langvalue = "" + splitlang[0].trim() + " / <span lang='" + lstEndLang[key].value + "'> " + splitlang[1].trim() + " </span>"
+                        $(".language-dropdown-menu").append(
+                            $("<li><a class='lang-ar lang-select' data-lang='" + lstEndLang[key].value + "' href='#'>" + langvalue + "</a></li>")
+                        );
+                    }
+                }
+                //$('a[data-lang="en-us"]').attr('data-lang', 'en');
+                $("#languageDiv").show();
+                $(document).on("click", "a.lang-select", function (e) {
+                    setLanguage($(this).attr('data-lang') == 'en-us' ? "en" : $(this).attr('data-lang'));
+                    let selectedLang = $(this).attr('data-lang');
+                    setTimeout(() => {
+                        var lang = $('html')[0].lang;
+                        if (lang == "auto") {
+                            setLanguage(selectedLang);
+                        }
+                    }, 500);
+                });
+
+                setTimeout(function () { $('.or-navbar-translation-wrapper').show() }, 2000);
+            }
+            else {
+                $("#languageDiv").hide();
+            }
+            // Close JASNY offcanvas if escape key hit
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") {
+                    $(".offcanvas.in").offcanvas('hide');
+                }
+            });
+            // Close Bootsrap dropdown if last item of a dropdown tabs away
+            $('.or-navbar .dropdown-menu li:last-of-type a').blur(function () {
+                //$(this).closest('.dropdown').dropdown('toggle');
+                $(this).closest('.dropdown').removeClass('open');
+            });
+
+            // Close JASNY offcanvas if last item (that isn't dropdown) or last item of last dropdown tabs away
+            // If last item is not dropdown, or is closed dropdown, then close JASNY simply by tabbing away
+            $('.or-navbar .or-navigation-list > li:last-of-type > a').blur(function () {
+                if ($(this).parent('.dropdown.open').length === 0) {
+                    $(".offcanvas.in").offcanvas('hide');
+                }
+            });
+            // If last item is dropdown, close when last item of open dropdown tabs away
+            $('.or-navbar .or-navigation-list > li.dropdown:last-of-type .dropdown-menu li:last-of-type a').blur(function () {
+                $(".offcanvas.in").offcanvas('hide');
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+            $(".or-navbar-toggle-button").attr("aria-expanded", "false");
+            $(".or-navbar-toggle-button").on('click', function (event) {
+                if ($('.or-navbar-toggle-button').attr('aria-expanded') == 'false') {
+                    $(".or-navbar-toggle-button").attr("aria-expanded", "true");
+                } else {
+                    $(".or-navbar-toggle-button").attr("aria-expanded", "false");
+                }
+            });
+        });
+
+        function fireEvent(el, e) {
+            if (document.createEventObject) {
+                //for IE
+                var evt = document.createEventObject();
+                return el.fireEvent("on" + e, evt);
+            } else {
+                // For other browsers
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent(e, true, true);
+                return !el.dispatchEvent(evt);
+            }
+        }
+
+        function setLanguage(language) {
+            var gObj = $(".goog-te-combo");
+            var db = gObj.get(0);
+            gObj.val(language);
+            fireEvent(db, "change");
+        }
+
+        function eraseCookie(c_name) {
+            var d = new Date();
+            document.cookie = c_name + "=;expires =" + d.toUTCString() + "path=/";
+
+        }
+
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+
+            document.cookie = cname + "=" + cvalue + ";expires =" + d.toUTCString() + "path=/";
+        }
+
+        //function googleTranslateElementInit() {
+          //  var headerLanguageMode = 'Yes';
+          //  if (headerLanguageMode == "Yes") {
+            //    var defaultLanguage = 'en-us';
+            //    new google.translate.TranslateElement({ pageLanguage: defaultLanguage, layout: google.translate.TranslateElement.FloatPosition.TOP_LEFT }, 'google_translate_element');
+                //new google.translate.TranslateElement({ layout: google.translate.TranslateElement.FloatPosition.TOP_LEFT }, 'google_translate_element');
+            //}
+            //else
+              //  new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.FloatPosition.TOP_LEFT }, 'google_translate_element');
+        //}
+        
+        $('body').on('change', '.goog-te-combo', function () {
+            setTimeout(function () {
+                getSelectedlang();
+            }, 1000);
+        });
+        function getSelectedlang() {
+            var lang = $('html')[0].lang;
+            if (lang == "ar") {
+                $("html[lang=ar]").attr("dir", "rtl").find("body").addClass("right-to-left");
+                $(".or-official").css("text-align", "left")
+                if ($(".or-accordion-list").length != 0) {
+                    $(".or-accordion-heading-collapse").css("display", "table-header-group");
+                }
+            }
+            else {
+                $("html").removeAttr("dir");
+                $(".or-official").removeAttr("text-align");
+                if ($(".or-accordion-list").length != 0) {
+                    $(".or-accordion-panel .or-accordion-heading-collapse").removeAttr('style');
+                }
+            }
+        }
+
+        var url = "" + "_layouts/15/OID.SharePoint.StarterTemplate/scripts/data.txt";
+        var regexdata = '';
+        var prevFocus;
+
+        ExecuteOrDelayUntilScriptLoaded(function () {
+            var pm = SP.Ribbon.PageManager.get_instance();
+            pm.add_ribbonInited(function () { //Adds a handler to the handle the RibbonInited event.
+
+                var ribbon = (SP.Ribbon.PageManager.get_instance()).get_ribbon();
+                //OnSaveValidateHtml();
+                createSampleTab(ribbon);
+                applyCSSForDropdown();
+                SelectRibbonTab('Ribbon.Browse', true);
+                //CustomPageComponent.initializePageComponent();
+
+            });
+        }, 'sp.ribbon.js')
+    </script>
+    <!-- / BODY -->
+</body>
+</html>
+<!-- / HTML -->

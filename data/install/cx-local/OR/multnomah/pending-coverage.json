@@ -1,0 +1,48 @@
+{
+  "items": [
+    {
+      "status": "READER_DIVISION_INTEGRATION",
+      "ocdIds": [
+        "ocd-division/country:us/state:or/county:multnomah/council_district:2",
+        "ocd-division/country:us/state:or/special_district:columbia_river_peoples_utility_district/subdivision:1",
+        "ocd-division/country:us/state:or/special_district:east_multnomah_soil_and_water_conservation_district",
+        "ocd-division/country:us/state:or/special_district:interlachen_water_peoples_utility_district/subdistrict:2",
+        "ocd-division/country:us/state:or/special_district:interlachen_water_peoples_utility_district/subdistrict:3",
+        "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:2",
+        "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:4",
+        "ocd-division/country:us/state:or/special_district:rockwood_water_district/subdistrict:5",
+        "ocd-division/country:us/state:or/special_district:west_multnomah_soil_and_water_conservation_district"
+      ],
+      "issue": "Exact source-backed electorate IDs, never county-wide replacements.12 exact source geometries supplied."
+    },
+    {
+      "status": "COMPLETE_COLUMBIA_RIVER_PUD_SUBDIVISION_1_BOUNDARY",
+      "ocdIds": [
+        "ocd-division/country:us/state:or/special_district:columbia_river_peoples_utility_district/subdivision:1"
+      ],
+      "issue": "Identity, district-subdivision voter rule and Multnomah territory verified. Full cross-county subdivision polygon pending. Local PUD footprint excluded."
+    },
+    {
+      "status": "CERTIFIED_NAMED_WRITE_IN_CLASSIFICATION",
+      "file": "declared-write-ins.json",
+      "names": 2,
+      "affectedFieldsOutsideChangedInput": 2,
+      "sourceConfirmationFile": "pending-portland-council-confirmation.json",
+      "ancillaryReaderOcdIds": [
+        "ocd-division/country:us/state:or/place:portland/council_district:3",
+        "ocd-division/country:us/state:or/place:portland/council_district:4"
+      ]
+    },
+    {
+      "status": "OTHER_NAMED_WRITE_IN_SUPPLEMENTS_NOT_INDEPENDENTLY_ENUMERATED",
+      "issue": "No generic empty write-in lines become people; other filing authorities may maintain separate supplements."
+    },
+    {
+      "status": "MEASURES_ANCILLARY_ONLY",
+      "issue": "All current actual sample measure text captured. Preserve every existing state/Portland/Troutdale question, its exactID, measureRecords, explanation and analysis; no incoming measure refresh. Separate school/district measures and cross-county electorate attachment review not expanded here."
+    }
+  ],
+  "candidateFieldAcquisitionCompleteForPublishedActualSamples": true,
+  "independentElectionCensusBeyondCountyPublishedSamplesComplete": false,
+  "limits": "Complete current county-published actual sample census, not proof of absence outside that publication universe."
+}

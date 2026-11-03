@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-03T06:10:05.476644+00:00",
+  "allSourceHashes": "PASS",
+  "allPrimarySecondaryAndSeparateWriteInQuotes": "PASS",
+  "exactQuotesChecked": 429,
+  "completeOrdinaryLocalFields": 58,
+  "ordinaryLocalCandidates": 171,
+  "officialDynamicSampleFields": 57,
+  "officialDynamicSampleNamesPreserved": 169,
+  "sourceBackedNameVariants": 6,
+  "qualifiedProofExactOfficeHeadersAndNames": "PASS_169_DYNAMIC_NAMES_PLUS_2_SHARED_LIVERMORE_NAMES",
+  "sharedLivermoreContestAndTwoCandidateIds": "PASS_EXACT_ALAMEDA_IDENTITIES",
+  "heldJudicialContestAndCandidateIds": "PASS_13",
+  "qualifiedWriteInSeparate": "PASS_KOFI_OPONG_MENSAH",
+  "nativeContraCostaPrecinctPDFLayoutAudit": "PENDING_ACQUISITION",
+  "productionWrites": false
+}

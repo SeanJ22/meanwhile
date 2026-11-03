@@ -1,0 +1,1236 @@
+/**
+ * Author: eseufert
+ */
+
+/*
+ *	Load Accordion Script
+ */
+
+
+jQuery(document).ready(function () {
+    jQuery('body').on('click', 'ul.toggle-menu .accordion-header', function (e) {
+        e.preventDefault();
+        jQuery(this).next('.table-wrapper').slideToggle();
+        if (jQuery(this).hasClass('active')) {
+            jQuery(this).removeClass('active');
+        } else {
+            jQuery(this).addClass('active');
+        }
+    });
+});
+
+var soeElectionObj = new SoeElection();
+
+/*
+ *	Classes
+ */
+
+function SoeElection() {
+    this.initObj = null;
+    this.pluginArea = null;
+    this.subUrl = "election";
+    this.officeCandidatesContainer = null;
+    this.officeCandidateContainer = null;
+    this.electionContainer = null;
+    this.electionsContainer = null;
+    this.pollingPlacesContainer = null;
+    this.pollingPlaceContainer = null;
+    this.questionContainer = null;
+    this.officesUpForElectionContainer = null;
+    this.statusDialogContainer = null;
+    this.election = null;
+    this.electionsType = null;
+    this.pageTextsCache = null;
+
+    this.setInitInstance = function (instance) {
+        this.initObj = instance;
+        this.pluginArea = document.getElementById(instance.main);
+        instance.statusDialog("create");
+    }; // setInitInstance
+
+    ////////////////////////////////////////////////////////////  Election //////////////////////////////////////
+
+    this.getElection = function (eid) {
+        this.initObj.statusDialog("open");
+        var request = this.initObj.baseUrlRest + "/" + this.subUrl + "/getElection?eid=" + eid + "&lang=" + soeComponentUtils.getLanguage() + "&callback=soeElectionObj.processElection";
+        soeComponentUtils.callService(request);
+    }; // getElection
+
+    this.processElection = function (JSONData) {
+
+        var event = new Object();
+        event.category = "Components"
+        event.label = "action"
+        event.action = "Election"
+
+        //Google Analytics tracking
+        soeComponentUtils.trackGoogleEvent(event);
+        soeComponentUtils.trackGooglePageview("/election.html");
+
+        this.election = JSONData;
+        var pageLabels = JSONData.pageLabels;
+        this.pageTextsCache = JSONData.pageTexts;
+        var pageTexts = JSONData.pageTexts;
+        var pageOptions = JSONData.pageOptions;
+        if (pageTexts.ELECTION_CRUMB.rendered == true) {
+            soeBreadCrumbsObj.addCrumb("soeElectionObj.electionCallback(\"on\")", "soeElectionObj.electionCallback(\"off\")", pageTexts.ELECTION_CRUMB.pageTextValue);
+        }
+
+        var pageName = pageTexts.ELECTION_CRUMB.pageTextName.pageName.pageName;
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=" + pageName);
+
+
+        var iHTML = "";
+        iHTML += "<h2>" + JSONData.name + " " + JSONData.date + "</h2>";
+        if (pageTexts.ELECTION_HEADER_MESSAGE.rendered == true) {
+            iHTML += pageTexts.ELECTION_HEADER_MESSAGE.pageTextValue;
+        }
+        if (pageTexts.ELECTION_VOTER_REG_DEADLINE.rendered == true) {
+            iHTML += "<h3 class='deadline'>" + pageTexts.ELECTION_VOTER_REG_DEADLINE.pageTextValue + "&nbsp;" + JSONData.vregDeadline + "</h3>";
+        }
+        if (pageTexts.ELECTION_POLLING_PLACE_LINK.rendered == true) {
+            iHTML += "<a class='block-link' href='#' onclick='soeElectionObj.electionCallback(\"off\");soeElectionObj.getPollingPlaces(" + JSONData.eid + ");return false'>" + pageTexts.ELECTION_POLLING_PLACE_LINK.pageTextValue + "</a>";
+        }
+        //for (var l in pageLabels){
+        for (var l = 0; pageLabels.length > l; l++) {
+            var labelName = pageLabels[l].pageLabelName.pageLabelName;
+            var label = pageLabels[l];
+            switch (labelName) {
+                case "ELECTION_DOCUMENTS":
+                    if (label.rendered == true) {
+                        var documents = JSONData.documents;
+                        if (documents != null) {
+                            iHTML += "<table class='elections-election-documents'>";
+                            iHTML += "<caption>" + label.pageLabelValue + "</caption>";
+                            if (pageTexts.ELECTION_DOCUMENTS_DESCR.rendered == true) {
+                                iHTML += "<th>" + pageTexts.ELECTION_DOCUMENTS_DESCR.pageTextValue + "</th></tr>";
+                            }
+                            iHTML += "<tbody>";
+                            for (var index = 0; documents.length > index; index++) {
+                                startpos = documents[index].documentPath.lastIndexOf('/') + 1;
+                                name = documents[index].documentPath.substring(startpos);
+                                if (!( JSONData.documentHideFileName )) {
+                                    if (JSONData.documentNameIsDownLoadLink) {
+                                        iHTML += "<tr><td><a target='blank' href='" + documents[index].documentPath + "'>" + name + "</a></td>";
+                                    } else {
+                                        iHTML += "<tr><td>" + name + "</td>";
+                                    }
+                                }
+                                if (pageTexts.ELECTION_DOCUMENTS_DESCR.rendered == true) {
+                                    var descriptionText = ((documents[index].description.englishText != undefined) ? documents[index].description.englishText : documents[index].description);
+                                    if (soeComponentUtils.trim(descriptionText) == "") {
+                                        if (JSONData.documentHideFileName) {
+                                            descriptionText = pageTexts.ELECTION_DEFAULT_DOCUMENT_DESCRIPTION_MESSAGE.pageTextValue;
+                                        }
+                                    }
+                                    if (JSONData.documentDescriptionIsDownLoadLink) {
+                                        iHTML += "<td><p><a target='blank' href='" + documents[index].documentPath + "'>" + descriptionText + "</a></p></td></tr>";
+                                    } else {
+                                        iHTML += "<td><p>" + descriptionText + "</p></td></tr>";
+                                    }
+                                }
+                            }
+                            iHTML += "</tbody></table>";
+                        } else {
+                            if (pageTexts.ELECTION_DOCUMENTS_AVAIL.rendered == true) {
+                                iHTML += "<table class='elections-election-documents'>";
+                                iHTML += "<caption>" + label.pageLabelValue + "<caption>";
+                                iHTML += "<tbody>";
+                                iHTML += "<tr><td>" + pageTexts.ELECTION_DOCUMENTS_AVAIL.pageTextValue + "</td></tr>";
+                                iHTML += "</tbody></table>";
+                            }
+                        }
+                    }
+                    break;
+                case "ELECTION_OFFICES":
+                    // place holder for Election result archive
+                    //if (JSONData.electionResultStatus != null && JSONData.electionResultStatus == true) {
+                    if (label.rendered == true) {
+                        var judgeRetentions = JSONData.judgeRetentions;
+                        var questions = JSONData.questions;
+                        var levels = JSONData.levels;
+                        var offices = JSONData.offices;
+                        if (levels != null) {
+                            if (offices == null && questions == null && judgeRetentions == null) {
+                                if (pageTexts.ELECTION_OFFICES_AVAIL.rendered == true) {
+                                    iHTML += "<table class='elections-election-offices'>";
+                                    iHTML += "<caption>" + label.pageLabelValue + "</caption>";
+                                    iHTML += "<tbody>";
+                                    iHTML += "<tr><td>" + pageTexts.ELECTION_OFFICES_AVAIL.pageTextValue + "</td></tr>";
+                                    iHTML += "</tbody></table>";
+                                }
+                            } else {
+                                iHTML += "<table class='elections-election-offices'>";
+                                iHTML += "<caption>" + label.pageLabelValue + " <a class='caption-print' align='right' href='#' onclick='soeElectionObj.printFriendlyOffices(\"" + label.pageLabelValue + "\");return false;'>" + pageTexts.ELECTION_PRINT.pageTextValue + "</a></caption>";
+                                iHTML += "<tbody>";
+                                iHTML += "<tr><td>";
+                                iHTML += "<div id='election-accordion'>";
+                                //for (l in levels){
+                                for (var l = 0; levels.length > l; l++) {
+                                    var levelName = levels[l].name;
+                                    var iHTML_Office = "";
+                                    if (offices != null && offices[levelName] != null) {
+                                        var officeGrp = offices[levelName];
+                                        for (iOfficeGrp in officeGrp) {
+                                            //for ( var iOfficeGrp = 0 ; officeGrp.length > iOfficeGrp ; iOfficeGrp++ ) {
+                                            iHTML_Office += "<tr class='sub_header'><td colspan='2' >" + iOfficeGrp + "</td></tr>";
+                                            var eOfficeList = officeGrp[iOfficeGrp];
+                                            //for (ieOfficeList in eOfficeList){
+                                            for (var ieOfficeList = 0; eOfficeList.length > ieOfficeList; ieOfficeList++) {
+                                                var eo = eOfficeList[ieOfficeList];
+                                                var name = eo.name;
+                                                if (eo.eoDesigType != null && eo.eoDesigType != "") {
+                                                    name += " " + eo.eoDesigType;
+                                                }
+                                                if (eo.eoDesigName != null && eo.eoDesigName != "") {
+                                                    name += " " + eo.eoDesigName;
+                                                }
+                                                if (eo.eoParty != null) {
+                                                    var partyName = eo.eoParty;
+                                                    if (partyName != "") {
+                                                        name += " - " + partyName;
+                                                    }
+                                                }
+                                                var candidate = pageTexts.ELECTION_CANDIDATES_LINK.pageTextValue;
+                                                if (eo.hasCand == true) {
+                                                    candidate = "<a href='eid=" + JSONData.eid + "&eoid=" + eo.id + "' onclick='soeElectionObj.electionCallback(\"off\");soeElectionObj.getOfficeCandidates(" + JSONData.eid + "," + eo.id + ");return false'>" + pageTexts.ELECTION_CANDIDATES_LINK.pageTextValue + "</a>";
+                                                }
+                                                iHTML_Office += "<tr><td>" + name + "</td>";
+                                                if (pageTexts.ELECTION_CANDIDATES_LINK.rendered == true) {
+                                                    iHTML_Office += "<td>" + candidate + "</td>";
+                                                } else {
+                                                    iHTML_Office += "<td></td>";
+                                                }
+                                                iHTML_Office += "</tr>";
+                                            }
+                                        }
+                                    }
+                                    var iHTML_Judge = "";
+                                    if (judgeRetentions != null && judgeRetentions[levelName] != null && pageTexts.ELECTION_JUDGE_RETENTION.rendered == true) {
+                                        iHTML_Judge += "<tr class='sub_header'><td colspan='2'>" + pageTexts.ELECTION_JUDGE_RETENTION.pageTextValue + "</p></td></tr>";
+                                        var jList = judgeRetentions[levelName];
+                                        //for (index in jList){
+                                        for (var index = 0; jList.length > index; index++) {
+                                            iHTML_Judge += "<tr><td>" + ((jList[index].title.englishText != undefined) ? jList[index].title.englishText : jList[index].title) + "</td>";
+                                            if (pageTexts.ELECTION_RESPONSE_LINK.rendered == true) {
+                                                iHTML_Judge += "<td><a href='qid=" + jList[index].id + "' onclick='soeElectionObj.electionCallback(\"off\");soeElectionObj.getQuestion(" + jList[index].id + ",\"soeElectionObj.electionCallback()\",\"Election\");return false'>" + pageTexts.ELECTION_RESPONSE_LINK.pageTextValue + "</a></td>";
+                                            } else {
+                                                iHTML_Judge += "<td></td>";
+                                            }
+                                            iHTML_Judge += "</tr>";
+                                        }
+                                    }
+                                    var iHTML_Q = "";
+                                    if (questions != null && questions[levelName] != null && pageTexts.ELECTION_BALLOT_QUESTIONS.rendered == true) {
+                                        iHTML_Q += "<tr class='sub_header'><td colspan='2'>" + pageTexts.ELECTION_BALLOT_QUESTIONS.pageTextValue + "</p></td></tr>";
+                                        var qList = questions[levelName];
+                                        //for (index in qList){
+                                        for (var index = 0; qList.length > index; index++) {
+                                            iHTML_Q += "<tr><td>" + ((qList[index].title.englishText != undefined) ? qList[index].title.englishText : qList[index].title) + "</td>";
+                                            if (pageTexts.ELECTION_RESPONSE_LINK.rendered == true) {
+                                                iHTML_Q += "<td><a href='qid=" + qList[index].id + "' onclick='soeElectionObj.electionCallback(\"off\");soeElectionObj.getQuestion(" + qList[index].id + ",\"soeElectionObj.electionCallback()\",\"Election\");return false'>" + pageTexts.ELECTION_RESPONSE_LINK.pageTextValue + "</a></td>";
+                                            } else {
+                                                iHTML_Q += "<td></td>";
+                                            }
+                                            iHTML_Q += "</tr>";
+                                        }
+                                    }
+                                    if (iHTML_Office == "" && iHTML_Judge == "" && iHTML_Q == "") {
+                                    } else {
+                                        iHTML += "<h3><a href='#'>" + levelName + "</a></h3><div>";
+                                        iHTML += "<table><tbody>";
+                                        iHTML += iHTML_Office;
+                                        iHTML += iHTML_Judge;
+                                        iHTML += iHTML_Q;
+                                        iHTML += "</tbody></table>";
+                                        iHTML += "</div>";
+                                    }
+                                }
+                                iHTML += "</div></td></tr></tbody></table>"; // accordion
+                            }
+                        } else {
+                            iHTML += "<table>";
+                            iHTML += "<thead><tr><th>" + label.pageLabelValue + "</th></tr></thead>";
+                            iHTML += "<tbody>";
+                            iHTML += "<tr><td>" + pageTexts.ELECTION_OFFICES_AVAIL.pageTextValue + "</td></tr>";
+                            iHTML += "</tbody></table>";
+                        }
+                    }
+                    break;
+                case "ELECTION_DATES":
+                    if (label.rendered == true) {
+                        iHTML += "<table class='elections-election-documents'>";
+                        iHTML += "<caption>" + label.pageLabelValue + "<caption>";
+                        iHTML += "<tbody>";
+                        if (pageOptions.ELECTION_DATES_DATE.rendered) {
+                            var date = (this.election.date != undefined) ? this.election.date : '';
+                                iHTML += "<tr><td>" + pageOptions.ELECTION_DATES_DATE.pageOptionValue + "</td><td>" + date + "</td></tr>";
+                        }
+                        if (pageOptions.ELECTION_DATES_EV_STARTS.rendered) {
+                            var earlyVotingStarts = (this.election.earlyVotingStarts != undefined) ? this.election.earlyVotingStarts : '';
+                            if (earlyVotingStarts != '') {
+                                iHTML += "<tr><td>" + pageOptions.ELECTION_DATES_EV_STARTS.pageOptionValue + "</td><td>" + earlyVotingStarts + "</td></tr>";
+                            }
+                        }
+                        if (pageOptions.ELECTION_DATES_EV_ENDS.rendered) {
+                            var earlyVotingEnds = (this.election.earlyVotingEnds != undefined) ? this.election.earlyVotingEnds : '';
+                            if (earlyVotingEnds != '') {
+                                iHTML += "<tr><td>" + pageOptions.ELECTION_DATES_EV_ENDS.pageOptionValue + "</td><td>" + earlyVotingEnds + "</td></tr>";
+                            }
+                        }
+                        iHTML += "</tbody></table>";
+                    }
+                    break;
+            }
+        }
+        if (this.election.showEarlyVotingLinkWhenAvailable) {
+            iHTML += '<table class="voter-eligibility-links-table">';
+            if (true) {
+                iHTML += "<caption>" + this.election.pageTexts.ELECTION_ELECTION_SUB_HEADER.pageTextValue + "</caption>";
+            }
+            iHTML += '</tr><tr>';
+            iHTML += '<td><a href="' + this.election.eid + '" onclick="soeElectionObj.jumpToEarlyVoting(\'' + this.election.vrSystemCode + '\');return false;">' + this.election.pageTexts.ELECTION_EARLY_VOTING_LINK.pageTextValue + '</a></td>';
+            iHTML += '</tbody>';
+        }
+
+
+        if (this.electionContainer == null) {
+            this.electionContainer = document.createElement('div');
+            this.electionContainer.id = 'soe-election-container';
+            this.electionContainer.className = "soe-election-container";
+            this.electionContainer.innerHTML = iHTML;
+            this.pluginArea.appendChild(this.electionContainer);
+        } else {
+            this.electionContainer.innerHTML = iHTML;
+            this.electionCallback("on");
+        }
+        jQuery("#election-accordion").addClass("ui-accordion ui-accordion-icons ui-widget ui-helper-reset")
+            .find("h3")
+            .addClass("ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom")
+            .hover(function () {
+                jQuery(this).toggleClass("ui-state-hover");
+            })
+            .prepend('<span class="ui-icon ui-icon-triangle-1-e"></span>')
+            .click(function () {
+                jQuery(this)
+                    .toggleClass("ui-accordion-header-active ui-state-active ui-state-default ui-corner-bottom")
+                    .find(".ui-icon").toggleClass("ui-icon-triangle-1-e ui-icon-triangle-1-s").end()
+                    .next().toggle();
+                return false;
+            })
+            .next()
+            .addClass("ui-accordion-content  ui-helper-reset ui-widget-content ui-corner-bottom")
+            .hide();
+
+        this.initObj.statusDialog("close");
+    }; // processElection
+
+    this.electionCallback = function (type) {
+        if (type == "off") {
+            soeComponentUtils.hide(this.electionContainer);
+            soeComponentUtils.scrollToTop();
+        } else {
+            soeComponentUtils.show(this.electionContainer);
+            soeComponentUtils.scrollToTop();
+        }
+    }; // electionCallback
+
+    this.printFriendlyOffices = function (label) {
+        my_window = window.open("", "mywindow1", "status=1,scrollbars=1,menubar=1");
+        var judgeRetentions = this.election.judgeRetentions;
+        var questions = this.election.questions;
+        var levels = this.election.levels;
+        var offices = this.election.offices;
+        var pageTexts = this.pageTextsCache;
+        var iHTML = "";
+        if (levels != null) {
+            iHTML += "<h2>" + label + "</h2>";
+            for (var l = 0; levels.length > l; l++) {
+                var levelName = levels[l].name;
+                if ((offices == null || offices[levelName] == null) && (judgeRetentions == null || judgeRetentions[levelName] == null) && (questions == null || questions[levelName] == null)) {
+                    // skip there is no data for this level
+                    continue;
+                }
+                iHTML += "<h3 class='deadline'>" + levelName + "</h3>";
+                if (offices != null && offices[levelName] != null) {
+                    var officeGrp = offices[levelName];
+                    for (iOfficeGrp in officeGrp) {
+                        //for ( var iOfficeGrp = 0 ; officeGrp.length > iOfficeGrp; iOfficeGrp++ ) {
+                        iHTML += "<h4>" + iOfficeGrp + "</h4><hr>";
+                        var eOfficeList = officeGrp[iOfficeGrp];
+                        for (var ieOfficeList = 0; eOfficeList.length > ieOfficeList; ieOfficeList++) {
+                            var eo = eOfficeList[ieOfficeList];
+                            var name = eo.name;
+                            if (eo.eoDesigType != null && eo.eoDesigType != "") {
+                                name += " " + eo.eoDesigType;
+                            }
+                            if (eo.eoDesigName != null && eo.eoDesigName != "") {
+                                name += " " + eo.eoDesigName;
+                            }
+                            if (eo.eoParty != null) {
+                                var partyName = eo.eoParty;
+                                if (partyName != "") {
+                                    name += " - " + partyName;
+                                }
+                            }
+                            iHTML += "<p>" + name + "</p>";
+                        }
+                    }
+                }
+                if (judgeRetentions != null && judgeRetentions[levelName] != null && pageTexts.ELECTION_JUDGE_RETENTION.rendered == true) {
+                    iHTML += "<h3>" + pageTexts.ELECTION_JUDGE_RETENTION.pageTextValue + "</h3><hr>";
+                    var jList = judgeRetentions[levelName];
+                    //for (index in jList){
+                    for (var index = 0; jList.length > index; index++) {
+                        iHTML += "<p>" + jList[index].title.englishText + "</p>";
+                    }
+                }
+                if (questions != null && questions[levelName] != null && pageTexts.ELECTION_BALLOT_QUESTIONS.rendered == true) {
+                    iHTML += "<h3>" + pageTexts.ELECTION_BALLOT_QUESTIONS.pageTextValue + "</h3><hr>";
+                    var qList = questions[levelName];
+                    //for (index in qList){
+                    for (var index = 0; qList.length > index; index++) {
+                        iHTML += "<p>" + qList[index].title.englishText + "</p>";
+                    }
+                }
+            }
+        } else {
+            iHTML += "<div><p>" + label + "</p></div>";
+            iHTML += "<div><b>" + pageTexts.ELECTION_OFFICES_AVAIL.pageTextValue + "</b></div>";
+        }
+        my_window.document.write(iHTML);
+    }; // print friendly offices
+
+    ////////////////////////////////////////////////////////// Office Candidates /////////////////////////////////////
+
+    this.getOfficeCandidates = function (eid, eoid) {
+        this.initObj.statusDialog("open");
+        var request = this.initObj.baseUrlRest + "/" + this.subUrl + "/getOfficeCandidates?eoid=" + eoid + "&lang=" + soeComponentUtils.getLanguage() + "&callback=soeElectionObj.processOfficeCandidates";
+        soeComponentUtils.callService(request);
+    }; // getOfficeCandidates
+
+
+    this.processOfficeCandidates = function (JSONData) {
+        var pageTexts = JSONData.pageTexts;
+        var pageOptions = JSONData.pageOptions;
+        if (pageTexts.OFFICE_CANDIDATES_CRUMB.rendered == true) {
+            soeBreadCrumbsObj.addCrumb("soeElectionObj.officeCandidatesCallback(\"on\")", "soeElectionObj.officeCandidatesCallback(\"off\")", pageTexts.OFFICE_CANDIDATES_CRUMB.pageTextValue);
+        }
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=" + JSONData.pageName);
+        var iHTML = "";
+        if (pageTexts.OFFICE_CANDIDATES_HEADER.rendered == true) {
+            iHTML += "<h2>" + pageTexts.OFFICE_CANDIDATES_HEADER.pageTextValue + "</h2>";
+        }
+        iHTML += "<h3 class='deadline'>" + JSONData.ename + "&nbsp;&nbsp;" + JSONData.edate + "</h3>";
+        iHTML += "<table>";
+        party = "";
+        if (JSONData.eoparty != null && JSONData.eoparty != "") {
+            party = " - " + JSONData.eoparty;
+        }
+        iHTML += "<thead class='main-table-header'><tr><th>" + JSONData.eoname + party + "</th><th>" + pageTexts.OFFICE_CANDIDATES_VOTE_FOR.pageTextValue + " " + JSONData.votefor + "</th></thead>";
+        iHTML += "<tbody>";
+        var candidates = JSONData.candidates;
+        //for (index in candidates){
+        for (var index = 0; candidates.length > index; index++) {
+            var partyDescription = candidates[index].party.partyAbbreviation;
+            if (pageOptions.OFFICE_CANDIDATES_DISPLAY_PARTY_NAME.pageOptionValue.toLowerCase() == "true") {
+                partyDescription = candidates[index].party.name;
+            }
+            if (pageOptions.CANDIDATE_NAMES_ARE_LINKS_TO_CANDIDATE_DETAIL.pageOptionValue.toLowerCase() == "true") {
+                iHTML += "<tr><td><a href='eocid=" + candidates[index].id + "' onclick='soeElectionObj.officeCandidatesCallback(\"off\");soeElectionObj.getOfficeCandidate(" + candidates[index].id + ");return false'>" + candidates[index].candidateDisplayName + "</a></td><td>" + partyDescription + "</td></tr>";
+            } else {
+                iHTML += "<tr><td>" + candidates[index].candidateDisplayName + "</td><td>" + partyDescription + "</td></tr>";
+            }
+        }
+        iHTML += "</tbody></table>";
+        if (this.officeCandidatesContainer == null) {
+            this.officeCandidatesContainer = document.createElement('div');
+            this.officeCandidatesContainer.id = 'soe-officeCandidates-container';
+            this.officeCandidatesContainer.className = "soe-officeCandidates-container";
+            this.officeCandidatesContainer.innerHTML = iHTML;
+            this.pluginArea.appendChild(this.officeCandidatesContainer);
+        } else {
+            this.officeCandidatesContainer.innerHTML = iHTML;
+            this.officeCandidatesCallback("on");
+        }
+        this.initObj.statusDialog("close");
+    }; // processOfficeCandidates
+
+    this.officeCandidatesCallback = function (type) {
+        if (type == "off") {
+            soeComponentUtils.hide(this.officeCandidatesContainer);
+            soeComponentUtils.scrollToTop();
+        } else {
+            soeComponentUtils.show(this.officeCandidatesContainer);
+            soeComponentUtils.scrollToTop();
+        }
+    }; // officeCandidatesCallback
+
+    this.getOfficeCandidate = function (eocid) {
+        this.initObj.statusDialog("open");
+        var request = this.initObj.baseUrlRest + "/" + this.subUrl + "/getOfficeCandidate?eocid=" + eocid + "&lang=" + soeComponentUtils.getLanguage() + "&callback=soeElectionObj.processOfficeCandidate";
+        soeComponentUtils.callService(request);
+    }; // getOfficeCandidate
+
+    this.processOfficeCandidate = function (JSONData) {
+        var pageLabels = JSONData.pageLabels;
+        var pageTexts = JSONData.pageTexts;
+        if (pageTexts.OFFICE_CANDIDATE_CRUMB.rendered == true) {
+            soeBreadCrumbsObj.addCrumb("soeElectionObj.officeCandidateCallback(\"on\")", "soeElectionObj.officeCandidateCallback(\"off\")", pageTexts.OFFICE_CANDIDATE_CRUMB.pageTextValue);
+        }
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=" + JSONData.pageName);
+        var iHTML = "";
+        if (pageTexts.OFFICE_CANDIDATE_HEADER.rendered == true) {
+            iHTML += "<h2>" + pageTexts.OFFICE_CANDIDATE_HEADER.pageTextValue + "</h2>";
+        }
+        iHTML += "<h3>" + JSONData.ename + "&nbsp;&nbsp;" + JSONData.edate + "</h3>";
+        iHTML += "<table>";
+        party = "";
+        if (JSONData.eoparty != null && JSONData.eoparty != "") {
+            party = " - " + JSONData.eoparty;
+        }
+        iHTML += "<thead class='main-table-header'><tr><th>" + JSONData.eoname + party + "</th><th></th></tr></thead>";
+        iHTML += "</tbody>";
+        var candidate = JSONData.candidate;
+        //for (var l in pageLabels){
+        for (var l = 0; pageLabels.length > l; l++) {
+            var labelName = pageLabels[l].pageLabelName.pageLabelName;
+            var label = pageLabels[l];
+            switch (labelName) {
+                case "OFFICE_CANDIDATE_NAME":
+                    if (label.rendered == true && candidate.candidateDisplayName != null) {
+                        iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td>" + candidate.candidateDisplayName + "</td></tr>";
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_PARTY":
+                    if (label.rendered == true && candidate.party != null && candidate.party != "") {
+                        var partyName = (candidate.party.name.englishText != undefined) ? candidate.party.name.englishText : candidate.party.name;
+                        iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td>" + partyName + "</td></tr>";
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_ADDRESS":
+                    //if (!candidate.hideAddressOnWeb){
+                    if (candidate.address != null && !candidate.hideAddressOnWeb && label.rendered == true) {
+                        if (candidate.address.address1 != null && candidate.address.address1 != "") {
+                            iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td>" + candidate.address.address1;
+                            if (candidate.address.address2 != null && candidate.address.address2 != "") {
+                                iHTML += "<br/>" + candidate.address.address2;
+                            }
+                            if (candidate.address.address3 != null && candidate.address.address3 != "") {
+                                iHTML += "<br/>" + candidate.address.address3;
+                            }
+                            iHTML += "</td></tr>";
+                        }
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_CITY":
+                    if (candidate.address.city != null && candidate.address.city != "" && !candidate.hideAddressOnWeb && label.rendered == true) {
+                        iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td>" + candidate.address.city + "</td></tr>";
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_STATE":
+                    if (candidate.address.state != null && candidate.address.state != "" && !candidate.hideAddressOnWeb && label.rendered == true) {
+                        iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td>" + candidate.address.state + "</td></tr>";
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_ZIP":
+                    if (candidate.address.zip != null && candidate.address.zip != "" && !candidate.hideAddressOnWeb && label.rendered == true) {
+                        iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td>" + candidate.address.zip + "</td></tr>";
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_PHONE":
+                    if (candidate.phoneNumber != null && candidate.phoneNumber != "" && !candidate.hideAddressOnWeb && label.rendered == true) {
+                        iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td>" + candidate.phoneNumber + "</td></tr>";
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_FAX":
+                    if (candidate.faxNumber != null && candidate.faxNumber != "" && !candidate.hideAddressOnWeb && label.rendered == true) {
+                        iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td>" + candidate.faxNumber + "</td></tr>";
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_EMAIL":
+                    if (candidate.emailAddress != null && candidate.emailAddress != "" && label.rendered == true) {
+                        iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td><a href='mailto:" + candidate.emailAddress + "'>" + candidate.emailAddress + "</a></td></tr>";
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_WEBSITE":
+                    if (candidate.website != null && candidate.website != "" && label.rendered == true) {
+                        var website = candidate.website;
+                        var myRegEx = new RegExp("^http://", "i");
+                        if (website.search(myRegEx) == -1) {
+                            website = "http://" + website;
+                        }
+                        iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td><a target='blank' href='" + website + "'>" + website + "</a></td></tr>";
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_INCUMBENT":
+                    if (JSONData.currentincumbent != null && label.rendered == true) {
+                        var valIncumbent = JSONData.currentincumbent;
+                        if (JSONData.currentincumbent != null && JSONData.currentincumbent.toUpperCase() == "YES") {
+                            valIncumbent = pageTexts.OFFICE_CANDIDATE_INCUMBENT_YES.pageTextValue;
+                        } else {
+                            valIncumbent = pageTexts.OFFICE_CANDIDATE_INCUMBENT_NO.pageTextValue;
+                        }
+
+                        iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td>" + valIncumbent + "</td></tr>";
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_ANNOUNCE_DATE":
+                    if (JSONData.announceddate != null && label.rendered == true) {
+                        iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td>" + JSONData.announceddate + "</td></tr>";
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_STATUS":
+                    if (candidate.candidateStatus != null && label.rendered == true) {
+                        iHTML += "<tr><td class='label'>" + label.pageLabelValue + "</td><td>" + candidate.candidateStatus.name + "</td></tr>";
+                    }
+                    break;
+                case "OFFICE_CANDIDATE_BIOGRAPHY_LINK":
+                    if (label.rendered == true) {
+                        iHTML += "<tr><td colspan='2'><a href='#' onclick='soeElectionObj.getCandidateBiography(" + candidate.id + ");return false'>" + label.pageLabelValue + "</a></td></tr>";
+                    }
+                    break;
+            }
+        }
+        iHTML += "<tbody></table>";
+        if (this.officeCandidateContainer == null) {
+            this.officeCandidateContainer = document.createElement('div');
+            this.officeCandidateContainer.id = 'soe-officeCandidate-container';
+            this.officeCandidateContainer.className = "soe-officeCandidate-container";
+            this.officeCandidateContainer.innerHTML = iHTML;
+            this.pluginArea.appendChild(this.officeCandidateContainer);
+        } else {
+            this.officeCandidateContainer.innerHTML = iHTML;
+            this.officeCandidateCallback("on");
+        }
+        this.initObj.statusDialog("close");
+    }; // processOfficeCandidate
+
+    this.officeCandidateCallback = function (type) {
+        if (type == "off") {
+            soeComponentUtils.hide(this.officeCandidateContainer);
+            soeComponentUtils.scrollToTop();
+        } else {
+            soeComponentUtils.show(this.officeCandidateContainer);
+            soeComponentUtils.scrollToTop();
+        }
+    }; // officeCandidateCallback
+
+    //////////////////////////////////////////////////Polling Places //////////////////////////////////
+
+    this.getPollingPlaces = function (eid) {
+        this.initObj.statusDialog("open");
+        var request = this.initObj.baseUrlRest + "/" + this.subUrl + "/getPollingPlaces?eid=" + eid + "&lang=" + soeComponentUtils.getLanguage() + "&callback=soeElectionObj.processPollingPlaces";
+        soeComponentUtils.callService(request);
+    }; // getPollingPlaces
+
+    this.processPollingPlaces = function (JSONData) {
+        var pageLabels = JSONData.pageLabels;
+        var pageTexts = JSONData.pageTexts;
+        if (pageTexts.POLLING_PLACES_CRUMB.rendered == true) {
+            soeBreadCrumbsObj.addCrumb("soeElectionObj.pollingPlacesCallback(\"on\")", "soeElectionObj.pollingPlacesCallback(\"off\")", pageTexts.POLLING_PLACES_CRUMB.pageTextValue);
+        }
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=" + JSONData.pageName);
+        var iHTML = "";
+        if (pageTexts.POLLING_PLACES_HEADER.rendered == true) {
+            iHTML += "<h2>" + pageTexts.POLLING_PLACES_HEADER.pageTextValue + "</h2>";
+        }
+        var pollingPlaces = JSONData.pollingPlaces;
+        if (pollingPlaces == null) {
+            if (pageTexts.POLLING_PLACES_NO_RESULT_MESSAGE.rendered == true) {
+                iHTML += "<h2>" + pageTexts.POLLING_PLACES_NO_RESULT_MESSAGE.pageTextValue + "</h2>";
+            }
+        } else {
+            iHTML += "<h3 class='deadline'>" + JSONData.eName + " " + JSONData.eDate + "</h3>";
+            if (pageTexts.POLLING_PLACES_SAVE_AS_EXCEL_LINK.rendered == true) {
+                iHTML += "<a class='block-link' href='" + this.initObj.baseUrlRest + "/" + this.subUrl + "/getPollingPlacesExcel?eid=" + JSONData.eid + "'>" + pageTexts.POLLING_PLACES_SAVE_AS_EXCEL_LINK.pageTextValue + "</a>";
+            }
+            iHTML += "<table>";
+            iHTML += "<tbody><tr class='row_header'>";
+            //for (var l in pageLabels){
+
+
+            for (var l = 0; pageLabels.length > l; l++) {
+                var labelName = pageLabels[l].pageLabelName.pageLabelName;
+                var label = pageLabels[l];
+                switch (labelName) {
+                    case "POLLING_PLACES_PRECINCT":
+                        if (label.rendered == true) {
+                            iHTML += "<td>" + label.pageLabelValue + "</td>";
+                        }
+                        break;
+                    case "POLLING_PLACES_LOCATION":
+                        if (label.rendered == true) {
+                            iHTML += "<td>" + label.pageLabelValue + "</td>";
+                        }
+                        break;
+                    case "POLLING_PLACES_ADDRESS":
+                        if (label.rendered == true) {
+                            iHTML += "<td>" + label.pageLabelValue + "</td>";
+                        }
+                        break;
+                    case "POLLING_PLACES_CITY":
+                        if (label.rendered == true) {
+                            iHTML += "<td>" + label.pageLabelValue + "</td>";
+                        }
+                        break;
+                }
+
+            }
+            iHTML += "</tr>";
+            //for ( var county = 0 ; pollingPlaces.length > county ; county++ ) {
+            for (county in pollingPlaces) {
+                iHTML += "<tr class='sub_header'><td colspan='4'>" + county + "</td></tr>";
+                var places = pollingPlaces[county];
+                //for (r in places){
+                for (var r = 0; places.length > r; r++) {
+                    iHTML += "<tr>";
+                    //for (var l in pageLabels){
+                    for (var l = 0; pageLabels.length > l; l++) {
+                        var labelName = pageLabels[l].pageLabelName.pageLabelName;
+                        var label = pageLabels[l];
+                        switch (labelName) {
+                            case "POLLING_PLACES_PRECINCT":
+                                if (label.rendered == true) {
+                                    iHTML += "<td>" + places[r].precinct + "</td>";
+                                }
+                                break;
+                            case "POLLING_PLACES_LOCATION":
+                                if (label.rendered == true) {
+                                    if (places[r].ppName != null) {
+                                        iHTML += "<td><a href='eid=" + JSONData.eid + "&ppid=" + places[r].ppid + "' onclick='soeElectionObj.pollingPlacesCallback(\"off\");soeElectionObj.getPollingPlace(" + JSONData.eid + "," + places[r].ppid + ");return false'>" + places[r].ppName + "</a></td>";
+                                    } else {
+                                        iHTML += "<td>Polling Place Not Assigned</td>";
+                                    }
+                                }
+                                break;
+                            case "POLLING_PLACES_ADDRESS":
+                                if (label.rendered == true) {
+                                    if (places[r].address != null) {
+                                        iHTML += "<td>" + places[r].address + "</td>";
+                                    } else {
+                                        iHTML += "<td></td>";
+                                    }
+                                }
+                                break;
+                            case "POLLING_PLACES_CITY":
+                                if (label.rendered == true) {
+                                    if (places[r].city != null) {
+                                        iHTML += "<td>" + places[r].city + "</td>";
+                                    } else {
+                                        iHTML += "<td></td>";
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    iHTML += "</tr>";
+                }
+            }
+        }
+        iHTML += "</tbody></table>";
+        if (this.pollingPlacesContainer == null) {
+            this.pollingPlacesContainer = document.createElement('div');
+            this.pollingPlacesContainer.id = 'soe-pollingPlaces-container';
+            this.pollingPlacesContainer.className = "soe-pollingPlaces-container";
+            this.pollingPlacesContainer.innerHTML = iHTML;
+            this.pluginArea.appendChild(this.pollingPlacesContainer);
+        } else {
+            this.pollingPlacesContainer.innerHTML = iHTML;
+            this.pollingPlacesCallback("on");
+        }
+        this.initObj.statusDialog("close");
+    }; // processPollingPlaces
+
+    this.pollingPlacesCallback = function (type) {
+        if (type == "off") {
+            soeComponentUtils.hide(this.pollingPlacesContainer);
+            soeComponentUtils.scrollToTop();
+        } else {
+            soeComponentUtils.show(this.pollingPlacesContainer);
+            soeComponentUtils.scrollToTop();
+        }
+    }; // pollingPlacesCallback
+
+
+    this.getPollingPlace = function (eid, ppid) {
+        this.initObj.statusDialog("open");
+        var request = this.initObj.baseUrlRest + "/" + this.subUrl + "/getPollingPlace?eid=" + eid + "&ppid=" + ppid + "&lang=" + soeComponentUtils.getLanguage() + "&callback=soeElectionObj.processPollingPlace";
+        soeComponentUtils.callService(request);
+    }; // getPollingPlace
+
+    this.processPollingPlace = function (JSONData) {
+        var pageTexts = JSONData.pageTexts;
+        var pageLabels = JSONData.pageLabels;
+        if (pageTexts.POLLING_PLACE_CRUMB.rendered == true) {
+            soeBreadCrumbsObj.addCrumb("soeElectionObj.pollingPlaceCallback(\"on\")", "soeElectionObj.pollingPlaceCallback(\"off\")", pageTexts.POLLING_PLACE_CRUMB.pageTextValue);
+        }
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=" + JSONData.pageName);
+        var iHTML = "";
+        iHTML += "<h2>" + JSONData.eName + "</h2>";
+        iHTML += "<table>";
+        var headerText = "";
+        if (pageTexts.POLLING_PLACE_HEADER.rendered == true) {
+            headerText = pageTexts.POLLING_PLACE_HEADER.pageTextValue;
+        }
+        iHTML += "<caption>" + headerText + "</caption>";
+        iHTML += "<tbody>";
+        //for (var l in pageLabels){
+        for (var l = 0; pageLabels.length > l; l++) {
+            var labelName = pageLabels[l].pageLabelName.pageLabelName;
+            var label = pageLabels[l];
+            switch (labelName) {
+                case "POLLING_PLACE_NAME":
+                    if (label.rendered == true) {
+                        iHTML += "<tr><td><b>" + label.pageLabelValue + "</b></td><td>" + JSONData.ppName + "</td></tr>";
+                    }
+                    break;
+                case "POLLING_PLACE_ADDRESS":
+                    if (label.rendered == true) {
+                        var county = JSONData.county;
+                        if (JSONData.county != null) {
+                            county += " County";
+                        }
+                        iHTML += "<tr><td><b>" + label.pageLabelValue + "</b></td><td>" + JSONData.address + "<br>" + county + " <a href='#' onclick='soeComponentUtils.showOnMap(\"" + JSONData.address + "\",\"Address\",\"" + JSONData.latitude + "\",\"" + JSONData.longitude + "\");return false'>Google mapIt</a></td></tr>";
+                    }
+                    break;
+                case "POLLING_PLACE_DIRECTION":
+                    if (label.rendered == true) {
+                        iHTML += "<tr><td><b>" + label.pageLabelValue + "</b></td><td>" + JSONData.directions + "</td></tr>";
+                    }
+                    break;
+            }
+        }
+        iHTML += "<tr><td colspan='2'>&nbsp;</td></tr>";
+        iHTML += "</tbody></table>";
+        var images = JSONData.images;
+        //for (i in images){
+        for (var i = 0; images.length > i; i++) {
+            iHTML += "<br/><img width='500' height='375' src='" + images[i] + "' />";
+        }
+        if (this.pollingPlaceContainer == null) {
+            this.pollingPlaceContainer = document.createElement('div');
+            this.pollingPlaceContainer.id = 'soe-pollingPlace-container';
+            this.pollingPlaceContainer.className = "soe-pollingPlace-container";
+            this.pollingPlaceContainer.innerHTML = iHTML;
+            this.pluginArea.appendChild(this.pollingPlaceContainer);
+        } else {
+            this.pollingPlaceContainer.innerHTML = iHTML;
+            this.pollingPlaceCallback("on");
+        }
+        this.initObj.statusDialog("close");
+    }; // processPollingPlace
+
+    this.pollingPlaceCallback = function (type) {
+        if (type == "off") {
+            soeComponentUtils.hide(this.pollingPlaceContainer);
+            soeComponentUtils.scrollToTop();
+        } else {
+            soeComponentUtils.show(this.pollingPlaceContainer);
+            soeComponentUtils.scrollToTop();
+        }
+    }; // pollingPlaceCallback
+
+    this.getPollingPlaceExcel = function (eid, ppid) {
+        var url = "";
+        window.open(url, "Map", "target=_blank, width=800, height= 800, scrollbars=1, resizable=1");
+    }; // getPollingPlaceExcel
+
+    ////////////////////////////////////////////////////// Question ///////////////////////////////////////////
+
+    this.getQuestion = function (qid) {
+        this.initObj.statusDialog("open");
+        var request = this.initObj.baseUrlRest + "/" + this.subUrl + "/getQuestion?qid=" + qid + "&lang=" + soeComponentUtils.getLanguage() + "&callback=soeElectionObj.processQuestion";
+        soeComponentUtils.callService(request);
+    }; // getQuestion
+
+    this.processQuestion = function (JSONData) {
+        var pageTexts = JSONData.pageTexts;
+        if (pageTexts.QUESTION_CRUMB.rendered == true) {
+            soeBreadCrumbsObj.addCrumb("soeElectionObj.questionCallback(\"on\")", "soeElectionObj.questionCallback(\"off\")", pageTexts.QUESTION_CRUMB.pageTextValue);
+        }
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=" + JSONData.pageName);
+        var iHTML = "";
+        if (JSONData.ERROR != null) {
+            iHTML += "<h2>" + JSONData.ERROR + "</h2>";
+        } else {
+            if (pageTexts.QUESTION_HEADER.rendered == true) {
+                iHTML += "<h2>" + pageTexts.QUESTION_HEADER.pageTextValue + "</h2>";
+            }
+            iHTML += "<h3 class='deadline'>" + JSONData.eName + " " + JSONData.eDate + "</h3>";
+            iHTML += "<table>";
+            iHTML += "<caption>" + JSONData.qTitle + "</caption>";
+            iHTML += "<tbody>";
+            iHTML += "<tr><td>" + JSONData.question + "</td></tr>";
+            var answers = JSONData.answers;
+            //for (a in answers){
+            for (var a = 0; answers.length > a; a++) {
+                iHTML += "<tr><td style='text-align:center'>" + answers[a] + "</td></tr>";
+            }
+            iHTML += "</tbody></table>";
+        }
+        if (this.questionContainer == null) {
+            this.questionContainer = document.createElement('div');
+            this.questionContainer.id = 'soe-question-container';
+            this.questionContainer.className = "soe-question-container";
+            this.questionContainer.innerHTML = iHTML;
+            this.pluginArea.appendChild(this.questionContainer);
+        } else {
+            this.questionContainer.innerHTML = iHTML;
+            this.questionCallback("on");
+        }
+        this.initObj.statusDialog("close");
+    }; // processQuestion
+
+    this.questionCallback = function (type) {
+        if (type == "off") {
+            soeComponentUtils.hide(this.questionContainer);
+            soeComponentUtils.scrollToTop();
+        } else {
+            soeComponentUtils.show(this.questionContainer);
+            soeComponentUtils.scrollToTop();
+        }
+    }; // questionCallback
+
+    /////////////////////////////////////////////////////////////// Elections /////////////////////////////////////////////
+
+    this.getElections = function (type, pid) {
+        var electionId = soeComponentUtils.getQueryStringValue("electionId"); //is there a specific election requested from the querystring?
+        if (electionId != null) {
+            //go to specfic election
+            soeElectionObj.getElection(electionId);
+        } else {
+            //show list of elections
+            var myPrecinct = "";
+            if (pid != null) {
+                myPrecinct = "&precinctId=" + pid;
+            }
+            var myType = "";
+            if (type == "past" || type == "current" || type == "all") {
+                if (type == "past") {
+                    this.electionsType = "Past";
+                } else if (type == "current") {
+                    this.electionsType = "Current";
+                } else {
+                    this.electionsType = null;
+                }
+                myType = "type=" + type;
+            } else {
+                myType = "type=all";
+            }
+            this.initObj.statusDialog("open");
+            var request = this.initObj.baseUrlRest + "/" + this.subUrl + "/getElections?" + myType + myPrecinct + "&lang=" + soeComponentUtils.getLanguage() + "&callback=soeElectionObj.processElections";
+            soeComponentUtils.callService(request);
+        }
+    }; //getElections
+
+    this.processElections = function (JSONData) {
+
+        /////////////////////////// LOAD ACCORDION FUNCTIONALITY  //////////////////////////
+
+
+        /////////////////////////// [start] check for errors  //////////////////////////
+
+        if (JSONData.ERROR != null || JSONData.ERROR != "") {
+            if (this.electionsContainer == null) {
+                this.electionsContainer = document.createElement('div');
+                this.electionsContainer.id = 'soe-elections-container';
+                this.electionsContainer.className = "soe-elections-container";
+                this.electionsContainer.innerHTML = JSONData.ERROR;
+                this.pluginArea.appendChild(this.electionsContainer);
+            } else {
+                this.electionsContainer.innerHTML = JSONData.ERROR;
+                this.electionsCallback("on");
+            }
+            this.initObj.statusDialog("close");
+        }
+
+        /////////////////////////// [end] check for errors  //////////////////////////
+
+        var pageLabels = JSONData.pageLabels;
+        var pageTexts = JSONData.pageTexts;
+        if (this.electionsType == "Past") {
+            if (pageTexts.ELECTIONS_PAST_CRUMB.rendered == true) {
+                soeBreadCrumbsObj.addCrumb("soeElectionObj.electionsCallback(\"on\")", "soeElectionObj.electionsCallback(\"off\")", pageTexts.ELECTIONS_PAST_CRUMB.pageTextValue);
+            }
+        } else if (this.electionsType == "Current") {
+            if (pageTexts.ELECTIONS_FUTURE_CRUMB.rendered == true) {
+                soeBreadCrumbsObj.addCrumb("soeElectionObj.electionsCallback(\"on\")", "soeElectionObj.electionsCallback(\"off\")", pageTexts.ELECTIONS_FUTURE_CRUMB.pageTextValue);
+            }
+        } else {
+            if (pageTexts.ELECTIONS_CRUMB.rendered == true) {
+                soeBreadCrumbsObj.addCrumb("soeElectionObj.electionsCallback(\"on\")", "soeElectionObj.electionsCallback(\"off\")", pageTexts.ELECTIONS_CRUMB.pageTextValue);
+            }
+        }
+
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=" + JSONData.pageName);
+
+        var headerHTML = "";
+        var iHTML = "";
+        var elections = JSONData.elections;
+
+        if (this.electionsType == "Past") {
+            if (pageTexts.ELECTIONS_PAST_HEADER.rendered == true) {
+                iHTML += "<h2>" + pageTexts.ELECTIONS_PAST_HEADER.pageTextValue + "</h2>";
+            }
+        } else if (this.electionsType == "Current") {
+            if (pageTexts.ELECTIONS_FUTURE_HEADER.rendered == true) {
+                iHTML += "<h2>" + pageTexts.ELECTIONS_FUTURE_HEADER.pageTextValue + "</h2>";
+            }
+        } else {
+            if (pageTexts.ELECTIONS_HEADER.rendered == true) {
+                iHTML += "<h2>" + pageTexts.ELECTIONS_HEADER.pageTextValue + "</h2>";
+            }
+        }
+
+        // Header
+        for (var l = 0; pageLabels.length > l; l++) {
+            var labelName = pageLabels[l].pageLabelName.pageLabelName;
+            var label = pageLabels[l];
+            switch (labelName) {
+                case "ELECTIONS_ELECTION_NAME":
+                    if (label.rendered == true) {
+                        headerHTML += "<td>" + label.pageLabelValue + "</td>";
+                    }
+                    break;
+                case "ELECTIONS_ELECTION_DATE":
+                    if (label.rendered == true) {
+                        headerHTML += "<td>" + label.pageLabelValue + "</td>";
+                    }
+                    break;
+                case "ELECTIONS_REGISTRATION_DEADLINE":
+                    if (label.rendered == true) {
+                        headerHTML += "<td>" + label.pageLabelValue + "</td>";
+                    }
+                    break;
+                case "ELECTIONS_ELECTION_EARLY_VOTING_STARTS":
+                    if (label.rendered == true) {
+                        headerHTML += "<td>" + label.pageLabelValue + "</td>";
+                    }
+                    break;
+                case "ELECTIONS_ELECTION_EARLY_VOTING_ENDS":
+                    if (label.rendered == true) {
+                        headerHTML += "<td>" + label.pageLabelValue + "</td>";
+                    }
+                    break;
+            }
+        }
+
+        //////////////////////////////// there are 3 rendering routines defined //////////////////////////
+
+        //rendering routine 1 - roll up elections by Election Type
+        if (JSONData.groupElectionByType) {
+            iHTML += "<ul class='toggle-menu'>";
+            for (var i = 0; JSONData.electionGroupFacades.length > i; i++) {
+                var electionGroupFacade = JSONData.electionGroupFacades[i];
+                iHTML += "<li>";
+                iHTML += "<a href='#' class='accordion-header'>" + electionGroupFacade.electionType + "<span class='arrow'></span></a>";
+                iHTML += "<div class='table-wrapper'>";
+                iHTML += "<table border=0>";
+                iHTML += "<tbody>";
+                iHTML += "<tr>";
+                iHTML += headerHTML;
+                iHTML += "</tr>";
+                for (var e = 0; electionGroupFacade.electionFacades.length > e; e++) {
+                    var electionFacade = electionGroupFacade.electionFacades[e];
+                    iHTML += "<tr>";
+                    for (var l = 0; pageLabels.length > l; l++) {
+                        var labelName = pageLabels[l].pageLabelName.pageLabelName;
+                        var label = pageLabels[l];
+                        switch (labelName) {
+                            case "ELECTIONS_ELECTION_NAME":
+                                if (label.rendered == true) {
+                                    iHTML += "<td class='form-label'><a href='#' onclick='soeElectionObj.electionsCallback(\"off\");soeElectionObj.getElection(" + electionFacade.eid + ");return false;'>" + electionFacade.name + "</a></td>";
+                                }
+                                break;
+                            case "ELECTIONS_ELECTION_DATE":
+                                if (label.rendered == true) {
+                                    iHTML += "<td>" + electionFacade.date + "</td>";
+                                }
+                                break;
+                            case "ELECTIONS_REGISTRATION_DEADLINE":
+                                if (label.rendered == true) {
+                                    iHTML += "<td>" + electionFacade.vregDeadline + "</td>";
+                                }
+                                break;
+                        }
+                    }
+                    iHTML += "</tr>";
+                }
+                iHTML += "</tbody></table></div>";
+                iHTML += "</li>";
+            }
+            iHTML += "</ul>";
+        }
+
+        //rendering routine 1 - roll up elections by year
+        if (JSONData.groupElectionByYear) {
+            iHTML += "<ul class='toggle-menu'>";
+            for (var i = 0; JSONData.electionGroupFacades.length > i; i++) {
+                var electionGroupFacade = JSONData.electionGroupFacades[i];
+                iHTML += "<li>";
+                iHTML += "<a href='#' class='accordion-header'>" + electionGroupFacade.year + "<span class='arrow'></span></a>";
+                iHTML += "<div class='table-wrapper'>";
+                iHTML += "<table border=0>";
+                iHTML += "<tbody>";
+                iHTML += "<tr>";
+                iHTML += headerHTML;
+                iHTML += "</tr>";
+                for (var e = 0; electionGroupFacade.electionFacades.length > e; e++) {
+                    var electionFacade = electionGroupFacade.electionFacades[e];
+                    iHTML += "<tr>";
+                    for (var l = 0; pageLabels.length > l; l++) {
+                        var labelName = pageLabels[l].pageLabelName.pageLabelName;
+                        var label = pageLabels[l];
+                        switch (labelName) {
+                            case "ELECTIONS_ELECTION_NAME":
+                                if (label.rendered == true) {
+                                    iHTML += "<td class='form-label'><a href='#' onclick='soeElectionObj.electionsCallback(\"off\");soeElectionObj.getElection(" + electionFacade.eid + ");return false;'>" + electionFacade.name + "</a></td>";
+                                }
+                                break;
+                            case "ELECTIONS_ELECTION_DATE":
+                                if (label.rendered == true) {
+                                    iHTML += "<td>" + electionFacade.date + "</td>";
+                                }
+                                break;
+                            case "ELECTIONS_REGISTRATION_DEADLINE":
+                                if (label.rendered == true) {
+                                    iHTML += "<td>" + electionFacade.vregDeadline + "</td>";
+                                }
+                                break;
+                            case "ELECTIONS_ELECTION_EARLY_VOTING_STARTS":
+                                if (label.rendered == true) {
+                                    var earlyVotingStarts = (electionFacade.earlyVotingStarts != undefined && electionFacade.earlyVotingStarts != null) ? electionFacade.earlyVotingStarts : '';
+                                    iHTML += "<td>" + earlyVotingStarts + "</td>";
+                                }
+                                break;
+                            case "ELECTIONS_ELECTION_EARLY_VOTING_ENDS":
+                                if (label.rendered == true) {
+                                    var earlyVotingEnds = (electionFacade.earlyVotingEnds != undefined && electionFacade.earlyVotingEnds != null) ? electionFacade.earlyVotingEnds : '';
+                                    iHTML += "<td>" + earlyVotingEnds+ "</td>";
+                                }
+                                break;
+                        }
+                    }
+                    iHTML += "</tr>";
+                }
+                iHTML += "</tbody></table></div>";
+                iHTML += "</li>";
+            }
+            iHTML += "</ul>";
+        } else {
+            if (elections != null && elections.length > 0) {
+                //routine 2 - draw elections as straight list
+                iHTML += "<table border=0>";
+                iHTML += "<tbody><tr class='row_header'>";
+
+                iHTML += headerHTML;
+
+                // Header
+                /*
+                 for ( var l = 0 ; pageLabels.length > l ; l++ ) {
+                 var labelName = pageLabels[l].pageLabelName.pageLabelName;
+                 var label = pageLabels[l];
+                 switch(labelName){
+                 case "ELECTIONS_ELECTION_NAME":
+                 if (label.rendered == true){
+                 iHTML += "<td>"+label.pageLabelValue+"</td>";
+                 }
+                 break;
+                 case "ELECTIONS_ELECTION_DATE":
+                 if (label.rendered == true){
+                 iHTML += "<td>"+label.pageLabelValue+"</td>";
+                 }
+                 break;
+                 case "ELECTIONS_REGISTRATION_DEADLINE":
+                 if (label.rendered == true){
+                 iHTML += "<td>"+label.pageLabelValue+"</td>";
+                 }
+                 break;
+                 }
+                 }
+                 */
+
+
+                iHTML += "</tr>";
+                //for (var e in elections) {
+                for (var e = 0; elections.length > e; e++) {
+                    iHTML += "<tr>";
+                    //for (var l in pageLabels){
+                    for (var l = 0; pageLabels.length > l; l++) {
+                        var labelName = pageLabels[l].pageLabelName.pageLabelName;
+                        var label = pageLabels[l];
+                        switch (labelName) {
+                            case "ELECTIONS_ELECTION_NAME":
+                                if (label.rendered == true) {
+                                    iHTML += "<td class='form-label'><a href='#' onclick='soeElectionObj.electionsCallback(\"off\");soeElectionObj.getElection(" + elections[e].eid + ");return false;'>" + elections[e].name + "</a></td>";
+                                }
+                                break;
+                            case "ELECTIONS_ELECTION_DATE":
+                                if (label.rendered == true) {
+                                    iHTML += "<td>" + elections[e].date + "</td>";
+                                }
+                                break;
+                            case "ELECTIONS_REGISTRATION_DEADLINE":
+                                if (label.rendered == true) {
+                                    iHTML += "<td>" + elections[e].vregDeadline + "</td>";
+                                }
+                                break;
+                            case "ELECTIONS_ELECTION_EARLY_VOTING_STARTS":
+                                if (label.rendered == true) {
+                                    var earlyVotingStarts = (elections[e].earlyVotingStarts != undefined && elections[e].earlyVotingStarts != null) ? elections[e].earlyVotingStarts : '';
+                                    iHTML += "<td>" + earlyVotingStarts + "</td>";
+                                }
+                                break;
+                            case "ELECTIONS_ELECTION_EARLY_VOTING_ENDS":
+                                if (label.rendered == true) {
+                                    var earlyVotingEnds = (elections[e].earlyVotingEnds != undefined && elections[e].earlyVotingEnds != null) ? elections[e].earlyVotingEnds : '';
+                                    iHTML += "<td>" + earlyVotingEnds+ "</td>";
+                                }
+                                break;
+                        }
+                    }
+                    iHTML += "</tr>";
+                }
+                iHTML += "</tbody></table>";
+            }
+        }
+
+        //} else {
+        //	if (pageTexts.ELECTIONS_NODATA_MSG.rendered == true){
+        //		iHTML += "<div>"+pageTexts.ELECTIONS_NODATA_MSG.pageTextValue+"</div>";
+        //	}
+        //}
+
+
+        if (this.electionsContainer == null) {
+            this.electionsContainer = document.createElement('div');
+            this.electionsContainer.id = 'soe-elections-container';
+            this.electionsContainer.className = "soe-elections-container";
+            this.electionsContainer.innerHTML = iHTML;
+            this.pluginArea.appendChild(this.electionsContainer);
+        } else {
+            this.electionsContainer.innerHTML = iHTML;
+            this.electionsCallback("on");
+        }
+        this.initObj.statusDialog("close");
+    }; // processElections
+
+
+    this.jumpToEarlyVoting = function (electionId) {
+        this.electionCallback("off");
+        soeComponentUtils.scrollToTop();
+        earlyVotingDallasObj.init(electionId);
+    }; // jumpToEarlyVoting
+
+    this.electionsCallback = function (type) {
+        if (type == "off") {
+            soeComponentUtils.hide(this.electionsContainer);
+            soeComponentUtils.scrollToTop();
+        } else {
+            soeComponentUtils.show(this.electionsContainer);
+            soeComponentUtils.scrollToTop();
+        }
+    }; // electionsCallback
+
+} // end soeElection

@@ -1,0 +1,767 @@
+{
+  "checkedAt": "2026-11-03T06:10:38.678188+00:00",
+  "nativeCountyOrigin": "403 on official HTML, component JS and PDF routes; native PDF bytes not acquired",
+  "publicReader": "Unsigned, election-only public sources; exact reader bytes have their own SHA256 and native-byte limitations. No signed URLs forwarded.",
+  "officialPublicSampleEndpoint": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=66&lang=en",
+  "sampleScope": "57 complete local dynamic sample fields; one additional cross-county local field and all13 shared judges corroborated by native Alameda actual sample. Contra Costa precinct PDF/layout audit remains pending.",
+  "namedStatus": "Kofi Opong-Mensah explicitly WRITE-IN; separate qualified-write-in record, no ordinary candidacy or fabricated withdrawal.",
+  "sourceNameVariants": "All six substantive dynamic sample variants preserved with component office/candidate IDs and exact publisher statement-office-code bridges to the qualified proof; canonical proof/zero report names retained.",
+  "olderQualifiedProofAdditionalOffices": "Additional August27 offices not in current dynamic sample/zero report are not inferred cancelled or withdrawn; final sample/status verification remains pending.",
+  "locationLookup": "An attempted public-office location query was rejected by automatic approval review before execution as potential third-party location disclosure; route abandoned without retry. Remaining acquisition used election-only endpoints.",
+  "voterIdentityRequested": false,
+  "productionWrites": false,
+  "captures": [
+    {
+      "capture": "candidate-test-hash.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/election/november-3-2026-general-election/#eid=66&eoid=1600",
+      "status": 200,
+      "sha256": "7787ba8626df927246368bc42aaaa25e18d2ff7b6c748517c3cfbae15783839e",
+      "bytes": 79425,
+      "fetchedAt": "2026-11-03T05:54:22.300676+00:00"
+    },
+    {
+      "capture": "candidate-test-query.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/election/november-3-2026-general-election/?eid=66&eoid=1600",
+      "status": 200,
+      "sha256": "2ff559e4a83ddcd5d6fad61542f15c74f5a58352c1044626c704ba737f214604",
+      "bytes": 80449,
+      "fetchedAt": "2026-11-03T05:54:30.782883+00:00"
+    },
+    {
+      "capture": "ccc-candidate-detail.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/wp-content/uploads/8-27-26_candidatelist_detail_final.pdf",
+      "status": 200,
+      "sha256": "2fdaad09ed3094040bec447b21a927ebcfd511d8d1a5ba1b070ef4dff989a0f0",
+      "bytes": 181624,
+      "fetchedAt": "2026-11-03T06:00:33.406058+00:00"
+    },
+    {
+      "capture": "ccc-candidate-page.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/elections/candidates-campaigns-measures/",
+      "status": 200,
+      "sha256": "756c4b18c916405cbe8b93b5096feb55099e2b0487f9bfdcc0e0724a25d9f46e",
+      "bytes": 25139,
+      "fetchedAt": "2026-11-03T05:59:24.786025+00:00"
+    },
+    {
+      "capture": "ccc-candidate-summary.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/wp-content/uploads/8-14-26_candidatelist_summary_final.pdf",
+      "status": 200,
+      "sha256": "38b11b7b13c6c805e12bc5b0258c39973b99053d8805c3e6100a14075a91d59e",
+      "bytes": 14473,
+      "fetchedAt": "2026-11-03T06:00:32.409606+00:00"
+    },
+    {
+      "capture": "ccc-court.meta.json",
+      "url": "https://appellate.courts.ca.gov/",
+      "status": 200,
+      "sha256": "fac97909e91c1425e01f6dc5608ee26b14746b8a4c41115c15ce3493e00b02b6",
+      "bytes": 266077,
+      "fetchedAt": "2026-11-03T05:59:17.859618+00:00"
+    },
+    {
+      "capture": "ccc-election-js.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/js/soe_component_scripts/soe_election_2.0.js",
+      "status": 422,
+      "sha256": "cde7cd55af68521860142d396ab6484c5b690e7a6b8ea2be61485dbb7c08873d",
+      "bytes": 325,
+      "fetchedAt": "2026-11-03T05:53:45.760534+00:00"
+    },
+    {
+      "capture": "ccc-election-json-browser.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getElection?eid=66&lang=en",
+      "status": 200,
+      "sha256": "c483c70de542db9c84267a7ffa5b4fbcd8ec7de32d943912d2638442b95e9ac4",
+      "bytes": 37434,
+      "fetchedAt": "2026-11-03T05:55:01.229244+00:00"
+    },
+    {
+      "capture": "ccc-election-json.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getElection?eid=66&lang=en",
+      "status": 422,
+      "sha256": "cde7cd55af68521860142d396ab6484c5b690e7a6b8ea2be61485dbb7c08873d",
+      "bytes": 325,
+      "fetchedAt": "2026-11-03T05:53:46.606041+00:00"
+    },
+    {
+      "capture": "ccc-elections.meta.json",
+      "url": "https://www.contracostavote.gov/elections/",
+      "status": 403,
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "bytes": 118,
+      "fetchedAt": "2026-11-03T05:50:12.019119+00:00"
+    },
+    {
+      "capture": "ccc-general-reader-html.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/election/november-3-2026-general-election/",
+      "status": 200,
+      "sha256": "9c36d04bd91a7542ed7d7e0e3f81a67733a99feeef53355a27c7590d1c4c06d0",
+      "bytes": 280374,
+      "fetchedAt": "2026-11-03T05:51:33.134966+00:00"
+    },
+    {
+      "capture": "ccc-general-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/election/november-3-2026-general-election/",
+      "status": 200,
+      "sha256": "4176efbc45ada9291d3eec61e1f9c48d3cdb4497a3db0c2216bade567775f207",
+      "bytes": 79090,
+      "fetchedAt": "2026-11-03T05:50:42.435853+00:00"
+    },
+    {
+      "capture": "ccc-general-singular.meta.json",
+      "url": "https://www.contracostavote.gov/election/november-3-2026-general-election/",
+      "status": 403,
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "bytes": 118,
+      "fetchedAt": "2026-11-03T05:50:36.591174+00:00"
+    },
+    {
+      "capture": "ccc-general.meta.json",
+      "url": "https://www.contracostavote.gov/elections/november-3-2026-general-election/",
+      "status": 403,
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "bytes": 118,
+      "fetchedAt": "2026-11-03T05:50:12.070871+00:00"
+    },
+    {
+      "capture": "ccc-home-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/elections/",
+      "status": 200,
+      "sha256": "cf860aefeb94338cb0131c4cd80c9c751b9d632bb16981ce07ca29e07756e5fa",
+      "bytes": 18233,
+      "fetchedAt": "2026-11-03T05:50:41.503348+00:00"
+    },
+    {
+      "capture": "ccc-lookup-reader-html.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/elections/voter-registration/my-voting-information/",
+      "status": 200,
+      "sha256": "8d5444f249f432d7d0cb8e02764edb405c8c8846f1b022dab7f81adf255f0985",
+      "bytes": 65355,
+      "fetchedAt": "2026-11-03T05:51:33.319687+00:00"
+    },
+    {
+      "capture": "ccc-media-api.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/wp-json/wp/v2/media?search=sample&per_page=100",
+      "status": 429,
+      "sha256": "035bbf36cc8f59eeb5f53cc91330dcfe2dd9356f5f554a6ac0f61eadf87002ed",
+      "bytes": 242,
+      "fetchedAt": "2026-11-03T05:56:52.428020+00:00"
+    },
+    {
+      "capture": "ccc-media-sample-browser.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/wp-json/wp/v2/media?search=2026&per_page=100",
+      "status": 200,
+      "sha256": "ed6a7c7c15db91f2b6ffbaec4ccb7be48bd7853833e3e3e642ccf701fa90f3de",
+      "bytes": 118,
+      "fetchedAt": "2026-11-03T05:57:58.130245+00:00"
+    },
+    {
+      "capture": "ccc-new-county.meta.json",
+      "url": "https://www.contracosta.ca.gov/m/newsflash/Home/Detail/3051",
+      "status": 200,
+      "sha256": "c83ee5c8586536a6be4a8209f8d43e0abaa0c879b38f471bb7ef101d480e3541",
+      "bytes": 118336,
+      "fetchedAt": "2026-11-03T05:50:37.770450+00:00"
+    },
+    {
+      "capture": "ccc-office1600-json-browser.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1600&lang=en",
+      "status": 200,
+      "sha256": "143ffad93baca195d41967a9e753ce6d99801c9277bcdfc286abd31f926af0fc",
+      "bytes": 4305,
+      "fetchedAt": "2026-11-03T05:54:59.085200+00:00"
+    },
+    {
+      "capture": "ccc-positions.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/wp-content/uploads/26Nov03_PositionsUpForElection.pdf",
+      "status": 200,
+      "sha256": "ee774118c487de278f244dc954b0fa62c1f8275e3735ea2fe1cb04eb2eb3af3f",
+      "bytes": 5931,
+      "fetchedAt": "2026-11-03T06:00:32.252658+00:00"
+    },
+    {
+      "capture": "ccc-precinct-form.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/precinct/adminctrl?lang=en",
+      "status": 200,
+      "sha256": "41eea9ec3020f22d08ae5b90dedc4708884b01051448916f825dbd439a86c122",
+      "bytes": 8851,
+      "fetchedAt": "2026-11-03T05:55:22.932622+00:00"
+    },
+    {
+      "capture": "ccc-precinct-js-browser.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/js/soe_component_scripts/soe_precinct_finder_3.0.js",
+      "status": 200,
+      "sha256": "acfe42175b6194a69aae1ac08e987cbc7786615f42d8e158a6335357585ef9a9",
+      "bytes": 44809,
+      "fetchedAt": "2026-11-03T05:54:46.298501+00:00"
+    },
+    {
+      "capture": "ccc-precinct-js.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/js/soe_component_scripts/soe_precinct_finder_3.0.js",
+      "status": 422,
+      "sha256": "cde7cd55af68521860142d396ab6484c5b690e7a6b8ea2be61485dbb7c08873d",
+      "bytes": 325,
+      "fetchedAt": "2026-11-03T05:53:46.153746+00:00"
+    },
+    {
+      "capture": "ccc-retention-rules.meta.json",
+      "url": "https://appellate.courts.ca.gov/about-courts/appellate-retention-elections",
+      "status": 200,
+      "sha256": "aebc0c2b1f9091ff78599527d07ddda6579fe1a6d8db1bb0be1e069ed51bbee0",
+      "bytes": 201264,
+      "fetchedAt": "2026-11-03T05:59:17.989744+00:00"
+    },
+    {
+      "capture": "ccc-sample-all.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=66&lang=en",
+      "status": 200,
+      "sha256": "cee7dc9d3bf4ecad1ea30a07baa25a434bb35a0c5f8f1c363b39d4db9ba44e9b",
+      "bytes": 58538,
+      "fetchedAt": "2026-11-03T05:55:32.265743+00:00"
+    },
+    {
+      "capture": "ccc-sample-js-browser.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/js/soe_component_scripts/soe_sample_ballot_3.0.js",
+      "status": 200,
+      "sha256": "662d37c3610fbf072e8a3786462923a40531d169f8bbb93bbd4308c581d5c772",
+      "bytes": 16414,
+      "fetchedAt": "2026-11-03T05:54:47.359979+00:00"
+    },
+    {
+      "capture": "ccc-sample-js.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/js/soe_component_scripts/soe_sample_ballot_3.0.js",
+      "status": 422,
+      "sha256": "cde7cd55af68521860142d396ab6484c5b690e7a6b8ea2be61485dbb7c08873d",
+      "bytes": 325,
+      "fetchedAt": "2026-11-03T05:53:45.799644+00:00"
+    },
+    {
+      "capture": "ccc-sample-rendered.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/elections/sample-ballot/?electionId=66",
+      "status": 401,
+      "sha256": "d50e55dc696109aee70ff87aeab23483b9c4230a88441bf8f75cd4ba52888f58",
+      "bytes": 345,
+      "fetchedAt": "2026-11-03T05:57:56.479831+00:00"
+    },
+    {
+      "capture": "ccc-zero-cdn.meta.json",
+      "url": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/contracosta-ca.connect.clarityelections.com/ElectionSummaryReportRPT-48.pdf",
+      "status": 404,
+      "sha256": "688cdc83d0bbdbeaf48714398d3a9b2ec96db41678ceab8580bda25294f19f92",
+      "bytes": 300,
+      "fetchedAt": "2026-11-03T05:54:58.630622+00:00"
+    },
+    {
+      "capture": "ccc-zero-native.meta.json",
+      "url": "https://www.contracostavote.gov/wp-content/uploads/ElectionSummaryReportRPT-48.pdf",
+      "status": 403,
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "bytes": 118,
+      "fetchedAt": "2026-11-03T05:51:33.335028+00:00"
+    },
+    {
+      "capture": "ccc-zero-reader-browser-html.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/wp-content/uploads/ElectionSummaryReportRPT-48.pdf",
+      "status": 401,
+      "sha256": "d50e55dc696109aee70ff87aeab23483b9c4230a88441bf8f75cd4ba52888f58",
+      "bytes": 345,
+      "fetchedAt": "2026-11-03T05:59:17.166727+00:00"
+    },
+    {
+      "capture": "ccc-zero-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/wp-content/uploads/ElectionSummaryReportRPT-48.pdf",
+      "status": 200,
+      "sha256": "34d886c9f414f0b4f5b66d2c94ec118f15cd28d715a91c711fb7a7d6e2074024",
+      "bytes": 36177,
+      "fetchedAt": "2026-11-03T05:51:34.532947+00:00"
+    },
+    {
+      "capture": "election-js-connect.meta.json",
+      "url": "https://contracosta-ca.connect.clarityelections.com/js/soe_component_scripts/soe_election_2.0.js",
+      "status": 403,
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "bytes": 118,
+      "fetchedAt": "2026-11-03T05:54:22.326946+00:00"
+    },
+    {
+      "capture": "election-js-native.meta.json",
+      "url": "https://www.contracostavote.gov/js/soe_component_scripts/soe_election_2.0.js",
+      "status": 403,
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "bytes": 118,
+      "fetchedAt": "2026-11-03T05:54:22.413857+00:00"
+    },
+    {
+      "capture": "election-js-no-www.meta.json",
+      "url": "https://contracostavote.gov/js/soe_component_scripts/soe_election_2.0.js",
+      "status": 403,
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "bytes": 118,
+      "fetchedAt": "2026-11-03T05:54:22.758670+00:00"
+    },
+    {
+      "capture": "election-js-reader-text.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/js/soe_component_scripts/soe_election_2.0.js",
+      "status": 200,
+      "sha256": "eafc15b48cc1f932cac9eb2db45245af9a7c71b68aad3f4e14d3dd89619c6974",
+      "bytes": 68146,
+      "fetchedAt": "2026-11-03T05:54:26.212875+00:00"
+    },
+    {
+      "capture": "office-1581.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1581&lang=en",
+      "status": 200,
+      "sha256": "b567b7dd0b9fb5783fa7ce004cc2a75e54c5e051295a58344e611474082765ab",
+      "bytes": 4878,
+      "fetchedAt": "2026-11-03T06:04:18.400549+00:00"
+    },
+    {
+      "capture": "office-1584.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1584&lang=en",
+      "status": 200,
+      "sha256": "f43ed3e463a0cfa16bdf190d330a0bc2c59d13adf0ac7f4b81a45c77efc215e9",
+      "bytes": 4308,
+      "fetchedAt": "2026-11-03T06:04:17.792448+00:00"
+    },
+    {
+      "capture": "office-1585.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1585&lang=en",
+      "status": 200,
+      "sha256": "65634e8c8c58f4447c8a172135399fce68d71a46b19f263001280729bd60be4a",
+      "bytes": 4332,
+      "fetchedAt": "2026-11-03T06:04:18.451080+00:00"
+    },
+    {
+      "capture": "office-1587.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1587&lang=en",
+      "status": 200,
+      "sha256": "78ec9ebd2f84e9f9b8c19e99795df6679d1f5c00b9c72768dc7499e16ea7dc8e",
+      "bytes": 4352,
+      "fetchedAt": "2026-11-03T06:04:17.076450+00:00"
+    },
+    {
+      "capture": "office-1588.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1588&lang=en",
+      "status": 200,
+      "sha256": "7c4be3fd567c3afb477b4bc8826e345d77c7f55a7e94f0ad755a922b95f98e76",
+      "bytes": 5475,
+      "fetchedAt": "2026-11-03T06:04:18.706340+00:00"
+    },
+    {
+      "capture": "office-1590.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1590&lang=en",
+      "status": 200,
+      "sha256": "ffd583d0007104348696200cbfdc937c9e783dbe9115cbc170d6f19ff621754a",
+      "bytes": 4377,
+      "fetchedAt": "2026-11-03T06:04:19.534205+00:00"
+    },
+    {
+      "capture": "office-1591.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1591&lang=en",
+      "status": 200,
+      "sha256": "16b2428cae3c7ef740a1a7fa2ff0b93b19b2128e6c61f0bf108491b6108802ec",
+      "bytes": 4357,
+      "fetchedAt": "2026-11-03T06:04:19.737560+00:00"
+    },
+    {
+      "capture": "office-1592.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1592&lang=en",
+      "status": 200,
+      "sha256": "666e249771482bb4ce365a217c9612b13de0b1ba519e8d94f82e8402d1936648",
+      "bytes": 4355,
+      "fetchedAt": "2026-11-03T06:05:29.776504+00:00"
+    },
+    {
+      "capture": "office-1593.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1593&lang=en",
+      "status": 200,
+      "sha256": "3cca307bef9bd5cfe78e86d7c66936c18b4d21ede2bc0271ffe7a830100102b3",
+      "bytes": 4349,
+      "fetchedAt": "2026-11-03T06:04:19.271782+00:00"
+    },
+    {
+      "capture": "office-1594.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1594&lang=en",
+      "status": 200,
+      "sha256": "83c6994dc4f05a29a28c66b04e28e4d37d38caa6291187580d54416dc00031e4",
+      "bytes": 6126,
+      "fetchedAt": "2026-11-03T06:04:17.887569+00:00"
+    },
+    {
+      "capture": "office-1596.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1596&lang=en",
+      "status": 200,
+      "sha256": "16a593f09517aa90b4d6955527848c440009744b8acd0f0aa138ae5c0e3d02a1",
+      "bytes": 4912,
+      "fetchedAt": "2026-11-03T06:04:18.990998+00:00"
+    },
+    {
+      "capture": "office-1597.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1597&lang=en",
+      "status": 200,
+      "sha256": "5cdfe73922e6a6574041617d6620b4dc3f4a90dc9b309ce6d188fb77d4415d11",
+      "bytes": 4350,
+      "fetchedAt": "2026-11-03T06:04:19.789306+00:00"
+    },
+    {
+      "capture": "office-1598.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1598&lang=en",
+      "status": 200,
+      "sha256": "62b94bc52d4d540e4d2f4c97437f4012cd625942d46d4dd1a71ecd53d25095a6",
+      "bytes": 5467,
+      "fetchedAt": "2026-11-03T06:04:20.113508+00:00"
+    },
+    {
+      "capture": "office-1599.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1599&lang=en",
+      "status": 200,
+      "sha256": "7a7c6279932431d8037520a9c74e3abdb2da1aad430f4c23c50f7039f0ecc9e5",
+      "bytes": 6641,
+      "fetchedAt": "2026-11-03T06:05:29.592379+00:00"
+    },
+    {
+      "capture": "office-1600.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1600&lang=en",
+      "status": 200,
+      "sha256": "143ffad93baca195d41967a9e753ce6d99801c9277bcdfc286abd31f926af0fc",
+      "bytes": 4305,
+      "fetchedAt": "2026-11-03T05:56:46.008174+00:00"
+    },
+    {
+      "capture": "office-1601.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1601&lang=en",
+      "status": 200,
+      "sha256": "750f6b52791110e1e922d41c771bd8fcf4336f8f062b2b10486ca1b46ecb7538",
+      "bytes": 5501,
+      "fetchedAt": "2026-11-03T05:56:46.305769+00:00"
+    },
+    {
+      "capture": "office-1602.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1602&lang=en",
+      "status": 200,
+      "sha256": "8b7382ababba5bd45e960922a79c17ce80944f4f8b750284780e7a348ff85d88",
+      "bytes": 4945,
+      "fetchedAt": "2026-11-03T05:56:46.203459+00:00"
+    },
+    {
+      "capture": "office-1603.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1603&lang=en",
+      "status": 200,
+      "sha256": "5da3ef7093327f995be11e54de730d8e880c3e184dbd4681715e97219afcb689",
+      "bytes": 4938,
+      "fetchedAt": "2026-11-03T05:56:46.095650+00:00"
+    },
+    {
+      "capture": "office-1604.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1604&lang=en",
+      "status": 200,
+      "sha256": "b37e42da162ceb95bc402517335a5f371867dc7e62fbca9edbeec315dce084cb",
+      "bytes": 5467,
+      "fetchedAt": "2026-11-03T05:56:46.437920+00:00"
+    },
+    {
+      "capture": "office-1605.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1605&lang=en",
+      "status": 200,
+      "sha256": "2c8933765ab6bf8425dd4d2602a277bce62a9b65d54cb9562df31925aaba686f",
+      "bytes": 4904,
+      "fetchedAt": "2026-11-03T05:56:47.261711+00:00"
+    },
+    {
+      "capture": "office-1606.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1606&lang=en",
+      "status": 200,
+      "sha256": "9cef6a0a9bec557627b9ad6313fb97ff12ee1b760ed45702cfc8c8cafda9a9e9",
+      "bytes": 5535,
+      "fetchedAt": "2026-11-03T05:56:47.450444+00:00"
+    },
+    {
+      "capture": "office-1607.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1607&lang=en",
+      "status": 200,
+      "sha256": "1d8b0357e53a09bd5e802bffe5015961290f299266c284b7bc71c39516a167ad",
+      "bytes": 4330,
+      "fetchedAt": "2026-11-03T05:56:47.436573+00:00"
+    },
+    {
+      "capture": "office-1608.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1608&lang=en",
+      "status": 200,
+      "sha256": "9ee0c818f5243cf7e1289a0e19feca63f74a2494b8930eea61ec3e03f819e5c9",
+      "bytes": 3734,
+      "fetchedAt": "2026-11-03T05:56:47.197590+00:00"
+    },
+    {
+      "capture": "office-1609.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1609&lang=en",
+      "status": 200,
+      "sha256": "62e81dbccb5ff20fa59c173f45f74feebc98f85896cafeef9bd17f97ce847251",
+      "bytes": 4921,
+      "fetchedAt": "2026-11-03T05:56:47.524730+00:00"
+    },
+    {
+      "capture": "office-1610.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1610&lang=en",
+      "status": 200,
+      "sha256": "7ac2fc7786db575f4f20b687b62c55c068b20ca60e6102aa155a9b309c13529f",
+      "bytes": 6657,
+      "fetchedAt": "2026-11-03T05:56:48.482733+00:00"
+    },
+    {
+      "capture": "office-1611.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1611&lang=en",
+      "status": 200,
+      "sha256": "35025c00865f8611729d8669dae15b51178b13b0152e738b92d742ac1f99d23f",
+      "bytes": 5479,
+      "fetchedAt": "2026-11-03T05:56:48.416488+00:00"
+    },
+    {
+      "capture": "office-1612.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1612&lang=en",
+      "status": 200,
+      "sha256": "46b0596035870bda9ecc2d5705468fa2a45770f099f67c34d59b0af3ff3c3291",
+      "bytes": 5463,
+      "fetchedAt": "2026-11-03T05:56:48.871850+00:00"
+    },
+    {
+      "capture": "office-1613.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1613&lang=en",
+      "status": 200,
+      "sha256": "252b4571f1b62f3400e15ae4408711bf5fc592d28b6a8aff4a70ad8b3dd28336",
+      "bytes": 4299,
+      "fetchedAt": "2026-11-03T05:56:48.937576+00:00"
+    },
+    {
+      "capture": "office-1614.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1614&lang=en",
+      "status": 200,
+      "sha256": "0481c9ed2a07102c04e6ad0ce283ade235d518ca18e27af649cc22de0f45498b",
+      "bytes": 5433,
+      "fetchedAt": "2026-11-03T05:56:48.790454+00:00"
+    },
+    {
+      "capture": "office-1615.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1615&lang=en",
+      "status": 200,
+      "sha256": "97010d732560a4fef0f06954b8b4b483076673f03a160eacaa1f98a7196d0045",
+      "bytes": 6101,
+      "fetchedAt": "2026-11-03T05:56:49.763766+00:00"
+    },
+    {
+      "capture": "office-1616.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1616&lang=en",
+      "status": 200,
+      "sha256": "be92a0a64928bb87a8b7290fb2261fc74e1873bdb16dcb9e4c41c18448fa29d9",
+      "bytes": 9419,
+      "fetchedAt": "2026-11-03T05:56:49.688033+00:00"
+    },
+    {
+      "capture": "office-1617.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1617&lang=en",
+      "status": 200,
+      "sha256": "bf0fc8791ce015ed416be96f3eb28b24cb27b8c31a4cab6a363742c5658e0bf4",
+      "bytes": 5533,
+      "fetchedAt": "2026-11-03T05:56:50.826768+00:00"
+    },
+    {
+      "capture": "office-1618.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1618&lang=en",
+      "status": 200,
+      "sha256": "882a3773da5a0cf79a6aa0fbf53a784b84691e2cf76b864e6c62b7eeda879a81",
+      "bytes": 3664,
+      "fetchedAt": "2026-11-03T05:56:50.352198+00:00"
+    },
+    {
+      "capture": "office-1619.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1619&lang=en",
+      "status": 200,
+      "sha256": "c634dd18bb160facb7789d0ac97a8f1093511cad83fb5cf605587092d233936c",
+      "bytes": 4289,
+      "fetchedAt": "2026-11-03T06:04:15.778449+00:00"
+    },
+    {
+      "capture": "office-1620.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1620&lang=en",
+      "status": 200,
+      "sha256": "491b1067dac5bb69bd0b969c311650b19f8eabd7b785967c129ce00b19699cf2",
+      "bytes": 5481,
+      "fetchedAt": "2026-11-03T06:04:15.385380+00:00"
+    },
+    {
+      "capture": "office-1621.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1621&lang=en",
+      "status": 200,
+      "sha256": "fcda7e07b8306b545cf242ac2a7cfc1724c0a0b1c29e37fb21a5dd9c68d03896",
+      "bytes": 3654,
+      "fetchedAt": "2026-11-03T06:04:15.170227+00:00"
+    },
+    {
+      "capture": "office-1622.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1622&lang=en",
+      "status": 200,
+      "sha256": "ffd082a3e64e9ac43507c4afaa8db389ca357583a0c3ba7e1137dfe73b7d49d2",
+      "bytes": 3625,
+      "fetchedAt": "2026-11-03T06:04:15.415945+00:00"
+    },
+    {
+      "capture": "office-1623.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1623&lang=en",
+      "status": 200,
+      "sha256": "05fe896b1633a64afb7d51edecb84a46381fb17455aa8f7901177fe33c01aa87",
+      "bytes": 4906,
+      "fetchedAt": "2026-11-03T06:04:15.360254+00:00"
+    },
+    {
+      "capture": "office-1624.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1624&lang=en",
+      "status": 200,
+      "sha256": "0161a42d736ff22f5b19313901c8b4ac7d02a74bb2d6fee6cffe8aba1e5aef6d",
+      "bytes": 4308,
+      "fetchedAt": "2026-11-03T06:04:16.428063+00:00"
+    },
+    {
+      "capture": "office-1625.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1625&lang=en",
+      "status": 200,
+      "sha256": "5ea7142af05e6be64d5b51b2b1aaccaaecda8427c83260f4965786b63992da79",
+      "bytes": 4355,
+      "fetchedAt": "2026-11-03T06:04:16.552325+00:00"
+    },
+    {
+      "capture": "office-1626.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1626&lang=en",
+      "status": 200,
+      "sha256": "58c384c5fd7ad175a3565b01ea2cc5605e0f6781b645edc5fb46fa254c6f04d2",
+      "bytes": 4301,
+      "fetchedAt": "2026-11-03T06:04:17.301224+00:00"
+    },
+    {
+      "capture": "office-1627.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1627&lang=en",
+      "status": 200,
+      "sha256": "806980a778066b130aff78c958f308a8de32486d640ea1c7512a3ef2dd7894ea",
+      "bytes": 3642,
+      "fetchedAt": "2026-11-03T06:04:17.519874+00:00"
+    },
+    {
+      "capture": "office-1628.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1628&lang=en",
+      "status": 200,
+      "sha256": "22fd8449d0312c69562f117d3650dc2ec89361aa1364c36aab5e0b4ab2e90895",
+      "bytes": 5493,
+      "fetchedAt": "2026-11-03T06:05:31.121595+00:00"
+    },
+    {
+      "capture": "office-1629.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1629&lang=en",
+      "status": 200,
+      "sha256": "24a42c76372eeac0940376993daf8e122778f8ecf5d9fea749ca68700c822d25",
+      "bytes": 4316,
+      "fetchedAt": "2026-11-03T06:05:30.910224+00:00"
+    },
+    {
+      "capture": "office-1630.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1630&lang=en",
+      "status": 200,
+      "sha256": "4e794cdf0f0d716969e08895874b967c7f77c2f9715be7b332f58c260b22dd78",
+      "bytes": 4366,
+      "fetchedAt": "2026-11-03T06:05:34.106609+00:00"
+    },
+    {
+      "capture": "office-1631.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1631&lang=en",
+      "status": 200,
+      "sha256": "0849578fa89d1925c813408ce90bbed228dca58e2e855141482227ba126f752c",
+      "bytes": 4339,
+      "fetchedAt": "2026-11-03T06:05:32.285635+00:00"
+    },
+    {
+      "capture": "office-1632.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1632&lang=en",
+      "status": 200,
+      "sha256": "8a21eb054fe7ef215964980218357f719b1ccd816a857f61d2b3c16726454f3d",
+      "bytes": 4298,
+      "fetchedAt": "2026-11-03T06:05:40.334560+00:00"
+    },
+    {
+      "capture": "office-1633.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1633&lang=en",
+      "status": 200,
+      "sha256": "ea9dd269a70641d48d0527c6b4876049e069e7d661d1d647b2fe514f2d7d38a9",
+      "bytes": 5437,
+      "fetchedAt": "2026-11-03T06:05:32.022533+00:00"
+    },
+    {
+      "capture": "office-1634.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1634&lang=en",
+      "status": 200,
+      "sha256": "a7a17d67978b16c1faac3ea8c7c370078ca57741e9735eae6f227884c5f01d00",
+      "bytes": 4337,
+      "fetchedAt": "2026-11-03T06:04:21.560459+00:00"
+    },
+    {
+      "capture": "office-1635.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1635&lang=en",
+      "status": 200,
+      "sha256": "423944fb0b24f53aa4bcdca2a960cecfca71c6dd136a8571eaeee95351a028be",
+      "bytes": 6087,
+      "fetchedAt": "2026-11-03T06:05:33.531802+00:00"
+    },
+    {
+      "capture": "office-1636.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1636&lang=en",
+      "status": 200,
+      "sha256": "ffc2353020f9fc35c08c2a796f9510c1afe5a8fe46572406a27ca38a980e38ad",
+      "bytes": 4353,
+      "fetchedAt": "2026-11-03T06:05:30.873921+00:00"
+    },
+    {
+      "capture": "office-1637.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1637&lang=en",
+      "status": 200,
+      "sha256": "1a776c28542d69a604ddf5a6af7f7b3429dab6f78ff05f23facdb8470b65b699",
+      "bytes": 6097,
+      "fetchedAt": "2026-11-03T06:05:32.509243+00:00"
+    },
+    {
+      "capture": "office-1638.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1638&lang=en",
+      "status": 200,
+      "sha256": "f446877fb0bbd2c54c68a57ac2ccb71b1cc756c75de6a82a8cf13de791c80c25",
+      "bytes": 4349,
+      "fetchedAt": "2026-11-03T06:05:33.305797+00:00"
+    },
+    {
+      "capture": "office-1639.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1639&lang=en",
+      "status": 200,
+      "sha256": "e0b373980958f4e7fdedc252418a78b20a6b9d6f40a7becf44451fc7d29e278a",
+      "bytes": 4318,
+      "fetchedAt": "2026-11-03T06:05:29.788653+00:00"
+    },
+    {
+      "capture": "office-1641.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1641&lang=en",
+      "status": 200,
+      "sha256": "c4324343894aba05d8ff9cd5b0136eb2377fa20c4f7c3eb8ca271bb3757bb8a5",
+      "bytes": 4314,
+      "fetchedAt": "2026-11-03T05:56:51.921486+00:00"
+    },
+    {
+      "capture": "office-1642.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1642&lang=en",
+      "status": 200,
+      "sha256": "dfd76f7fa5a78158bd2604a02b96381a594682de1e66337d81123940a52866a2",
+      "bytes": 4329,
+      "fetchedAt": "2026-11-03T05:56:50.215546+00:00"
+    },
+    {
+      "capture": "office-1643.meta.json",
+      "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1643&lang=en",
+      "status": 200,
+      "sha256": "815d4659c5dec30b12438a299686967d9bf8eb64b2dc2911f665c7fb6639479a",
+      "bytes": 4327,
+      "fetchedAt": "2026-11-03T05:56:50.974790+00:00"
+    }
+  ]
+}

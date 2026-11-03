@@ -1,0 +1,9 @@
+{
+  "url": "https://r.jina.ai/https://www.contracostavote.gov/elections/sample-ballot/?electionId=66",
+  "finalUrl": "https://r.jina.ai/https://www.contracostavote.gov/elections/sample-ballot/?electionId=66",
+  "status": 401,
+  "fetchedAt": "2026-11-03T05:57:56.479831+00:00",
+  "sha256": "d50e55dc696109aee70ff87aeab23483b9c4230a88441bf8f75cd4ba52888f58",
+  "bytes": 345,
+  "contentType": "application/json; charset=utf-8"
+}

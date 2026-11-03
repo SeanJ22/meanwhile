@@ -1,0 +1,296 @@
+[
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-john-swett-unified-school-district-governing-board-member",
+    "candidacyId": "ca-cx-local-2026-contra-costa-john-swett-unified-school-district-governing-board-member-samantha-watson-alvarado",
+    "canonicalName": "SAMANTHA WATSON-ALVARADO",
+    "canonicalSources": [
+      {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/ElectionSummaryReportRPT-48.pdf",
+        "name": "SAMANTHA WATSON-ALVARADO"
+      },
+      {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/8-27-26_candidatelist_detail_final.pdf",
+        "name": "SAMANTHA WATSON-ALVARADO"
+      }
+    ],
+    "publishedSampleName": "Samantha Watson-Alavarado",
+    "publishedSamplePartyText": "Party Preference: None",
+    "sampleSourceUrl": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=66&lang=en",
+    "componentOfficeId": 1588,
+    "componentCandidateId": 5126,
+    "sameExactNameAfterCaseAndWhitespaceNormalization": false,
+    "resolution": "Official qualified proof and later zero report independently agree on exact canonical name and office; full sample block and publisher candidate/office IDs retain the variant.",
+    "unresolvedConflict": false,
+    "qualifiedProofOfficeId": "3311",
+    "qualifiedProofOfficeHeader": "NONPARTISAN OFFICES SCHOOL JOHN SWETT UNIFIED SCHOOL DISTRICT Governing Board Member \n\n3311 JohnSwettSchBd * 8435SC John Swett Unified School District  2 4 4 ON BALLOT",
+    "qualifiedProofExactName": "SAMANTHA WATSON-ALVARADO",
+    "qualifiedProofCandidateIdPrintedToken": "3",
+    "qualifiedProofCandidateIdCaution": "Printed token retained verbatim; adjacent dates can be concatenated by PDF text extraction. Not treated as a numeric cross-system identity key.",
+    "identityEvidence": {
+      "rule": "EXACT_PUBLISHER_OFFICE_CODE_BRIDGE_AND_COMPLETE_FIELD_UNIQUE_REMAINING_VARIANT",
+      "componentOfficeId": 1588,
+      "componentCandidateId": 5126,
+      "proofOfficeId": "3311",
+      "proofNameAndZeroReportAgree": true,
+      "sourceProofHeader": "NONPARTISAN OFFICES SCHOOL JOHN SWETT UNIFIED SCHOOL DISTRICT Governing Board Member \n\n3311 JohnSwettSchBd * 8435SC John Swett Unified School District  2 4 4 ON BALLOT",
+      "nativePrecinctPrintedNameComparison": "PENDING_CONTRA_COSTA_NATIVE_PRECINCT_PDF_COVERAGE",
+      "officialSampleStatementUrl": "https://www.contracostavote.gov/cs-3311/",
+      "officialSampleStatementOfficeCode": "3311",
+      "sameExactOfficialOfficeCodeInQualifiedProof": true
+    },
+    "componentIdentityReceipt": {
+      "officialUrl": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1588&lang=en",
+      "readerUrl": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1588&lang=en",
+      "retrievedAt": "2026-11-03T06:04:18.706340+00:00",
+      "sha256": "7c4be3fd567c3afb477b4bc8826e345d77c7f55a7e94f0ad755a922b95f98e76",
+      "sourceFile": "evidence/office-1588.txt",
+      "metadataFile": "evidence/office-1588.meta.json",
+      "hashScope": "Exact unsigned public reader response bytes; not original native JSON bytes."
+    }
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-acalanes-union-high-school-district-governing-board-member-trustee-area-1",
+    "candidacyId": "ca-cx-local-2026-contra-costa-acalanes-union-high-school-district-governing-board-member-trustee-area-1-stacey-schweppe",
+    "canonicalName": "STACEY SCHWEPPE",
+    "canonicalSources": [
+      {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/ElectionSummaryReportRPT-48.pdf",
+        "name": "STACEY SCHWEPPE"
+      },
+      {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/8-27-26_candidatelist_detail_final.pdf",
+        "name": "STACEY SCHWEPPE"
+      }
+    ],
+    "publishedSampleName": "Stacy Schweppe",
+    "publishedSamplePartyText": "Non Partisan",
+    "sampleSourceUrl": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=66&lang=en",
+    "componentOfficeId": 1641,
+    "componentCandidateId": 5239,
+    "sameExactNameAfterCaseAndWhitespaceNormalization": false,
+    "resolution": "Official qualified proof and later zero report independently agree on exact canonical name and office; full sample block and publisher candidate/office IDs retain the variant.",
+    "unresolvedConflict": false,
+    "qualifiedProofOfficeId": "3401",
+    "qualifiedProofOfficeHeader": "NONPARTISAN OFFICES SCHOOL ACALANES UNION HIGH SCHOOL DISTRICT Governing Board Member - Trustee Area 1 \n\n3401 AcalanesUHSD1 18410SC-1 Acalanes Union High School District - Trustee Area 1  2 2 ON BALLOT",
+    "qualifiedProofExactName": "STACEY SCHWEPPE",
+    "qualifiedProofCandidateIdPrintedToken": "2",
+    "qualifiedProofCandidateIdCaution": "Printed token retained verbatim; adjacent dates can be concatenated by PDF text extraction. Not treated as a numeric cross-system identity key.",
+    "identityEvidence": {
+      "rule": "EXACT_PUBLISHER_OFFICE_CODE_BRIDGE_AND_COMPLETE_FIELD_UNIQUE_REMAINING_VARIANT",
+      "componentOfficeId": 1641,
+      "componentCandidateId": 5239,
+      "proofOfficeId": "3401",
+      "proofNameAndZeroReportAgree": true,
+      "sourceProofHeader": "NONPARTISAN OFFICES SCHOOL ACALANES UNION HIGH SCHOOL DISTRICT Governing Board Member - Trustee Area 1 \n\n3401 AcalanesUHSD1 18410SC-1 Acalanes Union High School District - Trustee Area 1  2 2 ON BALLOT",
+      "nativePrecinctPrintedNameComparison": "PENDING_CONTRA_COSTA_NATIVE_PRECINCT_PDF_COVERAGE",
+      "officialSampleStatementUrl": "https://www.contracostavote.gov/cs-3401-en/",
+      "officialSampleStatementOfficeCode": "3401",
+      "sameExactOfficialOfficeCodeInQualifiedProof": true
+    },
+    "componentIdentityReceipt": {
+      "officialUrl": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1641&lang=en",
+      "readerUrl": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1641&lang=en",
+      "retrievedAt": "2026-11-03T05:56:51.921486+00:00",
+      "sha256": "c4324343894aba05d8ff9cd5b0136eb2377fa20c4f7c3eb8ca271bb3757bb8a5",
+      "sourceFile": "evidence/office-1641.txt",
+      "metadataFile": "evidence/office-1641.meta.json",
+      "hashScope": "Exact unsigned public reader response bytes; not original native JSON bytes."
+    }
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-diablo-community-services-district-director",
+    "candidacyId": "ca-cx-local-2026-contra-costa-diablo-community-services-district-director-steve-lichliter",
+    "canonicalName": "STEVE LICHLITER",
+    "canonicalSources": [
+      {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/ElectionSummaryReportRPT-48.pdf",
+        "name": "STEVE LICHLITER"
+      },
+      {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/8-27-26_candidatelist_detail_final.pdf",
+        "name": "STEVE LICHLITER"
+      }
+    ],
+    "publishedSampleName": "Steven Lichliter",
+    "publishedSamplePartyText": "Party Preference: None",
+    "sampleSourceUrl": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=66&lang=en",
+    "componentOfficeId": 1628,
+    "componentCandidateId": 5203,
+    "sameExactNameAfterCaseAndWhitespaceNormalization": false,
+    "resolution": "Official qualified proof and later zero report independently agree on exact canonical name and office; full sample block and publisher candidate/office IDs retain the variant.",
+    "unresolvedConflict": false,
+    "qualifiedProofOfficeId": "7016",
+    "qualifiedProofOfficeHeader": "NONPARTISAN OFFICES DISTRICT DIABLO COMMUNITY SERVICES DISTRICT Director \n\n7016 DiabloCmtySvc * 1010CS Diablo Community Services District  3 4 4 ON BALLOT",
+    "qualifiedProofExactName": "STEVE LICHLITER",
+    "qualifiedProofCandidateIdPrintedToken": "4",
+    "qualifiedProofCandidateIdCaution": "Printed token retained verbatim; adjacent dates can be concatenated by PDF text extraction. Not treated as a numeric cross-system identity key.",
+    "identityEvidence": {
+      "rule": "EXACT_PUBLISHER_OFFICE_CODE_BRIDGE_AND_COMPLETE_FIELD_UNIQUE_REMAINING_VARIANT",
+      "componentOfficeId": 1628,
+      "componentCandidateId": 5203,
+      "proofOfficeId": "7016",
+      "proofNameAndZeroReportAgree": true,
+      "sourceProofHeader": "NONPARTISAN OFFICES DISTRICT DIABLO COMMUNITY SERVICES DISTRICT Director \n\n7016 DiabloCmtySvc * 1010CS Diablo Community Services District  3 4 4 ON BALLOT",
+      "nativePrecinctPrintedNameComparison": "PENDING_CONTRA_COSTA_NATIVE_PRECINCT_PDF_COVERAGE",
+      "officialSampleStatementUrl": "https://www.contracostavote.gov/cs-7016-en/",
+      "officialSampleStatementOfficeCode": "7016",
+      "sameExactOfficialOfficeCodeInQualifiedProof": true
+    },
+    "componentIdentityReceipt": {
+      "officialUrl": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1628&lang=en",
+      "readerUrl": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1628&lang=en",
+      "retrievedAt": "2026-11-03T06:05:31.121595+00:00",
+      "sha256": "22fd8449d0312c69562f117d3650dc2ec89361aa1364c36aab5e0b4ab2e90895",
+      "sourceFile": "evidence/office-1628.txt",
+      "metadataFile": "evidence/office-1628.meta.json",
+      "hashScope": "Exact unsigned public reader response bytes; not original native JSON bytes."
+    }
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-antioch-member-city-council-district-4",
+    "candidacyId": "ca-cx-local-2026-contra-costa-city-of-antioch-member-city-council-district-4-matty-mathews-alappat",
+    "canonicalName": "MATTY MATHEWS ALAPPAT",
+    "canonicalSources": [
+      {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/ElectionSummaryReportRPT-48.pdf",
+        "name": "MATTY MATHEWS ALAPPAT"
+      },
+      {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/8-27-26_candidatelist_detail_final.pdf",
+        "name": "MATTY MATHEWS ALAPPAT"
+      }
+    ],
+    "publishedSampleName": "Matty Matthews Alappat",
+    "publishedSamplePartyText": "Party Preference: None",
+    "sampleSourceUrl": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=66&lang=en",
+    "componentOfficeId": 1601,
+    "componentCandidateId": 5150,
+    "sameExactNameAfterCaseAndWhitespaceNormalization": false,
+    "resolution": "Official qualified proof and later zero report independently agree on exact canonical name and office; full sample block and publisher candidate/office IDs retain the variant.",
+    "unresolvedConflict": false,
+    "qualifiedProofOfficeId": "5012",
+    "qualifiedProofOfficeHeader": "NONPARTISAN OFFICES CITY CITY OF ANTIOCH City Council, District 4 \n\n5012 AntiochCouncil Dist4 \n\n5AN-4 City of Antioch - Council District 4  1 4 4 ON BALLOT",
+    "qualifiedProofExactName": "MATTY MATHEWS ALAPPAT",
+    "qualifiedProofCandidateIdPrintedToken": "3",
+    "qualifiedProofCandidateIdCaution": "Printed token retained verbatim; adjacent dates can be concatenated by PDF text extraction. Not treated as a numeric cross-system identity key.",
+    "identityEvidence": {
+      "rule": "EXACT_PUBLISHER_OFFICE_CODE_BRIDGE_AND_COMPLETE_FIELD_UNIQUE_REMAINING_VARIANT",
+      "componentOfficeId": 1601,
+      "componentCandidateId": 5150,
+      "proofOfficeId": "5012",
+      "proofNameAndZeroReportAgree": true,
+      "sourceProofHeader": "NONPARTISAN OFFICES CITY CITY OF ANTIOCH City Council, District 4 \n\n5012 AntiochCouncil Dist4 \n\n5AN-4 City of Antioch - Council District 4  1 4 4 ON BALLOT",
+      "nativePrecinctPrintedNameComparison": "PENDING_CONTRA_COSTA_NATIVE_PRECINCT_PDF_COVERAGE",
+      "officialSampleStatementUrl": "https://www.contracostavote.gov/cs5012-en/",
+      "officialSampleStatementOfficeCode": "5012",
+      "sameExactOfficialOfficeCodeInQualifiedProof": true
+    },
+    "componentIdentityReceipt": {
+      "officialUrl": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1601&lang=en",
+      "readerUrl": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1601&lang=en",
+      "retrievedAt": "2026-11-03T05:56:46.305769+00:00",
+      "sha256": "750f6b52791110e1e922d41c771bd8fcf4336f8f062b2b10486ca1b46ecb7538",
+      "sourceFile": "evidence/office-1601.txt",
+      "metadataFile": "evidence/office-1601.meta.json",
+      "hashScope": "Exact unsigned public reader response bytes; not original native JSON bytes."
+    }
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-pinole-member-city-council",
+    "candidacyId": "ca-cx-local-2026-contra-costa-city-of-pinole-member-city-council-matthew-matt-avery",
+    "canonicalName": "MATTHEW \"MATT\" AVERY",
+    "canonicalSources": [
+      {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/ElectionSummaryReportRPT-48.pdf",
+        "name": "MATTHEW \"MATT\" AVERY"
+      },
+      {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/8-27-26_candidatelist_detail_final.pdf",
+        "name": "MATTHEW \"MATT\" AVERY"
+      }
+    ],
+    "publishedSampleName": "Matthew \"Matty\" Avery",
+    "publishedSamplePartyText": "Party Preference: None",
+    "sampleSourceUrl": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=66&lang=en",
+    "componentOfficeId": 1615,
+    "componentCandidateId": 5179,
+    "sameExactNameAfterCaseAndWhitespaceNormalization": false,
+    "resolution": "Official qualified proof and later zero report independently agree on exact canonical name and office; full sample block and publisher candidate/office IDs retain the variant.",
+    "unresolvedConflict": false,
+    "qualifiedProofOfficeId": "6201",
+    "qualifiedProofOfficeHeader": "NONPARTISAN OFFICES CITY CITY OF PINOLE Member, City Council \n\n6201 PinoleCouncil * 5PI City of Pinole  3 5 5 ON BALLOT",
+    "qualifiedProofExactName": "MATTHEW \"MATT\" AVERY",
+    "qualifiedProofCandidateIdPrintedToken": "4",
+    "qualifiedProofCandidateIdCaution": "Printed token retained verbatim; adjacent dates can be concatenated by PDF text extraction. Not treated as a numeric cross-system identity key.",
+    "identityEvidence": {
+      "rule": "EXACT_PUBLISHER_OFFICE_CODE_BRIDGE_AND_COMPLETE_FIELD_UNIQUE_REMAINING_VARIANT",
+      "componentOfficeId": 1615,
+      "componentCandidateId": 5179,
+      "proofOfficeId": "6201",
+      "proofNameAndZeroReportAgree": true,
+      "sourceProofHeader": "NONPARTISAN OFFICES CITY CITY OF PINOLE Member, City Council \n\n6201 PinoleCouncil * 5PI City of Pinole  3 5 5 ON BALLOT",
+      "nativePrecinctPrintedNameComparison": "PENDING_CONTRA_COSTA_NATIVE_PRECINCT_PDF_COVERAGE",
+      "officialSampleStatementUrl": "https://www.contracostavote.gov/cs6201-en/",
+      "officialSampleStatementOfficeCode": "6201",
+      "sameExactOfficialOfficeCodeInQualifiedProof": true
+    },
+    "componentIdentityReceipt": {
+      "officialUrl": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1615&lang=en",
+      "readerUrl": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1615&lang=en",
+      "retrievedAt": "2026-11-03T05:56:49.763766+00:00",
+      "sha256": "97010d732560a4fef0f06954b8b4b483076673f03a160eacaa1f98a7196d0045",
+      "sourceFile": "evidence/office-1615.txt",
+      "metadataFile": "evidence/office-1615.meta.json",
+      "hashScope": "Exact unsigned public reader response bytes; not original native JSON bytes."
+    }
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-richmond-mayor",
+    "candidacyId": "ca-cx-local-2026-contra-costa-city-of-richmond-mayor-claudia-jimenez",
+    "canonicalName": "CLAUDIA JIMÉNEZ",
+    "canonicalSources": [
+      {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/ElectionSummaryReportRPT-48.pdf",
+        "name": "CLAUDIA JIMÉNEZ"
+      },
+      {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/8-27-26_candidatelist_detail_final.pdf",
+        "name": "CLAUDIA JIMÉNEZ"
+      }
+    ],
+    "publishedSampleName": "Claudia JimÃ©nez",
+    "publishedSamplePartyText": "Non Partisan",
+    "sampleSourceUrl": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=66&lang=en",
+    "componentOfficeId": 1619,
+    "componentCandidateId": 5194,
+    "sameExactNameAfterCaseAndWhitespaceNormalization": false,
+    "resolution": "Official qualified proof and later zero report independently agree on exact canonical name and office; full sample block and publisher candidate/office IDs retain the variant.",
+    "unresolvedConflict": false,
+    "qualifiedProofOfficeId": "6501",
+    "qualifiedProofOfficeHeader": "NONPARTISAN OFFICES CITY CITY OF RICHMOND Mayor \n\n6501 RichmondMayor \n\n1 2 2 ON BALLOT",
+    "qualifiedProofExactName": "CLAUDIA JIMÉNEZ",
+    "qualifiedProofCandidateIdPrintedToken": "1",
+    "qualifiedProofCandidateIdCaution": "Printed token retained verbatim; adjacent dates can be concatenated by PDF text extraction. Not treated as a numeric cross-system identity key.",
+    "identityEvidence": {
+      "rule": "EXACT_PUBLISHER_OFFICE_CODE_BRIDGE_AND_COMPLETE_FIELD_UNIQUE_REMAINING_VARIANT",
+      "componentOfficeId": 1619,
+      "componentCandidateId": 5194,
+      "proofOfficeId": "6501",
+      "proofNameAndZeroReportAgree": true,
+      "sourceProofHeader": "NONPARTISAN OFFICES CITY CITY OF RICHMOND Mayor \n\n6501 RichmondMayor \n\n1 2 2 ON BALLOT",
+      "nativePrecinctPrintedNameComparison": "PENDING_CONTRA_COSTA_NATIVE_PRECINCT_PDF_COVERAGE",
+      "officialSampleStatementUrl": "https://www.contracostavote.gov/cs6501-en/",
+      "officialSampleStatementOfficeCode": "6501",
+      "sameExactOfficialOfficeCodeInQualifiedProof": true
+    },
+    "componentIdentityReceipt": {
+      "officialUrl": "https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1619&lang=en",
+      "readerUrl": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1619&lang=en",
+      "retrievedAt": "2026-11-03T06:04:15.778449+00:00",
+      "sha256": "c634dd18bb160facb7789d0ac97a8f1093511cad83fb5cf605587092d233936c",
+      "sourceFile": "evidence/office-1619.txt",
+      "metadataFile": "evidence/office-1619.meta.json",
+      "hashScope": "Exact unsigned public reader response bytes; not original native JSON bytes."
+    }
+  }
+]

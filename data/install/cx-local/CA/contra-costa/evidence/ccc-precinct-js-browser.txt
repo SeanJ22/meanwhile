@@ -1,0 +1,828 @@
+/**
+ * Author: eseufert
+ */
+
+var soePrecinctFinderObj = new SoePrecinctFinder();
+/*
+ *	Classes
+ */
+function SoePrecinctFinder() {
+    this.initObj = null;
+    this.pluginArea = null;
+    this.settings = "";
+    this.direction = true;
+    this.subUrl = "precinct";
+    this.streetFormContainer = null;
+    this.streetsContainer = null;
+    this.precinctContainer = null;
+    this.statusDialogContainer = null;
+    this.formFieldObjects = new Array();
+    this.detailOptions = new Array();
+    this.autoCompleteFormFieldIds = new Array();
+
+    this.setInitInstance = function (instance) {
+        this.initObj = instance;
+        this.pluginArea = document.getElementById(instance.main);
+        this.initObj.statusDialog("create");
+        this.loadStreetSearchForm();
+    }; // setInitInstance
+
+    this.loadStreetSearchForm = function () {
+        this.initObj.statusDialog("open");
+        var request = this.initObj.baseUrlRest + "/" + this.subUrl + "/adminctrl?lang=" + soeComponentUtils.getLanguage() + "&callback=soePrecinctFinderObj.processStreetSearchForm";
+        soeComponentUtils.callService(request, true);
+        //load detail options
+        var optionsRequest = this.initObj.baseUrlRest + "/" + this.subUrl + "/detailoptions?lang=" + soeComponentUtils.getLanguage() + "&callback=soePrecinctFinderObj.setDetailOptions";
+        soeComponentUtils.callService(optionsRequest, true);
+    }; // getSettings
+
+    this.setDetailOptions = function (options) {
+        this.detailOptions = options;
+    };
+
+    this.fillElectionPrecincts = function (electionPrecincts, pageOptions, pageTexts, precinctFinderHeadingsInitialLevel) {
+        var iHTML = "<div class='precinct-finder-my-elections-wrapper'>";
+        if (electionPrecincts.length == 0) {
+            iHTML += "<h" + precinctFinderHeadingsInitialLevel + " class='precinct-finder-my-elections-title no-elections-available'>No Elections Available</h" + precinctFinderHeadingsInitialLevel + ">";
+        } else {
+            iHTML += "<h" + precinctFinderHeadingsInitialLevel + " class='precinct-finder-my-elections-title'>My Elections</h" + precinctFinderHeadingsInitialLevel + "><ul id='my-elections' class='precinct-finder-my-elections' aria-label='My Elections'>";
+            for (var i = 0; electionPrecincts.length > i; i++) {
+                iHTML += "<li class='sub_header' data-electionType='" + electionPrecincts[i].electionFacade.electionTypeName + "' data-sbvgPctStyle='" + electionPrecincts[i].SBVG_PctStyle + "'>";
+                if (pageOptions.PRECINCT_FINDER_DETAIL_ELECTION_NAMES_ARE_LINKS_TO_ELECTIONS.pageOptionValue.toLowerCase() == "true") {
+                    iHTML += "<div class='election-name'><h" + (+precinctFinderHeadingsInitialLevel+1) + " class='election-name-heading'><a href='" + electionPrecincts[i].electionFacade.eid + "' onclick='soePrecinctFinderObj.precinctCallback(\"off\");soeElectionObj.getElection(" + electionPrecincts[i].electionFacade.eid + ");return false;'><span class='election-date'>" + electionPrecincts[i].electionFacade.date + "</span><span class='election-separator'> - </span><span class='election-title'>" + electionPrecincts[i].electionFacade.name + "</span></a></h" + (+precinctFinderHeadingsInitialLevel+1) + "></div>";
+                } else {
+                    iHTML += "<div class='election-name'><h" + (+precinctFinderHeadingsInitialLevel+1) + " class='election-name-heading'><span class='election-date'>" + electionPrecincts[i].electionFacade.date + "</span><span class='election-separator'> - </span><span class='election-title'>" + electionPrecincts[i].electionFacade.name + "</span></h" + (+precinctFinderHeadingsInitialLevel+1) + "></div>";
+                }
+                iHTML += "<div class='election-details'><div class='polling-place-wrapper clearfix'><div class='address-box'>";
+                var pollingPlaceName = electionPrecincts[i].pollingPlace.name;
+                if (pollingPlaceName != null && soeComponentUtils.trim(pollingPlaceName) != "") {
+                    iHTML += "<div class='polling-place-name'>" + pollingPlaceName + "</div>";
+                }
+                var address = electionPrecincts[i].pollingPlace.streetAddress;
+                var streetAddress = "";
+                if (address != null) {
+                    streetAddress += "<div class='polling-place-address'>";
+                    if (address.address1 != null && address.address1 != "") {
+                        streetAddress += "<div class='address'>" + address.address1 + "</div>";
+                    }
+                    streetAddress = "<div class='address'>" + address.address1 + "</div>";
+                    if (address.address2 != null && address.address2 != "") {
+                        streetAddress += "<div class='address'>" + address.address2 + "</div>";
+                    }
+                    if (address.address3 != null && address.address3 != "") {
+                        streetAddress += "<div class='address'>" + address.address3 + "</div>";
+                    }
+                    streetAddress += "<div class='address'>";
+                    if (address.city != null && address.city != "") {
+                        streetAddress += address.city;
+                    }
+                    if (address.state != null && address.state != "") {
+                        streetAddress += ", " + address.state;
+                    }
+                    if (address.zip != null && address.zip != "") {
+                        streetAddress += " " + address.zip;
+                    }
+                    streetAddress += "</div></div>";
+                }
+                iHTML += streetAddress + "</div></div>";
+
+                //------------------------------------------------
+                //[start] rule for showing polling place link
+                //------------------------------------------------
+                if (pageTexts.PRECINCT_FINDER_DETAIL_POLLING_PLACE_LINK.rendered == true) {
+                    iHTML += "<div class='polling-place-link'>";
+                    iHTML += "<a href='" + electionPrecincts[i].electionFacade.eid + "' onclick='soePrecinctFinderObj.precinctCallback(\"off\");soeElectionObj.getPollingPlace(" + electionPrecincts[i].electionFacade.eid + "," + electionPrecincts[i].pollingPlace.id + ");return false;'>" + pageTexts.PRECINCT_FINDER_DETAIL_POLLING_PLACE_LINK.pageTextValue + "</a>";
+                    iHTML += "</div>";
+                } else {
+                    if (pageTexts.PRECINCT_FINDER_DETAIL_POLLING_PLACE_LINK_UNAVAILABLE.rendered == true) {
+                        iHTML += "<div class='polling-place-link polling-place-link-unavailable'>" + pageTexts.PRECINCT_FINDER_DETAIL_POLLING_PLACE_LINK_UNAVAILABLE.pageTextValue + "</div>";
+                    }
+                }
+                //------------------------------------------------
+                //[end] rule for showing polling place link
+                //------------------------------------------------
+
+                //------------------------------------------------
+                //[start] rule for showing Sample Ballot link
+                //------------------------------------------------
+                var ballotDocs = electionPrecincts[i].electionFacade.ballotDocs;
+                if (pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK.rendered) {
+                    if (electionPrecincts[i].electionFacade.displaySampleBallot == true) {
+                        if (electionPrecincts[i].electionFacade.primaryElection.toLowerCase() == "yes") {
+                            // primary
+                            if (electionPrecincts[i].electionFacade.sampleBallotType == "Dynamic") {
+                                iHTML += "<div class='sample-ballot-link sample-ballot-link-dynamic'><a href='" + electionPrecincts[i].electionFacade.eid + "' onclick='soePrecinctFinderObj.precinctCallback(\"off\");soePrecinctFinderObj.goToSampleBallotNoParty(" + electionPrecincts[i].electionFacade.eid + "," + electionPrecincts[i].precinct.id + "," + electionPrecincts[i].pollingPlace.id + ");return false;'>" + decodeURIComponent(escape(pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK.pageTextValue)) + "</a></div>";
+                            } else if (electionPrecincts[i].electionFacade.sampleBallotType == "PDF") {
+                                if (ballotDocs != null && ballotDocs.length > 0) {
+                                    iHTML += "<div class='sample-ballot-link sample-ballot-link-pdf'><a href='" + electionPrecincts[i].electionFacade.eid + "' onclick='soePrecinctFinderObj.precinctCallback(\"off\");soePrecinctFinderObj.goToSampleBallotNoParty(" + electionPrecincts[i].electionFacade.eid + "," + electionPrecincts[i].precinct.id + "," + electionPrecincts[i].pollingPlace.id + ");return false;'>" + decodeURIComponent(escape(pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK.pageTextValue)) + "</a></div>";
+                                } else {
+                                    if (pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK_UNAVAILABLE.rendered) {
+                                        iHTML += "<div class='sample-ballot-link sample-ballot-link-unavailable'>" + pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK_UNAVAILABLE.pageTextValue + "</div>";
+                                    }
+                                }
+                            }
+                        } else {
+                            // general
+                            if (electionPrecincts[i].electionFacade.sampleBallotType == "Dynamic") {
+                                iHTML += "<div class='sample-ballot-link sample-ballot-link-dynamic'><a href='" + electionPrecincts[i].electionFacade.eid + "' onclick='soePrecinctFinderObj.precinctCallback(\"off\");soePrecinctFinderObj.goToSampleBallot(" + electionPrecincts[i].electionFacade.eid + "," + electionPrecincts[i].precinct.id + ",null," + electionPrecincts[i].pollingPlace.id + ");return false;'>" + pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK.pageTextValue + "</a></div>";
+                            } else if (electionPrecincts[i].electionFacade.sampleBallotType == "PDF") {
+                                //var ballotDocs = electionPrecincts[i].electionFacade.ballotDocs;
+                                if (ballotDocs != null && ballotDocs.length > 0) {
+                                    for (var a = 0; ballotDocs.length > a; a++) {
+                                        var ballotName = pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK.pageTextValue;
+                                        if (ballotDocs[a].alternateBallotType != null) {
+                                            if (ballotDocs[a].alternateBallotType.nameTxt != undefined) {
+                                                ballotName += " - " + ballotDocs[a].alternateBallotType.nameTxt;
+                                            }
+                                        }
+                                        iHTML += "<div class='sample-ballot-link sample-ballot-link-pdf'><a href='" + electionPrecincts[i].electionFacade.ballotDocPath + ballotDocs[a].sampleBallotDoc.fileName + "' target='_blank'>" + ballotName + "</a></div>";
+                                    }
+                                } else {
+                                    if (pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK_UNAVAILABLE.rendered) {
+                                        iHTML += "<div class='sample-ballot-link sample-ballot-link-unavailable'>" + pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK_UNAVAILABLE.pageTextValue + "</div>";
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        if (pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK_UNAVAILABLE.rendered) {
+                            iHTML += "<div class='sample-ballot-link sample-ballot-link-unavailable'>" + pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK_UNAVAILABLE.pageTextValue + "</div>";
+                        }
+                    }
+                } else {
+                    if (pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK_UNAVAILABLE.rendered) {
+                        iHTML += "<div class='sample-ballot-link sample-ballot-link-unavailable'>" + pageTexts.PRECINCT_FINDER_DETAIL_SAMPLE_BALLOT_LINK_UNAVAILABLE.pageTextValue + "</div>";
+                    }
+                }
+                //------------------------------------------------
+                //[end] rule for showing Sample Ballot link
+                //------------------------------------------------
+
+                //------------------------------------------------
+                //[start] new properties
+                //------------------------------------------------
+                if (pageTexts.PRECINCT_FINDER_DETAIL_BALLOT_TYPE && pageTexts.PRECINCT_FINDER_DETAIL_BALLOT_TYPE.rendered) {
+                    var value = '';
+                    if (electionPrecincts[i].ballotType !== undefined && electionPrecincts[i].ballotType != null) {
+                        value = electionPrecincts[i].ballotType;
+                    }
+                    iHTML += '<div class="ballot-type"><strong>' + pageTexts.PRECINCT_FINDER_DETAIL_BALLOT_TYPE.pageTextValue + ': ' + value + '</strong></div>';
+                }
+                if (pageTexts.PRECINCT_FINDER_DETAIL_BALLOT_STYLE && pageTexts.PRECINCT_FINDER_DETAIL_BALLOT_STYLE.rendered) {
+                    var value = '';
+                    if (electionPrecincts[i].ballotStyle !== undefined && electionPrecincts[i].ballotStyle != null) {
+                        value = electionPrecincts[i].ballotStyle;
+                    }
+                    iHTML += '<div class="ballot-style" style="margin-top: 5pt;">' + pageTexts.PRECINCT_FINDER_DETAIL_BALLOT_STYLE.pageTextValue + ': ' + value + '</div>';
+                }
+                iHTML += '</li>';
+                //------------------------------------------------
+                //[end] new properties
+                //------------------------------------------------
+            }
+            iHTML += "</ul></div>";
+        }
+        return iHTML;
+    }; //getElectionPrecinctsCallback
+
+    this.goToSampleBallot = function (eid, pid, partyid, pollingPlaceId) {
+        soeComponentUtils.hide(this.precinctContainer);
+        soeSampleBallotObj.getSampleBallot(eid, pid, partyid, pollingPlaceId);
+    };
+
+    this.goToSampleBallotNoParty = function (eid, pid, pollingPlaceId) {
+        soeComponentUtils.hide(this.precinctContainer);
+        soeSampleBallotObj.getUniqueParties(eid, pid, pollingPlaceId);
+    };
+
+    this.processStreetSearchForm = function (JSONData) {
+        var mainPath = this.initObj.baseUrlRest + "/" + this.subUrl + "/";
+        var pageForms = JSONData.pageForms;
+        var pageTexts = JSONData.pageTexts;
+        var pageLabels = JSONData.pageLabels;
+        var autocomplete = '';
+
+        // create Street Form
+        if (pageTexts.PRECINCT_FINDER_SEARCH_CRUMB.rendered == true) {
+            soeBreadCrumbsObj.addCrumb("soePrecinctFinderObj.streetFormCallback(\"on\")", "soePrecinctFinderObj.streetFormCallback(\"off\")", pageTexts.PRECINCT_FINDER_SEARCH_CRUMB.pageTextValue);
+        }
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=PRECINCT_FINDER_SEARCH");
+        var iHTML = "<div class='form_wrapper'>";
+        iHTML += "<div>";
+        if (pageTexts.PRECINCT_FINDER_PAGE_TITLE.rendered == true) {
+            iHTML += "<p> " + pageTexts.PRECINCT_FINDER_PAGE_TITLE.pageTextValue + "</p>";
+        }
+        if (pageTexts.PRECINCT_FINDER_SEARCH_H1.rendered == true) {
+            iHTML += "<p>" + pageTexts.PRECINCT_FINDER_SEARCH_H1.pageTextValue + "</p>";
+        }
+        if (pageTexts.PRECINCT_FINDER_SEARCH_H2.rendered == true) {
+            iHTML += "<p>" + pageTexts.PRECINCT_FINDER_SEARCH_H2.pageTextValue + "</p>";
+        }
+        iHTML += "</div>";
+        iHTML += "<form id='precinctFinderForm'>";
+        iHTML += "<fieldset aria-labelledby='Precinct Finder'>";
+        iHTML += "<legend></legend>";
+        //draw form
+        var fields = pageForms;
+        this.formFieldObjects = pageForms;
+        for (var i = 0; fields.length > i; i++) {
+            if (fields[i].rendered) {
+
+                switch(fields[i].pageFormFieldName.pageFormFieldName) {
+                    case 'PRECINCT_FINDER_ZIPCODE':
+                        autocomplete = 'autocomplete="postal-code"';
+                        break;
+                    case 'PRECINCT_FINDER_FULL_ADDRESS':
+                        autocomplete = 'autocomplete="street-address"';
+                        break;
+                    default:
+                        autocomplete = '';
+                        break;
+                }
+
+                var type = fields[i].pageFormFieldName.fieldType;
+                var fieldIndicator = "";
+                var requiredField = "";
+                if (type == "date") {
+                    fieldIndicator = "(mm/dd/yyyy)";
+                }
+                if (fields[i].required) {
+                    fieldIndicator += " *";
+                    requiredField = 'aria-required="true"';
+                }
+                iHTML += "<div class='field_wrapper voter-lookup-input" + i + "'>";
+                iHTML += "<label for='" + fields[i].pageFormFieldName.pageFormFieldName + "'>" + fields[i].pageFormFieldValue + " " + fieldIndicator + "</label>";
+                if (fields[i].lookupValues.length > 0) {
+                    iHTML += "<select id='" + fields[i].pageFormFieldName.pageFormFieldName + "' name='" + fields[i].pageFormFieldName.pageFormFieldName + "'" + requiredField + ">";
+                    iHTML += "<option value=''>-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>";
+                    for (var c = 0; fields[i].lookupValues.length > c; c++) {
+                        iHTML += "<option value='" + fields[i].lookupValues[c].value + "'>" + fields[i].lookupValues[c].name + "</option>";
+                    }
+                    iHTML += "</select>";
+                } else {
+                    var formFieldId = fields[i].pageFormFieldName.pageFormFieldName;
+                    this.autoCompleteFormFieldIds[this.autoCompleteFormFieldIds.length] = formFieldId;
+                    var autoCompleteEvent = "";
+                    if (soeComponentUtils.trim(fields[i].autoCompleteServiceName) != "") {
+                        var servicePath = mainPath + fields[i].autoCompleteServiceName;
+                        autoCompleteEvent = " onfocus='soeComponentUtils.setAutocomplete(\"" + formFieldId + "\", \"" + servicePath + "\")' ";
+                    }
+                    iHTML += "<input type='text' " + autoCompleteEvent + " class='textfield med' value='' id='" + fields[i].pageFormFieldName.pageFormFieldName + "' name='" + fields[i].pageFormFieldName.pageFormFieldName + "' " + autocomplete + " " + requiredField + "/>";
+                }
+                iHTML += "</div>";
+            }
+        }
+        iHTML += "<div class='button_wrapper'>";
+        for (var l = 0; pageLabels.length > l; l++) {
+            var labelName = pageLabels[l].pageLabelName.pageLabelName;
+            var label = pageLabels[l];
+            switch (labelName) {
+                case "PRECINCT_FINDER_SEARCH_SEARCH":
+                    if (label.rendered == true) {
+                        iHTML += "<input type='submit' value='" + label.pageLabelValue + "'/>";
+                    }
+                    break;
+                case "PRECINCT_FINDER_SEARCH_CLEAR":
+                    if (label.rendered == true) {
+                        iHTML += "<input type='reset' value='" + label.pageLabelValue + "' name='clear'  class='search'/>";
+                    }
+                    break;
+            }
+        }
+
+        iHTML += "</div>";
+        iHTML += "</fieldset>";
+        iHTML += "</form>";
+        iHTML += "</div>";
+
+
+        if (this.streetFormContainer == null) {
+            this.streetFormContainer = document.createElement('div');
+            this.streetFormContainer.id = 'soe-streetForm-container';
+            this.streetFormContainer.innerHTML = iHTML;
+            this.pluginArea.appendChild(this.streetFormContainer);
+        } else {
+            this.streetFormContainer.innerHTML = iHTML;
+            this.streetFormCallback("on");
+        }
+
+        soeComponentUtils.fullAddressAutocomplete(
+            'PRECINCT_FINDER_FULL_ADDRESS',
+            'PRECINCT_FINDER_STREET_ID',
+            this.initObj.baseUrlRest + '/street/search'
+        );
+
+        var $form = jQuery('#precinctFinderForm');
+        jQuery('<input/>', {
+            name: 'lang',
+            type: 'hidden',
+            value: soeComponentUtils.getLanguage()
+        }).appendTo($form);
+
+        var self = this;
+        $form.on('submit', function (event) {
+            event.preventDefault();
+            if (self.validateForm()) {
+                self.initObj.statusDialog("open");
+                self.streetFormCallback("off");
+                jQuery.post(
+                    self.initObj.baseUrlRest + '/' + self.subUrl + '/findstreet',
+                    $form.serialize(),
+                    self.processStreets(self)
+                );
+            }
+        }).on('reset', function (event) {
+            jQuery(event.target).children('input[type="hidden"]').each(function (index, input) {
+                jQuery(input).val('');
+            });
+        });
+
+        this.initObj.statusDialog("close");
+    }; // displayStreetSearchForm
+
+    this.streetFormCallback = function (type) {
+        if (type == "off") {
+            soeComponentUtils.hide(this.streetFormContainer);
+        } else {
+            soeComponentUtils.show(this.streetFormContainer);
+        }
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=PRECINCT_FINDER_SEARCH");
+    }; // streetFormCallback
+
+    this.getPrecinct = function (precinct) {
+        this.initObj.statusDialog("open");
+        var request = this.initObj.baseUrlRest + "/" + this.subUrl + "/precinctdetail?precinctId=" + precinct + "&lang=" + soeComponentUtils.getLanguage() + "&callback=soePrecinctFinderObj.processPrecinct";
+        soeComponentUtils.callService(request);
+    }; // getPrecinctDetail
+
+    this.processPrecinct = function (JSONData) {
+
+        var pageTexts = JSONData.pageTexts;
+        var pageOptions = JSONData.pageOptions;
+        if (pageTexts.PRECINCT_FINDER_DETAIL_CRUMB.rendered == true) {
+            soeBreadCrumbsObj.addCrumb("soePrecinctFinderObj.precinctCallback(\"on\")", "soePrecinctFinderObj.precinctCallback(\"off\")", pageTexts.PRECINCT_FINDER_DETAIL_CRUMB.pageTextValue);
+        }
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=PRECINCT_FINDER_DETAIL");
+
+        var iHTML = "";
+        var precinctFinderHeadingsInitialLevel;
+        if (pageTexts.PRECINCT_FINDER_DETAIL_HEADER.rendered == true) {
+            iHTML += "<div class='precinct-finder-detail-header'><h2>" + pageTexts.PRECINCT_FINDER_DETAIL_HEADER.pageTextValue + "</h2></div>";
+            precinctFinderHeadingsInitialLevel = '3';
+        } else {
+            precinctFinderHeadingsInitialLevel = '2';
+        }
+
+        var headerText = "";
+        if (pageTexts.PRECINCT_FINDER_DETAIL_PRECINCT_HEADER.rendered == true) {
+            headerText = pageTexts.PRECINCT_FINDER_DETAIL_PRECINCT_HEADER.pageTextValue + " ";
+        }
+        iHTML += "<h" + precinctFinderHeadingsInitialLevel + " class='precinct-finder-header'>" + headerText;
+        if (pageTexts.PRECINCT_FINDER_DETAIL_PRECINCT_HEADER_LINK.rendered == true && JSONData.precinctUrlPath != null && JSONData.precinctUrlPath != "") {
+            iHTML += "<a href='" + JSONData.precinctUrlPath + "' target='_blank'>" + JSONData.precinctName + "</a> <span class='link-type'>" + pageTexts.PRECINCT_FINDER_DETAIL_PRECINCT_HEADER_LINK.pageTextValue + "</span>";
+        } else {
+            iHTML += JSONData.precinctName;
+        }
+
+        iHTML += "</h" + precinctFinderHeadingsInitialLevel + ">";
+
+        var defaultPollingPlaceFound = false;
+        if (pageOptions.PRECINCT_FINDER_DETAIL_DISPLAY_DEFAULT_POLLING_PLACE.pageOptionValue.toLowerCase() == "true") {
+            if (JSONData.defaultPollingPlace != null) {
+                defaultPollingPlaceFound = true;
+                //draw header text
+                iHTML += '<table class="voter-eligibility-links-table" border=0>';
+                if (pageTexts.PRECINCT_FINDER_DETAIL_DEFAULT_POLLING_PLACE_HEADER_MESSAGE.rendered == true) {
+                    iHTML += "<caption>" + pageTexts.PRECINCT_FINDER_DETAIL_DEFAULT_POLLING_PLACE_HEADER_MESSAGE.pageTextValue + "</caption>";
+                }
+                iHTML += '<tbody><tr><td>';
+                iHTML += JSONData.defaultPollingPlace.name + "</br>";
+                iHTML += JSONData.defaultPollingPlace.streetAddress.address1 + "</br>";
+                iHTML += soeComponentUtils.trim(JSONData.defaultPollingPlace.streetAddress.city) + ", ";
+                iHTML += soeComponentUtils.trim(JSONData.defaultPollingPlace.streetAddress.state) + ", ";
+                iHTML += soeComponentUtils.trim(JSONData.defaultPollingPlace.streetAddress.zip) + "";
+                iHTML += '</td></tr></tbody>';
+            }
+            if (!(defaultPollingPlaceFound)) {
+                //No default polling place was found, display the message.
+                if (pageTexts.PRECINCT_FINDER_DETAIL_NO_DEFAULT_POLLING_PLACE_FOUND_MESSAGE.rendered == true) {
+                    iHTML += pageTexts.PRECINCT_FINDER_DETAIL_NO_DEFAULT_POLLING_PLACE_FOUND_MESSAGE.pageTextValue;
+                }
+            }
+        }
+
+        if (pageOptions.PRECINCT_FINDER_DETAIL_DISPLAY_DEFAULT_POLLING_PLACE.pageOptionValue.toLowerCase() == "true") {
+            if (defaultPollingPlaceFound) {
+                if (soeComponentUtils.trim(JSONData.mapHref) != "") {
+                    if (pageTexts.PRECINCT_FINDER_DETAIL_MAP_LINK_TEXT.rendered == true) {
+                        iHTML += "<table border=0 class='precinct-finder-map-link'>";
+                        iHTML += "<td>";
+                        iHTML += "<a target='soe_top' href='http://maps.google.com/maps?q=" + JSONData.mapHref + "'>" + pageTexts.PRECINCT_FINDER_DETAIL_MAP_LINK_TEXT.pageTextValue + "</a>";
+                        iHTML += "</td>";
+                        iHTML += "</table>";
+                    }
+                }
+            }
+        }
+
+        iHTML += "<nav aria-label='Precinct Finder'><ul class='precinct-finder-options'>";
+        iHTML += "";
+
+        //these vars do the following - creating new rows every 3 columns that are being added.
+        var colCount = 0;
+        var colSize = 2;
+
+        if (pageTexts.PRECINCT_FINDER_DETAIL_ELECTED_OFFICE_LINK.rendered == true) {
+            if (colCount > colSize) {
+                //iHTML += '</tr><tr>';
+                colCount = 0;
+            }
+            iHTML += "<li><a href='#' onclick='soePrecinctFinderObj.precinctCallback(\"off\");soePrecinctFinderObj.electedOfficials(" + JSONData.precinctId + ")'>" + pageTexts.PRECINCT_FINDER_DETAIL_ELECTED_OFFICE_LINK.pageTextValue + "</a></li>";
+            colCount++;
+        }
+        if (pageTexts.PRECINCT_FINDER_DETAIL_DISTRICT_LINK.rendered == true) {
+            if (colCount > colSize) {
+                //iHTML += '</tr><tr>';
+                colCount = 0;
+            }
+            iHTML += "<li><a href='#' onclick='soePrecinctFinderObj.precinctCallback(\"off\");soePrecinctFinderObj.showDistricts(" + JSONData.precinctId + ")'>" + pageTexts.PRECINCT_FINDER_DETAIL_DISTRICT_LINK.pageTextValue + "</a></td>";
+            colCount++;
+        }
+        if (pageTexts.PRECINCT_FINDER_DETAIL_OFFICES_UPFOR_LINK.rendered == true) {
+            if (colCount > colSize) {
+                //iHTML += '</tr><tr>';
+                colCount = 0;
+            }
+            iHTML += "<li><a href='#' onclick='soePrecinctFinderObj.precinctCallback(\"off\");soePrecinctFinderObj.officesUpForElection(" + JSONData.precinctId + ")'>" + pageTexts.PRECINCT_FINDER_DETAIL_OFFICES_UPFOR_LINK.pageTextValue + "</a></li>";
+            colCount++;
+        }
+        if (pageTexts.PRECINCT_FINDER_DETAIL_CURRENT_ELECTIONS_LINK.rendered == true) {
+            if (colCount > colSize) {
+                iHTML += '</tr><tr>';
+                colCount = 0;
+            }
+            iHTML += "<li><a href='#' onclick='soePrecinctFinderObj.precinctCallback(\"off\");soeElectionObj.getElections(\"current\"," + JSONData.precinctId + ")'>" + pageTexts.PRECINCT_FINDER_DETAIL_CURRENT_ELECTIONS_LINK.pageTextValue + "</a></li>";
+            colCount++;
+        }
+        if (pageTexts.PRECINCT_FINDER_DETAIL_PAST_ELECTIONS_LINK.rendered == true) {
+            if (colCount > colSize) {
+                //iHTML += '</tr><tr>';
+                colCount = 0;
+            }
+            iHTML += "<li><a href='#' onclick='soePrecinctFinderObj.precinctCallback(\"off\");soeElectionObj.getElections(\"past\"," + JSONData.precinctId + ")'>" + pageTexts.PRECINCT_FINDER_DETAIL_PAST_ELECTIONS_LINK.pageTextValue + "</a></li>";
+            colCount++;
+        }
+
+        iHTML += "</ul></nav>";
+        iHTML += "<div id='electionPrecincts'></div>";
+        if (pageOptions.PRECINCT_FINDER_DETAIL_ELECTION_POLLING_PLACE_INFO_ON_PAGE.pageOptionValue.toLowerCase() == "true") {
+            iHTML += this.fillElectionPrecincts(JSONData.electionPrecincts, pageOptions, pageTexts, precinctFinderHeadingsInitialLevel);
+        }
+        if (this.precinctContainer == null) {
+            this.precinctContainer = document.createElement('div');
+            this.precinctContainer.id = 'soe-precinct-container';
+            this.precinctContainer.className = "soe-precinct-container";
+            this.precinctContainer.innerHTML = iHTML;
+            this.pluginArea.appendChild(this.precinctContainer);
+        } else {
+            this.precinctContainer.innerHTML = iHTML;
+            this.precinctCallback("on");
+        }
+        this.initObj.statusDialog("close");
+    }; // processPrecinct
+
+    this.precinctCallback = function (type) {
+        if (type == "off") {
+            soeComponentUtils.hide(this.precinctContainer);
+        } else {
+            soeComponentUtils.show(this.precinctContainer);
+        }
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=PRECINCT_FINDER_DETAIL");
+    }; // precinctCallback
+
+    this.errorMessage = function () {
+        alert("in error message");
+        this.initObj.statusDialog("close");
+    }; // errorMessage
+
+    this.validateForm = function () {
+        var validationArray = [];
+        for (var i = 0; this.formFieldObjects.length > i; i++) {
+            if (this.formFieldObjects[i].rendered) {
+                var inputId = this.formFieldObjects[i].pageFormFieldName.pageFormFieldName;
+                var inputElement = document.getElementById(inputId);
+                var value = soeComponentUtils.trim(inputElement.value);
+                var title = this.formFieldObjects[i].pageFormFieldName.title;
+                //Format Check
+                if (this.formFieldObjects[i].validation != null) {
+
+                    var validation = this.formFieldObjects[i].validation;
+                    var regularExpression = new RegExp(validation);
+                    if (regularExpression.exec(value) == null) {
+                        validationArray[validationArray.length] = title + " has incorrect format.";
+                    }
+                }
+                //Type check
+                if (soeComponentUtils.trim(value) != "") {
+                    if (this.formFieldObjects[i].pageFormFieldName.fieldType == "int") {
+                        if (isNaN(parseInt(value))) {
+                            validationArray[validationArray.length] = title + " must be a number.";
+                        }
+                    }
+                }
+                //Required Check
+                if (this.formFieldObjects[i].required) {
+
+                    if (soeComponentUtils.trim(value) == "") {
+                        validationArray[validationArray.length] = title + " is required.";
+                    }
+                }
+            }
+        }
+        if (validationArray.length > 0) {
+            var errorMsg = "Sorry, the following fields need correction:\n\n";
+            for (var i = 0; validationArray.length > i; i++) {
+                errorMsg += validationArray[i] + "\n";
+            }
+            errorMsg += "\n";
+            alert(errorMsg);
+            return false;
+
+        } else {
+            return true;
+        }
+    }; // validateForm
+
+    //insane in the membrane
+    this.shutOffAutoComplete = function () {
+        for (var i = 0; this.autoCompleteFormFieldIds.length > i; i++) {
+            try {
+                jQuery("#" + this.autoCompleteFormFieldIds[i]).autocomplete("close");
+            } catch (e) {
+
+            }
+        }
+    };
+
+    this.processStreets = function (obj) {
+        return function (JSONData) {
+            if (JSONData.hasOwnProperty('ERROR')) {
+                alert(JSONData.ERROR);
+                obj.initObj.statusDialog("close");
+                obj.streetFormCallback('on');
+                return;
+            }
+
+            //Google Analytics tracking
+            var event = {};
+            event.category = "Components";
+            event.label = "action";
+            event.action = "Precinct Finder Results";
+
+            soeComponentUtils.trackGoogleEvent(event);
+            soeComponentUtils.trackGooglePageview("/precinct_finder_results.html");
+
+            //shut down any lingering autocomplete boxes if there are any
+            obj.shutOffAutoComplete();
+
+            var streets = JSONData.streets;
+            var pageTexts = JSONData.pageTexts;
+            var pageLabels = JSONData.pageLabels;
+            if (pageTexts.PRECINCT_FINDER_STREET_CRUMB.rendered == true) {
+                soeBreadCrumbsObj.addCrumb("soePrecinctFinderObj.streetsCallback(\"on\")", "soePrecinctFinderObj.streetsCallback(\"off\")", pageTexts.PRECINCT_FINDER_STREET_CRUMB.pageTextValue);
+            }
+            soeAdminLinkObj.addLink(obj.initObj.adminHome + "component/index.soe?pageName=PRECINCT_FINDER_STREET");
+            var iHTML = "";
+
+            if (streets != null && streets.length > 0) {
+                if (pageTexts.PRECINCT_FINDER_STREET_H1.rendered == true) {
+                    iHTML += "<h2>" + streets.length + " " + pageTexts.PRECINCT_FINDER_STREET_H1.pageTextValue + "</h2>";
+                }
+                iHTML += "<table><thead>";
+                for (var l = 0; pageLabels.length > l; l++) {
+                    var labelName = pageLabels[l].pageLabelName.pageLabelName;
+                    var label = pageLabels[l];
+                    switch (labelName) {
+                        case "PRECINCT_FINDER_STREET_ADDRESS":
+                            if (label.rendered == true) {
+                                iHTML += "<th width='40%'>" + label.pageLabelValue + "</th>";
+                            }
+                            break;
+                        case "PRECINCT_FINDER_STREET_CITY":
+                            if (label.rendered == true) {
+                                iHTML += "<th width='20%'>" + label.pageLabelValue + "</th>";
+                            }
+                            break;
+                        case "PRECINCT_FINDER_STREET_ZIPCODE":
+                            if (label.rendered == true) {
+                                iHTML += "<th width='20%'>" + label.pageLabelValue + "</th>";
+                            }
+                            break;
+                        case "PRECINCT_FINDER_STREET_PRECINCT":
+                            if (label.rendered == true) {
+                                iHTML += "<th width='20%'>" + label.pageLabelValue + "</th>";
+                            }
+                            break;
+                    }
+                }
+                iHTML += "</thead><tbody>";
+                for (var s = 0; streets.length > s; s++) {
+                    var street = streets[s];
+                    //alert("STreet " + street.address);
+                    iHTML += "<tr>";
+                    for (var l = 0; pageLabels.length > l; l++) {
+                        var label = pageLabels[l].pageLabelName.pageLabelName;
+                        switch (label) {
+                            case "PRECINCT_FINDER_STREET_ADDRESS":
+                                if (pageLabels[l].rendered == true) {
+                                    iHTML += "<td>" + street.address + " " + street.predir + " " + street.street;
+                                }
+                                if (street.type != null) {
+                                    iHTML += " " + street.type;
+                                }
+                                if (street.postdir != null) {
+                                    iHTML += " " + street.postdir;
+                                }
+                                if (street.aptnum != null) {
+                                    iHTML += " Apt. " + street.aptnum;
+                                }
+                                iHTML += "</td>";
+                                break;
+                            case "PRECINCT_FINDER_STREET_CITY":
+                                if (pageLabels[l].rendered == true) {
+                                    iHTML += "<td>" + street.city + "</td>";
+                                }
+                                break;
+                            case "PRECINCT_FINDER_STREET_ZIPCODE":
+                                if (pageLabels[l].rendered == true) {
+                                    iHTML += "<td align='center'>" + street.zipcode + "</td>";
+                                }
+                                break;
+                            case "PRECINCT_FINDER_STREET_PRECINCT":
+                                if (pageLabels[l].rendered == true) {
+                                    iHTML += "<td align='center'><a href='pid=" + street.precinct + "' onclick='soePrecinctFinderObj.streetsCallback(\"off\");soePrecinctFinderObj.getPrecinct(" + street.precinct + ");return false'>" + street.precinctname + "</a></td>";
+                                }
+                                break;
+                        }
+                    }
+                    iHTML += "</tr>";
+                }
+                iHTML += "</tbody></table>";
+            } else {
+                if (pageTexts.PRECINCT_FINDER_STREET_NODATA_MSG.rendered == true) {
+                    iHTML += "<h2>" + pageTexts.PRECINCT_FINDER_STREET_NODATA_MSG.pageTextValue + "</h2>";
+
+                    //Google Analytics tracking when result not found
+                    var event = new Object();
+                    event.category = 'Search'
+                    event.action = 'ZeroResults'
+                    event.label = 'Precinct Finder Results'
+
+                    soeComponentUtils.trackGoogleEvent(event);
+                    soeComponentUtils.trackGooglePageview("/PrecinctFinder.html?id=NotFound");
+                }
+            }
+            if (obj.streetsContainer == null) {
+                obj.streetsContainer = document.createElement('div');
+                obj.streetsContainer.id = 'soe-streets-container';
+                obj.streetsContainer.className = "soe-streets-container";
+                obj.streetsContainer.innerHTML = iHTML;
+                obj.pluginArea.appendChild(obj.streetsContainer);
+            } else {
+                obj.streetsContainer.innerHTML = iHTML;
+                obj.streetsCallback("on");
+            }
+            obj.initObj.statusDialog("close");
+
+            //if only one result found, go right to it
+            if (streets.length == 1) {
+                var street = streets[0];
+                obj.streetsCallback("off");
+                obj.getPrecinct(street.precinct);
+            }
+
+        }
+    }; // processStreetSearch
+
+    this.showDistricts = function (precinctId) {
+        //shut down and pass control
+        soeElectedOfficials.init(precinctId, true); //boolean switches between Districts view or Elected Officals view.
+    }; // showDistricts
+
+    this.electedOfficials = function (precinctId) {
+        //shut down and pass control
+        soeElectedOfficials.init(precinctId, false); //boolean switches between Districts view or Elected Officals view.
+    }; // electedOfficials
+
+    this.officesUpForElection = function (precinctId) {
+        soeOfficesUpElection.init(precinctId, false);
+    }; // officesUpForElection
+
+    this.streetsCallback = function (type) {
+        if (type == "off") {
+            soeComponentUtils.hide(this.streetsContainer);
+        } else {
+            soeComponentUtils.show(this.streetsContainer);
+        }
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=PRECINCT_FINDER_STREET");
+    }; // streetsCallback
+
+
+    //helper for drawing Polling Place link
+    this.getPollingPlaceStatus = function (pollingPlace, displayPollingPlaceDetailsLink, hidePollingPlaceLinkWhenUnavailable) {
+        //ridiculous rule for showing PollingPlace link
+        var returnStatus = 0;
+        var pollingPlaceFlag1 = false;
+        var pollingPlaceFlag2 = false;
+        var pollingPlaceFlag3 = false;
+        var pollingPlaceViewSwitch = 0; //0 show link, 1 blank space, 2 show message
+        if (pollingPlace != null) {
+            pollingPlaceFlag1 = true;
+        }
+        if (displayPollingPlaceDetailsLink) {
+            pollingPlaceFlag2 = true;
+        }
+        if (hidePollingPlaceLinkWhenUnavailable) {
+            pollingPlaceFlag3 = true;
+        }
+        if (pollingPlaceFlag1) {
+            if (pollingPlaceFlag2 && pollingPlaceFlag3) {
+                pollingPlaceViewSwitch = 0;
+            } else if (pollingPlaceFlag2 && !pollingPlaceFlag3) {
+                pollingPlaceViewSwitch = 0;
+            } else if (!pollingPlaceFlag2 && pollingPlaceFlag3) {
+                pollingPlaceViewSwitch = 1;
+            } else {
+                pollingPlaceViewSwitch = 2;
+            }
+        } else {
+            if (pollingPlaceFlag2 && pollingPlaceFlag3) {
+                pollingPlaceViewSwitch = 1;
+            } else if (pollingPlaceFlag2 && !pollingPlaceFlag3) {
+                pollingPlaceViewSwitch = 2;
+            } else if (!pollingPlaceFlag2 && pollingPlaceFlag3) {
+                pollingPlaceViewSwitch = 1;
+            } else {
+                pollingPlaceViewSwitch = 2;
+            }
+        }
+        if (pollingPlaceViewSwitch == 0) {
+            returnStatus = 0;
+        } else if (pollingPlaceViewSwitch == 1) {
+            returnStatus = 1;
+        } else {
+            returnStatus = 2;
+        }
+        return returnStatus;
+    };
+
+    //helper for drawing sample ballot link
+    this.getSampleBallotStatus = function (electionFormDisplaySampleBallot, displaySampleBallotLink, hideSampleBallotLinkWhenUnavailable) {
+
+        var returnStatus = 0;
+        var pollingPlaceFlag1 = false;
+        var pollingPlaceFlag2 = false;
+        var pollingPlaceFlag3 = false;
+        var pollingPlaceViewSwitch = 0; //0 show link, 1 blank space, 2 show message
+        if (electionFormDisplaySampleBallot) {
+            pollingPlaceFlag1 = true;
+        }
+        if (displaySampleBallotLink) {
+            pollingPlaceFlag2 = true;
+        }
+        if (hideSampleBallotLinkWhenUnavailable) {
+            pollingPlaceFlag3 = true;
+        }
+        if (pollingPlaceFlag1) {
+            if (pollingPlaceFlag2 && pollingPlaceFlag3) {
+                pollingPlaceViewSwitch = 0;
+            } else if (pollingPlaceFlag2 && !pollingPlaceFlag3) {
+                pollingPlaceViewSwitch = 0;
+            } else if (!pollingPlaceFlag2 && pollingPlaceFlag3) {
+                pollingPlaceViewSwitch = 1;
+            } else {
+                pollingPlaceViewSwitch = 2;
+            }
+        } else {
+            if (pollingPlaceFlag2 && pollingPlaceFlag3) {
+                pollingPlaceViewSwitch = 1;
+            } else if (pollingPlaceFlag2 && !pollingPlaceFlag3) {
+                pollingPlaceViewSwitch = 2;
+            } else if (!pollingPlaceFlag2 && pollingPlaceFlag3) {
+                pollingPlaceViewSwitch = 1;
+            } else {
+                pollingPlaceViewSwitch = 2;
+            }
+        }
+        if (pollingPlaceViewSwitch == 0) {
+            returnStatus = 0;
+        } else if (pollingPlaceViewSwitch == 1) {
+            returnStatus = 1;
+        } else {
+            returnStatus = 2;
+        }
+        return returnStatus;
+    };
+
+
+}

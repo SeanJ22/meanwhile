@@ -1,0 +1,340 @@
+/**
+ * Author Ed Seufert
+ */
+
+var soeSampleBallotObj = new SoeSampleBallot();
+
+/*
+ *	Classes
+ */
+
+function SoeSampleBallot() {
+    this.initObj = null;
+    this.pluginArea = null;
+    this.subUrl = "sampleballot";
+    this.sampleBallotContainer = null;
+    this.sampleBallotContainerParyList = null;
+    this.eid = null;
+    this.pid = null;
+    this.pollingplaceid = null;
+    this.partyid = null;
+    //this.pageTexts = null;
+
+    this.setInitInstance = function (instance) {
+        this.initObj = instance;
+        this.pluginArea = document.getElementById(instance.main);
+        instance.statusDialog("create");
+    }; // setInitInstance
+
+    this.init = function () {
+        var eid = soeComponentUtils.getQueryStringValue("electionId");
+        var pid = soeComponentUtils.getQueryStringValue("precinctId");
+        var pollingplaceid = soeComponentUtils.getQueryStringValue("pollingPlaceId");
+        var partyid = soeComponentUtils.getQueryStringValue("partyId");
+        if (eid != null) {
+            this.getSampleBallot(eid, pid, partyid, pollingplaceid);
+        } else {
+            this.processErrorMessage("No Sample Ballot Found");
+        }
+    };
+
+    this.processErrorMessage = function (message) {
+        if (this.sampleBallotContainer == null) {
+            this.sampleBallotContainer = document.createElement('div');
+            this.sampleBallotContainer.id = 'soe-sampleBallot-container';
+            this.sampleBallotContainer.className = "soe-sampleBallot-container";
+            this.sampleBallotContainer.innerHTML = "<br>" + message;
+            this.pluginArea.appendChild(this.sampleBallotContainer);
+            this.initObj.statusDialog("close");
+        } else {
+            this.sampleBallotContainer.innerHTML = "<br>" + message;
+            this.sampleBallotCallback("on");
+            this.initObj.statusDialog("close");
+        }
+    }; // process error message
+
+    this.getUniqueParties = function (electionId, precinctId, pollingplaceId, partyId) {
+        this.eid = electionId;
+        this.pid = precinctId;
+        this.pollingplaceid = pollingplaceId;
+        var request = this.initObj.baseUrlRest + "/" + this.subUrl + "/getUniqueParties?&electionId=" + electionId + "&precinctId=" + precinctId + "&lang=" + soeComponentUtils.getLanguage() + "&callback=soeSampleBallotObj.processUniqueParties";
+        soeComponentUtils.callService(request);
+    };
+
+    this.processUniqueParties = function (JSONData) {
+        var myPageTexts = JSONData.pageTexts;
+        if (myPageTexts.SAMPLE_BALLOT_PARTY_SELECT_CRUMB.rendered) {
+            soeBreadCrumbsObj.addCrumb("soeSampleBallotObj.sampleBallotParyListCallback(\"on\")", "soeSampleBallotObj.sampleBallotParyListCallback(\"off\")", myPageTexts.SAMPLE_BALLOT_PARTY_SELECT_CRUMB.pageTextValue);
+        }
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=" + JSONData.pageName);
+        var iHTML = "";
+        if (myPageTexts.SAMPLE_BALLOT_PARTY_SELECT_HEADER.rendered) {
+            iHTML += "<h3>" + myPageTexts.SAMPLE_BALLOT_PARTY_SELECT_HEADER.pageTextValue + "</h3>";
+        }
+        if (JSONData.ballotType == "Dynamic") {
+            var parties = JSONData.finalPartyList;
+            if (parties != null && parties.length > 0) {
+                iHTML += '<table id="soe_list_component_table">';
+                if (myPageTexts.SAMPLE_BALLOT_PARTY_SELECT_LIST_HEADER.rendered) {
+                    iHTML += "<caption>" + myPageTexts.SAMPLE_BALLOT_PARTY_SELECT_LIST_HEADER.pageTextValue + "</caption>";
+                }
+                iHTML += '<tbody>';
+                for (var i = 0; parties.length > i; i++) {
+                    var party = parties[i];
+                    if (party.id != null) {
+                        var partyName = party.name.englishText;
+
+                        if (party.name.multiLingualTexts != undefined && party.name.multiLingualTexts != null) {
+                            for (var j = 0; j < party.name.multiLingualTexts.length; j++) {
+                                var ml = party.name.multiLingualTexts[j];
+                                if (ml.language == soeComponentUtils.getLanguage()) {
+                                    partyName = ml.value;
+                                }
+                            }
+                        }
+
+                        if (party.partyAbbreviation != null && party.partyAbbreviation != "") {
+                            partyName += ", " + party.partyAbbreviation;
+                        }
+                        iHTML += "<tr><td><a href=" + party.id + " onclick='soeSampleBallotObj.selectParty(" + party.id + ");return false;'>" + partyName + "</a></td></tr>";
+                    }
+                }
+                iHTML += '</tbody>';
+                iHTML += '</table>';
+            } else {
+                //no parties
+            }
+        } else {
+            // PDF
+            var ballotDocs = JSONData.PDFBallotDocs;
+            if (ballotDocs != null && ballotDocs.length > 0) {
+                iHTML += '<table id="soe_list_component_table">';
+                if (myPageTexts.SAMPLE_BALLOT_PARTY_SELECT_LIST_HEADER.rendered) {
+                    iHTML += "<caption>" + myPageTexts.SAMPLE_BALLOT_PARTY_SELECT_LIST_HEADER.pageTextValue + "</caption>";
+                }
+                iHTML += '<tbody>';
+                for (var a = 0; ballotDocs.length > a; a++) {
+                    var ballotName = ballotDocs[a].party.name.englishText;
+                    if (ballotDocs[a].party.partyAbbreviation != null && ballotDocs[a].party.partyAbbreviation != "") {
+                        ballotName += ", " + ballotDocs[a].party.partyAbbreviation;
+                    }
+                    if (ballotDocs[a].alternateBallotType != null) {
+                        ballotName += " - " + ballotDocs[a].alternateBallotType.nameTxt.englishText;
+                    }
+                    iHTML += "<tr><td><a href=" + JSONData.ballotDocPath + ballotDocs[a].sampleBallotDoc.fileName + " target='_blank' >" + ballotName + "</a></td></tr>";
+                }
+                iHTML += '</tbody>';
+                iHTML += '</table>';
+            } else {
+                //no ballots
+            }
+        }
+        if (this.sampleBallotContainerParyList == null) {
+            this.sampleBallotContainerParyList = document.createElement('div');
+            this.sampleBallotContainerParyList.id = 'soe-sampleBallot-container-party-list';
+            this.sampleBallotContainerParyList.className = "soe-sampleBallot-container-party-list";
+            this.sampleBallotContainerParyList.innerHTML = iHTML;
+            this.pluginArea.appendChild(this.sampleBallotContainerParyList);
+        } else {
+            this.sampleBallotContainerParyList.innerHTML = iHTML;
+            this.sampleBallotParyListCallback("on");
+        }
+        this.initObj.statusDialog("close");
+    };
+
+    this.selectParty = function (partyId) {
+        this.sampleBallotParyListCallback("off");
+        this.getSampleBallot(this.eid, this.pid, partyId, this.pollingplaceid);
+    };
+
+    this.getSampleBallot = function (eid, pid, partyid, pollingplaceid) {
+        this.initObj.statusDialog("open");
+        var request = this.initObj.baseUrlRest + "/" + this.subUrl + "/getBallot?eid=" + eid;
+        if (pid != null) {
+            request += "&pid=" + pid;
+        }
+        if (partyid != null) {
+            request += "&partyid=" + partyid;
+        }
+        if (pollingplaceid != null) {
+            request += "&pollingplaceid=" + pollingplaceid;
+        }
+        request += "&lang=" + soeComponentUtils.getLanguage() + "&callback=soeSampleBallotObj.processSampleBallot";
+        soeComponentUtils.callService(request);
+    }; //getSampleBallot
+
+    this.convertVoteFor = function (voteForNumberString) {
+        try {
+            var returnValue = "";
+            var voteForNumber = parseInt(voteForNumberString);
+            switch (voteForNumber) {
+                case 1:
+                    returnValue = "One";
+                    break;
+                case 2:
+                    returnValue = "Two";
+                    break;
+                case 3:
+                    returnValue = "Three";
+                    break;
+                case 4:
+                    returnValue = "Four";
+                    break;
+                case 5:
+                    returnValue = "Five";
+                    break;
+                case 6:
+                    returnValue = "Six";
+                    break;
+                default:
+                    returnValue = voteForNumberString;
+            }
+            return returnValue;
+        } catch (e) {
+            //could not convert to number
+            return voteForNumberString;
+        }
+    };
+
+    this.processSampleBallot = function (JSONData) {
+
+        var event = new Object();
+        event.category = "Components"
+        event.label = "action"
+        event.action = "Sample Ballot"
+
+        //Google Analytics tracking
+        soeComponentUtils.trackGoogleEvent(event);
+        soeComponentUtils.trackGooglePageview("/sample_ballot.html");
+
+        if (JSONData.ERROR) {
+            //TODO: hard coded text values because on error no pageText objects are returned - this needs to be changed
+            soeBreadCrumbsObj.addCrumb("soeSampleBallotObj.sampleBallotCallback(\"on\")", "soeSampleBallotObj.sampleBallotCallback(\"off\")", "Sample Ballot");
+            this.processErrorMessage("No Sample Ballot Found");
+            return;
+        }
+        var myPageTexts = JSONData.pageTexts;
+        var iHTML = "";
+        if (myPageTexts.SAMPLE_BALLOT_CRUMB.rendered) {
+            soeBreadCrumbsObj.addCrumb("soeSampleBallotObj.sampleBallotCallback(\"on\")", "soeSampleBallotObj.sampleBallotCallback(\"off\")", myPageTexts.SAMPLE_BALLOT_CRUMB.pageTextValue);
+        }
+        soeAdminLinkObj.addLink(this.initObj.adminHome + "component/index.soe?pageName=" + JSONData.pageName);
+        if (JSONData.ERROR) {
+            if (myPageTexts.SAMPLE_BALLOT_ERROR.rendered) {
+                iHTML += "<br><h3>" + myPageTexts.SAMPLE_BALLOT_ERROR.pageTextValue + "</h3>";
+            }
+        } else {
+            //if (JSONData.ballotType == "Dynamic"){
+            if (JSONData.pname != null) {
+                if (myPageTexts.SAMPLE_BALLOT_HEADER.rendered) {
+                    iHTML += "<h2>" + myPageTexts.SAMPLE_BALLOT_HEADER.pageTextValue + " " + JSONData.pname + "</h2>";
+                }
+            }
+            var items = JSONData.items;
+            iHTML += "<table>";
+            iHTML += "<caption>" + JSONData.name + " " + JSONData.date + "</caption>";
+            if (items.length == 0) {
+                if (myPageTexts.SAMPLE_BALLOT_NO_BALLOT_ITEMS_FOUND_MESSAGE.rendered) {
+                    iHTML += "<tr><td>" + myPageTexts.SAMPLE_BALLOT_NO_BALLOT_ITEMS_FOUND_MESSAGE.pageTextValue + "</td></tr>";
+                }
+            } else {
+                for (var i = 0; items.length > i; i++) {
+                    var title = items[i].title;
+                    if (items[i].partyname != null && items[i].partyname != "") {
+                        title += " - " + items[i].partyname;
+                    }
+                    if (items[i].type == "EO") {
+                        if (JSONData.convertVoteForOption == "true") {
+                            iHTML += "<tr class='sub_header'><td colspan=2>" + title + " (" + myPageTexts.SAMPLE_BALLOT_VOTE_FOR.pageTextValue + " " + items[i].voteFor + ")</td></tr>";
+                        } else {
+                            iHTML += "<tr class='sub_header'><td colspan=2 >" + title + " ("  + myPageTexts.SAMPLE_BALLOT_VOTE_FOR.pageTextValue + " " + this.convertVoteFor(items[i].voteFor) + ")</td></tr>";
+
+                        }
+                    } else {
+                        iHTML += "<tr class='sub_header'><td colspan=2>" + title + "</td></tr>";
+                    }
+                    if (items[i].subTitle != null) {
+                        iHTML += "<tr class='precinct_question'><td colspan=2>" + items[i].subTitle + "</td></tr>";
+                    }
+                    //draw subitems
+                    var subitems = items[i].subItems;
+                    if (subitems != null) {
+                        if (subitems.length > 0) {
+                            for (var s = 0; subitems.length > s; s++) {
+                                iHTML += "<tr><td>" + subitems[s].column1 + "</td><td>" + subitems[s].column2 + "</td></tr>";
+                            }
+                        } else {
+                            if (myPageTexts.SAMPLE_BALLOT_NO_BALLOT_SUB_ITEMS_FOUND_MESSAGE.rendered) {
+                                iHTML += "<tr><td></td><td>" + myPageTexts.SAMPLE_BALLOT_NO_BALLOT_SUB_ITEMS_FOUND_MESSAGE.pageTextValue + "</td></tr>";
+                            }
+                        }
+                    } else {
+                        if (myPageTexts.SAMPLE_BALLOT_NO_BALLOT_SUB_ITEMS_FOUND_MESSAGE.rendered) {
+                            iHTML += "<tr><td></td><td>" + myPageTexts.SAMPLE_BALLOT_NO_BALLOT_SUB_ITEMS_FOUND_MESSAGE.pageTextValue + "</td></tr>";
+                        }
+                    }
+                }
+            }
+            iHTML += "</tbody>";
+            iHTML += "</table>";
+            var pollingPlace = JSONData.pollingPlace;
+            if (pollingPlace != null) {
+                iHTML += "<table>";
+                iHTML += "<tbody>";
+                iHTML += "<tr class='row_header'><td colspan='2'>" + myPageTexts.SAMPLE_BALLOT_POLLING_PLACE_SECTION.pageTextValue + "</td></tr>";
+                var pollingPlacePageLabels = pollingPlace.pageLabels;
+                for (var l = 0; pollingPlacePageLabels.length > l; l++) {
+                    var labelName = pollingPlacePageLabels[l].pageLabelName.pageLabelName;
+                    var label = pollingPlacePageLabels[l];
+                    switch (labelName) {
+                        case "POLLING_PLACE_NAME":
+                            if (label.rendered == true) {
+                                iHTML += "<tr><td nowrap='nowrap'><b>" + label.pageLabelValue + " : </b></td><td>" + pollingPlace.ppName + "</td></tr>";
+                            }
+                            break;
+                        case "POLLING_PLACE_ADDRESS":
+                            if (label.rendered == true) {
+                                iHTML += "<tr><td nowrap='nowrap'><b>" + label.pageLabelValue + " : </b></td><td>" + pollingPlace.address + "<br/><a href='#' onclick='soeComponentUtils.showOnMap(\"" + pollingPlace.address + "\",\"Address\",\"" + pollingPlace.latitude + "\",\"" + pollingPlace.longitude + "\");return false'>Google mapIt</a></td></tr>";
+                            }
+                            break;
+                        case "POLLING_PLACE_DIRECTION":
+                            if (label.rendered == true) {
+                                iHTML += "<tr><td nowrap='nowrap'><b>" + label.pageLabelValue + " : </b></td><td>" + pollingPlace.directions + "</td></tr>";
+                            }
+                            break;
+                    }
+                }
+                iHTML += "</tbody></table>";
+            }
+        }
+        if (this.sampleBallotContainer == null) {
+            this.sampleBallotContainer = document.createElement('div');
+            this.sampleBallotContainer.id = 'soe-sampleBallot-container';
+            this.sampleBallotContainer.className = "soe-sampleBallot-container";
+            this.sampleBallotContainer.innerHTML = iHTML;
+            this.pluginArea.appendChild(this.sampleBallotContainer);
+        } else {
+            this.sampleBallotContainer.innerHTML = iHTML;
+            this.sampleBallotCallback("on");
+        }
+        this.initObj.statusDialog("close");
+    }; // processSampleBallot
+
+    this.sampleBallotCallback = function (type) {
+        if (type == "off") {
+            soeComponentUtils.hide(this.sampleBallotContainer);
+        } else {
+            soeComponentUtils.show(this.sampleBallotContainer);
+        }
+    }; // sampleBallotCallback
+
+    this.sampleBallotParyListCallback = function (type) {
+        if (type == "off") {
+            soeComponentUtils.hide(this.sampleBallotContainerParyList);
+        } else {
+            soeComponentUtils.show(this.sampleBallotContainerParyList);
+        }
+    };
+
+
+}

@@ -3,19 +3,19 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:11:11.024278+00:00",
+  "preparedAt": "2026-11-03T06:11:47.699717+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
   "nextCounty": {
-    "rank": 41,
-    "stateName": "California",
-    "county": "Contra Costa County",
-    "fips": "06013",
-    "population": 1170070,
+    "rank": 52,
+    "stateName": "Indiana",
+    "county": "Marion County",
+    "fips": "18097",
+    "population": 992196,
     "populationYear": 2025,
-    "state": "CA"
+    "state": "IN"
   },
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
@@ -1001,6 +1001,27 @@
       }
     },
     {
+      "state": "CA",
+      "county": "Contra Costa",
+      "populationRank": 41,
+      "manifest": "CA/contra-costa/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 71,
+      "measureContests": 0,
+      "candidacies": 184,
+      "newContests": 58,
+      "refreshedContests": 13,
+      "sourceInputSha256": "223161a10ec755119dfbddc5367ad7fcd7311133cc9ac76db4013e5b3bf8c32d",
+      "coverage": [
+        "All58 ordinary local fields/171 candidates in current October23 official county zero report are prepared;57 fields are compared with the current official dynamic SAMPLE_BALLOT election66 composite and all58 with the official qualified proof. The58th field, cross-county Livermore Valley Joint USD Trustee Area3, is verified by Alameda current native actual sample and reuses its exact prepared contest/two candidate IDs.",
+        "Source coverage is explicit: Contra Costa native origin returns403; saved unsigned public reader captures preserve exact text and their own hashes, not native PDF/JSON bytes. Current dynamic sample content is not equivalent to a complete precinct PDF/layout audit. Its13 retention blocks omit judge names, and it omits shared Livermore Area3; the shared Alameda native actual sample corroborates all13 judges and both Livermore names. Precinct-specific printed Contra Costa samples/layouts remain acquisition work.",
+        "Every dynamic sample full block and published spelling is preserved in source-name-reconciliation.json. Six substantive variants/encoding errors are reconciled to exact canonical names corroborated by both the qualified proof and newer zero report, with exact office and publisher candidate IDs. Complete cardinalities and all remaining names are checked; PDF line-wrap hyphenation is retained in evidence. Reader-visible source spelling variants must remain available for review.",
+        "The zero report explicitly lists Kofi Opong-Mensah as WRITE-IN for Hercules council. His qualified write-in record stays separate from ordinary choices pending a verified reader distinction; no withdrawal or removal is invented. Blank Write-in/Yes/No slots are not candidates. The August27 proof contains additional offices absent from current dynamic sample/zero report; those are not inferred withdrawn/cancelled, and remain pending final sample/status verification.",
+        "Electorates use exact city, school trustee-area, community-college ward, county education area and special-district division/ward IDs. No district is widened to the county and no split precinct is installed as a whole-member link. Exact held FirstDCA county-membership ID is refreshed from official current court geography and retention-voting rules. Unresolved reader joins remain explicit.",
+        "All held and already-prepared CA packet identities were scanned. All13 held judicial contest/candidate IDs and shared Livermore Area3 prepared identities are preserved. Legislative contests, measures, explainers and unrelated records are left to the partial merge. Data only, no production publication, git operation or voter-identity query."
+      ]
+    },
+    {
       "state": "VA",
       "county": "Fairfax",
       "populationRank": 42,
@@ -1356,17 +1377,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 51,
-    "packetsPrepared": 52,
-    "candidateAndRetentionContests": 2767,
+    "countiesPrepared": 52,
+    "packetsPrepared": 53,
+    "candidateAndRetentionContests": 2838,
     "measureContests": 113,
-    "candidacyEntries": 6152,
-    "newContestEntriesAgainstCheckedInBaseline": 2269,
-    "distinctPreparedContestIds": 2859,
-    "distinctPreparedCandidateIds": 6091,
-    "distinctNewContestsAgainstCheckedInBaseline": 2258,
+    "candidacyEntries": 6336,
+    "newContestEntriesAgainstCheckedInBaseline": 2327,
+    "distinctPreparedContestIds": 2916,
+    "distinctPreparedCandidateIds": 6256,
+    "distinctNewContestsAgainstCheckedInBaseline": 2313,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 52
+    "distinctCountyHandoffs": 53
   },
   "remainingWork": [
     {

@@ -1,0 +1,9 @@
+{
+  "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1602&lang=en",
+  "finalUrl": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getOfficeCandidates?eoid=1602&lang=en",
+  "status": 200,
+  "fetchedAt": "2026-11-03T05:56:46.203459+00:00",
+  "sha256": "8b7382ababba5bd45e960922a79c17ce80944f4f8b750284780e7a348ff85d88",
+  "bytes": 4945,
+  "contentType": "text/plain; charset=utf-8"
+}

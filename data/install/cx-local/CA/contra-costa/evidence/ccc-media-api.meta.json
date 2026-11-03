@@ -1,0 +1,9 @@
+{
+  "url": "https://r.jina.ai/https://www.contracostavote.gov/wp-json/wp/v2/media?search=sample&per_page=100",
+  "finalUrl": "https://r.jina.ai/https://www.contracostavote.gov/wp-json/wp/v2/media?search=sample&per_page=100",
+  "status": 429,
+  "fetchedAt": "2026-11-03T05:56:52.428020+00:00",
+  "sha256": "035bbf36cc8f59eeb5f53cc91330dcfe2dd9356f5f554a6ac0f61eadf87002ed",
+  "bytes": 242,
+  "contentType": "application/json; charset=utf-8"
+}

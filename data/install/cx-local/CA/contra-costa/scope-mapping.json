@@ -1,0 +1,486 @@
+[
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-brentwood-union-school-district-governing-board-member",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:brentwood_union_elementary_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-knightsen-elementary-school-district-governing-board-member",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:knightsen_elementary_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-oakley-union-elementary-school-district-governing-board-member-trustee-area-4",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:oakley_union_elementary_school_district/trustee_area:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-orinda-union-school-district-governing-board-member",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:orinda_union_elementary_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-walnut-creek-school-district-governing-board-member",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:walnut_creek_elementary_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-contra-costa-county-board-of-education-board-member-area-2",
+    "ocdId": "ocd-division/country:us/state:ca/county:contra_costa/board_of_education_area:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-contra-costa-community-college-district-governing-board-member-ward-1",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:contra_costa_community_college_district/ward:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-contra-costa-community-college-district-governing-board-member-ward-3",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:contra_costa_community_college_district/ward:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-antioch-unified-school-district-governing-board-member-trustee-area-5",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:antioch_unified_school_district/trustee_area:5",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-john-swett-unified-school-district-governing-board-member",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:john_swett_unified_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-mt-diablo-unified-school-district-governing-board-member-trustee-area-2",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:mount_diablo_unified_school_district/trustee_area:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-mt-diablo-unified-school-district-governing-board-member-trustee-area-4",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:mount_diablo_unified_school_district/trustee_area:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-san-ramon-valley-unified-school-district-governing-board-member-trustee-area-5",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:san_ramon_valley_unified_school_district/trustee_area:5",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "cx-local-ca-alameda-2026-livermore-valley-joint-unified-school-district-governing-board-member-area-3",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:livermore_valley_joint_unified_school_district/trustee_area:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-acalanes-union-high-school-district-governing-board-member-trustee-area-1",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:acalanes_union_high_school_district/trustee_area:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-liberty-union-high-school-district-governing-board-member-trustee-area-4",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:liberty_union_high_school_district/trustee_area:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-diablo-community-services-district-director",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:diablo_community_services_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-dublin-san-ramon-services-district-director-division-2",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:dublin_san_ramon_services_district/division:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-moraga-orinda-fire-protection-district-director-division-3",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:moraga-orinda_fire_protection_district/division:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-moraga-orinda-fire-protection-district-director-division-4",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:moraga-orinda_fire_protection_district/division:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-east-bay-regional-park-district-director-ward-7",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_regional_park_district/ward:7",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-pleasant-hill-recreation-park-district-director",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:pleasant_hill_recreation_and_park_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-central-contra-costa-sanitary-district-director-trustee-area-2",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:central_contra_costa_sanitary_district/division:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-ironhouse-sanitary-district-director",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:ironhouse_sanitary_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-mt-view-sanitary-district-director-area-2",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:mt_view_sanitary_district/area:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-contra-costa-water-district-director-division-2",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:contra_costa_water_district/division:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "cx-local-ca-alameda-2026-ebmud-director-ward-3",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_municipal_utility_district/ward:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "cx-local-ca-alameda-2026-ebmud-director-ward-7",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_municipal_utility_district/ward:7",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-antioch-member-city-council-district-1",
+    "ocdId": "ocd-division/country:us/state:ca/place:antioch/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-antioch-member-city-council-district-4",
+    "ocdId": "ocd-division/country:us/state:ca/place:antioch/council_district:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-brentwood-member-city-council-district-2",
+    "ocdId": "ocd-division/country:us/state:ca/place:brentwood/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-brentwood-member-city-council-district-4",
+    "ocdId": "ocd-division/country:us/state:ca/place:brentwood/council_district:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-clayton-member-city-council",
+    "ocdId": "ocd-division/country:us/state:ca/place:clayton",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-concord-city-treasurer",
+    "ocdId": "ocd-division/country:us/state:ca/place:concord",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-concord-member-city-council-district-1",
+    "ocdId": "ocd-division/country:us/state:ca/place:concord/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-concord-member-city-council-district-3",
+    "ocdId": "ocd-division/country:us/state:ca/place:concord/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-concord-member-city-council-district-5",
+    "ocdId": "ocd-division/country:us/state:ca/place:concord/council_district:5",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-town-of-danville-member-town-council",
+    "ocdId": "ocd-division/country:us/state:ca/place:danville",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-el-cerrito-member-city-council",
+    "ocdId": "ocd-division/country:us/state:ca/place:el_cerrito",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-hercules-member-city-council",
+    "ocdId": "ocd-division/country:us/state:ca/place:hercules",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-town-of-moraga-member-town-council",
+    "ocdId": "ocd-division/country:us/state:ca/place:moraga",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-martinez-member-city-council-district-1",
+    "ocdId": "ocd-division/country:us/state:ca/place:martinez/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-orinda-member-city-council",
+    "ocdId": "ocd-division/country:us/state:ca/place:orinda",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-pinole-member-city-council",
+    "ocdId": "ocd-division/country:us/state:ca/place:pinole",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-pittsburg-city-clerk",
+    "ocdId": "ocd-division/country:us/state:ca/place:pittsburg",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-pittsburg-city-treasurer",
+    "ocdId": "ocd-division/country:us/state:ca/place:pittsburg",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-pittsburg-member-city-council",
+    "ocdId": "ocd-division/country:us/state:ca/place:pittsburg",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-pleasant-hill-member-city-council-district-3",
+    "ocdId": "ocd-division/country:us/state:ca/place:pleasant_hill/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-pleasant-hill-member-city-council-district-4",
+    "ocdId": "ocd-division/country:us/state:ca/place:pleasant_hill/council_district:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-richmond-mayor",
+    "ocdId": "ocd-division/country:us/state:ca/place:richmond",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-san-pablo-city-clerk",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_pablo",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-san-pablo-city-treasurer",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_pablo",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-san-pablo-member-city-council",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_pablo",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-san-ramon-mayor",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_ramon",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-san-ramon-member-city-council-district-2",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_ramon/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-san-ramon-member-city-council-district-4",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_ramon/council_district:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "BOUNDARY_OR_DIVISION_JOIN_REQUIRED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-walnut-creek-city-treasurer",
+    "ocdId": "ocd-division/country:us/state:ca/place:walnut_creek",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-contra-costa-city-of-walnut-creek-member-city-council",
+    "ocdId": "ocd-division/country:us/state:ca/place:walnut_creek",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "readerJoinStatus": "EXISTING_DIVISION"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-charles-a-smiley",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-kathleen-m-banke",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-monique-langhorne-wilson",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-therese-m-stewart",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-tara-m-desautels",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-ioana-petrou",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-victor-a-rodriguez",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-tracie-l-brown",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-mark-simons",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-danny-y-chou",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-gordon-burns",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-kelli-m-evans",
+    "ocdId": "ocd-division/country:us/state:ca",
+    "presentInCheckedInRegistry": true,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-joshua-groban",
+    "ocdId": "ocd-division/country:us/state:ca",
+    "presentInCheckedInRegistry": true,
+    "readerJoinStatus": "EXISTING_DIVISION_OR_HELD_WHOLE_COUNTY_MEMBERSHIP"
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "electionId": "ca-2026-11-03-general",
+  "electionDate": "2026-11-03",
+  "status": "PRESERVED_SEPARATELY_PENDING_READER_REPRESENTATION",
+  "records": [
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-hercules-member-city-council-qualified-write-in-kofi-opong-mensah",
+      "contestId": "ca-cx-local-2026-contra-costa-city-of-hercules-member-city-council",
+      "name": "KOFI OPONG-MENSAH",
+      "status": "QUALIFIED_WRITE_IN",
+      "classification": "DECLARED_WRITE_IN",
+      "ordinaryChoice": false,
+      "readerDisplayStatus": "PENDING_VERIFIED_NAMED_WRITE_IN_DISTINCTION",
+      "provenance": {
+        "sourceUrl": "https://www.contracostavote.gov/wp-content/uploads/ElectionSummaryReportRPT-48.pdf",
+        "sourceOrg": "Contra Costa County Elections Division",
+        "collectedAt": "2026-11-03T05:51:34.532947+00:00",
+        "verifiedAt": "2026-11-03T06:05:41.109026+00:00",
+        "quote": "KOFI OPONG-MENSAH  WRITE-IN  0 0 0 N/A"
+      }
+    }
+  ]
+}

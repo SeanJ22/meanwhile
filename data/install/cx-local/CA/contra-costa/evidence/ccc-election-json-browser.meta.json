@@ -1,0 +1,9 @@
+{
+  "url": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getElection?eid=66&lang=en",
+  "finalUrl": "https://r.jina.ai/https://www.contracostavote.gov/ce/mobile/seam/resource/rest/election/getElection?eid=66&lang=en",
+  "status": 200,
+  "fetchedAt": "2026-11-03T05:55:01.229244+00:00",
+  "sha256": "c483c70de542db9c84267a7ffa5b4fbcd8ec7de32d943912d2638442b95e9ac4",
+  "bytes": 37434,
+  "contentType": "text/plain; charset=utf-8"
+}

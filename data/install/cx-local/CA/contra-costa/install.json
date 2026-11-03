@@ -1,0 +1,522 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CA",
+  "county": "Contra Costa",
+  "countyFips": "06013",
+  "populationRank": 41,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-cx-local-2026-contra-costa-brentwood-union-school-district-governing-board-member",
+      "title": "Brentwood Union School District, Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:brentwood_union_elementary_school_district",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-knightsen-elementary-school-district-governing-board-member",
+      "title": "Knightsen Elementary School District, Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:knightsen_elementary_school_district",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-oakley-union-elementary-school-district-governing-board-member-trustee-area-4",
+      "title": "Oakley Union Elementary School District, Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:oakley_union_elementary_school_district/trustee_area:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-orinda-union-school-district-governing-board-member",
+      "title": "Orinda Union School District, Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:orinda_union_elementary_school_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-walnut-creek-school-district-governing-board-member",
+      "title": "Walnut Creek School District, Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:walnut_creek_elementary_school_district",
+      "candidates": 6
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-contra-costa-county-board-of-education-board-member-area-2",
+      "title": "Contra Costa County Board Of Education, Board Member, Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/county:contra_costa/board_of_education_area:2",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-contra-costa-community-college-district-governing-board-member-ward-1",
+      "title": "Contra Costa Community College District, Governing Board Member, Ward 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:contra_costa_community_college_district/ward:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-contra-costa-community-college-district-governing-board-member-ward-3",
+      "title": "Contra Costa Community College District, Governing Board Member, Ward 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:contra_costa_community_college_district/ward:3",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-antioch-unified-school-district-governing-board-member-trustee-area-5",
+      "title": "Antioch Unified School District, Governing Board Member, Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:antioch_unified_school_district/trustee_area:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-john-swett-unified-school-district-governing-board-member",
+      "title": "John Swett Unified School District, Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:john_swett_unified_school_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-mt-diablo-unified-school-district-governing-board-member-trustee-area-2",
+      "title": "Mt. Diablo Unified School District, Governing Board Member, Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:mount_diablo_unified_school_district/trustee_area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-mt-diablo-unified-school-district-governing-board-member-trustee-area-4",
+      "title": "Mt. Diablo Unified School District, Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:mount_diablo_unified_school_district/trustee_area:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-san-ramon-valley-unified-school-district-governing-board-member-trustee-area-5",
+      "title": "San Ramon Valley Unified School District, Governing Board Member, Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_ramon_valley_unified_school_district/trustee_area:5",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-livermore-valley-joint-unified-school-district-governing-board-member-area-3",
+      "title": "Livermore Valley Joint Unified School District Governing Board Member, Area #3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:livermore_valley_joint_unified_school_district/trustee_area:3",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-acalanes-union-high-school-district-governing-board-member-trustee-area-1",
+      "title": "Acalanes Union High School District, Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:acalanes_union_high_school_district/trustee_area:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-liberty-union-high-school-district-governing-board-member-trustee-area-4",
+      "title": "Liberty Union High School District, Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:liberty_union_high_school_district/trustee_area:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-diablo-community-services-district-director",
+      "title": "Diablo Community Services District, Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:diablo_community_services_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-dublin-san-ramon-services-district-director-division-2",
+      "title": "Dublin San Ramon Services District, Director, Division 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:dublin_san_ramon_services_district/division:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-moraga-orinda-fire-protection-district-director-division-3",
+      "title": "Moraga-Orinda Fire Protection District, Director, Division 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:moraga-orinda_fire_protection_district/division:3",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-moraga-orinda-fire-protection-district-director-division-4",
+      "title": "Moraga-Orinda Fire Protection District, Director, Division 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:moraga-orinda_fire_protection_district/division:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-east-bay-regional-park-district-director-ward-7",
+      "title": "East Bay Regional Park District, Director, Ward 7",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_regional_park_district/ward:7",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-pleasant-hill-recreation-park-district-director",
+      "title": "Pleasant Hill Recreation & Park District, Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:pleasant_hill_recreation_and_park_district",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-central-contra-costa-sanitary-district-director-trustee-area-2",
+      "title": "Central Contra Costa Sanitary District, Director, Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:central_contra_costa_sanitary_district/division:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-ironhouse-sanitary-district-director",
+      "title": "Ironhouse Sanitary District, Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:ironhouse_sanitary_district",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-mt-view-sanitary-district-director-area-2",
+      "title": "Mt. View Sanitary District, Director, Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:mt_view_sanitary_district/area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-contra-costa-water-district-director-division-2",
+      "title": "Contra Costa Water District, Director, Division 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:contra_costa_water_district/division:2",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-ebmud-director-ward-3",
+      "title": "EBMUD Director, Ward 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_municipal_utility_district/ward:3",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-ebmud-director-ward-7",
+      "title": "EBMUD Director, Ward 7",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_municipal_utility_district/ward:7",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-antioch-member-city-council-district-1",
+      "title": "City Of Antioch, Member, City Council, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:antioch/council_district:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-antioch-member-city-council-district-4",
+      "title": "City Of Antioch, Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:antioch/council_district:4",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-brentwood-member-city-council-district-2",
+      "title": "City Of Brentwood, Member, City Council, District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:brentwood/council_district:2",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-brentwood-member-city-council-district-4",
+      "title": "City Of Brentwood, Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:brentwood/council_district:4",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-clayton-member-city-council",
+      "title": "City Of Clayton, Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:clayton",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-concord-city-treasurer",
+      "title": "City Of Concord, City Treasurer",
+      "ocdId": "ocd-division/country:us/state:ca/place:concord",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-concord-member-city-council-district-1",
+      "title": "City Of Concord, Member, City Council, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:concord/council_district:1",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-concord-member-city-council-district-3",
+      "title": "City Of Concord, Member, City Council, District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:concord/council_district:3",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-concord-member-city-council-district-5",
+      "title": "City Of Concord, Member, City Council, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:concord/council_district:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-town-of-danville-member-town-council",
+      "title": "Town Of Danville, Member, Town Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:danville",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-el-cerrito-member-city-council",
+      "title": "City Of El Cerrito, Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:el_cerrito",
+      "candidates": 6
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-hercules-member-city-council",
+      "title": "City Of Hercules, Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:hercules",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-town-of-moraga-member-town-council",
+      "title": "Town Of Moraga, Member, Town Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:moraga",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-martinez-member-city-council-district-1",
+      "title": "City Of Martinez, Member, City Council, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:martinez/council_district:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-orinda-member-city-council",
+      "title": "City Of Orinda, Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:orinda",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-pinole-member-city-council",
+      "title": "City Of Pinole, Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:pinole",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-pittsburg-city-clerk",
+      "title": "City Of Pittsburg, City Clerk",
+      "ocdId": "ocd-division/country:us/state:ca/place:pittsburg",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-pittsburg-city-treasurer",
+      "title": "City Of Pittsburg, City Treasurer",
+      "ocdId": "ocd-division/country:us/state:ca/place:pittsburg",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-pittsburg-member-city-council",
+      "title": "City Of Pittsburg, Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:pittsburg",
+      "candidates": 11
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-pleasant-hill-member-city-council-district-3",
+      "title": "City Of Pleasant Hill, Member, City Council, District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:pleasant_hill/council_district:3",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-pleasant-hill-member-city-council-district-4",
+      "title": "City Of Pleasant Hill, Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:pleasant_hill/council_district:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-richmond-mayor",
+      "title": "City Of Richmond, Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:richmond",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-san-pablo-city-clerk",
+      "title": "City Of San Pablo, City Clerk",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_pablo",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-san-pablo-city-treasurer",
+      "title": "City Of San Pablo, City Treasurer",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_pablo",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-san-pablo-member-city-council",
+      "title": "City Of San Pablo, Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_pablo",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-san-ramon-mayor",
+      "title": "City Of San Ramon, Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_ramon",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-san-ramon-member-city-council-district-2",
+      "title": "City Of San Ramon, Member, City Council, District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_ramon/council_district:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-san-ramon-member-city-council-district-4",
+      "title": "City Of San Ramon, Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_ramon/council_district:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-walnut-creek-city-treasurer",
+      "title": "City Of Walnut Creek, City Treasurer",
+      "ocdId": "ocd-division/country:us/state:ca/place:walnut_creek",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-contra-costa-city-of-walnut-creek-member-city-council",
+      "title": "City Of Walnut Creek, Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:walnut_creek",
+      "candidates": 2
+    },
+    {
+      "id": "ca-sos-2026-general-retention-charles-a-smiley",
+      "title": "Associate Justice, Court of Appeal, First District, Division One \u2014 CHARLES A. SMILEY",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-kathleen-m-banke",
+      "title": "Associate Justice, Court of Appeal, First District, Division One \u2014 KATHLEEN M. BANKE",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-monique-langhorne-wilson",
+      "title": "Associate Justice, Court of Appeal, First District, Division One \u2014 MONIQUE LANGHORNE WILSON",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-therese-m-stewart",
+      "title": "Presiding Justice, Court of Appeal, First District, Division Two \u2014 THERESE M. STEWART",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-tara-m-desautels",
+      "title": "Associate Justice, Court of Appeal, First District, Division Two \u2014 TARA M. DESAUTELS",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-ioana-petrou",
+      "title": "Associate Justice, Court of Appeal, First District, Division Three \u2014 IOANA PETROU",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-victor-a-rodriguez",
+      "title": "Associate Justice, Court of Appeal, First District, Division Three \u2014 VICTOR A. RODRIGUEZ",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-tracie-l-brown",
+      "title": "Presiding Justice, Court of Appeal, First District, Division Four \u2014 TRACIE L. BROWN",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-mark-simons",
+      "title": "Associate Justice, Court of Appeal, First District, Division Five \u2014 MARK SIMONS",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-danny-y-chou",
+      "title": "Associate Justice, Court of Appeal, First District, Division Five \u2014 DANNY Y. CHOU",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-gordon-burns",
+      "title": "Associate Justice, Court of Appeal, First District, Division Five \u2014 GORDON BURNS",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-kelli-m-evans",
+      "title": "Associate Justice of the Supreme Court \u2014 KELLI M. EVANS",
+      "ocdId": "ocd-division/country:us/state:ca",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-joshua-groban",
+      "title": "Associate Justice of the Supreme Court \u2014 JOSHUA GROBAN",
+      "ocdId": "ocd-division/country:us/state:ca",
+      "candidates": 1
+    }
+  ],
+  "operation": "Data-only partial source-backed local candidate packet; River must merge against latest held state, reuse shared Alameda identities, and preserve all unrelated measures and legislative races. Native Contra Costa precinct PDF/layout coverage and reader joins remain explicit dependencies.",
+  "coverage": [
+    "All58 ordinary local fields/171 candidates in current October23 official county zero report are prepared;57 fields are compared with the current official dynamic SAMPLE_BALLOT election66 composite and all58 with the official qualified proof. The58th field, cross-county Livermore Valley Joint USD Trustee Area3, is verified by Alameda current native actual sample and reuses its exact prepared contest/two candidate IDs.",
+    "Source coverage is explicit: Contra Costa native origin returns403; saved unsigned public reader captures preserve exact text and their own hashes, not native PDF/JSON bytes. Current dynamic sample content is not equivalent to a complete precinct PDF/layout audit. Its13 retention blocks omit judge names, and it omits shared Livermore Area3; the shared Alameda native actual sample corroborates all13 judges and both Livermore names. Precinct-specific printed Contra Costa samples/layouts remain acquisition work.",
+    "Every dynamic sample full block and published spelling is preserved in source-name-reconciliation.json. Six substantive variants/encoding errors are reconciled to exact canonical names corroborated by both the qualified proof and newer zero report, with exact office and publisher candidate IDs. Complete cardinalities and all remaining names are checked; PDF line-wrap hyphenation is retained in evidence. Reader-visible source spelling variants must remain available for review.",
+    "The zero report explicitly lists Kofi Opong-Mensah as WRITE-IN for Hercules council. His qualified write-in record stays separate from ordinary choices pending a verified reader distinction; no withdrawal or removal is invented. Blank Write-in/Yes/No slots are not candidates. The August27 proof contains additional offices absent from current dynamic sample/zero report; those are not inferred withdrawn/cancelled, and remain pending final sample/status verification.",
+    "Electorates use exact city, school trustee-area, community-college ward, county education area and special-district division/ward IDs. No district is widened to the county and no split precinct is installed as a whole-member link. Exact held FirstDCA county-membership ID is refreshed from official current court geography and retention-voting rules. Unresolved reader joins remain explicit.",
+    "All held and already-prepared CA packet identities were scanned. All13 held judicial contest/candidate IDs and shared Livermore Area3 prepared identities are preserved. Legislative contests, measures, explainers and unrelated records are left to the partial merge. Data only, no production publication, git operation or voter-identity query."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:ca/county:contra_costa/board_of_education_area:2",
+    "ocd-division/country:us/state:ca/place:antioch/council_district:1",
+    "ocd-division/country:us/state:ca/place:antioch/council_district:4",
+    "ocd-division/country:us/state:ca/place:brentwood/council_district:2",
+    "ocd-division/country:us/state:ca/place:brentwood/council_district:4",
+    "ocd-division/country:us/state:ca/place:concord/council_district:1",
+    "ocd-division/country:us/state:ca/place:concord/council_district:3",
+    "ocd-division/country:us/state:ca/place:concord/council_district:5",
+    "ocd-division/country:us/state:ca/place:el_cerrito",
+    "ocd-division/country:us/state:ca/place:martinez/council_district:1",
+    "ocd-division/country:us/state:ca/place:pleasant_hill/council_district:3",
+    "ocd-division/country:us/state:ca/place:pleasant_hill/council_district:4",
+    "ocd-division/country:us/state:ca/place:san_ramon/council_district:2",
+    "ocd-division/country:us/state:ca/place:san_ramon/council_district:4",
+    "ocd-division/country:us/state:ca/school_district:acalanes_union_high_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:antioch_unified_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:contra_costa_community_college_district/ward:1",
+    "ocd-division/country:us/state:ca/school_district:contra_costa_community_college_district/ward:3",
+    "ocd-division/country:us/state:ca/school_district:liberty_union_high_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:livermore_valley_joint_unified_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:mount_diablo_unified_school_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:mount_diablo_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:oakley_union_elementary_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:san_ramon_valley_unified_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/special_district:central_contra_costa_sanitary_district/division:2",
+    "ocd-division/country:us/state:ca/special_district:contra_costa_water_district/division:2",
+    "ocd-division/country:us/state:ca/special_district:diablo_community_services_district",
+    "ocd-division/country:us/state:ca/special_district:dublin_san_ramon_services_district/division:2",
+    "ocd-division/country:us/state:ca/special_district:east_bay_municipal_utility_district/ward:3",
+    "ocd-division/country:us/state:ca/special_district:east_bay_municipal_utility_district/ward:7",
+    "ocd-division/country:us/state:ca/special_district:east_bay_regional_park_district/ward:7",
+    "ocd-division/country:us/state:ca/special_district:ironhouse_sanitary_district",
+    "ocd-division/country:us/state:ca/special_district:moraga-orinda_fire_protection_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:moraga-orinda_fire_protection_district/division:4",
+    "ocd-division/country:us/state:ca/special_district:mt_view_sanitary_district/area:2",
+    "ocd-division/country:us/state:ca/special_district:pleasant_hill_recreation_and_park_district"
+  ],
+  "sampleCoverageStatus": "57_OFFICIAL_DYNAMIC_SAMPLE_FIELDS_PLUS_SHARED_ALAMEDA_NATIVE_LIVERMORE_FIELD; COUNTY_NATIVE_PRECINCT_PDF_LAYOUT_AUDIT_PENDING",
+  "counts": {
+    "localCandidateContests": 58,
+    "ordinaryLocalCandidateRows": 171,
+    "sharedHeldRetentionContests": 13,
+    "sharedHeldRetentionCandidateIdsPreserved": 13,
+    "candidateRows": 184,
+    "qualifiedWriteInsPreservedSeparately": 1,
+    "qualifiedWriteInsIncludedAsOrdinaryChoices": 0,
+    "sharedPreparedLivermoreContests": 1,
+    "sharedPreparedLivermoreCandidateIdsPreserved": 2,
+    "newLocalCandidateContests": 57,
+    "officialDynamicSampleFields": 57,
+    "sharedNativeSampleLocalFields": 1,
+    "nativeContraCostaPrecinctPDFsAcquired": 0,
+    "heldWholeCountyMembershipIdsRefreshed": 1,
+    "unresolvedReaderDivisions": 36,
+    "measureContestsAdded": 0,
+    "legislativeContestsAdded": 0
+  },
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS: 9 sources; 256 primary and 429 total primary/secondary/separate-status quotes",
+    "completeOfficialNamedCandidateBlocks": "PASS_58_FIELDS_171_ORDINARY_LOCAL_CANDIDATES_PLUS_13_SHARED_RETENTION_JUDGES",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "sourceBackedSampleNameVariants": "PASS_SIX_VARIANTS_WITH_EXACT_PUBLISHER_OFFICE_CODE_BRIDGES_AND_COMPLETE_FIELDS",
+    "sharedLivermoreIdentity": "PASS_EXACT_ALAMEDA_CONTEST_AND_TWO_CANDIDATE_IDS",
+    "qualifiedWriteInStatus": "PASS_KOFI_SEPARATE_NO_WITHDRAWAL_INVENTED",
+    "sourceHashesAndQuotes": "PASS: 9 captured sources and 256 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "Main/River: merge against latest CA including Alameda identities; resolve exact district joins, verify sample-name reconciliation and named write-in reader distinction, acquire native precinct PDF/layout coverage, and verify actual reader delivery before publication.",
+  "packetBytes": 20704789,
+  "frozenAt": "2026-11-03T06:10:38.681009+00:00"
+}

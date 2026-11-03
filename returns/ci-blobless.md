@@ -7,7 +7,7 @@ check: connection proofs
 ready: CI-01 dc937dd0a68a6c689b4c04b2752611e0500f850b
 river: 99eac64f7bfd847b4f647642cc959c12382ce549
 at: 2026-11-03T17:02:39Z
-state: returned
+state: cleared: integrated ready 8e9c37977e424d7995c5b508e0ef6c9a5388d8df on river b342a72847a2f771bc434cf690f37bbc6c252e81
 fix_subject: fix:bad1f67b
 fix: River · stream/ci-blobless — connection proofs failed for ci-blobless: READY dc937dd0a68a refused: its message lacks "still working on the next scheduled run". Every READY message states that the work is connected end to end and that it is still working on the next scheduled run, with the evidence for each.
 

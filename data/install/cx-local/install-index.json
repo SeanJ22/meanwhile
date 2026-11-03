@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:57:52.871825+00:00",
+  "preparedAt": "2026-11-03T04:57:55.773925+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -605,7 +605,28 @@
       }
     }
   ],
-  "sourceReviewCounties": [],
+  "sourceReviewCounties": [
+    {
+      "state": "PA",
+      "county": "Philadelphia",
+      "populationRank": 25,
+      "manifest": "PA/philadelphia/install.json",
+      "status": "SOURCE_REVIEW_NO_WRITE",
+      "counts": {
+        "publishedStyles": 48,
+        "reviewedStyles": 48,
+        "originalSamplePdfPages": 336,
+        "existingUniqueCandidateOfficeFields": 33,
+        "existingCandidaciesPreserved": 43,
+        "existingPhiladelphiaMeasuresPreserved": 2,
+        "newLocalContests": 0,
+        "newLocalCandidacies": 0,
+        "newOrRefreshedMeasures": 0,
+        "absencesCreated": 0
+      },
+      "sourceScope": "No additional local candidate field appears in the complete current official48published split-style samples or the associated official office/candidate inventory. This is a source-scoped review result; no countywide reader absence or no-election record is created."
+    }
+  ],
   "totals": {
     "countiesPrepared": 24,
     "packetsPrepared": 25,
@@ -616,8 +637,8 @@
     "distinctPreparedContestIds": 1846,
     "distinctPreparedCandidateIds": 4051,
     "distinctNewContestsAgainstCheckedInBaseline": 1472,
-    "sourceReviewCounties": 0,
-    "distinctCountyHandoffs": 24
+    "sourceReviewCounties": 1,
+    "distinctCountyHandoffs": 25
   },
   "remainingWork": [
     {

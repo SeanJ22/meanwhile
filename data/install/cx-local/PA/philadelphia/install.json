@@ -1,0 +1,40 @@
+{
+  "kind": "CX_LOCAL_BALLOT_SOURCE_REVIEW",
+  "step": "CX-LOCAL",
+  "state": "PA",
+  "county": "Philadelphia",
+  "countyFips": "42101",
+  "populationRank": 25,
+  "status": "SOURCE_REVIEW_NO_WRITE",
+  "reviewedAt": "2026-11-03T04:43:23.384697+00:00",
+  "sourceReceiptFile": "source-receipt.json",
+  "sourceSupportFile": "source-support.json",
+  "publishedStyleInventoryFile": "published-styles.json",
+  "retainedFieldProofFile": "retained-fields.json",
+  "reviewFile": "source-review.json",
+  "counts": {
+    "publishedStyles": 48,
+    "reviewedStyles": 48,
+    "originalSamplePdfPages": 336,
+    "existingUniqueCandidateOfficeFields": 33,
+    "existingCandidaciesPreserved": 43,
+    "existingPhiladelphiaMeasuresPreserved": 2,
+    "newLocalContests": 0,
+    "newLocalCandidacies": 0,
+    "newOrRefreshedMeasures": 0,
+    "absencesCreated": 0
+  },
+  "sourceScope": "No additional local candidate field appears in the complete current official48published split-style samples or the associated official office/candidate inventory. This is a source-scoped review result; no countywide reader absence or no-election record is created.",
+  "operation": "Verified source review only. No ballot-input directory or partial ballot mutation. Preserve every existing PA contest,candidacy,measure and explanation unchanged. No production or git operation performed.",
+  "checks": {
+    "sourceHashAndOfficeInventory": "PASS",
+    "heldIdentityAndSourcePreservation": "PASS",
+    "merge": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE",
+    "manualProjectionCandidate": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE",
+    "publication": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE",
+    "parentSourceByteAndCandidateExcerptReplay": "PASS"
+  },
+  "subjects": [],
+  "remainingWork": "No local named candidate install is proposed from these published sources. Individual ward/division mapping,language translation parity and any later certified named write-in supplement were not independently certified; no broader absence inferred.",
+  "nextOwner": "Parent to validate source-review manifest and index separately from installable race packets."
+}

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html data-html-server-rendered="true" lang="en" data-vue-tag="%7B%22lang%22:%7B%22ssr%22:%22en%22%7D%7D">
+  <head>
+    <title>Philadelphia City Commissioners</title><meta name="gridsome:hash" content="50772a0b37ad8e4bf670c88a3608cf5b4bfd7fd4"><meta data-vue-tag="ssr" charset="utf-8"><meta data-vue-tag="ssr" name="generator" content="Gridsome v0.1.0"><meta data-vue-tag="ssr" data-key="viewport" name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta data-vue-tag="ssr" data-key="format-detection" name="format-detection" content="telephone=no"><meta data-vue-tag="ssr" name="format-detection" content="telephone=no"><meta data-vue-tag="ssr" name="title" content="Philadelphia City Commissioners"><meta data-vue-tag="ssr" name="og:type" content="website"><meta data-vue-tag="ssr" name="og:image" content="https://vote.phila.gov/media/cc-home-cover-image-open-graph.jpg"><meta data-vue-tag="ssr" name="twitter:image" content="https://vote.phila.gov/media/20220425163641/cc-homepage-hero.jpeg"><meta data-vue-tag="ssr" name="og:image:alt" content="Voters with raised hands outside Philadelphia City Hall."><meta data-vue-tag="ssr" name="twitter:card" content="summary_large_image"><meta data-vue-tag="ssr" data-key="description" name="description" content="Official website of the Philadelphia City Commissioners."><meta data-vue-tag="ssr" name="og:title" content="Candidates for Office | Philadelphia City Commissioners"><meta data-vue-tag="ssr" name="og:title" content="Candidates for Office"><link data-vue-tag="ssr" rel="icon" href="data:,"><link data-vue-tag="ssr" rel="icon" type="image/png" sizes="16x16" href="/voting/candidates-for-office/assets/static/favicon.ce0531f.a93c8f082e8c29c415876f5c3f1a45b3.png"><link data-vue-tag="ssr" rel="icon" type="image/png" sizes="32x32" href="/voting/candidates-for-office/assets/static/favicon.ac8d93a.a93c8f082e8c29c415876f5c3f1a45b3.png"><link data-vue-tag="ssr" rel="manifest" href="/manifest.json"><link data-vue-tag="ssr" rel="apple-touch-icon" href="https://vote.phila.gov/media/20220610175715/seal-512-transparent.png"><link data-vue-tag="ssr" rel="apple-touch-startup-image" href="https://vote.phila.gov/media/20220610175715/seal-512-transparent.png"><link rel="preload" href="/voting/candidates-for-office/assets/css/styles.styles.2066f8e1.css" as="style"><link rel="preload" href="/voting/candidates-for-office/assets/js/app.cb4b9490.js" as="script"><link rel="preload" href="/voting/candidates-for-office/assets/js/page--src--templates--standard-page-vue.1207159b.js" as="script"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/0.3c615a91.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/1.6e65c473.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/10.f402f7c5.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/11.89449b40.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/12.d62ae3bc.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/13.fb19f1ea.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/14.7cd63186.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/15.d80be27f.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/16.85adb143.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/17.a2d32703.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/18.8aff4b6a.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/19.835ee7fd.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/2.68f24360.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/20.db56f138.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/21.669dda42.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/22.59db6634.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/23.551aa693.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/24.b190862c.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/25.78a8b860.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/26.c1cdbda2.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/27.6214d8c7.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/28.781af5e9.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/29.ead0ed56.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/3.d14a7abe.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/30.26f72dde.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/31.b96d7adf.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/32.dcc71e5a.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/33.06edb7eb.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/34.da3e3d85.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/35.4c900981.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/36.fab5f17e.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/37.6d20e92b.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/38.f65df5dd.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/39.e007058b.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/4.e2adbb89.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/40.39f670a2.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/5.e70f8848.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/6.93467623.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/7.5c1f824f.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/8.c9deb613.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/9.3b2a1db4.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/page--node-modules--gridsome--app--pages--404-vue.53c19dfd.js"><link rel="prefetch" href="/voting/candidates-for-office/assets/js/vendors~page--src--templates--standard-page-vue.99a9342b.js"><link rel="stylesheet" href="/voting/candidates-for-office/assets/css/styles.styles.2066f8e1.css"><noscript data-vue-tag="ssr"><style>.g-image--loading{display:none;}</style></noscript>
+  </head>
+  <body >
+    <div data-server-rendered="true" id="app" class="layout"><div id="trusted-site"><div id="trusted-site-bar"><div class="container"><div class="level is-marginless is-mobile"><div class="level-left"><div class="level-item"><a href="https://www.phila.gov" target="_blank"><img src="/voting/candidates-for-office/assets/img/phila-small-logo.9593a7d9.svg" aria-label="Link To https://www.phila.gov" width="139" height="18" alt="City of Philadelphia trusted site"></a></div></div><div class="level-right"><div class="level-item">
+            An official website of the city of philadelphia government  
+            <a href="#">Here's how you know</a></div></div></div></div><div id="trusted-site-details" style="display:none;"><div class="container"><div id="close-tsd"><span class="icon"><a href="#" aria-label="Close Trusted Site Details"><i class="fas fa-times"></i></a></span></div><div id="trusted-panel"><div class="columns is-centered is-marginless is-multiline is-tablet"><div class="column"><div class="trust-icon"><span class="icon circle-icon"><i class="fas fa-lock"></i></span><span class="icon-text"> https:// </span></div><div class="trust-details">
+                The <strong>https://</strong>in the address bar means your information is encrypted and can not be accessed by anyone else
+              </div></div><div class="column"><div class="trust-icon-right"><span class="icon circle-icon"><i class="fas fa-university"></i></span><span class="icon-text"> .gov </span></div><div class="trust-details-right">
+                Only government entities in the U.S. can end in .gov
+              </div></div></div></div></div></div></div></div><header class="header"><h1 class="is-sr-only">
+    Philadelphia city commissioners
+  </h1><div class="banner-image" style="background-image:url(https://vote.phila.gov/media/20220425163703/cc-header-bg.jpeg);"><div class="custom-container"><div class="columns is-mobile is-marginless is-vcentered"><div class="column is-hidden-desktop is-3-mobile is-3-tablet"></div><div class="column p-0 auto is-6-tablet site-logo"><a href="/"><img src="https://vote.phila.gov/media/philadelphia-city-commissioners-logo.png" alt="Philadelphia City Commissioner logo" class="banner-logo" style="display: block"></a></div><div class="column auto pr-0 language-selector is-4-mobile has-text-right" data-v-0284bd14><div class="control lang-select has-icons-left" data-v-0284bd14><div class="select is-small" data-v-0284bd14><label for="lang-select" class="is-sr-only" data-v-0284bd14>Select language</label><select id="lang-select" data-v-0284bd14><option selected="selected" value="english" class="lang-dropdown" data-v-0284bd14>English</option><option value="spanish" class="lang-dropdown" data-v-0284bd14>Español</option><option value="chinese" class="lang-dropdown" data-v-0284bd14>中文</option></select></div><div class="icon is-small is-left" data-v-0284bd14><i class="fas fa-globe" data-v-0284bd14></i></div></div></div></div></div><div class="header-menu"><div class="custom-container"><div class="columns is-marginless"><div class="column is-11 is-paddingless"><nav role="navigation" aria-label="main navigation" class="navbar"><div class="navbar-brand"><button id="js-navbar-burger" role="button" aria-label="Open menu" aria-expanded="false" aria-controls="js-menu" class="navbar-burger burger"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><div class="menu-name">Menu</div></button></div><div id="js-navbar-menu" class="navbar-menu"><div class="navbar-start"><div class="navbar-dropdown"><a href="/search/" class="navbar-item">Search this website</a></div><div><div class="has-dropdown navbar-item is-hoverable"><span class="is-current"><a href="#" class="navbar-link">Voting</a></span><div><div class="navbar-dropdown"><a href="/voting/registering-to-vote/" class="navbar-item">Registering to Vote
+                </a><a href="/voting/vote-by-mail/" class="navbar-item">Vote by Mail
+                </a><a href="/voting/voting-at-the-polls/" class="navbar-item">Voting at the Polls
+                </a><a href="/voting/candidates-for-office/" class="navbar-item">Candidates for Office
+                </a><a href="/voting/current-elected-officials/" class="navbar-item">Elected Officials
+                </a><a href="/voting/important-dates-for-voters/" class="navbar-item">Important Dates for Voters
+                </a></div></div></div></div><div><div class="has-dropdown navbar-item is-hoverable"><span><a href="#" class="navbar-link">Working the Polls</a></span><div><div class="navbar-dropdown"><a href="/working-the-polls/become-a-poll-worker/" class="navbar-item">Become an Election Board Worker
+                </a><a href="/working-the-polls/board-training/" class="navbar-item">Election Board Virtual Training
+                </a><a href="/voting/current-elected-officials/current-election-board-workers/" class="navbar-item">Current Election Board Workers
+                </a><a href="/working-the-polls/training-materials/" class="navbar-item">Election Board Training Materials
+                </a><a href="/working-the-polls/bilingual-interpreters/" class="navbar-item">Bilingual Interpreters
+                </a><a href="/working-the-polls/important-dates-for-board-workers/" class="navbar-item">Election Board Worker Training Dates
+                </a></div></div></div></div><div><div class="has-dropdown navbar-item is-hoverable"><span><a href="#" class="navbar-link">Candidates &amp; Campaigns</a></span><div><div class="navbar-dropdown"><a href="/candidates-campaigns/running-for-office/" class="navbar-item">Running for Office
+                </a><a href="/candidates-campaigns/create-nomination-petitions/" class="navbar-item">Create Nomination Petitions
+                </a><a href="/candidates-campaigns/create-nomination-papers/" class="navbar-item">Create Nomination Papers
+                </a><a href="/candidates-campaigns/campaign-finance/" class="navbar-item">Campaign Finance
+                </a><a href="/candidates-campaigns/poll-watcher-certificates/" class="navbar-item">Poll Watcher Certificates
+                </a><a href="/candidates-campaigns/important-dates-for-candidates-campaigns/" class="navbar-item">Important Dates for Candidates &amp; Campaigns
+                </a></div></div></div></div><div><div class="has-dropdown navbar-item is-hoverable"><span><a href="#" class="navbar-link">Resources &amp; Data</a></span><div><div class="navbar-dropdown"><a href="/resources-data/election-result/" class="navbar-item">Current Election Results
+                </a><a href="/resources-data/past-election-results/" class="navbar-item">Past Election Results
+                </a><a href="/resources-data/election-resources/" class="navbar-item">Election Resources
+                </a><a href="/resources-data/news/" class="navbar-item">News
+                </a><a href="/resources-data/commissioner-meetings/" class="navbar-item">Commissioner Meetings
+                </a><a href="/resources-data/important-dates/" class="navbar-item">Important Dates
+                </a></div></div></div></div><div><div class="has-dropdown navbar-item is-hoverable"><span><a href="#" class="navbar-link">About Us</a></span><div><div class="navbar-dropdown"><a href="/about-us/commissioners/" class="navbar-item">Commissioners
+                </a><a href="/about-us/contact-us/" class="navbar-item">Contact Us
+                </a><a href="/about-us/satellite-election-offices/" class="navbar-item">Satellite Election Offices (SEOs)
+                </a><a href="/about-us/language-accessibility/" class="navbar-item">Language Accessibility
+                </a><a href="/resources-data/commissioner-meetings/" class="navbar-item">Commissioner Meetings
+                </a><a href="/resources-data/election-resources/reports-and-data/" class="navbar-item">Reports &amp; Data
+                </a></div></div></div></div></div><div class="navbar-end"></div></div></nav></div><!----></div></div></div></div><!----></header><!----><section class="body-content"><div><div><!----><div data-v-296f4200><div class="breadcrumbs" data-v-296f4200><div class="custom-container"><nav aria-label="breadcrumbs" class="breadcrumb"><ul class="is-marginless"><li><a href="/"><span class="icon is-small"><i aria-hidden="true" class="fas fa-home fa-fw"></i><span class="is-sr-only">Back to home</span></span></a></li><li><a href="/voting/" class="firstItem"><span>Voting</span></a></li><li class="is-active"><a href="#" aria-current="page"><span>Candidates for Office</span></a></li></ul></nav></div></div><div class="parent-page-title" data-v-296f4200><div class="custom-container" data-v-296f4200><div data-v-296f4200><h2 class="title is-1 mb-0">Voting</h2></div></div></div><div class="custom-container" data-v-296f4200><div class="columns is-marginless reverse-columns" data-v-296f4200><div class="column is-3 is-paddingless" data-v-296f4200><aside class="menu" data-v-296f4200><div><div class="side-nav-parent"><ul class="side-nav-group menu-list"><li class="group-parent"><a href="/voting/registering-to-vote/">Registering to Vote</a></li><!----></ul><ul class="side-nav-group menu-list"><li class="group-parent"><a href="/voting/vote-by-mail/">Vote by Mail</a></li><!----></ul><ul class="side-nav-group menu-list"><li class="group-parent"><a href="/voting/voting-at-the-polls/">Voting at the Polls</a></li><!----></ul><ul class="side-nav-group menu-list"><li class="group-parent"><a href="/voting/candidates-for-office/" class="is-current">Candidates for Office</a></li><div class="side-nav-child-items"><div><div class="side-nav-child-item"><aside parentMenu="[object Object]" class="menu"><div><div class="side-nav-parent"><ul class="menu-list current-children"><li><a href="/voting/candidates-for-office/ballot-language-access/">Ballot Language Access</a></li><div class="side-nav-child-items"><div><div><a href="/voting/candidates-for-office/ballot-language-access/historical-ballot-language-access/">Historical Ballot Language Access</a></div></div></div></ul></div></div></aside></div></div><div><div><a href="/voting/candidates-for-office/historical-candidates-for-office/">Historical Candidates for Office</a></div></div></div></ul><ul class="side-nav-group menu-list"><li class="group-parent"><a href="/voting/current-elected-officials/">Elected Officials</a></li><!----></ul><ul class="side-nav-group menu-list"><li><a href="/voting/important-dates-for-voters/">Important Dates for Voters</a></li><!----></ul></div></div><div><div class="side-nav-parent"><!----></div></div><div><div class="side-nav-parent"><!----></div></div><div><div class="side-nav-parent"><!----></div></div><div><div class="side-nav-parent"><!----></div></div></aside></div><a href="#main" tabindex="1" class="skip-link" data-v-296f4200>Skip to main content</a><main id="main" tabindex="-1" class="column pt-0 main-body-copy" data-v-296f4200><h3 class="page-title" data-v-296f4200>Candidates for Office</h3><!----><p data-v-296f4200><p>On November 03, 2026, Philadelphia voters will cast Election ballots to select candidates for the following offices:</p>
+<hr />
+<h4>Ballot Questions are available <b> <a href="https://vote.phila.gov/media/2026G_Ballot_Questions.pdf" target="_blank" rel="_blank noopener">here</a></b>.</h4>
+<hr />
+<h3>Note: Button numbers are displayed below in brackets: []</h3>
+<h3>Governor and Lieutenant Governor – Statewide – Vote for the candidates of one party for Governor and Lieutenant Governor</h3>
+<ul>
+<li>JOSH SHAPIRO AND AUSTIN DAVIS (DEMOCRATIC) [101]</li>
+<li>STACY GARRITY AND JASON RICHEY (REPUBLICAN) [201]</li>
+<li>KEN KRAWCHUK AND JOHN THOMAS (LIBERTARIAN) [301]</li>
+</ul>
+<h3>Representative in Congress – 2nd District – Vote for 1</h3>
+<ul>
+<li>BRENDAN F BOYLE (DEMOCRATIC) [102]</li>
+<li>JESSICA ARRIAGA (REPUBLICAN) [202]</li>
+</ul>
+<h3>Representative in Congress – 3rd District – Vote for 1</h3>
+<ul>
+<li>CHRIS RABB (DEMOCRATIC) [102]</li>
+<li>DENNIS MAHONEY (THE INDEPENDENT PARTY) [402]</li>
+</ul>
+<h3>Representative in Congress – 5th District – Vote for 1</h3>
+<ul>
+<li>MARY GAY SCANLON (DEMOCRATIC) [102]</li>
+<li>NICK MANGANARO (REPUBLICAN) [202]</li>
+</ul>
+<h3>Senator in the General Assembly – 2nd District – Vote for 1</h3>
+<ul>
+<li>CHRISTINE M TARTAGLIONE (DEMOCRATIC) [103]</li>
+</ul>
+<h3>Senator in the General Assembly – 4th District – Vote for 1</h3>
+<ul>
+<li>ART HAYWOOD (DEMOCRATIC) [103]</li>
+<li>TODD JOHNSON (REPUBLICAN) [203]</li>
+</ul>
+<h3>Senator in the General Assembly – 8th District – Vote for 1</h3>
+<ul>
+<li>ANTHONY HARDY WILLIAMS (DEMOCRATIC) [103]</li>
+</ul>
+<h3>Representative in the General Assembly – 10th District – Vote for 1</h3>
+<ul>
+<li>AMEN BROWN (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 170th District – Vote for 1</h3>
+<ul>
+<li>ROB GURTCHEFF (DEMOCRATIC) [104]</li>
+<li>MARTINA WHITE (REPUBLICAN) [204]</li>
+</ul>
+<h3>Representative in the General Assembly – 172nd District – Vote for 1</h3>
+<ul>
+<li>SEAN M DOUGHERTY (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 173rd District – Vote for 1</h3>
+<ul>
+<li>PAT GALLAGHER (DEMOCRATIC) [104]</li>
+<li>BILL GRIFFIN (REPUBLICAN) [204]</li>
+</ul>
+<h3>Representative in the General Assembly – 174th District – Vote for 1</h3>
+<ul>
+<li>ED NEILSON (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 175th District – Vote for 1</h3>
+<ul>
+<li>MARYLOUISE ISAACSON (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 177th District – Vote for 1</h3>
+<ul>
+<li>JOE HOHENSTEIN (DEMOCRATIC) [104]</li>
+<li>ROBYN BIRD (REPUBLICAN) [204]</li>
+</ul>
+<h3>Representative in the General Assembly – 179th District – Vote for 1</h3>
+<ul>
+<li>JASON T DAWKINS (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 180th District – Vote for 1</h3>
+<ul>
+<li>JOSE A GIRAL (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 181st District – Vote for 1</h3>
+<ul>
+<li>MALCOLM KENYATTA (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 182nd District – Vote for 1</h3>
+<ul>
+<li>BEN WAXMAN (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 184th District – Vote for 1</h3>
+<ul>
+<li>ELIZABETH FIEDLER (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 185th District – Vote for 1</h3>
+<ul>
+<li>REGINA YOUNG (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 186th District – Vote for 1</h3>
+<ul>
+<li>JORDAN A HARRIS (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 188th District – Vote for 1</h3>
+<ul>
+<li>RICK KRAJEWSKI (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 190th District – Vote for 1</h3>
+<ul>
+<li>RONI GREEN (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 191st District – Vote for 1</h3>
+<ul>
+<li>JOANNA E MCCLINTON (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 192nd District – Vote for 1</h3>
+<ul>
+<li>MORGAN CEPHAS (DEMOCRATIC) [104]</li>
+<li>TIFFANY VANN BROWN (REPUBLICAN) [204]</li>
+</ul>
+<h3>Representative in the General Assembly – 194th District – Vote for 1</h3>
+<ul>
+<li>TARIK KHAN (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 195th District – Vote for 1</h3>
+<ul>
+<li>SIERRA MCNEIL (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 197th District – Vote for 1</h3>
+<ul>
+<li>DANILO BURGOS (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 198th District – Vote for 1</h3>
+<ul>
+<li>DARISHA K PARKER (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 200th District – Vote for 1</h3>
+<ul>
+<li>CHRIS JOHNSON (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 201st District – Vote for 1</h3>
+<ul>
+<li>ANDRE D CARROLL (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 202nd District – Vote for 1</h3>
+<ul>
+<li>JARED SOLOMON (DEMOCRATIC) [104]</li>
+</ul>
+<h3>Representative in the General Assembly – 203rd District – Vote for 1</h3>
+<ul>
+<li>ANTHONY BELLMON (DEMOCRATIC) [104]</li>
+</ul>
+<hr />
+<h2>Sample Ballots by Split</h2>
+<table width="100%">
+<thead>
+<tr>
+<th>Congressional District 2</th>
+<th>Congressional District 3</th>
+<th>Congressional District 5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td valign="top">
+<ul>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/f637c7f7-ea41-408e-8e4d-fcdc49fa0172.pdf" target="_blank" rel="noopener noreferrer">2-2-177</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/b9813ae7-6c1a-4ff6-87ae-da16244af8bf.pdf" target="_blank" rel="noopener noreferrer">2-2-179</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/0a09637b-2e80-4d76-a427-c1faa1cc2a7c.pdf" target="_blank" rel="noopener noreferrer">2-2-180</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/5fa63b04-cb86-4daa-941f-2b7c2d48ebb0.pdf" target="_blank" rel="noopener noreferrer">2-2-197</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/b40c5626-e73b-4188-8a04-0ed576bcdf4e.pdf" target="_blank" rel="noopener noreferrer">2-2-202</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/fe662a8b-afc5-4cbc-aa1b-d456b3fb9e87.pdf" target="_blank" rel="noopener noreferrer">2-2-203</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/cdc2d853-0a95-40b7-8fe4-6b3ce24daca9.pdf" target="_blank" rel="noopener noreferrer">2-xx-170</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/3b130ff0-8a20-4ae4-aea4-7536737eea48.pdf" target="_blank" rel="noopener noreferrer">2-xx-172</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/206c6e44-1ff6-4528-ac5a-f657f3218837.pdf" target="_blank" rel="noopener noreferrer">2-xx-173</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/beedb896-06a4-404a-bb7e-297ced2c1012.pdf" target="_blank" rel="noopener noreferrer">2-xx-174</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/99ec87f3-f457-4007-8dc5-461bc274393e.pdf" target="_blank" rel="noopener noreferrer">2-xx-175</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/0704e482-4db6-4c9f-a647-a1d8f8782f16.pdf" target="_blank" rel="noopener noreferrer">2-xx-177</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/858d8c0d-e6bc-4cfc-b3f8-ed5a0d2e736b.pdf" target="_blank" rel="noopener noreferrer">2-xx-179</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/bd795364-d048-4e46-bc44-869e8a5e73b7.pdf" target="_blank" rel="noopener noreferrer">2-xx-181</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/f7406eba-86dd-49e6-be3a-917b7d32361c.pdf" target="_blank" rel="noopener noreferrer">2-xx-182</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/fe57e765-5cc0-4fc1-9793-dc5934590e8d.pdf" target="_blank" rel="noopener noreferrer">2-xx-195</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/6835b0a0-0604-4511-a13d-d3cc621d843d.pdf" target="_blank" rel="noopener noreferrer">2-xx-197</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/3cabab7e-36a1-4aff-8fbe-8b93e205e2aa.pdf" target="_blank" rel="noopener noreferrer">2-xx-198</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/b0dfe4a5-411b-4078-8012-b3db9d47eb23.pdf" target="_blank" rel="noopener noreferrer">2-xx-202</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/eeaf074d-3919-4156-b3e0-5ced5ca0cd33.pdf" target="_blank" rel="noopener noreferrer">2-xx-203</a></li>
+</ul>
+</td>
+<td valign="top">
+<ul>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/9af08aa3-c9bc-4efd-8c5a-b7b9717283a4.pdf" target="_blank" rel="noopener noreferrer">3-4-194</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/9499ed58-9d0b-4fe4-bc3f-18b5ab3e0ff0.pdf" target="_blank" rel="noopener noreferrer">3-4-198</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/c086b5e0-fa68-4b4c-9b4d-f97f6cab5a9c.pdf" target="_blank" rel="noopener noreferrer">3-4-200</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/eb6a770f-f591-414b-990f-54f4b21f2752.pdf" target="_blank" rel="noopener noreferrer">3-4-201</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/b724bf6e-ce0c-4066-8c6c-df24734bf290.pdf" target="_blank" rel="noopener noreferrer">3-8-10</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/5681e96a-146b-4289-89d3-bed4211eedad.pdf" target="_blank" rel="noopener noreferrer">3-8-185</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/2bab4104-a0cd-4a34-a8fa-d8ae205e20ee.pdf" target="_blank" rel="noopener noreferrer">3-8-186</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/b27eef41-fd70-4e4a-825c-6a2af9697118.pdf" target="_blank" rel="noopener noreferrer">3-8-188</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/653c491b-3693-46db-b57d-1dbf32a530e0.pdf" target="_blank" rel="noopener noreferrer">3-8-191</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/cce1da52-9fc5-4953-822a-270723c4aba1.pdf" target="_blank" rel="noopener noreferrer">3-xx-10</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/83158e75-ad28-4f92-9bec-0320e873fc01.pdf" target="_blank" rel="noopener noreferrer">3-xx-175</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/617aa0ab-e141-494d-9ba3-85eff0f718a8.pdf" target="_blank" rel="noopener noreferrer">3-xx-181</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/6bcea152-a8f5-4365-baac-c7f4836390ba.pdf" target="_blank" rel="noopener noreferrer">3-xx-182</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/d264e847-7381-4ec9-8166-0fb4535c7fe0.pdf" target="_blank" rel="noopener noreferrer">3-xx-184</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/f51b7c5c-e480-4d70-8057-e66bbd68d5c8.pdf" target="_blank" rel="noopener noreferrer">3-xx-186</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/6cf0d1e5-d80d-4ebb-9ce3-57997341f7d7.pdf" target="_blank" rel="noopener noreferrer">3-xx-188</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/83c38994-8f1b-4a6d-9c66-9076724f2fb1.pdf" target="_blank" rel="noopener noreferrer">3-xx-190</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/118c9f84-13c6-4a38-8c75-2baa21d002f0.pdf" target="_blank" rel="noopener noreferrer">3-xx-192</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/2ba20d33-9cd3-49cb-8ee4-fff606208c99.pdf" target="_blank" rel="noopener noreferrer">3-xx-194</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/1eba4b92-4c23-4b90-bf73-56e347b9daa6.pdf" target="_blank" rel="noopener noreferrer">3-xx-195</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/10c74950-85b6-43dc-9b53-818549f1b7b5.pdf" target="_blank" rel="noopener noreferrer">3-xx-198</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/8c6125ff-dd31-4c5a-a904-020bbdee1d53.pdf" target="_blank" rel="noopener noreferrer">3-xx-200</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/d2cf5516-f89f-426d-ac2b-166c9e480c57.pdf" target="_blank" rel="noopener noreferrer">3-xx-201</a></li>
+</ul>
+</td>
+<td valign="top">
+<ul>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/c3a03c5b-02c7-421e-a33f-e91397958c62.pdf" target="_blank" rel="noopener noreferrer">5-8-185</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/5cf8ac21-cec3-4985-a92a-8e08d22343ff.pdf" target="_blank" rel="noopener noreferrer">5-8-186</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/1eaacd36-2bb3-48da-9746-fa6ea9c4fdfe.pdf" target="_blank" rel="noopener noreferrer">5-8-191</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/90cd97b4-181b-40f3-b393-c77bc87b3a57.pdf" target="_blank" rel="noopener noreferrer">5-xx-184</a></li>
+<li><a href="https://vote.phila.gov/files/SampleBallot/2026_General/30071539-1082-4aca-88fd-c250ddaf76d5.pdf" target="_blank" rel="noopener noreferrer">5-xx-185</a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</p></main></div></div></div><!----><!----><!----></div></div></section><div><footer class="footer"><div class="footer-content custom-container"><div data-v-82da9132><section class="columns global-footer" data-v-82da9132><div class="column" data-v-82da9132><h2 data-v-82da9132>
+        Contact the City Commissioners
+      </h2><div data-v-82da9132><div data-v-82da9132><h3 data-v-82da9132>Commissioner Omar Sabir (D), Chair</h3>
+          215-686-3462, 3463<br data-v-82da9132>
+          215-587-9107 <br data-v-82da9132><a href="mailto:Omar.Sabir@phila.gov" data-v-82da9132>Omar.Sabir@phila.gov</a><br data-v-82da9132><div class="social" data-v-82da9132><a href="https://www.facebook.com/commissionersabir/" target="_blank" style="display:;" data-v-82da9132><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="facebook-f" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="svg-inline--fa fa-facebook-f" data-v-82da9132 data-v-82da9132><path fill="currentColor" d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" data-v-82da9132 data-v-82da9132></path></svg><span class="is-sr-only" data-v-82da9132>Facebook account</span></a><a target="_blank" style="display:none;" data-v-82da9132><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-twitter" data-v-82da9132 data-v-82da9132><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" data-v-82da9132 data-v-82da9132></path></svg><span class="is-sr-only" data-v-82da9132>Twitter account</span></a><a target="_blank" style="display:none;" data-v-82da9132><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-instagram" data-v-82da9132 data-v-82da9132><path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" data-v-82da9132 data-v-82da9132></path></svg><span class="is-sr-only" data-v-82da9132>Instagram account</span></a><a target="_blank" style="display:none;" data-v-82da9132><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="youtube" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-youtube" data-v-82da9132 data-v-82da9132><path fill="currentColor" d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z" data-v-82da9132 data-v-82da9132></path></svg><span class="is-sr-only" data-v-82da9132>Youtube account</span></a></div></div></div><div data-v-82da9132><div data-v-82da9132><h3 data-v-82da9132>Commissioner Lisa M. Deeley (D), Vice-Chair</h3>
+          215-686-3460, 3461<br data-v-82da9132>
+          215-686-3947 <br data-v-82da9132><a href="mailto:Lisa.Deeley@phila.gov" data-v-82da9132>Lisa.Deeley@phila.gov</a><br data-v-82da9132><div class="social" data-v-82da9132><a href="https://www.facebook.com/CommissionerDeeley" target="_blank" style="display:;" data-v-82da9132><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="facebook-f" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="svg-inline--fa fa-facebook-f" data-v-82da9132 data-v-82da9132><path fill="currentColor" d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" data-v-82da9132 data-v-82da9132></path></svg><span class="is-sr-only" data-v-82da9132>Facebook account</span></a><a target="_blank" style="display:none;" data-v-82da9132><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-twitter" data-v-82da9132 data-v-82da9132><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" data-v-82da9132 data-v-82da9132></path></svg><span class="is-sr-only" data-v-82da9132>Twitter account</span></a><a target="_blank" style="display:none;" data-v-82da9132><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-instagram" data-v-82da9132 data-v-82da9132><path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" data-v-82da9132 data-v-82da9132></path></svg><span class="is-sr-only" data-v-82da9132>Instagram account</span></a><a target="_blank" style="display:none;" data-v-82da9132><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="youtube" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-youtube" data-v-82da9132 data-v-82da9132><path fill="currentColor" d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z" data-v-82da9132 data-v-82da9132></path></svg><span class="is-sr-only" data-v-82da9132>Youtube account</span></a></div></div></div><div data-v-82da9132><div data-v-82da9132><h3 data-v-82da9132>Commissioner Seth Bluestein (R)</h3>
+          215-686-3464, 3467<br data-v-82da9132>
+          215-686-3472 <br data-v-82da9132><a href="mailto:Seth.Bluestein@phila.gov" data-v-82da9132>Seth.Bluestein@phila.gov</a><br data-v-82da9132><div class="social" data-v-82da9132><a href="https://www.facebook.com/CommishBluestein/" target="_blank" style="display:;" data-v-82da9132><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="facebook-f" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="svg-inline--fa fa-facebook-f" data-v-82da9132 data-v-82da9132><path fill="currentColor" d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" data-v-82da9132 data-v-82da9132></path></svg><span class="is-sr-only" data-v-82da9132>Facebook account</span></a><a target="_blank" style="display:none;" data-v-82da9132><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-twitter" data-v-82da9132 data-v-82da9132><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" data-v-82da9132 data-v-82da9132></path></svg><span class="is-sr-only" data-v-82da9132>Twitter account</span></a><a href="https://www.instagram.com/commishbluestein/" target="_blank" style="display:;" data-v-82da9132><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-instagram" data-v-82da9132 data-v-82da9132><path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" data-v-82da9132 data-v-82da9132></path></svg><span class="is-sr-only" data-v-82da9132>Instagram account</span></a><a target="_blank" style="display:none;" data-v-82da9132><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="youtube" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-youtube" data-v-82da9132 data-v-82da9132><path fill="currentColor" d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z" data-v-82da9132 data-v-82da9132></path></svg><span class="is-sr-only" data-v-82da9132>Youtube account</span></a></div></div></div></div><div class="column" data-v-82da9132><h2 data-v-82da9132>
+        Department contact Information
+      </h2><div data-v-82da9132><div data-v-82da9132><h3 data-v-82da9132>
+            Connect With Us
+          </h3><p data-v-82da9132><div>
+<div style="display: inline-block;"><a href="https://twitter.com/PhillyVotes/" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a></div>
+<div style="display: inline-block;"><a href="https://instagram.com/phillyvotes" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a></div>
+<div style="display: inline-block;"><a href="https://facebook.com/phillyvotes" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a></div>
+<div style="display: inline-block;"><a href="https://www.youtube.com/@philadelphiacitycommissioners" target="_blank" rel="noopener"><img src="https://vote.phila.gov/media/youtube-icon-16-x-13.png" alt="YouTube" /></a></div>
+</div>
+</p></div></div><div data-v-82da9132><div data-v-82da9132><h3 data-v-82da9132>
+            County Board of Elections
+          </h3><p data-v-82da9132><p>City Hall, Rm 142<br />
+1400 John F Kennedy Blvd<br />
+Philadelphia, PA 19107<br />
+Phone: 215-686-3469</p>
+</p></div></div><div data-v-82da9132><div data-v-82da9132><h3 data-v-82da9132>
+            Voter Registration Office
+          </h3><p data-v-82da9132><p>520 N Columbus Blvd, 5th Fl<br />
+Philadelphia, PA 19123<br />
+Phone: 215-686-1591</p>
+</p></div></div><div data-v-82da9132><div data-v-82da9132><h3 data-v-82da9132>
+            Election Board Unit
+          </h3><p data-v-82da9132><p>520 N Columbus Blvd, Ste 512<br />
+Philadelphia, PA 19123<br />
+Phone: 215-685-4811</p>
+</p></div></div></div><div class="column" data-v-82da9132><h2 data-v-82da9132>Resources</h2><div data-v-82da9132><div data-v-82da9132><p data-v-82da9132><a href="https://www.pavoterservices.pa.gov/pages/VoterRegistrationApplication.aspx" data-v-82da9132>
+              Register to Vote
+            </a></p><p data-v-82da9132></p></div></div><div data-v-82da9132><div data-v-82da9132><p data-v-82da9132><a href="https://atlas.phila.gov/voting" data-v-82da9132>
+              Polling Places
+            </a></p><p data-v-82da9132></p></div></div><div data-v-82da9132><div data-v-82da9132><p data-v-82da9132><a href="https://vote.phila.gov/results/" data-v-82da9132>
+              Election Results
+            </a></p><p data-v-82da9132></p></div></div><div data-v-82da9132><div data-v-82da9132><p data-v-82da9132><a href="https://vote.phila.gov/about-us/satellite-election-offices/" data-v-82da9132>
+              Satellite Election Offices
+            </a></p><p data-v-82da9132></p></div></div></div></section></div></div></footer><div class="lower-footer"><ul><li><a href="https://www.phila.gov/privacy/pdfs/FinalCityOpenRecords.pdf">Right to know (PDF)</a></li><li><a href="/about-us/language-accessibility/">Translation disclaimer</a></li><li><a href="https://www.phila.gov/terms-of-use/">Terms of use</a></li><li><a href="https://www.phila.gov/privacypolicy/">Privacy policy</a></li></ul></div></div><footer class="sticky-footer"><div class="custom-container"><div class="columns full-width is-marginless is-mobile is-multiline"><a href="https://vote.phila.gov/" class="icon-group column center pt-4 is-paddingless is-6-touch is-one-quarter"><i aria-hidden="true" class="fa-2x fas fa-house"></i><h3>
+          Home
+        </h3></a><a href="https://www.pavoterservices.pa.gov/pages/VoterRegistrationApplication.aspx" class="icon-group column center pt-4 is-paddingless is-6-touch is-one-quarter"><i aria-hidden="true" class="fa-2x fas fa-clipboard-list-check"></i><h3>
+          Register Online
+        </h3></a><a href="https://vote.phila.gov/voting/vote-by-mail/vote-by-mail/" class="icon-group column center pt-4 is-paddingless is-6-touch is-one-quarter"><i aria-hidden="true" class="fa-2x fas fa-envelope"></i><h3>
+          Vote by Mail
+        </h3></a><a href="https://atlas.phila.gov/voting" class="icon-group column center pt-4 is-paddingless is-6-touch is-one-quarter"><i aria-hidden="true" class="fa-2x fas fa-map-marker-alt"></i><h3>
+          Find my Polling Place
+        </h3></a></div></div></footer></div>
+    <script src="/voting/candidates-for-office/assets/js/app.cb4b9490.js" defer></script><script src="/voting/candidates-for-office/assets/js/page--src--templates--standard-page-vue.1207159b.js" defer></script>
+  </body>
+</html>

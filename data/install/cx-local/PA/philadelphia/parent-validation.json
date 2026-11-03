@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "kind": "SOURCE_REVIEW_NO_WRITE",
+  "sourceHashes": "PASS",
+  "sourceFiles": 51,
+  "fingerprintedBlobs": 150,
+  "publishedStyles": 48,
+  "retainedContests": 33,
+  "candidateQuoteReplays": 43,
+  "ballotInputChange": false,
+  "productionWrites": false,
+  "merge": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE",
+  "manualProjectionCandidate": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE"
+}

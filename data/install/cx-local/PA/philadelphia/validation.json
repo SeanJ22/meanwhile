@@ -1,0 +1,2789 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "source review kind",
+      "pass": true
+    },
+    {
+      "check": "no write status",
+      "pass": true
+    },
+    {
+      "check": "no ballot input exists",
+      "pass": true
+    },
+    {
+      "check": "48unique published styles",
+      "pass": true
+    },
+    {
+      "check": "all published inventory sources acquired",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash a28bce8f4ecb4cc8cf414186ba6bcfa3a0a2bf4a45e44e3d7b0226bc9c23eaf2",
+      "pass": true
+    },
+    {
+      "check": "saved text hash e97298693c00c56782fa7f23ded749e10d158c006ce7f9bb858ef02352c85e5c",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source a28bce8f4ecb4cc8cf414186ba6bcfa3a0a2bf4a45e44e3d7b0226bc9c23eaf2",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash a28bce8f4ecb4cc8cf414186ba6bcfa3a0a2bf4a45e44e3d7b0226bc9c23eaf2",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 91342a4995a3c2fd46ab1e565812428d1da987ddea7cdf4b7424bb32d264b047",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 98178da02ed0e6ac1a0fa995fb4e141765a71264ae92e774bea3e9eebaa8e07c",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 91342a4995a3c2fd46ab1e565812428d1da987ddea7cdf4b7424bb32d264b047",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 91342a4995a3c2fd46ab1e565812428d1da987ddea7cdf4b7424bb32d264b047",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash e0a84ecfbf639cd546a97e7f504ba37d5f822229869c401834812e306da0dfbe",
+      "pass": true
+    },
+    {
+      "check": "saved text hash eb323ed0ef74a7dfb5d30e1e1c7cc6359e6f8253580ff9b29f07a9668e6d1770",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source e0a84ecfbf639cd546a97e7f504ba37d5f822229869c401834812e306da0dfbe",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash e0a84ecfbf639cd546a97e7f504ba37d5f822229869c401834812e306da0dfbe",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 0fd3c9083f78134169ab2f0f9ebfa13ebbc544475c95d59aa98127e8ba6c5157",
+      "pass": true
+    },
+    {
+      "check": "saved text hash cc52e2ecc38fc8b285593e99e3166af44fda12a261b0afad89352a1b3f3f4966",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 0fd3c9083f78134169ab2f0f9ebfa13ebbc544475c95d59aa98127e8ba6c5157",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 0fd3c9083f78134169ab2f0f9ebfa13ebbc544475c95d59aa98127e8ba6c5157",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 16dc2b087aeaadf21a82e95d8499d83178f4f88a38a2464afd9656aeddd13de4",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 9f6992c2758da3bc39fad4369150c01ecb29bfc6fdc22bd8a1cbc103b8897bcc",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 16dc2b087aeaadf21a82e95d8499d83178f4f88a38a2464afd9656aeddd13de4",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 16dc2b087aeaadf21a82e95d8499d83178f4f88a38a2464afd9656aeddd13de4",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 6504170ccddd4bce420ababaccfd2ba5291d008b5610cd4620f0515dddd27df4",
+      "pass": true
+    },
+    {
+      "check": "saved text hash aa01a9ca3016a53548f1a94755b93a99680891f622159bc020e9a4f0b81ee305",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 6504170ccddd4bce420ababaccfd2ba5291d008b5610cd4620f0515dddd27df4",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 6504170ccddd4bce420ababaccfd2ba5291d008b5610cd4620f0515dddd27df4",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash e50a0e7fb46d3879ddf971abe19f17e436b07d38cb94581810e9ff3b08d2958f",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 1a519e9441c844326700f08c748a28c0d7b8068bffcbfb5357fea98b60178d11",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source e50a0e7fb46d3879ddf971abe19f17e436b07d38cb94581810e9ff3b08d2958f",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash e50a0e7fb46d3879ddf971abe19f17e436b07d38cb94581810e9ff3b08d2958f",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash d703c3f1d342ba1016298c52cc94effdd121e5681d483cd199e4f9e647bd549d",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 288c779b5148feec8647126cdf9941db91363d2cd84b842c5ff7bc68c22bc5da",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source d703c3f1d342ba1016298c52cc94effdd121e5681d483cd199e4f9e647bd549d",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash d703c3f1d342ba1016298c52cc94effdd121e5681d483cd199e4f9e647bd549d",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 9039ccf6e51de4feb4e4e080fe723a51a0f253585cd8e64d00ec7483e6e22188",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 625fbcfb226b2ab0304a36bd9e1a4486bffc6e708609f782e6de2b034148bfa7",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 9039ccf6e51de4feb4e4e080fe723a51a0f253585cd8e64d00ec7483e6e22188",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 9039ccf6e51de4feb4e4e080fe723a51a0f253585cd8e64d00ec7483e6e22188",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash e46fa9b0839d7f6296b8d0e7b0cd4e62aa452b415cd692a3bf6a5162fc20ba50",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 950faf5a54ce63b10dd5ea54576abcc2c23ef6529ccd78a634db87885a957b36",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source e46fa9b0839d7f6296b8d0e7b0cd4e62aa452b415cd692a3bf6a5162fc20ba50",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash e46fa9b0839d7f6296b8d0e7b0cd4e62aa452b415cd692a3bf6a5162fc20ba50",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 1466b1009fd040726286560ea629eb80fdeea93eef8a27d24acda9dba6c5efdb",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 344127c68939050da6bdd58ef2c92456732a33bfad622b06d5aa02322d395320",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 1466b1009fd040726286560ea629eb80fdeea93eef8a27d24acda9dba6c5efdb",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 1466b1009fd040726286560ea629eb80fdeea93eef8a27d24acda9dba6c5efdb",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash f9f11ddfc955e306c657f16eb85dc8eeba2b79069c1aaf82bdd061907bfafa1a",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 71d14d09c2564ddab7b5932b61e83a7c2073f1f62c3a9b5db75c6469107f3512",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source f9f11ddfc955e306c657f16eb85dc8eeba2b79069c1aaf82bdd061907bfafa1a",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash f9f11ddfc955e306c657f16eb85dc8eeba2b79069c1aaf82bdd061907bfafa1a",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 10766ae5a998254f9a1faeffdebe328afd3d55ab9f5ecf457e70e7b353085d8a",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 32ccc42b0e6fb299abbbe2fe6c886af2770e04cc12e2948e122726fe62c80524",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 10766ae5a998254f9a1faeffdebe328afd3d55ab9f5ecf457e70e7b353085d8a",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 10766ae5a998254f9a1faeffdebe328afd3d55ab9f5ecf457e70e7b353085d8a",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 4df74d87b6ede2e92e8e8233ac521c792d04c658b823802847af8006e48294ab",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 98da832105975c82ed3fd1ee45f88661d7106ea76c5db772fdbd83d8e19f0e8b",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 4df74d87b6ede2e92e8e8233ac521c792d04c658b823802847af8006e48294ab",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 4df74d87b6ede2e92e8e8233ac521c792d04c658b823802847af8006e48294ab",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 44f24c4d4eb4efbdfc3f5f00436f82858ccea678dc1b9e78bd3851fec775f4d4",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 264632e44b6ed3b011c9d1c70c964d6da8c6859fb906fcaedbe8c887f1f827da",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 44f24c4d4eb4efbdfc3f5f00436f82858ccea678dc1b9e78bd3851fec775f4d4",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 44f24c4d4eb4efbdfc3f5f00436f82858ccea678dc1b9e78bd3851fec775f4d4",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 02af7a60465d63843228e746212ae1dfdcc053b0f655a827b1003d91be84d319",
+      "pass": true
+    },
+    {
+      "check": "saved text hash c79c2b394496565ac186311ce4b9f70ed81734faf9647a224b751a8dcf375571",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 02af7a60465d63843228e746212ae1dfdcc053b0f655a827b1003d91be84d319",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 02af7a60465d63843228e746212ae1dfdcc053b0f655a827b1003d91be84d319",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 633bd12fb1f473f9e4a064dd1d7625e62052ef4b1eafb229be1446a5c2f7365b",
+      "pass": true
+    },
+    {
+      "check": "saved text hash dc6d4258f948d43435f6a87299ea457455540a1698c6246fd4d65cca513d977d",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 633bd12fb1f473f9e4a064dd1d7625e62052ef4b1eafb229be1446a5c2f7365b",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 633bd12fb1f473f9e4a064dd1d7625e62052ef4b1eafb229be1446a5c2f7365b",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 8145b6f443cfe126fae67ee7c275470c59cb0e3175b7624f8fbfb7c43edb18cd",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 4e71cd7f5bdc7c9ffe25d884737e29f65643c830195a8a310811c5cb1643fffc",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 8145b6f443cfe126fae67ee7c275470c59cb0e3175b7624f8fbfb7c43edb18cd",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 8145b6f443cfe126fae67ee7c275470c59cb0e3175b7624f8fbfb7c43edb18cd",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 2bbfc29a8d4aa60f94a422761940493445717612aa4cecd361317712bbf433e0",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 3d71ac17e736c38bae0a4d408b9a2d985ab05b06e7a0c1027b130047339074ec",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 2bbfc29a8d4aa60f94a422761940493445717612aa4cecd361317712bbf433e0",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 2bbfc29a8d4aa60f94a422761940493445717612aa4cecd361317712bbf433e0",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash a6bd1ac608a32c4df7a108b0ad5d66a2005fb7ce81bfea15c0902aca34e0bd4f",
+      "pass": true
+    },
+    {
+      "check": "saved text hash ea82c2539a364f5cc125ada12c0f5514eeec44c58ca275700dc7660ef5370c81",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source a6bd1ac608a32c4df7a108b0ad5d66a2005fb7ce81bfea15c0902aca34e0bd4f",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash a6bd1ac608a32c4df7a108b0ad5d66a2005fb7ce81bfea15c0902aca34e0bd4f",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash ce14487c36e3b6bf409b1000afb5355d1b4a12371e5e1bfd167ec950e5a9c6cc",
+      "pass": true
+    },
+    {
+      "check": "saved text hash e065feff3048013e812267aabbd6803b485621481db0c26508c7e5f0789a156d",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source ce14487c36e3b6bf409b1000afb5355d1b4a12371e5e1bfd167ec950e5a9c6cc",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash ce14487c36e3b6bf409b1000afb5355d1b4a12371e5e1bfd167ec950e5a9c6cc",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash ed3599a3cf8a9ea12d6bc55ee1677c4f62f9a501cbe5228736f7359af51720b9",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 4eb0ebf2da5afc27715b29cf805e7cb93ea3057bc8280c85375bd8140afba8c6",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source ed3599a3cf8a9ea12d6bc55ee1677c4f62f9a501cbe5228736f7359af51720b9",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash ed3599a3cf8a9ea12d6bc55ee1677c4f62f9a501cbe5228736f7359af51720b9",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 8f6336f5bcd80a4bcc653d153f8ea41673cf206ec25e2dcf9da3b3ddf187fd3b",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 70e6066586d2cf753b1d897b715c05d49cb18e238b6b6d784847e76d094e0288",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 8f6336f5bcd80a4bcc653d153f8ea41673cf206ec25e2dcf9da3b3ddf187fd3b",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 8f6336f5bcd80a4bcc653d153f8ea41673cf206ec25e2dcf9da3b3ddf187fd3b",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 7eb71c2154deb6d70cfd8b587fab65010553b633ecd603bc2264b737f55a5ef4",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 1111a12105a3a36ddd84536d21eb11d2fecb2ec4f02bd6113e82e965c304ea45",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 7eb71c2154deb6d70cfd8b587fab65010553b633ecd603bc2264b737f55a5ef4",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 7eb71c2154deb6d70cfd8b587fab65010553b633ecd603bc2264b737f55a5ef4",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 484da8139e5ea22bf0821abfd063098bb077c5b40b108df34cb74ddffc4afca2",
+      "pass": true
+    },
+    {
+      "check": "saved text hash d68ceb2cd86f38200535e03636c004d593dad59bef2dcf8a7abae0078f41df61",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 484da8139e5ea22bf0821abfd063098bb077c5b40b108df34cb74ddffc4afca2",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 484da8139e5ea22bf0821abfd063098bb077c5b40b108df34cb74ddffc4afca2",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 5ea9e015c6e13838c263c938d8f3e209eb978e43c4a05256bc0d3963d21e3d4c",
+      "pass": true
+    },
+    {
+      "check": "saved text hash bfe6a665c8c1a3231aec4033a99942c8ad29fc333b3dabfca642070b17ae279c",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 5ea9e015c6e13838c263c938d8f3e209eb978e43c4a05256bc0d3963d21e3d4c",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 5ea9e015c6e13838c263c938d8f3e209eb978e43c4a05256bc0d3963d21e3d4c",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash c7a5f15142f90f12c638d77588dfb80d82f2024a8eced6b0f5ec429bbc493c4b",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 3628c41fc13ced8505a4638f998e58a65a1dbb1f146be72a59b6b405c2826abb",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source c7a5f15142f90f12c638d77588dfb80d82f2024a8eced6b0f5ec429bbc493c4b",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash c7a5f15142f90f12c638d77588dfb80d82f2024a8eced6b0f5ec429bbc493c4b",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash a21aee8e257f9b32ca63521ea78cbfa1e4a526008aa6387dc11405edc50bed74",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 4bbffa26caf3e5eb0ad170cdac7e340f433c21fc548bad2c4cbb41fa1d98eafb",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source a21aee8e257f9b32ca63521ea78cbfa1e4a526008aa6387dc11405edc50bed74",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash a21aee8e257f9b32ca63521ea78cbfa1e4a526008aa6387dc11405edc50bed74",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash ce4925d17facf3ae4dfd3e5471158cd47b63a819c28d5226a01ba1d9a5ca516f",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 3bb1076897a4d15ea97192dffe34cb71de7aace94b0ad823c17790e95388be35",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source ce4925d17facf3ae4dfd3e5471158cd47b63a819c28d5226a01ba1d9a5ca516f",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash ce4925d17facf3ae4dfd3e5471158cd47b63a819c28d5226a01ba1d9a5ca516f",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 8683f4d3fb6d409f9ffe0c112bf6143397f9325241feb1e0488567c21b42cc17",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 4f1c0fe025997a7a909e24cb0d3b0268c17e5eea1ea77f22805f6fd5d4ff2967",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 8683f4d3fb6d409f9ffe0c112bf6143397f9325241feb1e0488567c21b42cc17",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 8683f4d3fb6d409f9ffe0c112bf6143397f9325241feb1e0488567c21b42cc17",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash c4b1cd2fffa0f4239dec804de9776319d934c83349b52c02388202e8a328bfea",
+      "pass": true
+    },
+    {
+      "check": "saved text hash ec908ea4b5e193c9f5a6301c94ac357af35181dc0b4546e907a9938d92d8511a",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source c4b1cd2fffa0f4239dec804de9776319d934c83349b52c02388202e8a328bfea",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash c4b1cd2fffa0f4239dec804de9776319d934c83349b52c02388202e8a328bfea",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 9f068c59724e284be2acdbd4e5ed518d6cbf5b733627e902c6530ca5b3225cfe",
+      "pass": true
+    },
+    {
+      "check": "saved text hash aa2ae9a41f82d69b5c7c94b8f86d10b7862b4554a6cb73704f9bf7f35a506249",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 9f068c59724e284be2acdbd4e5ed518d6cbf5b733627e902c6530ca5b3225cfe",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 9f068c59724e284be2acdbd4e5ed518d6cbf5b733627e902c6530ca5b3225cfe",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 696cd27ae2178c7a25f043d7b7854865aa1dace284ae67aff3f0b88f4af5d153",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 55a98f1a047e23176fe13d4e0f1fd2621f87488ce2243b008be7f4819c0d3981",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 696cd27ae2178c7a25f043d7b7854865aa1dace284ae67aff3f0b88f4af5d153",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 696cd27ae2178c7a25f043d7b7854865aa1dace284ae67aff3f0b88f4af5d153",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 4a21160fa14044405f3ff898370b8d9e1c842661ae866f7518ef38ec0ae181aa",
+      "pass": true
+    },
+    {
+      "check": "saved text hash c6cc4e65c7a09659b1f6d85894ab9de2c2dac8f3f65cef4e9d73b01e7b078e60",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 4a21160fa14044405f3ff898370b8d9e1c842661ae866f7518ef38ec0ae181aa",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 4a21160fa14044405f3ff898370b8d9e1c842661ae866f7518ef38ec0ae181aa",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 971b84583dd4b328ee81a098ff824f104bcd6f33724e21885a34312a56de6972",
+      "pass": true
+    },
+    {
+      "check": "saved text hash a0caf7bd957dc7d61383ebcf970bdab1ae64ae384266020a61207614c4d87d02",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 971b84583dd4b328ee81a098ff824f104bcd6f33724e21885a34312a56de6972",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 971b84583dd4b328ee81a098ff824f104bcd6f33724e21885a34312a56de6972",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash bfbc9a111e143c44617fe13ec9e5c2cec860eef37cfd262e999054263a927037",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 578d6c958bbc09051b3dca081708fdfe2b9385fd02db12912589454cf9b53635",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source bfbc9a111e143c44617fe13ec9e5c2cec860eef37cfd262e999054263a927037",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash bfbc9a111e143c44617fe13ec9e5c2cec860eef37cfd262e999054263a927037",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash f465f0d8b81528fefc147819e8d709974b51afe85fa4d788979f3ccd3b47f835",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 5f065919db83a665ed4538100b91ee21dd45ffc8592cda96276a53fe48b0fb39",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source f465f0d8b81528fefc147819e8d709974b51afe85fa4d788979f3ccd3b47f835",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash f465f0d8b81528fefc147819e8d709974b51afe85fa4d788979f3ccd3b47f835",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 60a432340b188ef798d429c87e25f3a63bbf63f9d3a9127bd81c719ebc37a47e",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 91fd0f03aeff1020d0c2dbe5e91bc4ac8c048d1e5f8630524021e2beeac9a4f7",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 60a432340b188ef798d429c87e25f3a63bbf63f9d3a9127bd81c719ebc37a47e",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 60a432340b188ef798d429c87e25f3a63bbf63f9d3a9127bd81c719ebc37a47e",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash b28f5a55e186052c70ffd68e691aa1b29a9b3e5b630eb7370e5ae1553c70346e",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 65b6c2ec9f144dfe19e03d91c2b52a8245b82a0443b5a8013d7bcd1a1920a469",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source b28f5a55e186052c70ffd68e691aa1b29a9b3e5b630eb7370e5ae1553c70346e",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash b28f5a55e186052c70ffd68e691aa1b29a9b3e5b630eb7370e5ae1553c70346e",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash e0b0cccca64d92ace19e0326fa1759bdc253551ad96106a89960acda7e4a7d0f",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 58370c02064e08213dc45ae689381d4d8835acc09fc1ad583815e44ea9a3100d",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source e0b0cccca64d92ace19e0326fa1759bdc253551ad96106a89960acda7e4a7d0f",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash e0b0cccca64d92ace19e0326fa1759bdc253551ad96106a89960acda7e4a7d0f",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 62b458282eff205e3bebfaf9543103e229e4e753bece7bf914482fe77667d7c4",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 56664d4feb5da3a881a2b9f228691f30d13f1e7237b1a7087382ebc2a965ff4c",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 62b458282eff205e3bebfaf9543103e229e4e753bece7bf914482fe77667d7c4",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 62b458282eff205e3bebfaf9543103e229e4e753bece7bf914482fe77667d7c4",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash f4bb5f619c35f17a1ce7ff4f360eef64488cb62d20b9dfe7ddcf351be4297640",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 4baec41eaaad0b8cd05f7828359f4506bd8593ab4daea55cfdab952e3ff2c99e",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source f4bb5f619c35f17a1ce7ff4f360eef64488cb62d20b9dfe7ddcf351be4297640",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash f4bb5f619c35f17a1ce7ff4f360eef64488cb62d20b9dfe7ddcf351be4297640",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 6ccf13607de61c45e2b1a2d22637cec1f7bb6e54fb1f28b131a7add43601b5c1",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 2c227ab7d86862bd1c5eef5c6b8da7a83f9577ea76ebf3a8110e4ca7623f54d8",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 6ccf13607de61c45e2b1a2d22637cec1f7bb6e54fb1f28b131a7add43601b5c1",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 6ccf13607de61c45e2b1a2d22637cec1f7bb6e54fb1f28b131a7add43601b5c1",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 31c4ad1f94f11b86c4b614711e4c0895c685284c6f21af927dfbc4d555fcacc2",
+      "pass": true
+    },
+    {
+      "check": "saved text hash ddff19fc1248b421c4d5a23a77d96d4de8903424e95b0a3e498dc7c3f4dcf465",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 31c4ad1f94f11b86c4b614711e4c0895c685284c6f21af927dfbc4d555fcacc2",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 31c4ad1f94f11b86c4b614711e4c0895c685284c6f21af927dfbc4d555fcacc2",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash d05307f38113c3d63ecba6fb6bd90fa82429f51b3262ff5b48e4da182dedbd9d",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 2a26a7707ec1b9187827ee9f4e7492ae571ec991b66dfc32c4296fe99ec64dbf",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source d05307f38113c3d63ecba6fb6bd90fa82429f51b3262ff5b48e4da182dedbd9d",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash d05307f38113c3d63ecba6fb6bd90fa82429f51b3262ff5b48e4da182dedbd9d",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 6256988d9a5aa6957b24eb96342986073861dba71769ec6475b1fd5dfbc0bc8f",
+      "pass": true
+    },
+    {
+      "check": "saved text hash a51e03c13afd5bac8797cb33d5eb2fa6acaa91c3fa4f7012f06b94731d8ea7b3",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 6256988d9a5aa6957b24eb96342986073861dba71769ec6475b1fd5dfbc0bc8f",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 6256988d9a5aa6957b24eb96342986073861dba71769ec6475b1fd5dfbc0bc8f",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 84e68a4ffe5ff60e4fa089498f42d637a4288e2821f713754157ef3d002dbd8f",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 701979a635d2a60b18046d0d595dc181bde10fb7d676fb6203f7b29b5e2c7a2e",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 84e68a4ffe5ff60e4fa089498f42d637a4288e2821f713754157ef3d002dbd8f",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 84e68a4ffe5ff60e4fa089498f42d637a4288e2821f713754157ef3d002dbd8f",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 43f5d1deb1bee31dd2db29fdd73457b4bcbf26c34581d66e07f40c81b0bef638",
+      "pass": true
+    },
+    {
+      "check": "saved text hash da8060c283eec894b04db2e09ada3c78eb5647933b0b5e6e91b60faa218fcfa2",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 43f5d1deb1bee31dd2db29fdd73457b4bcbf26c34581d66e07f40c81b0bef638",
+      "pass": true
+    },
+    {
+      "check": "machine OCR hash 43f5d1deb1bee31dd2db29fdd73457b4bcbf26c34581d66e07f40c81b0bef638",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 1e30a37ac7afd1d3ba647a8693a7e19974ae782aca792a45eb13553533b54248",
+      "pass": true
+    },
+    {
+      "check": "saved text hash fb2a38e0b87278891162590c8d1e95f6211f7aca836ef1f62956c638e891596b",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 1e30a37ac7afd1d3ba647a8693a7e19974ae782aca792a45eb13553533b54248",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash 0b177e5665c7512a549a706aed3afbe1df59cb6849a99c341f1b018acbdc4259",
+      "pass": true
+    },
+    {
+      "check": "saved text hash e976131aca7bb50aab9ea8e888a1c2a8b5e19ed0e2dc21bd69f4ec735b82cf97",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source 0b177e5665c7512a549a706aed3afbe1df59cb6849a99c341f1b018acbdc4259",
+      "pass": true
+    },
+    {
+      "check": "original bytes hash eb838ca87e5454344bfad9b6ac78f0a5aa652b95f87a4f27962ed32ebb35cf5f",
+      "pass": true
+    },
+    {
+      "check": "saved text hash 8d911ece5259be1ed687c9e20497d6187908cad8089965b23c7a446c66bcff48",
+      "pass": true
+    },
+    {
+      "check": "receipt exact source eb838ca87e5454344bfad9b6ac78f0a5aa652b95f87a4f27962ed32ebb35cf5f",
+      "pass": true
+    },
+    {
+      "check": "entire held PA file unchanged",
+      "pass": true
+    },
+    {
+      "check": "all PA measures/explainers unchanged",
+      "pass": true
+    },
+    {
+      "check": "current official candidate raw hash equals held source",
+      "pass": true
+    },
+    {
+      "check": "current charter question raw hash equals held source",
+      "pass": true
+    },
+    {
+      "check": "33 held candidate fields retained",
+      "pass": true
+    },
+    {
+      "check": "43 named choices retained",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:2b841733e071fe18d72a",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:2b841733e071fe18d72a",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:acd8665256bd2db509d2",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:acd8665256bd2db509d2",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:30cf48b946276b195d48",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:30cf48b946276b195d48",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:95ea821b7c6fbc52e398",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:95ea821b7c6fbc52e398",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:7b83b258420367106312",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:7b83b258420367106312",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:147f7c51dc74713bfde8",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:147f7c51dc74713bfde8",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:98a791d832ce7a4877a4",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:98a791d832ce7a4877a4",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:cd-5",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:4059f262a5163a75b4dd",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:4059f262a5163a75b4dd",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:5de1990286e7f8d5a26e",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:5de1990286e7f8d5a26e",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldu-2",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:0f3909c03a1f3c51e96c",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:0f3909c03a1f3c51e96c",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldu-4",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:7176e0faa16869649f50",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:7176e0faa16869649f50",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:c14bf94143cfbd35f801",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:c14bf94143cfbd35f801",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldu-8",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:cb77a63ae4a5cb668010",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:cb77a63ae4a5cb668010",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-10",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:ce93feeacb3ef9ce780f",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:ce93feeacb3ef9ce780f",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-170",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:950f34f5cdb330431158",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:950f34f5cdb330431158",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:59b520b60a0ca4c46d7d",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:59b520b60a0ca4c46d7d",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-172",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:6dcfd7e1c86af9768cc3",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:6dcfd7e1c86af9768cc3",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-173",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:54d023b710d22eefe75b",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:54d023b710d22eefe75b",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:5e91cf22f804466669c5",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:5e91cf22f804466669c5",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-174",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:3e656e35463628ef6456",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:3e656e35463628ef6456",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-175",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:b9193abc5ea72abd9b33",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:b9193abc5ea72abd9b33",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-177",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:e1b8a4342fd922bb76cb",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:e1b8a4342fd922bb76cb",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:beb929beddbee11aa825",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:beb929beddbee11aa825",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-179",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:7b5efc6bfe9a8d509e4b",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:7b5efc6bfe9a8d509e4b",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-180",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:48361059939aa5d17cce",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:48361059939aa5d17cce",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-181",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:85b0caa54412d0c4ecb7",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:85b0caa54412d0c4ecb7",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-182",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:25c13b6c87b1fab82819",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:25c13b6c87b1fab82819",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-184",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:337709ce0e37f6ff2f55",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:337709ce0e37f6ff2f55",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-185",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:b44cf965e46b0c3f7843",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:b44cf965e46b0c3f7843",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-186",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:cb2c735aa2b857b12340",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:cb2c735aa2b857b12340",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-188",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:b08179d85361f9a2a5fb",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:b08179d85361f9a2a5fb",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-190",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:e5b919da6a6866e9a589",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:e5b919da6a6866e9a589",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-191",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:f79a30f579184ac23590",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:f79a30f579184ac23590",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-192",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:6e8247ba19f20aeb1b22",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:6e8247ba19f20aeb1b22",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:0f72a3ec6041df756370",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:0f72a3ec6041df756370",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-194",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:f6b3961f5d5930aee3cb",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:f6b3961f5d5930aee3cb",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-195",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:1f3bfab06dd16bd945f3",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:1f3bfab06dd16bd945f3",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-197",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:323c47e11ace40dafcfe",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:323c47e11ace40dafcfe",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-198",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:6623aef9aab5c4e81464",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:6623aef9aab5c4e81464",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-200",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:78c94ec4c33474e81fde",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:78c94ec4c33474e81fde",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-201",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:a07d1f846932cc434742",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:a07d1f846932cc434742",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-202",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:111b537fb05ca6d11a82",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:111b537fb05ca6d11a82",
+      "pass": true
+    },
+    {
+      "check": "held contest exact object pa-dos:pa-2026-general:sldl-203",
+      "pass": true
+    },
+    {
+      "check": "held choice exact object pa-dos:pa-2026-general:candidate:c5d5cbc213cd13f512c6",
+      "pass": true
+    },
+    {
+      "check": "source exact name party excerpt pa-dos:pa-2026-general:candidate:c5d5cbc213cd13f512c6",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-2-177",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-2-177",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-2-177",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-2-177",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-177 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-177 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-177 pa-dos:pa-2026-general:sldl-177",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-177 pa-dos:pa-2026-general:sldu-2",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-2-179",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-2-179",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-2-179",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-2-179",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-179 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-179 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-179 pa-dos:pa-2026-general:sldl-179",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-179 pa-dos:pa-2026-general:sldu-2",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-2-180",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-2-180",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-2-180",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-2-180",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-180 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-180 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-180 pa-dos:pa-2026-general:sldl-180",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-180 pa-dos:pa-2026-general:sldu-2",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-2-197",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-2-197",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-2-197",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-2-197",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-197 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-197 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-197 pa-dos:pa-2026-general:sldl-197",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-197 pa-dos:pa-2026-general:sldu-2",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-2-202",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-2-202",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-2-202",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-2-202",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-202 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-202 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-202 pa-dos:pa-2026-general:sldl-202",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-202 pa-dos:pa-2026-general:sldu-2",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-2-203",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-2-203",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-2-203",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-2-203",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-203 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-203 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-203 pa-dos:pa-2026-general:sldl-203",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-2-203 pa-dos:pa-2026-general:sldu-2",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-170",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-170",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-170",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-170",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-170 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-170 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-170 pa-dos:pa-2026-general:sldl-170",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-172",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-172",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-172",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-172",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-172 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-172 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-172 pa-dos:pa-2026-general:sldl-172",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-173",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-173",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-173",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-173",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-173 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-173 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-173 pa-dos:pa-2026-general:sldl-173",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-174",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-174",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-174",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-174",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-174 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-174 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-174 pa-dos:pa-2026-general:sldl-174",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-175",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-175",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-175",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-175",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-175 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-175 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-175 pa-dos:pa-2026-general:sldl-175",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-177",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-177",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-177",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-177",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-177 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-177 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-177 pa-dos:pa-2026-general:sldl-177",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-179",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-179",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-179",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-179",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-179 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-179 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-179 pa-dos:pa-2026-general:sldl-179",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-181",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-181",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-181",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-181",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-181 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-181 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-181 pa-dos:pa-2026-general:sldl-181",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-182",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-182",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-182",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-182",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-182 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-182 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-182 pa-dos:pa-2026-general:sldl-182",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-195",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-195",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-195",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-195",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-195 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-195 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-195 pa-dos:pa-2026-general:sldl-195",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-197",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-197",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-197",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-197",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-197 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-197 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-197 pa-dos:pa-2026-general:sldl-197",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-198",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-198",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-198",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-198",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-198 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-198 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-198 pa-dos:pa-2026-general:sldl-198",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-202",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-202",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-202",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-202",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-202 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-202 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-202 pa-dos:pa-2026-general:sldl-202",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 2-xx-203",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 2-xx-203",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 2-xx-203",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 2-xx-203",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-203 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-203 pa-dos:pa-2026-general:cd-2",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 2-xx-203 pa-dos:pa-2026-general:sldl-203",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-4-194",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-4-194",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-4-194",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-4-194",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-194 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-194 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-194 pa-dos:pa-2026-general:sldl-194",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-194 pa-dos:pa-2026-general:sldu-4",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-4-198",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-4-198",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-4-198",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-4-198",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-198 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-198 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-198 pa-dos:pa-2026-general:sldl-198",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-198 pa-dos:pa-2026-general:sldu-4",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-4-200",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-4-200",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-4-200",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-4-200",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-200 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-200 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-200 pa-dos:pa-2026-general:sldl-200",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-200 pa-dos:pa-2026-general:sldu-4",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-4-201",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-4-201",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-4-201",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-4-201",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-201 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-201 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-201 pa-dos:pa-2026-general:sldl-201",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-4-201 pa-dos:pa-2026-general:sldu-4",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-8-10",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-8-10",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-8-10",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-8-10",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-10 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-10 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-10 pa-dos:pa-2026-general:sldl-10",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-10 pa-dos:pa-2026-general:sldu-8",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-8-185",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-8-185",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-8-185",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-8-185",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-185 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-185 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-185 pa-dos:pa-2026-general:sldl-185",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-185 pa-dos:pa-2026-general:sldu-8",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-8-186",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-8-186",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-8-186",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-8-186",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-186 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-186 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-186 pa-dos:pa-2026-general:sldl-186",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-186 pa-dos:pa-2026-general:sldu-8",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-8-188",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-8-188",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-8-188",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-8-188",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-188 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-188 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-188 pa-dos:pa-2026-general:sldl-188",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-188 pa-dos:pa-2026-general:sldu-8",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-8-191",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-8-191",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-8-191",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-8-191",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-191 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-191 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-191 pa-dos:pa-2026-general:sldl-191",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-8-191 pa-dos:pa-2026-general:sldu-8",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-10",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-10",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-10",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-10",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-10 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-10 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-10 pa-dos:pa-2026-general:sldl-10",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-175",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-175",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-175",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-175",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-175 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-175 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-175 pa-dos:pa-2026-general:sldl-175",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-181",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-181",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-181",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-181",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-181 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-181 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-181 pa-dos:pa-2026-general:sldl-181",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-182",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-182",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-182",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-182",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-182 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-182 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-182 pa-dos:pa-2026-general:sldl-182",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-184",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-184",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-184",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-184",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-184 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-184 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-184 pa-dos:pa-2026-general:sldl-184",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-186",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-186",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-186",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-186",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-186 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-186 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-186 pa-dos:pa-2026-general:sldl-186",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-188",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-188",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-188",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-188",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-188 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-188 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-188 pa-dos:pa-2026-general:sldl-188",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-190",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-190",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-190",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-190",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-190 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-190 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-190 pa-dos:pa-2026-general:sldl-190",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-192",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-192",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-192",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-192",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-192 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-192 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-192 pa-dos:pa-2026-general:sldl-192",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-194",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-194",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-194",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-194",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-194 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-194 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-194 pa-dos:pa-2026-general:sldl-194",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-195",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-195",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-195",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-195",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-195 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-195 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-195 pa-dos:pa-2026-general:sldl-195",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-198",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-198",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-198",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-198",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-198 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-198 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-198 pa-dos:pa-2026-general:sldl-198",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-200",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-200",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-200",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-200",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-200 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-200 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-200 pa-dos:pa-2026-general:sldl-200",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 3-xx-201",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 3-xx-201",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 3-xx-201",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 3-xx-201",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-201 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-201 pa-dos:pa-2026-general:cd-3",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 3-xx-201 pa-dos:pa-2026-general:sldl-201",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 5-8-185",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 5-8-185",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 5-8-185",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 5-8-185",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-8-185 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-8-185 pa-dos:pa-2026-general:cd-5",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-8-185 pa-dos:pa-2026-general:sldl-185",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-8-185 pa-dos:pa-2026-general:sldu-8",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 5-8-186",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 5-8-186",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 5-8-186",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 5-8-186",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-8-186 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-8-186 pa-dos:pa-2026-general:cd-5",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-8-186 pa-dos:pa-2026-general:sldl-186",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-8-186 pa-dos:pa-2026-general:sldu-8",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 5-8-191",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 5-8-191",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 5-8-191",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 5-8-191",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-8-191 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-8-191 pa-dos:pa-2026-general:cd-5",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-8-191 pa-dos:pa-2026-general:sldl-191",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-8-191 pa-dos:pa-2026-general:sldu-8",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 5-xx-184",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 5-xx-184",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 5-xx-184",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 5-xx-184",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-xx-184 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-xx-184 pa-dos:pa-2026-general:cd-5",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-xx-184 pa-dos:pa-2026-general:sldl-184",
+      "pass": true
+    },
+    {
+      "check": "sample current Nov2026 5-xx-185",
+      "pass": true
+    },
+    {
+      "check": "machine image/native inventory parity 5-xx-185",
+      "pass": true
+    },
+    {
+      "check": "all offices resolve held fields 5-xx-185",
+      "pass": true
+    },
+    {
+      "check": "no extra local keyword field 5-xx-185",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-xx-185 pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-xx-185 pa-dos:pa-2026-general:cd-5",
+      "pass": true
+    },
+    {
+      "check": "complete name/party block retained 5-xx-185 pa-dos:pa-2026-general:sldl-185",
+      "pass": true
+    },
+    {
+      "check": "162 printed office occurrences",
+      "pass": true
+    },
+    {
+      "check": "33 unique printed office identities",
+      "pass": true
+    },
+    {
+      "check": "no new contests/candidates/measure/absence mutation",
+      "pass": true
+    },
+    {
+      "check": "merge no ballot input change",
+      "pass": true
+    },
+    {
+      "check": "visual aid bytes hash 77da77f87a5944b6cf5177c88c9b57eba1cbd74e90d2d2567dbddd0e4cc38e14",
+      "pass": true
+    },
+    {
+      "check": "visual aid bytes hash b498712e9d2b89625a7e743a3787a12fff6321d00c79614c1eca0be7526bd92c",
+      "pass": true
+    },
+    {
+      "check": "visual aid bytes hash 2eb59bcf80b8c1946ca10df12d1fde1d4443d53364f440ad16312559cd41a625",
+      "pass": true
+    },
+    {
+      "check": "visual aid bytes hash fabc195729efbf69b52caa7e433ffc35e05c915d2c6b3ee9b3ec527a0ee43028",
+      "pass": true
+    }
+  ],
+  "counts": {
+    "checks": 693,
+    "publishedStylesReviewed": 48,
+    "existingCandidateFieldsPreserved": 33,
+    "existingCandidateChoicesPreserved": 43,
+    "newLocalFields": 0,
+    "measureMutations": 0
+  },
+  "merge": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE",
+  "manualProjectionCandidate": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE",
+  "publication": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE",
+  "scopeLimit": "Complete current public48split-style inventory; individual ward/division-to-style mapping and named write-in supplement not independently certified. No reader absence created."
+}

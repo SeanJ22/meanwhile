@@ -1,0 +1,562 @@
+<!doctype html>
+<!--[if lt IE 7 ]>
+<html class="ie ie6" lang="en-US">
+<![endif]-->
+<!--[if IE 7 ]>
+<html class="ie ie7" lang="en-US">
+  <![endif]-->
+  <!--[if IE 8 ]>
+  <html class="ie ie8" lang="en-US">
+    <![endif]-->
+    <!--[if IE 9 ]>
+    <html class="ie ie9" lang="en-US">
+      <![endif]-->
+      <!--[if (gte IE 10)|!(IE)]><!-->
+      <html lang="en-US">
+        <!--<![endif]-->
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta name="google-site-verification" content="i7vidQMV6sGJQzwm7y8kM0c1c0uLKjDbQ2yYy7QOokg" />
+          <meta name="facebook-domain-verification" content="94lu77slbm0kx7vsp5vv2k4f0avj3s" />
+          <title>ACC Board of Trustees Elections | Office of Community and Government Affairs | Austin Community College District</title>
+          <link rel="profile" href="https://gmpg.org/xfn/11">
+          <link rel="pingback" href="https://offices.austincc.edu/community-and-government-affairs/xmlrpc.php">
+          <!--Edit Permissions Check -->
+
+          <!-- Favicons -->
+          <link rel="shortcut icon" href="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/favicon.ico" type="image/vnd.microsoft.icon">
+          <link rel="apple-touch-icon" href="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/images/apple-touch-icon.png">
+          <link rel="apple-touch-icon" sizes="72x72" href="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/images/apple-touch-icon-72x72.png" />
+          <link rel="apple-touch-icon" sizes="114x114" href="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/images/apple-touch-icon-114x114.png" />
+
+          <!-- Load Google Fonts -->
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+          <meta name='robots' content='max-image-preview:large' />
+<link rel="alternate" type="application/rss+xml" title="Office of Community and Government Affairs &raquo; Feed" href="https://offices.austincc.edu/community-and-government-affairs/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Office of Community and Government Affairs &raquo; Comments Feed" href="https://offices.austincc.edu/community-and-government-affairs/comments/feed/" />
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://offices.austincc.edu/community-and-government-affairs/wp-json/oembed/1.0/embed?url=https%3A%2F%2Foffices.austincc.edu%2Fcommunity-and-government-affairs%2Facc-board-of-trustees-elections%2F" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://offices.austincc.edu/community-and-government-affairs/wp-json/oembed/1.0/embed?url=https%3A%2F%2Foffices.austincc.edu%2Fcommunity-and-government-affairs%2Facc-board-of-trustees-elections%2F&#038;format=xml" />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<link rel='stylesheet' id='embedpress-css-css' href='https://offices.austincc.edu/community-and-government-affairs/wp-content/plugins/embedpress/assets/css/embedpress.css?ver=1793286200' media='all' />
+<link rel='stylesheet' id='embedpress-blocks-style-css' href='https://offices.austincc.edu/community-and-government-affairs/wp-content/plugins/embedpress/assets/css/blocks.build.css?ver=1793286200' media='all' />
+<style id="wp-emoji-styles-inline-css">
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+/*# sourceURL=wp-emoji-styles-inline-css */
+</style>
+<style id="wp-block-library-inline-css">
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}:root .has-text-align-center{text-align:center}:root .has-text-align-left{text-align:left}:root .has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{word-wrap:normal!important;border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;word-break:normal!important}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style^=border-color],[style*=";border-color"],[style*="; border-color"]){border-style:solid}html :where([style^=border-top-color],[style*=";border-top-color"],[style*="; border-top-color"]){border-top-style:solid}html :where([style^=border-right-color],[style*=";border-right-color"],[style*="; border-right-color"]){border-right-style:solid}html :where([style^=border-bottom-color],[style*=";border-bottom-color"],[style*="; border-bottom-color"]){border-bottom-style:solid}html :where([style^=border-left-color],[style*=";border-left-color"],[style*="; border-left-color"]){border-left-style:solid}html :where([style^=border-width],[style*=";border-width"],[style*="; border-width"]){border-style:solid}html :where([style^=border-top-width],[style*=";border-top-width"],[style*="; border-top-width"]){border-top-style:solid}html :where([style^=border-right-width],[style*=";border-right-width"],[style*="; border-right-width"]){border-right-style:solid}html :where([style^=border-bottom-width],[style*=";border-bottom-width"],[style*="; border-bottom-width"]){border-bottom-style:solid}html :where([style^=border-left-width],[style*=";border-left-width"],[style*="; border-left-width"]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+
+/*# sourceURL=/wp-includes/css/dist/block-library/common.min.css */
+</style>
+<style id="wp-block-heading-inline-css">
+h1:where(.wp-block-heading).has-background,h2:where(.wp-block-heading).has-background,h3:where(.wp-block-heading).has-background,h4:where(.wp-block-heading).has-background,h5:where(.wp-block-heading).has-background,h6:where(.wp-block-heading).has-background{padding:1.25em 2.375em}h1.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h1.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h2.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h2.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h3.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h3.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h4.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h4.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h5.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h5.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h6.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h6.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]){rotate:180deg}
+/*# sourceURL=https://offices.austincc.edu/community-and-government-affairs/wp-includes/blocks/heading/style.min.css */
+</style>
+<style id="wp-block-paragraph-inline-css">
+.is-small-text{font-size:.875em}.is-regular-text{font-size:1em}.is-large-text{font-size:2.25em}.is-larger-text{font-size:3em}.has-drop-cap:not(:focus):first-letter{float:left;font-size:8.4em;font-style:normal;font-weight:100;line-height:.68;margin:.05em .1em 0 0;text-transform:uppercase}body.rtl .has-drop-cap:not(:focus):first-letter{float:none;margin-left:.1em}p.has-drop-cap.has-background{overflow:hidden}:root :where(p.has-background){padding:1.25em 2.375em}:where(p.has-text-color:not(.has-link-color)) a{color:inherit}p.has-text-align-left[style*="writing-mode:vertical-lr"],p.has-text-align-right[style*="writing-mode:vertical-rl"]{rotate:180deg}
+/*# sourceURL=https://offices.austincc.edu/community-and-government-affairs/wp-includes/blocks/paragraph/style.min.css */
+</style>
+<style id="wp-block-group-inline-css">
+.wp-block-group{box-sizing:border-box}:where(.wp-block-group.wp-block-group-is-layout-constrained){position:relative}
+/*# sourceURL=https://offices.austincc.edu/community-and-government-affairs/wp-includes/blocks/group/style.min.css */
+</style>
+<style id="wp-block-separator-inline-css">
+@charset "UTF-8";.wp-block-separator{border:none;border-top:2px solid}:root :where(.wp-block-separator.is-style-dots){height:auto;line-height:1;text-align:center}:root :where(.wp-block-separator.is-style-dots):before{color:currentColor;content:"···";font-family:serif;font-size:1.5em;letter-spacing:2em;padding-left:2em}.wp-block-separator.is-style-dots{background:none!important;border:none!important}
+/*# sourceURL=https://offices.austincc.edu/community-and-government-affairs/wp-includes/blocks/separator/style.min.css */
+</style>
+<style id="wp-block-table-inline-css">
+.wp-block-table{overflow-x:auto}.wp-block-table table{border-collapse:collapse;width:100%}.wp-block-table thead{border-bottom:3px solid}.wp-block-table tfoot{border-top:3px solid}.wp-block-table td,.wp-block-table th{border:1px solid;padding:.5em}.wp-block-table .has-fixed-layout{table-layout:fixed;width:100%}.wp-block-table .has-fixed-layout td,.wp-block-table .has-fixed-layout th{word-break:break-word}.wp-block-table.aligncenter,.wp-block-table.alignleft,.wp-block-table.alignright{display:table;width:auto}.wp-block-table.aligncenter td,.wp-block-table.aligncenter th,.wp-block-table.alignleft td,.wp-block-table.alignleft th,.wp-block-table.alignright td,.wp-block-table.alignright th{word-break:break-word}.wp-block-table .has-subtle-light-gray-background-color{background-color:#f3f4f5}.wp-block-table .has-subtle-pale-green-background-color{background-color:#e9fbe5}.wp-block-table .has-subtle-pale-blue-background-color{background-color:#e7f5fe}.wp-block-table .has-subtle-pale-pink-background-color{background-color:#fcf0ef}.wp-block-table.is-style-stripes{background-color:transparent;border-collapse:inherit;border-spacing:0}.wp-block-table.is-style-stripes tbody tr:nth-child(odd){background-color:#f0f0f0}.wp-block-table.is-style-stripes.has-subtle-light-gray-background-color tbody tr:nth-child(odd){background-color:#f3f4f5}.wp-block-table.is-style-stripes.has-subtle-pale-green-background-color tbody tr:nth-child(odd){background-color:#e9fbe5}.wp-block-table.is-style-stripes.has-subtle-pale-blue-background-color tbody tr:nth-child(odd){background-color:#e7f5fe}.wp-block-table.is-style-stripes.has-subtle-pale-pink-background-color tbody tr:nth-child(odd){background-color:#fcf0ef}.wp-block-table.is-style-stripes td,.wp-block-table.is-style-stripes th{border-color:transparent}.wp-block-table.is-style-stripes{border-bottom:1px solid #f0f0f0}.wp-block-table .has-border-color td,.wp-block-table .has-border-color th,.wp-block-table .has-border-color tr,.wp-block-table .has-border-color>*{border-color:inherit}.wp-block-table table[style*=border-top-color] tr:first-child,.wp-block-table table[style*=border-top-color] tr:first-child td,.wp-block-table table[style*=border-top-color] tr:first-child th,.wp-block-table table[style*=border-top-color]>*,.wp-block-table table[style*=border-top-color]>* td,.wp-block-table table[style*=border-top-color]>* th{border-top-color:inherit}.wp-block-table table[style*=border-top-color] tr:not(:first-child){border-top-color:currentColor}.wp-block-table table[style*=border-right-color] td:last-child,.wp-block-table table[style*=border-right-color] th,.wp-block-table table[style*=border-right-color] tr,.wp-block-table table[style*=border-right-color]>*{border-right-color:inherit}.wp-block-table table[style*=border-bottom-color] tr:last-child,.wp-block-table table[style*=border-bottom-color] tr:last-child td,.wp-block-table table[style*=border-bottom-color] tr:last-child th,.wp-block-table table[style*=border-bottom-color]>*,.wp-block-table table[style*=border-bottom-color]>* td,.wp-block-table table[style*=border-bottom-color]>* th{border-bottom-color:inherit}.wp-block-table table[style*=border-bottom-color] tr:not(:last-child){border-bottom-color:currentColor}.wp-block-table table[style*=border-left-color] td:first-child,.wp-block-table table[style*=border-left-color] th,.wp-block-table table[style*=border-left-color] tr,.wp-block-table table[style*=border-left-color]>*{border-left-color:inherit}.wp-block-table table[style*=border-style] td,.wp-block-table table[style*=border-style] th,.wp-block-table table[style*=border-style] tr,.wp-block-table table[style*=border-style]>*{border-style:inherit}.wp-block-table table[style*=border-width] td,.wp-block-table table[style*=border-width] th,.wp-block-table table[style*=border-width] tr,.wp-block-table table[style*=border-width]>*{border-style:inherit;border-width:inherit}
+/*# sourceURL=https://offices.austincc.edu/community-and-government-affairs/wp-includes/blocks/table/style.min.css */
+</style>
+
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}.wp-block-button{--wp--preset--dimension--25: 25%;--wp--preset--dimension--50: 50%;--wp--preset--dimension--75: 75%;--wp--preset--dimension--100: 100%;}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<link rel='stylesheet' id='theme-css' href='https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/style.css?v=1&#038;ver=3.0.5' media='screen' />
+<link rel='stylesheet' id='layout-css' href='https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/css/layout.css?ver=3.0.5' media='screen' />
+<link rel='stylesheet' id='formalize-css' href='https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/css/formalize.css?ver=3.0.5' media='screen' />
+<link rel='stylesheet' id='superfish-css' href='https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/css/superfish.css?ver=3.0.5' media='screen' />
+<script id="jquery-core-js" src="https://offices.austincc.edu/community-and-government-affairs/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script id="jquery-migrate-js" src="https://offices.austincc.edu/community-and-government-affairs/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
+<link rel="https://api.w.org/" href="https://offices.austincc.edu/community-and-government-affairs/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://offices.austincc.edu/community-and-government-affairs/wp-json/wp/v2/pages/18" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://offices.austincc.edu/community-and-government-affairs/xmlrpc.php?rsd" />
+<link rel="canonical" href="https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/" />
+<link rel='shortlink' href='https://offices.austincc.edu/community-and-government-affairs/?p=18' />
+
+          <!-- Load Google Tag Manager -->
+          <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-WQD764R');
+          </script>
+          <!-- End Google Tag Manager -->
+
+          <!-- Load Complied Skeleton Framework Mods -->
+          <link rel="stylesheet" href="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/css/skeleton.css">
+
+          <!-- Bootstrap 5.3.3: Latest compiled and minified CSS -->
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+          <!-- Font Awesome 6.4.2 -->
+          <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+          <!-- accordion stylesheet -->
+          <link rel="stylesheet" href="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/css/accordion.css">
+
+          <!-- Our print stylesheet -->
+          <link rel="stylesheet" href="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/css/print.css">
+
+          <!-- jQuery -->
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+          <!-- jQuery UI -->
+          <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+
+          <!-- our js -->
+          <script src="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/javascripts/functions.js"></script>
+
+        </head>
+        <body class="wp-singular page-template-default page page-id-18 page-parent wp-embed-responsive wp-theme-ACC-2015 sidebar-left">
+          <!-- Google Tag Manager (noscript) -->
+          <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WQD764R"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+          <!-- End Google Tag Manager (noscript) -->
+          <div id="skip-link">
+            <a class='hidden-link ensure-accessibility' title='Make Content Accessible' id='ensure-accessibility' href='javascript:ensure_accessibility();' tabindex='1'>Select this link if you are using screen reading or another assistive technology before continuing to enable accessible content on this page.</a>            <a href="#main-content" class="hidden-link" title="Skip to Main Content" id="skip-main-content">Skip to Main Content</a>
+            <a href="#navigation" class="hidden-link" title="Skip to Main Navigation">Skip to Main Navigation</a>
+            <a href="#sub_navigation" class="hidden-link" title="Skip to Page Navigation">Skip to Page Navigation</a>
+            <a href="#sidebar" class="hidden-link" title="Skip to Page Sidebar">Skip to Page Sidebar</a>
+            <a href="#social-media" class="hidden-link" title="Skip to Footer">Skip to Footer</a>
+            <a href="#googlesearch" class="hidden-link" title="Skip to ACC Search">Skip to ACC Search</a>
+          </div>
+          <!-- off canvas menu -->
+          <aside class="right-off-canvas-menu" aria-hidden="true">
+            <div id="navigation"></div><!--/#navigation-->            <div id="sub_navigation"><div class="side-menu"><ul id="menu-side-menu" class="menu"><li id="menu-item-44" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-44"><a href="https://offices.austincc.edu/community-and-government-affairs/">Community and Government Affairs</a></li>
+<li id="menu-item-45" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-18 current_page_item menu-item-has-children menu-item-45"><a href="https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/" aria-current="page">ACC Board of Trustees Elections</a>
+<ul class="sub-menu">
+	<li id="menu-item-754" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-754"><a href="https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/november-3-2026-election-results/">November 3, 2026 Election Results</a></li>
+	<li id="menu-item-46" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-46"><a href="https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/qualifications-for-board-of-trustee-candidates/">Qualifications for Board of Trustee Candidates</a></li>
+	<li id="menu-item-507" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-507"><a href="https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/candidates-for-the-acc-board-of-trustees-2026-election/">Candidates for the ACC Board of Trustees 2026 Election</a></li>
+	<li id="menu-item-581" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-581"><a href="https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/election-postings-november-2026-election-cycle/">Election Postings &#8211; November 2026 Election Cycle</a></li>
+</ul>
+</li>
+<li id="menu-item-47" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-47"><a href="https://offices.austincc.edu/community-and-government-affairs/annexation/">Annexation</a>
+<ul class="sub-menu">
+	<li id="menu-item-48" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48"><a href="https://offices.austincc.edu/community-and-government-affairs/annexation/annexation-by-election/">Annexation by Election</a></li>
+	<li id="menu-item-49" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-49"><a href="https://offices.austincc.edu/community-and-government-affairs/annexation/annexation-by-election-amendment/">Annexation by Election Amendment</a></li>
+	<li id="menu-item-50" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-50"><a href="https://offices.austincc.edu/community-and-government-affairs/annexation/annexation-by-election-statute/">Annexation by Election Statute</a></li>
+	<li id="menu-item-417" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-417"><a href="https://offices.austincc.edu/community-and-government-affairs/annexation/pflugerville-annexation-election/">Pflugerville Annexation</a></li>
+</ul>
+</li>
+<li id="menu-item-54" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-54"><a href="https://offices.austincc.edu/community-and-government-affairs/community-engagement/">Community Engagement</a>
+<ul class="sub-menu">
+	<li id="menu-item-58" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-58"><a href="https://offices.austincc.edu/community-and-government-affairs/community-engagement/regional-advisory-committees/">Regional Advisory Committees</a></li>
+</ul>
+</li>
+<li id="menu-item-60" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-60"><a href="https://offices.austincc.edu/community-and-government-affairs/elections-and-campaigning/">Elections and Campaigning</a></li>
+<li id="menu-item-63" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-63"><a href="https://offices.austincc.edu/community-and-government-affairs/government-relations/">Government Relations</a>
+<ul class="sub-menu">
+	<li id="menu-item-80" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-80"><a href="https://offices.austincc.edu/community-and-government-affairs/government-relations/legislative-information/">Legislative Information</a></li>
+	<li id="menu-item-66" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-66"><a href="https://offices.austincc.edu/community-and-government-affairs/government-relations/government-and-political-links/">Links of Interest</a></li>
+</ul>
+</li>
+<li id="menu-item-78" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-78"><a href="https://offices.austincc.edu/community-and-government-affairs/government-relations/acc-votes/">ACC Votes</a>
+<ul class="sub-menu">
+	<li id="menu-item-625" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-625"><a href="https://offices.austincc.edu/community-and-government-affairs/government-relations/acc-votes/calendar-of-acc-votes-election-events/">ACC Elections and Voter Registration Events</a></li>
+</ul>
+</li>
+<li id="menu-item-82" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-82"><a href="https://offices.austincc.edu/community-and-government-affairs/center-for-nonprofit-studies/">Center for Nonprofit Studies</a></li>
+<li id="menu-item-76" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-76"><a href="https://offices.austincc.edu/community-and-government-affairs/contact-us/">Contact Us</a></li>
+<li id="menu-item-281" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-281"><a href="https://offices.austincc.edu/community-and-government-affairs/site-map/">Site Map</a></li>
+</ul></div></div><!--/#sub_navigation-->          </aside>
+          <div class="off-canvas-wrap">
+          <div class="inner-wrap">
+          <div class="exit-off-canvas"></div>
+          <div id="navigation-small">
+            <span class="bars"><i class="fa fa-bars"></i> MENU</span>
+            <div class="clearfix"></div>
+          </div>
+          <!-- Header with ACC Logo -->
+          <div class="print-logo">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-12">
+                  <img src="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/images/logo-printer.gif" alt="Austin Community College District">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="header">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-3 col-sm-3">
+                  <a href="https://www.austincc.edu/" id="logo" title="Return to the Austin Community College District home page"><img class="logo" typeof="foaf:Image" src="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/images/logo.png" alt="Austin Community College District"></a>
+                </div>
+                <div class="col-md-9 col-sm-9 col-xs-12 ">
+                  <ul class="header-menu">
+                    <li class="leaf"><a href="https://www.austincc.edu/students" title="ACCmail">Current Students</a></li>
+                    <li class="leaf"><a href="https://www.austincc.edu/facstaff" title="ACCeID">Faculty &amp; Staff</a></li>
+                    <li class="leaf"><a href="https://www.austincc.edu/business-community" title=" Business & Community"> Business &amp; Community </a></li>
+                    <li class="leaf"><a href="https://www.austincc.edu/employment" title="Jobs">Jobs</a></li>
+                    <li class="leaf"><a href="https://www.austincc.edu/schedule" title="Course Schedule">Course Schedule</a></li>
+                    <li class="last apply_now"><a class="apply-click" href="https://www.austincc.edu/apply" title="Apply to ACC">Apply to ACC</a></li>
+                  </ul>
+                  <ul class="header-sub-menu">
+                    <li class="leaf"><a href="https://www.austincc.edu/programs" title="">Academic &amp; Career Programs</a></li>
+                    <li class="leaf"><a href="https://www.austincc.edu/admissions" title="">Admissions</a></li>
+                    <li class="leaf"><a href="https://www.austincc.edu/costs" title="">Paying for College</a></li>
+                    <li class="leaf"><a href="https://www.austincc.edu/support" title="">Student Support</a></li>
+                    <li class="leaf"><a href="https://www.austincc.edu/campuses" title="">Campuses</a></li>
+                    <li class="leaf"><a href="https://www.austincc.edu/about" title="">About ACC</a></li>
+                  </ul>
+                  <div style="clear:both"></div>
+                  <div class="pull-right">
+                    <label for="i-am" class="obscure">I am..</label>
+                    <select onchange="if(this.value.length) location = this.value;" id="i-am" name="i-am">
+                      <option value="">I am...</option>
+                      <option value="https://www.austincc.edu/future">Future Student</option>
+                      <option value="https://www.austincc.edu/current">Current Student</option>
+                      <option value="https://www.austincc.edu/veterans">Active Military/Veteran</option>
+                      <option value="https://www.austincc.edu/international">International Student</option>
+                      <option value="https://www.austincc.edu/accessibility">Student with a Disability</option>
+                      <option value="https://www.austincc.edu/hse">GED/Adult Ed Student</option>
+                      <option value="https://www.austincc.edu/learnenglish">ESOL/ESL Student</option>
+                      <option value="https://continue.austincc.edu/">Continuing Education Student</option>
+                      <option value="https://www.austincc.edu/alumni">Former Student/Alum</option>
+                      <option value="https://www.austincc.edu/facstaff">Faculty or Staff Member</option>
+                      <option value="https://www.austincc.edu/business-and-community">Business Partner</option>
+                      <option value="https://www.austincc.edu/foundation/">Donor</option>
+                    </select>
+                    <!-- Google Programmable Search -->
+                    <div id="search-container">
+                      <script async src="https://cse.google.com/cse.js?cx=005510451201798684761:cikyyuu9zz4"></script>
+                      <div class="gcse-search"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Main Navigation -->
+          <div class="main-menu-wrapper" id="main-menu">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12" id="navigation-large">
+                  <!-- main navigation links -->
+                  <div id="navigation"></div><!--/#navigation-->                  <a class='hidden-link' title='Back to Top' href='#skip-link'>Back to Top</a>                </div>
+              </div>
+            </div>
+          </div>
+          <div class="container">
+<div class="row main-row">
+<!-- Page Title -->
+<div class="col-xs-12">
+   <div id="breadcrumbs">
+   <!-- Frontpage Breadcrumb -->
+      <!-- Pages and Posts Breadcrumbs -->
+      <ul id="breadcrumbs"><li><a href="https://www.austincc.edu/">ACC Home</a><li class="separator"> » </li></li><li><a class="subdomain_name" href="https://offices.austincc.edu">offices</a></li><li class="separator"> » </li><li><a href="https://offices.austincc.edu/community-and-government-affairs">Office of Community and Government Affairs</a></li><li class="separator"> » </li><li><strong> ACC Board of Trustee...</strong></li></ul>      </div>
+   </div>
+<div class="col-xs-12">
+      <h1>ACC Board of Trustees Elections</h1>
+   </div>
+	<div class="col-xs-12">
+      <!-- ADD BANNER PHP -->
+      <div id="page-banner">
+               </div>
+      <!-- END -->
+   </div>
+   <!-- Begin Page Menu Widget Loop -->
+      <div class="col-xs-12 col-sm-9">
+      
+
+				<div id="post-18" class="post-18 page type-page status-publish hentry">
+
+					<div class="entry-content" id="main-content">
+						<p class="wp-block-paragraph">Under Texas law, Austin Community College is a separate political subdivision. It is responsible for conducting elections to elect members of the ACC Board of Trustees, to levy taxes, and for annexation issues.</p>
+<p class="wp-block-paragraph">Members of the Board of Trustees represent residents of the ACC taxing district. Trustees are elected at large for six-year terms to provide appropriate high-level guidance and leadership to ensure the College meets the needs of the communities served. The next Board of Trustees election is Tuesday, November 3, 2026. Places 1, 2, and 3 will be up for election.</p>
+<p class="wp-block-paragraph">The window to apply to run for the Board of Trustees in the November 2026 election is closed. The next election will be in November 2028; Places 4, 5, and 6 will be up for election. Check this page in the summer of 2028 for information for how to apply to run.</p>
+<p class="wp-block-paragraph">Click <strong><a href="https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/candidates-for-the-acc-board-of-trustees-2026-election/">HERE</a></strong> to view the list of those who have applied to be on the ballot for the November 2026 election.</p>
+<p class="wp-block-paragraph">Click <strong><a href="https://austincc.edu/accvotes">HERE</a></strong> for information on how to register to vote in the November 2026 election.</p>
+<hr class="wp-block-separator has-alpha-channel-opacity" />
+<h2 class="wp-block-heading">Campaign Financial Reports</h2>
+<p class="wp-block-paragraph">All approved candidates and members of the Board of Trustees must complete financial reporting required by Title 15 of the Texas Election Code regulating political funds and campaigns.</p>
+<figure class="wp-block-table">
+<table class="has-fixed-layout">
+<tbody>
+<tr>
+<td><a href="https://www.ethics.state.tx.us/data/filinginfo/schedules/s26uniform.pdf" target="_blank" rel="noreferrer noopener">2026 Filing Schedule for Reports Due in Connection with Elections Held on Uniform Election Dates</a></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://ethics.state.tx.us/data/forms/coh/e_coh.pdf" data-type="link" data-id="https://ethics.state.tx.us/data/forms/coh/e_coh.pdf" target="_blank" rel="noreferrer noopener">Candidate/Officeholder Campaign Finance Report</a></td>
+<td><a href="https://www.ethics.state.tx.us/data/forms/coh/COH-local_ins26.pdf" target="_blank" rel="noreferrer noopener">Instruction Guide</a></td>
+</tr>
+<tr>
+<td><a href="https://www.ethics.state.tx.us/data/forms/coh/coh_uc-local.pdf" target="_blank" rel="noreferrer noopener">Candidate/Officeholder Report of Unexpended Contributions</a></td>
+<td><a href="https://www.ethics.state.tx.us/data/forms/coh/COHuc_local_ins26.pdf" target="_blank" rel="noreferrer noopener">Instruction Guide</a></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p class="wp-block-paragraph">The reports below are from current Board of Trustee members, candidates for the Board of Trustees, and political action committees who are involved in elections.</p>
+<div class="wp-block-group">
+<div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained"><div class="list"><p class="trigger"><a href="#">Sean Hassan — ACC Board of Trustees Place 4</a></p><div class="toggle_container"><div class="block"></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1BSnOBiNCoaKpueClxz9R4qOlvf25DD2r/view?usp=sharing" target="_blank" rel="noreferrer noopener">January 2024 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/160fPxJsijcTISZN9AOqWh_xdF_I64ps1/view?usp=sharing" data-type="link" data-id="https://drive.google.com/file/d/160fPxJsijcTISZN9AOqWh_xdF_I64ps1/view?usp=sharing" target="_blank" rel="noreferrer noopener">July 2024 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1MzJScWmIjBBqcRD31QhguvlDyw48SWC8/view?usp=sharing">Januar</a><a href="https://drive.google.com/file/d/1MzJScWmIjBBqcRD31QhguvlDyw48SWC8/view?usp=sharing" target="_blank" rel="noreferrer noopener">y 2025 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1EMxgEE3MU_JlPCp7BLC0VJBHiz_TlHbv/view?usp=sharing" target="_blank" rel="noreferrer noopener">July 2025 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1LqpCS6LBFhByu5rARJZGIEPO9Ow07Ilo/view?usp=sharing">January 2026 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/open?id=18OpOPwfpZ4VryMyhsUNZZd-Gj562eE-B&amp;usp=drive_fs">July 2026 submission</a></p>
+<p></div></div></div>
+</p></div>
+</div>
+<div class="wp-block-group">
+<div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained"><div class="list"><p class="trigger"><a href="#">Manuel Gonzalez — ACC Board of Trustees Place 5</a></p><div class="toggle_container"><div class="block"></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1tyV--3zLKKtyx_jsEeKze11lPIz6QbJo/view?usp=sharing" data-type="link" data-id="https://drive.google.com/file/d/1665pEOHA3sEMicGQ8qSxHIx3_2mP5Y6Q/view?usp=sharing" target="_blank" rel="noreferrer noopener">July 2024 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1FEBDU3Riww3BgFw0ANNoOaGF6ER638zN/view?usp=sharing" data-type="link" data-id="https://drive.google.com/file/d/1665pEOHA3sEMicGQ8qSxHIx3_2mP5Y6Q/view?usp=sharing" target="_blank" rel="noreferrer noopener">January 2025 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1Gm5tVsvmTm6WiHOzJwPTDSg9D_eGZ8Ox/view?usp=sharing" data-type="link" data-id="https://drive.google.com/file/d/1665pEOHA3sEMicGQ8qSxHIx3_2mP5Y6Q/view?usp=sharing" target="_blank" rel="noreferrer noopener">July 2025 submission</a></p>
+<p></div></div></div>
+</p></div>
+</div>
+<div class="wp-block-group">
+<div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained"><div class="list"><p class="trigger"><a href="#">Steve Jackobs — ACC Board of Trustees Place 6</a></p><div class="toggle_container"><div class="block"></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1y5rS5oINJmX_FdQqHHqoup_uVFvshhlr/view?usp=sharing" target="_blank" rel="noreferrer noopener">January 2024 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/15zLqtM3RcEVO4NXaLVUWyKhvvoJmnbHR/view?usp=sharing" data-type="link" data-id="https://drive.google.com/file/d/15zLqtM3RcEVO4NXaLVUWyKhvvoJmnbHR/view?usp=sharing" target="_blank" rel="noreferrer noopener">July 2024 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1J_Rrrj1_wtx5aOHGAxfguHy0bvk1qLX8/view?usp=sharing" target="_blank" rel="noreferrer noopener">January 2025 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1IrLT4I6JbFfq1nDYmsiczC_KO7k8wvBm/view?usp=sharing" target="_blank" rel="noreferrer noopener">July 2025 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1z0jTFSbyiAwEhsQX7bYb9WZK7VzYLnXk/view?usp=sharing">July 2026 submission</a></p>
+<p></div></div></div>
+</p></div>
+</div>
+<div class="wp-block-group">
+<div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained"><div class="list"><p class="trigger"><a href="#">Stephanie Gharakhanian — ACC Board of Trustees Place 8</a></p><div class="toggle_container"><div class="block"></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/18sRN1drRA10ca5bRgQZbET6LagilIONJ/view?usp=sharing" target="_blank" rel="noreferrer noopener">January 2024 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1693JWhoZX1ptfwyA3NykJWBwaGlZi2GL/view?usp=sharing" data-type="link" data-id="https://drive.google.com/file/d/1693JWhoZX1ptfwyA3NykJWBwaGlZi2GL/view?usp=sharing" target="_blank" rel="noreferrer noopener">July 2024 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1I3euqX_Z6Dy4_1xkeM05hd5Ntf5ba8sF/view?usp=sharing">January 2025 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1mpBcoQPWv10FSPIXCqYdomZmOAIBe8x5/view?usp=sharing" target="_blank" rel="noreferrer noopener">July 2025 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1rgo4Uosa0PWgDxPX7H0GEuDk72Jq8hzN/view?usp=sharing" data-type="link" data-id="https://drive.google.com/file/d/1rgo4Uosa0PWgDxPX7H0GEuDk72Jq8hzN/view?usp=sharing" target="_blank" rel="noreferrer noopener">January 2026 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1u7bSCtW67BMrlhkvK36YxlTdfSA9mNEO/view?usp=sharing" target="_blank" rel="noreferrer noopener">July 2026 submission</a></p>
+<p></div></div></div>
+</p></div>
+</div>
+<div class="wp-block-group">
+<div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained"><div class="list"><p class="trigger"><a href="#">Julie Nitsch — ACC Board of Trustees Place 9</a></p><div class="toggle_container"><div class="block"></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/16Im_hdLVDA7vUQnIq14cQacjKfxUP9wK/view?usp=sharing" data-type="link" data-id="https://drive.google.com/file/d/16Im_hdLVDA7vUQnIq14cQacjKfxUP9wK/view?usp=sharing" target="_blank" rel="noreferrer noopener">July 2024 submission</a></p>
+<p></div></div></div></p>
+<p><div class="list"><p class="trigger"><a href="#">ACC Works — Specific-purpose Committee</a></p><div class="toggle_container"><div class="block"></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/16cvZ8agM_y5m31SbpczT11-y12BCHMhK/view?usp=sharing" data-type="link" data-id="https://drive.google.com/file/d/16cvZ8agM_y5m31SbpczT11-y12BCHMhK/view?usp=sharing" target="_blank" rel="noreferrer noopener">July 2024 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/open?id=1IzXcdQBVXvOR2giNiabXlDwEu4zOKix1&amp;usp=drive_fs" data-type="link" data-id="https://drive.google.com/file/d/16cvZ8agM_y5m31SbpczT11-y12BCHMhK/view?usp=sharing" target="_blank" rel="noreferrer noopener">January 2025 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1RNyq3xCEcbb5pUkvlni2nhsVonEp6bKt/view?usp=sharing" data-type="link" data-id="https://drive.google.com/file/d/16cvZ8agM_y5m31SbpczT11-y12BCHMhK/view?usp=sharing" target="_blank" rel="noreferrer noopener">July 2025 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1c_lBMv3ZUJTnn_1szyT3s_XvIOZ8Bl7P/view?usp=sharing" data-type="link" data-id="https://drive.google.com/file/d/1BWkO0v3Ah1-VlIewJKxx4JcsP_mM4YeF/view?usp=sharing" target="_blank" rel="noreferrer noopener">January 2026 submission</a></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/file/d/1-7lzA_D6_5aZ8nmXli4F_RQ8_L2eL_6N/view?usp=sharing">July 2026 submission</a></p>
+<p></div></div></div></p>
+<p><div class="list"><p class="trigger"><a href="#">Greater Lockhart for ACC — Specific-purpose Committee</a></p><div class="toggle_container"><div class="block"></p>
+<p class="wp-block-paragraph"><a href="https://drive.google.com/open?id=1JAWEAcgowD6j3qMts8ju-QNfFxzKILKV&amp;usp=drive_fs" data-type="link" data-id="https://drive.google.com/file/d/16cvZ8agM_y5m31SbpczT11-y12BCHMhK/view?usp=sharing" target="_blank" rel="noreferrer noopener">January 2025 submission</a></p>
+<p></div></div></div>
+</p></div>
+</div>
+						<p></p>
+
+																		<a class='hidden-link' title='Back to Top' href='#skip-link'>Back to Top</a>					</div><!-- .entry-content -->
+				</div><!-- #post-## -->
+				<div id="comments">
+
+
+
+
+</div>
+   </div>
+   <div class="col-xs-12 col-sm-3">
+      <div class="side-menu on-page">
+         <div id="sub_navigation"><div class="side-menu"><ul id="menu-side-menu-2" class="menu"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-44"><a href="https://offices.austincc.edu/community-and-government-affairs/">Community and Government Affairs</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-18 current_page_item menu-item-has-children menu-item-45"><a href="https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/" aria-current="page">ACC Board of Trustees Elections</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-754"><a href="https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/november-3-2026-election-results/">November 3, 2026 Election Results</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-46"><a href="https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/qualifications-for-board-of-trustee-candidates/">Qualifications for Board of Trustee Candidates</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-507"><a href="https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/candidates-for-the-acc-board-of-trustees-2026-election/">Candidates for the ACC Board of Trustees 2026 Election</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-581"><a href="https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/election-postings-november-2026-election-cycle/">Election Postings &#8211; November 2026 Election Cycle</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-47"><a href="https://offices.austincc.edu/community-and-government-affairs/annexation/">Annexation</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48"><a href="https://offices.austincc.edu/community-and-government-affairs/annexation/annexation-by-election/">Annexation by Election</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-49"><a href="https://offices.austincc.edu/community-and-government-affairs/annexation/annexation-by-election-amendment/">Annexation by Election Amendment</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-50"><a href="https://offices.austincc.edu/community-and-government-affairs/annexation/annexation-by-election-statute/">Annexation by Election Statute</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-417"><a href="https://offices.austincc.edu/community-and-government-affairs/annexation/pflugerville-annexation-election/">Pflugerville Annexation</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-54"><a href="https://offices.austincc.edu/community-and-government-affairs/community-engagement/">Community Engagement</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-58"><a href="https://offices.austincc.edu/community-and-government-affairs/community-engagement/regional-advisory-committees/">Regional Advisory Committees</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-60"><a href="https://offices.austincc.edu/community-and-government-affairs/elections-and-campaigning/">Elections and Campaigning</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-63"><a href="https://offices.austincc.edu/community-and-government-affairs/government-relations/">Government Relations</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-80"><a href="https://offices.austincc.edu/community-and-government-affairs/government-relations/legislative-information/">Legislative Information</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-66"><a href="https://offices.austincc.edu/community-and-government-affairs/government-relations/government-and-political-links/">Links of Interest</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-78"><a href="https://offices.austincc.edu/community-and-government-affairs/government-relations/acc-votes/">ACC Votes</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-625"><a href="https://offices.austincc.edu/community-and-government-affairs/government-relations/acc-votes/calendar-of-acc-votes-election-events/">ACC Elections and Voter Registration Events</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-82"><a href="https://offices.austincc.edu/community-and-government-affairs/center-for-nonprofit-studies/">Center for Nonprofit Studies</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-76"><a href="https://offices.austincc.edu/community-and-government-affairs/contact-us/">Contact Us</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-281"><a href="https://offices.austincc.edu/community-and-government-affairs/site-map/">Site Map</a></li>
+</ul></div></div><!--/#sub_navigation-->                  <a class='hidden-link' title='Back to Top' href='#skip-link'>Back to Top</a>      </div>
+   </div>
+   </div>
+
+<div class="row">
+    <script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/community-and-government-affairs/*"},{"not":{"href_matches":["/community-and-government-affairs/wp-*.php","/community-and-government-affairs/wp-admin/*","/community-and-government-affairs/wp-content/uploads/sites/36/*","/community-and-government-affairs/wp-content/*","/community-and-government-affairs/wp-content/plugins/*","/community-and-government-affairs/wp-content/themes/ACC-2015/*","/community-and-government-affairs/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script id="custom-js" src="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/javascripts/app.js?ver=1.2.3"></script>
+<script id="superfish-js" src="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/javascripts/superfish.js?ver=1.2.3"></script>
+<script id="formalize-js" src="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/javascripts/jquery.formalize.min.js?ver=1.2.3"></script>
+<script id="wp-emoji-settings" type="application/json">
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://offices.austincc.edu/community-and-government-affairs/wp-includes/js/wp-emoji-release.min.js?ver=7.1.4"}}
+</script>
+<script type="module">
+/*! This file is auto-generated */
+var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof HTMLScriptElement))throw new Error("Element missing: "+e);const r=JSON.parse(t.text),s=(window._wpemojiSettings=r,"wpEmojiSettingsSupports"),o=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(s,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const r=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===r[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,r){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!r(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,r){let a;const s=(a="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),o=(s.textBaseline="top",s.font="600 32px Arial",{});return e.forEach(e=>{o[e]=t(s,e,n,r)}),o}function a(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}r.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(s));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(o),u.toString(),c.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"});const a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=e=>{i(n=e.data),a.terminate(),t(n)})}catch(e){}i(n=f(o,u,c,p))}t(n)}).then(e=>{for(const n in e)r.supports[n]=e[n],r.supports.everything=r.supports.everything&&r.supports[n],"flag"!==n&&(r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&r.supports[n]);var t;r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&!r.supports.flag,r.supports.everything||((t=r.source||{}).concatemoji?a(t.concatemoji):t.wpemoji&&t.twemoji&&(a(t.twemoji),a(t.wpemoji)))});
+//# sourceURL=https://offices.austincc.edu/community-and-government-affairs/wp-includes/js/wp-emoji-loader.min.js
+</script>
+</div>
+</div> <!-- end container -->
+<div class="footer">
+    <div class="row get_started" style="">
+    <div><h2>Start Here. Get There.</h2></div>
+    <p>Explore, learn, and achieve with support every step of the way.</p>
+<a class="apply-click" href="https://www.austincc.edu/apply" title="Apply Now">Apply to ACC</a>
+<a class="rfi-click" href="https://austincc.my.site.com/ApplicationPortal/s/webtolead" title="Request Info">Request Info</a>
+       </div>
+   <div class="links">
+<div class="container">
+<div class="row">
+<div class="col-sm-6 col-md-3">
+   <div class="item">
+      <a href="https://www.austincc.edu/contact">Contact ACC</a>
+      <a href="https://offices.austincc.edu/chancellor/">Office of the Chancellor</a>
+      <a href="https://www.austincc.edu/cip">CIP</a>
+      <a href="https://www.austincc.edu/emergency">Emergency</a>
+      <a href="https://apps.highered.texas.gov/resumes/">Institutional Résumé</a>
+      <a href="https://www.austincc.edu/openrecords">Public Information Act</a>
+      <a href="https://www.austincc.edu/about-acc/graduation-retention-transfer-rates/">Student Success Rates</a>
+      <a href="https://www.austincc.edu/caresactreports">CARES Act Reports</a>
+      <a href="https://www.austincc.edu/report-an-incident">Report an Incident</a>
+      <a href="https://www.austincc.edu/report-a-problem-with-this-page">Report a Problem With This Page</a>
+   </div>
+</div>
+<div class="col-sm-6 col-md-3">
+   <div class="item">
+      <a href="https://www.austincc.edu/about-acc/accreditation">Accreditation</a>
+      <a href="https://austin.bncollege.com/?storeId=65166">ACC Bookstore</a>
+      <a href="https://www.austincc.edu/catalog/">Catalog</a>
+      <a href="https://www6.austincc.edu/schedule/">Course Schedule</a>
+      <a href="https://www6.austincc.edu/schedule/">Syllabus &amp; Curriculum Vitae</a>
+      <a href="https://www.austincc.edu/ferpa">FERPA</a>
+      <a href="https://www.austincc.edu/nondiscrimination">Non-Discrimination Statement</a>
+      <a href="https://www.austincc.edu/titleix">Title IX – Sexual Misconduct</a>
+      <a href="https://www.austincc.edu/counseling">Mental Health Counseling</a>
+      <a href="https://www.austincc.edu/phishing">Phishing Scams and IT Security Alerts</a>
+   </div>
+</div>
+<div class="col-sm-6 col-md-3">
+   <div class="item">
+      <a href="https://www.austincc.edu/">ACC Home</a>
+      <a href="https://www.austincc.edu/about-acc">About ACC</a>
+      <a href="https://www.austincc.edu/about-acc/mission-vision-and-values">Mission, Vision &amp; Values</a>
+      <a href="https://www.austincc.edu/academic-and-career-programs">Academic &amp; Career Programs</a>
+      <a href="https://www.austincc.edu/admissions">Admissions </a>
+      <a href="https://www.austincc.edu/paying-for-college">Paying for College</a>
+      <a href="https://www.austincc.edu/student-support">Student Support</a>
+      <a href="https://www.austincc.edu/campuses">Campuses</a>
+      <a href="https://offices.austincc.edu/board-of-trustees/">Board of Trustees</a>
+   </div>
+</div>
+<div class="col-sm-6 col-md-3">
+<div class="item">
+<div class="item">
+   <a href="https://www.austincc.edu"><img src="https://offices.austincc.edu/community-and-government-affairs/wp-content/themes/ACC-2015/images/logo.png" alt="Austin Community College District"></a>
+   <div class="social-media-icons-footer">
+      <a href="https://www.facebook.com/ACCDistrict" aria-label="ACC on Facebook"><i class="fab fa-facebook"></i></a>
+	   <a href="https://twitter.com/accdistrict" aria-label="ACC on X"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="https://www.linkedin.com/school/accdistrict/" aria-label="ACC on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://www.instagram.com/accdistrict/" aria-label="ACC on Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com/@ACCTVStudios" aria-label="ACCTV's YouTube Channel"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.reddit.com/r/ACCDistrict/" aria-label="ACC on Reddit"><i class="fab fa-reddit"></i></a>
+   </div>
+</div>
+                <div class="item">
+                    <h3 class="block-title">Main Address</h2>
+                    <address>Austin Community College District<br> 6101 Highland Campus Drive<br> Austin, Texas 78752-4390<br> 512-223-7000</address> 
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+</div>
+<script>
+
+jQuery(document).ready(function(){
+
+jQuery(".jquery-tabs").tabs();
+ jQuery(".accordion").accordion({collapsible: true, autoHeight: false, active: false, navigation: true, heightStyle: "content"});
+    jQuery(".bars").click(function(){
+        $(".off-canvas-wrap").toggleClass("move-left");
+        $(".right-off-canvas-menu").toggleClass('active');
+        $("body").toggleClass("noscroll");
+        $("html").toggleClass("noscroll");
+        $(".exit-off-canvas").show();
+    });
+    jQuery(".exit-off-canvas").click(function(){
+        $(".off-canvas-wrap").toggleClass("move-left");
+        $(".right-off-canvas-menu").toggleClass('active');
+        $("body").toggleClass("noscroll");
+        $("html").toggleClass("noscroll");
+        $(this).hide();
+    });
+jQuery("a[href^='#']").click(function(){var     r=jQuery(this).attr("href");jQuery(r).attr("tabindex",-1).on("blur focusout",function(){$(this).removeAttr("tabindex")}).focus()});var hasAccordions=jQuery(".accordion").length;hasAccordions||jQuery("#ensure-accessibility").remove();
+    $('[data-toggle="tooltip"]').tooltip();
+
+});
+
+function ensure_accessibility(){jQuery(".accordion").accordion("destroy");var i="<a class='hidden-link' href='#skip-link'>Back to Top</a>";jQuery(".accordion h3 + div").append(i),jQuery(".accordion h3").addClass("accordion-fix"),jQuery("#skip-main-content").focus(),jQuery("#ensure-accessibility").remove()}
+
+</script>
+</body>
+</html>

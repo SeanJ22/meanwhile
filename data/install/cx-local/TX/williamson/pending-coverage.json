@@ -1,0 +1,45 @@
+{
+  "items": [
+    {
+      "status": "PRECISE_READER_DISTRICT_INTEGRATION",
+      "ocdIds": [
+        "ocd-division/country:us/state:tx/county:williamson/commissioner_precinct:2",
+        "ocd-division/country:us/state:tx/county:williamson/commissioner_precinct:4",
+        "ocd-division/country:us/state:tx/county:williamson/justice_precinct:1",
+        "ocd-division/country:us/state:tx/county:williamson/justice_precinct:2",
+        "ocd-division/country:us/state:tx/county:williamson/justice_precinct:3",
+        "ocd-division/country:us/state:tx/county:williamson/justice_precinct:4",
+        "ocd-division/country:us/state:tx/court_of_appeals_district:3",
+        "ocd-division/country:us/state:tx/judicial_district:277",
+        "ocd-division/country:us/state:tx/judicial_district:368",
+        "ocd-division/country:us/state:tx/judicial_district:480",
+        "ocd-division/country:us/state:tx/judicial_district:512",
+        "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+        "ocd-division/country:us/state:tx/special_district:solana_ranch_municipal_utility_district_no_1",
+        "ocd-division/country:us/state:tx/special_district:theon_ranches_municipal_utility_district_no_1",
+        "ocd-division/country:us/state:tx/special_district:williamson_central_appraisal_district",
+        "ocd-division/country:us/state:tx/special_district:williamson_county_municipal_utility_district_no_80"
+      ],
+      "issue": "Exact identities and6full voter precinct geometries. Preserve4held judicial whole-county memberships and24sharedTravis court3memberships. NewCAD coextensivecounty membership explicit."
+    },
+    {
+      "status": "FULL_CROSS_COUNTY_DISTRICT_GEOGRAPHY_NOT_REPRESENTED_BY_COUNTY_FOOTPRINTS",
+      "issue": "Five relevant MUD source polygons portable with explicit limits. Solana and Theon absent current county layer. Solana confirmation election expressly spans Bell and Williamson. School/college source polygons not substituted for full legal taxing/voter district."
+    },
+    {
+      "status": "NAMED_WRITE_IN_OFFICIAL_QUALIFICATION_UNRESOLVED",
+      "file": "declared-write-ins.json"
+    },
+    {
+      "status": "CANCELLED_UNOPPOSED_NAMED_STATUS_ENUMERATION_PENDING",
+      "file": "cancellation-status-evidence.json"
+    },
+    {
+      "status": "MEASURES_ANCILLARY_ONLY",
+      "issue": "Complete sample captures all measures; no measure input. Preserve all latest CX-VOTES Austin/Travis questions, exactIDs, measureRecords, explanations and analyses."
+    },
+    {
+      "status": "VOTER_SPECIFIC_STYLE_AND_INDEPENDENT_ELECTION_CENSUS_NOT_CLAIMED"
+    }
+  ]
+}

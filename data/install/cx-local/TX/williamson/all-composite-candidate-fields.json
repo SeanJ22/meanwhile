@@ -1,0 +1,2045 @@
+[
+  {
+    "voteY": 281.8950500488281,
+    "title": "United States Senator",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Ken Paxton",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "James Talarico",
+        "printedParty": "Democratic Party"
+      },
+      {
+        "name": "Ted Brown",
+        "printedParty": "Libertarian Party"
+      }
+    ],
+    "genericWriteInSlots": 1,
+    "page": 1,
+    "clip": [
+      33,
+      259.45277709960936,
+      215,
+      441.73268432617186
+    ],
+    "quote": "United States Senator\n(Senador de los Estados Unidos)\nVote for One\n(Vote por Uno)\nKen Paxton\nRepublican Party\n(Partido Republicano)\nJames Talarico\nDemocratic Party\n(Partido Demócrata)\nTed Brown\nLibertarian Party\n(Partido Libertario)\nWrite-in (Voto escrito)"
+  },
+  {
+    "voteY": 482.2950134277344,
+    "title": "United States Representative, District 11",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "August Pfluger",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Claire Reynolds",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      33,
+      441.73268432617186,
+      215,
+      569.2927124023438
+    ],
+    "quote": "United States Representative,\nDistrict 11\n(Representante de los Estados Unidos,\nDistrito Número 11)\nVote for One\n(Vote por Uno)\nAugust Pfluger\nRepublican Party\n(Partido Republicano)\nClaire Reynolds\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 609.8550415039062,
+    "title": "United States Representative, District 17",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Pete Sessions",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Casey Shepard",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      33,
+      569.2927124023438,
+      215,
+      696.8527709960938
+    ],
+    "quote": "United States Representative,\nDistrict 17\n(Representante de los Estados Unidos,\nDistrito Número 17)\nVote for One\n(Vote por Uno)\nPete Sessions\nRepublican Party\n(Partido Republicano)\nCasey Shepard\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 737.4151000976562,
+    "title": "United States Representative, District 31",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "John Carter",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Justin Early",
+        "printedParty": "Democratic Party"
+      },
+      {
+        "name": "Greg Stoker",
+        "printedParty": "Green Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      33,
+      696.8527709960938,
+      215,
+      851.0528442382813
+    ],
+    "quote": "United States Representative,\nDistrict 31\n(Representante de los Estados Unidos,\nDistrito Número 31)\nVote for One\n(Vote por Uno)\nJohn Carter\nRepublican Party\n(Partido Republicano)\nJustin Early\nDemocratic Party\n(Partido Demócrata)\nGreg Stoker\nGreen Party\n(Partido Verde)"
+  },
+  {
+    "voteY": 905.5350952148438,
+    "title": "Governor",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Greg Abbott",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Gina Hinojosa",
+        "printedParty": "Democratic Party"
+      },
+      {
+        "name": "Pat Dixon",
+        "printedParty": "Libertarian Party"
+      }
+    ],
+    "genericWriteInSlots": 1,
+    "page": 1,
+    "clip": [
+      33,
+      883.092822265625,
+      215,
+      1067.2927734375
+    ],
+    "quote": "Governor\n(Gobernador)\nVote for One\n(Vote por Uno)\nGreg Abbott\nRepublican Party\n(Partido Republicano)\nGina Hinojosa\nDemocratic Party\n(Partido Demócrata)\nPat Dixon\nLibertarian Party\n(Partido Libertario)\nWrite-in (Voto escrito)"
+  },
+  {
+    "voteY": 1089.85498046875,
+    "title": "Lieutenant Governor",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Dan Patrick",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Vikki Goodwin",
+        "printedParty": "Democratic Party"
+      },
+      {
+        "name": "Anthony Cristo",
+        "printedParty": "Libertarian Party"
+      },
+      {
+        "name": "Kevin McCormick",
+        "printedParty": "Green Party"
+      }
+    ],
+    "genericWriteInSlots": 1,
+    "page": 1,
+    "clip": [
+      33,
+      1067.2927734375,
+      215,
+      1355.7
+    ],
+    "quote": "Lieutenant Governor\n(Gobernador Teniente)\nVote for One\n(Vote por Uno)\nDan Patrick\nRepublican Party\n(Partido Republicano)\nVikki Goodwin\nDemocratic Party\n(Partido Demócrata)\nAnthony Cristo\nLibertarian Party\n(Partido Libertario)\nKevin McCormick\nGreen Party\n(Partido Verde)\nWrite-in (Voto escrito)"
+  },
+  {
+    "voteY": 281.8950500488281,
+    "title": "Attorney General",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Mayes Middleton",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Nathan Johnson",
+        "printedParty": "Democratic Party"
+      },
+      {
+        "name": "Tom Oxford",
+        "printedParty": "Libertarian Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      217,
+      259.45277709960936,
+      395,
+      401.1729309082031
+    ],
+    "quote": "Attorney General\n(Procurador General)\nVote for One\n(Vote por Uno)\nMayes Middleton\nRepublican Party\n(Partido Republicano)\nNathan Johnson\nDemocratic Party\n(Partido Demócrata)\nTom Oxford\nLibertarian Party\n(Partido Libertario)"
+  },
+  {
+    "voteY": 423.6152648925781,
+    "title": "Comptroller of Public Accounts",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Don Huffines",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Sarah Eckhardt",
+        "printedParty": "Democratic Party"
+      },
+      {
+        "name": "V. Alonzo Echavarria-Garza",
+        "printedParty": "Libertarian Party"
+      },
+      {
+        "name": "Shehla Faizi",
+        "printedParty": "Green Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      217,
+      401.1729309082031,
+      395,
+      568.212939453125
+    ],
+    "quote": "Comptroller of Public Accounts\n(Contralor de Cuentas Públicas)\nVote for One\n(Vote por Uno)\nDon Huffines\nRepublican Party\n(Partido Republicano)\nSarah Eckhardt\nDemocratic Party\n(Partido Demócrata)\nV. Alonzo Echavarria-Garza\nLibertarian Party\n(Partido Libertario)\nShehla Faizi\nGreen Party\n(Partido Verde)"
+  },
+  {
+    "voteY": 600.7352905273438,
+    "title": "Commissioner of the General Land Office",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Dawn Buckingham",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Benjamin Flores",
+        "printedParty": "Democratic Party"
+      },
+      {
+        "name": "Neill Snider",
+        "printedParty": "Libertarian Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      217,
+      568.212939453125,
+      395,
+      712.9329711914063
+    ],
+    "quote": "Commissioner of the General\nLand Office\n(Comisionado de la Oficina General de Tierras)\nVote for One\n(Vote por Uno)\nDawn Buckingham\nRepublican Party\n(Partido Republicano)\nBenjamin Flores\nDemocratic Party\n(Partido Demócrata)\nNeill Snider\nLibertarian Party\n(Partido Libertario)"
+  },
+  {
+    "voteY": 735.4953002929688,
+    "title": "Commissioner of Agriculture",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Nate Sheets",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Clayton Tucker",
+        "printedParty": "Democratic Party"
+      },
+      {
+        "name": "Austin R. Kelly",
+        "printedParty": "Libertarian Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      217,
+      712.9329711914063,
+      395,
+      854.6530029296875
+    ],
+    "quote": "Commissioner of Agriculture\n(Comisionado de Agricultura)\nVote for One\n(Vote por Uno)\nNate Sheets\nRepublican Party\n(Partido Republicano)\nClayton Tucker\nDemocratic Party\n(Partido Demócrata)\nAustin R. Kelly\nLibertarian Party\n(Partido Libertario)"
+  },
+  {
+    "voteY": 877.2152709960938,
+    "title": "Railroad Commissioner",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Bo French",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Jon Rosenthal",
+        "printedParty": "Democratic Party"
+      },
+      {
+        "name": "Arthur DiBianca",
+        "printedParty": "Libertarian Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      217,
+      854.6530029296875,
+      395,
+      996.3730346679688
+    ],
+    "quote": "Railroad Commissioner\n(Comisionado de Ferrocarriles)\nVote for One\n(Vote por Uno)\nBo French\nRepublican Party\n(Partido Republicano)\nJon Rosenthal\nDemocratic Party\n(Partido Demócrata)\nArthur DiBianca\nLibertarian Party\n(Partido Libertario)"
+  },
+  {
+    "voteY": 1018.935302734375,
+    "title": "Chief Justice, Supreme Court",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Jimmy Blacklock",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Maggie Ellis",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      217,
+      996.3730346679688,
+      395,
+      1107.853076171875
+    ],
+    "quote": "Chief Justice, Supreme Court\n(Juez Presidente, Corte Suprema)\nVote for One\n(Vote por Uno)\nJimmy Blacklock\nRepublican Party\n(Partido Republicano)\nMaggie Ellis\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 1148.415283203125,
+    "title": "Justice, Supreme Court, Place 2, Unexpired Term",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "James P. Sullivan",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Chari Kelly",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      217,
+      1107.853076171875,
+      395,
+      1355.7
+    ],
+    "quote": "Justice, Supreme Court,\nPlace 2, Unexpired Term\n(Juez, Corte Suprema, Lugar Número 2,\nDuración Restante del Cargo)\nVote for One\n(Vote por Uno)\nJames P. Sullivan\nRepublican Party\n(Partido Republicano)\nChari Kelly\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 281.8952941894531,
+    "title": "Justice, Supreme Court, Place 7",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Kyle Hawkins",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Kristen Hawkins",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      397,
+      259.45302124023436,
+      579,
+      372.85316772460936
+    ],
+    "quote": "Justice, Supreme Court, Place 7\n(Juez, Corte Suprema, Lugar Número 7)\nVote for One\n(Vote por Uno)\nKyle Hawkins\nRepublican Party\n(Partido Republicano)\nKristen Hawkins\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 395.2955017089844,
+    "title": "Justice, Supreme Court, Place 8",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Brett Busby",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Gisela D. Triana",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      397,
+      372.85316772460936,
+      579,
+      484.21315307617186
+    ],
+    "quote": "Justice, Supreme Court, Place 8\n(Juez, Corte Suprema, Lugar Número 8)\nVote for One\n(Vote por Uno)\nBrett Busby\nRepublican Party\n(Partido Republicano)\nGisela D. Triana\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 524.7754516601562,
+    "title": "Judge, Court of Criminal Appeals, Place 3",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Thomas Smith",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Okey Anyiam",
+        "printedParty": "Democratic Party"
+      },
+      {
+        "name": "Mark Ash",
+        "printedParty": "Libertarian Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      397,
+      484.21315307617186,
+      579,
+      640.2131225585938
+    ],
+    "quote": "Judge, Court of Criminal Appeals,\nPlace 3\n(Juez, Corte de Apelaciones Criminales, Lugar\nNúmero 3)\nVote for One\n(Vote por Uno)\nThomas Smith\nRepublican Party\n(Partido Republicano)\nOkey Anyiam\nDemocratic Party\n(Partido Demócrata)\nMark Ash\nLibertarian Party\n(Partido Libertario)"
+  },
+  {
+    "voteY": 680.6554565429688,
+    "title": "Judge, Court of Criminal Appeals, Place 4",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Kevin Patrick Yeary",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Audra Riley",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      397,
+      640.2131225585938,
+      579,
+      767.7731811523438
+    ],
+    "quote": "Judge, Court of Criminal Appeals,\nPlace 4\n(Juez, Corte de Apelaciones Criminales, Lugar\nNúmero 4)\nVote for One\n(Vote por Uno)\nKevin Patrick Yeary\nRepublican Party\n(Partido Republicano)\nAudra Riley\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 808.2155151367188,
+    "title": "Judge, Court of Criminal Appeals, Place 9",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "John Messinger",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Holly Taylor",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      397,
+      767.7731811523438,
+      579,
+      895.3332397460938
+    ],
+    "quote": "Judge, Court of Criminal Appeals,\nPlace 9\n(Juez, Corte de Apelaciones Criminales, Lugar\nNúmero 9)\nVote for One\n(Vote por Uno)\nJohn Messinger\nRepublican Party\n(Partido Republicano)\nHolly Taylor\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 935.7755126953125,
+    "title": "Member, State Board of Education, District 5",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Mica Arellano",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Allison Bush",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      397,
+      895.3332397460938,
+      579,
+      1024.81328125
+    ],
+    "quote": "Member, State Board of Education,\nDistrict 5\n(Miembro de la Junta Estatal de Educación,\nDistrito Número 5)\nVote for One\n(Vote por Uno)\nMica Arellano\nRepublican Party\n(Partido Republicano)\nAllison Bush\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 1047.2554931640625,
+    "title": "State Senator, District 5",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Charles Schwertner",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Paul Thomasson",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      397,
+      1024.81328125,
+      579,
+      1138.2133056640625
+    ],
+    "quote": "State Senator, District 5\n(Senador Estatal, Distrito Número 5)\nVote for One\n(Vote por Uno)\nCharles Schwertner\nRepublican Party\n(Partido Republicano)\nPaul Thomasson\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 1160.655517578125,
+    "title": "State Senator, District 24",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Pete Flores",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Joe Paz Herrera",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 1,
+    "clip": [
+      397,
+      1138.2133056640625,
+      579,
+      1355.7
+    ],
+    "quote": "State Senator, District 24\n(Senador Estatal, Distrito Número 24)\nVote for One\n(Vote por Uno)\nPete Flores\nRepublican Party\n(Partido Republicano)\nJoe Paz Herrera\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 97.2151107788086,
+    "title": "State Representative, District 20",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Terry M. Wilson",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Matthias-Jonah Early",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      33,
+      75.5551254272461,
+      215,
+      188.5329620361328
+    ],
+    "quote": "State Representative, District 20\n(Representante Estatal, Distrito Número 20)\nVote for One\n(Vote por Uno)\nTerry M. Wilson\nRepublican Party\n(Partido Republicano)\nMatthias-Jonah Early\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 211.09523010253906,
+    "title": "State Representative, District 52",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Caroline Harris Davila",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Chris Jimenez",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      33,
+      188.5329620361328,
+      215,
+      301.93300170898436
+    ],
+    "quote": "State Representative, District 52\n(Representante Estatal, Distrito Número 52)\nVote for One\n(Vote por Uno)\nCaroline Harris Davila\nRepublican Party\n(Partido Republicano)\nChris Jimenez\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 324.4952697753906,
+    "title": "State Representative, District 136",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Theodore Schramm",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "John H. Bucy III",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      33,
+      301.93300170898436,
+      215,
+      415.75526733398436
+    ],
+    "quote": "State Representative, District 136\n(Representante Estatal, Distrito Número 136)\nVote for One\n(Vote por Uno)\nTheodore Schramm\nRepublican Party\n(Partido Republicano)\nJohn H. Bucy III\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 437.2953186035156,
+    "title": "Chief Justice, 15th Court of Appeals District",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Scott Brister",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Jerry Zimmerer",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      33,
+      415.75526733398436,
+      215,
+      526.8129760742188
+    ],
+    "quote": "Chief Justice, 15th Court of Appeals District\n(JuezPresidente, Corte de Apelaciones del 15a Distrito)\nVote for One\n(Vote por Uno)\nScott Brister\nRepublican Party\n(Partido Republicano)\nJerry Zimmerer\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 567.2553100585938,
+    "title": "Justice, 15th Court of Appeals District, Place 2",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Scott K. Field",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Tom Baker",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      33,
+      526.8129760742188,
+      215,
+      654.3730346679688
+    ],
+    "quote": "Justice, 15th Court of\nAppeals District, Place 2\n(Juez, Corte de Apelaciones del 15a\nDistrito, Lugar Número 2)\nVote for One\n(Vote por Uno)\nScott K. Field\nRepublican Party\n(Partido Republicano)\nTom Baker\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 694.8153686523438,
+    "title": "Justice, 15th Court of Appeals District, Place 3",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "April Farris",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Marc M. Meyer",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      33,
+      654.3730346679688,
+      215,
+      781.9330932617188
+    ],
+    "quote": "Justice, 15th Court of\nAppeals District, Place 3\n(Juez, Corte de Apelaciones del 15a\nDistrito, Lugar Número 3)\nVote for One\n(Vote por Uno)\nApril Farris\nRepublican Party\n(Partido Republicano)\nMarc M. Meyer\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 822.3754272460938,
+    "title": "Chief Justice, 3rd Court of Appeals District",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Cory Liu",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Darlene Byrne",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      33,
+      781.9330932617188,
+      215,
+      912.4931518554688
+    ],
+    "quote": "Chief Justice, 3rd Court of\nAppeals District\n(Juez Presidente, Corte de Apelaciones del\nTercero Distrito)\nVote for One\n(Vote por Uno)\nCory Liu\nRepublican Party\n(Partido Republicano)\nDarlene Byrne\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 946.9354248046875,
+    "title": "District Judge, 277th Judicial District",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Stacey Mathews",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      33,
+      912.4931518554688,
+      215,
+      1011.7331420898438
+    ],
+    "quote": "District Judge, 277th\nJudicial District\n(Juez de Distrito, Distrito Judicial 277)\nVote for One\n(Vote por Uno)\nStacey Mathews\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 1046.1754150390625,
+    "title": "District Judge, 368th Judicial District",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Sarah Bruchmiller",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      33,
+      1011.7331420898438,
+      215,
+      1109.0531494140625
+    ],
+    "quote": "District Judge, 368th\nJudicial District\n(Juez de Distrito, Distrito Judicial 368)\nVote for One\n(Vote por Uno)\nSarah Bruchmiller\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 1161.495361328125,
+    "title": "District Judge, 480th Judicial District, Unexpired Term",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Terence Davis",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      33,
+      1109.0531494140625,
+      215,
+      1355.7
+    ],
+    "quote": "District Judge, 480th\nJudicial District,\nUnexpired Term\n(Juez de Distrito, Distrito Judicial 480,\nDuración Restante del Cargo)\nVote for One\n(Vote por Uno)\nTerence Davis\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 110.7754135131836,
+    "title": "District Judge, 512th Judicial District",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Sarah Moore",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Leslie Booker",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      217,
+      76.21313781738282,
+      395,
+      199.0932647705078
+    ],
+    "quote": "District Judge, 512th\nJudicial District\n(Juez de Distrito, Distrito Judicial 512)\nVote for One\n(Vote por Uno)\nSarah Moore\nRepublican Party\n(Partido Republicano)\nLeslie Booker\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 253.57557678222656,
+    "title": "County Judge",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Steve Snell",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Heather Jefts",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      217,
+      231.0133087158203,
+      395,
+      344.4134094238281
+    ],
+    "quote": "County Judge\n(Juez del Condado)\nVote for One\n(Vote por Uno)\nSteve Snell\nRepublican Party\n(Partido Republicano)\nHeather Jefts\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 366.9757385253906,
+    "title": "Judge, County Court at Law No. 1",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Brandy Hallford",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      217,
+      344.4134094238281,
+      395,
+      429.49342651367186
+    ],
+    "quote": "Judge, County Court at Law No. 1\n(Juez, Corte de Ley del Condado Número 1)\nVote for One\n(Vote por Uno)\nBrandy Hallford\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 452.0557556152344,
+    "title": "Judge, County Court at Law No. 2",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Laura Barker",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      217,
+      429.49342651367186,
+      395,
+      514.5734130859375
+    ],
+    "quote": "Judge, County Court at Law No. 2\n(Juez, Corte de Ley del Condado Número 2)\nVote for One\n(Vote por Uno)\nLaura Barker\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 537.0157470703125,
+    "title": "Judge, County Court at Law No. 3",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Kathryn Fowler",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      217,
+      514.5734130859375,
+      395,
+      599.5334350585938
+    ],
+    "quote": "Judge, County Court at Law No. 3\n(Juez, Corte de Ley del Condado Número 3)\nVote for One\n(Vote por Uno)\nKathryn Fowler\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 622.0957641601562,
+    "title": "Judge, County Court at Law No. 4",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "David Oliver",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      217,
+      599.5334350585938,
+      395,
+      684.6134521484375
+    ],
+    "quote": "Judge, County Court at Law No. 4\n(Juez, Corte de Ley del Condado Número 4)\nVote for One\n(Vote por Uno)\nDavid Oliver\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 707.0557861328125,
+    "title": "District Clerk",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Cathy Mendoza",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      217,
+      684.6134521484375,
+      395,
+      769.6934692382813
+    ],
+    "quote": "District Clerk\n(Secretario del Distrito)\nVote for One\n(Vote por Uno)\nCathy Mendoza\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 792.1358032226562,
+    "title": "County Clerk",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Bill Fairbrother",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Erin Block",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      217,
+      769.6934692382813,
+      395,
+      883.0934936523438
+    ],
+    "quote": "County Clerk\n(Secretario del Condado)\nVote for One\n(Vote por Uno)\nBill Fairbrother\nRepublican Party\n(Partido Republicano)\nErin Block\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 905.5357666015625,
+    "title": "County Treasurer",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Carole Callahan",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      217,
+      883.0934936523438,
+      395,
+      966.1335327148438
+    ],
+    "quote": "County Treasurer\n(Tesorero del Condado)\nVote for One\n(Vote por Uno)\nCarole Callahan\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 1006.69580078125,
+    "title": "County Tax Assessor-Collector, Unexpired Term",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Catherine Totty",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Eric Hanke",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      217,
+      966.1335327148438,
+      395,
+      1095.61357421875
+    ],
+    "quote": "County Tax Assessor-Collector,\nUnexpired Term\n(Asesor-Colector de Impuestos del Condado,\nDuración Restante del Cargo)\nVote for None or One\n(Vote por Ninguno o Uno)\nCatherine Totty\nRepublican Party\n(Partido Republicano)\nEric Hanke\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 1118.17578125,
+    "title": "County Commissioner, Precinct 2",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "David McDonald",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      217,
+      1095.61357421875,
+      395,
+      1180.6935302734375
+    ],
+    "quote": "County Commissioner, Precinct 2\n(Comisionado del Condado, Precinto Número 2)\nVote for One\n(Vote por Uno)\nDavid McDonald\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 1203.1357421875,
+    "title": "County Commissioner, Precinct 4",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Russ Boles",
+        "printedParty": "Republican Party"
+      },
+      {
+        "name": "Harmon Rhea",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 1,
+    "page": 2,
+    "clip": [
+      217,
+      1180.6935302734375,
+      395,
+      1355.7
+    ],
+    "quote": "County Commissioner, Precinct 4\n(Comisionado del Condado, Precinto Número 4)\nVote for One\n(Vote por Uno)\nRuss Boles\nRepublican Party\n(Partido Republicano)\nHarmon Rhea\nDemocratic Party\n(Partido Demócrata)\nWrite-in (Voto escrito)"
+  },
+  {
+    "voteY": 97.6950912475586,
+    "title": "Justice of the Peace, Precinct 1",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "KT Musselman",
+        "printedParty": "Democratic Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      397,
+      75.13281555175782,
+      579,
+      160.2127716064453
+    ],
+    "quote": "Justice of the Peace, Precinct 1\n(Juez de Paz, Precinto Número 1)\nVote for One\n(Vote por Uno)\nKT Musselman\nDemocratic Party\n(Partido Demócrata)"
+  },
+  {
+    "voteY": 182.65504455566406,
+    "title": "Justice of the Peace, Precinct 2",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Angela Williams",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      397,
+      160.2127716064453,
+      579,
+      245.2927276611328
+    ],
+    "quote": "Justice of the Peace, Precinct 2\n(Juez de Paz, Precinto Número 2)\nVote for One\n(Vote por Uno)\nAngela Williams\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 267.7350158691406,
+    "title": "Justice of the Peace, Precinct 3",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Evelyn McLean",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      397,
+      245.2927276611328,
+      579,
+      330.25270385742186
+    ],
+    "quote": "Justice of the Peace, Precinct 3\n(Juez de Paz, Precinto Número 3)\nVote for One\n(Vote por Uno)\nEvelyn McLean\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 352.8150329589844,
+    "title": "Justice of the Peace, Precinct 4",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Rhonda Redden",
+        "printedParty": "Republican Party"
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      397,
+      330.25270385742186,
+      579,
+      416.0526916503906
+    ],
+    "quote": "Justice of the Peace, Precinct 4\n(Juez de Paz, Precinto Número 4)\nVote for One\n(Vote por Uno)\nRhonda Redden\nRepublican Party\n(Partido Republicano)"
+  },
+  {
+    "voteY": 465.4950866699219,
+    "title": "Williamson Central Appraisal District Board of Directors, Place 1",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Hope Hisle-Piper",
+        "printedParty": null
+      },
+      {
+        "name": "Clint Stephenson",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      397,
+      416.0526916503906,
+      579,
+      529.4527465820313
+    ],
+    "quote": "Williamson Central\nAppraisal District\n(Distrito de Avalúos Central de Williamson)\nBoard of Directors, Place 1\n(La Junta Directiva, Lugar 1)\nVote for None or One\n(Vote por Ninguno o Uno)\nHope Hisle-Piper\nClint Stephenson"
+  },
+  {
+    "voteY": 578.8951416015625,
+    "title": "Williamson Central Appraisal District Board of Directors, Place 2",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Stephan Zaparolli",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      397,
+      529.4527465820313,
+      579,
+      628.5728637695313
+    ],
+    "quote": "Williamson Central\nAppraisal District\n(Distrito de Avalúos Central de Williamson)\nBoard of Directors, Place 2\n(La Junta Directiva, Lugar 2)\nVote for None or One\n(Vote por Ninguno o Uno)\nStephan Zaparolli"
+  },
+  {
+    "voteY": 678.13525390625,
+    "title": "Williamson Central Appraisal District Board of Directors, Place 3",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Mason Moses",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 2,
+    "clip": [
+      397,
+      628.5728637695313,
+      579,
+      723.49296875
+    ],
+    "quote": "Williamson Central\nAppraisal District\n(Distrito de Avalúos Central de Williamson)\nBoard of Directors, Place 3\n(La Junta Directiva, Lugar 3)\nVote for None or One\n(Vote por Ninguno o Uno)\nMason Moses"
+  },
+  {
+    "voteY": 1049.175537109375,
+    "title": "City of Jarrell Mayor",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Lori Allen",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 3,
+    "clip": [
+      217,
+      1008.7333251953125,
+      395,
+      1093.693408203125
+    ],
+    "quote": "City of Jarrell\n(Ciudad de Jarrell)\nMayor\n(Alcalde)\nVote for One\n(Vote por Uno)\nLori Allen"
+  },
+  {
+    "voteY": 1134.255615234375,
+    "title": "City of Jarrell Alderman, Place 1",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Daniel J. Klepac",
+        "printedParty": null
+      },
+      {
+        "name": "Frederick Coy",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 3,
+    "clip": [
+      217,
+      1093.693408203125,
+      395,
+      1192.9333984375
+    ],
+    "quote": "City of Jarrell\n(Ciudad de Jarrell)\nAlderman, Place 1\n(Concejal, Lugar 1)\nVote for One\n(Vote por Uno)\nDaniel J. Klepac\nFrederick Coy"
+  },
+  {
+    "voteY": 1233.49560546875,
+    "title": "City of Jarrell Alderman, Place 2",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Tim Jordan",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 3,
+    "clip": [
+      217,
+      1192.9333984375,
+      395,
+      1355.7
+    ],
+    "quote": "City of Jarrell\n(Ciudad de Jarrell)\nAlderman, Place 2\n(Concejal, Lugar 2)\nVote for One\n(Vote por Uno)\nTim Jordan"
+  },
+  {
+    "voteY": 113.7756576538086,
+    "title": "City of Pflugerville Council Member, Place 2",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "David Rogers",
+        "printedParty": null
+      },
+      {
+        "name": "Ceasar Ruiz",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 3,
+    "clip": [
+      397,
+      73.21338195800782,
+      579,
+      172.4533721923828
+    ],
+    "quote": "City of Pflugerville\n(Ciudad de Pflugerville)\nCouncil Member, Place 2\n(Miembro del Concilio, Lugar 2)\nVote for One\n(Vote por Uno)\nDavid Rogers\nCeasar Ruiz"
+  },
+  {
+    "voteY": 213.01564025878906,
+    "title": "City of Pflugerville Council Member, Place 4",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Trent Barlow",
+        "printedParty": null
+      },
+      {
+        "name": "De Juana \"De J.\" Lozada",
+        "printedParty": null
+      },
+      {
+        "name": "Gregory L. Harrington",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 3,
+    "clip": [
+      397,
+      172.4533721923828,
+      579,
+      285.85341186523436
+    ],
+    "quote": "City of Pflugerville\n(Ciudad de Pflugerville)\nCouncil Member, Place 4\n(Miembro del Concilio, Lugar 4)\nVote for One\n(Vote por Uno)\nTrent Barlow\nDe Juana \"De J.\" Lozada\nGregory L. Harrington"
+  },
+  {
+    "voteY": 326.4156799316406,
+    "title": "City of Pflugerville Council Member, Place 6",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Oscar R. Mitchell",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 3,
+    "clip": [
+      397,
+      285.85341186523436,
+      579,
+      369.3157531738281
+    ],
+    "quote": "City of Pflugerville\n(Ciudad de Pflugerville)\nCouncil Member, Place 6\n(Miembro del Concilio, Lugar 6)\nVote for One\n(Vote por Uno)\nOscar R. Mitchell"
+  },
+  {
+    "voteY": 340.4555358886719,
+    "title": "Austin Community College District Board of Trustees, Place 1",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Dana Walker",
+        "printedParty": null
+      },
+      {
+        "name": "Gloria Gonzales-Dholakia",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 5,
+    "clip": [
+      33,
+      300.01320190429686,
+      215,
+      399.25319213867186
+    ],
+    "quote": "Austin Community College District\n(Distrito de Austin Community College)\nBoard of Trustees, Place 1\n(La Mesa Directiva, Puesto 1)\nVote for One\n(Vote por Uno)\nDana Walker\nGloria Gonzales-Dholakia"
+  },
+  {
+    "voteY": 439.8155212402344,
+    "title": "Austin Community College District Board of Trustees, Place 2",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Gigi Edwards Bryant",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 5,
+    "clip": [
+      33,
+      399.25319213867186,
+      215,
+      484.2132141113281
+    ],
+    "quote": "Austin Community College District\n(Distrito de Austin Community College)\nBoard of Trustees, Place 2\n(La Mesa Directiva, Puesto 2)\nVote for One\n(Vote por Uno)\nGigi Edwards Bryant"
+  },
+  {
+    "voteY": 524.7755126953125,
+    "title": "Austin Community College District Board of Trustees, Place 3",
+    "voteFor": 1,
+    "printedInstruction": "Vote for One",
+    "candidates": [
+      {
+        "name": "Trevor Hale",
+        "printedParty": null
+      },
+      {
+        "name": "Nan McRaven",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 5,
+    "clip": [
+      33,
+      484.2132141113281,
+      215,
+      582.0131713867188
+    ],
+    "quote": "Austin Community College District\n(Distrito de Austin Community College)\nBoard of Trustees, Place 3\n(La Mesa Directiva, Puesto 3)\nVote for One\n(Vote por Uno)\nTrevor Hale\nNan McRaven"
+  },
+  {
+    "voteY": 702.0161743164062,
+    "title": "Leander Independent School District Board of Trustees, Place 1",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Serenity Coats",
+        "printedParty": null
+      },
+      {
+        "name": "Gerald Prater",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 5,
+    "clip": [
+      397,
+      661.4538452148438,
+      579,
+      774.8538696289063
+    ],
+    "quote": "Leander Independent School District\n(Distrito Escolar Independiente de Leander)\nBoard of Trustees, Place 1\n(Consejo de Escuelas, Lugar 1)\nVote for None or One\n(Vote por Ninguno o Uno)\nSerenity Coats\nGerald Prater"
+  },
+  {
+    "voteY": 815.2962036132812,
+    "title": "Leander Independent School District Board of Trustees, Place 2",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Meg Dean",
+        "printedParty": null
+      },
+      {
+        "name": "Perla Muñoz Hopkins",
+        "printedParty": null
+      },
+      {
+        "name": "Chitra Nedun",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 5,
+    "clip": [
+      397,
+      774.8538696289063,
+      579,
+      902.4139282226563
+    ],
+    "quote": "Leander Independent School District\n(Distrito Escolar Independiente de Leander)\nBoard of Trustees, Place 2\n(Consejo de Escuelas, Lugar 2)\nVote for None or One\n(Vote por Ninguno o Uno)\nMeg Dean\nPerla Muñoz Hopkins\nChitra Nedun"
+  },
+  {
+    "voteY": 942.856201171875,
+    "title": "Leander Independent School District Board of Trustees, Place 6",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Laura Marques",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 5,
+    "clip": [
+      397,
+      902.4139282226563,
+      579,
+      1001.6539184570313
+    ],
+    "quote": "Leander Independent School District\n(Distrito Escolar Independiente de Leander)\nBoard of Trustees, Place 6\n(Consejo de Escuelas, Lugar 6)\nVote for None or One\n(Vote por Ninguno o Uno)\nLaura Marques"
+  },
+  {
+    "voteY": 1042.09619140625,
+    "title": "Leander Independent School District Board of Trustees, Place 7",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Jason Embry",
+        "printedParty": null
+      },
+      {
+        "name": "Paul Gauthier",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 5,
+    "clip": [
+      397,
+      1001.6539184570313,
+      579,
+      1355.7
+    ],
+    "quote": "Leander Independent School District\n(Distrito Escolar Independiente de Leander)\nBoard of Trustees, Place 7\n(Consejo de Escuelas, Lugar 7)\nVote for None or One\n(Vote por Ninguno o Uno)\nJason Embry\nPaul Gauthier"
+  },
+  {
+    "voteY": 423.4956359863281,
+    "title": "Pflugerville Independent School District Board of Trustees, Place 6",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Nicole Toran",
+        "printedParty": null
+      },
+      {
+        "name": "Jean Mayer",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      33,
+      372.97328491210936,
+      215,
+      486.37330932617186
+    ],
+    "quote": "Pflugerville Independent\nSchool District\n(Distrito Escolar Independiente de Pflugerville)\nBoard of Trustees, Place 6\n(Consejo de Escuelas, Lugar 6)\nVote for None or One\n(Vote por Ninguno o Uno)\nNicole Toran\nJean Mayer"
+  },
+  {
+    "voteY": 536.8956298828125,
+    "title": "Pflugerville Independent School District Board of Trustees, Place 7",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Chevonne Lorigo-Johst",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      33,
+      486.37330932617186,
+      215,
+      585.613330078125
+    ],
+    "quote": "Pflugerville Independent\nSchool District\n(Distrito Escolar Independiente de Pflugerville)\nBoard of Trustees, Place 7\n(Consejo de Escuelas, Lugar 7)\nVote for None or One\n(Vote por Ninguno o Uno)\nChevonne Lorigo-Johst"
+  },
+  {
+    "voteY": 636.0156860351562,
+    "title": "Round Rock Independent School District Board of Trustees, Place 3",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Ayaan Moledina",
+        "printedParty": null
+      },
+      {
+        "name": "Vera Southwell",
+        "printedParty": null
+      },
+      {
+        "name": "Amber Feller Landrum",
+        "printedParty": null
+      },
+      {
+        "name": "Gregory Andrew",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      33,
+      585.613330078125,
+      215,
+      727.3333618164063
+    ],
+    "quote": "Round Rock Independent\nSchool District\n(Distrito Escolar Independiente de Round Rock)\nBoard of Trustees, Place 3\n(Consejo de Escuelas, Lugar 3)\nVote for None or One\n(Vote por Ninguno o Uno)\nAyaan Moledina\nVera Southwell\nAmber Feller Landrum\nGregory Andrew"
+  },
+  {
+    "voteY": 777.855712890625,
+    "title": "Round Rock Independent School District Board of Trustees, Place 4",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Alicia Markum",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      33,
+      727.3333618164063,
+      215,
+      826.45341796875
+    ],
+    "quote": "Round Rock Independent\nSchool District\n(Distrito Escolar Independiente de Round Rock)\nBoard of Trustees, Place 4\n(Consejo de Escuelas, Lugar 4)\nVote for None or One\n(Vote por Ninguno o Uno)\nAlicia Markum"
+  },
+  {
+    "voteY": 876.9757080078125,
+    "title": "Round Rock Independent School District Board of Trustees, Place 5",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Miriam Arora",
+        "printedParty": null
+      },
+      {
+        "name": "Meghna Roy",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      33,
+      826.45341796875,
+      215,
+      939.8535034179688
+    ],
+    "quote": "Round Rock Independent\nSchool District\n(Distrito Escolar Independiente de Round Rock)\nBoard of Trustees, Place 5\n(Consejo de Escuelas, Lugar 5)\nVote for None or One\n(Vote por Ninguno o Uno)\nMiriam Arora\nMeghna Roy"
+  },
+  {
+    "voteY": 990.375732421875,
+    "title": "Round Rock Independent School District Board of Trustees, Place 6",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Fabian Cuero",
+        "printedParty": null
+      },
+      {
+        "name": "Troy J. Evanovich",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      33,
+      939.8535034179688,
+      215,
+      1049.6534912109375
+    ],
+    "quote": "Round Rock Independent\nSchool District\n(Distrito Escolar Independiente de Round Rock)\nBoard of Trustees, Place 6\n(Consejo de Escuelas, Lugar 6)\nVote for None or One\n(Vote por Ninguno o Uno)\nFabian Cuero\nTroy J. Evanovich"
+  },
+  {
+    "voteY": 140.05567932128906,
+    "title": "Block House Municipal Utility District Director Election",
+    "voteFor": 3,
+    "printedInstruction": "Vote for None, One, Two, or Three",
+    "candidates": [
+      {
+        "name": "Ashley Musso",
+        "printedParty": null
+      },
+      {
+        "name": "Ryan Poppe",
+        "printedParty": null
+      },
+      {
+        "name": "Sandra Martin",
+        "printedParty": null
+      },
+      {
+        "name": "Tina Reckaway",
+        "printedParty": null
+      },
+      {
+        "name": "Terri L. Hutton",
+        "printedParty": null
+      },
+      {
+        "name": "Jaden Tipton",
+        "printedParty": null
+      },
+      {
+        "name": "Nancy Winston",
+        "printedParty": null
+      },
+      {
+        "name": "Matt Sanner",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      217,
+      89.53332824707032,
+      395,
+      282.97365112304686
+    ],
+    "quote": "Block House Municipal Utility District\n(Distrito Municipal de Servicios\nPúblicos de Block House)\nDirector Election\n(Elección de Directores)\nVote for None, One, Two, or Three\n(Vote por Ninguna, Uno, Dos, o Tres)\nAshley Musso\nRyan Poppe\nSandra Martin\nTina Reckaway\nTerri L. Hutton\nJaden Tipton\nNancy Winston\nMatt Sanner",
+    "districtName": "Block House Municipal Utility District",
+    "officeLabel": "Director Election"
+  },
+  {
+    "voteY": 343.4559631347656,
+    "title": "Highlands at Mayfield Ranch Municipal Utility District Director, Place 1",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Frederick Franklin",
+        "printedParty": null
+      },
+      {
+        "name": "Stacy Henderson",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      217,
+      282.97365112304686,
+      395,
+      396.2536193847656
+    ],
+    "quote": "Highlands at Mayfield Ranch\nMunicipal Utility District\n(Distrito Municipal de Servicio Público de\nHighlands at Mayfield Ranch)\nDirector, Place 1\n(Director, Lugar 1)\nVote for None or One\n(Vote por Ninguno o Uno)\nFrederick Franklin\nStacy Henderson",
+    "districtName": "Highlands at Mayfield Ranch Municipal Utility District",
+    "officeLabel": "Director, Place 1"
+  },
+  {
+    "voteY": 456.8559265136719,
+    "title": "Highlands at Mayfield Ranch Municipal Utility District Director, Place 3",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Kevin Pintar",
+        "printedParty": null
+      },
+      {
+        "name": "Jerome Gaillard",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      217,
+      396.2536193847656,
+      395,
+      509.65358276367186
+    ],
+    "quote": "Highlands at Mayfield Ranch\nMunicipal Utility District\n(Distrito Municipal de Servicio Público de\nHighlands at Mayfield Ranch)\nDirector, Place 3\n(Director, Lugar 3)\nVote for None or One\n(Vote por Ninguno o Uno)\nKevin Pintar\nJerome Gaillard",
+    "districtName": "Highlands at Mayfield Ranch Municipal Utility District",
+    "officeLabel": "Director, Place 3"
+  },
+  {
+    "voteY": 570.255859375,
+    "title": "Highlands at Mayfield Ranch Municipal Utility District Director, Place 5",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Tracy Walpole",
+        "printedParty": null
+      },
+      {
+        "name": "Karim Rashidi",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      217,
+      509.65358276367186,
+      395,
+      624.1335327148438
+    ],
+    "quote": "Highlands at Mayfield Ranch\nMunicipal Utility District\n(Distrito Municipal de Servicio Público de\nHighlands at Mayfield Ranch)\nDirector, Place 5\n(Director, Lugar 5)\nVote for None or One\n(Vote por Ninguno o Uno)\nTracy Walpole\nKarim Rashidi",
+    "districtName": "Highlands at Mayfield Ranch Municipal Utility District",
+    "officeLabel": "Director, Place 5"
+  },
+  {
+    "voteY": 682.5758666992188,
+    "title": "North Austin Municipal Utility District No. 1 Director, Place 2",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Don Conklin",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      217,
+      624.1335327148438,
+      395,
+      723.2535888671875
+    ],
+    "quote": "North Austin Municipal\nUtility District No. 1\n(El Distrito Municipal Servicios Publicos No. 1\ndel Norte de Austin)\nDirector, Place 2\n(Director, Puesto 2)\nVote for None or One\n(Vote por Ninguno o Uno)\nDon Conklin",
+    "districtName": "North Austin Municipal Utility District No. 1",
+    "officeLabel": "Director, Place 2"
+  },
+  {
+    "voteY": 781.81591796875,
+    "title": "North Austin Municipal Utility District No. 1 Director, Place 4",
+    "voteFor": 1,
+    "printedInstruction": "Vote for None or One",
+    "candidates": [
+      {
+        "name": "Diana Christiano",
+        "printedParty": null
+      },
+      {
+        "name": "Jennifer Wiebe",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      217,
+      723.2535888671875,
+      395,
+      837.0136596679688
+    ],
+    "quote": "North Austin Municipal\nUtility District No. 1\n(El Distrito Municipal Servicios Publicos No. 1\ndel Norte de Austin)\nDirector, Place 4\n(Director, Puesto 4)\nVote for None or One\n(Vote por Ninguno o Uno)\nDiana Christiano\nJennifer Wiebe",
+    "districtName": "North Austin Municipal Utility District No. 1",
+    "officeLabel": "Director, Place 4"
+  },
+  {
+    "voteY": 1023.7359619140625,
+    "title": "Solana Ranch Municipal Utility District No. 1 Permanent Directors Election",
+    "voteFor": 5,
+    "printedInstruction": "Vote for None, One, Two, Three, Four or Five",
+    "candidates": [
+      {
+        "name": "Joe Birdwell",
+        "printedParty": null
+      },
+      {
+        "name": "Theresa Canchola",
+        "printedParty": null
+      },
+      {
+        "name": "Becky Hinojosa",
+        "printedParty": null
+      },
+      {
+        "name": "Martha Mangum",
+        "printedParty": null
+      },
+      {
+        "name": "Sandra Wilm",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      217,
+      963.2536499023438,
+      395,
+      1120.573779296875
+    ],
+    "quote": "Solana Ranch Municipal Utility\nDistrict No. 1\n(Distrito de Servicios Públicos Municipales Nro. 1\nde Solana Ranch)\nPermanent Directors Election\n(Elección De Directores Permanentes)\nVote for None, One, Two, Three, Four or Five\n(Vote por ninguna, una, dos, tres, cuatro o cinco )\nJoe Birdwell\nTheresa Canchola\nBecky Hinojosa\nMartha Mangum\nSandra Wilm",
+    "districtName": "Solana Ranch Municipal Utility District No. 1",
+    "officeLabel": "Permanent Directors Election"
+  },
+  {
+    "voteY": 144.97584533691406,
+    "title": "Theon Ranches Municipal Utility District No. 1 Directors Election",
+    "voteFor": 5,
+    "printedInstruction": "Vote for None, One, Two, Three, Four or Five",
+    "candidates": [
+      {
+        "name": "Andres Martinez",
+        "printedParty": null
+      },
+      {
+        "name": "Samantha Garcia",
+        "printedParty": null
+      },
+      {
+        "name": "John Senko",
+        "printedParty": null
+      },
+      {
+        "name": "Lauryn Pianelli",
+        "printedParty": null
+      },
+      {
+        "name": "Diego Mayorga",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 6,
+    "clip": [
+      397,
+      84.49353332519532,
+      579,
+      241.8137237548828
+    ],
+    "quote": "Theon Ranches Municipal Utility\nDistrict No. 1\n(Distrito de Servicios Públicos Municipales Nro. 1\nde Theon Ranches)\nDirectors Election\n(Elección de Directores)\nVote for None, One, Two, Three, Four or Five\n(Vote por ninguna, una, dos, tres, cuatro o cinco)\nAndres Martinez\nSamantha Garcia\nJohn Senko\nLauryn Pianelli\nDiego Mayorga",
+    "districtName": "Theon Ranches Municipal Utility District No. 1",
+    "officeLabel": "Directors Election"
+  },
+  {
+    "voteY": 556.09521484375,
+    "title": "Williamson County Municipal Utility District No. 80 Permanent Directors Election",
+    "voteFor": 5,
+    "printedInstruction": "Vote for None, One, Two, Three, Four or Five",
+    "candidates": [
+      {
+        "name": "Jay Antala",
+        "printedParty": null
+      },
+      {
+        "name": "Manasvi Ardeshana",
+        "printedParty": null
+      },
+      {
+        "name": "Jwalasinh Brahmbhatt",
+        "printedParty": null
+      },
+      {
+        "name": "Jaya Kafle",
+        "printedParty": null
+      },
+      {
+        "name": "Parag Ratanpara",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 7,
+    "clip": [
+      33,
+      495.61293334960936,
+      215,
+      652.81279296875
+    ],
+    "quote": "Williamson County Municipal\nUtility District No. 80\n(El Distrito Municipal Servicios Publicos\nNo. 80 del Condado de Williamson)\nPermanent Directors Election\n(Elección De Directores Permanentes)\nVote for None, One, Two, Three, Four or Five\n(Vote por ninguna, una, dos, tres, cuatro o cinco )\nJay Antala\nManasvi Ardeshana\nJwalasinh Brahmbhatt\nJaya Kafle\nParag Ratanpara",
+    "districtName": "Williamson County Municipal Utility District No. 80",
+    "officeLabel": "Permanent Directors Election"
+  },
+  {
+    "voteY": 825.2551879882812,
+    "title": "Williamson-Travis Counties Municipal Utility District No. 1 Directors Election",
+    "voteFor": 3,
+    "printedInstruction": "Vote for Three",
+    "candidates": [
+      {
+        "name": "Hanoi Avila",
+        "printedParty": null
+      },
+      {
+        "name": "David Flores",
+        "printedParty": null
+      },
+      {
+        "name": "Beth Jones",
+        "printedParty": null
+      },
+      {
+        "name": "Stephen Bodnarchuk Jr.",
+        "printedParty": null
+      },
+      {
+        "name": "Kimberly Massaro",
+        "printedParty": null
+      },
+      {
+        "name": "Linda Fabre",
+        "printedParty": null
+      },
+      {
+        "name": "Thomas Vacek",
+        "printedParty": null
+      }
+    ],
+    "genericWriteInSlots": 0,
+    "page": 7,
+    "clip": [
+      217,
+      764.7728759765625,
+      395,
+      1355.7
+    ],
+    "quote": "Williamson-Travis Counties\nMunicipal Utility District No. 1\n(Municipales Nro. 1 del Condados de\nWilliamson-Travis)\nDirectors Election\n(Elección de Directores)\nVote for Three\n(Vote por Tres)\nHanoi Avila\nDavid Flores\nBeth Jones\nStephen Bodnarchuk Jr.\nKimberly Massaro\nLinda Fabre\nThomas Vacek",
+    "districtName": "Williamson-Travis Counties Municipal Utility District No. 1",
+    "officeLabel": "Directors Election"
+  }
+]

@@ -1,0 +1,528 @@
+{
+  "status": "ANCILLARY_CANCELLED_UNOPPOSED_DOCUMENTS;NOT_CANDIDACY_INPUT",
+  "documents": [
+    {
+      "title": "Order of Cancellation-West Williamson County MUD No. 1",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21798/Order-of-Cancellation-West-Williamson-County-MUD-No-1",
+      "nativeSha256": "ed1deabe5dc03cbb41cc5185b1f4031e9ca05cfb6f8fe47e542c20627622acd9",
+      "pages": 7,
+      "nativeTextCharacters": 5457,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation- Williamson County MUD No. 15",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21813/Order-of-Cancellation--Williamson-County-MUD-No-15",
+      "nativeSha256": "51adcb155d30e167de8244a44103e3e84099759cfb16dde9051ffe01b2b06715",
+      "pages": 7,
+      "nativeTextCharacters": 18,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Certification of Unopposed Candidates- Brushy Creek MUD",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21817/Certification-of-Unopposed-Candidates--Brushy-Creek-MUD",
+      "nativeSha256": "e509174f87600a105f7cb1e12653b61288294536c6151275f471b87945c0d911",
+      "pages": 1,
+      "nativeTextCharacters": 1215,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation-Brushy Creek MUD",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21818/Order-of-Cancellation-Brushy-Creek-MUD",
+      "nativeSha256": "39302b455339a54fd3e15cda4e09af7de636a8679446574e350be81e5efc6d0e",
+      "pages": 1,
+      "nativeTextCharacters": 1532,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation- Williamson County MUD No. 17",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21835/Order-of-Cancellation--Williamson-County-MUD-No-17",
+      "nativeSha256": "5b0026806332391315a14951884b91d8c4e6dd933c8625636b1dd9efc086bc8f",
+      "pages": 8,
+      "nativeTextCharacters": 7582,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Jarrell ISD",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21931/Order-of-Cancellation-Jarrell-ISD",
+      "nativeSha256": "0b2a43ff325c51fefa7d0c2d578c1aa305997a1de2e3e03b92c188d0a4537d80",
+      "pages": 1,
+      "nativeTextCharacters": 1360,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation WSIDD No. 3",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21969/Order-of-Cancellation-WSIDD-No-3",
+      "nativeSha256": "c061d1d9fa1c185bcbbc04ab0d087264e6020daa6f5fe214a0d2c3e59de02021",
+      "pages": 8,
+      "nativeTextCharacters": 5608,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Williamson County MUD No. 22",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21970/Order-of-Cancellation-Williamson-County-MUD-No-22",
+      "nativeSha256": "0a781f0f78b499d19e245ab2c1d42cffb5d20490ffdcc42014578df5a6b5d3f1",
+      "pages": 7,
+      "nativeTextCharacters": 5703,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Lakeside MUD No. 3",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21995/Order-of-Cancellation-Lakeside-MUD-No-3",
+      "nativeSha256": "71ca1cfc188bf82bab72311ea098b04248671ddb33dfe8f9ab23431cf3fb968f",
+      "pages": 7,
+      "nativeTextCharacters": 40,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Siena MUD No. 1",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22027/Order-of-Cancellation-Siena-MUD-No-1",
+      "nativeSha256": "dfd9738da9df72e2ac731baf7d60129c2a7f28349a0c04a5c9ac1c40a7f4f0c8",
+      "pages": 8,
+      "nativeTextCharacters": 7517,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Siena MUD No. 2",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22028/Order-of-Cancellation-Siena-MUD-No-2",
+      "nativeSha256": "32b116d20a7f4d35bbdab808a52bd8b3237b859ad15ba965cee860d5926fd58e",
+      "pages": 8,
+      "nativeTextCharacters": 7505,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation CLL MUD No. 1",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22041/Order-of-Cancellation-CLL-MUD-No-1",
+      "nativeSha256": "9e366041de331e9a6929d024806234e532887dfbfb368d68edadb12088b1f9d0",
+      "pages": 3,
+      "nativeTextCharacters": 6,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation City of Coupland",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22063/Order-of-Cancellation-City-of-Coupland",
+      "nativeSha256": "93f7e0b0ace54358c7a68139563e9804652998c00c29edbc62fe2e2a1f9e47fb",
+      "pages": 3,
+      "nativeTextCharacters": 5327,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Parkside at Mayfield Ranch MUD",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22072/Order-of-Cancellation-Parkside-at-Mayfield-Ranch-MUD",
+      "nativeSha256": "37450dfcd2ff8e575783e3e4e51fae878b58fd322d4e967eba6aa95c7155e813",
+      "pages": 8,
+      "nativeTextCharacters": 21,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Paloma Lake MUD No. 2",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22178/Order-of-Cancellation-Paloma-Lake-MUD-No-2",
+      "nativeSha256": "2aaa693fccd068f08cae16741d1d7711d5e546812a0ef970d23678524d858f74",
+      "pages": 16,
+      "nativeTextCharacters": 45,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Vista Oaks MUD",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22179/Order-of-Cancellation-Vista-Oaks-MUD",
+      "nativeSha256": "df8224bf3bf852046844150de1189632a862e86c277cf7dbe181f0eaea87360f",
+      "pages": 14,
+      "nativeTextCharacters": 39,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Wells Branch MUD",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22180/Order-of-Cancellation-Wells-Branch-MUD",
+      "nativeSha256": "feae298804e5e152c01c86c4a4d02db82528d9ca99c979488df31cb6780a2e11",
+      "pages": 8,
+      "nativeTextCharacters": 21,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Williamson-Liberty Hill MUD",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22181/Order-of-Cancellation-Williamson-Liberty-Hill-MUD",
+      "nativeSha256": "8b50046037e8a8a9e203e087636f0a392d6ad89ef7910362e3c4502de4af6446",
+      "pages": 8,
+      "nativeTextCharacters": 21,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation WCID No. 2",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22182/Order-of-Cancellation-WCID-No-2",
+      "nativeSha256": "69078c513ac5f3b5be4c9da1af07dec0bd2d34f24cf1126767e695c5589547fe",
+      "pages": 8,
+      "nativeTextCharacters": 21,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Paloma Lake MUD No. 1",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22183/Order-of-Cancellation-Paloma-Lake-MUD-No-1",
+      "nativeSha256": "0abce77d20f54ca7b4e9d68e8679d9e305cd42ab18d550eceb28a4d61fbfabca",
+      "pages": 16,
+      "nativeTextCharacters": 45,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Williamson County MUD No. 50",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22266/Order-of-Cancellation-Williamson-County-MUD-No-50",
+      "nativeSha256": "abfd3df0ebeac0462218687bf24e242ab1353200f7c1790740abda7cb5bf23f2",
+      "pages": 4,
+      "nativeTextCharacters": 9,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    },
+    {
+      "title": "Order of Cancellation Williamson County MUD No. 48",
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22267/Order-of-Cancellation-Williamson-County-MUD-No-48",
+      "nativeSha256": "12fb59c6321d4cc3ab23eb311273005e193d575807639b439bc8f76de77315e7",
+      "pages": 4,
+      "nativeTextCharacters": 9,
+      "sourceRole": "CANCELLED_OR_UNOPPOSED_STATUS_ONLY;NOT_ACTUAL_VOTING_FIELD",
+      "namedStatusEnumeration": "PENDING_SEPARATE_NATIVE_TEXT_OR_OCR_REVIEW",
+      "ordinaryCandidaciesCreated": 0
+    }
+  ],
+  "knownNativeStatusRecords": [
+    {
+      "name": "Mindee Hernandez",
+      "nativeDistrict": "Jarrell Independent School District",
+      "nativeOffice": "Board of Trustees, Place 2",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21931/Order-of-Cancellation-Jarrell-ISD",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:28.818521+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Candidate (Candidato)\nMindee Hernandez\nJennifer Gadison\nJenny Arnold\nOffice Sought (Cargo al que presenta candidatura)\nJarrell ISD, Board of Trustees, Place 2\nJarrell ISD, Board of Trustees, Place 3\nJarrell ISD, Board of Trustees, Place 6"
+      }
+    },
+    {
+      "name": "Jennifer Gadison",
+      "nativeDistrict": "Jarrell Independent School District",
+      "nativeOffice": "Board of Trustees, Place 3",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21931/Order-of-Cancellation-Jarrell-ISD",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:28.818521+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Candidate (Candidato)\nMindee Hernandez\nJennifer Gadison\nJenny Arnold\nOffice Sought (Cargo al que presenta candidatura)\nJarrell ISD, Board of Trustees, Place 2\nJarrell ISD, Board of Trustees, Place 3\nJarrell ISD, Board of Trustees, Place 6"
+      }
+    },
+    {
+      "name": "Jenny Arnold",
+      "nativeDistrict": "Jarrell Independent School District",
+      "nativeOffice": "Board of Trustees, Place 6",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21931/Order-of-Cancellation-Jarrell-ISD",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:28.818521+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Candidate (Candidato)\nMindee Hernandez\nJennifer Gadison\nJenny Arnold\nOffice Sought (Cargo al que presenta candidatura)\nJarrell ISD, Board of Trustees, Place 2\nJarrell ISD, Board of Trustees, Place 3\nJarrell ISD, Board of Trustees, Place 6"
+      }
+    },
+    {
+      "name": "Rebecca Tullos",
+      "nativeDistrict": "Brushy Creek Municipal Utility District",
+      "nativeOffice": "Director, Place 1",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21818/Order-of-Cancellation-Brushy-Creek-MUD",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:29.207369+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Candidates (Candidatos) \nRebecca Tullos \nKim Filiatrault \nKen Reifschlager \nOffice Sought (Cargo al que presenta candidatura) \nDirector, Place 1 \nDirector, Place 3 \nDirector, Place 5"
+      }
+    },
+    {
+      "name": "Kim Filiatrault",
+      "nativeDistrict": "Brushy Creek Municipal Utility District",
+      "nativeOffice": "Director, Place 3",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21818/Order-of-Cancellation-Brushy-Creek-MUD",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:29.207369+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Candidates (Candidatos) \nRebecca Tullos \nKim Filiatrault \nKen Reifschlager \nOffice Sought (Cargo al que presenta candidatura) \nDirector, Place 1 \nDirector, Place 3 \nDirector, Place 5"
+      }
+    },
+    {
+      "name": "Ken Reifschlager",
+      "nativeDistrict": "Brushy Creek Municipal Utility District",
+      "nativeOffice": "Director, Place 5",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21818/Order-of-Cancellation-Brushy-Creek-MUD",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:29.207369+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Candidates (Candidatos) \nRebecca Tullos \nKim Filiatrault \nKen Reifschlager \nOffice Sought (Cargo al que presenta candidatura) \nDirector, Place 1 \nDirector, Place 3 \nDirector, Place 5"
+      }
+    },
+    {
+      "name": "Lawona Andrews",
+      "nativeDistrict": "Siena MUD No. 1",
+      "nativeOffice": "Director",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22027/Order-of-Cancellation-Siena-MUD-No-1",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:30.838347+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "2. \nLawona Andrews and Steve Bosland are elected to office"
+      }
+    },
+    {
+      "name": "Steve Bosland",
+      "nativeDistrict": "Siena MUD No. 1",
+      "nativeOffice": "Director",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22027/Order-of-Cancellation-Siena-MUD-No-1",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:30.838347+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "2. \nLawona Andrews and Steve Bosland are elected to office"
+      }
+    },
+    {
+      "name": "Toby Thurman",
+      "nativeDistrict": "Siena MUD No. 2",
+      "nativeOffice": "Director",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22028/Order-of-Cancellation-Siena-MUD-No-2",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:31.317299+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "2. \nToby Thurman and Kathy Turner are elected to office"
+      }
+    },
+    {
+      "name": "Kathy Turner",
+      "nativeDistrict": "Siena MUD No. 2",
+      "nativeOffice": "Director",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22028/Order-of-Cancellation-Siena-MUD-No-2",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:31.317299+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "2. \nToby Thurman and Kathy Turner are elected to office"
+      }
+    },
+    {
+      "name": "Timothy Unger",
+      "nativeDistrict": "West Williamson County MUD No. 1",
+      "nativeOffice": "Director",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21798/Order-of-Cancellation-West-Williamson-County-MUD-No-1",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:31.564671+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "2. \nTimothy Unger and Gary D. Guynes are elected to office"
+      }
+    },
+    {
+      "name": "Gary D. Guynes",
+      "nativeDistrict": "West Williamson County MUD No. 1",
+      "nativeOffice": "Director",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21798/Order-of-Cancellation-West-Williamson-County-MUD-No-1",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:31.564671+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "2. \nTimothy Unger and Gary D. Guynes are elected to office"
+      }
+    },
+    {
+      "name": "Joel Bock",
+      "nativeDistrict": " Williamson County MUD No. 17",
+      "nativeOffice": "Director",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21835/Order-of-Cancellation--Williamson-County-MUD-No-17",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:32.613565+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "2. \nJoel Bock and Melissa Glass are elected to office"
+      }
+    },
+    {
+      "name": "Melissa Glass",
+      "nativeDistrict": " Williamson County MUD No. 17",
+      "nativeOffice": "Director",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21835/Order-of-Cancellation--Williamson-County-MUD-No-17",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:32.613565+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "2. \nJoel Bock and Melissa Glass are elected to office"
+      }
+    },
+    {
+      "name": "Claudia Capers",
+      "nativeDistrict": "Williamson County MUD No. 22",
+      "nativeOffice": "Director",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21970/Order-of-Cancellation-Williamson-County-MUD-No-22",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:32.634453+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "2. \nClaudia Capers is elected to office"
+      }
+    },
+    {
+      "name": "Samantha Fulford",
+      "nativeDistrict": "WSIDD No. 3",
+      "nativeOffice": "Director",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21969/Order-of-Cancellation-WSIDD-No-3",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:33.913024+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "2. \nSamantha Fulford and Bob Dickerson are elected to office"
+      }
+    },
+    {
+      "name": "Bob Dickerson",
+      "nativeDistrict": "WSIDD No. 3",
+      "nativeOffice": "Director",
+      "status": "DECLARED_ELECTED_UNOPPOSED;ELECTION_CANCELLED",
+      "ordinaryCandidacyCreated": false,
+      "electorateMapping": "PENDING_SEPARATE_STATUS_ONLY_IDENTITY_REVIEW",
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21969/Order-of-Cancellation-WSIDD-No-3",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:33.913024+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "2. \nSamantha Fulford and Bob Dickerson are elected to office"
+      }
+    },
+    {
+      "name": "Machelle Sandbulte",
+      "nativeDistrict": "City of Coupland",
+      "nativeOffice": "Alderwoman",
+      "status": "CERTIFIED_UNOPPOSED;CANCELLATION_CARRIER_ACQUIRED;RASTER_ORDER_PAGE_NOT_OCR_REVIEWED",
+      "ordinaryCandidacyCreated": false,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22063/Order-of-Cancellation-City-of-Coupland",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:28.511639+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Machelle Sandbulte"
+      }
+    },
+    {
+      "name": "Janet 'Sue' Rogers",
+      "nativeDistrict": "City of Coupland",
+      "nativeOffice": "Alderwoman",
+      "status": "CERTIFIED_UNOPPOSED;CANCELLATION_CARRIER_ACQUIRED;RASTER_ORDER_PAGE_NOT_OCR_REVIEWED",
+      "ordinaryCandidacyCreated": false,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22063/Order-of-Cancellation-City-of-Coupland",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:28.511639+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Janet 'Sue' Rogers"
+      }
+    },
+    {
+      "name": "Monic Trevino",
+      "nativeDistrict": "City of Coupland",
+      "nativeOffice": "Alderwoman",
+      "status": "CERTIFIED_UNOPPOSED;CANCELLATION_CARRIER_ACQUIRED;RASTER_ORDER_PAGE_NOT_OCR_REVIEWED",
+      "ordinaryCandidacyCreated": false,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22063/Order-of-Cancellation-City-of-Coupland",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T09:11:28.511639+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Monic Trevino"
+      }
+    }
+  ],
+  "knownNativeStatusNames": 20,
+  "ordinaryCandidatesCreated": 0,
+  "namedStatusEnumerationComplete": false,
+  "limit": "22 full native county-posted cancellation/certification documents are portable. Some are raster and individual declaration names still need separate OCR/status replay. No cancelled field is invented in candidate input."
+}

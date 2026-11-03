@@ -1,0 +1,15 @@
+{
+  "completeActualCompositeAcquired": true,
+  "physicalPages": 8,
+  "substantivePages": 7,
+  "watermarkOnlyPage": 8,
+  "allCandidateFields": 79,
+  "allPreprintedNames": 170,
+  "localFields": 52,
+  "localPreprintedNames": 104,
+  "selectedSource": "sample-comprehensive",
+  "noOcrUsedForCandidateFacts": true,
+  "fullVoterSpecificStyleCensus": false,
+  "independentElectionCensusBeyondCountyComposite": false,
+  "rule": "Current official comprehensive sample supplies complete candidate blocks. Independent/cancelled-election and separate write-in certification work remain distinct. Printed unopposed candidate fields remain CANDIDACY; no automatic retention/elected status inferred."
+}

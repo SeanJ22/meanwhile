@@ -1,0 +1,745 @@
+{
+  "heldBaselineSha256": "84a8e10b47b66a47b296d749d97e325b36fdf65a2823ab82c9a4effdd5cc157a",
+  "identityInputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "sha256": "84a8e10b47b66a47b296d749d97e325b36fdf65a2823ab82c9a4effdd5cc157a"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/fort-bend/ballot-input/tx.json",
+      "sha256": "4e1f0f61db43d7fd577a830f6d8f0e4bc333101da90fd6ee931c8ca20bacb9dc"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/collin/ballot-input/tx.json",
+      "sha256": "78b843a3a9ac5676ac71dd21b7e19f425185cbf27761b9f4b29594c01984a5a6"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/bexar/ballot-input/tx.json",
+      "sha256": "43da78b5eee2f422dcb97711b87da2770651dc701f096f5094b332d5b3904ad4"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/denton/ballot-input/tx.json",
+      "sha256": "a6635582f3e44c631ba70d14ef988ef97c97d3ecff43690a3c578b273e5d9719"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/dallas/ballot-input/tx.json",
+      "sha256": "e64bc09bfbf27350990837bee56f4374f0f6e7c176c48a0a9fdaaa1567d936bf"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "sha256": "3c4aa4665587c521c985ead211df30de6f3349e12ad6582622beb394c45d6f33"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/tarrant/ballot-input/tx.json",
+      "sha256": "d135b3d797500603c3205e62fcb04928f1c7a9a622b3b47c491dcb641916a5aa"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/el-paso/ballot-input/tx.json",
+      "sha256": "5ce86022b2f38b49af449809a47d01ab314bb51cebfb2538bcef496145050bd6"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/harris/ballot-input/tx.json",
+      "sha256": "559e74a7a419ed451385c583156905bb9fc212f9354001fedbc9ea62c72da56a"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/hidalgo/ballot-input/tx.json",
+      "sha256": "0361cf349e6d27faf19f768681ba8573e71b4dc27a910adf7b4e203ba4c4ce72"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/montgomery/ballot-input/tx.json",
+      "sha256": "4f44b68b4beed8e40b613561fa97191b4036a0e00870660acadc9a86552f61ce"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TX-79402c8d3/explainer-expansion__austin-final__ballot-input__tx.json",
+      "sha256": "91d48cabb1a415b09c94350ae3e206fabb4115326ab4a81d426ea67749c7a465"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TX-79402c8d3/explainer-expansion__travis__ballot-input__tx.json",
+      "sha256": "aae7dbb1e813b068b989d6763c1aee6670102be035d337b5d564dacfd402b984"
+    }
+  ],
+  "records": [
+    {
+      "contestId": "tx-cx-local-2026-chief-justice-court-of-appeals-3",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-chief-justice-court-of-appeals-3:cory-liu",
+        "tx-cx-local-2026-chief-justice-court-of-appeals-3:darlene-byrne"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-277",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identityPath": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-277:stacey_mathews"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-368",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identityPath": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-368:sarah_bruchmiller"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-480",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identityPath": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-480:terence_davis"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-512",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identityPath": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-512:sarah_moore",
+        "tx-ba01-2026-district-judge-512:leslie_booker"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48491-county_judge",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identityPath": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-county-48491-county_judge:steve_snell",
+        "tx-ba01-2026-county-48491-county_judge:heather_jefts"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48491-judge_county_court_at_law_no_1",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identityPath": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-county-48491-judge_county_court_at_law_no_1:brandy_hallford"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48491-judge_county_court_at_law_no_2",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identityPath": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-county-48491-judge_county_court_at_law_no_2:laura_barker"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48491-judge_county_court_at_law_no_3",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identityPath": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-county-48491-judge_county_court_at_law_no_3:kathryn_fowler"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48491-judge_county_court_at_law_no_4",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identityPath": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-county-48491-judge_county_court_at_law_no_4:david_oliver"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48491-district_clerk",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identityPath": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-county-48491-district_clerk:cathy_mendoza"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48491-county_clerk",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identityPath": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-county-48491-county_clerk:bill_fairbrother",
+        "tx-ba01-2026-county-48491-county_clerk:erin_block"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48491-county_treasurer",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identityPath": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-county-48491-county_treasurer:carole_callahan"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-county-tax-assessor-collector-unexpired-term",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-county-tax-assessor-collector-unexpired-term:catherine-totty",
+        "cx-local-tx-williamson-2026-county-tax-assessor-collector-unexpired-term:eric-hanke"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-county-commissioner-precinct-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-county-commissioner-precinct-2:david-mcdonald"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-county-commissioner-precinct-4",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-county-commissioner-precinct-4:russ-boles",
+        "cx-local-tx-williamson-2026-county-commissioner-precinct-4:harmon-rhea"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-justice-of-the-peace-precinct-1",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-justice-of-the-peace-precinct-1:kt-musselman"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-justice-of-the-peace-precinct-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-justice-of-the-peace-precinct-2:angela-williams"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-justice-of-the-peace-precinct-3",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-justice-of-the-peace-precinct-3:evelyn-mclean"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-justice-of-the-peace-precinct-4",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-justice-of-the-peace-precinct-4:rhonda-redden"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-williamson-central-appraisal-district-board-of-directors-place-1",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-williamson-central-appraisal-district-board-of-directors-place-1:hope-hisle-piper",
+        "cx-local-tx-williamson-2026-williamson-central-appraisal-district-board-of-directors-place-1:clint-stephenson"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-williamson-central-appraisal-district-board-of-directors-place-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-williamson-central-appraisal-district-board-of-directors-place-2:stephan-zaparolli"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-williamson-central-appraisal-district-board-of-directors-place-3",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-williamson-central-appraisal-district-board-of-directors-place-3:mason-moses"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-city-of-jarrell-mayor",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-city-of-jarrell-mayor:lori-allen"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-city-of-jarrell-alderman-place-1",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-city-of-jarrell-alderman-place-1:daniel-j-klepac",
+        "cx-local-tx-williamson-2026-city-of-jarrell-alderman-place-1:frederick-coy"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-city-of-jarrell-alderman-place-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-city-of-jarrell-alderman-place-2:tim-jordan"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-2",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-2:david-rogers",
+        "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-2:ceasar-ruiz"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-4",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-4:trent-barlow",
+        "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-4:de-juana-de-j-lozada",
+        "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-4:gregory-l-harrington"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-6",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-6:oscar-r-mitchell"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-acc-trustee-place-1",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-acc-trustee-place-1:dana-walker",
+        "tx-cx-local-2026-travis-acc-trustee-place-1:gloria-gonzales-dholakia"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-acc-trustee-place-2",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-acc-trustee-place-2:gigi-edwards-bryant"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-acc-trustee-place-3",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-acc-trustee-place-3:trevor-hale",
+        "tx-cx-local-2026-travis-acc-trustee-place-3:nan-mcraven"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-1",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-1:serenity-coats",
+        "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-1:gerald-prater"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-2",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-2:meg-dean",
+        "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-2:perla-munoz-hopkins",
+        "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-2:chitra-nedun"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-6",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-6:laura-marques"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-7",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-7:jason-embry",
+        "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-7:paul-gauthier"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-pflugerville-isd-board-of-trustees-place-6",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-pflugerville-isd-board-of-trustees-place-6:nicole-toran",
+        "tx-cx-local-2026-travis-pflugerville-isd-board-of-trustees-place-6:jean-mayer"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-pflugerville-isd-board-of-trustees-place-7",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-pflugerville-isd-board-of-trustees-place-7:chevonne-lorigo-johst"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-3",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-3:ayaan-moledina",
+        "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-3:vera-southwell",
+        "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-3:amber-feller-landrum",
+        "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-3:gregory-andrew"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-4",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-4:alicia-markum"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-5",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-5:miriam-arora",
+        "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-5:meghna-roy"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-6",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-6:fabian-cuero",
+        "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-6:troy-j-evanovich"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-block-house-municipal-utility-district-director-election",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-block-house-municipal-utility-district-director-election:ashley-musso",
+        "cx-local-tx-williamson-2026-block-house-municipal-utility-district-director-election:ryan-poppe",
+        "cx-local-tx-williamson-2026-block-house-municipal-utility-district-director-election:sandra-martin",
+        "cx-local-tx-williamson-2026-block-house-municipal-utility-district-director-election:tina-reckaway",
+        "cx-local-tx-williamson-2026-block-house-municipal-utility-district-director-election:terri-l-hutton",
+        "cx-local-tx-williamson-2026-block-house-municipal-utility-district-director-election:jaden-tipton",
+        "cx-local-tx-williamson-2026-block-house-municipal-utility-district-director-election:nancy-winston",
+        "cx-local-tx-williamson-2026-block-house-municipal-utility-district-director-election:matt-sanner"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-highlands-at-mayfield-ranch-municipal-utility-district-director-place-1",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-highlands-at-mayfield-ranch-municipal-utility-district-director-place-1:frederick-franklin",
+        "cx-local-tx-williamson-2026-highlands-at-mayfield-ranch-municipal-utility-district-director-place-1:stacy-henderson"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-highlands-at-mayfield-ranch-municipal-utility-district-director-place-3",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-highlands-at-mayfield-ranch-municipal-utility-district-director-place-3:kevin-pintar",
+        "cx-local-tx-williamson-2026-highlands-at-mayfield-ranch-municipal-utility-district-director-place-3:jerome-gaillard"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-highlands-at-mayfield-ranch-municipal-utility-district-director-place-5",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-highlands-at-mayfield-ranch-municipal-utility-district-director-place-5:tracy-walpole",
+        "cx-local-tx-williamson-2026-highlands-at-mayfield-ranch-municipal-utility-district-director-place-5:karim-rashidi"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-north-austin-mud-no-1-director-place-2",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-north-austin-mud-no-1-director-place-2:don-conklin"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-north-austin-mud-no-1-director-place-4",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-north-austin-mud-no-1-director-place-4:diana-christiano",
+        "tx-cx-local-2026-travis-north-austin-mud-no-1-director-place-4:jennifer-wiebe"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-solana-ranch-municipal-utility-district-no-1-permanent-directors-election",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-solana-ranch-municipal-utility-district-no-1-permanent-directors-election:joe-birdwell",
+        "cx-local-tx-williamson-2026-solana-ranch-municipal-utility-district-no-1-permanent-directors-election:theresa-canchola",
+        "cx-local-tx-williamson-2026-solana-ranch-municipal-utility-district-no-1-permanent-directors-election:becky-hinojosa",
+        "cx-local-tx-williamson-2026-solana-ranch-municipal-utility-district-no-1-permanent-directors-election:martha-mangum",
+        "cx-local-tx-williamson-2026-solana-ranch-municipal-utility-district-no-1-permanent-directors-election:sandra-wilm"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-theon-ranches-municipal-utility-district-no-1-directors-election",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-theon-ranches-municipal-utility-district-no-1-directors-election:andres-martinez",
+        "cx-local-tx-williamson-2026-theon-ranches-municipal-utility-district-no-1-directors-election:samantha-garcia",
+        "cx-local-tx-williamson-2026-theon-ranches-municipal-utility-district-no-1-directors-election:john-senko",
+        "cx-local-tx-williamson-2026-theon-ranches-municipal-utility-district-no-1-directors-election:lauryn-pianelli",
+        "cx-local-tx-williamson-2026-theon-ranches-municipal-utility-district-no-1-directors-election:diego-mayorga"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-williamson-2026-williamson-county-municipal-utility-district-no-80-permanent-directors-election",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identityPath": null,
+      "candidateIds": [
+        "cx-local-tx-williamson-2026-williamson-county-municipal-utility-district-no-80-permanent-directors-election:jay-antala",
+        "cx-local-tx-williamson-2026-williamson-county-municipal-utility-district-no-80-permanent-directors-election:manasvi-ardeshana",
+        "cx-local-tx-williamson-2026-williamson-county-municipal-utility-district-no-80-permanent-directors-election:jwalasinh-brahmbhatt",
+        "cx-local-tx-williamson-2026-williamson-county-municipal-utility-district-no-80-permanent-directors-election:jaya-kafle",
+        "cx-local-tx-williamson-2026-williamson-county-municipal-utility-district-no-80-permanent-directors-election:parag-ratanpara"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-travis-williamson-travis-counties-municipal-utility-district-no-1-directors",
+      "identityStatus": "SHARED_READY_TRAVIS_ID",
+      "identityPath": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "candidateIds": [
+        "tx-cx-local-2026-travis-williamson-travis-counties-municipal-utility-district-no-1-directors:hanoi-avila",
+        "tx-cx-local-2026-travis-williamson-travis-counties-municipal-utility-district-no-1-directors:david-flores",
+        "tx-cx-local-2026-travis-williamson-travis-counties-municipal-utility-district-no-1-directors:beth-jones",
+        "tx-cx-local-2026-travis-williamson-travis-counties-municipal-utility-district-no-1-directors:stephen-bodnarchuk-jr",
+        "tx-cx-local-2026-travis-williamson-travis-counties-municipal-utility-district-no-1-directors:kimberly-massaro",
+        "tx-cx-local-2026-travis-williamson-travis-counties-municipal-utility-district-no-1-directors:linda-fabre",
+        "tx-cx-local-2026-travis-williamson-travis-counties-municipal-utility-district-no-1-directors:thomas-vacek"
+      ]
+    }
+  ],
+  "caseOnlySourceNameComparisons": [
+    {
+      "id": "tx-ba01-2026-district-judge-277:stacey_mathews",
+      "heldName": "STACEY MATHEWS",
+      "printedName": "Stacey Mathews",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "District Judge, 277th\nJudicial District\n(Juez de Distrito, Distrito Judicial 277)\nVote for One\n(Vote por Uno)\nStacey Mathews\nRepublican Party\n(Partido Republicano)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-368:sarah_bruchmiller",
+      "heldName": "SARAH BRUCHMILLER",
+      "printedName": "Sarah Bruchmiller",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "District Judge, 368th\nJudicial District\n(Juez de Distrito, Distrito Judicial 368)\nVote for One\n(Vote por Uno)\nSarah Bruchmiller\nRepublican Party\n(Partido Republicano)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-480:terence_davis",
+      "heldName": "TERENCE DAVIS",
+      "printedName": "Terence Davis",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "District Judge, 480th\nJudicial District,\nUnexpired Term\n(Juez de Distrito, Distrito Judicial 480,\nDuración Restante del Cargo)\nVote for One\n(Vote por Uno)\nTerence Davis\nRepublican Party\n(Partido Republicano)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-512:sarah_moore",
+      "heldName": "SARAH MOORE",
+      "printedName": "Sarah Moore",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "District Judge, 512th\nJudicial District\n(Juez de Distrito, Distrito Judicial 512)\nVote for One\n(Vote por Uno)\nSarah Moore\nRepublican Party\n(Partido Republicano)\nLeslie Booker\nDemocratic Party\n(Partido Demócrata)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-512:leslie_booker",
+      "heldName": "LESLIE BOOKER",
+      "printedName": "Leslie Booker",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "District Judge, 512th\nJudicial District\n(Juez de Distrito, Distrito Judicial 512)\nVote for One\n(Vote por Uno)\nSarah Moore\nRepublican Party\n(Partido Republicano)\nLeslie Booker\nDemocratic Party\n(Partido Demócrata)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-county_judge:steve_snell",
+      "heldName": "STEVE SNELL",
+      "printedName": "Steve Snell",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "County Judge\n(Juez del Condado)\nVote for One\n(Vote por Uno)\nSteve Snell\nRepublican Party\n(Partido Republicano)\nHeather Jefts\nDemocratic Party\n(Partido Demócrata)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-county_judge:heather_jefts",
+      "heldName": "HEATHER JEFTS",
+      "printedName": "Heather Jefts",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "County Judge\n(Juez del Condado)\nVote for One\n(Vote por Uno)\nSteve Snell\nRepublican Party\n(Partido Republicano)\nHeather Jefts\nDemocratic Party\n(Partido Demócrata)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-judge_county_court_at_law_no_1:brandy_hallford",
+      "heldName": "BRANDY HALLFORD",
+      "printedName": "Brandy Hallford",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Judge, County Court at Law No. 1\n(Juez, Corte de Ley del Condado Número 1)\nVote for One\n(Vote por Uno)\nBrandy Hallford\nRepublican Party\n(Partido Republicano)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-judge_county_court_at_law_no_2:laura_barker",
+      "heldName": "LAURA BARKER",
+      "printedName": "Laura Barker",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Judge, County Court at Law No. 2\n(Juez, Corte de Ley del Condado Número 2)\nVote for One\n(Vote por Uno)\nLaura Barker\nRepublican Party\n(Partido Republicano)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-judge_county_court_at_law_no_3:kathryn_fowler",
+      "heldName": "KATHRYN FOWLER",
+      "printedName": "Kathryn Fowler",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Judge, County Court at Law No. 3\n(Juez, Corte de Ley del Condado Número 3)\nVote for One\n(Vote por Uno)\nKathryn Fowler\nRepublican Party\n(Partido Republicano)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-judge_county_court_at_law_no_4:david_oliver",
+      "heldName": "DAVID OLIVER",
+      "printedName": "David Oliver",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "Judge, County Court at Law No. 4\n(Juez, Corte de Ley del Condado Número 4)\nVote for One\n(Vote por Uno)\nDavid Oliver\nRepublican Party\n(Partido Republicano)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-district_clerk:cathy_mendoza",
+      "heldName": "CATHY MENDOZA",
+      "printedName": "Cathy Mendoza",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "District Clerk\n(Secretario del Distrito)\nVote for One\n(Vote por Uno)\nCathy Mendoza\nRepublican Party\n(Partido Republicano)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-county_clerk:bill_fairbrother",
+      "heldName": "BILL FAIRBROTHER",
+      "printedName": "Bill Fairbrother",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "County Clerk\n(Secretario del Condado)\nVote for One\n(Vote por Uno)\nBill Fairbrother\nRepublican Party\n(Partido Republicano)\nErin Block\nDemocratic Party\n(Partido Demócrata)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-county_clerk:erin_block",
+      "heldName": "ERIN BLOCK",
+      "printedName": "Erin Block",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "County Clerk\n(Secretario del Condado)\nVote for One\n(Vote por Uno)\nBill Fairbrother\nRepublican Party\n(Partido Republicano)\nErin Block\nDemocratic Party\n(Partido Demócrata)"
+      }
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-county_treasurer:carole_callahan",
+      "heldName": "CAROLE CALLAHAN",
+      "printedName": "Carole Callahan",
+      "heldNamePreserved": true,
+      "identityLettersUnchangedAfterCaseFold": true,
+      "provenance": {
+        "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+        "sourceOrg": "Williamson County Elections",
+        "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+        "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+        "quote": "County Treasurer\n(Tesorero del Condado)\nVote for One\n(Vote por Uno)\nCarole Callahan\nRepublican Party\n(Partido Republicano)"
+      }
+    }
+  ],
+  "sharedCandidateCoreFieldsPreserved": true,
+  "rule": "12 exact held contest/15 candidate IDs reused; all held candidate core fields preserved; current print differs in letter case only.20 shared Travis contest/43 candidate IDs and all shared core fields preserved.20 missing office IDs/46 candidate IDs minted. Federal/state/legislative/15thAppeals and all measures remain outside changed input."
+}

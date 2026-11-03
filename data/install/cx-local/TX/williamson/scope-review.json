@@ -1,0 +1,72 @@
+{
+  "acc": {
+    "sourceUrl": "https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/",
+    "sourceOrg": "Austin Community College District",
+    "collectedAt": "2026-11-03T09:12:01.279724+00:00",
+    "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+    "quote": "Trustees are elected at large for six-year terms to provide appropriate high-level guidance and leadership to ensure the College meets the needs of the communities served."
+  },
+  "leander": {
+    "sourceUrl": "https://www.leanderisd.org/boardoftrustees/",
+    "sourceOrg": "Leander Independent School District",
+    "collectedAt": "2026-11-03T09:12:01.280468+00:00",
+    "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+    "quote": "The members of the Leander ISD Board of Trustees are elected at-large."
+  },
+  "roundRock": {
+    "sourceUrl": "https://www.roundrockisd.org/page/board-of-trustees",
+    "sourceOrg": "Round Rock Independent School District",
+    "collectedAt": "2026-11-03T09:12:01.280960+00:00",
+    "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+    "quote": "There are seven members of the Round Rock ISD Board of Trustees, each elected at-large to serve staggered four-year terms."
+  },
+  "pflugerville": {
+    "sourceUrl": "https://www.pfisd.net/about-us/pfisd-board-of-trustees/board-elections/board-election-november-2026",
+    "sourceOrg": "Pflugerville Independent School District",
+    "collectedAt": "2026-11-03T09:12:01.281518+00:00",
+    "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+    "quote": "Board members are elected at large for specific places on the Board."
+  },
+  "jarrell": {
+    "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21925/Notice-of-Election-City-of-Jarrell",
+    "sourceOrg": "Williamson County Elections",
+    "collectedAt": "2026-11-03T09:11:25.779901+00:00",
+    "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+    "quote": "To the registered voters of the City of Jarrell, Texas:"
+  },
+  "cad": {
+    "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22025/Notice-of-Election-Williamson-Central-Appraisal-District",
+    "sourceOrg": "Williamson County Elections",
+    "collectedAt": "2026-11-03T09:11:25.779213+00:00",
+    "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+    "quote": "To the registered voters of the County of Williamson , Texas:"
+  },
+  "taxStatute": {
+    "sourceUrl": "https://r.jina.ai/https://statutes.capitol.texas.gov/Docs/TX/htm/TX.6.htm",
+    "sourceOrg": "Texas Legislature; official text through public reader",
+    "collectedAt": "2026-11-03T06:28:48.144038+00:00",
+    "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+    "quote": "(a) The appraisal district's boundaries are the same as the county's boundaries."
+  },
+  "solana": {
+    "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21250/Notice-of-Election-Solana-Ranch-MUD-No-1",
+    "sourceOrg": "Williamson County Elections",
+    "collectedAt": "2026-11-03T09:11:25.782651+00:00",
+    "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+    "quote": "TO THE RESIDENT, QUALIFIED ELECTORS OF SOLANA RANCH MUNICIPAL UTILITY DISTRICT NO. 1:"
+  },
+  "theon": {
+    "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21929/Notice-of-Election-Theon-Ranches-MUD-No-1",
+    "sourceOrg": "Williamson County Elections",
+    "collectedAt": "2026-11-03T09:11:27.025864+00:00",
+    "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+    "quote": "TO THE DULY QUALIFIED RESIDENT VOTERS OF THEON RANCHES MUNICIPAL UTILITY DISTRICT NO. 1:"
+  },
+  "williamsonTravis": {
+    "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/21926/Notice-of-Election-Williamson-Travis-County-MUD-No-1",
+    "sourceOrg": "Williamson County Elections",
+    "collectedAt": "2026-11-03T09:11:27.269265+00:00",
+    "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+    "quote": "TO WILLIAMSON AND TRAVIS COUNTIES AND THE DULY QUALIFIED RESIDENT VOTERS OF WILLIAMSON-TRAVIS COUNTIES MUNICIPAL UTILITY DISTRICT NO. 1:"
+  }
+}

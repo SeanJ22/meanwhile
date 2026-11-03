@@ -1,0 +1,16 @@
+{
+  "status": "OFFICIAL_NAMED_CERTIFICATION_NOT_ACQUIRED",
+  "records": [],
+  "discoveryLeads": [
+    {
+      "name": "Tish Flores",
+      "office": "Williamson County Commissioner, Precinct4",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson/commissioner_precinct:4",
+      "status": "CAMPAIGN_SELF_IDENTIFICATION_ONLY;OFFICIAL_QUALIFICATION_UNVERIFIED",
+      "sourceUrl": "https://www.tishflores.com/",
+      "nativeHash": "befb090454269aaac66ddca1f9eb5068c9a3c9b3ed541c6864f7239e860f62c5",
+      "ordinaryCandidacyCreated": false
+    }
+  ],
+  "limit": "Actual sample prints a blank write-in line for commissioner4. Candidate campaign and secondary sources identify TishFlores, but no official named certification has been acquired. This lead is not a verified eligible choice; preprinted-name completeness is the scope of input. Blank lines never become people. Other separate filing-office write-in supplements remain pending."
+}

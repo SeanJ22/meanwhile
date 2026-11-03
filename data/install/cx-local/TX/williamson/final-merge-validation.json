@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-11-03T09:31:13.154Z",
+  "latestCxVotesRef": "79402c8d3",
+  "sharedTravisThenAllLatestCxVotesThenWilliamsonMerge": "PASS",
+  "latestNestedStateInputsChecked": 2,
+  "allIncomingFieldsAdmittedExact": 52,
+  "allIncomingCandidateIdsAndCoreAdmittedExact": 104,
+  "sharedTravisIdsAndCandidateCoresPreservedFields": 20,
+  "sharedTravisCandidateCoresPreserved": 43,
+  "heldCandidateIdsAndCorePreserved": 15,
+  "unrelatedContestsPreserved": 1796,
+  "unrelatedCandidateCoresPreserved": 2271,
+  "allQuestionRowsPreserved": 35,
+  "allMeasureRecordAnalysisExplanationRowsPreserved": 27,
+  "exactHeldJudicialWholeCountyMembershipsPreserved": 4,
+  "exactSharedThirdCourtWholeCountyMembershipsPreserved": 24,
+  "newCadWholeCountyMembershipAdmitted": 1,
+  "noProductionWrites": true
+}

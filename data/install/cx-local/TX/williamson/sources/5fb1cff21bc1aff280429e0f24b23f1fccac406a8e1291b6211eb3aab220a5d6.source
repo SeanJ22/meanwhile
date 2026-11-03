@@ -1,0 +1,3535 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+<!-- Google Tag Manager for GA4 -->
+				<script>(function(w,d,s,l,i){w.GAMeasurementID='G-DTTCJ2SMP7';w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','cpDataLayerGA4','GTM-K73C5PS');</script>
+				<!-- End Google Tag Manager for GA4 -->
+				<script type='text/javascript'>
+					var enableTelemetry = 'false'
+					var aiConfig = {
+					instrumentationKey: '1cde048e-3185-4906-aa46-c92a7312b60f'						
+					}
+					var appInsights = window.appInsights || function (a) { function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement('script'); b.src = a.url || 'https://js.monitor.azure.com/scripts/a/ai.0.js', d.getElementsByTagName('script')[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ['Event', 'Exception', 'Metric', 'PageView', 'Trace', 'Dependency']; f.length;)b('track' + f.pop()); if (b('setAuthenticatedUserContext'), b('clearAuthenticatedUserContext'), b('startTrackEvent'), b('stopTrackEvent'), b('startTrackPage'), b('stopTrackPage'), b('flush'), !a.disableExceptionTracking) { f = 'onerror', b('_' + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c['_' + f](a, b, d, e, h), i } } return c }(aiConfig);
+					window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length;
+					// Add telemetry initializer
+					appInsights.queue.push(function() {
+						appInsights.context.addTelemetryInitializer(function(envelope) {
+							var telemetryItem = envelope.data.baseData;
+							// To check the telemetry item’s type:
+							if (!false)
+							{
+								//If the telemetry is not enabled, we still want to capture Google map custom event, so only allow that
+								if (envelope.name.indexOf('.Event') == -1)
+									return false;
+							}
+						});
+					});						
+					appInsights.trackPageView();
+				</script>
+	<script>
+		function populateAntiForgery(token) {
+			var input = document.createElement("input");
+			input.name = "__RequestVerificationToken";
+			input.type = "hidden";
+			input.value = token;
+			var absPat = /^https?:\/\/|^\/\//i;
+			var forms = document.getElementsByTagName("form");
+			for (var i = 0; i < forms.length; i++) {
+				if (forms[i].method == "post" &&
+					!forms[i].querySelector('[name="__RequestVerificationToken"]') &&
+					!absPat.test(forms[i].getAttribute("action"))) {
+					forms[i].appendChild(input.cloneNode());
+				}
+			}
+		}
+
+		function getAntiForgeryToken(callback, error) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/antiforgery");
+			xhr.addEventListener("load", function() {
+				try {
+					if (this.status !== 200) {
+						throw Error("Invalid status. Could not retrieve antiforgery token.");
+					}
+					var obj = JSON.parse(this.responseText);
+					callback(obj.token);
+				} catch (e) {
+					typeof error === "function" && error(e);
+				}
+			});
+			xhr.send();
+		}
+
+		getAntiForgeryToken(function(token) {
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded" 
+				|| document.readyState === "interactive") {
+				populateAntiForgery(token);
+				return;
+			}
+			document.addEventListener("DOMContentLoaded", function() {
+				populateAntiForgery(token);
+			}, false);
+		}, console.error);
+	</script>
+			
+
+	<script type="text/javascript">
+		window.departmentHeader = {};
+		window.pageSectionTracker = {};
+		window.isResponsiveEnabled = true;
+		window.isRemoveSetHeights= false;
+		if (window.isRemoveSetHeights) {
+			document.documentElement.className += ' removeSetHeights';
+		}
+		window.mainMenuMediaQuery = 'screen and (max-width: 40em)';
+		window.isMobileBrowserIncludingTablets = false;
+		window.fixedResponsiveMenu = false;
+		window.fullWidthResponsiveMenu = true;
+		window.responsiveMenuHeight = '';
+		window.responsiveMenuFontSize = '';
+		window.isContentAdvisor = false;
+		(function () {
+			window.setSizeCookie = function () {
+				document.cookie = "dpi=" + window.devicePixelRatio + "; path=/";
+				document.cookie = "viewportWidth=" + window.innerWidth + "; path=/";
+				document.cookie = "viewportHeight=" + window.innerHeight + "; path=/";
+				if (screen && screen.width && screen.height) {
+					document.cookie = "screenWidth=" + screen.width + "; path=/";
+					document.cookie = "screenHeight=" + screen.height + "; path=/";
+				}
+				document.cookie = "responsiveGhost=1; path=/";
+			};
+
+			setSizeCookie();
+		}());
+	</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script async src="https://docaccess.com/docbox.js"></script>
+	
+	<meta name="category0" content="Home" />
+<meta name="category1" content="Government" />
+<meta name="category2" content="District Courts" />
+
+	
+	<meta name="theme-color" content="rgb(50, 78, 108)">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+		<title>District Courts | Williamson County, TX</title>
+
+		<meta name="description" content="Access information regarding the Williamson County District Courts.">
+			<script src="/Assets/Scripts/jQuery/jquery-3.7.1.min.js"></script>
+	<script src="/Assets/Scripts/jQuery/jquery-migrate-3.6.0.min.js" type="text/javascript"></script>
+	
+
+	<!--[if IE 6]><script language="JavaScript" type="text/javascript"> var isie6 = true; </script><![endif]-->
+	<!--[if IE 7]><script language="JavaScript" type="text/javascript"> var isie7 = true; </script><![endif]-->
+	<!--[if IE 8]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<!--[if IE 9]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<script type="text/javascript"><!--
+	var intCountryCode = 840;
+	var order = '';
+//--></script>
+	
+	<link href="/-2140275272.css" rel="stylesheet" type="text/css" />	<link href="/1261679483.css" rel="stylesheet" type="text/css" />
+
+	<link rel="stylesheet" type="text/css" href="/Assets/Styles/Print.css" media="print">
+	<script type="text/javascript">
+		window.Pages = window.Pages || {};
+		// FrontEnd RWD initialization
+		window.Pages.rwdReady = $.Deferred();
+		window.Pages.toolBarDeferred = $.Deferred();
+		window.Pages.rwdSetupComplete = $.Deferred();
+		window.Pages.megaMenuLoaded = $.Deferred();
+		window.Pages.angularToolbarComplete = $.Deferred();
+		window.Pages.frontEndToolbarComplete = $.Deferred();
+	</script>
+	<!--CPHeadContent-->
+	<script src="/739942322.js" type="text/javascript"></script>
+	
+	
+	
+	
+
+
+
+
+	<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="/App_Themes/ie8.css"><![endif]-->
+	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/App_Themes/ie7.css"><![endif]-->
+	<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="/App_Themes/ie6.css"><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="/Scripts/html5.js"></script><![endif]-->
+
+	<script type="text/javascript">
+		setEditorVariables(false, 840);
+		function getPrintPreviewType() { return 0; } function printPreview() {pPreview(getPrintPreviewType()); }
+	</script>
+	<script src="/Assets/Scripts/AlpineJS/3.14.1/alpine.min.js" type="text/javascript" defer="defer"></script>
+</head>
+<body class="wide " >
+
+    <script>jQuery(document).click(function (event) {
+	var target = jQuery(event.target);
+	if (target.attr('src') && target.parents('.image').length && target.parents('.widget').length) {
+		var text = target.attr('title');
+		
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Image',
+				eventAction: 'Image - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.is('button') || target.hasClass('button') || target.parents().hasClass('button')) {
+		var text = "";
+		if (target.parents('.button')[0]) {
+			text = target.parents('.button').first().text();
+		} else if (target.text().length) {
+			text = target.text();
+		} else if (target.attr('title').length) {
+			text = target.attr('title');
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Button - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetCustomHtml').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Custom Html',
+				eventAction: 'Custom Html Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.editor').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Editor',
+				eventAction: 'Editor Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.GraphicLinks').length) {
+		var text = "";
+		var targetGraphicLink = target;
+		if (target.hasClass('widgetGraphicLinksLink')) {
+			targetGraphicLink = jQuery(target.children()[0]);
+		}
+		if (targetGraphicLink.hasClass('text')) {
+			text = targetGraphicLink.text();
+		} else if (targetGraphicLink.attr('src').length) {
+			if (targetGraphicLink.attr('alt').length) {
+				text = targetGraphicLink.attr('alt');
+			} else {
+				text = targetGraphicLink.attr('src');
+			}
+		} else {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Graphic Links',
+				eventAction: 'Graphic Link - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.InfoAdvanced').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Info Advanced',
+				eventAction: 'Info Advanced Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.list').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'List',
+				eventAction: 'List Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.megaMenuItem').length || target.parents('.topMenuItem').length) {
+		var megaMenuText = jQuery('.topMenuItem.mouseover').find('span').text();
+		var breadCrumbs = [];
+		jQuery('.breadCrumbs > li').each(function () {
+			 breadCrumbs.push(this.textContent);
+		});
+		var pageTitle = breadCrumbs.join('>');
+		var subTitleText = target.parents('.megaMenuItem').children('.widgetTitle').children().text();
+		var text = "";
+		if (pageTitle) {
+			text += pageTitle + " | ";
+		} else {
+			text += document.title + ' - ';
+		}
+		if (target.text() == "" && megaMenuText == "") {
+			text += "N/A";
+		} else if (target.text().length && megaMenuText.length) {
+			if (megaMenuText == target.text()) {
+				text += megaMenuText;
+			} else {
+				text += megaMenuText + " - " + subTitleText + " - " + target.text();
+			}
+		} else if (target.text() == "") {
+			text += megaMenuText;
+		} else {
+			text += target.text();
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Mega Menu',
+				eventAction: 'Mega Menu : ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetNewsFlash').length && target.parents('.widgetItem').length) {
+		var text = jQuery(target.parents('.widgetItem')[0]).find('.widgetTitle').children().text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'News Flash',
+				eventAction: 'News Flash - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.hasClass('widgetQuickLinksLink') || target.find('.widgetQuickLinksLink').length) {
+		var text = target.text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Quick Links',
+				eventAction: 'Quick Links - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.attr('src') && target.parents('.cpSlideshow').length) {
+		var text = target.attr('title');
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Slideshow',
+				eventAction: 'Slideshow - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetText').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Text',
+				eventAction: 'Text Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+});</script>
+	<div id="popoverModal" class="cp-PopOver cp-PopOver--modal cp-AdminWrap" style="position: fixed; display: none;">
+	<div class="cp-PopOver-header">
+		<h3 class="cp-PopOver-title"></h3>
+		<button class="cp-Btn cp-PopOver-close" onclick="closePopOverModal(event)">
+			<svg class="cp-Icon--close" alt="close" title="close">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconClose"></use>
+			</svg>
+		</button>
+	</div>
+	<div id="cpPopOverBody" class="cp-PopOver-body">
+		<form id="cpPopOverForm" name="cpPopOverForm" novalidate></form>
+	</div>
+	<div id="cpPopOverFooter" class="cp-PopOver-footer">
+		<div class="cp-BtnGroup" id="actionButtons">
+			<!-- Action buttons will be dynamically added here -->
+		</div>
+	</div>
+</div>
+    <div id="fb-root"></div>
+<div id=skipToContentLinks>
+<a href="#cc5f8c90dc-b4cb-431b-90ee-10648f8df655" target="_self" class="skipToContentLink">Skip to Main Content</a>
+</div>
+    <form id="frmReferenceFormForTelerikEditorDialogs"></form>
+
+        <input type="hidden" id="GoogleMapsKey" value="AIzaSyDWUuE-ifkbhxblF920N8MjpBdTg1Wt784" />
+
+
+
+    <input type="hidden" id="cpcDomain" value="https://cp-civicplusuniversity2.civicplus.com">
+    <input type="hidden" id="hdnStructureID" value="1" />
+    <input type="hidden" id="hdnContentCollectionID" value="f9fa886b-604b-4026-aead-5ca25b94e059" />
+    <input type="hidden" id="hdnWorkingCopyID" value="00000000-0000-0000-0000-000000000000" />
+    <input type="hidden" id="hdnThemeID" value="1" />
+    <input type="hidden" id="pageIsFrontEnd" value="true" />
+    <input type="hidden" id="pageModuleID" />
+    <input type="hidden" id="pagePageID" value="454" />
+
+    <div id="stickyPlaceholder"></div>
+    <div id="outer-wrap" class="outer-wrap">
+        <div id="inner-wrap" class="inner-wrap">
+                <div id="divToolbars" class="cpToolbars newCP mui-fixed" style="">
+                    
+
+
+
+                </div>
+            <div id="bodyWrapper">
+                <div id="mainNavHolderMobile" class="mainNavHolderMobile"></div>
+                
+<div data-cpRole="structuralContainer" id="bodyContainerTS">
+<!-- Header Container --><header data-cpRole="structuralContainer" id="headerContainerTS" class="fixedTopTS">
+<div class="siteWrap2"><div data-cpRole="structuralContainer" id="headerInnerTS">
+<div data-cpRole="banner" id="bannerLogoTS" class="bannerLogoTS empty">
+
+
+
+
+				<a id="bannerLogoTS-48" style="			display: block; text-align: center;
+" class="bannerObject" href="/" target="_self"><img alt="Wilco Logo Mark - Color" class="bannerObject" height="61" src="/ImageRepository/Document?documentID=6491" width="101" /></a>
+</div><div data-cpRole="contentContainer" id="homeTS">	<div id="ccd862391e-d15f-4361-9ab1-660f6ecdbeaa" data-containerid="d862391e-d15f-4361-9ab1-660f6ecdbeaa" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="bb9aaf89-c169-4a0e-b53e-594727c9c886">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last ide56b804c-50a2-4f95-a97e-6f81d1c99772" style="" data-widgetcontainerid="e56b804c-50a2-4f95-a97e-6f81d1c99772">	
+<div data-widget-id="02002121-3614-42be-8441-b9a672c7b031" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget02002121-3614-42be-8441-b9a672c7b031" class="widget widgetGraphicLinks skin45 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid1 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<ul class="semanticList">
+					<!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/" target="_self">
+
+<img src="/ImageRepository/Document?documentID=76" 
+     class="graphicButtonLink" alt="Home icon" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=77'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=76'"
+     onfocus="this.src='/ImageRepository/Document?documentID=77'" 
+	onblur="this.src='/ImageRepository/Document?documentID=76'"> 
+</a></li><!--
+				-->
+				</ul>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div><nav data-cpRole="nav" id="mainNav" class="siteNav mainNav" role="navigation">
+<ol id="mainNavMenu" data-parent="1" class="rootNavMenu" role="menu"><!--
+--><li id="MainItem27" class="topMenuItem" role="none" data-pageid="27" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu27" id = "mainNavGovernment" class="navMainItem mainNavItem mainNavItem1 " href="/27/Government" target = "_self" >   Government  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem31" class="topMenuItem" role="none" data-pageid="31" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu31" id = "mainNavResidents" class="navMainItem mainNavItem mainNavItem2 " href="/31/Residents" target = "_self" >   Residents  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem149" class="topMenuItem" role="none" data-pageid="149" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu149" id = "mainNavDepartments" class="navMainItem mainNavItem mainNavItem3 " href="/149/Departments" target = "_self" >   Departments  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem35" class="topMenuItem" role="none" data-pageid="35" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu35" id = "mainNavBusiness" class="navMainItem mainNavItem mainNavItem4 " href="/35/Business" target = "_self" >   Business  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem9" class="topMenuItem" role="none" data-pageid="9" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu9" id = "mainNavHowDoI" class="navMainItem mainNavItem mainNavItem5 " href="/9/How-Do-I" target = "_self" >   How Do I...  </a>			<!--
+			--><!--
+			--></li><!---->
+</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupMenu() {
+				const menuID = 'mainNavMenu';
+				const menuType = MAIN_MENU;
+
+				//setup menu manager properties for main menu
+				if (!menuManager.mobileMainNav && true)
+					menuManager.adjustMainItemsWidth('#' + menuID);
+				menuManager.isMainMenuEditable = false;
+				menuManager.mainMenuMaxSubMenuLevels = 4;
+				menuManager.setMOMMode(2, menuType);
+
+				//Init main menu
+				const setupDraggable = menuManager.isMainMenuEditable;
+				const urlToGetHiddenMenus = '/Pages/MenuMain/HiddenMainSubMenus?pageID=1&moduleID=&themeID=1&menuContainerID=mainNav';
+
+				menuManager.setupMenu(menuID, 'mainNav', menuType, setupDraggable, urlToGetHiddenMenus);
+				menuManager.mainMenuInit = true;
+				menuManager.mainMenuTextResizer = false;
+				if (1.00 > 0)
+					menuManager.mainMenuTextResizerRatio = 1.00;
+				if (window.isResponsiveEnabled)
+					menuManager.mainMenuReady.resolve();
+
+			}
+
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded"
+				|| document.readyState === "interactive") {
+				setupMenu();
+				return;
+			}
+
+			document.addEventListener("DOMContentLoaded", setupMenu);
+		})();
+	</script>
+
+
+<aside data-cpRole="megaMenu" id="megaMenu" class="megaMenu" style="display: none;"><input type="hidden" id="megaMenuPopupDirection" value="0"><input type="hidden" id="megaMenuWidthReference" value="0"><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu27" class="contentTop mainNavMegaMenu megaMenuContainer pageID_27 hidden" data-orientation="horizontal">	<div id="ccf967d0ec-d6ca-4464-8fef-07d7c1c86f63" data-containerid="f967d0ec-d6ca-4464-8fef-07d7c1c86f63" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu31" class="contentTop mainNavMegaMenu megaMenuContainer pageID_31 hidden" data-orientation="horizontal">	<div id="cc29a74c53-ba4d-4a3d-9e9f-10e7e8e131dd" data-containerid="29a74c53-ba4d-4a3d-9e9f-10e7e8e131dd" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu149" class="contentTop mainNavMegaMenu megaMenuContainer pageID_149 hidden" data-orientation="horizontal">	<div id="ccde06581b-1b67-4780-bb70-0fa89773c14f" data-containerid="de06581b-1b67-4780-bb70-0fa89773c14f" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu35" class="contentTop mainNavMegaMenu megaMenuContainer pageID_35 hidden" data-orientation="horizontal">	<div id="cc0c6b2709-2519-40cc-967d-bdceca06c922" data-containerid="0c6b2709-2519-40cc-967d-bdceca06c922" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu9" class="contentTop mainNavMegaMenu megaMenuContainer pageID_9 hidden" data-orientation="horizontal">	<div id="cc7e4c0e44-debc-4b00-87fa-74b83781d6d1" data-containerid="7e4c0e44-debc-4b00-87fa-74b83781d6d1" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside></aside></nav>
+</div></div>
+</header><!-- Banner --><div data-cpRole="structuralContainer" id="bannerContainerTS" class="noOverflowTS">
+<div data-cpRole="banner" id="banner1"><div data-cpRole="structuralContainer" id="bannerSizingTS">
+<div class="siteWrap"><div data-cpRole="structuralContainer" id="bannerContentTS">
+<div data-cpRole="contentContainer" id="searchTS">	<div id="cce7a1e73c-4cca-4e01-b395-ced84107803f" data-containerid="e7a1e73c-4cca-4e01-b395-ced84107803f" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="f605f4a8-8f77-44af-8d43-2dc42cd059c3">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id49eeb53e-a401-4f27-9c14-ff7e2ad5ceff" style="" data-widgetcontainerid="49eeb53e-a401-4f27-9c14-ff7e2ad5ceff">	
+<div data-widget-id="0068f54d-af91-4618-a8ce-7e5343db6a41" data-widget-controller-path="/Layout/WidgetSearch">
+	
+	<script defer type="text/javascript" src="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.js"></script>
+	<script defer src="/Areas/Layout/Assets/Scripts/Search.js" type="text/javascript"></script>
+	<script defer type="text/javascript">
+
+		$(document).ready(function () {
+			try {
+				// Minimum characters required before performing a search/autocomplete
+				var minPrefixLength = 3;
+				var autoCompleteDebounceDelay = 500;
+				var searchFieldSelector = "#searchField" + '0068f54d-af91-4618-a8ce-7e5343db6a41';
+				var checkboxSelector = "#ysnSearchOnlyDept" + '0068f54d-af91-4618-a8ce-7e5343db6a41';
+				var buttonSelector = ".widgetSearchButton" + '0068f54d-af91-4618-a8ce-7e5343db6a41';
+				var autoCompleteCache = {};
+				var autoCompleteCacheKeys = [];
+				var autoCompleteCacheLimit = 25;
+				var currentAutoCompleteRequest = null;
+				var currentAutoCompleteRequestKey = null;
+				var autoCompleteDebounceTimer = null;
+				var autoCompleteDebounceKey = null;
+				var pendingAutoCompleteResponses = [];
+
+				function normalizeAutoCompleteTerm(term) {
+					return $.trim((term || "") + "").replace(/\s+/g, " ");
+				}
+
+				function shouldSearch(term) {
+					return normalizeAutoCompleteTerm(term).length >= minPrefixLength;
+				}
+
+				function getAutoCompleteUrl() {
+					return '/Search/AutoComplete' + ($(checkboxSelector).is(':checked') || false? '?departmentId=0' : '');
+				}
+
+				function getAutoCompleteCacheKey(requestUrl, term) {
+					return requestUrl + "|" + term.toLowerCase();
+				}
+
+				function cacheAutoCompleteResult(cacheKey, data) {
+					if (!Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+						autoCompleteCacheKeys.push(cacheKey);
+						if (autoCompleteCacheKeys.length > autoCompleteCacheLimit) {
+							delete autoCompleteCache[autoCompleteCacheKeys.shift()];
+						}
+					}
+					autoCompleteCache[cacheKey] = data;
+				}
+
+				function respondToPendingAutoComplete(data) {
+					var responses = pendingAutoCompleteResponses;
+					pendingAutoCompleteResponses = [];
+					for (var i = 0; i < responses.length; i++) {
+						responses[i](data);
+					}
+				}
+
+				function cancelPendingAutoComplete() {
+					clearTimeout(autoCompleteDebounceTimer);
+					autoCompleteDebounceKey = null;
+					if (currentAutoCompleteRequest != null) {
+						currentAutoCompleteRequest.abort();
+						currentAutoCompleteRequest = null;
+					}
+					currentAutoCompleteRequestKey = null;
+					respondToPendingAutoComplete([]);
+				}
+
+				function createWidgetAutoCompleteSource(options) {
+					return function (request, response) {
+						var term = normalizeAutoCompleteTerm(request.term);
+						if (!options.shouldSearch(term)) {
+							response([]);
+							return;
+						}
+
+						var requestUrl = options.url();
+						var cacheKey = getAutoCompleteCacheKey(requestUrl, term);
+						if (Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+							response(autoCompleteCache[cacheKey]);
+							if (options.success) {
+								options.success(autoCompleteCache[cacheKey]);
+							}
+							return;
+						}
+
+						if (currentAutoCompleteRequestKey === cacheKey || autoCompleteDebounceKey === cacheKey) {
+							pendingAutoCompleteResponses.push(response);
+							return;
+						}
+
+						cancelPendingAutoComplete();
+						autoCompleteDebounceKey = cacheKey;
+						pendingAutoCompleteResponses.push(response);
+						autoCompleteDebounceTimer = setTimeout(function () {
+							autoCompleteDebounceKey = null;
+							currentAutoCompleteRequestKey = cacheKey;
+							currentAutoCompleteRequest = $.ajax({
+								url: requestUrl,
+								dataType: "json",
+								timeout: options.timeout,
+								data: {
+									term: term,
+								},
+								success: function (data) {
+									if (currentAutoCompleteRequestKey === cacheKey) {
+										cacheAutoCompleteResult(cacheKey, data);
+										respondToPendingAutoComplete(data);
+										if (options.success) {
+											options.success(data);
+										}
+									}
+								},
+								error: function (xmlhttprequest, textstatus, message) {
+									if (textstatus === "abort") {
+										return;
+									}
+
+									if (options.error) {
+										options.error(xmlhttprequest, textstatus, message);
+									}
+
+									respondToPendingAutoComplete([]);
+								},
+								complete: function (xmlhttprequest) {
+									if (currentAutoCompleteRequest === xmlhttprequest) {
+										currentAutoCompleteRequest = null;
+										currentAutoCompleteRequestKey = null;
+									}
+								}
+							});
+						}, options.delay);
+					};
+				}
+
+				// click handler for search buttons
+				$(buttonSelector).click(function (e) {
+					e.preventDefault();
+					var $btn = $(this);
+					var $field = $btn.siblings(".widgetSearchBox");
+					var term = $field.val() + "";
+					if (!shouldSearch(term)) {
+						// do nothing until user types enough characters
+						$field.focus();
+						return;
+					}
+
+					if ($(checkboxSelector).is(':checked') || false)
+					{
+						doWidgetSearch($.trim(term), Number(0));
+					}
+					else {
+						doWidgetSearch($.trim(term), 0);
+					}
+				});
+
+				// enter key handler for the search field
+				$(searchFieldSelector).keypress(function (e) {
+					var code = e.which || e.keyCode;
+					if (code === 13) {
+						e.preventDefault();
+						var $this = $(this);
+						var term = $this.val() + "";
+						if (!shouldSearch(term)) {
+							// do nothing until user types enough characters
+							$this.focus();
+							return false;
+						}
+
+						if ($(checkboxSelector).is(':checked') || false) {
+							doWidgetSearch($.trim(term), Number(0));
+						} else {
+							doWidgetSearch($.trim(term), 0);
+						}
+						return false;
+					}
+					return true;
+				});
+
+				// autocomplete: set minLength and guard source
+				if (true) {
+					var $searchField = $(searchFieldSelector).autocomplete({
+						minLength: minPrefixLength,
+						source: createWidgetAutoCompleteSource({
+							delay: autoCompleteDebounceDelay,
+							timeout: 10000,
+							shouldSearch: shouldSearch,
+							url: getAutoCompleteUrl,
+							success: function () {
+								$('.autoCompleteError').remove();
+							},
+							error: function (xmlhttprequest, textstatus, message) {
+								if (textstatus === "timeout") {
+									if ($(searchFieldSelector).siblings('.autoCompleteError').length == 0)
+										$('<span class="autoCompleteError"><p class="alert error">Search autocomplete is currently not responding. Please try again later.</p></span>').insertAfter($(searchFieldSelector));
+								}
+							}
+						}),
+						html: true,
+						delay: 0,
+						select: function (event, ui) {
+							$(this).val(ui.item.value);
+							$(this).next().click();
+						}
+					});
+
+					$searchField.data("ui-autocomplete")._renderItem = function (ul, item) {
+						return $("<li class=\"itemList\"></li>")
+							.data("ui-autocomplete-item", item)
+							.append("<a>" + item.label + "</a>")
+							.appendTo(ul);
+					};
+				}
+
+				// keep searchBtnApplyQuery consistent with prefix rule
+				window.searchBtnApplyQuery = function() {
+					var $field = $(searchFieldSelector);
+					var term = $field.val() + "";
+					if (shouldSearch(term)) {
+						// update href for the icon/button (if present)
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "/Search?searchPhrase=" + encodeURIComponent($.trim(term));
+					} else {
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "#";
+					}
+				};
+			}
+			catch(e) {} //we're going to eat this error. Autocomplete won't work but we dont wan't to break anything else on the page.
+		});
+	</script>
+
+	<section id="widgetPreviewSearch" class="widget widgetSearch skin43 widgetOptionSet15" style="display: block;" aria-label="Search">
+				<!-- For the button right and inside -->
+		<div class="widgetBody buttonRightInside">
+			<input class="widgetSearchBox widgetSearchBox0068f54d-af91-4618-a8ce-7e5343db6a41" cp5ph="true" id="searchField0068f54d-af91-4618-a8ce-7e5343db6a41" name="searchField" onchange="searchBtnApplyQuery();" placeholder="Search..." type="text" value="" />
+						<a href="/Search/Results" id="btnSearchIcon" class="widgetSearchButton widgetSearchButton0068f54d-af91-4618-a8ce-7e5343db6a41" role="button"><img alt="Search" class="imageHover" data-hover="/ImageRepository/Document?documentID=92" data-image="/ImageRepository/Document?documentID=93" src="/ImageRepository/Document?documentID=93" /></a>
+
+			<label class="searchLabel" aria-hidden="true" for="searchField0068f54d-af91-4618-a8ce-7e5343db6a41">Search</label>
+		</div>
+
+	</section>
+
+
+<style scoped>
+	  
+		.widgetSearch ::-webkit-input-placeholder {
+		color: #373330;
+	  }
+		.widgetSearch :-moz-placeholder { /* Firefox 18- */
+	   color: #373330;
+	}
+		.widgetSearch ::-moz-placeholder {  /* Firefox 19+ */
+	   color: #373330;
+	}
+	.widgetSearch :-ms-input-placeholder {
+	   color: #373330;
+	}
+	
+
+	.widgetSearch .widgetBody .widgetSearchBox0068f54d-af91-4618-a8ce-7e5343db6a41
+	{
+		color: #373330;
+		font-family: Kanit;
+font-size: 1.1em;
+box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.16);
+border-radius: 100px;
+height: 65px;
+border: none;
+padding: 0 80px 0 25px;
+	}
+	.widgetSearch .widgetBody .widgetSearchButton0068f54d-af91-4618-a8ce-7e5343db6a41
+	{
+		margin: 7px;
+width: 50px;
+	}
+	.widgetSearch .widgetSearch-onlyDept0068f54d-af91-4618-a8ce-7e5343db6a41
+	{
+		display: inline-block;
+		color: #333;
+		
+		
+		 padding-top: 10px;
+	}
+	#ysnSearchOnlyDept0068f54d-af91-4618-a8ce-7e5343db6a41
+	{
+		position: relative;
+		top: .125em;
+	}
+
+</style>
+
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.css">
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.theme.min.css">
+
+
+
+<script type="text/javascript">
+	//Updates search icons href to have the correct queryString
+	function searchBtnApplyQuery() {
+		document.getElementById("btnSearchIcon").href = "/Search?searchPhrase=" + document.getElementById("searchField0068f54d-af91-4618-a8ce-7e5343db6a41").value;
+	}
+</script>
+
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div>
+</div></div>
+</div>
+
+
+
+
+		<div id="bannerImagesJSON2" class="hidden"></div>
+		<div id="bannerSlideshowControls_banner1" class="bannerSlideshowControlsNew none " style="display:none">
+			<a id="arrowPrev_banner1" tabindex="0" class="arrowNew prev" aria-label="Banner Arrow Previous"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowLeft"></use></svg></a>
+			<a id="arrowNext_banner1" tabindex="0" class="arrowNew next" aria-label="Banner Arrow Next"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowRight"></use></svg></a>
+		</div>
+			<script type="text/javascript">
+				$(window).on("load", function () {
+					$.when(window.Pages.rwdSetupComplete)
+						.done(function () {
+							renderExternalBannerSlideshow('banner1',
+								{"BannerOptionID":2,"ThemeID":1,"SlotName":"banner1","Name":"Default","IsDefault":true,"BannerMode":2,"SlideShowSlideTiming":null,"SlideshowTransition":0,"SlideShowTransitionTiming":null,"ImageScale":true,"ImageAlignment":1,"ImageScroll":true,"MuteSound":true,"VideoType":0,"Status":40,"SlideshowControlsPosition":0,"SlideshowControlsAlignment":0,"SlideshowBannerControlsColorScheme":0,"DisplayVideoPauseButton":false,"VideoPauseButtonAlignment":1,"VideoPauseButtonControlsAlignment":0,"VideoPauseButtonStyle":"#FFFFFF","VideoPauseButtonBackgroundStyle":"#000000","VideoPauseButtonAlignmentClass":"alignRight viewport","DisplaySlideshowPauseButton":true,"SlideshowControlsColor":"#FFFFFF","SlideshowControlsBackgroundColor":"#000000","SlideshowPauseButtonClass":"isHidden","BannerImages":[{"BannerImageID":436,"BannerOptionID":2,"FileName":"/ImageRepository/Document?documentID=20232","Height":701,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":1,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":""}],"BannerVideos":[],"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/"},
+								'/App_Themes/Interior/Images/',
+								'Rotating');
+						});
+				});
+			</script>
+
+</div>
+</div><!-- Content container --><div data-cpRole="structuralContainer" id="mainContainerTS">
+<div class="siteWrap"><div data-cpRole="structuralContainer" id="mainWrapTS" class="mainWrap" role="main">
+<div data-cpRole="structuralContainer" id="outerContentWrapTS" class="outerContentWrap">
+<div data-cpRole="structuralContainer" id="contentWrapTS" class="contentWrap">
+<div data-cpRole="breadCrumbs" id="breadCrumbs" class="breadCrumbContainer">		<ol class="semanticList breadCrumbs">
+			<li><a class="breadCrumb" href="/">Home</a></li><li><a class="breadCrumb" href="/27/Government">Government</a></li><li id="currentBCPage" data-pageid="454"><a href class="breadCrumb" aria-current="page">District Courts</a></li>
+		</ol>
+
+	   
+    
+</div><div data-cpRole="mainContentContainer" id="moduleContent">
+	
+	<div id="page" class="moduleContentNew">
+		
+
+	<input id="hdnPageID" name="hdnPageID" type="hidden" value="454" />
+	<input id="hdnParentID" name="hdnParentID" type="hidden" value="27" />
+	<input id="hdnVersionID" name="hdnVersionID" type="hidden" value="12292" />
+	<input id="pageMenuTitle" name="pageMenuTitle" type="hidden" value="District Courts" />
+	<input id="pageShowFeatureColumn" name="pageShowFeatureColumn" type="hidden" value="False" />
+	<input id="hdnIsLayoutPage" name="hdnIsLayoutPage" type="hidden" value="False" />
+	<input id="hdnPageStatus" name="hdnPageStatus" type="hidden" value="Published" />
+
+				<h1 id="versionHeadLine" class="headline">
+
+District Courts		</h1>
+	
+		<div id="cc5f8c90dc-b4cb-431b-90ee-10648f8df655" data-containerid="5f8c90dc-b4cb-431b-90ee-10648f8df655" class="pageContent cpGrid cpGrid24"  data-contentcontainerbreakpoint="30" >
+			
+
+		<div class="row outer wide"><!--
+--><div class="outer col col12 first" style="" data-widgetcontainerid="79c167b5-a843-4c0d-a495-72046b26d09e">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id2444b4f4-7707-4fd6-9e8a-7a7c032ba006" style="" data-widgetcontainerid="2444b4f4-7707-4fd6-9e8a-7a7c032ba006">	
+<div class="widget editor pageStyles narrow" id="divEditor6e517bc3-c735-44e3-8551-f620a9c0b93d" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1" aria-hidden="true" tabindex="-1">On this page:</h2><ul><li><a href="#News">News &amp; Announcements</a></li><li><a href="#Directory">Directory</a></li><li><a href="#Visiting">Visiting the District Courts</a></li><li><a href="#FAQ">Help Center</a></li><li><a href="#Related">Related Agencies</a></li></ul>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '6e517bc3-c735-44e3-8551-f620a9c0b93d'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col12 last" style="" data-widgetcontainerid="93860e62-8c0f-4f2e-972d-59091275410b">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id6b52110f-d456-4e2a-8198-d85101edc1a2" style="" data-widgetcontainerid="6b52110f-d456-4e2a-8198-d85101edc1a2">	
+<div class="widget editor pageStyles narrow" id="divEditor9a94a4d9-4c01-45c9-8b0d-d7ce7097d506" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><img src="/ImageRepository/Document?documentId=491" class="fr-dib fr-rounded fr-fil" alt="Justice Center" style="width: 239px;"></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '9a94a4d9-4c01-45c9-8b0d-d7ce7097d506'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="1acb41e7-c85c-46cc-a504-d1cd4b7c2e28">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id1d4a882a-5f06-460e-ba51-3a7da74aa653" style="" data-widgetcontainerid="1d4a882a-5f06-460e-ba51-3a7da74aa653">	
+<div class="widget editor pageStyles narrow" id="divEditor160d1405-4b8e-47af-bc1b-951adf59cba6" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1" aria-hidden="true" tabindex="-1">News &amp; Announcements</h2>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '160d1405-4b8e-47af-bc1b-951adf59cba6'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="d6c44704-86c7-4767-82ca-68c7ef503d97">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col24 first last iddc3945e6-714c-4071-919c-15ffcb4ae43b" style="" data-widgetcontainerid="dc3945e6-714c-4071-919c-15ffcb4ae43b">	
+<div class="widget editor pageStyles narrow" id="divEditor0353e7ae-3a93-4c28-8357-2a41c3e74052" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h3 class="subhead2" id="isPasted" aria-level="2" role="heading"><strong>2026 District Court Jury Trial Schedule</strong></h3><p>The District Courts have released the 2026 Jury Trial Schedule. &nbsp; &nbsp;</p><p>For specific dates and court requirements, click on the appropriate link below:</p><table style="width: 100%; margin-left: calc(0%);"><tbody><tr><td style="width: 50.0000%;"><ul><li><a href="https://www.wilcotx.gov/455/26th-District-Court" target="_blank" rel="noopener" aria-describedby="audioeye_new_window_message">26th District Court</a></li><li><a href="https://www.wilcotx.gov/487/368th-District-Court" target="_blank" rel="noopener" aria-describedby="audioeye_new_window_message">368th District Court</a></li><li><a href="https://www.wilcotx.gov/517/425th-District-Court" target="_blank" rel="noopener" aria-describedby="audioeye_new_window_message">425th District Court</a></li><li><a href="https://www.wilcotx.gov/1821/512th-District-Court" target="_blank" rel="noopener" aria-describedby="audioeye_new_window_message">512th District Court</a></li></ul></td><td style="width: 50.0000%;"><ul><li><a href="https://www.wilcotx.gov/466/277th-District-Court" target="_blank" rel="noopener" aria-describedby="audioeye_new_window_message">277th District Court</a></li><li><a href="https://www.wilcotx.gov/500/395th-District-Court" target="_blank" rel="noopener" aria-describedby="audioeye_new_window_message">395th District Court</a></li><li><a href="https://www.wilcotx.gov/537/480th-District-Court" target="_blank" rel="noopener" aria-describedby="audioeye_new_window_message">480th District Court</a></li></ul></td></tr></tbody></table>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '0353e7ae-3a93-4c28-8357-2a41c3e74052'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col24 first last id45a425c1-1266-44fb-94bc-a0509cb4b8ed" style="" data-widgetcontainerid="45a425c1-1266-44fb-94bc-a0509cb4b8ed">	
+<div class="widget editor pageStyles narrow" id="divEditorcac8c525-bde5-43fd-a7e8-5ae8eaa9fd0a" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h3 aria-level="2" id="isPasted">Standing Orders</h3><p>The District Courts have released several standing orders related to criminal matters. &nbsp;Counsel should review and be familiar with these orders, which may be found at links below. &nbsp;</p><ol><li><a href="/DocumentCenter/View/12486" target="_blank" rel="noopener" aria-describedby="audioeye_new_window_message">Standing Order Regarding Appellate Briefs</a></li><li><a href="/DocumentCenter/View/12485" target="_blank" rel="noopener" aria-describedby="audioeye_new_window_message">Standing Order Regarding Experts and Investigators</a></li><li><a href="/DocumentCenter/View/13481" target="_blank" rel="noopener" aria-describedby="audioeye_new_window_message">Standing Order Regarding Trial Continuances</a></li></ol>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'cac8c525-bde5-43fd-a7e8-5ae8eaa9fd0a'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="143600eb-1cf1-4be6-a963-3957d3c1f447">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id065ea6c2-baa0-4b05-b5bb-2f784d1ad961" style="" data-widgetcontainerid="065ea6c2-baa0-4b05-b5bb-2f784d1ad961">	
+<div class="widget editor pageStyles narrow" id="divEditorf7ef495f-acd3-4822-b1fa-a6c94ad0f3d2" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1" id="Directory">Directory</h2><p style="text-align: left;"><em>Represented parties (parties with a lawyer) should <strong>not</strong> attempt to contact the Court, except through their attorney.</em></p><table style="width: 100%; height: 567px;"><tbody><tr><td style="width: 50.0000%;"><h3 aria-hidden="false" tabindex="-1" aria-level="2"><a href="https://www.wilcotx.gov/455/26th-District-Court">26th District Court</a><br>Judge Donna King</h3><p>The 26th District Court hears civil and criminal cases and presides over the Felony Mental Health Docket.</p></td><td style="width: 50.0000%;"><h3 aria-hidden="false" tabindex="-1" aria-level="2"><a href="https://www.wilcotx.gov/466/277th-District-Court">277th District Court</a><br>Judge Stacey Mathews</h3><p>The 277th District Court hears criminal and juvenile cases and presides over the Transformative Justice Program.</p></td></tr><tr><td style="width: 50.0000%;"><h3 aria-hidden="false" tabindex="-1" aria-level="2"><a href="https://www.wilcotx.gov/487/368th-District-Court">368th District Court</a><br>Judge Sarah Bruchmiller</h3><p>The 368th District Court hears civil and criminal cases and presides over the Felony DWI Court Program.</p></td><td style="width: 50.0000%;"><h3 aria-level="2"><a href="https://www.wilcotx.gov/500/395th-District-Court">395th District Court</a><br>Judge Ryan Larson</h3><p>The 395th District Court hears civil, child welfare (CPS), and family cases and presides over the Family Recovery Court (FRC) program.</p></td></tr><tr style="height: 75px;"><td style="width: 50.0000%;"><h3 aria-hidden="false" tabindex="-1" aria-level="2"><a href="https://www.wilcotx.gov/517/425th-District-Court">425th District Court</a><br>Judge Jason Bramow</h3><p>The 425th District Court hears civil, child welfare (CPS), and family cases.</p></td><td style="width: 50.0000%;"><h3 aria-hidden="false" tabindex="-1" aria-level="2"><a href="https://www.wilcotx.gov/537/480th-District-Court">480th District Court</a><br>Judge Terence M. Davis</h3>The 480th District Court hears civil, child welfare (CPS), and family cases.</td></tr><tr><td style="width: 50.0000%;"><h3 aria-hidden="false" tabindex="-1" aria-level="2"><a href="https://www.wilcotx.gov/1821/512th-District-Court" target="_blank" rel="noopener" aria-describedby="audioeye_new_window_message">512th District Court</a><br>Judge Sarah Moore</h3><p>The 512th District Court hears civil and criminal cases.</p><br></td><td style="width: 50.0000%;"><br></td></tr><tr><td style="width: 99.8519%;" colspan="2"><h3 aria-hidden="false" tabindex="-1"><a href="https://www.wilcotx.gov/1167/District-Court-Administration">District Court Administration</a><br>(DCA)</h3><p>DCA is an administrative office that provides operational, technical, and administrative support to the courts. Staff manage various programs on behalf of the District Court judiciary with the goal of ensuring efficient, effective access to justice in Williamson County.</p></td></tr></tbody></table><h2 class="subhead1" aria-hidden="false" tabindex="-1" aria-level="2">Visiting the District Courts</h2>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'f7ef495f-acd3-4822-b1fa-a6c94ad0f3d2'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="a430a4aa-4ec2-4447-91f1-2a3dd9e34b3d">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id29cd2a43-1cbd-4d6d-a5ff-9bd685cfcdbc" style="" data-widgetcontainerid="29cd2a43-1cbd-4d6d-a5ff-9bd685cfcdbc">	
+
+	<div id="divTabbed6b77653a-312c-4b71-b654-3e3eac8532e2" class="widget widgetTabbed narrow skin43 accordionTabs" data-widgetid="6b77653a-312c-4b71-b654-3e3eac8532e2">
+
+		<div class="cpTabPanels">
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab6b77653a-312c-4b71-b654-3e3eac8532e2_0" class="tabButton" id="tabBtnNarrow6b77653a-312c-4b71-b654-3e3eac8532e2_0" role="button" aria-controls="tab6b77653a-312c-4b71-b654-3e3eac8532e2_0" aria-expanded="false" ><span class="tabName editable" data-sequence="0" data-tabname="Address and Directions" contenteditable="false">Address and Directions</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab6b77653a-312c-4b71-b654-3e3eac8532e2_0" role="region" aria-labelledby="tabBtn6b77653a-312c-4b71-b654-3e3eac8532e2_0" >
+
+
+
+
+
+
+
+
+
+<div data-widget-id="c08b0f63-6be3-429f-8e04-34a6367e1bd0" data-moduleWidgetType="cityDirectory" data-widget-controller-path="/CityDirectory/Widget">
+	<div id="cityDirectoryWidgetc08b0f63-6be3-429f-8e04-34a6367e1bd0" class="widget widgetStaffDirectory skin43 wide" >
+			<div class="widgetHeader">
+							</div>
+						<ol class="semanticList">
+		<li class="widgetItem h-card">
+
+
+
+
+				<div class="field h-adr">
+					<strong>Physical Address</strong>
+<button class="viewMap" data-moduleId="4" onclick="new CivicPlus.Maps().LoadMap(document.getElementById('googleMap67'), '100%', $(document.getElementById('googleMap67')).next('.infotext').children('.address').text());">View Map</button>					<br />
+					<span class="p-street-address">405 Martin Luther King Street</span><br />
+					<span class="locality">Georgetown</span>, <span class="p-region">TX</span> <span class="p-postal-code">78626</span>
+
+				</div>
+				<br />
+
+					<script type="text/javascript">
+							$(document).ready(function () {
+								var mode = 2;
+								loadGoogleMapsScript(mode, 'loadMaps');
+							});
+					</script>
+					<div class="field">
+						<br>
+						<div class="mapWrapLazyLoaded">
+							<div id="googleMap67" class="googleMap" style=""></div>
+							<div style="display: none" class="infotext">
+								<div class="address">405 Martin Luther King Street  Georgetown TX 78626</div>
+							</div>
+						</div>
+						<a href="https://www.google.com/maps/place/405+Martin+Luther+King+Street++Georgetown+TX+78626" class="mapLink" title="Open location on Google Maps">Directions</a>
+					</div>
+					<br />
+
+
+									
+
+
+		</li>
+									</ol>
+	</div>
+</div>
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab6b77653a-312c-4b71-b654-3e3eac8532e2_1" class="tabButton" id="tabBtnNarrow6b77653a-312c-4b71-b654-3e3eac8532e2_1" role="button" aria-controls="tab6b77653a-312c-4b71-b654-3e3eac8532e2_1" aria-expanded="false" ><span class="tabName editable" data-sequence="1" data-tabname="Hours &amp; Public Access" contenteditable="false">Hours & Public Access</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab6b77653a-312c-4b71-b654-3e3eac8532e2_1" role="region" aria-labelledby="tabBtn6b77653a-312c-4b71-b654-3e3eac8532e2_1" >
+
+<div class="widget editor pageStyles narrow" id="divEditore33f5504-1ee7-426f-844b-2df3db3872d0" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p>The Justice Center is open to the public Monday-Friday from 8:00 AM-5:00 PM. Members of the public are required to enter at the corner of 4th and Martin Luther King St.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'e33f5504-1ee7-426f-844b-2df3db3872d0'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab6b77653a-312c-4b71-b654-3e3eac8532e2_2" class="tabButton" id="tabBtnNarrow6b77653a-312c-4b71-b654-3e3eac8532e2_2" role="button" aria-controls="tab6b77653a-312c-4b71-b654-3e3eac8532e2_2" aria-expanded="false" ><span class="tabName editable" data-sequence="2" data-tabname="Security" contenteditable="false">Security</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab6b77653a-312c-4b71-b654-3e3eac8532e2_2" role="region" aria-labelledby="tabBtn6b77653a-312c-4b71-b654-3e3eac8532e2_2" >
+
+<div class="widget editor pageStyles narrow" id="divEditoreaa061c8-41e7-485b-ac94-7e71a7f5af87" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p>In order to enter the Justice Center, you are required to go through security screening. &nbsp;In addition, any bags/packages you bring with you are subject to search.</p><p>The Williamson County Sheriff&apos;s Office is responsible for security of the Justice Center.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'eaa061c8-41e7-485b-ac94-7e71a7f5af87'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab6b77653a-312c-4b71-b654-3e3eac8532e2_3" class="tabButton" id="tabBtnNarrow6b77653a-312c-4b71-b654-3e3eac8532e2_3" role="button" aria-controls="tab6b77653a-312c-4b71-b654-3e3eac8532e2_3" aria-expanded="false" ><span class="tabName editable" data-sequence="3" data-tabname="Parking" contenteditable="false">Parking</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab6b77653a-312c-4b71-b654-3e3eac8532e2_3" role="region" aria-labelledby="tabBtn6b77653a-312c-4b71-b654-3e3eac8532e2_3" >
+
+<div class="widget editor pageStyles narrow" id="divEditor8937b9b5-a38f-4a9d-8d9f-8a586e5d4bb4" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p>There are several free parking options around the Justice Center. &nbsp;The surface lot on 4th St., just north of the building and the parking garage on 4th St., across from the Williamson County Jail are the nearest to the public entrance to the building.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '8937b9b5-a38f-4a9d-8d9f-8a586e5d4bb4'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab6b77653a-312c-4b71-b654-3e3eac8532e2_4" class="tabButton" id="tabBtnNarrow6b77653a-312c-4b71-b654-3e3eac8532e2_4" role="button" aria-controls="tab6b77653a-312c-4b71-b654-3e3eac8532e2_4" aria-expanded="false" ><span class="tabName editable" data-sequence="4" data-tabname="Children in Court" contenteditable="false">Children in Court</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab6b77653a-312c-4b71-b654-3e3eac8532e2_4" role="region" aria-labelledby="tabBtn6b77653a-312c-4b71-b654-3e3eac8532e2_4" >
+
+<div class="widget editor pageStyles narrow" id="divEditor40d1d606-455b-408e-811f-da3777ef655f" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p>Children should not be brought to Court without the prior approval of the Court.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '40d1d606-455b-408e-811f-da3777ef655f'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab6b77653a-312c-4b71-b654-3e3eac8532e2_5" class="tabButton" id="tabBtnNarrow6b77653a-312c-4b71-b654-3e3eac8532e2_5" role="button" aria-controls="tab6b77653a-312c-4b71-b654-3e3eac8532e2_5" aria-expanded="false" ><span class="tabName editable" data-sequence="5" data-tabname="Recording Devices" contenteditable="false">Recording Devices</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab6b77653a-312c-4b71-b654-3e3eac8532e2_5" role="region" aria-labelledby="tabBtn6b77653a-312c-4b71-b654-3e3eac8532e2_5" >
+
+<div class="widget editor pageStyles narrow" id="divEditor5713190d-1d90-435c-aadf-aaa6d1f57cc7" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p>Recording court proceedings is prohibited by law.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '5713190d-1d90-435c-aadf-aaa6d1f57cc7'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab6b77653a-312c-4b71-b654-3e3eac8532e2_6" class="tabButton" id="tabBtnNarrow6b77653a-312c-4b71-b654-3e3eac8532e2_6" role="button" aria-controls="tab6b77653a-312c-4b71-b654-3e3eac8532e2_6" aria-expanded="false" ><span class="tabName editable" data-sequence="6" data-tabname="Courtroom Dress and conduct" contenteditable="false">Courtroom Dress and conduct</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab6b77653a-312c-4b71-b654-3e3eac8532e2_6" role="region" aria-labelledby="tabBtn6b77653a-312c-4b71-b654-3e3eac8532e2_6" >
+
+<div class="widget editor pageStyles narrow" id="divEditor9951e584-fcfb-49fb-ad68-97696bf7755f" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h3 class="subhead2" aria-level="2" id="isPasted" role="heading">Dress Guidelines</h3><p><em>Appropriate attire is mandatory for any appearance in court, whether as a participant, witness, or observer. &nbsp;As a general rule, you should think of the courtroom as a formal environment, and you should dress as you would if you were going to an important job interview. &nbsp;</em></p><ul><li>Men: &nbsp;long pants (if your pants have belt loops, wear a belt); shirt (tucked in); shoes with socks</li><li>Women: &nbsp;dress, skirt, or long pants; blouse, sweater; casual dress shirt; shoes</li></ul><p aria-hidden="true" tabindex="-1" aria-level="2">The following is not allowed:</p><table style="width: 100%;"><tbody><tr><td style="width: 33.3333%;">Shorts</td><td style="width: 33.3333%;">Hats (unless for religious purposes)</td><td style="width: 33.3333%;">Halter top, tube top</td></tr><tr><td style="width: 33.3333%;">T-shirt/muscle shirt</td><td style="width: 33.3333%;">See-through top</td><td style="width: 33.3333%;">Flip flops</td></tr><tr><td style="width: 33.3333%;">Clothing that exposes midriff or underwear</td><td style="width: 33.3333%;">Ripped/torn clothing</td><td style="width: 33.3333%;">Pants that fall below the waist</td></tr><tr><td style="width: 33.3333%;">Clothing that promotes illegal activity, violence</td><td style="width: 33.3333%;">Sunglasses</td><td style="width: 33.3333%;"><br></td></tr></tbody></table><p><br></p><h3 class="subhead2" aria-hidden="true" tabindex="-1" aria-level="2" role="heading">Decorum and Conduct</h3><ol><li style="box-sizing: border-box; margin-bottom: 0.35em; border: 0px none; font-style: normal; font-weight: 400;">Do not approach the bench without permission.</li><li>When given permission, stand in the area designated by the Bailiff.</li><li>Cell phones must be turned off or placed on silent and may not be used in the courtroom.</li><li>Food or drink is not allowed in the courtroom.</li><li>If you are waiting in the courtroom, please keep conversation to a minimum. &nbsp;If you disturb the court or participants, you may be asked to leave.</li></ol>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '9951e584-fcfb-49fb-ad68-97696bf7755f'));
+	});
+</script>
+</div>
+
+				</div>
+					</div>
+	</div>
+	<script type="text/javascript">
+
+		//If responsive not enabled, execute this after a timeout
+		if(!isResponsiveEnabled)
+		{
+			window.setTimeout(function(){
+				var tabbedWidgetID = 'divTabbed6b77653a-312c-4b71-b654-3e3eac8532e2';
+				typeof setTabbedWidgetsTabHeight === "function" && setTabbedWidgetsTabHeight(tabbedWidgetID);
+			}, 1500);
+		}
+
+		function reinitCarousels() {
+			if (window.carouselsToInit) {
+				for (var i = 0; i < window.carouselsToInit.length; i++) {
+					carouselsToInit[i]();
+				}
+			}
+		}
+		function sizeTabbedContent(element){
+			if(window.Pages){
+				if(window.Pages.onResizeHandlers){
+					var setTabbedInterval = setInterval(function () {
+						window.Pages.onResizeHandlers.forEach(function(car){car();});
+					}, 25)
+
+
+					setTimeout(function () {
+						clearInterval(setTabbedInterval);
+						if ($.cookie("enableLiveEdit") === "true") {
+							setInterval(function () {
+								window.Pages.onResizeHandlers.forEach(function(car){car();});
+							}, 2000);
+						}
+					}, 2500);
+					element.onclick="window.setTimeout(function(){reinitCarousels();},2);"
+				}
+			}
+		}
+
+		function adjustTab(e) {
+			e.preventDefault();
+			window.setTimeout(function(){
+				reinitCarousels();
+			}, 2);
+			sizeTabbedContent(this);
+		}
+
+		var tabButtons = document.querySelectorAll("#divTabbed6b77653a-312c-4b71-b654-3e3eac8532e2 .tabButton");
+
+		tabButtons.forEach(function (tabButton) {
+			tabButton.addEventListener("click", adjustTab);
+		});
+
+	</script>
+
+
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="f3643d1e-5817-4f44-a160-db0645529fc9">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id90986184-0b62-42b7-b6c2-d9dc8f8b67ea" style="" data-widgetcontainerid="90986184-0b62-42b7-b6c2-d9dc8f8b67ea">	
+<div class="widget editor pageStyles narrow" id="divEditor5f7ecaf5-1a2e-4460-8a5a-acce418d2be0" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1" id="FAQ">Help Center</h2>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '5f7ecaf5-1a2e-4460-8a5a-acce418d2be0'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="085e1f98-4e98-4884-9964-082aa147dfa9">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id8b7cf81d-2f15-4b9b-82a2-f37077954796" style="" data-widgetcontainerid="8b7cf81d-2f15-4b9b-82a2-f37077954796">	
+
+	<div id="divTabbed359baaa5-b122-4bc3-b3a5-aceec35971b7" class="widget widgetTabbed narrow skin43 accordionTabs" data-widgetid="359baaa5-b122-4bc3-b3a5-aceec35971b7">
+
+		<div class="cpTabPanels">
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab359baaa5-b122-4bc3-b3a5-aceec35971b7_0" class="tabButton" id="tabBtnNarrow359baaa5-b122-4bc3-b3a5-aceec35971b7_0" role="button" aria-controls="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_0" aria-expanded="false" ><span class="tabName editable" data-sequence="0" data-tabname="Find Court dates and Case information" contenteditable="false">Find Court dates and Case information</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_0" role="region" aria-labelledby="tabBtn359baaa5-b122-4bc3-b3a5-aceec35971b7_0" >
+
+
+
+
+<div data-widget-id="69134710-d533-4503-930a-e4812a106c24" data-moduleName="list" id="widgetText69134710-d533-4503-930a-e4812a106c24" class="widget widgetText">
+	<div class="widgetBody pageStyles" id="div69134710-d533-4503-930a-e4812a106c24">
+
+		<div style="min-height: 18px;">
+			<div class="textContent" >The Williamson County <a target="_blank" href="https://judicialrecords.wilco.org/PublicAccess/default.aspx" aria-describedby="audioeye_new_window_message" aria-label="Public Judicial Records Website Opens in new window">Public Judicial Records Website</a> contains information about all cases pending in the District Courts (except those that are restricted by law).&nbsp; This includes court assignment and court date (if set).</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.widget .textContent p:first-child {
+		padding-top: 0px;
+		margin-top: 0px;
+	}
+
+</style>
+
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab359baaa5-b122-4bc3-b3a5-aceec35971b7_1" class="tabButton" id="tabBtnNarrow359baaa5-b122-4bc3-b3a5-aceec35971b7_1" role="button" aria-controls="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_1" aria-expanded="false" ><span class="tabName editable" data-sequence="1" data-tabname="File documents" contenteditable="false">File documents</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_1" role="region" aria-labelledby="tabBtn359baaa5-b122-4bc3-b3a5-aceec35971b7_1" >
+
+<div class="widget editor pageStyles narrow" id="divEditor39cb9675-a6cb-4552-bf94-8e578d95a4ba" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p>The <a href="https://www.wilcotx.gov/309/District-Clerk">Williamson County District Clerk</a> maintains the records of the District Courts. &nbsp;Documents are filed with that office via the statewide <a href="http://www.efiletexas.gov/" target="_blank" rel="noopener" aria-label="eFile Texas  Opens in new window" aria-describedby="audioeye_new_window_message">eFile Texas </a>system.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '39cb9675-a6cb-4552-bf94-8e578d95a4ba'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab359baaa5-b122-4bc3-b3a5-aceec35971b7_2" class="tabButton" id="tabBtnNarrow359baaa5-b122-4bc3-b3a5-aceec35971b7_2" role="button" aria-controls="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_2" aria-expanded="false" ><span class="tabName editable" data-sequence="2" data-tabname="Find Legal Advice" contenteditable="false">Find Legal Advice</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_2" role="region" aria-labelledby="tabBtn359baaa5-b122-4bc3-b3a5-aceec35971b7_2" >
+
+
+
+
+<div data-widget-id="0875462a-5053-404d-883f-3cbef2a4557d" data-moduleName="list" id="widgetText0875462a-5053-404d-883f-3cbef2a4557d" class="widget widgetText">
+	<div class="widgetBody pageStyles" id="div0875462a-5053-404d-883f-3cbef2a4557d">
+
+		<div style="min-height: 18px;">
+			<div class="textContent" >You should contact an attorney to assist you in resolving your matter.&nbsp; Court staff are unable to provide you with legal advice, nor can the court refer you to an attorney.&nbsp; There are several programs that provide referrals to attorneys.&nbsp; These include&nbsp;<span style="font-family: Kanit; font-size: 1em; font-style: normal; font-weight: 200;">the</span><a target="_blank" href="https://austinlrs.com/" aria-describedby="audioeye_new_window_message" aria-label=" Lawyer Referral Service of Central Texas Opens in new window" style="font-size: 1em;"> Lawyer Referral Service of Central Texas</a>,<span style="font-family: Kanit; font-size: 1em; font-style: normal; font-weight: 200;">&nbsp;the </span><a target="_blank" href="https://www.tcdla.com/" aria-label="Texas Criminal Defense Lawyers Association Opens in new window" aria-describedby="audioeye_new_window_message" style="font-size: 1em;">Texas Criminal Defense Lawyers Association</a>, and&nbsp;<span style="font-family: Kanit; font-size: 1em; font-style: normal; font-weight: 200;" class="startContainer endContainer">the <a target="_blank" href="https://www.texasbar.com/AM/Template.cfm?Section=Lawyer_Referral_Service_LRIS_&amp;Template=/CM/HTMLDisplay.cfm&amp;ContentID=60315" aria-describedby="audioeye_new_window_message">Lawyer Referral and Information Service</a>&nbsp;</span><div><br>There are a number of entities who provide access to legal advice at low or no cost <strong><em>for those who qualify</em></strong>.&nbsp; <a target="_blank" href="https://texaslawhelp.org/" onkeypress="this.onclick();" onclick="return showExternalSiteDialog(this);" aria-describedby="audioeye_new_window_message" aria-label="TexasLawHelp.org Opens in new window">TexasLawHelp.org</a> (the Texas Legal Services Center) and <a target="_blank" href="https://www.trla.org/" onkeypress="this.onclick();" onclick="return showExternalSiteDialog(this);" aria-describedby="audioeye_new_window_message" aria-label="Texas Rio Grande Legal Aid Opens in new window">Texas Rio Grande Legal Aid</a> are two examples.</div></div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.widget .textContent p:first-child {
+		padding-top: 0px;
+		margin-top: 0px;
+	}
+
+</style>
+
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab359baaa5-b122-4bc3-b3a5-aceec35971b7_3" class="tabButton" id="tabBtnNarrow359baaa5-b122-4bc3-b3a5-aceec35971b7_3" role="button" aria-controls="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_3" aria-expanded="false" ><span class="tabName editable" data-sequence="3" data-tabname="I need an attorney in a felony case" contenteditable="false">I need an attorney in a felony case</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_3" role="region" aria-labelledby="tabBtn359baaa5-b122-4bc3-b3a5-aceec35971b7_3" >
+
+
+
+
+<div data-widget-id="b8e83a74-146d-4b7d-8bec-8c19de83883b" data-moduleName="list" id="widgetTextb8e83a74-146d-4b7d-8bec-8c19de83883b" class="widget widgetText">
+	<div class="widgetBody pageStyles" id="divb8e83a74-146d-4b7d-8bec-8c19de83883b">
+
+		<div style="min-height: 18px;">
+			<div class="textContent" >Most important:&nbsp; You MUST go to court, even if you can't afford an attorney.&nbsp; <br><br>The court will ask you to make a good effort to hire an attorney.&nbsp; Under certain circumstances, individuals may be eligible to have an attorney appointed to represent them in a criminal case.&nbsp; More details may be found at <a target="_blank" href="https://www.wilcotx.gov/669/Indigent-Defense" aria-describedby="audioeye_new_window_message" aria-label="Williamson County Pretrial Services Opens in new window" rel="noopener">Williamson County Pretrial Services</a> website.</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.widget .textContent p:first-child {
+		padding-top: 0px;
+		margin-top: 0px;
+	}
+
+</style>
+
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab359baaa5-b122-4bc3-b3a5-aceec35971b7_4" class="tabButton" id="tabBtnNarrow359baaa5-b122-4bc3-b3a5-aceec35971b7_4" role="button" aria-controls="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_4" aria-expanded="false" ><span class="tabName editable" data-sequence="4" data-tabname="Jury Duty information" contenteditable="false">Jury Duty information</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_4" role="region" aria-labelledby="tabBtn359baaa5-b122-4bc3-b3a5-aceec35971b7_4" >
+
+<div class="widget editor pageStyles narrow" id="divEditor6b524019-72f4-4b2e-b0f3-6c7ab76efd4b" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p>Information about Jury Duty can be found on the <a href="https://www.wilcotx.gov/309/District-Clerk">District Clerk&apos;s</a> website.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '6b524019-72f4-4b2e-b0f3-6c7ab76efd4b'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab359baaa5-b122-4bc3-b3a5-aceec35971b7_5" class="tabButton" id="tabBtnNarrow359baaa5-b122-4bc3-b3a5-aceec35971b7_5" role="button" aria-controls="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_5" aria-expanded="false" ><span class="tabName editable" data-sequence="5" data-tabname="Inmate Information" contenteditable="false">Inmate Information</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_5" role="region" aria-labelledby="tabBtn359baaa5-b122-4bc3-b3a5-aceec35971b7_5" >
+
+<div class="widget editor pageStyles narrow" id="divEditor85769db5-ef9e-4bd8-8870-bc56f46cf091" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p>Inmate information can be found on the <a href="https://www.wilcotx.gov/649/Corrections-Bureau">Williamson County Sheriff&apos;s Office website</a>.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '85769db5-ef9e-4bd8-8870-bc56f46cf091'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab359baaa5-b122-4bc3-b3a5-aceec35971b7_6" class="tabButton" id="tabBtnNarrow359baaa5-b122-4bc3-b3a5-aceec35971b7_6" role="button" aria-controls="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_6" aria-expanded="false" ><span class="tabName editable" data-sequence="6" data-tabname="Media Inquiries" contenteditable="false">Media Inquiries</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_6" role="region" aria-labelledby="tabBtn359baaa5-b122-4bc3-b3a5-aceec35971b7_6" >
+
+<div class="widget editor pageStyles narrow" id="divEditor59201e57-feb0-4810-be09-f6873b50d126" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p>Members of the media with inquiries related to the District Courts should contact <a href="https://www.wilcotx.gov/1167/District-Court-Administration">District Court Administration.</a></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '59201e57-feb0-4810-be09-f6873b50d126'));
+	});
+</script>
+</div>
+
+				</div>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab359baaa5-b122-4bc3-b3a5-aceec35971b7_7" role="region" aria-labelledby="tabBtn359baaa5-b122-4bc3-b3a5-aceec35971b7_7" >
+				</div>
+					</div>
+	</div>
+	<script type="text/javascript">
+
+		//If responsive not enabled, execute this after a timeout
+		if(!isResponsiveEnabled)
+		{
+			window.setTimeout(function(){
+				var tabbedWidgetID = 'divTabbed359baaa5-b122-4bc3-b3a5-aceec35971b7';
+				typeof setTabbedWidgetsTabHeight === "function" && setTabbedWidgetsTabHeight(tabbedWidgetID);
+			}, 1500);
+		}
+
+		function reinitCarousels() {
+			if (window.carouselsToInit) {
+				for (var i = 0; i < window.carouselsToInit.length; i++) {
+					carouselsToInit[i]();
+				}
+			}
+		}
+		function sizeTabbedContent(element){
+			if(window.Pages){
+				if(window.Pages.onResizeHandlers){
+					var setTabbedInterval = setInterval(function () {
+						window.Pages.onResizeHandlers.forEach(function(car){car();});
+					}, 25)
+
+
+					setTimeout(function () {
+						clearInterval(setTabbedInterval);
+						if ($.cookie("enableLiveEdit") === "true") {
+							setInterval(function () {
+								window.Pages.onResizeHandlers.forEach(function(car){car();});
+							}, 2000);
+						}
+					}, 2500);
+					element.onclick="window.setTimeout(function(){reinitCarousels();},2);"
+				}
+			}
+		}
+
+		function adjustTab(e) {
+			e.preventDefault();
+			window.setTimeout(function(){
+				reinitCarousels();
+			}, 2);
+			sizeTabbedContent(this);
+		}
+
+		var tabButtons = document.querySelectorAll("#divTabbed359baaa5-b122-4bc3-b3a5-aceec35971b7 .tabButton");
+
+		tabButtons.forEach(function (tabButton) {
+			tabButton.addEventListener("click", adjustTab);
+		});
+
+	</script>
+
+
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="a86b93f1-380d-40d2-8f5e-21376b71aedf">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id9725173c-c761-46b1-a4bf-60fed02f8e54" style="" data-widgetcontainerid="9725173c-c761-46b1-a4bf-60fed02f8e54">	
+<div class="widget editor pageStyles narrow" id="divEditora059c1bf-7a2c-4ab2-8757-4c2941288370" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1" id="Related">Related Agencies</h2><p>Additional information about other court offices and agencies related to court business is available below.</p><table style="width: 100%;"><tbody><tr><td style="width: 50.0000%;"><a href="https://www.wilcotx.gov/157/Adult-Probation">Community Supervision and Corrections (Adult Probation)</a></td><td style="width: 50.0000%;"><a href="https://www.wilcotx.gov/214/County-Attorney">County Attorney&apos;s Office</a></td></tr><tr><td style="width: 50.0000%;"><a href="https://www.wilcotx.gov/256/District-Attorney">District Attorney&apos;s Office</a></td><td style="width: 50.0000%;"><a href="https://www.wilcotx.gov/309/District-Clerk">District Clerk&apos;s Office</a></td></tr><tr><td style="width: 50.0000%;"><a href="https://www.wilcotx.gov/527/Juvenile-Services">Juvenile Services</a></td><td style="width: 50.0000%;"><a href="https://www.wilcotx.gov/562/Magistrate">Magistrate&apos;s Office</a></td></tr><tr><td style="width: 50.0000%;"><a href="https://www.wilcotx.gov/648/Pretrial-Services">Pretrial Services</a></td><td style="width: 50.0000%;"><a href="https://www.wilcotx.gov/637/Sheriffs-Office">Williamson County Sheriff&apos;s Office</a></td></tr></tbody></table><h3 class="subhead2" aria-level="2" aria-hidden="true" tabindex="-1" role="heading"><br><br></h3><p><br></p><p><br></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'a059c1bf-7a2c-4ab2-8757-4c2941288370'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+		</div>
+
+	</div>
+
+	
+	<div class="newCP">
+
+	</div>
+</div>
+</div><aside data-cpRole="contentContainer" id="featureColumn" class="secondaryContent">	<div id="ccd6923f64-2522-4bce-8783-61ad1b416b69" data-containerid="d6923f64-2522-4bce-8783-61ad1b416b69" class="pageContent cpGrid cpGrid24 showInMobile" data-contentcontainerbreakpoint="40">
+				                
+
+
+
+	</div>
+</aside>
+</div><div data-cpRole="structuralContainer" id="siteSidebarTS" class="siteSidebar">
+<aside data-cpRole="contentContainer" id="sidebarContainer1TS">	<div id="cc09dbbba6-0c1e-4094-9c12-088dfe72594b" data-containerid="09dbbba6-0c1e-4094-9c12-088dfe72594b" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><nav data-cpRole="nav" id="secondaryNav" class="siteNav secondaryNav">
+
+
+
+
+
+	<ol role="menu" id="secondaryMenusecondaryNav" data-parent="454" class="rootNavMenu accordionNav">
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem455" data-pageid="455">
+		<div class="accordionNavItem">
+			<a href="/455/26th-District-Court" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">26th District Court</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="26th District Court Submenu" aria-expanded="false" aria-controls="submenu-lvl1-455"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-455" style="display: none;" data-parent="455">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem456" data-pageid="456">
+			<div class="accordionNavItem">
+				<a href="/456/Court-Appointed-Attorney-Vouchers" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Court Appointed Attorney Vouchers</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem458" data-pageid="458">
+			<div class="accordionNavItem">
+				<a href="/458/Felony-Mental-Health-Docket" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Felony Mental Health Docket</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem460" data-pageid="460">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/2189" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Indigent Defense Plan (PDF)</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem461" data-pageid="461">
+			<div class="accordionNavItem">
+				<a href="/461/26th-District-Court-Jury-Trial-Dates" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">26th District Court Jury Trial Dates</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1740" data-pageid="1740">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/15329/OSAR-Referral-Form-Bluebonnet-Trails" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">OSAR Referral Request</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1792" data-pageid="1792">
+			<div class="accordionNavItem">
+				<a href="https://www.wilcotx.gov/DocumentCenter/View/16709/State-Bar-of-Texas-Uniform-Jury-Handbook" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Jury Duty Information</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem463" data-pageid="463">
+			<div class="accordionNavItem">
+				<a href="/FormCenter/26th-District-Court-12/Request-a-Transcript-56" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Request a Transcript</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem464" data-pageid="464">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/2191" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Reset Form (PDF)</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem457" data-pageid="457">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/2186" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Expedited Foreclosure Default Checklist (PDF)</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem462" data-pageid="462">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/10386/Williamson-County-Local-Rules-of-Court-2024-rev" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Local Rules (PDF)</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem465" data-pageid="465">
+			<div class="accordionNavItem">
+				<a href="https://judicialrecords.wilco.org/PublicAccess/default.aspx" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Search Docket</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem466" data-pageid="466">
+		<div class="accordionNavItem">
+			<a href="/466/277th-District-Court" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">277th District Court</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="277th District Court Submenu" aria-expanded="false" aria-controls="submenu-lvl1-466"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-466" style="display: none;" data-parent="466">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem486" data-pageid="486">
+			<div class="accordionNavItem">
+				<a href="https://judicialrecords.wilco.org/PublicAccess/default.aspx" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Search Docket</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem487" data-pageid="487">
+		<div class="accordionNavItem">
+			<a href="/487/368th-District-Court" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">368th District Court</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="368th District Court Submenu" aria-expanded="false" aria-controls="submenu-lvl1-487"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-487" style="display: none;" data-parent="487">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1733" data-pageid="1733">
+			<div class="accordionNavItem">
+				<a href="/1733/Attorney-Information" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Attorney Information</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1011" data-pageid="1011">
+			<div class="accordionNavItem">
+				<a href="/454/District-Courts" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Court Appointed Attorney Voucher</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem492" data-pageid="492">
+			<div class="accordionNavItem">
+				<a href="/492/Felony-Treatment-Court-Program" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Felony Treatment Court Program</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem494" data-pageid="494">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/10386/Williamson-County-Local-Rules-of-Court-2024-rev" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Local Rules (PDF)</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1012" data-pageid="1012">
+			<div class="accordionNavItem">
+				<a href="/669/Indigent-Defense" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Indigent Defense</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1769" data-pageid="1769">
+			<div class="accordionNavItem">
+				<a href="https://www.wilcotx.gov/DocumentCenter/View/15329/OSAR-Referral-Form-Bluebonnet-Trails" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">OSAR Referral Request</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem495" data-pageid="495">
+			<div class="accordionNavItem">
+				<a href="/309/District-Clerk" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Request Copies / Status of Service</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem496" data-pageid="496">
+			<div class="accordionNavItem">
+				<a href="/FormCenter/368th-District-Court-14/Request-a-Transcript-58" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Request a Transcript</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem497" data-pageid="497">
+			<div class="accordionNavItem">
+				<a href="https://judicialrecords.wilco.org/PublicAccess/default.aspx" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Search Docket</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem500" data-pageid="500">
+		<div class="accordionNavItem">
+			<a href="/500/395th-District-Court" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">395th District Court</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="395th District Court Submenu" aria-expanded="false" aria-controls="submenu-lvl1-500"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-500" style="display: none;" data-parent="500">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem502" data-pageid="502">
+			<div class="accordionNavItem">
+				<a href="/502/Family-Recovery-Court" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Family Recovery Court</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem513" data-pageid="513">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/10386/Williamson-County-Local-Rules-of-Court-2024-rev" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Local Rules (PDF)</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem515" data-pageid="515">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/8508" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">2024-2025 CPS Attorney List (Tex. Gov&#39;t Code Sec. 37)</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1521" data-pageid="1521">
+			<div class="accordionNavItem">
+				<a href="/FormCenter/395th-District-Court-31/Request-a-Transcript-87" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Request a Transcript</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem517" data-pageid="517">
+		<div class="accordionNavItem">
+			<a href="/517/425th-District-Court" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">425th District Court</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="425th District Court Submenu" aria-expanded="false" aria-controls="submenu-lvl1-517"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-517" style="display: none;" data-parent="517">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem519" data-pageid="519">
+			<div class="accordionNavItem">
+				<a href="/519/Attorneys" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Attorneys</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem522" data-pageid="522">
+			<div class="accordionNavItem">
+				<a href="https://judicialrecords.wilco.org/PublicAccess/default.aspx" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Docket Calendar</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem524" data-pageid="524">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/10386/Williamson-County-Local-Rules-of-Court-2024-rev" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Local Rules (PDF)</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1695" data-pageid="1695">
+			<div class="accordionNavItem">
+				<a href="https://www.wilcotx.gov/DocumentCenter/View/14593/Checklist-and-Forms-for-Pro-Se-Litigants-PDF" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Checklist and Forms for Pro Se Litigants 425th District Court (PDF)</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem535" data-pageid="535">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/8509" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">2024-2025 CPS Attorney List (Tex. Gov&#39;t Code Sec. 37)</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1751" data-pageid="1751">
+			<div class="accordionNavItem">
+				<a href="https://www.wilcotx.gov/1602/Self-Represented-Litigants" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Self-Represented Litigants</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem537" data-pageid="537">
+		<div class="accordionNavItem">
+			<a href="/537/480th-District-Court" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">480th District Court&#160;</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="480th District Court&#160; Submenu" aria-expanded="false" aria-controls="submenu-lvl1-537"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-537" style="display: none;" data-parent="537">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1660" data-pageid="1660">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/14745/Court-Policies-and-Procedures-Revised-41025" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Court Policies &amp; Procedures</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem553" data-pageid="553">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/10386/Williamson-County-Local-Rules-of-Court-2024-rev" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Local Rules (PDF)</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem540" data-pageid="540">
+			<div class="accordionNavItem">
+				<a href="/540/Attorneys" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Attorneys</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1602" data-pageid="1602">
+			<div class="accordionNavItem">
+				<a href="/1602/Links-for-Self-Represented-Litigants" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Links for Self-Represented Litigants</span></a>
+					<a href="#" role="button" class="openAccordionNav accordionNavMenuItem" aria-label="Links for Self-Represented Litigants Submenu" aria-expanded="false" aria-controls="submenu-lvl2-1602"></a>
+			</div>
+							<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl2" id="submenu-lvl2-1602" style="display: none;" data-parent="1602">
+							<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1661" data-pageid="1661">
+			<div class="accordionNavItem">
+				<a href="/1661/Divorces" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Divorces</span></a>
+					<a href="#" role="button" class="openAccordionNav accordionNavMenuItem" aria-label="Divorces Submenu" aria-expanded="false" aria-controls="submenu-lvl3-1661"></a>
+			</div>
+							<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl3" id="submenu-lvl3-1661" style="display: none;" data-parent="1661">
+							<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1666" data-pageid="1666">
+			<div class="accordionNavItem">
+				<a href="/1666/Divorce---No-Kids" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Divorce - No Kids</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1667" data-pageid="1667">
+			<div class="accordionNavItem">
+				<a href="/1667/Divorce---With-Kids" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Divorce - With Kids</span></a>
+			</div>
+					</li>
+
+				</ol>
+		</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1662" data-pageid="1662">
+			<div class="accordionNavItem">
+				<a href="/1662/Name-Changes" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Name Changes</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1663" data-pageid="1663">
+			<div class="accordionNavItem">
+				<a href="/1663/Forms" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Forms</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1664" data-pageid="1664">
+			<div class="accordionNavItem">
+				<a href="/1664/FAQ" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">FAQ</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1665" data-pageid="1665">
+			<div class="accordionNavItem">
+				<a href="/1665/Video-Library" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Video Library</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1913" data-pageid="1913">
+			<div class="accordionNavItem">
+				<a href="https://www.wilcotx.gov/DocumentCenter/View/19719/Certification-for-using-AI" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Certificate Re: Use of AI</span></a>
+			</div>
+					</li>
+
+				</ol>
+		</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1789" data-pageid="1789">
+			<div class="accordionNavItem">
+				<a href="/1789/Juror-Information" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Juror Information</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem554" data-pageid="554">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/8510" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">2024-2025 CPS Attorney List (Tex. Gov&#39;t Code Sec. 37)</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1821" data-pageid="1821">
+		<div class="accordionNavItem">
+			<a href="/1821/512th-District-Court" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">512th District Court</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="512th District Court Submenu" aria-expanded="false" aria-controls="submenu-lvl1-1821"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-1821" style="display: none;" data-parent="1821">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1850" data-pageid="1850">
+			<div class="accordionNavItem">
+				<a href="/1850/Attorney-Information" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Attorney Information</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1831" data-pageid="1831">
+			<div class="accordionNavItem">
+				<a href="https://judicialrecords.wilco.org/PublicAccess/default.aspx" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Search Docket</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1822" data-pageid="1822">
+			<div class="accordionNavItem">
+				<a href="https://www.wilcotx.gov/DocumentCenter/View/2189/Indigent-Defense-Plan-PDF" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Indigent Defense Plan</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1824" data-pageid="1824">
+			<div class="accordionNavItem">
+				<a href="/1824/Court-Appointed-Attorney-Voucher" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Court Appointed Attorney Voucher</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1828" data-pageid="1828">
+			<div class="accordionNavItem">
+				<a href="https://www.wilcotx.gov/DocumentCenter/View/2191/Reset-Form-PDF" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Reset Form</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1829" data-pageid="1829">
+			<div class="accordionNavItem">
+				<a href="https://www.wilcotx.gov/DocumentCenter/View/10386/Williamson-County-Local-Rules-of-Court-2024-rev" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Local Rules</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1167" data-pageid="1167">
+		<div class="accordionNavItem">
+			<a href="/1167/District-Court-Administration" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">District Court Administration</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="District Court Administration Submenu" aria-expanded="false" aria-controls="submenu-lvl1-1167"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-1167" style="display: none;" data-parent="1167">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1181" data-pageid="1181">
+			<div class="accordionNavItem">
+				<a href="/1181/Specialty-Court-Programs" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Specialty Court Programs</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1182" data-pageid="1182">
+			<div class="accordionNavItem">
+				<a href="/1182/Indigent-Defense-Criminal-and-CPS-Cases" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Indigent Defense (Criminal and CPS Cases)</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1183" data-pageid="1183">
+			<div class="accordionNavItem">
+				<a href="/1183/Local-Rules-and-Standing-Orders" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Local Rules and Standing Orders</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1488" data-pageid="1488">
+			<div class="accordionNavItem">
+				<a href="/1488/Jail-Based-Competency-Restoration" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Jail Based Competency Restoration</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1861" data-pageid="1861">
+			<div class="accordionNavItem">
+				<a href="/1861/Transformative-Justice" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Transformative Justice</span></a>
+					<a href="#" role="button" class="openAccordionNav accordionNavMenuItem" aria-label="Transformative Justice Submenu" aria-expanded="false" aria-controls="submenu-lvl2-1861"></a>
+			</div>
+							<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl2" id="submenu-lvl2-1861" style="display: none;" data-parent="1861">
+							<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1880" data-pageid="1880">
+			<div class="accordionNavItem">
+				<a href="/1880/About-Us" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">About Us</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1881" data-pageid="1881">
+			<div class="accordionNavItem">
+				<a href="/1881/Our-Partners" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Our Partners</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1976" data-pageid="1976">
+			<div class="accordionNavItem">
+				<a href="/1976/Donations" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Donations</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1896" data-pageid="1896">
+			<div class="accordionNavItem">
+				<a href="/1896/Contact-Us" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Contact Us</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1956" data-pageid="1956">
+			<div class="accordionNavItem">
+				<a href="/1956/Forms" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Forms</span></a>
+					<a href="#" role="button" class="openAccordionNav accordionNavMenuItem" aria-label="Forms Submenu" aria-expanded="false" aria-controls="submenu-lvl3-1956"></a>
+			</div>
+							<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl3" id="submenu-lvl3-1956" style="display: none;" data-parent="1956">
+							<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1898" data-pageid="1898">
+			<div class="accordionNavItem">
+				<a href="/1898/Weekly-Check-In" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Weekly Check In</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1899" data-pageid="1899">
+			<div class="accordionNavItem">
+				<a href="https://signnow.com/s/vCSku4Hl?form=true" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Bluebonnet Release Form</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1900" data-pageid="1900">
+			<div class="accordionNavItem">
+				<a href="https://signnow.com/s/CLfL0r0m" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Basic HIPPA Release</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1901" data-pageid="1901">
+			<div class="accordionNavItem">
+				<a href="https://signnow.com/s/CigFBOIK" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Education Release Form</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1902" data-pageid="1902">
+			<div class="accordionNavItem">
+				<a href="/1902/Phase-Up-Questionnaire" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Phase Up Questionnaire</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1960" data-pageid="1960">
+			<div class="accordionNavItem">
+				<a href="/1960/Volunteer-Mentor-Form" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Volunteer Mentor Form</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1962" data-pageid="1962">
+			<div class="accordionNavItem">
+				<a href="https://signnow.com/s/JPifB7vq" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Decisions Cause Responses</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1963" data-pageid="1963">
+			<div class="accordionNavItem">
+				<a href="/1963/Proactive-Strategies" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Proactive Strategies</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1964" data-pageid="1964">
+			<div class="accordionNavItem">
+				<a href="https://signnow.com/s/MMTCf7lW" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">TBCH ROI</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1965" data-pageid="1965">
+			<div class="accordionNavItem">
+				<a href="https://signnow.com/s/xnC3l87b" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">TJ Transport Waiver</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1966" data-pageid="1966">
+			<div class="accordionNavItem">
+				<a href="https://signnow.com/s/wUfSjmFd" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Counseling Consent Form</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1967" data-pageid="1967">
+			<div class="accordionNavItem">
+				<a href="https://signnow.com/s/9WUejE1A" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Emergency Contact</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1968" data-pageid="1968">
+			<div class="accordionNavItem">
+				<a href="https://signnow.com/s/9WUejE1A" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Group Therapy Consent</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1969" data-pageid="1969">
+			<div class="accordionNavItem">
+				<a href="https://signnow.com/s/I7jnnkHO" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Photo Consent Form</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1970" data-pageid="1970">
+			<div class="accordionNavItem">
+				<a href="https://signnow.com/s/7jyfNbFG" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Social Media Policy</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1971" data-pageid="1971">
+			<div class="accordionNavItem">
+				<a href="https://signnow.com/s/Mz1767Y3" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Text Message Consent Form</span></a>
+			</div>
+					</li>
+
+				</ol>
+		</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1897" data-pageid="1897">
+			<div class="accordionNavItem">
+				<a href="/1897/Resources" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Resources</span></a>
+					<a href="#" role="button" class="openAccordionNav accordionNavMenuItem" aria-label="Resources Submenu" aria-expanded="false" aria-controls="submenu-lvl3-1897"></a>
+			</div>
+							<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl3" id="submenu-lvl3-1897" style="display: none;" data-parent="1897">
+							<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1953" data-pageid="1953">
+			<div class="accordionNavItem">
+				<a href="/1953/Getting-a-DL-or-ID-Card" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Getting a DL or ID Card</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1958" data-pageid="1958">
+			<div class="accordionNavItem">
+				<a href="/1958/Healthcare-and-Insurance" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Healthcare and Insurance</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1959" data-pageid="1959">
+			<div class="accordionNavItem">
+				<a href="/1959/GED-Resources" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">GED Resources</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1961" data-pageid="1961">
+			<div class="accordionNavItem">
+				<a href="/1961/Community-Service" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Community Service</span></a>
+			</div>
+					</li>
+
+				</ol>
+		</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1972" data-pageid="1972">
+			<div class="accordionNavItem">
+				<a href="/1972/Events" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Events</span></a>
+					<a href="#" role="button" class="openAccordionNav accordionNavMenuItem" aria-label="Events Submenu" aria-expanded="false" aria-controls="submenu-lvl3-1972"></a>
+			</div>
+							<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl3" id="submenu-lvl3-1972" style="display: none;" data-parent="1972">
+							<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1973" data-pageid="1973">
+			<div class="accordionNavItem">
+				<a href="/1973/Calendar" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Calendar</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1975" data-pageid="1975">
+			<div class="accordionNavItem">
+				<a href="http://judicialrecords.wilco.org/PublicAccess/Search.aspx?ID=26" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Court Dates</span></a>
+			</div>
+					</li>
+
+				</ol>
+		</li>
+
+				</ol>
+		</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1156" data-pageid="1156">
+		<div class="accordionNavItem">
+			<a href="/1156/District-Court-Documents" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">District Court Documents</a>
+		</div>
+			</li>
+
+	</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupSecondaryMenuProperties() {
+				//setup menu manager properties for secondary menu
+				menuManager.isSideMenuEditable = false;
+				menuManager.sideMenuMaxSubMenuLevels = 4;
+				menuManager.sideMenuHasCustomLinks = false;
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupSecondaryMenuProperties, { once: true });
+				return;
+			}
+
+			setupSecondaryMenuProperties();
+		})();
+	</script>
+
+	<script type="text/javascript">
+		(function () {
+			function setupAccordionSecondaryNav() {
+				var $menuContainer = $('#secondaryNav');
+
+				$menuContainer.find('*[id^="SideItem"]').each(function () {
+					var ids = $('[id="' + this.id + '"]');
+					if (ids.length > 1)
+						$.each(ids, function (index, value) {
+							value.id = value.id + '_' + index;
+						});
+				});
+
+				$menuContainer.find('.hasAccordionChildren .openAccordionNav').off('click.secondaryNav').on('click.secondaryNav', function (e) {
+					e.preventDefault();
+					showHideAccordionMenuForSecondaryNav($(this));
+				});
+
+				$menuContainer.find(".grippy").each(function () {
+					menuManager.setupDraggableElement($(this), SIDE_MENU, '#secondaryNav');
+				});
+
+				$menuContainer.find("li").each(function () {
+					menuManager.setupDroppableAccordionElement($(this), SIDE_MENU);
+				});
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupAccordionSecondaryNav, { once: true });
+				return;
+			}
+
+			setupAccordionSecondaryNav();
+		})();
+	</script>
+
+
+
+</nav><aside data-cpRole="contentContainer" id="sidebarContainer2TS">	<div id="cc03d3fade-8b46-4f09-a794-c6ee582fe4e3" data-containerid="03d3fade-8b46-4f09-a794-c6ee582fe4e3" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div>
+</div></div>
+</div><!-- GBs --><div data-cpRole="structuralContainer" id="gbsContainerTS">
+<div class="siteWrap"><div data-cpRole="contentContainer" id="gbsTS">	<div id="cc11518a05-e094-4c31-b15f-56c2264ada02" data-containerid="11518a05-e094-4c31-b15f-56c2264ada02" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="1">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col12 first" style="" data-widgetcontainerid="d7025657-bfd5-4113-8aba-b3066cc377bc">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last ida122ee64-a9f2-4e28-8cae-1ed5eb4d47d6" style="" data-widgetcontainerid="a122ee64-a9f2-4e28-8cae-1ed5eb4d47d6">	
+<div data-widget-id="40235962-9558-4541-a75a-33daf5d55e26" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget40235962-9558-4541-a75a-33daf5d55e26" class="widget widgetGraphicLinks skin45 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid3 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://www.wilcotx.gov/1780/Budget-Tax-Rate-Info" target="_self" class="fancyButton fancyButton49 " >
+		<span>
+			<span><span class="text">Budget &amp; Tax Rate Info</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton49.fancyButton:link,.fancyButton49.fancyButton:visited, .fancyButton49div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=73');
+	background-repeat: no-repeat;
+	background-position: center .5em ;
+background-size: 100px;
+transition:.2s ease-in-out;}
+.fancyButton49.fancyButton:hover,.fancyButton49.fancyButton:focus,.fancyButton49.fancyButton:active,.fancyButton49.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;}
+.fancyButton49.fancyButton:link > span,.fancyButton49.fancyButton:visited > span, .fancyButton49div.fancyButton > span{
+}
+.fancyButton49.fancyButton:hover > span,.fancyButton49.fancyButton:focus > span,.fancyButton49.fancyButton:active > span,.fancyButton49.fancyButton.hover > span{
+}
+.fancyButton49.fancyButton .text{
+	color: #3c5d80;
+	font-family: "Montserrat";
+	padding-top: 7.5em;
+	font-weight: 500;
+	text-decoration: none;
+	padding-top: 7.5em;
+	background-repeat: no-repeat;
+	background-position: 15.5em  1.75em ;
+
+
+}
+.fancyButton49.fancyButton:hover .text,.fancyButton49.fancyButton:focus .text,.fancyButton49.fancyButton:active .text,.fancyButton49.fancyButton.hover .text{
+	color: #3c5d80;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: 15.25em  1.25em ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://williamsoncountytx-web.tylerhost.net/williamsonweb/" target="_self" class="fancyButton fancyButton47 " >
+		<span>
+			<span><span class="text">Records</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton47.fancyButton:link,.fancyButton47.fancyButton:visited, .fancyButton47div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=74');
+	background-repeat: no-repeat;
+	background-position: center .5em ;
+background-size: 100px;
+transition:.2s ease-in-out;}
+.fancyButton47.fancyButton:hover,.fancyButton47.fancyButton:focus,.fancyButton47.fancyButton:active,.fancyButton47.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;}
+.fancyButton47.fancyButton:link > span,.fancyButton47.fancyButton:visited > span, .fancyButton47div.fancyButton > span{
+}
+.fancyButton47.fancyButton:hover > span,.fancyButton47.fancyButton:focus > span,.fancyButton47.fancyButton:active > span,.fancyButton47.fancyButton.hover > span{
+}
+.fancyButton47.fancyButton .text{
+	color: #3c5d80;
+	font-family: "Montserrat";
+	padding-top: 7.5em;
+	font-weight: 500;
+	text-decoration: none;
+	padding-top: 7.5em;
+	background-repeat: no-repeat;
+	background-position: center 1.75em ;
+
+
+}
+.fancyButton47.fancyButton:hover .text,.fancyButton47.fancyButton:focus .text,.fancyButton47.fancyButton:active .text,.fancyButton47.fancyButton.hover .text{
+	color: #3c5d80;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: 15.25em  1.25em ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/687/Tax-Assessor-Collector" target="_self" class="fancyButton fancyButton48 " >
+		<span>
+			<span><span class="text">Tax Office</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton48.fancyButton:link,.fancyButton48.fancyButton:visited, .fancyButton48div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=75');
+	background-repeat: no-repeat;
+	background-position: center .5em ;
+background-size: 100px;
+transition:.2s ease-in-out;}
+.fancyButton48.fancyButton:hover,.fancyButton48.fancyButton:focus,.fancyButton48.fancyButton:active,.fancyButton48.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;}
+.fancyButton48.fancyButton:link > span,.fancyButton48.fancyButton:visited > span, .fancyButton48div.fancyButton > span{
+}
+.fancyButton48.fancyButton:hover > span,.fancyButton48.fancyButton:focus > span,.fancyButton48.fancyButton:active > span,.fancyButton48.fancyButton.hover > span{
+}
+.fancyButton48.fancyButton .text{
+	color: #3c5d80;
+	font-family: "Montserrat";
+	padding-top: 7.5em;
+	font-weight: 500;
+	text-decoration: none;
+	padding-top: 7.5em;
+	background-repeat: no-repeat;
+	background-position: 15.5em  1.75em ;
+
+
+}
+.fancyButton48.fancyButton:hover .text,.fancyButton48.fancyButton:focus .text,.fancyButton48.fancyButton:active .text,.fancyButton48.fancyButton.hover .text{
+	color: #3c5d80;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: 15.25em  1.25em ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col12 last" style="" data-widgetcontainerid="21ff26ff-675b-4157-86a9-53c850f4440c">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id0d7f4a36-cb09-4f54-8196-b93817673929" style="" data-widgetcontainerid="0d7f4a36-cb09-4f54-8196-b93817673929">	
+<div data-widget-id="5c2640ba-76c1-443a-bf17-9388ae4db3aa" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget5c2640ba-76c1-443a-bf17-9388ae4db3aa" class="widget widgetGraphicLinks skin45 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid3 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/185/Elections" target="_self" class="fancyButton fancyButton51 " >
+		<span>
+			<span><span class="text">Elections</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton51.fancyButton:link,.fancyButton51.fancyButton:visited, .fancyButton51div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=71');
+	background-repeat: no-repeat;
+	background-position: center .5em ;
+background-size: 100px;
+transition:.2s ease-in-out;}
+.fancyButton51.fancyButton:hover,.fancyButton51.fancyButton:focus,.fancyButton51.fancyButton:active,.fancyButton51.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;}
+.fancyButton51.fancyButton:link > span,.fancyButton51.fancyButton:visited > span, .fancyButton51div.fancyButton > span{
+}
+.fancyButton51.fancyButton:hover > span,.fancyButton51.fancyButton:focus > span,.fancyButton51.fancyButton:active > span,.fancyButton51.fancyButton.hover > span{
+}
+.fancyButton51.fancyButton .text{
+	color: #3c5d80;
+	font-family: "Montserrat";
+	padding-top: 7.5em;
+	font-weight: 500;
+	text-decoration: none;
+	padding-top: 7.5em;
+	background-repeat: no-repeat;
+	background-position: 15.5em  1.75em ;
+
+
+}
+.fancyButton51.fancyButton:hover .text,.fancyButton51.fancyButton:focus .text,.fancyButton51.fancyButton:active .text,.fancyButton51.fancyButton.hover .text{
+	color: #3c5d80;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: 15.25em  1.25em ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/257/Court-Lookup" target="_self" class="fancyButton fancyButton50 " >
+		<span>
+			<span><span class="text">Court / Jail Lookup</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton50.fancyButton:link,.fancyButton50.fancyButton:visited, .fancyButton50div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=70');
+	background-repeat: no-repeat;
+	background-position: center .5em ;
+background-size: 100px;
+transition:.2s ease-in-out;}
+.fancyButton50.fancyButton:hover,.fancyButton50.fancyButton:focus,.fancyButton50.fancyButton:active,.fancyButton50.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;}
+.fancyButton50.fancyButton:link > span,.fancyButton50.fancyButton:visited > span, .fancyButton50div.fancyButton > span{
+}
+.fancyButton50.fancyButton:hover > span,.fancyButton50.fancyButton:focus > span,.fancyButton50.fancyButton:active > span,.fancyButton50.fancyButton.hover > span{
+}
+.fancyButton50.fancyButton .text{
+	color: #3c5d80;
+	font-family: "Montserrat";
+	padding-top: 7.5em;
+	font-weight: 500;
+	text-decoration: none;
+	padding-top: 7.5em;
+	background-repeat: no-repeat;
+	background-position: 15.5em  1.75em ;
+background-size: 60px;
+transition:.2s ease-in-out;
+}
+.fancyButton50.fancyButton:hover .text,.fancyButton50.fancyButton:focus .text,.fancyButton50.fancyButton:active .text,.fancyButton50.fancyButton.hover .text{
+	color: #3c5d80;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: 15.25em  1.25em ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://www.wilcotx.gov/470/Careers" target="_self" class="fancyButton fancyButton52 " >
+		<span>
+			<span><span class="text">Employment</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton52.fancyButton:link,.fancyButton52.fancyButton:visited, .fancyButton52div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=72');
+	background-repeat: no-repeat;
+	background-position: center .5em ;
+background-size: 100px;
+transition:.2s ease-in-out;}
+.fancyButton52.fancyButton:hover,.fancyButton52.fancyButton:focus,.fancyButton52.fancyButton:active,.fancyButton52.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;}
+.fancyButton52.fancyButton:link > span,.fancyButton52.fancyButton:visited > span, .fancyButton52div.fancyButton > span{
+}
+.fancyButton52.fancyButton:hover > span,.fancyButton52.fancyButton:focus > span,.fancyButton52.fancyButton:active > span,.fancyButton52.fancyButton.hover > span{
+}
+.fancyButton52.fancyButton .text{
+	color: #3c5d80;
+	font-family: "Montserrat";
+	padding-top: 7.5em;
+	font-weight: 500;
+	text-decoration: none;
+	padding-top: 7.5em;
+	background-repeat: no-repeat;
+	background-position: 15.5em  1.75em ;
+background-size: 60px;
+transition:.2s ease-in-out;
+}
+.fancyButton52.fancyButton:hover .text,.fancyButton52.fancyButton:focus .text,.fancyButton52.fancyButton:active .text,.fancyButton52.fancyButton.hover .text{
+	color: #3c5d80;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: 15.25em  1.25em ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- Calendar/Carousel --><!-- <div data-cpRole="structuralContainer" id="homeContainer1">
+    <div class="siteWrap">
+      <div data-cpRole="contentContainer" id="homeContent1a"></div>
+    </div>
+  </div> --><!-- Footer --><footer data-cpRole="structuralContainer" id="footerContainerTS">
+<div class="siteWrap"><div data-cpRole="contentContainer" id="footerTS">	<div id="cc00399a7b-f035-4b79-b0a3-0f8290d4659d" data-containerid="00399a7b-f035-4b79-b0a3-0f8290d4659d" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="55">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col6 first" style="" data-widgetcontainerid="f73f3142-be0c-416a-b8a8-7501a4a503af">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col6 first last id002e6a11-34ca-4bdc-94d5-7a7dd4f46b9a" style="" data-widgetcontainerid="002e6a11-34ca-4bdc-94d5-7a7dd4f46b9a">	
+    <div data-widget-id="b449bab1-fa9d-47c8-97bd-c7f6d3ba2ea4" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdvb449bab1-fa9d-47c8-97bd-c7f6d3ba2ea4" class="widget widgetInfoAdvanced skin56 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-label="Info Advanced">
+			<header class="widgetHeader" id="headerb449bab1-fa9d-47c8-97bd-c7f6d3ba2ea4">
+		<div class="">
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><img src="/ImageRepository/Document?documentId=6501" class="fr-dib" alt="Wilco Primary Logo - White"></p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdvb449bab1-fa9d-47c8-97bd-c7f6d3ba2ea4 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col6 first last id177cbcf0-3f4f-47c6-8664-081876f463ed" style="" data-widgetcontainerid="177cbcf0-3f4f-47c6-8664-081876f463ed">	
+<div data-widget-id="5437f737-42e4-4fa2-adfc-0ff30b7e969c" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget5437f737-42e4-4fa2-adfc-0ff30b7e969c" class="widget widgetGraphicLinks skin55 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:1em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid4 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/facebook" target="_self">
+
+<img src="/ImageRepository/Document?documentID=88" 
+     class="graphicButtonLink" alt="Facebook" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=88'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=88'"
+     onfocus="this.src='/ImageRepository/Document?documentID=88'" 
+	onblur="this.src='/ImageRepository/Document?documentID=88'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/twitter" target="_self">
+
+<img src="/ImageRepository/Document?documentID=6976" 
+     class="graphicButtonLink" alt="xlogo_white" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=6976'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=6976'"
+     onfocus="this.src='/ImageRepository/Document?documentID=6976'" 
+	onblur="this.src='/ImageRepository/Document?documentID=6976'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/instagram" target="_self">
+
+<img src="/ImageRepository/Document?documentID=89" 
+     class="graphicButtonLink" alt="Instagram" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=89'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=89'"
+     onfocus="this.src='/ImageRepository/Document?documentID=89'" 
+	onblur="this.src='/ImageRepository/Document?documentID=89'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/youtube" target="_self">
+
+<img src="/ImageRepository/Document?documentID=91" 
+     class="graphicButtonLink" alt="YouTube" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=91'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=91'"
+     onfocus="this.src='/ImageRepository/Document?documentID=91'" 
+	onblur="this.src='/ImageRepository/Document?documentID=91'"> 
+</a></li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col2" style="" data-widgetcontainerid="9eb701b0-8eed-4674-a752-763be3a10ec1">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col2 first last id7e46fe9a-dbf2-4326-b1ef-7319725e8bae" style="" data-widgetcontainerid="7e46fe9a-dbf2-4326-b1ef-7319725e8bae">	
+
+<div class="widget widgetSpacer" id="33f05d4d-be01-4b03-873a-13fd03009edb"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col4" style="" data-widgetcontainerid="f01c2459-16e8-4627-91c4-db6dbe3eed8a">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col4 first last idc9e3c040-7776-4e72-bff1-6898fcf7f8e3" style="" data-widgetcontainerid="c9e3c040-7776-4e72-bff1-6898fcf7f8e3">	
+    <div data-widget-id="2232b327-8b24-4d54-8bf8-59b690635b3a" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdv2232b327-8b24-4d54-8bf8-59b690635b3a" class="widget widgetInfoAdvanced skin37 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="header2232b327-8b24-4d54-8bf8-59b690635b3a">
+			<header class="widgetHeader" id="header2232b327-8b24-4d54-8bf8-59b690635b3a">
+		<div class="">
+					<h3 >Contact Us</h3>
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><a href="https://gis.wilco.org/maps/?viewer=facilities" target="_blank" rel="noopener">Find County Offices &amp; Facilities</a><br>Phone: <a href="tel: 512-943-1100">512-943-1100</a></p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdv2232b327-8b24-4d54-8bf8-59b690635b3a .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col2" style="" data-widgetcontainerid="71fd0abf-abe8-4ebe-84ac-d96f4fe5d416">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col2 first last ide64bc2d6-cd42-4811-bf90-83f6c6153329" style="" data-widgetcontainerid="e64bc2d6-cd42-4811-bf90-83f6c6153329">	
+
+<div class="widget widgetSpacer" id="569fff56-9768-4d99-a035-45d40b49774a"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col4" style="" data-widgetcontainerid="70fd6288-5ecf-430a-87e3-8c508e753791">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col4 first last id6bc521db-caa5-48fe-aea5-d44d1a2df552" style="" data-widgetcontainerid="6bc521db-caa5-48fe-aea5-d44d1a2df552">	
+	<div data-widget-id="518ec25d-2ae2-4fab-a458-12dfcab34869" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink518ec25d-2ae2-4fab-a458-12dfcab34869" class="widget widgetQuickLinks skin37 widgetOptionSet40 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader518ec25d-2ae2-4fab-a458-12dfcab34869">
+			<header class="widgetHeader" id="quickLinksHeader518ec25d-2ae2-4fab-a458-12dfcab34869">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=15" >Quick Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.wilcotx.gov/sso" target="_self" aria-label="Editor Sign-in - Helpful Links" rel="">Editor Sign-in</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/331/Commissioners-Court" target="_self" aria-label="Commissioners Court - Helpful Links" rel="">Commissioners Court</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/785/Veteran-Services" target="_self" aria-label="Veteran Services - Helpful Links" rel="">Veteran Services</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/294/Voter-Registration" target="_self" aria-label="Voter Registration - Helpful Links" rel="">Voter Registration</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.wilcotx.gov/220/Public-Information-Request" target="_self" aria-label="Public Information Request - Helpful Links" rel="">Public Information Request</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://egrants.gov.texas.gov/resources/civilrights" target="_self" aria-label="Compliance - Helpful Links" rel="">Compliance</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col2" style="" data-widgetcontainerid="4cf7b742-ab1d-4437-9f0e-acea8a4e662a">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col2 first last id6c6ba610-596e-49ce-b31b-63f230d43ad0" style="" data-widgetcontainerid="6c6ba610-596e-49ce-b31b-63f230d43ad0">	
+
+<div class="widget widgetSpacer" id="8d962cbf-9d42-4d73-ba5a-414589ef0697"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col4 last" style="" data-widgetcontainerid="93828ede-32e2-4d81-b4f8-a09968eb53fa">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col4 first last id239b456d-986d-40d6-a1b8-f878b04ddb1a" style="" data-widgetcontainerid="239b456d-986d-40d6-a1b8-f878b04ddb1a">	
+	<div data-widget-id="b963f5a9-b214-41a0-b9c6-2f7e8ef61645" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklinkb963f5a9-b214-41a0-b9c6-2f7e8ef61645" class="widget widgetQuickLinks skin37 widgetOptionSet40 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeaderb963f5a9-b214-41a0-b9c6-2f7e8ef61645">
+			<header class="widgetHeader" id="quickLinksHeaderb963f5a9-b214-41a0-b9c6-2f7e8ef61645">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=16" >Helpful Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/" target="_self" aria-label="Home - Site Links" rel="">Home</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/sitemap" target="_self" aria-label="Site Map - Site Links" rel="">Site Map</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/directory.aspx" target="_self" aria-label="Contact Us - Site Links" rel="">Contact Us</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.wilcotx.gov/1225/ADA-Accommodations-Request" target="_self" aria-label="Accessibility - Site Links" rel="">Accessibility</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/copyright" target="_self" aria-label="Copyright Notices - Site Links" rel="">Copyright Notices</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/privacy" target="_self" aria-label="Privacy Policy - Site Links" rel="">Privacy Policy</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</footer><!-- Powered By --><div data-cpRole="structuralContainer" id="poweredByContainerTS">
+<div class="siteWrap"><div data-cpRole="contentContainer" id="poweredByTS">	<div id="cc6c19b19e-1d91-45f7-a09b-51f7b1c21afe" data-containerid="6c19b19e-1d91-45f7-a09b-51f7b1c21afe" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="2bf5b23a-7373-41ff-8686-203276012b05">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id71370274-669e-493b-af62-72ad3ced663a" style="" data-widgetcontainerid="71370274-669e-493b-af62-72ad3ced663a">	
+ 
+	<div data-widget-id='20418f2b-8880-47a9-8f95-77e4d974e46a' data-moduleName="customHtml" id='widgetCustomHtml20418f2b-8880-47a9-8f95-77e4d974e46a' class="widget widgetCustomHtml skin37 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBody20418f2b-8880-47a9-8f95-77e4d974e46a">
+		<div id="customHtml20418f2b-8880-47a9-8f95-77e4d974e46a"><div><style>
+  /* CP icon */
+  .cpBylineIconTS {
+    color: #fff;
+  }
+  /* CP Text */
+  .cpBylineTextTS,
+  .cpBylineTextTS a:link {
+    color: #fff;
+  }
+
+  .cpBylineTS {
+    text-align: center;
+  }
+  
+  .cpBylineIconTS {
+    fill: currentColor;
+    width: 39px;
+    height: 26px;
+    display: inline;
+    vertical-align: middle;
+  }
+</style>
+
+<div class="widgetItem cpBylineTS">
+  <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 100 100" class="cpBylineIconTS">
+    <path class="c" d="M73.4,23.2h-19v16.7h19c2.8,0,5,2.2,5,5c0,2.8-2.2,5-5,5h-19v28.4h5.5l11.3-11.7h2.2c11.9,0,21.6-9.7,21.6-21.6C95,33,85.3,23.2,73.4,23.2"></path>
+    <path class="p" d="M45.8,66.5H26.6C14.7,66.5,5,56.8,5,44.9C5,33,14.7,23.2,26.6,23.2h19.1v16.7H26.6c-2.8,0-5,2.2-5,5c0,2.8,2.2,5,5,5h19.1V66.5z"></path>
+  </svg>
+  <span class="cpBylineTextTS">Government Websites by <a href="https://connect.civicplus.com/referral">CivicPlus&reg;</a></span>
+</div></div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+<link href="/745732998.css" rel="stylesheet" type="text/css" />
+
+<div id="SplashMessageWrapper" class="cp-Splash-wrapper">
+	<div role="dialog" aria-labelledby="cp-Splash-title" aria-describedby="editorContentDesc" aria-modal="true" tabindex="-1" id="SplashMessage" class="hidden cp-Splash cp-Splash--modal is-open">
+		<div class="cp-Splash-header">
+			<h2 class="cp-Splash-title" id="cp-Splash-title">Loading</h2>
+			<button class="cp-Splash-Btn cp-Splash-close" aria-label="Close this modal" title="Close this window">
+				<svg id="iconClose" viewBox="0 0 25 25">
+					<polygon style="fill:currentcolor"
+							 points="18.806,6.98 18.075,6.248 12.532,11.792 6.989,6.248 6.257,6.98 11.786,12.508 6.212,18.084 6.943,18.815 12.532,13.224 18.12,18.815 18.851,18.084 13.277,12.508"></polygon>
+				</svg>
+			</button>
+		</div>
+		<div class="cp-Splash-body">
+			<div class="cp-Splash-Prose editorContent fr-view" id="editorContentDesc">
+				<!-- Content from the Froala Editor will go here. -->
+				Loading
+			</div>
+		</div>
+		<div class="cp-Splash-footer">
+			<button class="cp-Splash-Btn cp-Splash-Btn--NoShow">Do Not Show Again</button>
+			<button class="cp-Splash-Btn cp-Splash-Btn--Close">Close</button>
+		</div>
+	</div>
+</div>
+
+<script src="/Assets/Scripts/APIClient.js"></script>
+<script src="/Assets/Mystique/Shared/Scripts/Moment/Moment.min.js"></script>
+<script src="/Assets/Scripts/SplashModal/SplashModalRender.js"></script>
+<script>
+
+		$(document).ready(function () {
+			var filter = {
+				targetId: '454',
+				targetType: 1
+			}
+
+			new SplashModalRender().triggerRender(filter);
+		});
+</script>
+
+
+	
+	
+	
+	
+
+
+
+	
+
+
+
+
+
+
+    <script src="/-1442400649.js" type="text/javascript"></script>
+    <!-- Fixed Nav Adjustment -->
+<script>
+  function getValueTS(elem, attr) {
+    var val = elem.css(attr);
+    if (val === undefined) return undefined;
+    var num = parseInt(val, 10);
+    if (num === NaN) return undefined;
+    return num;
+  }
+
+  function clampTS(number, min, max) {
+    return Math.min(Math.max(number, min), max);
+  }
+
+  function isPageEditingTS() {
+    return (
+      $("#doneEditing").length > 0 || // In live edit
+      typeof DesignCenter !== "undefined" // In theme manager
+    );
+  }
+
+  var bgColorRegexTS = new RegExp("rgba\((\d+), (\d+), (\d+), (\d*\.?\d*)\)");
+  function isTransparentTS(elem) {
+    var bg = elem.css('background-color');
+    if (typeof bg !== "string") return false;
+    if (bg === "transparent") return true;
+    if (!bg.startsWith('rgba(')) return false;
+    var matchState = bg.match(bgColorRegexTS);
+    if (!matchState || matchState.length !== 5) return false;
+    var alpha = parseFloat(matchState[4], 10);
+    if (!(alpha >= 0 && alpha < 1)) return false;
+    return true;
+  }
+
+  function iterateLeftpads(cb) {
+    var containersTS = $("[class^='siteWrap'],[class*=' siteWrap']");
+    for (var i = 0; i < containersTS.length; i++) {
+      var containerTS = containersTS[i];
+      // Skip the body container and anything with data-skip-leftpad
+      if (
+        containerTS.id !== "bodyContainerTS" &&
+        containerTS.getAttribute('data-skip-leftpad') === null
+      ) {
+        cb(containerTS);
+      }
+    }
+  }
+
+  function iterateRightpads(cb) {
+    var containersTS = $("[class^='siteWrap'],[class*=' siteWrap']");
+    for (var i = 0; i < containersTS.length; i++) {
+      var containerTS = containersTS[i];
+      // Skip the body container and anything with data-skip-rightpad
+      if (
+        containerTS.id !== "bodyContainerTS" &&
+        containerTS.getAttribute('data-skip-rightpad') === null
+      ) {
+        cb(containerTS);
+      }
+    }
+  }
+
+  var anchor = $("#divToolbars");
+  var bodyContainerTS = $("#bodyContainerTS");
+
+  // Outer banner padding (push banner down)
+  var outerSizingTS = $("#bannerContainerTS");
+  // Inner banner padding (push banner content down) - Transparent header OR on attaching headers
+  var innerSizingTS = $("#bannerSizingTS");
+
+  var forceUnfixClassTS = "forceUnfixTS";
+
+  var fixedTopTS = $(".fixedTopTS");
+  var fixedBottomTS = $(".fixedBottomTS");
+  var fixedLeftTS = $(".fixedLeftTS");
+  var fixedRightTS = $(".fixedRightTS");
+
+  var initialTopTS;
+  var topAttachTS;
+  if (fixedTopTS && fixedTopTS.length === 1) {
+    initialTopTS = getValueTS(fixedTopTS, 'top');
+    var attachment = fixedTopTS.attr('data-attach');
+    if (attachment) topAttachTS = $("#" + attachment);
+    if (!topAttachTS || topAttachTS.length !== 1) topAttachTS = undefined;
+  }
+
+  function resizeAdjustmentTS() {
+    var editing = isPageEditingTS();
+
+    // Fixed top script
+    (function () {
+      if (!fixedTopTS || fixedTopTS.length !== 1 || initialTopTS === undefined) return;
+
+      if (editing) {
+        fixedTopTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedTopTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      var topPosition = fixedTopTS.css('position');
+      if (topPosition === 'fixed') {
+        if (topAttachTS) {
+          scrollAdjustmentTS();
+        } else {
+          var anchorHeight = anchor.outerHeight() - 1;
+          fixedTopTS.css('top', anchorHeight + initialTopTS);
+        }
+      } else {
+        fixedTopTS.css('top', initialTopTS);
+      }
+
+      if (topPosition === 'fixed' || topPosition === 'absolute') {
+        // Bump the banner content down
+        if (isTransparentTS(fixedTopTS)) {
+          innerSizingTS.css('padding-top', initialTopTS + fixedTopTS.outerHeight());
+          outerSizingTS.css('padding-top', '');
+
+          try {
+            window.Pages.onResizeHandlersExecute();
+          } catch (e) { }
+        } else {
+          outerSizingTS.css('padding-top', fixedTopTS.outerHeight() - 1);
+          innerSizingTS.css('padding-top', '');
+        }
+      } else {
+        innerSizingTS.css('padding-top', '');
+        outerSizingTS.css('padding-top', '');
+      }
+    })();
+
+    // Fixed bottom script
+    (function () {
+      if (!fixedBottomTS || fixedBottomTS.length === 0) return;
+
+      // If the widget has gone narrow, force unfix
+      if (editing || fixedBottomTS.outerHeight() > 200) {
+        fixedBottomTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedBottomTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedBottomTS.css('position') === 'fixed') {
+        bodyContainerTS.css('padding-bottom', fixedBottomTS.outerHeight());
+      } else {
+        bodyContainerTS.css('padding-bottom', '');
+      }
+    })();
+
+    // Fixed left script
+    (function () {
+      if (!fixedLeftTS || fixedLeftTS.length === 0) return;
+
+      if (editing) {
+        fixedLeftTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedLeftTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedLeftTS.css('position') === 'fixed') {
+        var anchorHeight = anchor.outerHeight() - 1;
+        fixedLeftTS.css('top', anchorHeight);
+        var leftBoundingTS = fixedLeftTS[0].getBoundingClientRect();
+        iterateLeftpads(function (containerTS) {
+          var containerBoundingTS = containerTS.getBoundingClientRect();
+          if (containerBoundingTS.left <= leftBoundingTS.right) {
+            $(containerTS).css('padding-left', leftBoundingTS.width + 16);
+          } else {
+            $(containerTS).css('padding-left', '');
+          }
+        });
+      } else {
+        fixedLeftTS.css('top', '');
+        iterateLeftpads(function (containerTS) {
+          $(containerTS).css('padding-left', '');
+        });
+      }
+    })();
+
+    // Fixed right script
+    (function () {
+      if (!fixedRightTS || fixedRightTS.length === 0) return;
+
+      if (editing) {
+        fixedRightTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedRightTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedRightTS.css('position') === 'fixed') {
+        var anchorHeight = anchor.outerHeight() - 1;
+        fixedRightTS.css('top', anchorHeight);
+        var rightBoundingTS = fixedRightTS[0].getBoundingClientRect();
+        iterateRightpads(function (containerTS) {
+          var containerBoundingTS = containerTS.getBoundingClientRect();
+          if (containerBoundingTS.right >= rightBoundingTS.left) {
+            $(containerTS).css('padding-right', rightBoundingTS.width + 16);
+          }
+        });
+      } else {
+        fixedRightTS.css('top', '');
+        iterateRightpads(function (containerTS) {
+          $(containerTS).css('padding-right', '');
+        });
+      }
+    })();
+  }
+
+  function scrollAdjustmentTS() {
+    if (!fixedTopTS || fixedTopTS.length !== 1 || !topAttachTS || topAttachTS.length !== 1) return;
+    var topPosition = fixedTopTS.css('position');
+    if (topPosition === 'fixed' || topPosition === 'absolute') {
+      var anchorBounding = anchor[0].getBoundingClientRect();
+      var attachBounding = topAttachTS[0].getBoundingClientRect();
+      var scrollTop = $(window).scrollTop();
+
+      fixedTopTS.css('top', Math.max(anchorBounding.bottom - 1, attachBounding.bottom));
+    } else {
+      fixedTopTS.css('top', initialTopTS);
+    }
+  }
+
+  $(window).load(function () {
+    setTimeout(function () {
+      try {
+        resizeAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    }, 350);
+
+    $(window).scroll(function () {
+      try {
+        scrollAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    var adjustTimeoutTS;
+    $(window).resize(function () {
+      clearTimeout(adjustTimeoutTS);
+      adjustTimeoutTS = setTimeout(function () {
+        try {
+          resizeAdjustmentTS();
+        } catch (e) {
+          console.error(e);
+        }
+      }, 350);
+    });
+
+    $.when(window.Pages.angularToolbarComplete).done(function () {
+      try {
+        resizeAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  });
+</script>
+<!-- End Fixed Nav Adjustment -->
+
+<!----------Google Translate (Mobile Friendly)--------->
+
+<style>
+  #google-translate-container {
+    float: right;
+    padding: 3px 5px 0px 0px;
+    position: fixed; 
+    bottom: 16px; 
+    left: 10px; 
+    z-index: 5;
+  }
+  
+  .goog-te-combo, .goog-te-banner *, .goog-te-ftab *, .goog-te-menu *, .goog-te-menu2 *, .goog-te-balloon * {
+    font-family: arial;
+    font-size: 10pt;
+    background-image: url("https://www.gstatic.com/images/branding/product/2x/translate_24dp.png");
+    background-position: 5px 5px;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    text-indent: 16px;
+    background-color: #fff;
+    color: #000 !important;
+  }
+  
+  .goog-logo-link {
+    display: none !important;
+  }
+  
+  .goog-te-gadget {
+    color: transparent !important;
+  }
+  
+  .goog-te-gadget .goog-te-combo {
+    margin: 2px 0 !important;
+    border-radius: 15px !important;
+    }
+  
+  .goog-te-combo{
+    border: 1px solid !important;
+    border-color: #bcc9d7 #96a3b1 #96a3b1 #bcc9d7 !important;
+    border-radius: 50px !important;
+    height:31px !important;
+    padding: 0 1px 0 .25rem !important;
+                width: 156px;
+  }
+
+  #launcher-wrapper {
+    bottom: 50px !important;
+  }
+
+</style>
+
+<div id="google-translate-container">
+  <div id="google_translate_element">
+  </div>
+</div>
+
+<script>
+
+  function googleTranslateElementInit() {
+    var el = document.getElementById("google_translate_element");
+    if (el && el.innerHTML.trim() !== "") {
+        return;
+    }
+
+    new google.translate.TranslateElement({ pageLanguage: "en" }, "google_translate_element");
+    // begin accessibility compliance
+    $('img.goog-te-gadget-icon').attr('alt','Google Translate');
+    $('div#goog-gt-tt div.logo img').attr('alt','translate');
+    $('div#goog-gt-tt .original-text').css('text-align','left');
+    $('.goog-te-gadget-simple .goog-te-menu-value span').css('color','#000000');
+    $('.goog-te-combo').attr('aria-label','google translate languages');
+    $('svg.goog-te-spinner').attr('title','Google Translate Spinner');
+    $('.goog-te-gadget-simple .goog-te-menu-value span').css('color','#000000');
+  }
+
+  $(function() {
+    $.getScript("//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit");
+  });
+
+</script>
+
+<!--------------End Google Translate----------------->
+
+<script type="text/javascript">!function(){var b=function(){window.__AudioEyeSiteHash = "45bd9fb1d129e9fe3508493ef7f1976f"; var a=document.createElement("script");a.src="https://wsmcdn.audioeye.com/aem.js";a.type="text/javascript";a.setAttribute("async","");document.getElementsByTagName("body")[0].appendChild(a)};"complete"!==document.readyState?window.addEventListener?window.addEventListener("load",b):window.attachEvent&&window.attachEvent("onload",b):b()}();</script>
+
+<script src="https://cdn-residentagent.civicplus.com/loader.js"></script>
+<script>
+    window.ResidentAgentWidget.load({
+        agentId: '7c8227de-7973-4446-83dc-3b15fd3a0dc5',
+        apiUrl: 'https://residentagent-api-production.azurewebsites.net'
+    });
+</script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            document.cookie = "responsiveGhost=0; path=/";
+        });
+        $(window).on("load", function () {
+            $('body').addClass('doneLoading').removeClass('hideContent');
+
+            if ($('#404Content').length > 0)
+                $('div#bodyWrapper').css('padding', '0px');
+        });
+    </script>
+
+    <noscript>
+        <style>
+            body.hideContent {
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
+
+        
+<div style="display: none;">
+	<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+
+		<symbol id="iconArrow--left" viewbox="0 0 25 25">
+			<title>Arrow Left</title>
+			<polygon style="fill:currentcolor" points="18.044,25 19.498,23.545 8.409,12.454 19.408,1.455 17.954,0 5.502,12.452"></polygon>
+		</symbol>
+
+		<symbol id="iconArrow--right" viewbox="0 0 25 25">
+			<title>Arrow Right</title>
+			<polygon style="fill:currentcolor" points="6.957,0 5.502,1.455 16.591,12.546 5.592,23.545 7.047,25 19.498,12.548"></polygon>
+		</symbol>
+
+	</svg>
+</div>
+    <script type="text/javascript">loadCSS('//fonts.googleapis.com/css?family=Kanit:200|Montserrat:100,100italic,200,200italic,300,300italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic,italic,regular|');</script>
+    
+
+    <div class="hidden activeWidgetSkinComponentsOnPageJson">[]</div>
+        <div style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="iconSlideshowArrowLeft" viewBox="0 0 22.68 40">
+                    <title>Slideshow Left Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M20,40a2.67,2.67,0,0,1-1.9-.79L.79,21.9a2.68,2.68,0,0,1,0-3.79L18.1.79a2.68,2.68,0,1,1,3.79,3.79L6.47,20,21.89,35.42A2.68,2.68,0,0,1,20,40Z"></path>
+                    </g>
+                </symbol>
+                <symbol id="iconSlideshowArrowRight" viewBox="0 0 22.68 40">
+                    <title>Slideshow Right Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M2.68,0a2.67,2.67,0,0,1,1.9.79L21.89,18.1a2.68,2.68,0,0,1,0,3.79L4.58,39.21A2.68,2.68,0,0,1,.79,35.42L16.21,20,.79,4.58A2.68,2.68,0,0,1,2.68,0Z"></path>
+                    </g>
+                </symbol>
+            </svg>
+        </div>
+    
+	
+	
+
+    <div id="root-picker-outlet"></div>
+</body>
+</html>

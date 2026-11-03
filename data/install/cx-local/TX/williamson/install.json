@@ -1,0 +1,489 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "TX",
+  "county": "Williamson",
+  "countyFips": "48491",
+  "populationRank": 90,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TX",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge52 reviewed local candidacy fields/104preprinted names and1new exactCAD whole-county membership. Reuse12held office/15candidate IDs and20sharedTravis office/43candidate IDs. Mint20new offices/46names only. Preserve all unrelated records, exact shared cores and every latest question/analysis/explanation;all15held candidate cores preserved; current source case-only comparisons explicit. Namedwritein qualification and cancellation status enumeration separate. No production publication.",
+  "subjects": [
+    {
+      "id": "tx-cx-local-2026-chief-justice-court-of-appeals-3",
+      "title": "Chief Justice, 3rd Court of Appeals District",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-277",
+      "title": "DISTRICT JUDGE, 277TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:277",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-368",
+      "title": "DISTRICT JUDGE, 368TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:368",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-480",
+      "title": "DISTRICT JUDGE, 480TH JUDICIAL DISTRICT (UNEXPIRED TERM)",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:480",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-512",
+      "title": "DISTRICT JUDGE, 512TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:512",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-county_judge",
+      "title": "COUNTY JUDGE",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-judge_county_court_at_law_no_1",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-judge_county_court_at_law_no_2",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-judge_county_court_at_law_no_3",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-judge_county_court_at_law_no_4",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-district_clerk",
+      "title": "DISTRICT CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-county_clerk",
+      "title": "COUNTY CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-ba01-2026-county-48491-county_treasurer",
+      "title": "COUNTY TREASURER",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-county-tax-assessor-collector-unexpired-term",
+      "title": "County Tax Assessor-Collector, Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-county-commissioner-precinct-2",
+      "title": "County Commissioner, Precinct 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson/commissioner_precinct:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-county-commissioner-precinct-4",
+      "title": "County Commissioner, Precinct 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson/commissioner_precinct:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-justice-of-the-peace-precinct-1",
+      "title": "Justice of the Peace, Precinct 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson/justice_precinct:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-justice-of-the-peace-precinct-2",
+      "title": "Justice of the Peace, Precinct 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson/justice_precinct:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-justice-of-the-peace-precinct-3",
+      "title": "Justice of the Peace, Precinct 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson/justice_precinct:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-justice-of-the-peace-precinct-4",
+      "title": "Justice of the Peace, Precinct 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:williamson/justice_precinct:4",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-williamson-central-appraisal-district-board-of-directors-place-1",
+      "title": "Williamson Central Appraisal District Board of Directors, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:williamson_central_appraisal_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-williamson-central-appraisal-district-board-of-directors-place-2",
+      "title": "Williamson Central Appraisal District Board of Directors, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:williamson_central_appraisal_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-williamson-central-appraisal-district-board-of-directors-place-3",
+      "title": "Williamson Central Appraisal District Board of Directors, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:williamson_central_appraisal_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-city-of-jarrell-mayor",
+      "title": "City of Jarrell Mayor",
+      "ocdId": "ocd-division/country:us/state:tx/place:jarrell",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-city-of-jarrell-alderman-place-1",
+      "title": "City of Jarrell Alderman, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/place:jarrell",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-city-of-jarrell-alderman-place-2",
+      "title": "City of Jarrell Alderman, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/place:jarrell",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-2",
+      "title": "City of Pflugerville, Council Member, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-4",
+      "title": "City of Pflugerville, Council Member, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-6",
+      "title": "City of Pflugerville, Council Member, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-acc-trustee-place-1",
+      "title": "ACC, Trustee, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-acc-trustee-place-2",
+      "title": "ACC, Trustee, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-acc-trustee-place-3",
+      "title": "ACC, Trustee, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-1",
+      "title": "Leander ISD Board of Trustees, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-2",
+      "title": "Leander ISD Board of Trustees, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-6",
+      "title": "Leander ISD Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-7",
+      "title": "Leander ISD Board of Trustees, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-pflugerville-isd-board-of-trustees-place-6",
+      "title": "Pflugerville ISD Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:pflugerville_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-pflugerville-isd-board-of-trustees-place-7",
+      "title": "Pflugerville ISD Board of Trustees, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:pflugerville_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-3",
+      "title": "Round Rock ISD Board of Trustees, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-4",
+      "title": "Round Rock ISD Board of Trustees, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-5",
+      "title": "Round Rock ISD Board of Trustees, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-6",
+      "title": "Round Rock ISD Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-block-house-municipal-utility-district-director-election",
+      "title": "Block House Municipal Utility District Director Election",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:block_house_mud",
+      "type": "CANDIDACY",
+      "candidates": 8,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-highlands-at-mayfield-ranch-municipal-utility-district-director-place-1",
+      "title": "Highlands at Mayfield Ranch Municipal Utility District Director, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:highlands_at_mayfield_ranch_mud",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-highlands-at-mayfield-ranch-municipal-utility-district-director-place-3",
+      "title": "Highlands at Mayfield Ranch Municipal Utility District Director, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:highlands_at_mayfield_ranch_mud",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-highlands-at-mayfield-ranch-municipal-utility-district-director-place-5",
+      "title": "Highlands at Mayfield Ranch Municipal Utility District Director, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:highlands_at_mayfield_ranch_mud",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-north-austin-mud-no-1-director-place-2",
+      "title": "North Austin MUD No. 1 Director, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:north_austin_mud_1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-north-austin-mud-no-1-director-place-4",
+      "title": "North Austin MUD No. 1 Director, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:north_austin_mud_1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-solana-ranch-municipal-utility-district-no-1-permanent-directors-election",
+      "title": "Solana Ranch Municipal Utility District No. 1 Permanent Directors Election",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:solana_ranch_municipal_utility_district_no_1",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-theon-ranches-municipal-utility-district-no-1-directors-election",
+      "title": "Theon Ranches Municipal Utility District No. 1 Directors Election",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:theon_ranches_municipal_utility_district_no_1",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "cx-local-tx-williamson-2026-williamson-county-municipal-utility-district-no-80-permanent-directors-election",
+      "title": "Williamson County Municipal Utility District No. 80 Permanent Directors Election",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:williamson_county_municipal_utility_district_no_80",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    },
+    {
+      "id": "tx-cx-local-2026-travis-williamson-travis-counties-municipal-utility-district-no-1-directors",
+      "title": "Williamson-Travis Counties Municipal Utility District No. 1 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:williamson_travis_counties_mud_1",
+      "type": "CANDIDACY",
+      "candidates": 7,
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF"
+    }
+  ],
+  "coverage": {
+    "preparedContests": 52,
+    "preparedPreprintedNames": 104,
+    "checkedInHeldContests": 12,
+    "checkedInHeldCandidateIds": 15,
+    "reusedReadyTravisContests": 20,
+    "reusedReadyTravisCandidateIds": 43,
+    "newContests": 20,
+    "newCandidateIds": 46,
+    "allCompositeCandidateFields": 79,
+    "allCompositePreprintedNames": 170,
+    "excludedFederalStatewideLegislative15thAppealsFields": 27,
+    "actualSamplePhysicalPages": 8,
+    "substantiveSamplePages": 7,
+    "watermarkOnlyFinalPages": 1,
+    "localUtilityFields": 10,
+    "localUtilityPreprintedNames": 39,
+    "exactPreparedElectorates": 26,
+    "completePrecinctGeometryFeatures": 6,
+    "ancillaryDistrictSourceFootprints": 5,
+    "missingReaderDistrictIds": 16,
+    "newWholeCountyMemberships": 1,
+    "heldJudicialWholeCountyMembershipsPreserved": 4,
+    "sharedTravisThirdCourtWholeCountyMemberships": 24,
+    "caseOnlySourceNameComparisons": 15,
+    "ancillaryCancellationCertificationDocuments": 22,
+    "knownNativeUnopposedStatusNames": 20,
+    "officialNamedWriteInCertificationAcquired": false,
+    "sourceCaptures": 59,
+    "newMeasures": 0,
+    "absencesCreated": 0
+  },
+  "summary": "Native current comprehensive8-page actual sample:52local fields/104preprinted names, including all10MUD fields. Complete exact local blocks and52/104 name/party/vote replay. Six exact precinct electorate geometries; five district source footprints retain full-boundary limits. Shared20Travis races use exact existing IDs. Separate write-in/cancellation work remains pending.",
+  "missingReaderDistrictIds": [
+    "ocd-division/country:us/state:tx/county:williamson/commissioner_precinct:2",
+    "ocd-division/country:us/state:tx/county:williamson/commissioner_precinct:4",
+    "ocd-division/country:us/state:tx/county:williamson/justice_precinct:1",
+    "ocd-division/country:us/state:tx/county:williamson/justice_precinct:2",
+    "ocd-division/country:us/state:tx/county:williamson/justice_precinct:3",
+    "ocd-division/country:us/state:tx/county:williamson/justice_precinct:4",
+    "ocd-division/country:us/state:tx/court_of_appeals_district:3",
+    "ocd-division/country:us/state:tx/judicial_district:277",
+    "ocd-division/country:us/state:tx/judicial_district:368",
+    "ocd-division/country:us/state:tx/judicial_district:480",
+    "ocd-division/country:us/state:tx/judicial_district:512",
+    "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+    "ocd-division/country:us/state:tx/special_district:solana_ranch_municipal_utility_district_no_1",
+    "ocd-division/country:us/state:tx/special_district:theon_ranches_municipal_utility_district_no_1",
+    "ocd-division/country:us/state:tx/special_district:williamson_central_appraisal_district",
+    "ocd-division/country:us/state:tx/special_district:williamson_county_municipal_utility_district_no_80"
+  ],
+  "nextOwner": "River: merge after shared Travis identities/memberships; precise reader district/geometry integration, official named-write-in qualification and cancellation declaration status review. Preserve all unrelated measure attachments.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 59 captured sources and 157 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

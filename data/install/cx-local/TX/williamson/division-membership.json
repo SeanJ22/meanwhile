@@ -1,0 +1,380 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:williamson/justice_precinct:1",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "COMPLETE_EXACT_COUNTY_PRECINCT",
+    "provenance": {
+      "sourceUrl": "https://gis.wilco.org/arcgis/rest/services/public/county_elections/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+      "sourceOrg": "Williamson County Elections / official county GIS",
+      "collectedAt": "2026-11-03T09:10:46.902628+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "{\"OBJECTID\":13,\"LABEL_NAME\":\"PCT 1\",\"COUNTY\":\"WILLIAMSON\",\"SHAPE.STArea()\":1220032253.7422657,\"SHAPE.STLength()\":293544.72594056127}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:williamson/justice_precinct:4",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "COMPLETE_EXACT_COUNTY_PRECINCT",
+    "provenance": {
+      "sourceUrl": "https://gis.wilco.org/arcgis/rest/services/public/county_elections/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+      "sourceOrg": "Williamson County Elections / official county GIS",
+      "collectedAt": "2026-11-03T09:10:46.902628+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "{\"OBJECTID\":14,\"LABEL_NAME\":\"PCT 4\",\"COUNTY\":\"WILLIAMSON\",\"SHAPE.STArea()\":17297786952.396286,\"SHAPE.STLength()\":743654.38692257472}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:williamson/commissioner_precinct:4",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "COMPLETE_EXACT_COUNTY_PRECINCT",
+    "provenance": {
+      "sourceUrl": "https://gis.wilco.org/arcgis/rest/services/public/county_elections/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+      "sourceOrg": "Williamson County Elections / official county GIS",
+      "collectedAt": "2026-11-03T09:10:46.902628+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "{\"OBJECTID\":14,\"LABEL_NAME\":\"PCT 4\",\"COUNTY\":\"WILLIAMSON\",\"SHAPE.STArea()\":17297786952.396286,\"SHAPE.STLength()\":743654.38692257472}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:williamson/justice_precinct:3",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "COMPLETE_EXACT_COUNTY_PRECINCT",
+    "provenance": {
+      "sourceUrl": "https://gis.wilco.org/arcgis/rest/services/public/county_elections/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+      "sourceOrg": "Williamson County Elections / official county GIS",
+      "collectedAt": "2026-11-03T09:10:46.902628+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "{\"OBJECTID\":15,\"LABEL_NAME\":\"PCT 3\",\"COUNTY\":\"WILLIAMSON\",\"SHAPE.STArea()\":7996588263.8063564,\"SHAPE.STLength()\":650305.51746822358}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:williamson/justice_precinct:2",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "COMPLETE_EXACT_COUNTY_PRECINCT",
+    "provenance": {
+      "sourceUrl": "https://gis.wilco.org/arcgis/rest/services/public/county_elections/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+      "sourceOrg": "Williamson County Elections / official county GIS",
+      "collectedAt": "2026-11-03T09:10:46.902628+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "{\"OBJECTID\":16,\"LABEL_NAME\":\"PCT 2\",\"COUNTY\":\"WILLIAMSON\",\"SHAPE.STArea()\":5146738163.573698,\"SHAPE.STLength()\":462888.0145564155}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:williamson/commissioner_precinct:2",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "COMPLETE_EXACT_COUNTY_PRECINCT",
+    "provenance": {
+      "sourceUrl": "https://gis.wilco.org/arcgis/rest/services/public/county_elections/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+      "sourceOrg": "Williamson County Elections / official county GIS",
+      "collectedAt": "2026-11-03T09:10:46.902628+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "{\"OBJECTID\":16,\"LABEL_NAME\":\"PCT 2\",\"COUNTY\":\"WILLIAMSON\",\"SHAPE.STArea()\":5146738163.573698,\"SHAPE.STLength()\":462888.0145564155}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:williamson",
+    "registryPresent": true,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "County Judge\n(Juez del Condado)\nVote for One\n(Vote por Uno)\nSteve Snell\nRepublican Party\n(Partido Republicano)\nHeather Jefts\nDemocratic Party\n(Partido Demócrata)"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:3",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "EXACT_DISTRICT_IDENTITY;FULL_READER_BOUNDARY_PENDING",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "Chief Justice, 3rd Court of\nAppeals District\n(Juez Presidente, Corte de Apelaciones del\nTercero Distrito)\nVote for One\n(Vote por Uno)\nCory Liu\nRepublican Party\n(Partido Republicano)\nDarlene Byrne\nDemocratic Party\n(Partido Demócrata)"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:277",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "District Judge, 277th\nJudicial District\n(Juez de Distrito, Distrito Judicial 277)\nVote for One\n(Vote por Uno)\nStacey Mathews\nRepublican Party\n(Partido Republicano)"
+    },
+    "heldMembershipId": "tx-ba01-county-judicial-williamson-277",
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:368",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "District Judge, 368th\nJudicial District\n(Juez de Distrito, Distrito Judicial 368)\nVote for One\n(Vote por Uno)\nSarah Bruchmiller\nRepublican Party\n(Partido Republicano)"
+    },
+    "heldMembershipId": "tx-ba01-county-judicial-williamson-368",
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:480",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "District Judge, 480th\nJudicial District,\nUnexpired Term\n(Juez de Distrito, Distrito Judicial 480,\nDuración Restante del Cargo)\nVote for One\n(Vote por Uno)\nTerence Davis\nRepublican Party\n(Partido Republicano)"
+    },
+    "heldMembershipId": "tx-ba01-county-judicial-williamson-480",
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:512",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "District Judge, 512th\nJudicial District\n(Juez de Distrito, Distrito Judicial 512)\nVote for One\n(Vote por Uno)\nSarah Moore\nRepublican Party\n(Partido Republicano)\nLeslie Booker\nDemocratic Party\n(Partido Demócrata)"
+    },
+    "heldMembershipId": "tx-ba01-county-judicial-williamson-512",
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:jarrell",
+    "registryPresent": true,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "City of Jarrell\n(Ciudad de Jarrell)\nMayor\n(Alcalde)\nVote for One\n(Vote por Uno)\nLori Allen"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+    "registryPresent": true,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "City of Pflugerville\n(Ciudad de Pflugerville)\nCouncil Member, Place 2\n(Miembro del Concilio, Lugar 2)\nVote for One\n(Vote por Uno)\nDavid Rogers\nCeasar Ruiz"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "EXACT_DISTRICT_IDENTITY;FULL_READER_BOUNDARY_PENDING",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "Austin Community College District\n(Distrito de Austin Community College)\nBoard of Trustees, Place 1\n(La Mesa Directiva, Puesto 1)\nVote for One\n(Vote por Uno)\nDana Walker\nGloria Gonzales-Dholakia"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+    "registryPresent": true,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "Leander Independent School District\n(Distrito Escolar Independiente de Leander)\nBoard of Trustees, Place 1\n(Consejo de Escuelas, Lugar 1)\nVote for None or One\n(Vote por Ninguno o Uno)\nSerenity Coats\nGerald Prater"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/school_district:pflugerville_independent_school_district",
+    "registryPresent": true,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "Pflugerville Independent\nSchool District\n(Distrito Escolar Independiente de Pflugerville)\nBoard of Trustees, Place 6\n(Consejo de Escuelas, Lugar 6)\nVote for None or One\n(Vote por Ninguno o Uno)\nNicole Toran\nJean Mayer"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+    "registryPresent": true,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "Round Rock Independent\nSchool District\n(Distrito Escolar Independiente de Round Rock)\nBoard of Trustees, Place 3\n(Consejo de Escuelas, Lugar 3)\nVote for None or One\n(Vote por Ninguno o Uno)\nAyaan Moledina\nVera Southwell\nAmber Feller Landrum\nGregory Andrew"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:block_house_mud",
+    "registryPresent": true,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "Block House Municipal Utility District\n(Distrito Municipal de Servicios\nPúblicos de Block House)\nDirector Election\n(Elección de Directores)\nVote for None, One, Two, or Three\n(Vote por Ninguna, Uno, Dos, o Tres)\nAshley Musso\nRyan Poppe\nSandra Martin\nTina Reckaway\nTerri L. Hutton\nJaden Tipton\nNancy Winston\nMatt Sanner"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:highlands_at_mayfield_ranch_mud",
+    "registryPresent": true,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "Highlands at Mayfield Ranch\nMunicipal Utility District\n(Distrito Municipal de Servicio Público de\nHighlands at Mayfield Ranch)\nDirector, Place 1\n(Director, Lugar 1)\nVote for None or One\n(Vote por Ninguno o Uno)\nFrederick Franklin\nStacy Henderson"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:north_austin_mud_1",
+    "registryPresent": true,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "North Austin Municipal\nUtility District No. 1\n(El Distrito Municipal Servicios Publicos No. 1\ndel Norte de Austin)\nDirector, Place 2\n(Director, Puesto 2)\nVote for None or One\n(Vote por Ninguno o Uno)\nDon Conklin"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:solana_ranch_municipal_utility_district_no_1",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "EXACT_DISTRICT_IDENTITY;FULL_READER_BOUNDARY_PENDING",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "Solana Ranch Municipal Utility\nDistrict No. 1\n(Distrito de Servicios Públicos Municipales Nro. 1\nde Solana Ranch)\nPermanent Directors Election\n(Elección De Directores Permanentes)\nVote for None, One, Two, Three, Four or Five\n(Vote por ninguna, una, dos, tres, cuatro o cinco )\nJoe Birdwell\nTheresa Canchola\nBecky Hinojosa\nMartha Mangum\nSandra Wilm"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:theon_ranches_municipal_utility_district_no_1",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "EXACT_DISTRICT_IDENTITY;FULL_READER_BOUNDARY_PENDING",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "Theon Ranches Municipal Utility\nDistrict No. 1\n(Distrito de Servicios Públicos Municipales Nro. 1\nde Theon Ranches)\nDirectors Election\n(Elección de Directores)\nVote for None, One, Two, Three, Four or Five\n(Vote por ninguna, una, dos, tres, cuatro o cinco)\nAndres Martinez\nSamantha Garcia\nJohn Senko\nLauryn Pianelli\nDiego Mayorga"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:williamson_central_appraisal_district",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "EXPLICIT_NEW_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "Williamson Central\nAppraisal District\n(Distrito de Avalúos Central de Williamson)\nBoard of Directors, Place 1\n(La Junta Directiva, Lugar 1)\nVote for None or One\n(Vote por Ninguno o Uno)\nHope Hisle-Piper\nClint Stephenson"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:williamson_county_municipal_utility_district_no_80",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "EXACT_DISTRICT_IDENTITY;FULL_READER_BOUNDARY_PENDING",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "Williamson County Municipal\nUtility District No. 80\n(El Distrito Municipal Servicios Publicos\nNo. 80 del Condado de Williamson)\nPermanent Directors Election\n(Elección De Directores Permanentes)\nVote for None, One, Two, Three, Four or Five\n(Vote por ninguna, una, dos, tres, cuatro o cinco )\nJay Antala\nManasvi Ardeshana\nJwalasinh Brahmbhatt\nJaya Kafle\nParag Ratanpara"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:williamson_travis_counties_mud_1",
+    "registryPresent": true,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "HELD_CANONICAL_READER_DIVISION",
+    "provenance": {
+      "sourceUrl": "https://www.wilcotx.gov/DocumentCenter/View/22018/20261103-November-JGSE---COMPREHENSIVE-SAMPLE-BALLOT-PDF",
+      "sourceOrg": "Williamson County Elections",
+      "collectedAt": "2026-11-03T08:54:22.878548+00:00",
+      "verifiedAt": "2026-11-03T09:29:06.599958+00:00",
+      "quote": "Williamson-Travis Counties\nMunicipal Utility District No. 1\n(Municipales Nro. 1 del Condados de\nWilliamson-Travis)\nDirectors Election\n(Elección de Directores)\nVote for Three\n(Vote por Tres)\nHanoi Avila\nDavid Flores\nBeth Jones\nStephen Bodnarchuk Jr.\nKimberly Massaro\nLinda Fabre\nThomas Vacek"
+    },
+    "heldMembershipId": null,
+    "limit": "County source footprints do not establish complete cross-county legal bounds. No service-area, school-zone, county or place fallback is substituted."
+  }
+]

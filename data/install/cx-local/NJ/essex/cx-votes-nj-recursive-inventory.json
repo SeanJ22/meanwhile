@@ -1,0 +1,498 @@
+{
+  "pinnedCommit": "92b249b5ed11d6a9d39a227ca5cbc0b569860005",
+  "rootPath": "data/install/cx-votes/NJ",
+  "onlyTopLevelDirectory": "explainer-expansion",
+  "tree": {
+    "sha": "d33a7476207d7d81458c59411d6b1d51e62e48a4",
+    "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/trees/d33a7476207d7d81458c59411d6b1d51e62e48a4",
+    "tree": [
+      {
+        "path": "authority.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7e1d35620af32c49fd0e1e4d968f091d74ffb1cf",
+        "size": 1519,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/7e1d35620af32c49fd0e1e4d968f091d74ffb1cf"
+      },
+      {
+        "path": "ballot-input",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "a7f6245bf2b38cf008e9e885f6d2eba3d91a19c5",
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/trees/a7f6245bf2b38cf008e9e885f6d2eba3d91a19c5"
+      },
+      {
+        "path": "ballot-input/nj.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3bdcde91d2119bc2272161cd36292e22aa444d5b",
+        "size": 41172,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/3bdcde91d2119bc2272161cd36292e22aa444d5b"
+      },
+      {
+        "path": "checks.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "85cd42c5978d88b5ca1251b518ba7e8ffe67ecb4",
+        "size": 4309,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/85cd42c5978d88b5ca1251b518ba7e8ffe67ecb4"
+      },
+      {
+        "path": "install.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ff4464392e04f5b8136ab59072c548d72c2326c5",
+        "size": 3538,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/ff4464392e04f5b8136ab59072c548d72c2326c5"
+      },
+      {
+        "path": "jurisdiction-bindings.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6c04eeb97ada806e429580f49249eab38f715975",
+        "size": 4379,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/6c04eeb97ada806e429580f49249eab38f715975"
+      },
+      {
+        "path": "ordinary-admission-checks.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f7aa1ad6d17f18bdc2b59070a7a38c2df019401a",
+        "size": 588,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/f7aa1ad6d17f18bdc2b59070a7a38c2df019401a"
+      },
+      {
+        "path": "park-ridge-warren-supplement",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "92ed81d36e4a4a8ebd57d8290ce157a07d6f2201",
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/trees/92ed81d36e4a4a8ebd57d8290ce157a07d6f2201"
+      },
+      {
+        "path": "park-ridge-warren-supplement/authority.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9098a939dfc0a9f685ea58190e810fe1f389b987",
+        "size": 4367,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/9098a939dfc0a9f685ea58190e810fe1f389b987"
+      },
+      {
+        "path": "park-ridge-warren-supplement/ballot-input",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "473caa0d9cdcee93848f721c233951bef4545623",
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/trees/473caa0d9cdcee93848f721c233951bef4545623"
+      },
+      {
+        "path": "park-ridge-warren-supplement/ballot-input/nj.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1e6c199942fd6173ff321b8cde09b507cdc03679",
+        "size": 17107,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/1e6c199942fd6173ff321b8cde09b507cdc03679"
+      },
+      {
+        "path": "park-ridge-warren-supplement/checks.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b0b05e1c18266054b01886a44887322c98136f0b",
+        "size": 1914,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/b0b05e1c18266054b01886a44887322c98136f0b"
+      },
+      {
+        "path": "park-ridge-warren-supplement/install.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1e3c405e7a61b1c479632b679731590c14c1c7bb",
+        "size": 2961,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/1e3c405e7a61b1c479632b679731590c14c1c7bb"
+      },
+      {
+        "path": "park-ridge-warren-supplement/jurisdiction-bindings.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c7e96a29fbf7ca0b679fe27c8f9ba9d6f9a4825d",
+        "size": 1566,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/c7e96a29fbf7ca0b679fe27c8f9ba9d6f9a4825d"
+      },
+      {
+        "path": "park-ridge-warren-supplement/ordinary-admission-checks.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8b52112d4ff659c0db0fcbb02aaa97ab1e2cca26",
+        "size": 588,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/8b52112d4ff659c0db0fcbb02aaa97ab1e2cca26"
+      },
+      {
+        "path": "park-ridge-warren-supplement/source-index.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b1cb0654f7571950efdf3642f2363f0976d87f44",
+        "size": 2673,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/b1cb0654f7571950efdf3642f2363f0976d87f44"
+      },
+      {
+        "path": "park-ridge-warren-supplement/source-semantic-review.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4e7ed146331550fbbaad80709fe49f966c3afccb",
+        "size": 1634,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/4e7ed146331550fbbaad80709fe49f966c3afccb"
+      },
+      {
+        "path": "park-ridge-warren-supplement/source-support.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "71c9d3728ac5f93982943d88d3dd7e8d46f95a4f",
+        "size": 66987,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/71c9d3728ac5f93982943d88d3dd7e8d46f95a4f"
+      },
+      {
+        "path": "park-ridge-warren-supplement/sources",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "1a9bcd33ca0b0de6008a77864c1fb6f84278385f",
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/trees/1a9bcd33ca0b0de6008a77864c1fb6f84278385f"
+      },
+      {
+        "path": "park-ridge-warren-supplement/sources/04978e585d86ddaa0c7c29e9727b5cec1a94712111b3a3f8ddbf9f1af19d3868.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6475e9180f280c1a89c9899199772cebf6459592",
+        "size": 7286,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/6475e9180f280c1a89c9899199772cebf6459592"
+      },
+      {
+        "path": "park-ridge-warren-supplement/sources/1c4351ea1e481e52c40cf7d87cab14a20699f6e02cec8977772172eb97b95ba9.source",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fb70ee5f946fe6f04eb6524d489c79a87ef21016",
+        "size": 50892,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/fb70ee5f946fe6f04eb6524d489c79a87ef21016"
+      },
+      {
+        "path": "park-ridge-warren-supplement/sources/227842f5c7f69597839cc08130f6f747030f90d43ef3cf77f6efc27b0a760291.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5e329f714fd3a9efda67e7fe8e1ff78ede1e3829",
+        "size": 1966,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/5e329f714fd3a9efda67e7fe8e1ff78ede1e3829"
+      },
+      {
+        "path": "park-ridge-warren-supplement/sources/2a6923175f5297f3b900329927e6fad398271438150d215db23ec514c93051d5.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2955365103c0d051be5fff7d3d121449d772a0cf",
+        "size": 154016,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/2955365103c0d051be5fff7d3d121449d772a0cf"
+      },
+      {
+        "path": "park-ridge-warren-supplement/sources/4dccc2a5bde74a4f6f0e20b782cdab76c9d312f9f8e26f3faf4de88b2f4500a9.source",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f477de590143e2677f7e549a3d0c34d1b7669669",
+        "size": 568334,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/f477de590143e2677f7e549a3d0c34d1b7669669"
+      },
+      {
+        "path": "park-ridge-warren-supplement/sources/55330d4ad60b8340ee6ff7645079eb9a5fb4173b2c01d3c39bff9210828ab7c1.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bb50fc65777537c5abf93b57eebbcf148c1fffd2",
+        "size": 2720,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/bb50fc65777537c5abf93b57eebbcf148c1fffd2"
+      },
+      {
+        "path": "park-ridge-warren-supplement/sources/5a764f81bd6b4de99f63e4734c7872c75b3214fda9c951238ae4d43d3c76bc0e.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cc4e9a22dcbd876081d12831066b8bd9549a9f2d",
+        "size": 2068,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/cc4e9a22dcbd876081d12831066b8bd9549a9f2d"
+      },
+      {
+        "path": "park-ridge-warren-supplement/sources/c23f8b17e165f4a8a82d0c920017b01fc0dce9b143b59a01b89d34e28afaa163.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "832b4910675560f52a58c1c90e5b3df9551857fe",
+        "size": 370118,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/832b4910675560f52a58c1c90e5b3df9551857fe"
+      },
+      {
+        "path": "park-ridge-warren-supplement/sources/c39eb71e16ab15249713c7ffa46d9b4909ca7e033844a537de76780794ada9dc.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "50fd9fc27a91497c9d2060bb45ae002b5b237693",
+        "size": 857,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/50fd9fc27a91497c9d2060bb45ae002b5b237693"
+      },
+      {
+        "path": "park-ridge-warren-supplement/sources/d7fa05a792682f39da264536a266d0f25762beac6230271a7be5afa17a486026.source",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "28ef846a0f76881a8cd6b5d97c3513e3340a1005",
+        "size": 1304498,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/28ef846a0f76881a8cd6b5d97c3513e3340a1005"
+      },
+      {
+        "path": "source-index.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "265f525500c992f170c857ead4153511147e1117",
+        "size": 6159,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/265f525500c992f170c857ead4153511147e1117"
+      },
+      {
+        "path": "source-semantic-review.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "98acab721fc0ffcd630487521fc84a7e10806778",
+        "size": 1683,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/98acab721fc0ffcd630487521fc84a7e10806778"
+      },
+      {
+        "path": "source-support.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "96f4a258bbbb08a00876f48d50e8eeebe54dc5b8",
+        "size": 115670,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/96f4a258bbbb08a00876f48d50e8eeebe54dc5b8"
+      },
+      {
+        "path": "sources",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "9f8b588f202f1a184a1aaa54d52516598d2e520f",
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/trees/9f8b588f202f1a184a1aaa54d52516598d2e520f"
+      },
+      {
+        "path": "sources/00d47911e4630e888a403fdb21e0d39ace737d7a93fc7bf42c247ff795388ac6.source",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b3fa0ffd0d028f9a3b1a8cf47300636d2c355c41",
+        "size": 567380,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/b3fa0ffd0d028f9a3b1a8cf47300636d2c355c41"
+      },
+      {
+        "path": "sources/08e19b04c0622ffafb39b73538fc7f002211e6884d1cf395c0b194b92e20f735.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0763a96a50007088395582113a35eb32a42bb98e",
+        "size": 1352,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/0763a96a50007088395582113a35eb32a42bb98e"
+      },
+      {
+        "path": "sources/08e75eba43cd7dc5e6c2f667ebd3130fbb9ca9ea40dd630ceba88f12ba23676a.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c53fed2d4ca809eb9784ded02fa9f1f0c2b46298",
+        "size": 40065,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/c53fed2d4ca809eb9784ded02fa9f1f0c2b46298"
+      },
+      {
+        "path": "sources/0a94d6844bc5acc971c6fd1fb05db6e1063ad27a4dc8f64329b4f0eeed50bf35.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e9e0866fe21ad5f9865f6769d3e36c5f4fd17b68",
+        "size": 2061,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/e9e0866fe21ad5f9865f6769d3e36c5f4fd17b68"
+      },
+      {
+        "path": "sources/171e71870b120513a09a79f4ef43178210f55a8514b944844c594d1a2e684b23.source",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9db8a52f99e51ad2e2de263a4ae02894a17cf1c9",
+        "size": 772680,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/9db8a52f99e51ad2e2de263a4ae02894a17cf1c9"
+      },
+      {
+        "path": "sources/1d87945b4179df654c41ff4140da9c8d49b6085e2fc7d007046a47659922f57e.source",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "70743e3f69c38b664ab7491254c6f3f80ec1138a",
+        "size": 567444,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/70743e3f69c38b664ab7491254c6f3f80ec1138a"
+      },
+      {
+        "path": "sources/23e4e5ce854d2f9ca1cb96a20bd96e3a991d067bf999e8bfbf99ba8250b9038a.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6d0471749314b495b4bba0e8254f1a975726bc1b",
+        "size": 2106,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/6d0471749314b495b4bba0e8254f1a975726bc1b"
+      },
+      {
+        "path": "sources/391830255890dcdac4ce84c35b39c1a080c72a48634eecec8e05ed9056de9b21.source",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bfd8cbc5ff876151f223a1d1f6d2519ab7d542e9",
+        "size": 568320,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/bfd8cbc5ff876151f223a1d1f6d2519ab7d542e9"
+      },
+      {
+        "path": "sources/3a832605f976954c81048582fcf255e8bd16955453e59394bcad28d6ae3a13c6.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "56eb167fc73d5dd3dd65dc4c1865733eea312dba",
+        "size": 3115,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/56eb167fc73d5dd3dd65dc4c1865733eea312dba"
+      },
+      {
+        "path": "sources/4d64ae492fa7fe7d1137427f176a9d44f4fbaee7db6e76fbe46789452ed3014e.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f40d3b70143285529df6dd489b9b541c76d72453",
+        "size": 34783,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/f40d3b70143285529df6dd489b9b541c76d72453"
+      },
+      {
+        "path": "sources/5d525440105e7cff72192136ff3c81eab9463bb60c59bdf72c6cd1d05adc7203.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a31e7254fb74fa898ec6d0b04d2bcb1d356a13dd",
+        "size": 125909,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/a31e7254fb74fa898ec6d0b04d2bcb1d356a13dd"
+      },
+      {
+        "path": "sources/61e1b00caff4bc435e4d893c5cc2451a6e9551fa18983b9f08c28cb231dd0c0d.source",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0ccbe6ad956a77e37968e8d697bf2bb430960c47",
+        "size": 563638,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/0ccbe6ad956a77e37968e8d697bf2bb430960c47"
+      },
+      {
+        "path": "sources/64df426af74d2f905954775abe5c648c41ad40ebb25454754e51afbcbe5a9bd3.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "451612ef5b9d58a57c5e68c116e88b14193948e7",
+        "size": 51587,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/451612ef5b9d58a57c5e68c116e88b14193948e7"
+      },
+      {
+        "path": "sources/68daea7ed784ddb6ad481ad908b593002f716ef7e88c13eaca52cda052f1e400.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cd2f22f3070e4a9783605b8989c2412d51835240",
+        "size": 1269,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/cd2f22f3070e4a9783605b8989c2412d51835240"
+      },
+      {
+        "path": "sources/88049e7473bdfdac4bb855380696a2f1e63260e2000440314e99e96aad5dbec2.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "59d36f8606d5243687fc0f580562fbedad72e213",
+        "size": 1952,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/59d36f8606d5243687fc0f580562fbedad72e213"
+      },
+      {
+        "path": "sources/8ff3d413faf7b9717fddde8b9714c45d25c34af90fe1aa54013064ef20d7e652.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6100fa5d1a77b683e12b643da329ff81b1c2516a",
+        "size": 1827,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/6100fa5d1a77b683e12b643da329ff81b1c2516a"
+      },
+      {
+        "path": "sources/99bacb4ab8dd585b94ef518bc3b17edd67c0c0e1b63e5fdf3f83bac65d773622.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8207fe3f4501af5cbc87b3580cfcf167e6c7cb28",
+        "size": 1450,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/8207fe3f4501af5cbc87b3580cfcf167e6c7cb28"
+      },
+      {
+        "path": "sources/ad63b1d3e92a3791befe3fe47bb89a73e91322761077c6ad7590455452465444.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d540f76a79304c37e3a44cc2c62a602be061d7c7",
+        "size": 38775,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/d540f76a79304c37e3a44cc2c62a602be061d7c7"
+      },
+      {
+        "path": "sources/b2a7be7410027fdfb8564351d42b264821e6c1381bafc62737d8d578c2fbf0db.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a2ae6aa2368979eb5830e58b7ab9b998a2267f61",
+        "size": 2240,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/a2ae6aa2368979eb5830e58b7ab9b998a2267f61"
+      },
+      {
+        "path": "sources/b30a7408b6d79b5e862fc357ddc1f19083cfbcaeaa3871bb6eb5e2df8ae49ad6.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4985c4f1e40e2753eb700cac42a00e579e06e16d",
+        "size": 38436,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/4985c4f1e40e2753eb700cac42a00e579e06e16d"
+      },
+      {
+        "path": "sources/b6cf7e94e77add4a18d908004b7d673d1c8cac2c04c54670bac01175fc7cddbc.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c0c66838b318e104ebf9e2d6311550d08fd3b81d",
+        "size": 838,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/c0c66838b318e104ebf9e2d6311550d08fd3b81d"
+      },
+      {
+        "path": "sources/bd4eb060d7bc0364b520e53c26516cb5cd6ed6ddeac10eab1faf8aa1d2882ee5.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "75b09e4800cd12e8f872635f1e8c3ca258a8fe49",
+        "size": 36783,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/75b09e4800cd12e8f872635f1e8c3ca258a8fe49"
+      },
+      {
+        "path": "sources/c3acda2b462d74dc67ebe3f7efe35f40fe38c42dd386b02ebc73ad3594b0a233.source",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8bed62c8a9a3e49086f669eebfbcb59a2bdd8c53",
+        "size": 567218,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/8bed62c8a9a3e49086f669eebfbcb59a2bdd8c53"
+      },
+      {
+        "path": "sources/dc270df5aca25b01d8d034477416f6fd1aedd614933b6614a2ac86c91a02381d.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8c511143bbc235a40493e54bb8405b07292d26f9",
+        "size": 1971,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/8c511143bbc235a40493e54bb8405b07292d26f9"
+      },
+      {
+        "path": "sources/e1b5f088f1228549e81954b9a9461683fb4b23e31b40464cd13c4cb174a77a69.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a396ef5ee6a53194f12b7de73699b1208d35def1",
+        "size": 1355,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/a396ef5ee6a53194f12b7de73699b1208d35def1"
+      },
+      {
+        "path": "sources/eea88d9f2728da32336e2b0129731025e31bb82114ad23da82b4a346acb2c44e.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c005813de382221b9ff6ee6b3893b8dca1f9a084",
+        "size": 912,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/c005813de382221b9ff6ee6b3893b8dca1f9a084"
+      },
+      {
+        "path": "sources/f3bf092c68d7724c09d0d125ab3be27ea59b197bdab05693da533d62a40a0221.html",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8534798394d2b3200df8aa5bfaa1d09983dd0b91",
+        "size": 70701,
+        "url": "https://api.github.com/repos/SeanJ22/meanwhile/git/blobs/8534798394d2b3200df8aa5bfaa1d09983dd0b91"
+      }
+    ],
+    "truncated": false
+  },
+  "rawTreeResponseSha256": "d6ab78a22dc965215b8bf276ed5da2a5b980647a645db7150303f5507b23411f",
+  "eightPreparedQuestionIds": [
+    "nj-bergen-2026:dumont-question",
+    "nj-bergen-2026:franklin-lakes-question",
+    "nj-bergen-2026:new-milford-question",
+    "nj-bergen-2026:oradell-question",
+    "nj-bergen-2026:park-ridge-question",
+    "nj-bergen-2026:tenafly-question",
+    "nj-bergen-2026:wyckoff-question",
+    "nj-somerset-2026:warren-hofheimer-house"
+  ]
+}

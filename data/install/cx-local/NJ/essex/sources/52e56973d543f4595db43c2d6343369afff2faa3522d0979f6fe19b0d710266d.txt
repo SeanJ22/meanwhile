@@ -1,0 +1,381 @@
+W1
+W2
+W3
+W4
+Æ·
+7
+PASSAIC                       RI
+VER
+4567
+647
+Æ·
+7
+SECOND                      RI
+VER
+4567
+506
+Æ·
+21
+North Arlington Borough
+Bergen County
+Township of Nutley 
+Township of Bloomfield
+City of Newark
+4567
+645
+L 29
+C 8
+MAIER ST
+Town of Kearny
+Hudson County
+BLOOMFIELD AVE
+NEWARK LIGHT RAIL
+4567
+670
+THIRD                      RIVE
+R
+# 7
+ELEMENTARY 
+SCHOOL 
+OAKWOOD
+AVE
+ST. MARYS
+PL
+4567
+509
+SPUR
+3
+6
+4
+7
+1
+8
+6
+1
+6
+3
+6
+5
+4
+4
+3
+1
+2
+2
+5
+2
+1
+4
+5
+5
+3
+2
+NJ 7
+NJ 21
+MAIN ST
+FRANKLIN  AVE
+CORTLAND ST
+NEW ST
+LITTLE ST
+UNION  AVE
+MILL ST
+VALLEY ST
+DIVISION AVE
+HOLMES ST
+LINDEN AVE
+FOREST ST
+BELL ST
+DE WITT AVE
+FAIRWAY AVE
+ADELAIDE ST
+WILLIAMS ST
+GREYLOCK PKWAY
+EMMET ST
+MALONE AVE
+BEECH ST
+HECKEL ST
+TAPPAN ST
+GARDEN AVE
+OVERLOOK AVE
+STEPHENS ST
+HORNBLOWER ST
+NOLTON ST
+DOW ST
+LIBERTY ST
+FRANKLIN ST
+BREMOND ST
+BELMONT AVE
+BELMOHR ST
+LAKE ST
+HIGH ST
+SMALLWOOD AVE
+ESSEX COUNTY 672
+FLOYD ST
+CEDAR HILL AVE
+CHESTNUT ST
+MAY ST
+MARY ST
+CELIA TERR
+CARPENTER AVE
+RALPH ST
+MAGNOLIA ST
+TIONA AVE
+PERRY ST
+ROUTE 506
+BALDWIN PL
+WILBER ST
+LIGHAM ST
+HILL ST
+DEWITT ST
+PLENGE DR
+BERNICE RD
+HARRISON ST
+SANFORD AVE
+RUTAN DR
+SMITH ST
+GREYLOCK AVE
+ROCCO ST
+FAIRVIEW PL
+ROSMORE PL
+TERRY ST
+OAK ST
+MT PROSPECT AVE
+N. 7TH ST
+ROOSEVELT ST
+MELWEX ST
+WALLACE ST
+HEWITT AVE
+CUOZZO ST
+CHARLES ST
+JEFFERSON ST
+NAPLES AVE
+CENTRE ST
+CONTINENTAL AVE
+FREDERICK ST
+JORALEMON ST
+MAIER ST
+NNP
+DAWSON ST
+OVERHILL DR
+MONTIETH AVE
+KING ST
+BRIGHTON AVE
+WATCHUNG AVE
+COLUMBUS AVE
+BRANCH BROOK DR
+FLORENCE AVE
+CREST DR
+BRIDGE ST
+PROSPECT ST
+BELLEVILLE AVE
+PROSPECT PL
+MITCHELL ST
+MINKER PL
+PRESTON ST
+MERTZ AVE
+CAMPBELL AVE
+NEWARK PL
+MONTGOMERY PL
+WATSESSING AVE
+EUGENE PL
+HILTON ST
+N. BELMONT AVE
+CRESCENT TER
+RUTGERS ST
+WILSON PL
+CLEVELAND PL
+JEROME AVE
+ELENA PL
+SYCAMORE AVE
+JERALDO ST
+WALNUT ST
+BAYARD ST
+ACADAMY ST
+PARKVIEW AVE
+RESERVOIR PL
+JANNARONE ST
+COTTAGE ST
+BELLEVUE AVE
+STEVENS RD
+VANHOUTEN PL
+PRINCETON TER
+FR NJ 21 NB to CO 506 WB
+GROVE ST
+DAVIDSON ST
+DELAVAN AVE
+MEMPHIS AVE
+AUSTIN ST
+HOWARD PL
+WHITE OAK TERR
+CRESTWOOD AVE
+CELIA CT
+NEWCOMB ST
+MT PLEASANT AVE
+PARK ST
+CLEVELAND ST
+OGDEN PL
+BIRCHWOOD TERR
+MORSE PL
+RAYMOND ST
+MADISON CT
+CLEARMAN PL
+LAWRENCE ST
+GLESS AVE
+AGNES ST
+HUNKELE RD
+BELLA VISTA AVE
+MYRTLE AVE
+HICKORY ST
+PARKSIDE DR
+LAUREL CT
+TREMONT AVE
+WASHINGTON ST
+YALE TER
+ALVA ST
+RHODE PL
+FEDERAL ST
+ACME ST
+DELIA TERR
+GREENWHICH ST
+BROOK ST
+IRVING ST
+QUINTEN ST
+N. 9TH ST
+COPPER PL
+VAN RENSSELAER AVE
+CROSS ST
+CAROLYN DR
+LOUISE CTR
+RAILROAD PL
+MONTGOMERY ST
+PASSAIC AVE
+MAPLE AVE
+LESLIE TERR
+FOREST AVE
+CAROLYNE RD
+CANELLA CT
+BERTON PL
+MOORE PL
+N. 8TH ST
+BELLE TERR
+HOOVER AVE
+AUDREY CT
+ENTWHISTLE AVE
+CARMER AVE
+NEWARK AVE
+TERRY ST
+MOORE PL
+MAIN ST
+DELAVAN AVE
+RALPH ST
+RALPH ST
+VANHOUTEN PL
+PASSAIC AVE
+CORTLAND ST
+BRIGHTON AVE
+BRIDGE ST
+STEPHENS ST
+QUINTEN ST
+BELMONT AVE
+MAIN ST
+DEWITT ST
+JORALEMON ST
+NJ 21
+UNION  AVE
+ACADAMY ST
+PASSAIC AVE
+Essex County Board of Elections
+300 Penhorn Avenue, 3rd Floor
+Secaucus, NJ 07094
+Ph. 201-624-2137 Fax. 201-624-2136
+Remington, Vernick 
+& Arango Engineers
+³
+Ward Commissioner  Michael Carson
+Date
+I certify that, to the best of my knowledge,
+the ward/election district boundaries shown on
+this map are those legally in effect and are 
+accurate of this date.
+Secretary to Ward Commission     Linda Von Nessi  
+Date
+Certified by:
+Township of Belleville
+Essex County, N.J.
+0
+1,000
+2,000
+500
+Feet
+1 inch = 500 feet
+DATE:  NOVEMBER 3, 2011
+    Legend
+Streams
+Streets
+Railroad
+Municipal Boundary
+Voting District Boundary
+Voting Ward Boundary
+Ward 1
+Ward  2
+Ward 3
+Ward 4
+W1
+W2
+W3
+W4
+General Notes and Data Sources: 
+ 
+This ward/election district boundary map is for demonstration purposes only, any use of 
+this product with respect to accuracy and precision shall be the sole responsibility of the 
+end user. 
+ 
+The areas, boundaries and details, shown on this ward/election district map, are 
+referenced, in part, from ground surveys, aerial surveys and recorded plans, tax 
+assessment maps and documents, and are to be used for ward/election district 
+boundary purposes only. 
+ 
+Ward/election district boundary and location information was provided by the Essex 
+County Board of Elections.  The 2010 Census demographic data was obtained and 
+provided by US Census Bureau: http://www.census.gov/.  
+ 
+Additional cadastral feature mapping data, such as, waterways, roadways, railroads, 
+aerial orthophotography, etc. was obtained from the New Jersey Department of 
+Environmental Protection (NJDEP). This secondary product has not been verified by 
+(NJDEP) and is not state-authorized. 
+ 
+All positions are based on the following: 
+- 
+NAD 83 (horizontal datum) 
+- 
+New Jersey State Plane Coordinate System 
+- 
+English units (feet)  
+ 
+The geodetic accuracy and precision of the Geographic Information System (GIS) data 
+contained in this mapping has not been developed nor verified by a professional 
+licensed land surveyor and shall not be nor is intended to be used in matters requiring 
+delineation and location of true ground horizontal and/or vertical controls. 
+ 
+All ward/election mapping was prepared in compliance with Title 19 and Title 40 statutes 
+and is the property of the Essex County Board of Elections and states the following: “Not 
+for distribution, no reproduction without permission by Essex County Board of Elections”.  
+WARD & ELECTION
+DISTRICT MAP
+in the
+Ward Commissioner  Bethany O'Toole, Chairperson
+Date
+Ward Commissioner  Fran Adubato
+Date
+Ward Commissioner  Lee B. Fisher
+Date
+Ward Commissioner  Kelly Cavanaugh
+Date
+0701
+DATE
+REVISIONS
+L 29
+C 8
+Legislative District
+Congressional District
+4

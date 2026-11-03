@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-03T06:58:23.413679+00:00",
+  "checks": 1030,
+  "status": "PASS",
+  "publishedSamples": 29,
+  "municipalities": 22,
+  "completeLocalOfficeOccurrences": 136,
+  "uniqueNamedFields": 48,
+  "namedCandidates": 137,
+  "heldNoNamedFields": 1,
+  "newMeasureFields": 3,
+  "preparedQuestionIdsPreserved": 8,
+  "recursiveCxVotesInputPaths": 2,
+  "wholeCommissionMunicipalityMemberships": 21,
+  "wholeSchoolMunicipalityMemberships": 8,
+  "all49UniqueOfficeBlocksVisuallyVerified": true,
+  "zeroUnassignedNativeCandidateSpans": true,
+  "sourceCaptures": 11,
+  "productionWrites": false,
+  "publication": false
+}

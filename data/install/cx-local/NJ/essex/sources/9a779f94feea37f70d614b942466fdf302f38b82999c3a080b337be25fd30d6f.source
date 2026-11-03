@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html ng-app="adsModule">
+<head prefix="og: http://ogp.me/ns#">
+
+    <meta name="viewport" content="width=device-width" />
+    <meta property="og:image" content="/_Assets/img/logo/site-logo.png">
+    <meta name="description" content="Offical Site of The Essex County Clerk&#39;s Office" />
+
+    <title>The Essex County Clerk&#39;s Office - Home</title>
+
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/apple-touch-icon-57x57.png" />
+
+    <link rel="icon" type="image/png" href="/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="/favicon-128.png" sizes="128x128" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
+
+    <meta name="application-name" content="The Essex County Clerk&#39;s Office" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="msapplication-TileImage" content="mstile-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
+
+    <link rel="icon" type="image/png" href="/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&family=Titillium+Web:wght@400;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+    <style>
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+            display: none !important;
+        }
+    </style>
+    <link href="/_Assets/css/default.css" rel="stylesheet"/>
+
+    <link href="/_Assets/css/jquery-ui.structure.css" rel="stylesheet"/>
+<link href="/_Assets/css/jquery-ui.theme.css" rel="stylesheet"/>
+<link href="/_Assets/css/components/animate.css" rel="stylesheet"/>
+<link href="/_Assets/js/components/labelholder/labelholder.css" rel="stylesheet"/>
+<link href="/_Assets/js/components/scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+
+    <link href="/_Assets/css/components/glyphicons/glyphicons.css" rel="stylesheet" />
+    <link href="/_Assets/css/components/glyphicons/glyphicons-bootstrap.css" rel="stylesheet" />
+    
+
+    <!--[if IE 9]>
+        <style>
+         aside ul {
+            filter:none;
+        }
+        </style>
+    <![endif]-->
+    <!--[if lt IE 9]>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+    <!--[if IE]>
+        <style>
+            a.quick-links-tab {
+                right: 15px;
+            }
+        </style>
+    <![endif]-->
+    <script src="/Scripts/jquery-2.2.3.js"></script>
+<script src="/Scripts/jquery-3.7.1.js"></script>
+<script src="/Areas/ADS_Admin/_Assets/plugins/jquery-migrate.min.js"></script>
+<script src="/Scripts/jquery-ui-1.11.4.js"></script>
+<script src="/Scripts/js.cookie.js"></script>
+
+    <script src="/Scripts/angular.js"></script>
+<script src="/Scripts/angular-animate.js"></script>
+<script src="/Scripts/angular-resource.js"></script>
+<script src="/Scripts/angular-sanitize.js"></script>
+<script src="/Scripts/angular-ui/ui-bootstrap.js"></script>
+<script src="/Scripts/angular-ui/ui-bootstrap-tpls.js"></script>
+<script src="/_Assets/js/angular/libs/recaptcha/angular-recaptcha.js"></script>
+<script src="/_Assets/js/angular/alpha.ng.app.js"></script>
+
+    <script src="/_Assets/js/modernizr-2.8.3.js"></script>
+
+    
+<script async src="https://cse.google.com/cse.js?cx=f74906c18ebca416e"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-1555513-46', 'auto');
+        ga('send', 'pageview');
+    </script>
+</head>
+<body id="site-body">
+
+    <!-- OVERLAY MASK -->
+    <div id="overlay" onclick="hideAllOverlayItems();"></div>
+
+    
+
+    <a class="quick-links-tab" href="#" data-toggle="modal" data-target="#quicklinks">&nbsp;</a>
+
+    
+    <div class="site-header-outer">
+        <div class="row site-header-wrap">
+            <header class="col-md-12 site-header">
+                <section class="row">
+                    
+
+<nav class="col-md-12 site-header-nav">
+
+        <div class="site-topbar">
+            <script type="application/json" id="site-ticker-data">[{"Title":"General Election Results Click Here. Polls are open from 6:00 am to 8 pm. ","SiteLink":"https://results.enr.clarityelections.com/NJ/Essex/127486/","SiteTarget":"_blank","CSSClass":"ticker-attention"}]</script>
+            <script>window.__siteTickerUrl = "/Home/GetTickerData";</script>
+            <section class="hid site-ticker-band" id="ticker-init" role="region" aria-label="Office announcements" aria-live="polite">
+                <ul id="ticker">
+                    <li>
+                        <ul id="ticker-data">
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+            <div class="site-topbar-utilities-wrap">
+            <div class="container site-topbar-row site-topbar-utilities">
+                <div class="topbar-utility-left">
+                    <a href="tel:+1-(973) 621.4920" class="topbar-phone">
+                        <span class="topbar-phone-icon" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" focusable="false">
+                                <path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z"/>
+                            </svg>
+                        </span>
+                        <span class="topbar-phone-text">(973) 621.4920</span>
+                    </a>
+                </div>
+                <div id="topbar-translate" class="topbar-utility-center">
+                    <a href="#" class="topbar-translate-link" data-toggle="modal" data-target="#settings" title="Translate website">
+                        <span class="topbar-translate-icon" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" focusable="false">
+                                <path fill="currentColor" d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.24-6.7H15V4h-7v2h4.82C12.27 7.49 10.71 9.55 9.01 11.08L6.5 8.56 5.06 10l5.94 5.94 2.87-2.87zM18.5 10h-2L12 4.5V6l4.5 4.5 2-2z"/>
+                            </svg>
+                        </span>
+                        <span class="topbar-translate-text">Translate Website</span>
+                    </a>
+                </div>
+                <div class="topbar-utility-right topbar-utility-social social-links clearfix" aria-label="Social media">
+                    <a href="https://www.facebook.com/essexcountyclerk/" class="social-icon topbar-social-link clearfix" target="_blank" rel="noopener noreferrer" aria-label="Visit us on Facebook">
+                        <span class="topbar-social-icon ico-fb" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>
+                        </span>
+                    </a>
+                    <a href="https://www.instagram.com/essexcountyclerk/" class="social-icon topbar-social-link clearfix" target="_blank" rel="noopener noreferrer" aria-label="Visit us on Instagram">
+                        <span class="topbar-social-icon ico-ig" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm5 5.8a4.2 4.2 0 100 8.4 4.2 4.2 0 000-8.4zm4.9-2.4a1 1 0 100 2 1 1 0 000-2zM12 9.4a2.6 2.6 0 110 5.2 2.6 2.6 0 010-5.2z"/></svg>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="site-nav-pin-sentinel" aria-hidden="true"></div>
+        <!-- Main Menu: pins to top after ticker + utility bar scroll away -->
+        <div class="site-nav-pin">
+        <div class="container site-nav-bar" id="site-nav-container">
+            <div class="row">
+                <div class="col-md-12 navbar navbar-default" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#site-nav">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/">
+                            <span class="nb">Essex Clerk</span>
+                            <span class="mobile-nb">Essex Clerk County's Office</span>
+                        </a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="site-nav">
+                        <div class="mobile-menu-chrome">
+                            <div class="mobile-menu-header">
+                                <span class="mobile-menu-title">Essex County Clerk's Office</span>
+                                <button type="button" class="mobile-menu-close" aria-label="Close menu" data-toggle="collapse" data-target="#site-nav">
+                                    <img src="/_Assets/img/close.svg" width="22" height="22" alt="" />
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mobile-menu-scroll-hint" aria-hidden="true" role="status" aria-live="polite">
+                            <span class="mobile-menu-scroll-hint-label">Scroll down</span>
+                        </div>
+                        <div class="mobile-menu-nav-scroll">
+                        <ul class="nav navbar-nav">
+                            <li id="menu-s1" class="has-form clearfix mobile-menu-search">
+                                <label class="mobile-menu-search-label" for="mobileSearchText">Search</label>
+                                <form class="input-group mobile-menu-search-form" role="search" action="https://www.essexclerk.com/Search" method="get">
+                                    <input name="q" id="mobileSearchText" placeholder="Help me find..." type="search" autocomplete="on" class="form-control site-search-1" />
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-default mobile-menu-search-btn" aria-label="Search"><span class="glyphicon glyphicon-search" aria-hidden="true"></span><span class="mobile-menu-search-btn-text">Search</span></button>
+                                    </span>
+                                </form>
+                            </li>
+                            <li id="menu-hm"><a href="/" class="homeLink">Home</a></li>
+
+                            <li id="menu-se" class="dropdown">
+                                <a href="#" rel="nofollow" class="dropdown-toggle" data-toggle="dropdown">Services</a>
+                                <ul class="dropdown-menu ng-scope" role="menu">
+
+                                    <li>
+                                        <a href="#1" class="subnav-ctrl" role="button" data-toggle="collapse" data-parent="#menu-se" aria-expanded="false" aria-controls="#1">Ceremonies</a>
+                                        <ul class="subnav-nav collapse" id="1">
+                                            <li>
+                                                <a href="/Services/3">Oaths of Office</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/1">Weddings</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="#3" class="subnav-ctrl ng-binding" role="button" data-toggle="collapse" data-parent="#menu-se" aria-expanded="false" aria-controls="#3">Identification Services</a>
+                                        <ul class="subnav-nav collapse" id="3">
+                                            <li>
+                                                <a href="/Services/18">Essex County Resident ID</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/26">Gold Star ID Card</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/19">Senior Citizen Courtesy Identification Card</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/20">Youth Resident ID</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#4" class="subnav-ctrl ng-binding" role="button" data-toggle="collapse" data-parent="#menu-se" aria-expanded="false" aria-controls="#4">Passport Services</a>
+                                        <ul class="subnav-nav collapse" id="4">
+                                            <li>
+                                                <a href="/Services/12">Expedited Service</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/10">New Passport</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/11">Renew Passport</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#5" class="subnav-ctrl ng-binding" role="button" data-toggle="collapse" data-parent="#menu-se" aria-expanded="false" aria-controls="#5">Records Services</a>
+                                        <ul class="subnav-nav collapse" id="5">
+                                            <li>
+                                                <a href="/Services/13">Business Trade Names</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/15">Inheritance Tax Waivers</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/16">Liens &amp; Judgments</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/17">Religious Corporations</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/14">Trade Name Search</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#6" class="subnav-ctrl ng-binding" role="button" data-toggle="collapse" data-parent="#menu-se" aria-expanded="false" aria-controls="#6">Registration Services</a>
+                                        <ul class="subnav-nav collapse" id="6">
+                                            <li>
+                                                <a href="/Services/27">Notarized Document Certification</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/23">Notary Public License</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/21">Physicians License</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Services/22">Veterans Peddler License</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            
+                            <li id="menu-ei" class="dropdown">
+                                <a href="#" rel="nofollow" class="dropdown-toggle" data-toggle="dropdown">Election Information</a>
+                                <ul class="dropdown-menu" role="menu">
+
+                                    <li>
+                                        <a href="/_Content/img/news/EARLY-VOTING-LOCATIONS-2026-GENERAL-ELECTION.jpg" target="_blank">2026 General Election Early Voting Locations</a>
+                                    </li>
+                                    <li>
+                                        <a href="/_Content/pdf/GUIDE-TO-VOTING-GENERAL-2026.pdf">2026 Voter Guide</a>
+                                    </li>
+                                    <li>
+                                        <a href="/Services/4">Instructional Videos</a>
+                                    </li>
+                                    <li>
+                                        <a href="/Election/">Election Results</a>
+                                    </li>
+                                    <li>
+                                        <a href="/_Content/pdf/Essex-2026-Sample-Ballots.pdf" target="_blank">2026 GENERAL ELECTION SAMPLE BALLOTS</a>
+                                    </li>
+                                    <li>
+                                        <a href="/Services/6">Vote by Mail</a>
+                                    </li>
+                                    <li>
+                                        <a href="/Services/5">Voter Registration</a>
+                                    </li>
+                                    <li>
+                                        <a href="/Services/9">Voter Registration Lists</a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="https://www.essexclerk.com/_Content/pdf/Replacement-Ballot-Form-updated.pdf" target="_blank">Second Ballot Request</a>
+                                    </li>
+                                    <li>
+                                        <a href="/_Content/pdf/2026-UPDATED-DROP-BOX-LOCATIONS.pdf" target="_blank">UPDATE!! Drop Box Locations</a>
+
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="/_Content/pdf/forms/Opt-out-form.pdf" target="_blank">OPT OUT Form</a>
+                                    </li>
+                                    <li>
+                                        <a href="/_Content/pdf/forms/VOTER-REG-OFFICIAL-REMOVAL-FROM-VOTER-ROLLS.pdf" target="_blank">Request for Voter Registration Removal</a>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
+                            <!--<li id="menu-ei"><a href="/ElectionInformation">Election Information</a></li>-->
+                            <li id="menu-fo"><a href="/Forms">Forms</a></li>
+                            <li id="menu-ab"><a href="/About">About The Clerk</a></li>
+                            <li id="menu-ca"><a href="/Calendar">Calendar</a></li>
+                            <li id="menu-me"><a href="/Media">Media</a></li>
+                            <li><a href="#contact" class="contactLink">Contact</a></li>
+                            <li id="menu-s2">
+                                <a href="#" data-toggle="modal" data-target="#searchModal" title="Search" class="searchLink" aria-haspopup="dialog">
+                                    <span class="settings-txt">Search</span> <i>&nbsp;</i>
+                                </a>
+                            </li>
+                            
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+</nav>
+                </section>
+            </header>
+            <div class="col-xs-12">
+                
+    <section class="row feature-wrap">
+    <div class="col-xs-12 mobile-nav-spacer" aria-hidden="true"></div>
+    <div class="col-md-12 feature-img">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 feature-bg">
+
+                    <figure class="fadeIn">
+                        <figcaption>
+                            <h1><a href="/">The Essex County <strong>Clerk&#39;s Office</strong></a></h1>
+                        </figcaption>
+                    </figure>
+
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid site-container">
+        <main class="row main-content">
+
+            <div class="col-md-12">
+                <div class=" container ">
+                    <div class="row">
+
+                        
+
+                        
+
+
+
+<!-- SPLASH POPUP: outer shell is pointer-events:none so backdrop (#overlay) receives clicks; inner is interactive -->
+<div id="popup-splash" class="splash-modal-root" style="background-color:transparent;">
+    <div class="splash-modal-inner">
+        <div class="text-right splash-modal-close-wrap">
+            <a href="javascript:void(0);" class="arrow-close" onclick="hideAllOverlayItems();" aria-label="Close"><img src="/_Assets/img/close.svg" width="22" alt="" /></a>
+        </div>
+        <div class="splash-modal-body">
+            <a href="https://www.essexclerk.com/mobileapp">
+                <img src="/_Assets/img/Essex-Clerk-Popup-Mobile-App.png" class="img-responsive" alt="Download our Mobile App" />
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<section class="col-md-6 primary nav-id hp" id="primary" data-page="hm" role="main">
+
+    <section class="row">
+        
+<div id="pnlNews" class="poof">
+
+    
+
+    <!--<nav class="section-tabs theme-default">
+        <ul class="nav nav-pills nav-justified">
+            <li class="tab-1 active"><a href="#section-news" role="tab" data-toggle="tab">News</a></li>
+            <li class="tab-2"><a href="#section-notices" role="tab" data-toggle="tab">Notices</a></li>
+            <li class="tab-3"><a href="#section-archives" role="tab" data-toggle="tab">Archives</a></li>
+        </ul>
+    </nav>-->
+
+    <h3 class="hp-news">News</h3>
+
+    
+
+    <div class="tab-content">
+        <section class="tab-pane fade in active" id="section-news" ng-controller="newsArticleController" ng-init="init('')">
+            <div ng-init="loadPage()">
+                <div id="articles-holder" ng-repeat="item in main.records">
+                    <article ng-class="item.NewsArticle_Featured ? 'featured-article cf': 'cf'">
+                        <div class="fa-tag" ng-show="item.NewsArticle_Featured"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Featured Article</div>
+                        <header>
+                            <h2>
+                                <a href="/News/View/{{item.NewsArticle_ID}}/{{item.NewsArticle_Title | fixDash}}" ng-bind="item.NewsArticle_Title"></a>
+                                <br />
+                                <span class="h6 text-right">
+                                    Posted on:  {{item.NewsArticle_ReleaseDateTime | formatDateEvent}} - {{item.NewsArticle_ReleaseDateTime | formatTimeEvent}}
+                                </span>
+                            </h2>
+                        </header>
+                        <p><img ng-src="{{item.NewsArticle_CoverImage}}" alt=""></p>
+                        <div read-more class="rel" ng-model="item.NewsArticle_Body"></div>
+                        <div class="social">
+                            <div class="addthis_sharing_toolbox" data-url="http://www.essexclerk.com/News/View/{{item.NewsArticle_ID}}/{{item.NewsArticle_Title | fixDash}}" data-title="{{item.NewsArticle_Title}}"></div>
+                        </div>
+                    </article>
+                </div>
+                <div class="load-more-btn cf">
+                    <button class="btn btn-lm" href="#" ng-hide="showButtonLoadMore()" ng-click="loadMore()">Load More</button>
+                </div>
+            </div>
+        </section>
+        <section class="tab-pane fade in" id="section-notices" ng-controller="newsNoticeController">
+
+            <div ng-init="loadPage()">
+                <div id="articles-holder" ng-repeat="item in main.records">
+                    <article ng-class="item.NewsArticle_Featured ? 'featured-article cf': 'cf'">
+                        <div ng-class="item.NewsArticle_Featured ? 'feature-mark': ''"></div>
+                        <header>
+                            <h2><a href="/News/View/{{item.NewsArticle_ID}}" ng-bind="item.NewsArticle_Title"></a></h2>
+                        </header>
+                        <p><img ng-src="{{item.NewsArticle_CoverImage}}" alt=""></p>
+                        <div read-more class="rel" ng-model="item.NewsArticle_Body"></div>
+                        <div class="social">
+                            <div class="addthis_sharing_toolbox" data-url="http://www.essexclerk.com/News/View/{{item.NewsArticle_ID}}/{{item.NewsArticle_Title | fixDash}}" data-title="{{item.NewsArticle_Title}}"></div>
+                        </div>
+                    </article>
+                </div>
+                <div class="load-more-btn cf">
+                    <button class="btn btn-lm" href="#" ng-hide="showButtonLoadMore()" ng-click="loadMore()">Load More</button>
+                </div>
+            </div>
+
+        </section>
+        <section class="tab-pane fade in" id="section-archives" ng-controller="newsArchiveController">
+
+            <div ng-init="loadPage()">
+                <div id="articles-holder" ng-repeat="item in main.records">
+                    <article ng-class="item.NewsArticle_Featured ? 'featured-article cf': 'cf'">
+                        <div ng-class="item.NewsArticle_Featured ? 'feature-mark': ''"></div>
+                        <header>
+                            <h2>
+                                <a href="/News/View/{{item.NewsArticle_ID}}/{{item.NewsArticle_Title | fixDash}}"></a>
+                                <br />
+                                <small style="text-align: right;">Posted on: {{item.NewsArticle_ReleaseDateTime | formatDateEvent}}</small>
+                            </h2>
+                        </header>
+                        <p><img ng-src="{{item.NewsArticle_CoverImage}}" alt=""></p>
+                        <div read-more class="rel" ng-model="item.NewsArticle_Body"></div>
+                        <div class="social">
+                            <div class="addthis_sharing_toolbox" data-url="http://www.essexclerk.com/News/View/{{item.NewsArticle_ID}}/{{item.NewsArticle_Title | fixDash}}" data-title="{{item.NewsArticle_Title}}"></div>
+                        </div>
+                    </article>
+                </div>
+                <div class="load-more-btn cf">
+                    <button class="btn btn-lm" href="#" ng-hide="showButtonLoadMore()" ng-click="loadMore()">Load More</button>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+
+
+</div>
+
+    </section>
+
+    <section class="row">
+        
+        <h3>Welcome</h3>
+        <div class="side-box" style="padding:15px;">
+            <img src="/_Content/img/clerk2.jpg" class="img-responsive" alt="Christopher J. Durkin - Essex County Clerk" style="float: left; margin-right: 15px; border: 3px solid #0F2348;" />
+            <p>
+                Thanks for visiting the official Web site of the Essex County Clerk, your guide to the wide range of
+                services available to you as residents of Essex County.
+            </p>
+            <p>
+                Here, in one convenient location, you will find detailed instructions, downloadable forms, and fee
+                information for the many services offered by your Essex County Clerk, both in our Newark office, and
+                at satellite locations throughout the county.
+            </p>
+            <p>
+                If you need additional information or assistance, please do not hesitate to contact us via telephone
+                or e-mail.
+            </p>
+            <p class="welcome-sig">
+                <b>Christopher J. Durkin</b><br />
+                <i>Essex County Clerk</i>
+            </p>
+        </div>
+    </section>
+
+
+    
+
+    <section>
+
+        <div class="row">
+
+            
+
+
+            <div class="col-sm-12">
+                <!-- Clerk's Corner -->
+                
+
+                <!-- Mobile App -->
+                <h3>Essex Votes Mobile App</h3>
+                <a href="/mobileapp">
+                    <img src="/_Content/img/ClerksOfficeApp.jpg" alt="Essex Votes Mobile App Screenshot" class="img-responsive margin-bottom-30" style="max-width: 280px; margin: 20px 0;" />
+                </a>
+
+                <!-- Clerk's TV -->
+                
+
+                
+
+                
+
+            </div>
+
+
+
+            
+
+
+            
+        </div>
+
+
+        
+
+
+        
+
+    </section>
+
+</section>
+
+<div id="address-notice-bar" role="region" aria-label="Address notice">
+    <button type="button" class="address-notice-close" aria-label="Dismiss address notice">
+        <img src="/_Assets/img/close.svg" width="18" height="18" alt="" />
+    </button>
+    <b>ATTENTION!</b> Our new address is: <b>Dr. Martin Luther King Justice Building</b> - 495 Martin Luther King Jr. Boulevard, Newark NJ 07102
+</div>
+
+
+
+
+
+
+
+
+
+                        
+
+                         <aside class='col-md-5 col-md-offset-1 sidebar bs-pk'> 
+                        
+                        
+    <section class="row sb-section">
+    <div class="col-md-12 bs-pk">
+
+        <h3>Schedule my Appointment</h3>
+
+        <p>
+            Services for Notary Oaths, US Adult Passports (Ages 16 years and up), US Child Passports (Ages 0-15 years),
+            Notary Certifications and ALL County Identification Cards are by APPOINTMENT ONLY. To schedule an
+            appointment, <a
+                href="https://gcc02.safelinks.protection.outlook.com/?url=https%3A%2F%2Fessex.civicscheduler.com%2F&data=04%7C01%7Cjgrosso%40clerk.essexcountynj.org%7Ca84a7831efab464bc1da08d99d4da366%7Cd22d13114d06440099c6c0b945a3b348%7C0%7C0%7C637713779040996809%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&sdata=tdua100lRsq1b06itmB1StyMQ7ESGHEo2dWn2gtliUc%3D&reserved=0"
+                target="_blank">click here</a>.
+        </p>
+        <p>
+            All Vault Services are handled via mail or walk in only and are still located in the Hall of Records 465
+            Martin Luther King Jr. Boulevard Newark, NJ 07102.
+        </p>
+        <ul style="list-style:disc!important; padding:initial!important;margin-left:20px!important;">
+            <li>Paid Parking is available and open to patrons in addition to street parking.</li>
+        </ul>
+
+        <p>
+            <b>PLEASE BE ADVISED THAT THE UPDATED LEAD TIMES FOR U.S. PASSPORTS HAS BEEN CHANGED.</b>
+        </p>
+        <p>
+            <b>
+                ROUTINE PASSPORTS are now taking up to 6-8 weeks<br />
+                EXPEDITED PASSPORTS are now taking up to 2-3 weeks
+            </b>
+        </p>
+        <p>
+            <b>
+                AS OF JUNE 28, 2026 increase to price of expedited passports
+            </b>
+        </p>
+
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>ADULT US PASSPORT BOOK ONLY (Routine)</td>
+                    <td>$130.00</td>
+                </tr>
+                <tr>
+                    <td>ADULT US PASSPORT BOOK AND CARD (Routine)</td>
+                    <td>$160.00</td>
+                </tr>
+                <tr>
+                    <td>ADULT US PASSPORT BOOK (Expedite)</td>
+                    <td>$190.00</td>
+                </tr>
+                <tr>
+                    <td>ADULT US PASSPORT BOOK (Expedite with First Class Mail return)</td>
+                    <td>$216.87</td>
+                </tr>
+                <tr>
+                    <td>CHILD US PASSPORT BOOK ONLY (Routine)</td>
+                    <td>$100.00</td>
+                </tr>
+                <tr>
+                    <td>CHILD US PASSPORT BOOK AND CARD (Routine)</td>
+                    <td>$115.00</td>
+                </tr>
+                <tr>
+                    <td>CHILD US PASSPORT BOOK (Expedite)</td>
+                    <td>$160.00</td>
+                </tr>
+                <tr>
+                    <td>CHILD PASSPORT BOOK (Expedite with First Class Mail return)</td>
+                    <td>$186.87</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Buttons -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="buttons-home track-passport">
+                    <a href="https://travel.state.gov/content/travel/en/passports/need-passport/status.html"
+                        target="_blank">
+                        <img src="/_Assets/img/icon-passport.svg" />
+                        <span>Track Your<br />Passport</span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="buttons-home schedule-appointment">
+                    <a href="https://essex.civicscheduler.com/" target="_blank">
+                        <img src="/_Assets/img/icon-schedule.svg" />
+                        <span>Schedule my<br />Appointment</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+
+        <h3>Services Outside of the Clerk's Office</h3>
+
+        <p>The Essex County Clerk is NOT the OPRA Custodian of Records.</p>
+
+        <p>
+            Please visit <a href="https://essex.oprarequest.com" target="_blank">essex.oprarequest.com</a>.
+        </p>
+
+        <ul>
+            <li>
+                <b>To record a deed, mortgage, or lien, please contact the REGISTER OF DEEDS AND MORTGAGES at
+                    973-621-4960.</b>
+            </li>
+            <li>
+                <b>For ALL COURT MATTERS, please contact the Clerk of the Superior Court at 973-776-9300.</b>
+            </li>
+        </ul>
+
+
+        <h3>Social Media</h3>
+
+        <div class="row" style="margin-bottom:30px;">
+            <div class="col-sm-6">
+                <a href="https://www.instagram.com/essexcountyclerk/" target="_blank">
+                    <img src="/_Assets/img/instagram.png" />
+                    Follow us on <b>Instagram</b>
+                </a>
+            </div>
+            <div class="col-sm-6">
+                <a href="https://www.facebook.com/essexcountyclerk/" target="_blank">
+                    <img src="/_Assets/img/facebook-logo.png" />
+                    Follow us on <b>Facebook</b>
+                </a>
+            </div>
+        </div>
+
+        <!-- Facebook Widget -->
+        <div class="fb-like-box" data-href="https://www.facebook.com/essexcountyclerk" data-width="520px"
+            data-height="600px" data-colorscheme="light" data-show-faces="true" data-footer="true" data-header="true"
+            data-stream="true" data-show-border="false" style="margin-bottom:30px;"></div>
+        <script>
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+
+        <!-- Instagram Widget -->
+        <blockquote class="instagram-media" data-instgrm-captioned
+            data-instgrm-permalink="https://www.instagram.com/p/CanQgmxuIOy/?utm_source=ig_embed&amp;utm_campaign=loading"
+            data-instgrm-version="14"
+            style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+            <div style="padding:16px;"> <a
+                    href="https://www.instagram.com/p/CanQgmxuIOy/?utm_source=ig_embed&amp;utm_campaign=loading"
+                    style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;"
+                    target="_blank">
+                    <div style=" display: flex; flex-direction: row; align-items: center;">
+                        <div
+                            style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;">
+                        </div>
+                        <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                            <div
+                                style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;">
+                            </div>
+                            <div
+                                style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding: 19% 0;"></div>
+                    <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px"
+                            height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg"
+                            xmlns:xlink="https://www.w3.org/1999/xlink">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <g transform="translate(-511.000000, -20.000000)" fill="#000000">
+                                    <g>
+                                        <path
+                                            d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631">
+                                        </path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg></div>
+                    <div style="padding-top: 8px;">
+                        <div
+                            style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">
+                            View this post on Instagram</div>
+                    </div>
+                    <div style="padding: 12.5% 0;"></div>
+                    <div style="display: flex; flex-direction: row; margin-bottom: 14px; align-items: center;">
+                        <div>
+                            <div
+                                style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(0px) translateY(7px);">
+                            </div>
+                            <div
+                                style="background-color: #F4F4F4; height: 12.5px; transform: rotate(-45deg) translateX(3px) translateY(1px); width: 12.5px; flex-grow: 0; margin-right: 14px; margin-left: 2px;">
+                            </div>
+                            <div
+                                style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(9px) translateY(-18px);">
+                            </div>
+                        </div>
+                        <div style="margin-left: 8px;">
+                            <div
+                                style=" background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 20px; width: 20px;">
+                            </div>
+                            <div
+                                style=" width: 0; height: 0; border-top: 2px solid transparent; border-left: 6px solid #f4f4f4; border-bottom: 2px solid transparent; transform: translateX(16px) translateY(-4px) rotate(30deg)">
+                            </div>
+                        </div>
+                        <div style="margin-left: auto;">
+                            <div
+                                style=" width: 0px; border-top: 8px solid #F4F4F4; border-right: 8px solid transparent; transform: translateY(16px);">
+                            </div>
+                            <div
+                                style=" background-color: #F4F4F4; flex-grow: 0; height: 12px; width: 16px; transform: translateY(-4px);">
+                            </div>
+                            <div
+                                style=" width: 0; height: 0; border-top: 8px solid #F4F4F4; border-left: 8px solid transparent; transform: translateY(-4px) translateX(8px);">
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center; margin-bottom: 24px;">
+                        <div
+                            style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 224px;">
+                        </div>
+                        <div
+                            style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 144px;">
+                        </div>
+                    </div>
+                </a>
+                <p
+                    style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;">
+                    <a href="https://www.instagram.com/p/CanQgmxuIOy/?utm_source=ig_embed&amp;utm_campaign=loading"
+                        style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;"
+                        target="_blank">A post shared by Christopher J. Durkin (@essexcountyclerk)</a>
+                </p>
+            </div>
+        </blockquote>
+        <script async src="//www.instagram.com/embed.js"></script>
+
+    </div>
+</section>
+
+    
+
+<section class="row sb-section">
+    <div class="col-md-12 bs-pk">
+
+       
+
+    </div>
+</section>
+
+
+    
+
+                        
+                         </aside> 
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="row site-footer">
+            <div class="col-md-12">
+                <div class="container">
+                    <div class="row footer-columns">
+
+                        <nav class="col-md-4 site-map footer-sitemap footer-block" aria-label="Site map">
+
+    <h3 class="footer-block-title footer-section-heading">
+        <button type="button"
+                class="footer-section-toggle collapsed"
+                data-toggle="collapse"
+                data-target="#footer-sitemap-panel"
+                aria-expanded="false"
+                aria-controls="footer-sitemap-panel">
+            Site Map
+            <span class="footer-section-chevron" aria-hidden="true"></span>
+        </button>
+        <span class="footer-section-heading-text">Site Map</span>
+    </h3>
+
+    <div id="footer-sitemap-panel" class="footer-sitemap-panel collapse">
+        <div class="row" ng-controller="serviceFooterController">
+
+            <div class="col-md-6" ng-repeat="itemRow in records |  partition: 2">
+                <div ng-repeat="item in itemRow">
+                    <h4 ng-bind="item.ServiceCategory_Label"></h4>
+                    <ul>
+                        <li ng-repeat="service in item.Children" ng-if="service.Service_PageHref">
+                            <a ng-href="{{service.Service_PageHref}}" ng-bind="service.Service_Label"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="footer-social" aria-label="Social media">
+        <h4 class="footer-social-title">Follow Us</h4>
+        <div class="social-links clearfix">
+            <a href="https://www.facebook.com/essexcountyclerk/" class="social-icon clearfix" target="_blank" rel="noopener noreferrer" aria-label="Visit us on Facebook"><span class="ico-fb">&nbsp;</span><i><em>Visit us on Facebook!</em></i></a>
+            <a href="https://www.instagram.com/essexcountyclerk/" class="social-icon clearfix" target="_blank" rel="noopener noreferrer" aria-label="Visit us on Instagram"><span class="ico-ig">&nbsp;</span><i><em>Visit us on Instagram!</em></i></a>
+        </div>
+    </div>
+</nav>
+
+                        <div class="col-md-4 ftr-contact footer-contact-col">
+
+    <div class="footer-block footer-contact">
+        <h3 id="contact" class="footer-block-title">Contact Us</h3>
+
+        <section class="contact-form form-group" ng-controller="contactController" ng-init="recaptchaKey='6LfkwB0TAAAAAAbxNC2zzL2qHG8ksesC_YRTsYFh'">
+            <form ng-submit="processForm()">
+
+                <div id="messages" ng-show="message" class="contact-hdr"><span ng-bind="message"></span></div>
+
+                <div class="labelholder" data-label="(e.g. Alan Guth)">
+                    <input type="text" ng-model="contact.Contact_Name" class="form-control cf-nm" placeholder="Name" required />
+                </div>
+                <div class="labelholder" data-label="(e.g. email@address.com)">
+                    <input type="email" ng-model="contact.Contact_Email" class="form-control cf-eml" placeholder="Email Address" required />
+                </div>
+                <div class="labelholder" data-label="(e.g. (555) 555-1234)">
+                    <input type="tel" ng-model="contact.Contact_Phone" class="form-control phoneNumber" placeholder="Phone Number" required />
+                </div>
+                <div class="labelholder" data-label="(e.g. To whom it may concern...)">
+                    <textarea ng-model="contact.Contact_Message" class="form-control cf-msg" rows="1" id="msg" placeholder="Message" required></textarea>
+                </div>
+                <div class="contact-ftr">
+                    <span>
+                        <em class="rf">Note:</em> All Fields Required
+                    </span>
+                </div>
+                <div class="footer-recaptcha">
+                    <div class="footer-recaptcha-inner">
+                        <div vc-recaptcha size="'compact'" theme="'light'" key=recaptchaKey></div>
+                    </div>
+                </div>
+                <div class="footer-submit">
+                    <button type="submit" class="btn btn-default btn-lg">Submit</button>
+                </div>
+
+            </form>
+        </section>
+    </div>
+
+</div>
+
+                        <div class="col-md-4 footer-offices-col">
+                            <div class="footer-block footer-offices" aria-label="Our Offices">
+    <h3 class="footer-block-title">Our Offices</h3>
+    <div class="contact-info-block">
+        <div class="footer-map-wrap">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d898.7917049877616!2d-74.18049448530422!3d40.7364411150525!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c253893fd3e1ef%3A0xe46038866f3b0788!2s495%20Dr%20Martin%20Luther%20King%20Jr%20Blvd%2C%20Newark%2C%20NJ%2007103!5e0!3m2!1sen!2sus!4v1631123456977!5m2!1sen!2sus" frameborder="0" allowfullscreen="" loading="lazy" title="Map: Essex County Clerk office location"></iframe>
+        </div>
+        <div class="footer-address">
+            <p class="footer-address-name"><strong>Dr. Martin Luther King Justice Building</strong></p>
+            <p class="footer-address-line">
+                <a href="https://goo.gl/maps/fXsnsCHKn5sibc8k9" target="_blank" rel="noopener">
+                    495 Martin Luther King Jr. Boulevard.<br />
+                    Newark,
+                    NJ 07102
+                </a>
+            </p>
+            <p class="footer-address-contact">
+                <span>Tel: <a href="tel:+1-(973) 621.4920" class="tel">(973) 621.4920</a></span>
+                <span>Email: <a href="mailto:info@clerk.essexcountynj.org" class="tel">info@clerk.essexcountynj.org</a></span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<nav class="footer-block footer-utilities" aria-label="Footer utilities">
+    <ul class="footer-utility-links">
+        <li>
+            <a href="#" data-toggle="modal" data-target="#settings" title="Translate website">Translate Website</a>
+        </li>
+    </ul>
+</nav>
+
+                            
+                        </div>
+
+                        <small class="col-md-12 footer-meta">
+                            <em>
+                                <span>
+                                    &copy;&nbsp;2026&nbsp;Clerk's Office <i>/</i>
+                                    
+                                </span>
+                            </em>
+                            <em><span class="site-by"><a href="http://www.alphadogsolutions.com/" target="_blank">&nbsp;</a></span></em>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        (function () {
+            var addThis = document.createElement('script');
+            addThis.src = 'https://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-56ba0aed1c9bf82f';
+            addThis.async = true;
+            addThis.onerror = function () { };
+            document.body.appendChild(addThis);
+        }());
+    </script>
+
+    
+
+    
+    
+    
+
+    <div class="modal fade" id="quicklinks" tabindex="-1" role="dialog" aria-labelledby="quickLinksLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="quickLinksLabel">Resources</h4>
+            </div>
+            <div class="modal-body" ng-controller="quickLinksController">
+                <div class="quick-links row">
+                    <section class="col-md-4" ng-repeat="itemRow in records | partition: 3">
+                        <ul class="ul no-bullet li-mb-md" ng-repeat="item in itemRow">
+                            <li class="quick-links-header">{{item.CategoryLabel}}</li>
+                            <li ng-repeat="link in item.Links">
+                                <a href="{{link.Href}}" target="{{link.Target}}">{{link.Label}}</a>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+
+
+<div class="modal fade" id="settings" tabindex="-1" role="dialog" aria-labelledby="translateModalTitle" data-backdrop="true" data-keyboard="true">
+
+    <div class="modal-dialog modal-dialog-translate" role="document">
+
+        <div class="modal-content translate-modal-panel notranslate">
+
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+                <h4 class="modal-title" id="translateModalTitle">Translate Website</h4>
+
+            </div>
+
+            <div class="modal-body">
+
+
+
+
+                <p class="translate-help">
+
+                    Tap a language to translate this page. Translation is provided by Google and may not be exact.
+
+                </p>
+
+
+
+                <div class="translate-language-list" role="list">
+
+                    <p class="translate-language-group-label">Popular</p>
+
+                        <a href="/translate?lang=es&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Spanish</a>
+                        <a href="/translate?lang=pt&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Portuguese</a>
+                        <a href="/translate?lang=zh-CN&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Chinese (Simplified)</a>
+                        <a href="/translate?lang=zh-TW&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Chinese (Traditional)</a>
+                        <a href="/translate?lang=ko&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Korean</a>
+                        <a href="/translate?lang=fr&amp;returnUrl=%2F" class="translate-language-option" role="listitem">French</a>
+
+
+
+                    <p class="translate-language-group-label">More languages</p>
+
+                        <a href="/translate?lang=it&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Italian</a>
+                        <a href="/translate?lang=pl&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Polish</a>
+                        <a href="/translate?lang=ar&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Arabic</a>
+                        <a href="/translate?lang=hi&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Hindi</a>
+                        <a href="/translate?lang=ru&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Russian</a>
+                        <a href="/translate?lang=de&amp;returnUrl=%2F" class="translate-language-option" role="listitem">German</a>
+                        <a href="/translate?lang=vi&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Vietnamese</a>
+                        <a href="/translate?lang=ht&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Haitian Creole</a>
+                        <a href="/translate?lang=tl&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Filipino</a>
+                        <a href="/translate?lang=ur&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Urdu</a>
+                        <a href="/translate?lang=bn&amp;returnUrl=%2F" class="translate-language-option" role="listitem">Bengali</a>
+
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+    <div class="modal fade" id="calendarEventModal" tabindex="-1" role="dialog" aria-labelledby="Event_Title">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content printable">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <p id="Event_Department"></p>
+                <h4 class="modal-title cal-event-title" id="Event_Title"></h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="cal-event-date"><strong>Date/Time:</strong> <span id="Event_StartDateTime"></span><span id="Event_EndDateTime"></span></div>
+                <div class="cal-event-location"><strong>Location:</strong> <span id="Event_Location"></span></div>
+                <div class="cal-event-status"></div>
+                <div class="cal-event-description"><div id="Event_Description"></div></div>
+                <div class="cal-event-files cf" id="Event_Link"></div>
+                
+                <div class="cal-event-print">
+                    <a class="print-link">Print</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="calendarMeetingModal" tabindex="-1" role="dialog" aria-labelledby="Meeting_Title">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content printable">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title cal-event-title" id="Meeting_Title"></h4>
+            </div>
+            <div class="modal-body">
+
+                <p id="Meeting_Type"></p>
+                <div class="cal-event-status"></div>
+                <div class="cal-event-date"><strong>Date/Time:</strong> <span id="Meeting_DateTime"></span></div>
+                <div class="cal-event-location"><strong>Location:</strong> <span id="Meeting_Location"></span></div>
+                <div class="cal-event-description"><div id="Meeting_Description"></div></div>
+                <div class="cal-event-files cf" id="pdf-links"></div>
+                
+                <div class="cal-event-print">
+                    <a class="print-link">Print</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+
+<div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content site-search-modal">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" tabindex="-1"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="searchModalLabel">Search this site</h4>
+            </div>
+            <div class="modal-body">
+                <p class="site-search-modal-intro">Find forms, services, election information, and more.</p>
+                <form class="site-search-modal-form" role="search" action="https://www.essexclerk.com/Search" method="get">
+                    <label class="sr-only" for="modalSearchText">Search</label>
+                    <div class="input-group input-group-lg">
+                        <input name="q" id="modalSearchText" type="search" class="form-control" placeholder="Help me find..." autocomplete="on" />
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-primary site-search-modal-submit">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                Search
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div id="google_translate_element" class="google-translate-host" aria-hidden="true"></div>
+
+    
+
+    
+    <script src="/_Assets/js/bootstrap.js"></script>
+<script src="/_Assets/js/bootstrap/transition.js"></script>
+<script src="/_Assets/js/bootstrap/popover.js"></script>
+
+    <script src="/_Assets/js/components/jquery.liscroll.js"></script>
+<script src="/_Assets/js/components/jquery.expander.js"></script>
+<script src="/_Assets/js/components/jquery.maskedinput.js"></script>
+<script src="/_Assets/js/components/labelholder/labelholder.js"></script>
+<script src="/_Assets/js/components/jquery.bootstrap-autohidingnavbar.js"></script>
+<script src="/_Assets/js/components/scrollbar/js/uncompressed/jquery.mCustomScrollbar.js"></script>
+<script src="/_Assets/js/components/jquery.elastic.source.js"></script>
+<script src="/_Assets/js/components/succinct.js"></script>
+<script src="/_Assets/js/components/smooth-scroll/scroll-to/jquery.scrollTo.js"></script>
+<script src="/_Assets/js/components/smooth-scroll/jquery.localScroll.js"></script>
+<script src="/Scripts/moment.js"></script>
+
+    <script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <script src="/_Assets/js/alpha.jquery.calendar.js"></script>
+<script src="/_Assets/js/site.js"></script>
+
+
+    <script>
+        function googleTranslateApplyCookie() {
+            var match = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+            if (!match) {
+                return;
+            }
+
+            var parts = decodeURIComponent(match[1]).split('/').filter(function (segment) {
+                return segment.length > 0;
+            });
+
+            if (parts.length < 2) {
+                return;
+            }
+
+            var lang = parts[parts.length - 1];
+            if (!lang || lang === 'en') {
+                return;
+            }
+
+            var select = document.querySelector('.goog-te-combo');
+            if (!select || !select.options || !select.options.length) {
+                return;
+            }
+
+            var i;
+            for (i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === lang) {
+                    select.value = lang;
+                    if (document.createEvent) {
+                        var evt = document.createEvent('HTMLEvents');
+                        evt.initEvent('change', true, true);
+                        select.dispatchEvent(evt);
+                    } else if (window.jQuery) {
+                        window.jQuery(select).trigger('change');
+                    }
+                    break;
+                }
+            }
+        }
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'es,pt,zh-CN,zh-TW,ko,fr,it,pl,ar,hi,ru,de,vi,ht,tl,ur,bn',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+
+            window.setTimeout(googleTranslateApplyCookie, 100);
+            window.setTimeout(googleTranslateApplyCookie, 500);
+            window.setTimeout(googleTranslateApplyCookie, 1500);
+
+            if (window.jQuery) {
+                jQuery(document).trigger('googleTranslateReady');
+            }
+        }
+    </script>
+
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    
+    <script src="/_Assets/js/components/printThis.js"></script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-508acedf6477acb5" async="async"></script>
+
+
+    
+
+    
+    
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('.labelholder').labelholder();
+            $.getScript('/_Assets/js/social.js');
+        });
+    </script>
+
+
+    <!-- Accessibility Widget -->
+    <script>
+        (function () {
+            var adally = document.createElement('script');
+            adally.src = 'https://d2twz9av6or5hk.cloudfront.net/1.6/adally.js';
+            adally.onerror = function () { };
+            document.body.appendChild(adally);
+        }());
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "checkedAt": "2026-11-03T06:56:14.930108+00:00",
+  "method": "Read-only GitHub connector, immutable blob checks inherited from same-state Bergen acquisition and latest branchhead rechecked. No git operation.",
+  "ref": "stream/cx-votes",
+  "pinnedCommit": "92b249b5ed11d6a9d39a227ca5cbc0b569860005",
+  "held": {
+    "path": "data/ballot/2026-general/nj.json",
+    "sha256": "573d849265d7e83c2e3d638f9a8a20e776f1198adbbff8e332ba022b8371cd8a",
+    "contests": 109,
+    "candidates": 304,
+    "measures": 0
+  },
+  "remoteState": {
+    "path": "data/ballot/2026-general/nj.json",
+    "blobSha": "36ccf70b57520a529a345c19bfb99519d92cc64e",
+    "sha256": "3b0dd6697d09eaee4d01714ae5dbfe222569af7537a7981094ff1aeef3311453"
+  },
+  "remotePrepared": {
+    "path": "data/install/cx-votes/NJ/explainer-expansion/ballot-input/nj.json",
+    "blobSha": "3bdcde91d2119bc2272161cd36292e22aa444d5b",
+    "sha256": "4e0a29cdc5f4000d39ee27e25c41746e079c8681ecffbd58254ae5517524b7bc",
+    "unchangedPreparedMeasureIds": [
+      "nj-bergen-2026:dumont-question",
+      "nj-bergen-2026:franklin-lakes-question",
+      "nj-bergen-2026:new-milford-question",
+      "nj-bergen-2026:oradell-question",
+      "nj-bergen-2026:tenafly-question",
+      "nj-bergen-2026:wyckoff-question"
+    ]
+  },
+  "nestedPrepared": {
+    "path": "data/install/cx-votes/NJ/explainer-expansion/park-ridge-warren-supplement/ballot-input/nj.json",
+    "blobSha": "1e6c199942fd6173ff321b8cde09b507cdc03679",
+    "sha256": "a39d3336e671f725292b7d2328af8d87bd768fd77410451b68a1b4ed33dbf626",
+    "unchangedPreparedMeasureIds": [
+      "nj-bergen-2026:park-ridge-question",
+      "nj-somerset-2026:warren-hofheimer-house"
+    ]
+  },
+  "recursiveNjInstallInventory": {
+    "checkedRoot": "data/install/cx-votes/NJ",
+    "onlyTopDirectory": "explainer-expansion",
+    "directoryTreeSha": "d33a7476207d7d81458c59411d6b1d51e62e48a4",
+    "truncated": false,
+    "ballotInputPaths": [
+      "ballot-input/nj.json",
+      "park-ridge-warren-supplement/ballot-input/nj.json"
+    ]
+  },
+  "localLanePaths": [
+    "/workspace/meanwhile/data/install/cx-local/NJ/bergen/ballot-input/nj.json"
+  ],
+  "conclusion": "No Essex local candidate or measure identities/equivalent question found in held NJ, pinned latest CX-VOTES NJ ballot/prepared input or Bergen local lane. All eight prepared NJ questions/explainers (six base Bergen plus nested ParkRidge/Warren) and the Bergen local packet stay unchanged outside incomingIDs. Shared exact school-district/geographic registry IDs reused."
+}

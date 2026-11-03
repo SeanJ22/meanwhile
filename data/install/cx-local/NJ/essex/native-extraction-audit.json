@@ -1,0 +1,670 @@
+{
+  "physicalPages": 29,
+  "inventory": [
+    {
+      "physicalPage": 1,
+      "label": "Township of Belleville",
+      "nativeCharacterCount": 2343
+    },
+    {
+      "physicalPage": 2,
+      "label": "Township of Belleville Ward 2",
+      "nativeCharacterCount": 2667
+    },
+    {
+      "physicalPage": 3,
+      "label": "Township of Bloomfield Ward 1",
+      "nativeCharacterCount": 2638
+    },
+    {
+      "physicalPage": 4,
+      "label": "Township of Bloomfield Ward 2",
+      "nativeCharacterCount": 2633
+    },
+    {
+      "physicalPage": 5,
+      "label": "Township of Bloomfield Ward 3",
+      "nativeCharacterCount": 2632
+    },
+    {
+      "physicalPage": 6,
+      "label": "Borough of Caldwell",
+      "nativeCharacterCount": 2510
+    },
+    {
+      "physicalPage": 7,
+      "label": "Township of Cedar Grove",
+      "nativeCharacterCount": 2162
+    },
+    {
+      "physicalPage": 8,
+      "label": "City of East Orange",
+      "nativeCharacterCount": 1854
+    },
+    {
+      "physicalPage": 9,
+      "label": "Borough of Essex Fells",
+      "nativeCharacterCount": 8967
+    },
+    {
+      "physicalPage": 10,
+      "label": "Township of Fairfield",
+      "nativeCharacterCount": 10813
+    },
+    {
+      "physicalPage": 11,
+      "label": "Borough of Glen Ridge",
+      "nativeCharacterCount": 2686
+    },
+    {
+      "physicalPage": 12,
+      "label": "Township of Irvington",
+      "nativeCharacterCount": 1866
+    },
+    {
+      "physicalPage": 13,
+      "label": "Township of Livingston",
+      "nativeCharacterCount": 2570
+    },
+    {
+      "physicalPage": 14,
+      "label": "Township of Maplewood",
+      "nativeCharacterCount": 2639
+    },
+    {
+      "physicalPage": 15,
+      "label": "Township of Millburn",
+      "nativeCharacterCount": 2785
+    },
+    {
+      "physicalPage": 16,
+      "label": "Township of Montclair CD10",
+      "nativeCharacterCount": 3009
+    },
+    {
+      "physicalPage": 17,
+      "label": "Township of Montclair CD11",
+      "nativeCharacterCount": 3042
+    },
+    {
+      "physicalPage": 18,
+      "label": "City of Newark CD8",
+      "nativeCharacterCount": 2024
+    },
+    {
+      "physicalPage": 19,
+      "label": "City of Newark CD10 Comm 1",
+      "nativeCharacterCount": 1870
+    },
+    {
+      "physicalPage": 20,
+      "label": "City of Newark CD10 Comm 2",
+      "nativeCharacterCount": 1876
+    },
+    {
+      "physicalPage": 21,
+      "label": "City of Newark CD10 Comm 3",
+      "nativeCharacterCount": 1868
+    },
+    {
+      "physicalPage": 22,
+      "label": "Borough of North Caldwell",
+      "nativeCharacterCount": 9224
+    },
+    {
+      "physicalPage": 23,
+      "label": "Township of Nutley",
+      "nativeCharacterCount": 2449
+    },
+    {
+      "physicalPage": 24,
+      "label": "City of Orange Township",
+      "nativeCharacterCount": 2322
+    },
+    {
+      "physicalPage": 25,
+      "label": "Borough of Roseland",
+      "nativeCharacterCount": 9444
+    },
+    {
+      "physicalPage": 26,
+      "label": "South Orange Village",
+      "nativeCharacterCount": 2387
+    },
+    {
+      "physicalPage": 27,
+      "label": "Township of Verona",
+      "nativeCharacterCount": 2934
+    },
+    {
+      "physicalPage": 28,
+      "label": "Township of West Caldwell",
+      "nativeCharacterCount": 2557
+    },
+    {
+      "physicalPage": 29,
+      "label": "Township of West Orange",
+      "nativeCharacterCount": 3313
+    }
+  ],
+  "unassignedCandidateFontSpans": [],
+  "nonCandidateTitleFontSpans": [
+    {
+      "physicalPage": 1,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 2,
+      "text": "Municipal Election - Elección Municipal",
+      "bbox": [
+        213.68479919433594,
+        546.002685546875,
+        442.8873291015625,
+        563.1806640625
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 2,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        781.731689453125,
+        546.002685546875,
+        978.6671752929688,
+        563.1806640625
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 3,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 4,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 5,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 6,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 7,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 9,
+      "text": "Yes",
+      "bbox": [
+        903.6015014648438,
+        667.8187255859375,
+        921.3974609375,
+        682.542724609375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 9,
+      "text": "No",
+      "bbox": [
+        949.1339721679688,
+        667.8187255859375,
+        962.093994140625,
+        682.542724609375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 9,
+      "text": "Yes",
+      "bbox": [
+        1009.4053955078125,
+        667.8187255859375,
+        1027.2012939453125,
+        682.542724609375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 9,
+      "text": "No",
+      "bbox": [
+        1054.9381103515625,
+        667.8187255859375,
+        1067.8980712890625,
+        682.542724609375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 9,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        324.6932067871094,
+        568.87060546875,
+        521.3876953125,
+        586.048583984375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 10,
+      "text": "Bond Proposal Question 1",
+      "bbox": [
+        853.7902221679688,
+        277.5049133300781,
+        949.906494140625,
+        289.77490234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 10,
+      "text": "Bond Proposal Question 2",
+      "bbox": [
+        968.384521484375,
+        277.5049133300781,
+        1064.501220703125,
+        289.77490234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 10,
+      "text": "Explanatory Statement",
+      "bbox": [
+        1098.238037109375,
+        277.5049133300781,
+        1183.389892578125,
+        289.77490234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 10,
+      "text": "Yes",
+      "bbox": [
+        885.052001953125,
+        763.8607788085938,
+        902.8479614257812,
+        778.5847778320312
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 10,
+      "text": "No",
+      "bbox": [
+        930.5845947265625,
+        763.8607788085938,
+        943.7846069335938,
+        778.5847778320312
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 10,
+      "text": "Yes",
+      "bbox": [
+        1000.4097290039062,
+        763.8607788085938,
+        1018.2056884765625,
+        778.5847778320312
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 10,
+      "text": "No",
+      "bbox": [
+        1045.942138671875,
+        763.8607788085938,
+        1059.14208984375,
+        778.5847778320312
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 10,
+      "text": "West Essex Regional School District Bond Issue",
+      "bbox": [
+        870.0186157226562,
+        254.95343017578125,
+        1146.27685546875,
+        272.13140869140625
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 10,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        324.6932067871094,
+        559.52197265625,
+        521.3876953125,
+        576.699951171875
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 11,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 13,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 14,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 15,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 16,
+      "text": "Municipal Election - Elección Municipal",
+      "bbox": [
+        213.68479919433594,
+        546.002685546875,
+        442.8873291015625,
+        563.1806640625
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 16,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        781.731689453125,
+        546.002685546875,
+        978.6671752929688,
+        563.1806640625
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 17,
+      "text": "Municipal Election - Elección Municipal",
+      "bbox": [
+        213.68479919433594,
+        546.002685546875,
+        442.8873291015625,
+        563.1806640625
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 17,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        781.731689453125,
+        546.002685546875,
+        978.6671752929688,
+        563.1806640625
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 22,
+      "text": "Yes",
+      "bbox": [
+        903.6015014648438,
+        667.8187255859375,
+        921.3974609375,
+        682.542724609375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 22,
+      "text": "No",
+      "bbox": [
+        949.1339721679688,
+        667.8187255859375,
+        962.093994140625,
+        682.542724609375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 22,
+      "text": "Yes",
+      "bbox": [
+        1009.4053955078125,
+        667.8187255859375,
+        1027.2012939453125,
+        682.542724609375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 22,
+      "text": "No",
+      "bbox": [
+        1054.9381103515625,
+        667.8187255859375,
+        1067.8980712890625,
+        682.542724609375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 22,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        324.6932067871094,
+        568.87060546875,
+        521.3876953125,
+        586.048583984375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 23,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 24,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 25,
+      "text": "Yes",
+      "bbox": [
+        903.6015014648438,
+        667.8187255859375,
+        921.3974609375,
+        682.542724609375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 25,
+      "text": "No",
+      "bbox": [
+        949.1339721679688,
+        667.8187255859375,
+        962.093994140625,
+        682.542724609375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 25,
+      "text": "Yes",
+      "bbox": [
+        1009.4053955078125,
+        667.8187255859375,
+        1027.2012939453125,
+        682.542724609375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 25,
+      "text": "No",
+      "bbox": [
+        1054.9381103515625,
+        667.8187255859375,
+        1067.8980712890625,
+        682.542724609375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 25,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        324.6932067871094,
+        568.87060546875,
+        521.3876953125,
+        586.048583984375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 26,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 27,
+      "text": "Municipal Election - Elección Municipal",
+      "bbox": [
+        213.68479919433594,
+        546.002685546875,
+        442.8873291015625,
+        563.1806640625
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 27,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        781.731689453125,
+        546.002685546875,
+        978.6671752929688,
+        563.1806640625
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 28,
+      "text": "School Election - Elección Escolar",
+      "bbox": [
+        513.548095703125,
+        557.8975830078125,
+        710.2427978515625,
+        575.0755615234375
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    },
+    {
+      "physicalPage": 29,
+      "text": "Municipal Election - Elección Municipal",
+      "bbox": [
+        480.45318603515625,
+        555.6276245117188,
+        709.6558837890625,
+        572.8056030273438
+      ],
+      "reason": "Document section heading or printed question option, not a candidate."
+    }
+  ]
+}

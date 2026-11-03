@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<!--[if lte IE 8]>         <html lang="en-US" class="lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en-US"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	
+	<title>Board of Education in South Orange &amp; Maplewood</title>
+	
+
+		<script>
+				dataLayer = [{ 'schoolDomain': 'www.somsdk12.org' }];
+					dataLayer.push({'measurementID-GA4': 'G-RHLRCLK4KE' });
+
+		</script>
+
+			<script>
+			(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','dataLayer','GTM-P3BGC7');
+			</script>
+
+
+		<link rel="icon" href="https://resources.finalsite.net/images/v1731492849/somsdk12njus/m8g1vsnwqabj0bjzvfgy/SouthOrangeMaplewoodSchoolDistrictfavicon.png">
+	<meta name="description" content="The Board consists of nine citizens elected at large by the voters of South Orange and Maplewood.">
+	<meta name="keywords" content="Board of Education, South Orange &amp; Maplewood School District, boe, somsd">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<meta name="page-created" content="2024-11-26T15:25:12Z">
+			<meta name="page-published" content="2026-03-02T16:07:27Z">
+		
+			<link rel="canonical" href="https://www.somsdk12.org/board">
+			<meta property="og:url" content="https://www.somsdk12.org/board">
+		<meta property="og:description" content="The Board consists of nine citizens elected at large by the voters of South Orange and Maplewood.">
+
+
+
+
+			<meta property="og:image" content="https://resources.finalsite.net/images/t_image_size_4/v1737465928/somsdk12njus/dpkfhl6e7q9zz9jcg5uz/SOMSD-District-Backsplash.png">
+				<meta property="og:image:width" content="1200">
+				<meta property="og:image:height" content="799">
+
+
+	<meta property="og:title" content="Board of Education in South Orange &amp; Maplewood">
+	<meta property="og:type" content="website">
+
+	<link rel="stylesheet" href="/assets/application-902929cf385781add70a8e169aabb809b7754dfd713835cdcac09748e8067c90.css" media="all" />
+
+	
+	
+
+	
+
+	<style>
+ 	.fs_style_23 {
+	/* button style */
+}
+
+.fs_style_24 {
+	/* lead in */
+}
+</style>
+
+
+
+		<style id="fsHSLColors">
+			:root {
+				--primary-color-h: 347.93;
+				--primary-color-s: 87.88%;
+				--primary-color-l: 38.82%;
+				--primary-color-hsl: var(--primary-color-h), var(--primary-color-s), var(--primary-color-l);
+				--primary-color: #BA0C2F;
+				--secondary-color-h: 196.36;
+				--secondary-color-s: 6.29%;
+				--secondary-color-l: 65.69%;
+				--secondary-color-hsl: var(--secondary-color-h), var(--secondary-color-s), var(--secondary-color-l);
+				--secondary-color: #A2AAAD;
+				--main-font: 'Roboto';
+				--accent-font: 'EB Garamond';
+			}
+		</style>
+			<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&family=EB+Garamond:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+			<style>
+				:root {
+						--font-primary: 'Roboto';
+						--font-secondary: 'EB Garamond';
+				}
+			</style>
+
+
+			<link rel="stylesheet" href="/uploaded/themes/mod-easthartford/SOMSD_Webfont.css?1791469717" media="all" />
+			<link rel="stylesheet" href="/uploaded/themes/mod-easthartford/SOMSD-DraperCSS.css?1791469717" media="all" />
+
+		<style>
+  :root {
+    --display-accred-panel: block;
+    --has-sticky-header: false;
+    --is-district-site: true;
+    --header-logo-enabled: true;
+    --footer-logo-enabled: true;
+    --header-logo-bg: false;
+    --footer-logo-bg: false;
+    --header-logo-height-class: height-xlarge;
+    --footer-logo-height-class: height-xlarge;
+    --show-header-location-name: false;
+    --show-header-location-title: false;
+    --show-header-subtitle: false;
+    --show-header-motto: false;
+    --show-footer-title: false;
+    --weglot-display-position: default;
+    --hero-image-display: cropped;
+  }
+</style>
+
+
+		<script src="/assets/in_layout_head2-7df9fd0fe690668e94972fa0d26f5cd2dcf253571e19f971e7aa0b0c89bb7165.js"></script>
+
+		<script>
+document.addEventListener('DOMContentLoaded', () => {
+  var $ = window.jQuery;
+  if (!$ || !$('body').hasClass('fsLiveMode') || $('[data-hero]').length) return;
+
+  var $hero = $('.hero').eq(0),
+      $after = $('.fsHeader .fsBanner').first();
+  if (!$hero.length || !$after.length || $hero.closest('.fsHeader').length) return;
+
+  $hero.attr('data-hero', true);
+  $('body').addClass('has-hero');
+  $hero.insertAfter($after);
+
+  $hero.find('video').each(function () {
+    this.load();
+    if (this.autoplay) this.play().catch(function () {});
+  });
+
+  if (window.FS && FS.util && FS.util.updateDynamicImages) FS.util.updateDynamicImages($hero);
+  $('body').addClass('hero-loaded');
+
+  if (window.CUSTOMSTYLES) CUSTOMSTYLES.stickyHeader();
+  $(window).trigger('resize');
+});
+</script>
+
+
+<script type="text/javascript" src="https://cdn.weglot.com/weglot.min.js"></script>
+<script>
+    Weglot.initialize({
+        api_key: 'wg_9d783c565267f96186fc7b69d27ce9762'
+    });
+</script>
+
+<style>
+@font-face {
+  font-family: "AmerigoBTStdBold";
+  src: url('/uploaded/themes/mod-easthartford/fonts/font.woff2') format('woff2'), url('/uploaded/themes/mod-easthartford/fonts/font.woff') format('woff');
+}
+
+@font-face {
+  font-family: "MoisterBlock";
+  src: url('/uploaded/themes/mod-easthartford/fonts/MoisterBlock.woff2') format('woff2'), url('/uploaded/themes/mod-easthartford/fonts/MoisterBlock.woff') format('woff');
+}
+
+h1, h2, h3 {
+    font-family: 'AmerigoBTStdBold' !important;
+    font-face: 'AmerigoBTStdBold' !important;
+} 
+
+
+<!-- Modify perfect SOMSD distinct heading heading Eshaya --> 
+@media (min-width: 1100px) {
+    .header-6 .logo-container {
+        padding: 2px 30px 2px 0 !iimportant;
+    }
+}
+
+
+<!-- Reduce spacing between long footer Eshaya --> 
+  .footer-7 .school-details-container .logo-container {
+    margin-bottom: -20px !important;
+}
+  
+  .footer-7 .school-details-container .logo-container .logo-image {
+    margin: 0 0 0px 0 !important;
+}
+
+
+    .footer-7 .school-details-container {
+        text-align: center;
+        margin-bottom: 40px !important;
+}
+
+    #fsFooter .fsBanner>.fsElement>.fsElementContent>.fsElement>.fsElementContent>.fsElement {
+        margin-bottom: 30px;
+}
+
+    .footer-7 .footer-top-container {
+        padding: 40px 30px 30px;
+}
+</style>
+
+		
+
+			<link rel="stylesheet" class="fsThemeAssets" href="https://somsdk12njus.finalsite.com/theme-assets/clients/somsdk12njus/themes/2/theme-2-east-hartford-modular-theme-the-school-district-of-south-orange-and-maplewood.css?t=1791469689">
+
+			<style>.footer-7 .footer-links .fsNavLevel1 li a {
+    color: inherit;
+    font-size: 0.875rem;
+    line-height: 1.375rem;
+}
+
+@media (min-width: 1200px) {
+    .footer-7 .nav-utility-footer>.fsElementContent {
+        display: block;
+    }
+}
+@media (min-width: 700px) {
+    .footer-7 .nav-utility-footer .fsNavLevel1 {
+       justify-content: center !important;
+    }
+}
+
+body:not(.fsComposeMode) .post-calendar-4 .fsCalendar article {
+    min-height: 80px !important;
+    padding-left: 110px !important;
+}</style>
+
+	<script type="text/javascript">
+		(function(window) {
+			window.FS.currentPage = {
+				dateFormat: 'md',
+				homepageVideoOptimization: true,
+				timeFormat: '12'
+			};
+			const settings = FS.getNS('settings');
+			settings.styleManagerEnabled = true;
+			settings.calendarsEnabled = true;
+			// Add A11ySettings to window for conditional loading
+			window.A11ySettings = {"search_element":true,"resource_element":true,"post_element":true,"post_tools":true,"location_element":true,"minor_enhancements":true,"calendar_element":true,"calendar_tools":true,"accordion_element":true,"feed_element":true,"issue_element":true,"cloudinary_video_player":true,"athletics_element":true,"constituent_element":true,"audioeye_admin":false};
+		})(window);
+
+
+			document.addEventListener('DOMContentLoaded', function() {
+				const links = document.querySelectorAll('a[target="_blank"]');
+
+				links.forEach(link => {
+					if(link.querySelector('.fsStyleSROnly') && link.querySelector('.fsStyleSROnly').innerText.includes('opens in new window')) return;
+
+					link.insertAdjacentHTML('beforeend', '<span class="fsStyleSROnly">(opens in new window)</span>');
+				});
+			});
+	</script>
+
+
+
+	
+</head>
+
+<body data-logged-in="false" data-pageid="2307" data-lazy-load-media="false" data-resource-optimizations="true" class="fsLiveMode fsHasHeader fsHasMenu fsHasFooter fsHasOneColumnLayout fsSection2307 fsLocation2 fsHasTheme2">
+
+			<noscript>
+				<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3BGC7"
+					height="0" width="0" style="display:none;visibility:hidden">
+				</iframe>
+			</noscript>
+
+
+
+	<a id="fsSkipToMainContentLink" href="#fsPageContent">Skip To Main Content</a>
+
+<div id="fsPageWrapper">
+
+
+
+				<div id="fsMenu">
+					<div class=" fsMenu fsStyleAutoclear" id="fsEl_2632" data-settings-id="2635" data-use-new="true">
+
+			<div class="fsElement fsContainer mobile-menu-1" id="fsEl_2633" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsEmbed menu-trigger-container" id="fsEl_2634" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		    <button class="mobile-close" type="button"><span class="hidetext">Close Menu</span></button>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsSearchElement fsSearchForm site-search" id="fsEl_2635"  >
+
+				<div class="fsElementContent" >
+		<form action="https://www.somsdk12.org/search-results" method="get" novalidate="novalidate" data-controller="search-form" data-draft-mode="false">
+	<label for="fsSearchInput_2635" class="fsFieldLabel">Search</label>
+
+	<div class='fsSearchElementKeyword'>
+		<input type="text" name="q" id="fsSearchInput_2635" class="fsStyleSearchField fsStyleDefaultField" placeholder="Search" data-search-form-target="input" />
+		<button aria-label='Clear' class='fsButtonClear fsStateHidden' type='reset' data-search-form-target='clear' data-action='click->search-form#clearSearch'>
+			<span>Clear</span>
+		</button>
+	</div>
+
+	<button class='fsSearchElementSearchButton fsStyleUpdateButton' type='submit'>Search</button>
+</form>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsNavigation fsList nav-mobile-main" id="fsEl_2636" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav aria-label="main"><ul class="fsNavLevel1"><li class="fsNavParentPage"><a href="/about">About SOMSD</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li class="fsNavParentPage"><a href="https://www.somsdk12.org/about#leadership">District Leadership</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="https://resources.finalsite.net/images/v1758121038/somsdk12njus/t2vwggyr7zk45qftlzr0/CommunicationProtocol.pdf" target="_blank">Chain of Command<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/district">District Org Chart</a></li></ul></div></li><li><a href="/about/strategic-plan">Strategic Planning (2026)</a></li><li><a href="/about/school-performance-reports">School Performance Reports</a></li><li><a href="/district/asst-supt/hib">HIB Information</a></li><li><a href="/about/attendance-information">Attendance Information</a></li><li><a href="/about/student-code-of-conduct">Student Code of Conduct </a></li><li><a href="/about/withdrawals-transfer-ood">Withdrawals Transfer OOD</a></li><li><a href="/about/flag-status">Flag Protocols and Status</a></li><li><a href="http://somsdk12.org/schoolhours">School Hours</a></li><li><a href="/sop">Standard Operating Procedure</a></li><li><a href="https://www.somsdk12.org/directory">Staff Directory ⇢</a></li><li><a href="/about/organizational-chart">Organizational Chart </a></li></ul></div></li><li class="fsNavParentPage"><a href="/district">District Services</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/district">Department Directory</a></li><li class="fsNavParentPage"><a href="/district/superintendent">Office of the Superintendent</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/district/superintendent/facts">Setting the Record Straight - Superintendent's Communications</a></li><li><a href="/district/superintendent/plans">Mandated Educational Plans</a></li><li><a href="/district/superintendent/superintendents-100-day-plan">Introductory Plan into SOMSD</a></li><li><a href="https://www.somsdk12.org/integration" target="_blank">Intentional Integration Intitaitve<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/about/strategic-plan">Strategic Planning 2026</a></li></ul></div></li><li class="fsNavParentPage"><a href="/district/business">Business Office</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li class="fsNavParentPage"><a href="/district/business/budget">District Budget</a><div class="fsNavPageInfo"><ul class="fsNavLevel4"><li><a href="/district/business/budget/archive">Budget Archive - Past Years</a></li></ul></div></li><li><a href="/district/business/district-solicitations">District Solicitations</a></li><li><a href="/district/business/facilities">Facilities &amp; Physical Plant Management</a></li><li><a href="/district/business/facilities">Long Range Facilities Plan</a></li><li><a href="/district/business/water-testing-results">Water Testing Results</a></li><li><a href="/district/business/opra-request">OPRA Request</a></li><li><a href="/district/business/ritzer">Ritzer Field Project</a></li><li><a href="https://www.somsdk12.org/community/facility-use" target="_blank">Facility Use Instruction →<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></div></li><li class="fsNavParentPage"><a href="/district/communications">Communications</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/district/communications/media-requests">Media Requests</a></li><li><a href="/district/communications/branding">Branding &amp; Imagery</a></li><li><a href="/district/communications/submission">Submit a News Story</a></li><li><a href="/district/communications/feedback">Feedback and Website Support</a></li><li><a href="/district/communications/input">Student Involvement Opportunities</a></li><li><a href="/district/communications/internship">College Communications Internship</a></li><li><a href="/district/communications/news">District News</a></li><li><a href="https://app.classintercom.com/content?save_filters=true" target="_blank">Class Intercom for Social Media (Staff) ⇢<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.youtube.com/c/SouthOrangeMaplewoodSchoolDistrict" target="_blank">SOMSD YouTube Channel ⇢ <span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.somsdk12.org/fs/resource-manager/view/7880ffe1-11eb-44b5-805c-ade147eb6f4c" target="_blank">Sign Up For SMS<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></div></li><li class="fsNavParentPage"><a href="/district/curriculum">Curriculum &amp; Instruction</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/district/curriculum/materials-request">Request for Reconsideration of Materials</a></li></ul></div></li><li class="fsNavParentPage"><a href="/district/preschool">Early Childhood Education</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/district/preschool/preschool-sites">Preschool Sites</a></li><li><a href="/district/registration/preschool">Preschool Enrollment and Lottery ⇢</a></li><li><a href="/district/registration/sy27-preschool" target="_blank">2026-2027 Preschool Registration<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></div></li><li><a href="/district/business/facilities">Facilities &amp; Physical Plant</a></li><li class="fsNavParentPage"><a href="/district/foodservices">Food Services</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/district/foodservices/forms-and-policies">Forms and Policies</a></li><li><a href="/district/foodservices/free-reduced-lunch-application">Free &amp; Reduced Lunch Application</a></li><li><a href="/district/foodservices/payschools">PaySchools</a></li><li><a href="https://southorangemaplewood.fdmealplanner.com/MENUS" target="_blank">Meal Menus ⇢<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></div></li><li class="fsNavParentPage"><a href="/district/asst-supt">HIB, Suspensions, Title IX &amp; Affirm. Action</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/district/asst-supt/hib">HIB &amp; Anti-Bullying</a></li><li><a href="/district/asst-supt/title9">Title IX</a></li><li><a href="/district/asst-supt/affirmative-action">Affirmative Action</a></li><li><a href="/district/asst-supt/mckinney-vento">McKinney-Vento</a></li><li class="fsNavParentPage"><a href="/district/asst-supt/datingviolence">Dating Violence Advocacy</a><div class="fsNavPageInfo"><ul class="fsNavLevel4"><li><a href="https://www.somsdk12.org/district/asst-supt/datingviolence#resources">TDV Support and Resources</a></li></ul></div></li><li><a href="/district/asst-supt/attendance-matters">Attendance Matters</a></li><li><a href="https://sites.google.com/somsd.k12.nj.us/religiousaccomodation/home" target="_blank">Religious Observances ⇢<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/district/asst-supt/in-district-transfers">In-District Transfers</a></li><li><a href="/district/asst-supt/threat-assessment">Threat Assessment Reporting</a></li><li><a href="/district/asst-supt/presentations">Presentations &amp; Reports</a></li><li><a href="https://lookerstudio.google.com/reporting/233f9a4b-be09-47ca-ad55-3adbb2e94b89/page/mwrhC" target="_blank">Suspension and Expulsion Data ⇢ <span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.somsdk12.org/district/superintendent/plans#CEP" target="_blank">Comprehensive Equity Plan ⇢<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/district/asst-supt/hib-toolkit">HIB Toolkit </a></li></ul></div></li><li class="fsNavParentPage"><a href="/district/hr">Human Resources</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/district/hr/careers">Career Opportunities</a></li><li class="fsNavParentPage"><a href="/district/hr/benefits-change">Understanding New Medical Benefits</a><div class="fsNavPageInfo"><ul class="fsNavLevel4"><li><a href="/district/hr/benefits-change/faq">Benefits Frequently Asked Questions</a></li></ul></div></li><li><a href="/district/hr/job-descriptions">Job Descriptions</a></li><li><a href="https://www.somsdk12.org/district/superintendent/plans#CEP">Comprehensive Equity Plan ⇢</a></li></ul></div></li><li class="fsNavParentPage"><a href="/district/technology">Information Technology</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/district/technology/powerschool">PowerSchool Parent Portal Help</a></li><li><a href="/district/technology/devices">Student Devices (Chromebooks)</a></li><li><a href="/district/technology/google-workspace-for-education">Google Workspace for Education</a></li><li><a href="https://docs.google.com/forms/d/e/1FAIpQLSeWaG-H3gO98cR3bOhrc3AQAJfEV2BBTvLp7_Sp9GT_1IXsrA/formrestricted" target="_blank">Website Unblock Request<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/district/technology/technology-instructions-staff1">Technology Instructions (staff)</a></li><li><a href="/district/technology/tech-purchase-request-staff">Tech Purchase Request (staff)</a></li></ul></div></li><li class="fsNavParentPage"><a href="/district/nurses">Nursing Services</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/district/nurses/guidelines-after-illness">Guidelines After Illness</a></li><li><a href="/district/nurses/annual-physical-examinations">Annual Physical Examinations</a></li><li><a href="/district/nurses/health-care-resources">Health Care Resources</a></li><li><a href="/district/nurses/student-health-guidelines">Student Health Guidelines</a></li><li><a href="/district/nurses/head-injury-concussions">Head Injury &amp; Concussions</a></li><li><a href="https://drive.google.com/drive/folders/1jbRPwUpJGMLv-kJxDKdE8ubYgUn22mzs?usp=drive_link" target="_blank">Forms and Documents<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></div></li><li class="fsNavParentPage"><a href="/district/registration">Registration</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/district/registration/sy27">Upcoming Year - Registration Information (26-27)</a></li><li><a href="/district/registration/sy27-preschool">Preschool Registration Information (26-27)</a></li><li><a href="/district/registration/preschool">Pre-K Information, Lottery, and Waitlist</a></li><li><a href="/district/registration/enrollment-document-checklist">Enrollment Document Checklist</a></li><li><a href="/district/registration/registration-documents1">Registration Documents</a></li><li><a href="https://sites.google.com/somsd.k12.nj.us/somsdintegration/what-is-intentional-integration" target="_blank">SOMSD Integration Initiative<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></div></li><li class="fsNavParentPage"><a href="/district/safety">Safety &amp; Security</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="https://resources.finalsite.net/images/v1733918002/somsdk12njus/g7yp6j0zbchrxiyctfkc/2024_25GuidetoPositiveSchoolCultureClimateandCodeofConduct2024082_1.pdf" target="_blank">Guide to Positive School Culture, Climate, and Code of Conduct ⇢<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/district/asst-supt/threat-assessment">Threat Assessment Reporting ⇢</a></li><li><a href="/district/safety/stopit">STOPit Tipline &amp; Reporting System</a></li></ul></div></li><li class="fsNavParentPage"><a href="/district/specialservices">Special Services</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/district/specialservices/504">Section 504 Information</a></li><li><a href="/district/specialservices/ess-i-step">ESS &amp; I-STEP</a></li><li><a href="/district/specialservices/medicaid-annual-notification">Medicaid Annual Notification</a></li><li><a href="/district/specialservices/sepac">SEPAC</a></li><li><a href="https://somsdk12njus.finalsite.com/fs/resource-manager/view/d9c1e8b0-ef34-4f85-b29d-72cc45a8de9a" target="_blank">Referral Process<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/district/specialservices/irs">I&amp;RS</a></li><li><a href="/district/specialservices/special-education-guide">Guide to the Special Education Process</a></li><li><a href="/district/specialservices/audit">Special Education Audit</a></li><li><a href="https://www.nj.gov/education/specialed/parents/index.shtml" target="_blank">Parental Rights in Special Education (PRISE)<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.somsdk12.org/district/asst-supt/mckinney-vento">McKinney-Vento</a></li></ul></div></li><li class="fsNavParentPage"><a href="/district/transportation">Transportation</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/district/transportation/safety-rules-guidelines">Safety Rules &amp; Guidelines</a></li><li><a href="/district/transportation/stopfinder">StopFinder (Parent App)</a></li><li><a href="https://drive.google.com/file/d/1YLA_QHozrMGF8M4TAel78LGqdPsP2L-U/view" target="_blank">Online Bus Passes<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/district/transportation/transportation-application-form">Transportation Application Form</a></li><li><a href="/district/transportation/transportation-continuum">Transportation Continuum</a></li><li><a href="https://docs.google.com/document/d/1gCuiWA3QCIya94X2QP2PTC6WJ7gv_KHAOEmg0vxhcaU/edit?usp=sharing" target="_blank">Transportation FAQs<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/district/transportation/hazardous-routes">Hazardous Routes</a></li></ul></div></li></ul></div></li><li class="fsNavParentPage fsNavCurrentPage"><a href="/board">Board of Education</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/board">Meet the Board</a></li><li class="fsNavParentPage"><a href="/board/meetings">Board Meetings &amp; Schedule</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/board/meetings/recap">BOE Recap Newsletter</a></li><li><a href="/board/agendas">Meeting Agendas (Current)</a></li><li><a href="https://drive.google.com/drive/folders/1tJqxHi_nycYgtXbM4OJJkMZIvoeS2_fm" target="_blank">Meeting Minutes (Current)<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/board/meetings/meeting-minutes-archived">Meeting Minutes (Pre-2022)</a></li><li><a href="https://drive.google.com/drive/folders/1qMmW-PUaX4BOrJRNHH45XzgYjeLXEoBa" target="_blank">Presentations<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></div></li><li class="fsNavParentPage"><a href="/board/agendas">Agendas</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/board/agendas/meeting-agendas-archived">Meeting Agendas (Archived)</a></li></ul></div></li><li><a href="/board/policies">Board Policies</a></li><li class="fsNavParentPage"><a href="/board/boe-committees-current">BOE Committees (Current)</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/board/boe-committees-current/2025-boe-committees-clone-clone">2025 BOE Committees </a></li><li><a href="/board/boe-committees-current/2024-boe-committees-clone">2024 BOE Committees</a></li><li><a href="/board/boe-committees-current/2023-boe-committees">2023 BOE Committees</a></li><li><a href="/board/boe-committees-current/2022-boe-committees">2022 BOE Committees</a></li><li><a href="/board/boe-committees-current/2021-boe-committees">2021 BOE Committees</a></li><li><a href="/board/boe-committees-current/2020-boe-committees">2020 BOE Committees</a></li><li><a href="/board/boe-committees-current/2019-boe-committees">2019 BOE Committees</a></li></ul></div></li><li><a href="/board/meetings/recap">Meeting Recap Newsletter</a></li><li><a href="/board/bose">Board of School Estimate</a></li><li><a href="/board/goals">District &amp; BOE Goals</a></li><li><a href="/board/recognitions">Submit a BOE Recognition</a></li><li><a href="/board/presentations">Presentations</a></li><li><a href="https://drive.google.com/drive/folders/1cOJTaL2_inGOlZTz1i94Y04-SqoiSGFg?usp=sharing" target="_blank">Minutes<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.youtube.com/@southorangemaplewoodschool1641/featured" target="_blank">Watch Online on YouTube<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/board/office-of-civil-rights">Office of Civil Rights</a></li><li><a href="/board/notices">Public Notices</a></li></ul></div></li><li class="fsNavParentPage"><a href="/academics">Academics</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li class="fsNavParentPage"><a href="/academics/atlas">ATLAS Curriculum Library</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="https://somsdk12-public.rubiconatlas.org/Atlas/Public/View/Default" target="_blank">Rubicon Atlas (Public)<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></div></li><li class="fsNavParentPage"><a href="/academics/assessments">Assessments &amp; Testing</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/academics/assessments/spring-2024-njgpa-results-extended">Spring 2024 NJGPA Results – Extended</a></li></ul></div></li><li class="fsNavParentPage"><a href="/academics/fine-performing-arts">Fine &amp; Performing Arts</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/academics/fine-performing-arts/ms">MS</a></li><li><a href="/academics/fine-performing-arts/hs">HS</a></li></ul></div></li><li><a href="/academics/health-physical-education">Health &amp; Physical Education</a></li><li class="fsNavParentPage"><a href="/academics/ela">Language Arts</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/academics/ela/hs">HS</a></li><li><a href="/academics/ela/student-opportunities">Student Opportunities</a></li></ul></div></li><li class="fsNavParentPage"><a href="/academics/math">Mathematics</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/academics/math/new-page">HS</a></li></ul></div></li><li class="fsNavParentPage"><a href="/academics/science">Science</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/academics/science/hs">HS</a></li><li><a href="/academics/science/student-opportunities">Student Opportunities</a></li></ul></div></li><li class="fsNavParentPage"><a href="/academics/social-studies">Social Studies</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/academics/social-studies/hs">HS</a></li><li><a href="/academics/social-studies/student-opportunities">Student Opportunities</a></li><li><a href="/academics/social-studies/curriculum">Curriculum</a></li></ul></div></li><li class="fsNavParentPage"><a href="/academics/world-language-esl">World Language &amp; ESL</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/academics/world-language-esl/elementary">Elementary</a></li><li><a href="/academics/world-language-esl/hs">HS</a></li><li><a href="/academics/world-language-esl/student-opportunities">Student Opportunities</a></li></ul></div></li><li><a href="/academics/gifted">Gifted &amp; Talented Services</a></li></ul></div></li><li class="fsNavParentPage"><a href="/community">Community</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="https://www.somsdk12.org/community#bookstudy">Family Book Studies</a></li><li><a href="/community/webinars">Virtual Webinars</a></li><li><a href="https://www.somsdk12.org/community#fs-panel-23793">Family Resources</a></li><li><a href="https://drive.google.com/drive/folders/15e7EP6YYKbF_K2fwdShWzkhQOyPSOcCL?usp=sharing">Digital Backpack</a></li><li><a href="https://www.somsdk12.org/community#fs-panel-23410">Parenting Center</a></li><li><a href="https://www.somsdk12.org/community#fs-panel-23283">Beyond the Bell</a></li><li><a href="/community/hsa-pta">Home &amp; School Associations</a></li><li class="fsNavParentPage"><a href="/community/community-partners">Community Partners</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/community/community-partners/achieve-foundation">Achieve Foundation</a></li></ul></div></li><li class="fsNavParentPage"><a href="/community/mental-health-counseling-resources">Mental Health &amp; Counseling Resources</a><div class="fsNavPageInfo"><ul class="fsNavLevel3"><li><a href="/community/mental-health-counseling-resources/sel">Social Emotional Learning</a></li><li><a href="/community/mental-health-counseling-resources/suicide-prevention">Suicide Prevention </a></li><li><a href="/community/mental-health-counseling-resources/substance-abuse">Substance Abuse </a></li><li><a href="/community/mental-health-counseling-resources/sst">Student Support Team</a></li><li><a href="/community/mental-health-counseling-resources/the-digital-world">The Digital World</a></li><li><a href="/community/mental-health-counseling-resources/intern-programs">Intern Programs</a></li><li><a href="/community/mental-health-counseling-resources/njtss">New Jersey Tiered Systems of Supports</a></li></ul></div></li><li><a href="/community/facility-use">Facility Use Requests</a></li><li><a href="/powerschool">Parent Portal Help</a></li><li><a href="/community/summer-reading-list">Summer Reading List and Assignments</a></li></ul></div></li><li><a href="https://www.somsdk12.org/integration" target="_blank">Triple I ⇢<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></nav>
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsNavigation fsList nav-mobile-utility" id="fsEl_2637" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav aria-label="header utility"><ul class="fsNavLevel1"><li><a href="/news">District News</a></li><li class="fsNavParentPage"><a href="/calendar">District Calendar</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/schoolhours">School Hours &amp; Delays</a></li><li><a href="/calendar/unplug">Global Day of Unplugging 2026</a></li></ul></div></li><li class="fsNavParentPage"><a href="https://staff.somsdk12.org" target="_blank">Staff<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/directory">Staff Directory</a></li><li><a href="https://app.frontlineeducation.com/select/" target="_blank">Frontline Education<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://mail.google.com/a/students.somsd.k12.nj.us" target="_blank">District Email<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://somsd.login.duosecurity.com/email_first?authkey=ASYY08O7QSWDVFFM11DC&amp;scid=4bcd57bd5ec442ceb25b31d7bf761b96" target="_blank">Duo Self Service Portal<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://somsd.powerschool.com/teachers/pw.html" target="_blank">PowerSchool Teachers<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://somsd.powerschool.com/admin/pw.html" target="_blank">PowerSchool Admin<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://hq.operationshero.com" target="_blank">Operations Hero (IT &amp; Facilities Work Orders)<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://unify.performancematters.com/" target="_blank">Performance Matters Data<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://app.frontlineeducation.com/" target="_blank">Frontline IEP Direct<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://login.frontlineeducation.com/login?signin=b1b78097d91558704aff23959289feef&amp;productId=pd&amp;clientId=pd%23/login" target="_blank">Frontline My Learning Plan<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://somsd.linkit.com/Account/LogOn?ReturnUrl=%2f" target="_blank">LinkIt<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.ixl.com/signin/somsd" target="_blank">IXL<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://hib.hibster.com/login.aspx" target="_blank">Hibster Admin<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://register.capturepoint.com/reg_adm/" target="_blank">Community Pass Admin<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://authenticate.onatlas.com/login?SAMLRequest=pVNNj9owEL1X6n9AuRPjZBd2LUBKoR9ILESQ3UMvlWMPrNXETj1Oof%2B%2BTgiCVl0u9cXWfLx582Y8Rl4WFUtq96o38KMGdO%2Ff9fw5loVG1nonQW01MxwVMs1LQOYE2yZPSxaFA1ZZ44wwRfB33u00jgjWKaO7vMV8EqxXH5frz4vVN8ofZX4fD%2B84feTRCHYyHw4eBI1pJCQMRyLPaT7ieZf7AhY90iTwwN7UASLWsNDouHbeM4ju%2B4O4T6OMRix%2BYPHd1y577ntWmrsW4dW5Chkh3AsC2inBHYTGewuOoTAlKcxenTmnXesflJZK7283nJ%2BCkH3JsrSfrrdZh5KclZgZjXUJdgv2pxLwvFle%2BKApUX6nUWjrXIkzIWP3JGleJLnw9UjkRcGBLFuq01OVcTMS1opip%2F%2BNOibXcFcVKrbynS%2FmqSmU%2BHVyNOeTsSV3bytEQ9palOzv2lAGJVdFIqUFxOAClBSFOcws%2BLlMAmdrCHrkTwLdGoNsl9qL6uDoejNTVtwqbIYMRy7cWZiLONfxM98%2BbmA3vbnDgokmzptTfx2Mlc1KgPDFM8s1Vsa6Tqp%2Fgne8yQ3iPubsv%2F6k098%3D&amp;RelayState=https%3A%2F%2Fsomsdk12.rubiconatlas.org%2FAtlas%2FAuthentication%2FView%2FLogin" target="_blank">Rubicon Atlas (Admin)<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://mhs.com/" target="_blank">Nagleri Testing Admin<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://nj.pearsonaccessnext.com/" target="_blank">Pearson Access Next Teacher Admin Logins<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://secure.infosnap.com/admin/login/login.rails?ReturnUrl=/admin/dashboard/index.rails" target="_blank">PowerSchool Registration Admin<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://somsd-nj.safeschools.com/login" target="_blank">SafeSchools Online Mandatory Training<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://authem.schoolmessenger.com/customer/southorange/login?redirectUri=https://asp.schoolmessenger.com/southorange/index.php?" target="_blank">SchoolMessenger Admin<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/district/technology/technology-instructions-staff">Technology Instructions Staff</a></li><li><a href="https://docs.google.com/forms/d/e/1FAIpQLSeWaG-H3gO98cR3bOhrc3AQAJfEV2BBTvLp7_Sp9GT_1IXsrA/formrestricted" target="_blank">Website Unblock Request<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://docs.google.com/forms/d/e/1FAIpQLSdZ6xO55KMc7mO1ShRvzfjiGz1dyCCDVbkytdUS9gULU2ncDA/viewform?usp=sf_link" target="_blank">Technology Purchase Request<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.canva.com/brand/join?token=8B-yMqMxKEmietenBMif8A&amp;brandingVariant=edu&amp;referrer=team-invite">Canva Graphic Design</a></li></ul></div></li><li class="fsNavParentPage"><a href="/links">Students</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/links/communitypass">CommunityPass for Summer Programs</a></li><li><a href="https://login.classlink.com/my/somsd" target="_blank">Classlink<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://a2.mhs.com/ngat/login" target="_blank">Naglieri Testing<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://app.withwayfinder.com/login" target="_blank">Wayfinder<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.ixl.com/signin/somsd" target="_blank">IXL<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://drive.google.com/a/students.somsd.k12.nj.us" target="_blank">Google Drive<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/district/asst-supt/datingviolence">Dating Violence Advocacy</a></li><li><a href="https://appweb.stopitsolutions.com/directory" target="_blank">STOPit Anonymous Reporting<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.nj.gov/labor/youngworkers/find-a-job/working-papers/getstarted.shtml" target="_blank">Working Papers Form<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></div></li><li><a href="/canvas">Canvas</a></li><li class="button-powerschool"><a href="/powerschool">PowerSchool</a></li></ul></nav>
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+
+
+</div>
+
+
+				</div>
+
+			<header id="fsHeader" class="fsHeader">
+				<div class=" fsBanner fsStyleAutoclear" id="fsEl_2610" data-settings-id="2613" data-use-new="true">
+
+			<div class="fsElement fsContent" id="fsEl_23881" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div><!-- <center>
+<div><marquee direction="left" style="color: #ffffff;" width="70%">
+<h2 class="Scroll" style="color: #ffffff !important; ">Banner Title</h2>
+<br />
+<p style="color: #ffffff !important"><big>Banner Msg</big></p>
+</marquee></div>
+</center> -->
+<style type="text/css">.Scroll {
+    color: #ffffff;
+  }
+</style>
+</div>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContainer fs-theme-panel fs-theme-header header-6" id="fsEl_19757" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsContainer header-wrap" id="fsEl_19758" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsContainer header-top-wrap" id="fsEl_19759" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsContainer district-left-container" id="fsEl_19760" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsEmbed google-translate" id="fsEl_19761" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		    <div id="google_translate_element"></div>
+<script type="text/javascript">function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+}
+</script><script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" type="text/javascript"></script>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsNavigation fsList nav-social" id="fsEl_19762" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav aria-label="social media"><ul class="fsNavLevel1"><li><a href="https://www.instagram.com/somsdk12" target="_blank">Instagram<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.linkedin.com/company/somsdk12/" target="_blank">LinkedIn<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.facebook.com/somsdk12" target="_blank">Facebook<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.flickr.com/photos/somsdk12/albums" target="_blank">Flickr<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.youtube.com/@southorangemaplewoodschool1641" target="_blank">YouTube<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></nav>
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsNavigation fsList nav-district" id="fsEl_19763" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav aria-label="district"><ul class="fsNavLevel1"><li><a href="/">SOMSD Home</a></li><li><a href="https://columbia.somsdk12.org">Columbia High School</a></li><li class="schools"><a href="/schools">All Schools</a></li></ul></nav>
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsNavigation fsList nav-district-menu" id="fsEl_19764" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav aria-label="district"><ul class="fsNavLevel1"><li><a href="https://columbia.somsdk12.org">Columbia High School</a></li><li><a href="https://mms.somsdk12.org">Maplewood Middle School</a></li><li><a href="https://soms.somsdk12.org">South Orange Middle School</a></li><li><a href="https://clinton.somsdk12.org">Clinton Elementary School</a></li><li><a href="https://deliabolden.somsdk12.org">Delia Bolden Elementary School</a></li><li><a href="https://marshall.somsdk12.org">Marshall Elementary School</a></li><li><a href="https://sethboyden.somsdk12.org">Seth Boyden Elementary School</a></li><li><a href="https://southmountain.somsdk12.org">South Mountain Elementary School</a></li><li><a href="https://tuscan.somsdk12.org">Tuscan Elementary School</a></li><li><a href="https://montrose.somsdk12.org">Montrose Early Childhood Center</a></li></ul></nav>
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsEmbed menu-trigger-container" id="fsEl_19765" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		    <button class="mobile-toggle" type="button">
+  <div class="menu-text">
+    <span class="hidetext">Open</span>
+	<span class="showtext"> Menu</span>
+  </div>
+  <div class="line-wrap">
+  	<span class="line line-1"></span>
+    <span class="line line-2"></span>
+    <span class="line line-3"></span>
+  </div>
+  </button>
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContainer header-top" id="fsEl_19766" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsContainer logo-container" id="fsEl_19767" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<section class="fsElement fsLocationElement fsSingleItem logo-image height-xlarge   fsThumbnailOriginal fsThumbnailFull" id="fsEl_19768" data-use-new="true" >
+
+				<header>
+					<h2 class="fsElementTitle" id="fsElementTitle_19768">Logo Image</h2>
+	</header>
+	<div class="fsElementContent" >
+		
+<div class="fsLocationSingleItem">
+		<a href="https://www.somsdk12.org" class="fsLocationLink fsLocationLinkWrapper">
+						<div class="fsThumbnail" >
+			<img alt="The School District of South Orange &amp; Maplewood" data-aspect-ratio="0.33" data-image-sizes="[{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1737953686/somsdk12njus/qs616wbtuufjbui1upot/SOMSD-AlternateHeaderMark-FW.png&quot;,&quot;width&quot;:256},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1737953686/somsdk12njus/qs616wbtuufjbui1upot/SOMSD-AlternateHeaderMark-FW.png&quot;,&quot;width&quot;:512},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1737953686/somsdk12njus/qs616wbtuufjbui1upot/SOMSD-AlternateHeaderMark-FW.png&quot;,&quot;width&quot;:800},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1737953686/somsdk12njus/qs616wbtuufjbui1upot/SOMSD-AlternateHeaderMark-FW.png&quot;,&quot;width&quot;:1200},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto/v1737953686/somsdk12njus/qs616wbtuufjbui1upot/SOMSD-AlternateHeaderMark-FW.png&quot;,&quot;width&quot;:1500}]" src="" />
+	</div>
+
+
+
+
+
+
+		</a>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	</div>
+
+
+	</section>
+	
+	<div class="fsElement fsEmbed" id="fsEl_19788" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		    <style>
+  
+  /* footer color - january 2024 */
+  .weglot-active .footer-7 .nav-utility-footer, .footer-7 .accreditation-logos {
+    background: #F8F8F8; 
+}
+  /* footer color */
+  
+  
+  
+@media (min-width: 1100px) {
+    .header-6 .logo-container {
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        padding: 15px 30px 10px 0;
+    }
+}
+  
+  @media (min-width: 600px) {
+    .header-6 .logo-container .logo-image.height-xlarge img {
+        max-height: 170px;
+    }
+}
+  
+    .header-6 .logo-container .logo-image.height-xlarge img {
+    max-height: 160px;
+}
+  
+  
+  .header-6 .logo-container {
+    padding: 1px 0;
+}
+  
+  
+  
+  
+  
+    /*start somsd brand date styling */
+.post-calendar-4 .fsCalendar article .fsDate {
+    font-family: 'MoisterBlock' !important;
+    text-transform: lowercase;
+}
+  
+  .fsPostElement article .fsDateTime, .fsPostElement article .fsUpdatedDateTime {
+    font-family: 'MoisterBlock';
+    text-transform: lowercase;
+  }
+  
+    .fsCalendar .fsDate, .fsCalendar .fsTimeRange, .fsCalendar .fsEventDetails .fsAllDay {
+    font-family: 'MoisterBlock';
+    text-transform: lowercase;
+    font-weight: normal;
+  }
+  
+  .fsPostElement h5 {
+    font-family: 'MoisterBlock';
+    text-transform: lowercase;
+    font-weight: normal;
+  }
+  
+  /* more distinct somsd date styling - partially located calendar pages */
+.fsCalendar.fsGrid .fsCalendarEventGrid .fsCalendarDaybox .fsCalendarDate {
+    font-family: 'MoisterBlock' !important;
+      text-transform: lowercase;
+}
+
+.fsCalendarEventGrid .fsCalendarDaybox .fsCalendarDate, .fsCalendarGridControlBar .fsCalendarGridBrowser {
+    font-family: 'MoisterBlock' !important;
+      text-transform: lowercase !important;
+}
+  
+  #fsAccountBar .fsAccountBarName {
+    font-family: 'MoisterBlock';
+    text-transform: lowercase;
+    font-size: 1.15rem;
+    color: #242424;
+  }
+  #fsAccountBar {
+      background-color: #A2A8AC;
+  }
+  
+  
+    #fsAccountBar:after {
+    content: '@somsdk12';
+    font-family: 'DM Sans';
+    font-size: 0.8rem;
+    color: #242424;
+    vertical-align: -13px;
+  }
+  
+  /* important lowcase author name for NJ.com */
+    .fsPostElement article .fsAuthor {
+    text-transform: none;
+  }
+ 
+/*end somsd brand date styling */
+  
+  
+  /* emails */
+  .fsEmail, .fsEmail a {
+      text-decoration: none !important;
+  }
+  
+  
+  /*  news article header*/
+  .fsYoutubeTitle, .fsVimeoTitle, .fsAthleticsRosterList li>div.fsRosterName {
+    font-family: 'AmerigoBTStdBold';
+  }
+  /* end header */
+  
+ 
+  
+  
+
+body {
+    font-family: "DM Sans" !important; /* front page font */ 
+}
+  
+  
+  .header-6 .nav-district .fsNavLevel1>li>a {
+    padding: 12.5px 12px;
+    position: relative;
+    text-decoration: none;
+  }
+  
+  
+  .header-6 .nav-main .fsNavLevel1>li>a {
+    font-size: .95rem;
+    padding: 9px 0;
+}
+  
+  .header-6 .nav-main .fsNavLevel1>li .col-wrap {
+    margin-top: -25px;
+    margin-bottom: -15px;
+}
+  
+  
+  .slideshow-12 .fsResourceElement article figcaption .fsTitle {
+    font-family: var(--accent-font, "AmerigoBTStdBold", serif);
+}
+ 
+  
+  
+  /* button panel 3 homepage lowercase titles */
+  .button-panel-3 .fsResourceElement header .fsElementTitle {
+    text-transform: none !important;
+}
+
+
+
+  <!--Shrink left nav -->
+  
+  @media (min-width: 1100px) {
+    #fsBannerLeft {
+        padding-right: 40px;
+        width: 320px;
+    }
+}
+  
+  
+  <!-- snip scrolling menu -->
+  .nav-main .fsNavLevel1>li .fsNavPageInfo {
+    overflow-y: clip !important;
+}
+  
+  .header-6 .nav-main .fsNavLevel1>li .fsNavPageInfo {
+
+    overflow-y: hidden !important;
+  }
+  
+  
+  .footer-7 .nav-utility-footer .fsNavLevel1 {
+    margin-top: -10px;
+    font-size: 15px !important;
+    font-family: 'MoisterBlock';
+    text-transform: lowercase;
+    opacity: 60%;
+}
+  
+  
+  
+   .footer-7 #fsPoweredByFinalsite, #fsPoweredByFinalsite, div#fsPoweredByFinalsite {
+    opacity: 0.0 !important;
+}
+ .weglot-active .footer-7 .nav-utility-footer {
+        padding-bottom: 0px;
+}
+
+  
+  
+  
+</style>
+
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;display=swap" rel="stylesheet">
+
+
+
+<!-- iframe video style-->
+<style>
+    iframe[src*="docs.google.com"],
+iframe[src*="google.com/maps"],
+iframe[src*="youtube.com"],
+iframe[src*="player.vimeo.com"]{
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+</style>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsLocationElement fsSingleItem logo-title   fsThumbnailOriginal fsThumbnailSmall" id="fsEl_19769" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		
+<div class="fsLocationSingleItem"></div>
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContainer top-right-container" id="fsEl_19770" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsNavigation fsList nav-utility-header" id="fsEl_19771" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav aria-label="header utility"><ul class="fsNavLevel1"><li><a href="/news">District News</a></li><li class="fsNavParentPage"><a href="/calendar">District Calendar</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/schoolhours">School Hours &amp; Delays</a></li><li><a href="/calendar/unplug">Global Day of Unplugging 2026</a></li></ul></div></li><li class="fsNavParentPage"><a href="https://staff.somsdk12.org" target="_blank">Staff<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/directory">Staff Directory</a></li><li><a href="https://app.frontlineeducation.com/select/" target="_blank">Frontline Education<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://mail.google.com/a/students.somsd.k12.nj.us" target="_blank">District Email<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://somsd.login.duosecurity.com/email_first?authkey=ASYY08O7QSWDVFFM11DC&amp;scid=4bcd57bd5ec442ceb25b31d7bf761b96" target="_blank">Duo Self Service Portal<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://somsd.powerschool.com/teachers/pw.html" target="_blank">PowerSchool Teachers<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://somsd.powerschool.com/admin/pw.html" target="_blank">PowerSchool Admin<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://hq.operationshero.com" target="_blank">Operations Hero (IT &amp; Facilities Work Orders)<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://unify.performancematters.com/" target="_blank">Performance Matters Data<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://app.frontlineeducation.com/" target="_blank">Frontline IEP Direct<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://login.frontlineeducation.com/login?signin=b1b78097d91558704aff23959289feef&amp;productId=pd&amp;clientId=pd%23/login" target="_blank">Frontline My Learning Plan<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://somsd.linkit.com/Account/LogOn?ReturnUrl=%2f" target="_blank">LinkIt<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.ixl.com/signin/somsd" target="_blank">IXL<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://hib.hibster.com/login.aspx" target="_blank">Hibster Admin<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://register.capturepoint.com/reg_adm/" target="_blank">Community Pass Admin<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://authenticate.onatlas.com/login?SAMLRequest=pVNNj9owEL1X6n9AuRPjZBd2LUBKoR9ILESQ3UMvlWMPrNXETj1Oof%2B%2BTgiCVl0u9cXWfLx582Y8Rl4WFUtq96o38KMGdO%2Ff9fw5loVG1nonQW01MxwVMs1LQOYE2yZPSxaFA1ZZ44wwRfB33u00jgjWKaO7vMV8EqxXH5frz4vVN8ofZX4fD%2B84feTRCHYyHw4eBI1pJCQMRyLPaT7ieZf7AhY90iTwwN7UASLWsNDouHbeM4ju%2B4O4T6OMRix%2BYPHd1y577ntWmrsW4dW5Chkh3AsC2inBHYTGewuOoTAlKcxenTmnXesflJZK7283nJ%2BCkH3JsrSfrrdZh5KclZgZjXUJdgv2pxLwvFle%2BKApUX6nUWjrXIkzIWP3JGleJLnw9UjkRcGBLFuq01OVcTMS1opip%2F%2BNOibXcFcVKrbynS%2FmqSmU%2BHVyNOeTsSV3bytEQ9palOzv2lAGJVdFIqUFxOAClBSFOcws%2BLlMAmdrCHrkTwLdGoNsl9qL6uDoejNTVtwqbIYMRy7cWZiLONfxM98%2BbmA3vbnDgokmzptTfx2Mlc1KgPDFM8s1Vsa6Tqp%2Fgne8yQ3iPubsv%2F6k098%3D&amp;RelayState=https%3A%2F%2Fsomsdk12.rubiconatlas.org%2FAtlas%2FAuthentication%2FView%2FLogin" target="_blank">Rubicon Atlas (Admin)<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://mhs.com/" target="_blank">Nagleri Testing Admin<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://nj.pearsonaccessnext.com/" target="_blank">Pearson Access Next Teacher Admin Logins<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://secure.infosnap.com/admin/login/login.rails?ReturnUrl=/admin/dashboard/index.rails" target="_blank">PowerSchool Registration Admin<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://somsd-nj.safeschools.com/login" target="_blank">SafeSchools Online Mandatory Training<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://authem.schoolmessenger.com/customer/southorange/login?redirectUri=https://asp.schoolmessenger.com/southorange/index.php?" target="_blank">SchoolMessenger Admin<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/district/technology/technology-instructions-staff">Technology Instructions Staff</a></li><li><a href="https://docs.google.com/forms/d/e/1FAIpQLSeWaG-H3gO98cR3bOhrc3AQAJfEV2BBTvLp7_Sp9GT_1IXsrA/formrestricted" target="_blank">Website Unblock Request<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://docs.google.com/forms/d/e/1FAIpQLSdZ6xO55KMc7mO1ShRvzfjiGz1dyCCDVbkytdUS9gULU2ncDA/viewform?usp=sf_link" target="_blank">Technology Purchase Request<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.canva.com/brand/join?token=8B-yMqMxKEmietenBMif8A&amp;brandingVariant=edu&amp;referrer=team-invite">Canva Graphic Design</a></li></ul></div></li><li class="fsNavParentPage"><a href="/links">Students</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/links/communitypass">CommunityPass for Summer Programs</a></li><li><a href="https://login.classlink.com/my/somsd" target="_blank">Classlink<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://a2.mhs.com/ngat/login" target="_blank">Naglieri Testing<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://app.withwayfinder.com/login" target="_blank">Wayfinder<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.ixl.com/signin/somsd" target="_blank">IXL<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://drive.google.com/a/students.somsd.k12.nj.us" target="_blank">Google Drive<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/district/asst-supt/datingviolence">Dating Violence Advocacy</a></li><li><a href="https://appweb.stopitsolutions.com/directory" target="_blank">STOPit Anonymous Reporting<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.nj.gov/labor/youngworkers/find-a-job/working-papers/getstarted.shtml" target="_blank">Working Papers Form<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></div></li><li><a href="/canvas">Canvas</a></li><li class="button-powerschool"><a href="/powerschool">PowerSchool</a></li></ul></nav>
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContainer search-container" id="fsEl_19772" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsEmbed search-trigger-container" id="fsEl_19773" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		    <button class="search-trigger">
+  <span class="hidetext">Open Search</span>
+</button>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsSearchElement fsSearchForm site-search" id="fsEl_19774"  >
+
+				<div class="fsElementContent" >
+		<form action="https://www.somsdk12.org/search-results" method="get" novalidate="novalidate" data-controller="search-form" data-draft-mode="false">
+	<label for="fsSearchInput_19774" class="fsFieldLabel">Search</label>
+
+	<div class='fsSearchElementKeyword'>
+		<input type="text" name="q" id="fsSearchInput_19774" class="fsStyleSearchField fsStyleDefaultField" placeholder="Find a webpage..." data-search-form-target="input" />
+		<button aria-label='Clear' class='fsButtonClear fsStateHidden' type='reset' data-search-form-target='clear' data-action='click->search-form#clearSearch'>
+			<span>Clear</span>
+		</button>
+	</div>
+
+	<button class='fsSearchElementSearchButton fsStyleUpdateButton' type='submit'>Search</button>
+</form>
+
+	</div>
+	<footer>
+		<div class="fsElementFooterContent">
+			<div><button class="search-close"><span class="hidetext">Close Search</span></button></div>
+
+		</div>
+	</footer>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsNavigation fsList nav-main" id="fsEl_19775" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav aria-label="main"><ul class="fsNavLevel1"><li class="fsNavParentPage"><a href="/about">About SOMSD</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="https://www.somsdk12.org/about#leadership">District Leadership</a></li><li><a href="/about/strategic-plan">Strategic Planning (2026)</a></li><li><a href="/about/school-performance-reports">School Performance Reports</a></li><li><a href="/district/asst-supt/hib">HIB Information</a></li><li><a href="/about/attendance-information">Attendance Information</a></li><li><a href="/about/student-code-of-conduct">Student Code of Conduct </a></li><li><a href="/about/withdrawals-transfer-ood">Withdrawals Transfer OOD</a></li><li><a href="/about/flag-status">Flag Protocols and Status</a></li><li><a href="http://somsdk12.org/schoolhours">School Hours</a></li><li><a href="/sop">Standard Operating Procedure</a></li><li><a href="https://www.somsdk12.org/directory">Staff Directory ⇢</a></li><li><a href="/about/organizational-chart">Organizational Chart </a></li></ul></div></li><li class="fsNavParentPage"><a href="/district">District Services</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/district">Department Directory</a></li><li><a href="/district/superintendent">Office of the Superintendent</a></li><li><a href="/district/business">Business Office</a></li><li><a href="/district/communications">Communications</a></li><li><a href="/district/curriculum">Curriculum &amp; Instruction</a></li><li><a href="/district/preschool">Early Childhood Education</a></li><li><a href="/district/business/facilities">Facilities &amp; Physical Plant</a></li><li><a href="/district/foodservices">Food Services</a></li><li><a href="/district/asst-supt">HIB, Suspensions, Title IX &amp; Affirm. Action</a></li><li><a href="/district/hr">Human Resources</a></li><li><a href="/district/technology">Information Technology</a></li><li><a href="/district/nurses">Nursing Services</a></li><li><a href="/district/registration">Registration</a></li><li><a href="/district/safety">Safety &amp; Security</a></li><li><a href="/district/specialservices">Special Services</a></li><li><a href="/district/transportation">Transportation</a></li></ul></div></li><li class="fsNavParentPage fsNavCurrentPage"><a href="/board">Board of Education</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/board">Meet the Board</a></li><li><a href="/board/meetings">Board Meetings &amp; Schedule</a></li><li><a href="/board/agendas">Agendas</a></li><li><a href="/board/policies">Board Policies</a></li><li><a href="/board/boe-committees-current">BOE Committees (Current)</a></li><li><a href="/board/meetings/recap">Meeting Recap Newsletter</a></li><li><a href="/board/bose">Board of School Estimate</a></li><li><a href="/board/goals">District &amp; BOE Goals</a></li><li><a href="/board/recognitions">Submit a BOE Recognition</a></li><li><a href="/board/presentations">Presentations</a></li><li><a href="https://drive.google.com/drive/folders/1cOJTaL2_inGOlZTz1i94Y04-SqoiSGFg?usp=sharing" target="_blank">Minutes<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.youtube.com/@southorangemaplewoodschool1641/featured" target="_blank">Watch Online on YouTube<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/board/office-of-civil-rights">Office of Civil Rights</a></li><li><a href="/board/notices">Public Notices</a></li></ul></div></li><li class="fsNavParentPage"><a href="/academics">Academics</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/academics/atlas">ATLAS Curriculum Library</a></li><li><a href="/academics/assessments">Assessments &amp; Testing</a></li><li><a href="/academics/fine-performing-arts">Fine &amp; Performing Arts</a></li><li><a href="/academics/health-physical-education">Health &amp; Physical Education</a></li><li><a href="/academics/ela">Language Arts</a></li><li><a href="/academics/math">Mathematics</a></li><li><a href="/academics/science">Science</a></li><li><a href="/academics/social-studies">Social Studies</a></li><li><a href="/academics/world-language-esl">World Language &amp; ESL</a></li><li><a href="/academics/gifted">Gifted &amp; Talented Services</a></li></ul></div></li><li class="fsNavParentPage"><a href="/community">Community</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="https://www.somsdk12.org/community#bookstudy">Family Book Studies</a></li><li><a href="/community/webinars">Virtual Webinars</a></li><li><a href="https://www.somsdk12.org/community#fs-panel-23793">Family Resources</a></li><li><a href="https://drive.google.com/drive/folders/15e7EP6YYKbF_K2fwdShWzkhQOyPSOcCL?usp=sharing">Digital Backpack</a></li><li><a href="https://www.somsdk12.org/community#fs-panel-23410">Parenting Center</a></li><li><a href="https://www.somsdk12.org/community#fs-panel-23283">Beyond the Bell</a></li><li><a href="/community/hsa-pta">Home &amp; School Associations</a></li><li><a href="/community/community-partners">Community Partners</a></li><li><a href="/community/mental-health-counseling-resources">Mental Health &amp; Counseling Resources</a></li><li><a href="/community/facility-use">Facility Use Requests</a></li><li><a href="/powerschool">Parent Portal Help</a></li><li><a href="/community/summer-reading-list">Summer Reading List and Assignments</a></li></ul></div></li><li><a href="https://www.somsdk12.org/integration" target="_blank">Triple I ⇢<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></nav>
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsNavigation fsList nav-sub-horizontal" id="fsEl_19776" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav aria-label="secondary"><ul class="fsNavLevel1"><li><a href="/board">Meet the Board</a></li><li><a href="/board/meetings">Board Meetings &amp; Schedule</a></li><li><a href="/board/agendas">Agendas</a></li><li><a href="/board/policies">Board Policies</a></li><li><a href="/board/boe-committees-current">BOE Committees (Current)</a></li><li><a href="/board/meetings/recap">Meeting Recap Newsletter</a></li><li><a href="/board/bose">Board of School Estimate</a></li><li><a href="/board/goals">District &amp; BOE Goals</a></li><li><a href="/board/recognitions">Submit a BOE Recognition</a></li><li><a href="/board/presentations">Presentations</a></li><li><a href="https://drive.google.com/drive/folders/1cOJTaL2_inGOlZTz1i94Y04-SqoiSGFg?usp=sharing" target="_blank">Minutes<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.youtube.com/@southorangemaplewoodschool1641/featured" target="_blank">Watch Online on YouTube<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/board/office-of-civil-rights">Office of Civil Rights</a></li><li><a href="/board/notices">Public Notices</a></li></ul></nav>
+	</div>
+
+
+	</div>
+	
+	<section class="fsElement fsNavigation fsList nav-sub" id="fsEl_19777" data-use-new="true" >
+
+				<header>
+					<h2 class="fsElementTitle" id="fsElementTitle_19777">In This Section</h2>
+	</header>
+	<div class="fsElementContent" >
+		<nav aria-label="secondary"><ul class="fsNavLevel1"><li><a href="/board">Meet the Board</a></li><li class="fsNavParentPage"><a href="/board/meetings">Board Meetings &amp; Schedule</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/board/meetings/recap">BOE Recap Newsletter</a></li><li><a href="/board/agendas">Meeting Agendas (Current)</a></li><li><a href="https://drive.google.com/drive/folders/1tJqxHi_nycYgtXbM4OJJkMZIvoeS2_fm" target="_blank">Meeting Minutes (Current)<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/board/meetings/meeting-minutes-archived">Meeting Minutes (Pre-2022)</a></li><li><a href="https://drive.google.com/drive/folders/1qMmW-PUaX4BOrJRNHH45XzgYjeLXEoBa" target="_blank">Presentations<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></div></li><li class="fsNavParentPage"><a href="/board/agendas">Agendas</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/board/agendas/meeting-agendas-archived">Meeting Agendas (Archived)</a></li></ul></div></li><li><a href="/board/policies">Board Policies</a></li><li class="fsNavParentPage"><a href="/board/boe-committees-current">BOE Committees (Current)</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/board/boe-committees-current/2025-boe-committees-clone-clone">2025 BOE Committees </a></li><li><a href="/board/boe-committees-current/2024-boe-committees-clone">2024 BOE Committees</a></li><li><a href="/board/boe-committees-current/2023-boe-committees">2023 BOE Committees</a></li><li><a href="/board/boe-committees-current/2022-boe-committees">2022 BOE Committees</a></li><li><a href="/board/boe-committees-current/2021-boe-committees">2021 BOE Committees</a></li><li><a href="/board/boe-committees-current/2020-boe-committees">2020 BOE Committees</a></li><li><a href="/board/boe-committees-current/2019-boe-committees">2019 BOE Committees</a></li></ul></div></li><li><a href="/board/meetings/recap">Meeting Recap Newsletter</a></li><li><a href="/board/bose">Board of School Estimate</a></li><li><a href="/board/goals">District &amp; BOE Goals</a></li><li><a href="/board/recognitions">Submit a BOE Recognition</a></li><li><a href="/board/presentations">Presentations</a></li><li><a href="https://drive.google.com/drive/folders/1cOJTaL2_inGOlZTz1i94Y04-SqoiSGFg?usp=sharing" target="_blank">Minutes<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.youtube.com/@southorangemaplewoodschool1641/featured" target="_blank">Watch Online on YouTube<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/board/office-of-civil-rights">Office of Civil Rights</a></li><li><a href="/board/notices">Public Notices</a></li></ul></nav>
+	</div>
+
+
+	</section>
+	
+	<div class="fsElement fsNavigation fsBreadcrumb" id="fsEl_19778" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav aria-label="breadcrumb">
+    <ol>
+        
+
+<li  >
+		<a href="/">Home</a>
+			<span aria-hidden="true" class="fsNavBreadcrumbSeperator">&gt;</span>
+</li>
+
+
+<li aria-current=page >
+			Board of Education
+</li>
+
+    </ol>
+</nav>
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+
+
+</div>
+
+
+			</header>
+
+		<div id="fsPageBodyWrapper" class="fsPageBodyWrapper">
+			<div id="fsPageBody" class="fsStyleAutoclear fsPageBody">
+
+				<main id="fsPageContent" class="fsPageContent">
+
+
+
+
+							<div class="fsPageLayout fsLayout fsOneColumnLayout fsStyleAutoclear" id="fsEl_16227" data-use-new="true" >
+
+				<div class=" fsDiv fsStyleAutoclear" id="fsEl_16228"  >
+
+				<div class="fsElement fsContent" id="fsEl_20830" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<center><figure class="fsImage"><a href="#"><picture><img alt="The text %22Board of Education%22 in red and black is positioned on the left, while the logo for the School District of South Orange &amp;amp; Maplewood is on the right, all set against a plain white background." data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/v1752058071/somsdk12njus/laggsix5ox2xmxvfh8nc/25-07-09-boe-webheader.svg%22,%22width%22:818}]" data-resource-description="" data-resource-filename="25-07-09-boe-webheader.svg" data-resource-uuid="23b1f0c0-18ba-4cb0-9b78-dbc9f1962a0c" loading="lazy" src="" style="" width="90%"></picture></a></figure></center>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsLayout fsTwoColumnWideLeftLayout fsStyleAutoclear" id="fsEl_20824" data-use-new="true" >
+
+						<div class=" fsDiv fsStyleTwoThirds fsStyleColumn fsStyleColumn-1 fsStyleAutoclear" id="fsEl_20825"  >
+
+				<div class="fsElement fsContent" id="fsEl_23452" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<h2>Responsibilities of the School Board</h2>
+
+<p>The South Orange &amp; Maplewood School District is guided by a dedicated Board of Education, made up of nine community members elected by voters in South Orange Village&nbsp;and Maplewood Township. These individuals bring their passion and perspective to three-year terms, with elections held each year to welcome new or returning members. Together, they shape the future of our schools through thoughtful policymaking and stewardship.</p>
+
+<p>In addition to setting district policy, the Board selects the Superintendent, approves staff appointments and transitions, and helps ensure our schools have the resources and programs needed for students to thrive. The Board of Education also approves the district&rsquo;s budget, while the tax levy is reviewed separately by the <a href="/board/bose" style="color: #ba0c2f; font-weight: bold; text-decoration: underline dotted #A2AAAD; text-decoration-thickness: 0.1rem;" target="_blank">Board of School Estimate</a>. This collaborative group includes members from both municipalities and representatives from the School Board.</p>
+
+<p>Each January, the Board holds its annual reorganization meeting to elect a President and two Vice Presidents and to establish its committees.&nbsp;These committees meet monthly to explore important topics and recommend actions that support district goals.</p>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent" id="fsEl_23453" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<h2>Board Meetings</h2>
+
+<p style="margin-bottom: -40px;">The Board of Education meets on the third Monday of each month, except when precluded by a holiday. The Board, from time to time, will add additional meetings. Public sessions of all meetings of the Board are held at the Board Administration building, located at 525 Academy Street in Maplewood, and convene at 7:30 PM.</p>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsCalendar fsList fsItemCount_2" id="fsEl_23454" data-calendar-ids=9 data-calendars-feed-uuid="187a4684-067a-45ab-a1ae-0d3a24ac53ef" data-teams-feed-uuid="297462df-4f16-4b77-8cc4-a5596eea44b4" data-use-new="true" data-new-calendar-style=true >
+
+					
+
+
+	<div class="fsElementContent"
+	     data-controller="calendar-component--load-more-button"
+	     data-calendar-component--load-more-button-element-id-value="23454"
+	     data-calendar-component--load-more-button-start-row-value="3">
+		<ul class="fsA11yCalendarList"
+		    data-calendar-component--load-more-button-target="listContainer">
+						<li class="fsDayContainer">
+							<ul role="presentation">
+									<li><div class="fsCalendarEvent" data-controller="calendar-component--single-event" data-calendar-component--single-event-occur-id-value="32050893_2026-11-03T00:00:00Z_2026-11-04T00:00:00Z" data-calendar-component--single-event-element-id-value="23454" data-calendar-component--single-event-open-method-value="page">
+
+	<div class="fsTitle ">
+				<div class="fsElementEventColorIcon" role="img" style="background:#7a42e5" aria-label="Board of Education (somsdk12.org/board)"></div>
+
+		<a class="fsCalendarEventLink" data-occur-id="32050893_2026-11-03T00:00:00Z_2026-11-04T00:00:00Z" href="https://www.somsdk12.org/board/meetings/~occur-id/32050893_2026-11-03T00:00:00Z_2026-11-04T00:00:00Z">Election Day - School Closed for Students (PD Staff)</a>
+		
+	</div>
+
+			<time datetime="2026-11-03T00:00:00-05:00" class="fsDate"><span class="fsMonth">Nov</span> <span class="fsDay">3</span> <span class="fsYear">2026</span></time>
+
+	<div class="fsEventDetails">
+			<div class="fsAllDay">all day</div>
+
+
+
+
+
+	</div>
+
+	
+</div></li>
+							</ul>
+						</li>
+						<li class="fsDayContainer">
+							<ul role="presentation">
+									<li><div class="fsCalendarEvent" data-controller="calendar-component--single-event" data-calendar-component--single-event-occur-id-value="32050894_2026-11-05T00:00:00Z_2026-11-07T00:00:00Z" data-calendar-component--single-event-element-id-value="23454" data-calendar-component--single-event-open-method-value="page">
+
+	<div class="fsTitle ">
+				<div class="fsElementEventColorIcon" role="img" style="background:#7a42e5" aria-label="Board of Education (somsdk12.org/board)"></div>
+
+		<a class="fsCalendarEventLink" data-occur-id="32050894_2026-11-05T00:00:00Z_2026-11-07T00:00:00Z" href="https://www.somsdk12.org/board/meetings/~occur-id/32050894_2026-11-05T00:00:00Z_2026-11-07T00:00:00Z">NJEA Conference - District Closed</a>
+		
+	</div>
+
+			<time datetime="2026-11-05T00:00:00-05:00" class="fsDate"><span class="fsMonth">Nov</span> <span class="fsDay">5</span> <span class="fsYear">2026</span></time>
+
+	<div class="fsEventDetails">
+			<div class="fsAllDay">all day</div>
+
+
+
+
+
+	</div>
+
+	
+</div></li>
+							</ul>
+						</li>
+		</ul>
+
+	</div>
+
+
+
+	</div>
+	
+
+
+
+	</div>
+	
+	<div class=" fsDiv fsStyleOneThird fsStyleColumn fsStyleColumn-2 fsStyleColumn-last fsStyleAutoclear" id="fsEl_20826"  >
+
+				<div class="fsElement fsNavigation fsList nav-sub" id="fsEl_23455" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav aria-label="secondary"><ul class="fsNavLevel1"><li><a href="/board">Meet the Board</a></li><li class="fsNavParentPage"><a href="/board/meetings">Board Meetings &amp; Schedule</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/board/meetings/recap">BOE Recap Newsletter</a></li><li><a href="/board/agendas">Meeting Agendas (Current)</a></li><li><a href="https://drive.google.com/drive/folders/1tJqxHi_nycYgtXbM4OJJkMZIvoeS2_fm" target="_blank">Meeting Minutes (Current)<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/board/meetings/meeting-minutes-archived">Meeting Minutes (Pre-2022)</a></li><li><a href="https://drive.google.com/drive/folders/1qMmW-PUaX4BOrJRNHH45XzgYjeLXEoBa" target="_blank">Presentations<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></div></li><li class="fsNavParentPage"><a href="/board/agendas">Agendas</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/board/agendas/meeting-agendas-archived">Meeting Agendas (Archived)</a></li></ul></div></li><li><a href="/board/policies">Board Policies</a></li><li class="fsNavParentPage"><a href="/board/boe-committees-current">BOE Committees (Current)</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/board/boe-committees-current/2025-boe-committees-clone-clone">2025 BOE Committees </a></li><li><a href="/board/boe-committees-current/2024-boe-committees-clone">2024 BOE Committees</a></li><li><a href="/board/boe-committees-current/2023-boe-committees">2023 BOE Committees</a></li><li><a href="/board/boe-committees-current/2022-boe-committees">2022 BOE Committees</a></li><li><a href="/board/boe-committees-current/2021-boe-committees">2021 BOE Committees</a></li><li><a href="/board/boe-committees-current/2020-boe-committees">2020 BOE Committees</a></li><li><a href="/board/boe-committees-current/2019-boe-committees">2019 BOE Committees</a></li></ul></div></li><li><a href="/board/meetings/recap">Meeting Recap Newsletter</a></li><li><a href="/board/bose">Board of School Estimate</a></li><li><a href="/board/goals">District &amp; BOE Goals</a></li><li><a href="/board/recognitions">Submit a BOE Recognition</a></li><li><a href="/board/presentations">Presentations</a></li><li><a href="https://drive.google.com/drive/folders/1cOJTaL2_inGOlZTz1i94Y04-SqoiSGFg?usp=sharing" target="_blank">Minutes<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.youtube.com/@southorangemaplewoodschool1641/featured" target="_blank">Watch Online on YouTube<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/board/office-of-civil-rights">Office of Civil Rights</a></li><li><a href="/board/notices">Public Notices</a></li></ul></nav>
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsEmbed" id="fsEl_20832" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		    <p><a id="members" name="Members"></a></p>
+
+	</div>
+
+
+	</div>
+	
+
+
+
+	</div>
+	
+
+
+
+
+	</div>
+	
+	<div class="fsElement fsLayout fsTwoColumnWideLeftLayout fsStyleAutoclear" id="fsEl_24458" data-use-new="true" >
+
+						<div class=" fsDiv fsStyleTwoThirds fsStyleColumn fsStyleColumn-1 fsStyleAutoclear" id="fsEl_24459"  >
+
+				<div class="fsElement fsPanelGroup fsAccordion" id="fsEl_23456" data-use-new="true" data-one-panel="true" >
+
+				<div class="fsElementContent" >
+		    <ul class="fsTabsNav" role="tablist">
+        
+            <li id="fsTab-23457" class="fsTabsNavItem " role="presentation">
+                <a role='tab' aria-selected='false' href='#fs-panel-23457' aria-controls='fsEl_23457'>Board Members</a>
+                
+            </li>
+
+    </ul>
+
+    	<section class="fsElement fsPanel fsStateOpen fsStyleAutoclear" id="fsEl_23457" data-use-new="true" role="tabpanel" >
+
+				<header>
+					<h2 class="fsElementTitle" id="fsElementTitle_23457"><a role='button' aria-controls='fsPanelContent_23457' aria-expanded='false' class='accordion-trigger' id='fsAccordion_23457' href='#fs-panel-23457'>Board Members</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true" role="region" aria-labelledby="fsAccordion_23457">
+		<a id="fs-panel-23457"></a>
+	<div class="fsElement fsContent" id="fsEl_24609" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div style="margin-bottom: -20px;"><em><strong>Note:</strong> to send correspondence to all board members, please email <a href="mailto:boemembers@somsd.k12.nj.us" style="color: #ba0c2f; font-weight: bold; text-decoration: underline dotted #A2AAAD; text-decoration-thickness: 0.1rem;">boemembers@somsd.k12.nj.us</a></em></div>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent" id="fsEl_24606" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p><a href="#" target="_blank"><img alt="" class="fsStateFloatLeft" loading="lazy" role="presentation" src="https://www.somsdk12.org/fs/resource-manager/view/f5b656a1-080f-44bd-9676-d2a091d2a9a9" style="padding-right:30px; padding-bottom:15px; width:35%; float:left" /></a></p>
+
+<p style="padding-left: 80px;"><strong>William Meyer<br />
+President</strong><br />
+Term: 2024 - 2026<br />
+email:&nbsp;<a href="mailto:wmeyer@somsd.k12.nj.us" target="_blank">wmeyer@somsd.k12.nj.us</a></p>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent" id="fsEl_24610" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<hr style="clear: both; opacity:10%; margin-top: 30px;" />
+<p><a href="#" target="_blank"><img alt="" class="fsStateFloatLeft" loading="lazy" role="presentation" src="https://www.somsdk12.org/fs/resource-manager/view/d6e8e763-0b48-414e-b49b-d16ff69bd6d0" style="padding-right:30px; padding-bottom:20px; width:35%; float:left" /></a></p>
+
+<p><strong>Elizabeth Callahan<br />
+1st Vice President</strong><br />
+Term: 2024 - 2026<br />
+email:&nbsp;<a href="mailto:ecallaha@somsd.k12.nj.us">ecallaha@somsd.k12.nj.us</a></p>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent" id="fsEl_24613" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<hr style="clear: both; opacity:10%; margin-top: 30px;" />
+<p><a href="#" target="_blank"><img alt="" class="fsStateFloatLeft" loading="lazy" role="presentation" src="https://www.somsdk12.org/fs/resource-manager/view/1f2278b3-738c-44d5-b0d9-09bfc1381e64" style="padding-right:30px; padding-bottom:20px; width:35%; float:left" /></a></p>
+
+<p><strong>Malini Nayar<br />
+2nd Vice President</strong><br />
+Term: 2026&nbsp;- 2028<br />
+email:&nbsp;<a href="mailto:mnayar@somsd.k12.nj.us">mnayar@somsd.k12.nj.us</a></p>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent" id="fsEl_24614" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<hr style="clear: both; opacity:10%; margin-top: 30px;" />
+<p><a href="#" target="_blank"><img alt="" class="fsStateFloatLeft" loading="lazy" role="presentation" src="https://www.somsdk12.org/fs/resource-manager/view/f2f45954-d525-4c67-8362-5c1143cf1f93" style="padding-right:30px; padding-bottom:20px; width:35%; float:left" /></a></p>
+
+<p><strong>Jeffrey Bennett</strong><br />
+Term: 2025 - 2027<br />
+email:&nbsp;<a href="mailto:jbennet2@somsd.k12.nj.us">jbennet2@somsd.k12.nj.us</a></p>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent" id="fsEl_24616" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<hr style="clear: both; opacity:10%; margin-top: 30px;" />
+<p><a href="#" target="_blank"><img alt="" class="fsStateFloatLeft" loading="lazy" role="presentation" src="https://www.somsdk12.org/fs/resource-manager/view/4a883b90-84a2-4dbd-a037-c05d89862a90" style="padding-right:30px; padding-bottom:20px; width:35%; float:left" /></a></p>
+
+<p><strong>Deirdre Brown</strong><br />
+Term: 2025 - 2027<br />
+email:&nbsp;<a href="mailto:dbrown@somsd.k12.nj.us">dbrown@somsd.k12.nj.us</a></p>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent" id="fsEl_24620" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<hr style="clear: both; opacity:10%; margin-top: 30px;" />
+<p><a href="#" target="_blank"><img alt="" class="fsStateFloatLeft" loading="lazy" role="presentation" src="https://www.somsdk12.org/fs/resource-manager/view/59693094-eec6-4b7b-9f75-c37918970cab" style="padding-right:30px; padding-bottom:20px; width:35%; float:left" /></a></p>
+
+<p><strong>Meredith Higgins</strong><br />
+Term: 2026 - 2028<br />
+email:&nbsp;<a href="mailto:mhiggins@somsd.k12.nj.us">mhiggins@somsd.k12.nj.us</a></p>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent" id="fsEl_24617" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<hr style="clear: both; opacity:10%; margin-top: 30px;" />
+<p><a href="#" target="_blank"><img alt="" class="fsStateFloatLeft" loading="lazy" role="presentation" src="https://www.somsdk12.org/fs/resource-manager/view/d64fb2a0-b602-4778-a695-f543d0f9cf75" style="padding-right:30px; padding-bottom:20px; width:35%; float:left" /></a></p>
+
+<p><strong>Bimal Kapadia</strong><br />
+Term: 2025 - 2027<br />
+email:&nbsp;<a href="mailto:bkapadia@somsd.k12.nj.us">bkapadia@somsd.k12.nj.us</a></p>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent" id="fsEl_24618" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<hr style="clear: both; opacity:10%; margin-top: 30px;" />
+<p><a href="#" target="_blank"><img alt="" class="fsStateFloatLeft" loading="lazy" role="presentation" src="https://www.somsdk12.org/fs/resource-manager/view/e66b4503-2ccd-410f-bc10-8722c67aa196" style="padding-right:30px; padding-bottom:20px; width:35%; float:left" /></a></p>
+
+<p><strong>Shayna Sackett-Gable</strong><br />
+Term: 2024 - 2026<br />
+email:&nbsp;<a href="mailto:ssacket1@somsd.k12.nj.us">ssacket1@somsd.k12.nj.us</a></p>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent" id="fsEl_24619" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<hr style="clear: both; opacity:10%; margin-top: 30px;" />
+<p><span contenteditable="false" tabindex="-1"><a data-widget="image" href="#" target="_blank"><img alt="" class="fsStateFloatLeft" loading="lazy" role="presentation" src="https://www.somsdk12.org/fs/resource-manager/view/abe739a2-6f3f-4494-aff1-4d1b4a8961ee" style="padding-right:30px; padding-bottom:20px; width:35%; float:left" /></a></span></p>
+
+<p><strong>Paul Stephan</strong><br />
+Term: 2026 - 2028<br />
+email:&nbsp;<a href="mailto:pstephan@somsd.k12.nj.us">pstephan@somsd.k12.nj.us</a></p>
+
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</section>
+	
+
+
+
+	</div>
+
+
+	</div>
+	
+
+
+
+	</div>
+	
+	<div class=" fsDiv fsStyleOneThird fsStyleColumn fsStyleColumn-2 fsStyleColumn-last fsStyleAutoclear" id="fsEl_24460"  >
+
+				<div class="fsElement fsContent" id="fsEl_24461" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p align="center"><a href="https://www.somsdk12.org/goals" target="_blank"><img alt="SOMSD" src="https://www.somsdk12.org/fs/resource-manager/view/8cbfc773-a1b3-472a-86a8-bcd358a38117" style="width: 100%; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; aspect-ratio: 900/750; object-fit: cover; border: 1px solid #8d0923;" /></a></p>
+
+
+	</div>
+
+
+	</div>
+	
+
+
+
+	</div>
+	
+
+
+
+
+	</div>
+	
+	<div class="fsElement fsPanelGroup fsAccordion" id="fsEl_24623" data-use-new="true" data-one-panel="true" >
+
+				<div class="fsElementContent" >
+		    <ul class="fsTabsNav" role="tablist">
+        
+            <li id="fsTab-24635" class="fsTabsNavItem " role="presentation">
+                <a role='tab' aria-selected='false' href='#fs-panel-24635' aria-controls='fsEl_24635'>Student Representatives to the Board of Education</a>
+                
+            </li>
+
+    </ul>
+
+    	<section class="fsElement fsPanel fsStateOpen fsStyleAutoclear" id="fsEl_24635" data-use-new="true" role="tabpanel" >
+
+				<header>
+					<h2 class="fsElementTitle" id="fsElementTitle_24635"><a role='button' aria-controls='fsPanelContent_24635' aria-expanded='false' class='accordion-trigger' id='fsAccordion_24635' href='#fs-panel-24635'>Student Representatives to the Board of Education</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true" role="region" aria-labelledby="fsAccordion_24635">
+		<a id="fs-panel-24635"></a>
+	<div class="fsElement fsLayout fsTwoColumnLayout fsStyleAutoclear" id="fsEl_22416" data-use-new="true" >
+
+						<div class=" fsDiv fsStyleColumn fsStyleColumn-1 fsStyleAutoclear" id="fsEl_22417"  >
+
+				<div class="fsElement fsContent" id="fsEl_22420" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div style="text-align:center">
+<figure class="fsImage" data-widget="image" style="display:inline-block"><img alt="Student Representative to the Board of Education" loading="lazy" src="https://www.somsdk12.org/fs/resource-manager/view/f80dd60b-052f-495a-ab2f-e1397ad1885b" style="width: 40%;  border-radius: 1%; object-fit: cover; border: 4px solid #ba0c2f;" title="Student Representative to the Board of Education" /></figure>
+</div>
+
+<p align="center"><span style="font-family: AmerigoBTStdBold; color: #ba0c2f; font-weight: bold"><big>Penuel Shapiro</big></span><br />
+Term: 2025-2026<br />
+<span style="text-transform: lowercase; opacity: 40%; line-height: .6em;">boestudentrep1@somsd.k12.nj.us</span></p>
+
+
+	</div>
+
+
+	</div>
+	
+
+
+
+	</div>
+	
+	<div class=" fsDiv fsStyleColumn fsStyleColumn-2 fsStyleColumn-last fsStyleAutoclear" id="fsEl_22418"  >
+
+				<div class="fsElement fsContent" id="fsEl_22419" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div style="text-align:center">
+<figure class="fsImage" data-widget="image" style="display:inline-block"><img alt="Student Representative to the Board of Education" loading="lazy" src="https://www.somsdk12.org/fs/resource-manager/view/788201a4-b907-4ea5-bf56-dc672256f9d1" style="width: 40%;  border-radius: 1%; object-fit: cover; border: 4px solid #ba0c2f;" title="Student Representative to the Board of Education" /></figure>
+</div>
+
+<p align="center"><span style="font-family: AmerigoBTStdBold; color: #ba0c2f; font-weight: bold"><big>Scarlet Strogov</big></span><br />
+Term: 2025-2026<br />
+<span style="text-transform: lowercase; opacity: 40%; line-height: .6em;">boestudentrep2@somsd.k12.nj.us</span></p>
+
+
+	</div>
+
+
+	</div>
+	
+
+
+
+	</div>
+	
+
+
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</section>
+	
+
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent" id="fsEl_20823" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<h2>Public Participation at Board Meetings</h2>
+
+<p>The public is welcome to attend School Board meetings, workshops and public feedback sessions. Members of the public may participate in regular School Board meetings in the following ways:</p>
+
+<ol>
+	<li><strong>Hearings of Individuals and Delegations.</strong> The Board provides two periods during a regularly scheduled meeting at which members of the public may address the Board about an issue of concern, whether or not the item is on the agenda. The first period is at the beginning of a meeting. Individuals are asked to sign up to address the Board prior to the commencement of the meeting. Speakers are asked to identify themselves and their topic of interest before beginning their comments and may speak for a period of three minutes. The initial period of Hearings of Individuals and Delegations, by Board policy, extends for a maximum of 45 minutes. The second period for Hearings of Individuals and Delegations occurs at the end of the meeting, after New Business. The same procedures and three minute time limit per speaker, as with the initial Hearings of Individuals and Delegations, apply here.</li>
+	<li><strong>Presentations.</strong> Members of the public may submit a written request to the Board Secretary at least 7 days prior to a regularly scheduled Board meeting asking for an opportunity to address the Board.</li>
+</ol>
+
+<p>The request is to specify the topic of the presentation and the purpose for the request. After reviewing the request, the President of the Board will schedule a time for the presentation. A presentation of this type is limited to the maximum of 15 minutes. A copy of any written material associated with the presentation are to be delivered to the Board Secretary by the Thursday prior to the presentation for distribution to the Board.</p>
+
+<h2>Other Methods of Communicating with the Board</h2>
+
+<p>A member of the community also may communicate with the Board by writing to the members of the Board and/or the superintendent care of the Board Administration Building or via email at <a href="mailto:boemembers@somsd.k12.nj.us">boemembers@somsd.k12.nj.us</a>. As always, your input is welcome.</p>
+
+<p>Should a community member wish to contact a specific Board member, they can be reached at the board member&#39;s individual district email address. This information can be found further above on the <a href="#" target="_self">current board members&nbsp;page</a>.</p>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent" id="fsEl_25058" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<h2>Gifted &amp; Talented Noncompliance Procedure</h2>
+
+<p>An individual who believes that the district has not complied with the provisions of N.J.S.A. 18A:35-34 et seq. may file a complaint with the Board of Education. This policy for filing a complaint shall be linked to the homepage of the Board&rsquo;s Internet website. The Board shall issue a decision, in writing, to affirm, reject, or modify the district&rsquo;s action in the matter. The individual may then file a petition of appeal of the Board&rsquo;s written decision to the Commissioner of Education through the Office of Controversies and Disputes in accordance with N.J.S.A. 18A:6-9 and the procedures set forth in State Board of Education regulations.</p>
+
+<p align="left"><a href="https://forms.gle/4VNf6Ep2onyoH7LA6" target="_blank"><span class="button-link">Submit G&amp;T Compliance Feedback/Complaint</span></a></p>
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsPanelGroup fsAccordion fsPanelIconAfter" id="fsEl_21255" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		    <ul class="fsTabsNav" role="tablist">
+        
+            <li id="fsTab-21256" class="fsTabsNavItem " role="presentation">
+                <a role='tab' aria-selected='false' href='#fs-panel-21256' aria-controls='fsEl_21256'>Advisory Opinions for the South Orange & Maplewood Board of Education</a>
+                
+            </li>
+            <li id="fsTab-24196" class="fsTabsNavItem " role="presentation">
+                <a role='tab' aria-selected='false' href='#fs-panel-24196' aria-controls='fsEl_24196'>USDOE Office of Civil Rights</a>
+                
+            </li>
+
+    </ul>
+
+    	<section class="fsElement fsPanel fsA11yPanelIconAfter fsStyleAutoclear" id="fsEl_21256" data-use-new="true" role="tabpanel" >
+
+				<header>
+					<h2 class="fsElementTitle fsA11yElementTitleIconInSpan" id="fsElementTitle_21256">
+						<a role='button' aria-controls='fsPanelContent_21256' aria-expanded='false' class='accordion-trigger' id='fsAccordion_21256' href='#fs-panel-21256'>Advisory Opinions for the South Orange & Maplewood Board of Education</a><span aria-hidden="true"></span>
+</h2>	</header>
+	<div class="fsElementContent" aria-hidden="true" role="region" aria-labelledby="fsAccordion_21256">
+		<a id="fs-panel-21256"></a>
+	<div class="fsElement fsContent" id="fsEl_21258" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div>&nbsp;</div>
+
+<p><a data-file-name="April2021-NJSECAdvisoryOpinion1.pdf" data-resource-uuid="6dd9dc8b-5b41-4ff7-bb98-feffaaf43fec" href="/fs/resource-manager/view/6dd9dc8b-5b41-4ff7-bb98-feffaaf43fec">April 2021 NJ School Ethics Commission Advisory Opinion</a></p>
+
+<p><a data-file-name="October2021NJSchoolEthicsCommissionAdvisoryOpinion.pdf" data-resource-uuid="2fe19b84-bd8e-43ee-b80c-e49d83319275" href="/fs/resource-manager/view/2fe19b84-bd8e-43ee-b80c-e49d83319275">October 2021 NJ School Ethics Commission Advisory Opinion</a></p>
+
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</section>
+	
+	<section class="fsElement fsPanel fsA11yPanelIconAfter fsStyleAutoclear" id="fsEl_24196" data-use-new="true" role="tabpanel" >
+
+				<header>
+					<h2 class="fsElementTitle fsA11yElementTitleIconInSpan" id="fsElementTitle_24196">
+						<a role='button' aria-controls='fsPanelContent_24196' aria-expanded='false' class='accordion-trigger' id='fsAccordion_24196' href='#fs-panel-24196'>USDOE Office of Civil Rights</a><span aria-hidden="true"></span>
+</h2>	</header>
+	<div class="fsElementContent" aria-hidden="true" role="region" aria-labelledby="fsAccordion_24196">
+		<a id="fs-panel-24196"></a>
+	<div class="fsElement fsContent" id="fsEl_24198" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			
+<p><a data-current-sort="name" data-current-sort-type="asc" data-file-name="ComprehensiveEquityPlan2016-2016and2018-2019.pdf" data-folder="mdocs-cat-43" data-hide-folder="1" data-hide-main-folder="1" data-is-dashboard="" data-mdocs-id="718" data-resource-uuid="4094e483-86cc-4da9-ade2-5384219ab526" data-sort="name" data-sort-type="asc" data-toggle="dropdown" href="/fs/resource-manager/view/4094e483-86cc-4da9-ade2-5384219ab526">Comprehensive Equity Plan 2016-2016 and 2018-2019</a></p>
+
+<p><a data-current-sort="name" data-current-sort-type="asc" data-file-name="OCRResolutionAgreement.pdf" data-folder="mdocs-cat-43" data-hide-folder="1" data-hide-main-folder="1" data-is-dashboard="" data-mdocs-id="1807" data-resource-uuid="7132d5eb-6a70-414c-bb04-666eeb46796d" data-sort="name" data-sort-type="asc" data-toggle="dropdown" href="/fs/resource-manager/view/7132d5eb-6a70-414c-bb04-666eeb46796d">OCR Resolution Agreement</a></p>
+
+<p><a data-current-sort="name" data-current-sort-type="asc" data-file-name="SageEducationConsultants-PreliminaryFindings.pdf" data-folder="mdocs-cat-43" data-hide-folder="1" data-hide-main-folder="1" data-is-dashboard="" data-mdocs-id="2102" data-resource-uuid="57c2b998-7d98-43f1-a579-9772c90ff9f3" data-sort="name" data-sort-type="asc" data-toggle="dropdown" href="/fs/resource-manager/view/57c2b998-7d98-43f1-a579-9772c90ff9f3">Sage Education Consultants - Preliminary Findings</a></p>
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</section>
+	
+
+
+
+	</div>
+
+
+	</div>
+	
+
+
+
+	</div>
+	
+
+
+
+	</div>
+	
+
+
+
+				</main>
+			</div>
+		</div>
+
+			<footer id="fsFooter" class="fsFooter">
+				<div class=" fsBanner footer-7 fsStyleAutoclear" id="fsEl_2717" data-settings-id="2720" data-use-new="true">
+
+			<div class="fsElement fsContainer fs-theme-panel fs-theme-footers footer-7" id="fsEl_2718" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsContainer footer-top-container" id="fsEl_2719" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsContainer footer-left-container" id="fsEl_2720" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsContainer school-details-container" id="fsEl_2721" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsContainer logo-container" id="fsEl_2722" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<section class="fsElement fsLocationElement fsSingleItem logo-image height-xlarge   fsThumbnailOriginal fsThumbnailXLarge" id="fsEl_2723" data-use-new="true" >
+
+				<header>
+					<h2 class="fsElementTitle" id="fsElementTitle_2723">Logo Image</h2>
+	</header>
+	<div class="fsElementContent" >
+		
+<div class="fsLocationSingleItem">
+		<a href="https://www.somsdk12.org" class="fsLocationLink fsLocationLinkWrapper">
+						<div class="fsThumbnail" >
+			<img alt="South Orange &amp; Maplewood School District" data-aspect-ratio="0.4" data-image-sizes="[{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1736268975/somsdk12njus/j1xzg5galvcmjc6l0el7/SOMSD-Lettermark-Knockout.png&quot;,&quot;width&quot;:256},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1736268975/somsdk12njus/j1xzg5galvcmjc6l0el7/SOMSD-Lettermark-Knockout.png&quot;,&quot;width&quot;:512},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1736268975/somsdk12njus/j1xzg5galvcmjc6l0el7/SOMSD-Lettermark-Knockout.png&quot;,&quot;width&quot;:800},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto/v1736268975/somsdk12njus/j1xzg5galvcmjc6l0el7/SOMSD-Lettermark-Knockout.png&quot;,&quot;width&quot;:1000}]" src="" />
+	</div>
+
+
+
+
+
+
+		</a>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	</div>
+
+
+	</section>
+	
+	<section class="fsElement fsLocationElement fsSingleItem logo-title   fsThumbnailOriginal fsThumbnailSmall" id="fsEl_2724" data-use-new="true" >
+
+				<header>
+					<h2 class="fsElementTitle" id="fsElementTitle_2724">Logo Title</h2>
+	</header>
+	<div class="fsElementContent" >
+		
+<div class="fsLocationSingleItem"></div>
+
+	</div>
+
+
+	</section>
+	
+	<div class="fsElement fsLocationElement fsSingleItem school-details   fsThumbnailOriginal fsThumbnailSmall" id="fsEl_19786" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		
+<div class="fsLocationSingleItem"></div>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsLocationElement fsSingleItem school-details   fsThumbnailOriginal fsThumbnailSmall" id="fsEl_2725" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		
+<div class="fsLocationSingleItem">
+		
+
+	
+	<div class="fsLocationAddress fsLocationAddress-1">525 Academy Street</div>
+
+
+	<div class="fsLocationCity">Maplewood</div>
+
+	<div class="fsLocationState">NJ</div>
+
+	<div class="fsLocationZip">07040</div>
+
+
+	<div class="fsLocationPhone">
+			<span class="fsLocationLabel" aria-hidden="true">Phone: </span>
+			<a href="tel:(973) 762-5600"><span class="fsStyleSROnly">Phone: </span>(973) 762-5600</a>
+	</div>
+
+
+
+
+
+</div>
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsNavigation fsList nav-social" id="fsEl_2726" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav aria-label="social media"><ul class="fsNavLevel1"><li><a href="https://www.instagram.com/somsdk12" target="_blank">Instagram<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.linkedin.com/company/somsdk12/" target="_blank">LinkedIn<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.facebook.com/somsdk12" target="_blank">Facebook<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.flickr.com/photos/somsdk12/albums" target="_blank">Flickr<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.youtube.com/@southorangemaplewoodschool1641" target="_blank">YouTube<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></nav>
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContainer footer-right-container" id="fsEl_2727" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<section class="fsElement fsNavigation fsList footer-links" id="fsEl_2728" data-use-new="true" >
+
+				<header>
+					<h2 class="fsElementTitle" id="fsElementTitle_2728">Around SOMSD</h2>
+	</header>
+	<div class="fsElementContent" >
+		<nav aria-label="footer links 1"><ul class="fsNavLevel1"><li><a href="/news">Newsroom</a></li><li><a href="/district">Departments</a></li><li><a href="/directory">Staff Directory</a></li><li><a href="/employment">Employment</a></li><li><a href="/district/registration">Student Registration &amp; Enrollment</a></li><li><a href="/sop">Standard Operating Procedures</a></li></ul></nav>
+	</div>
+
+
+	</section>
+	
+	<section class="fsElement fsNavigation fsList footer-links" id="fsEl_2729" data-use-new="true" >
+
+				<header>
+					<h2 class="fsElementTitle" id="fsElementTitle_2729">‎ </h2>
+	</header>
+	<div class="fsElementContent" >
+		<nav aria-label="footer links 2"><ul class="fsNavLevel1"><li><a href="/calendar">District Calendar</a></li><li><a href="/district/asst-supt">HIB, Title IX, &amp; Affirmative Action</a></li><li><a href="/district/specialservices/504">Section 504 Information</a></li><li><a href="/community/hsa-pta">Home &amp; School Associations</a></li><li><a href="https://www.somsdk12.org/community#backpack">Digital Backpack</a></li><li><a href="https://www.somsdk12.org/community/community-partners" target="_blank">Support Our Students<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></nav>
+	</div>
+
+
+	</section>
+	
+	<div class="fsElement fsLocationElement fsSingleItem footer-links   fsThumbnailOriginal fsThumbnailSmall" id="fsEl_20026" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		
+<div class="fsLocationSingleItem">
+		
+
+	
+
+
+
+
+
+
+
+
+
+
+
+			<div class="fsLocationCustomField">
+				<center>
+<p align="center" style="text-align: center; max-width: 300px; margin-top: 10px;"><a href="https://www.somsdk12.org/goals" target="_blank"><img alt="SOMSD" src="https://www.somsdk12.org/fs/resource-manager/view/142e43f8-0177-4f93-9398-0182611db2a5" style="width: 99%; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; aspect-ratio: 500/250; object-fit: cover; border: 1px solid #8d0923;" /></a> <a href="https://www.somsdk12.org/webinars#upcoming" target="_blank"><img alt="SOMSD" src="https://www.somsdk12.org/fs/resource-manager/view/004c60dc-d8ad-42e5-b435-bdff35030df1" style="width: 99%; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; aspect-ratio: 500/250; object-fit: cover; border: 1px solid #8d0923;" /></a></p>
+</center>
+<style type="text/css">/* accordian dropdown */
+
+  fsAccordion .fsPanel.fsStateOpen>header, .fsTabs .fsPanel.fsStateOpen>header {
+    background: linear-gradient(135deg, #ba0c2f 0%, #8d0923 100%) !important;
+}
+ .fsTabs .fsPanel.fsStateOpen>header, .fsAccordion .fsPanel.fsStateOpen>header {
+    background: linear-gradient(135deg, #ba0c2f 0%, #8d0923 100%) !important;
+}
+  
+    /*navigation bar*/
+  .header-6 .nav-main {
+    background: linear-gradient(135deg, #ba0c2f 0%, #8d0923 100%) !important;
+  }
+.header-6 .nav-main .fsNavLevel1>li .fsNavPageInfo {
+    background: linear-gradient(135deg, #ba0c2f 0%, #690318 100%);
+  }
+  
+  /* Eshaya Draper footer */
+  .footer-7 .footer-top-container {
+    background: linear-gradient(2deg, #690318, #ba0c2f);
+  }
+  
+  
+  /*tabling*/
+  .fsAthleticsEvent.fsTable .fsElementTable th, .fsAthleticsRoster .fsElementTable th, table.table-style th, table.table-styled th {
+
+    background: linear-gradient(#8d0923, #ba0c2f);
+  }   
+    
+  
+  /* style heading */
+h1 .fsContent {
+    background: -webkit-linear-gradient(90deg, #ba0c2f, #8d0923);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+    
+
+    
+/* div#fsEl_2719 {
+    background: linear-gradient(135deg, #ba0c2f 0%, #690318 100%) !important;
+} */
+</style>
+
+			</div>
+</div>
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContent footer-content" id="fsEl_2731" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p style="text-align: center; line-height: 14px; margin-left: 40px; margin-right: 40px;"><small>The School District of South Orange &amp; Maplewood&nbsp;is committed to making our content accessible to all members of the public, including those with disabilities. This includes families, students, employees, and all others associated with our community. If you need assistance in accessing materials on the district website, or you would like to provide <a href="https://www.somsdk12.org/feedback" style="color: #ffffff; font-weight: bold; text-decoration: none; text-decoration-thickness: 0.1rem;" target="_blank">feedback</a>/recommendation on a school&nbsp;page, please email the district&#39;s communications office at <a href="mailto:information@somsd.k12.nj.us" style="color: #ffffff; font-weight: bold; text-decoration: underline dotted #A2AAAD; text-decoration-thickness: 0.1rem;" target="_blank">information@somsd.k12.nj.us</a></small></p>
+
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsContainer accreditation-logos" id="fsEl_2732" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsResourceElement fsSingleItem" id="fsEl_19695" data-use-new="true" data-source-element-id="19695" data-source-page-id="2340" data-display-items="collections_and_resources" >
+
+				<div class="fsElementContent" >
+		<div
+	class="fsResource fsResourceTypeImage"
+	data-controller="single-image"
+	data-resource-type="image"
+	data-single-image-resource-uuid-value="8ee8719c-13ff-4578-a100-86d42ff12c17"
+	data-single-image-resource-type-value="image"
+	data-single-image-preview-value="false">
+			<div class='fsA11yImage fsA11yImageSingle'>
+
+		<figure>
+				<a class="fsResourceLink" href="https://montrose.somsdk12.org" data-resource-type="Image" data-resource-title="Two yellow cartoon giraffes are centered within a blue circular frame, surrounded by the text &quot;MONTROSE EARLY CHILDHOOD CENTER&quot; against a plain white background." data-permitted-user="true" data-preview="false">
+					<picture>
+						<img alt="Montrose Early Childhood Center" data-resource-uuid="8ee8719c-13ff-4578-a100-86d42ff12c17" data-permitted-user="true" data-single-image-target="image" data-image-sizes="[{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1736275419/somsdk12njus/ozcoxfcitqgkdfecvsub/SOMSD-Montrose-Submark.png&quot;,&quot;width&quot;:256},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1736275419/somsdk12njus/ozcoxfcitqgkdfecvsub/SOMSD-Montrose-Submark.png&quot;,&quot;width&quot;:512},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1736275419/somsdk12njus/ozcoxfcitqgkdfecvsub/SOMSD-Montrose-Submark.png&quot;,&quot;width&quot;:800},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto/v1736275419/somsdk12njus/ozcoxfcitqgkdfecvsub/SOMSD-Montrose-Submark.png&quot;,&quot;width&quot;:1000}]" data-aspect-ratio="1.0" data-resource-title="Two yellow cartoon giraffes are centered within a blue circular frame, surrounded by the text &quot;MONTROSE EARLY CHILDHOOD CENTER&quot; against a plain white background." src="" />
+					</picture>
+</a>
+		</figure>
+	</div>
+
+</div>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsResourceElement fsSingleItem" id="fsEl_2733" data-use-new="true" data-source-element-id="2733" data-source-page-id="2340" data-display-items="collections_and_resources" >
+
+				<div class="fsElementContent" >
+		<div
+	class="fsResource fsResourceTypeImage"
+	data-controller="single-image"
+	data-resource-type="image"
+	data-single-image-resource-uuid-value="944af965-d94a-47a1-9544-cb58f12a0cae"
+	data-single-image-resource-type-value="image"
+	data-single-image-preview-value="false">
+			<div class='fsA11yImage fsA11yImageSingle'>
+
+		<figure>
+				<a class="fsResourceLink" href="https://clinton.somsdk12.org" data-resource-type="Image" data-resource-title="Clinton Elementary School" data-permitted-user="true" data-preview="false">
+					<picture>
+						<img alt="Clinton Elementary School" data-resource-uuid="944af965-d94a-47a1-9544-cb58f12a0cae" data-permitted-user="true" data-single-image-target="image" data-image-sizes="[{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1736275238/somsdk12njus/xt3m2gaignzbxw3kukcn/SOMSD-Clinton-Submark.png&quot;,&quot;width&quot;:256},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1736275238/somsdk12njus/xt3m2gaignzbxw3kukcn/SOMSD-Clinton-Submark.png&quot;,&quot;width&quot;:512},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1736275238/somsdk12njus/xt3m2gaignzbxw3kukcn/SOMSD-Clinton-Submark.png&quot;,&quot;width&quot;:800},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto/v1736275238/somsdk12njus/xt3m2gaignzbxw3kukcn/SOMSD-Clinton-Submark.png&quot;,&quot;width&quot;:1000}]" data-aspect-ratio="1.0" data-resource-title="Clinton Elementary School" src="" />
+					</picture>
+</a>
+		</figure>
+	</div>
+
+</div>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsResourceElement fsSingleItem" id="fsEl_2734" data-use-new="true" data-source-element-id="2734" data-source-page-id="2340" data-display-items="collections_and_resources" >
+
+				<div class="fsElementContent" >
+		<div
+	class="fsResource fsResourceTypeImage"
+	data-controller="single-image"
+	data-resource-type="image"
+	data-single-image-resource-uuid-value="40dc4d1f-1587-4e0d-928e-6f6df52b8f59"
+	data-single-image-resource-type-value="image"
+	data-single-image-preview-value="false">
+			<div class='fsA11yImage fsA11yImageSingle'>
+
+		<figure>
+				<a class="fsResourceLink" href="https://deliabolden.somsdk12.org" data-resource-type="Image" data-resource-title="Delia Bolden Elementary School" data-permitted-user="true" data-preview="false">
+					<picture>
+						<img alt="Delia Bolden Elementary School" data-resource-uuid="40dc4d1f-1587-4e0d-928e-6f6df52b8f59" data-permitted-user="true" data-single-image-target="image" data-image-sizes="[{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1736275260/somsdk12njus/uuz7zj7sttde1ne7zxsg/SOMSD-DeliaBolden-Submark.png&quot;,&quot;width&quot;:256},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1736275260/somsdk12njus/uuz7zj7sttde1ne7zxsg/SOMSD-DeliaBolden-Submark.png&quot;,&quot;width&quot;:512},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1736275260/somsdk12njus/uuz7zj7sttde1ne7zxsg/SOMSD-DeliaBolden-Submark.png&quot;,&quot;width&quot;:800},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto/v1736275260/somsdk12njus/uuz7zj7sttde1ne7zxsg/SOMSD-DeliaBolden-Submark.png&quot;,&quot;width&quot;:1000}]" data-aspect-ratio="1.0" data-resource-title="Delia Bolden Elementary School" src="" />
+					</picture>
+</a>
+		</figure>
+	</div>
+
+</div>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsResourceElement fsSingleItem" id="fsEl_2735" data-use-new="true" data-source-element-id="2735" data-source-page-id="2340" data-display-items="collections_and_resources" >
+
+				<div class="fsElementContent" >
+		<div
+	class="fsResource fsResourceTypeImage"
+	data-controller="single-image"
+	data-resource-type="image"
+	data-single-image-resource-uuid-value="fa8fad54-6eac-4943-85c8-6fc6da322522"
+	data-single-image-resource-type-value="image"
+	data-single-image-preview-value="false">
+			<div class='fsA11yImage fsA11yImageSingle'>
+
+		<figure>
+				<a class="fsResourceLink" href="https://marshall.somsdk12.org" data-resource-type="Image" data-resource-title="A green owl with an &quot;M&quot; on its chest sits on a branch inside a circular border, surrounded by the text &quot;MARSHALL ELEMENTARY SCHOOL&quot; against a plain white background." data-permitted-user="true" data-preview="false">
+					<picture>
+						<img alt="Marshall Elementary School" data-resource-uuid="fa8fad54-6eac-4943-85c8-6fc6da322522" data-permitted-user="true" data-single-image-target="image" data-image-sizes="[{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1736275402/somsdk12njus/rrhg9rurekvxyrsw8sfm/SOMSD-Marshall-Submark.png&quot;,&quot;width&quot;:256},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1736275402/somsdk12njus/rrhg9rurekvxyrsw8sfm/SOMSD-Marshall-Submark.png&quot;,&quot;width&quot;:512},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1736275402/somsdk12njus/rrhg9rurekvxyrsw8sfm/SOMSD-Marshall-Submark.png&quot;,&quot;width&quot;:800},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto/v1736275402/somsdk12njus/rrhg9rurekvxyrsw8sfm/SOMSD-Marshall-Submark.png&quot;,&quot;width&quot;:1000}]" data-aspect-ratio="1.0" data-resource-title="A green owl with an &quot;M&quot; on its chest sits on a branch inside a circular border, surrounded by the text &quot;MARSHALL ELEMENTARY SCHOOL&quot; against a plain white background." src="" />
+					</picture>
+</a>
+		</figure>
+	</div>
+
+</div>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsResourceElement fsSingleItem" id="fsEl_2736" data-use-new="true" data-source-element-id="2736" data-source-page-id="2340" data-display-items="collections_and_resources" >
+
+				<div class="fsElementContent" >
+		<div
+	class="fsResource fsResourceTypeImage"
+	data-controller="single-image"
+	data-resource-type="image"
+	data-single-image-resource-uuid-value="8ea92215-9056-46d2-b8ed-2c768fe39943"
+	data-single-image-resource-type-value="image"
+	data-single-image-preview-value="false">
+			<div class='fsA11yImage fsA11yImageSingle'>
+
+		<figure>
+				<a class="fsResourceLink" href="https://sethboyden.somsdk12.org" data-resource-type="Image" data-resource-title="A cartoon pug wearing green glasses is centered within a blue circular border containing the text &quot;SETH BOYDEN ELEMENTARY SCHOOL&quot; against a plain white background." data-permitted-user="true" data-preview="false">
+					<picture>
+						<img alt="Seth Boyden Elementary School" data-resource-uuid="8ea92215-9056-46d2-b8ed-2c768fe39943" data-permitted-user="true" data-single-image-target="image" data-image-sizes="[{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1736275432/somsdk12njus/ggan31t8klv7zioxsvd0/SOMSD-SethBoyden-Submark.png&quot;,&quot;width&quot;:256},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1736275432/somsdk12njus/ggan31t8klv7zioxsvd0/SOMSD-SethBoyden-Submark.png&quot;,&quot;width&quot;:512},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1736275432/somsdk12njus/ggan31t8klv7zioxsvd0/SOMSD-SethBoyden-Submark.png&quot;,&quot;width&quot;:800},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto/v1736275432/somsdk12njus/ggan31t8klv7zioxsvd0/SOMSD-SethBoyden-Submark.png&quot;,&quot;width&quot;:1000}]" data-aspect-ratio="1.0" data-resource-title="A cartoon pug wearing green glasses is centered within a blue circular border containing the text &quot;SETH BOYDEN ELEMENTARY SCHOOL&quot; against a plain white background." src="" />
+					</picture>
+</a>
+		</figure>
+	</div>
+
+</div>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsResourceElement fsSingleItem" id="fsEl_2738" data-use-new="true" data-source-element-id="2738" data-source-page-id="2340" data-display-items="collections_and_resources" >
+
+				<div class="fsElementContent" >
+		<div
+	class="fsResource fsResourceTypeImage"
+	data-controller="single-image"
+	data-resource-type="image"
+	data-single-image-resource-uuid-value="557fa797-b360-41a6-8517-fdc732542f4b"
+	data-single-image-resource-type-value="image"
+	data-single-image-preview-value="false">
+			<div class='fsA11yImage fsA11yImageSingle'>
+
+		<figure>
+				<a class="fsResourceLink" href="https://southmountain.somsdk12.org" data-resource-type="Image" data-resource-title="A smiling yellow star is centered within a blue circular border containing the text &quot;SOUTH MOUNTAIN ELEMENTARY SCHOOL&quot; against a plain white background." data-permitted-user="true" data-preview="false">
+					<picture>
+						<img alt="South Mountain Elementary School" data-resource-uuid="557fa797-b360-41a6-8517-fdc732542f4b" data-permitted-user="true" data-single-image-target="image" data-image-sizes="[{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1736275443/somsdk12njus/k4rnx3rctm7bkiuzkjjn/SOMSD-SouthMountain-Submark.png&quot;,&quot;width&quot;:256},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1736275443/somsdk12njus/k4rnx3rctm7bkiuzkjjn/SOMSD-SouthMountain-Submark.png&quot;,&quot;width&quot;:512},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1736275443/somsdk12njus/k4rnx3rctm7bkiuzkjjn/SOMSD-SouthMountain-Submark.png&quot;,&quot;width&quot;:800},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto/v1736275443/somsdk12njus/k4rnx3rctm7bkiuzkjjn/SOMSD-SouthMountain-Submark.png&quot;,&quot;width&quot;:1000}]" data-aspect-ratio="1.0" data-resource-title="A smiling yellow star is centered within a blue circular border containing the text &quot;SOUTH MOUNTAIN ELEMENTARY SCHOOL&quot; against a plain white background." src="" />
+					</picture>
+</a>
+		</figure>
+	</div>
+
+</div>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsResourceElement fsSingleItem" id="fsEl_19696" data-use-new="true" data-source-element-id="19696" data-source-page-id="2340" data-display-items="collections_and_resources" >
+
+				<div class="fsElementContent" >
+		<div
+	class="fsResource fsResourceTypeImage"
+	data-controller="single-image"
+	data-resource-type="image"
+	data-single-image-resource-uuid-value="181f1286-c547-4a70-aa86-6c9215fc284e"
+	data-single-image-resource-type-value="image"
+	data-single-image-preview-value="false">
+			<div class='fsA11yImage fsA11yImageSingle'>
+
+		<figure>
+				<a class="fsResourceLink" href="https://tuscan.somsdk12.org" data-resource-type="Image" data-resource-title="A blue and orange tiger head is centered within a circular blue border and surrounded by the text &quot;TUSCAN ELEMENTARY SCHOOL&quot; against a plain white background." data-permitted-user="true" data-preview="false">
+					<picture>
+						<img alt="Tuscan Elementary School" data-resource-uuid="181f1286-c547-4a70-aa86-6c9215fc284e" data-permitted-user="true" data-single-image-target="image" data-image-sizes="[{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1736275473/somsdk12njus/wztos0xvz6dzc23nspzb/SOMSD-Tuscan-Submark.png&quot;,&quot;width&quot;:256},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1736275473/somsdk12njus/wztos0xvz6dzc23nspzb/SOMSD-Tuscan-Submark.png&quot;,&quot;width&quot;:512},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1736275473/somsdk12njus/wztos0xvz6dzc23nspzb/SOMSD-Tuscan-Submark.png&quot;,&quot;width&quot;:800},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto/v1736275473/somsdk12njus/wztos0xvz6dzc23nspzb/SOMSD-Tuscan-Submark.png&quot;,&quot;width&quot;:1000}]" data-aspect-ratio="1.0" data-resource-title="A blue and orange tiger head is centered within a circular blue border and surrounded by the text &quot;TUSCAN ELEMENTARY SCHOOL&quot; against a plain white background." src="" />
+					</picture>
+</a>
+		</figure>
+	</div>
+
+</div>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsResourceElement fsSingleItem" id="fsEl_19698" data-use-new="true" data-source-element-id="19698" data-source-page-id="2340" data-display-items="collections_and_resources" >
+
+				<div class="fsElementContent" >
+		<div
+	class="fsResource fsResourceTypeImage"
+	data-controller="single-image"
+	data-resource-type="image"
+	data-single-image-resource-uuid-value="a8400a71-21ce-4674-babd-c67c1b0b5df6"
+	data-single-image-resource-type-value="image"
+	data-single-image-preview-value="false">
+			<div class='fsA11yImage fsA11yImageSingle'>
+
+		<figure>
+				<a class="fsResourceLink" href="https://mms.somsdk12.org" data-resource-type="Image" data-resource-title="Maplewood Middle School" data-permitted-user="true" data-preview="false">
+					<picture>
+						<img alt="Maplewood Middle School" data-resource-uuid="a8400a71-21ce-4674-babd-c67c1b0b5df6" data-permitted-user="true" data-single-image-target="image" data-image-sizes="[{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1736275330/somsdk12njus/ogmqy02gfump8shjhqfk/SOMSD-MMS-Submark.png&quot;,&quot;width&quot;:256},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1736275330/somsdk12njus/ogmqy02gfump8shjhqfk/SOMSD-MMS-Submark.png&quot;,&quot;width&quot;:512},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1736275330/somsdk12njus/ogmqy02gfump8shjhqfk/SOMSD-MMS-Submark.png&quot;,&quot;width&quot;:800},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto/v1736275330/somsdk12njus/ogmqy02gfump8shjhqfk/SOMSD-MMS-Submark.png&quot;,&quot;width&quot;:1000}]" data-aspect-ratio="1.0" data-resource-title="Maplewood Middle School" src="" />
+					</picture>
+</a>
+		</figure>
+	</div>
+
+</div>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsResourceElement fsSingleItem" id="fsEl_19697" data-use-new="true" data-source-element-id="19697" data-source-page-id="2340" data-display-items="collections_and_resources" >
+
+				<div class="fsElementContent" >
+		<div
+	class="fsResource fsResourceTypeImage"
+	data-controller="single-image"
+	data-resource-type="image"
+	data-single-image-resource-uuid-value="1dee9361-4e43-42b2-a9cc-ca07ebdd2033"
+	data-single-image-resource-type-value="image"
+	data-single-image-preview-value="false">
+			<div class='fsA11yImage fsA11yImageSingle'>
+
+		<figure>
+				<a class="fsResourceLink" href="https://soms.somsdk12.org" data-resource-type="Image" data-resource-title="A cartoon cougar wearing a red shirt is centered within a circular border, surrounded by the text &quot;SOUTH ORANGE MIDDLE SCHOOL&quot; against a plain white background." data-permitted-user="true" data-preview="false">
+					<picture>
+						<img alt="South Orange Middle School" data-resource-uuid="1dee9361-4e43-42b2-a9cc-ca07ebdd2033" data-permitted-user="true" data-single-image-target="image" data-image-sizes="[{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1736275455/somsdk12njus/onzdxh3a1oyryvircdnr/SOMSD-SOMS-Submark.png&quot;,&quot;width&quot;:256},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1736275455/somsdk12njus/onzdxh3a1oyryvircdnr/SOMSD-SOMS-Submark.png&quot;,&quot;width&quot;:512},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1736275455/somsdk12njus/onzdxh3a1oyryvircdnr/SOMSD-SOMS-Submark.png&quot;,&quot;width&quot;:800},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto/v1736275455/somsdk12njus/onzdxh3a1oyryvircdnr/SOMSD-SOMS-Submark.png&quot;,&quot;width&quot;:1000}]" data-aspect-ratio="1.0" data-resource-title="A cartoon cougar wearing a red shirt is centered within a circular border, surrounded by the text &quot;SOUTH ORANGE MIDDLE SCHOOL&quot; against a plain white background." src="" />
+					</picture>
+</a>
+		</figure>
+	</div>
+
+</div>
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsResourceElement fsSingleItem" id="fsEl_19699" data-use-new="true" data-source-element-id="19699" data-source-page-id="2340" data-display-items="collections_and_resources" >
+
+				<div class="fsElementContent" >
+		<div
+	class="fsResource fsResourceTypeImage"
+	data-controller="single-image"
+	data-resource-type="image"
+	data-single-image-resource-uuid-value="4af48041-edaf-4866-b052-060dc390b307"
+	data-single-image-resource-type-value="image"
+	data-single-image-preview-value="false">
+			<div class='fsA11yImage fsA11yImageSingle'>
+
+		<figure>
+				<a class="fsResourceLink" href="https://columbia.somsdk12.org" data-resource-type="Image" data-resource-title="Columbia High School - New Jersey&#39;s First High School" data-permitted-user="true" data-preview="false">
+					<picture>
+						<img alt="Columbia High School" data-resource-uuid="4af48041-edaf-4866-b052-060dc390b307" data-permitted-user="true" data-single-image-target="image" data-image-sizes="[{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1737014506/somsdk12njus/pbsuwoucpiiygrqkoufb/SOMSD-ColumbiaHighSchool-PrimarySeal.png&quot;,&quot;width&quot;:256},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1737014506/somsdk12njus/pbsuwoucpiiygrqkoufb/SOMSD-ColumbiaHighSchool-PrimarySeal.png&quot;,&quot;width&quot;:512},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1737014506/somsdk12njus/pbsuwoucpiiygrqkoufb/SOMSD-ColumbiaHighSchool-PrimarySeal.png&quot;,&quot;width&quot;:800},{&quot;url&quot;:&quot;https://resources.finalsite.net/images/f_auto,q_auto/v1737014506/somsdk12njus/pbsuwoucpiiygrqkoufb/SOMSD-ColumbiaHighSchool-PrimarySeal.png&quot;,&quot;width&quot;:1000}]" data-aspect-ratio="1.0" data-resource-title="Columbia High School - New Jersey&#39;s First High School" src="" />
+					</picture>
+</a>
+		</figure>
+	</div>
+
+</div>
+
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+	<div class="fsElement fsNavigation fsList nav-utility-footer" id="fsEl_2739" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav aria-label="footer utility"><ul class="fsNavLevel1"><li><a href="https://www.maplewoodnj.gov/home" target="_blank">Maplewood Township Homepage<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.southorange.org/" target="_blank">South Orange Village Homepage<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="/notices">Public Notices</a></li><li><a href="/sitemap">Sitemap</a></li><li><a href="https://www.somsdk12.org/classintercom" target="_blank">Class Intercom<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="https://www.somsdk12.org/feedback#form">Website Feedback</a></li><li><a href="https://www.somsdk12.org/composer" target="_blank">Login<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></nav>
+	</div>
+
+
+	</div>
+	
+
+
+	</div>
+
+
+	</div>
+	
+
+
+
+				<div id="fsPoweredByFinalsite" role="complementary">
+		<div>
+			<a href="https://www.finalsite.com/districts" title="Powered by Finalsite opens in a new window" target="_blank">Powered by Finalsite</a>
+		</div>
+	</div>
+
+</div>
+
+
+			</footer>
+
+</div>
+
+
+<div id="fs-global-aria-live-polite"
+     class="fsStyleSROnly"
+     aria-live="polite"
+     aria-atomic="true"></div>
+<div id="fs-global-aria-live-assertive"
+     class="fsStyleSROnly"
+     aria-live="assertive"
+     aria-atomic="true"></div>
+
+<script src="/assets/application-f1b89492d455c0681afb4f71072a6dab58363518762543d288b9e2f8e6a81bfe.js"></script>
+
+		<script class="fsThemeAssets" type="text/javascript" src="https://somsdk12njus.finalsite.com/theme-assets/clients/somsdk12njus/themes/2/theme-2-east-hartford-modular-theme-the-school-district-of-south-orange-and-maplewood.js?t=1791469689"></script>
+
+
+
+<script src="/assets/packs/js/runtime-888fcc72eb1d86ca73e6.js" defer="defer"></script>
+<script src="/assets/packs/js/5278-fe8dc83ac9c185ed4d29.js" defer="defer"></script>
+<script src="/assets/packs/js/1814-422277fffd1c436b9264.js" defer="defer"></script>
+<script src="/assets/packs/js/9020-adfcc07126e9938616f8.js" defer="defer"></script>
+<script src="/assets/packs/js/accountbar-288b04b0ba3beaeb81ee.js" defer="defer"></script>
+<script src="/assets/packs/js/elements-f52de3d399286ac97906.js" defer="defer"></script>
+
+	
+
+
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"5fb20d0601a643df91b59062182249a8","spa":2}' crossorigin="anonymous"></script>
+</body></html>

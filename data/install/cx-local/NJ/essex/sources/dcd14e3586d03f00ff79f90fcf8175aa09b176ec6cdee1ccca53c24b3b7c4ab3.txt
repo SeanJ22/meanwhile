@@ -1,0 +1,155 @@
+The Essex County Clerk's Office - Sample Ballots
+(973) 621.4920
+Translate Website
+Toggle navigation
+Essex Clerk
+Essex Clerk County's Office
+Essex County Clerk's Office
+Scroll down
+Search
+Search
+Home
+Services
+Ceremonies
+Oaths of Office
+Weddings
+Identification Services
+Essex County Resident ID
+Gold Star ID Card
+Senior Citizen Courtesy Identification Card
+Youth Resident ID
+Passport Services
+Expedited Service
+New Passport
+Renew Passport
+Records Services
+Business Trade Names
+Inheritance Tax Waivers
+Liens & Judgments
+Religious Corporations
+Trade Name Search
+Registration Services
+Notarized Document Certification
+Notary Public License
+Physicians License
+Veterans Peddler License
+Election Information
+2026 General Election Early Voting Locations
+2026 Voter Guide
+Instructional Videos
+Election Results
+2026 GENERAL ELECTION SAMPLE BALLOTS
+Vote by Mail
+Voter Registration
+Voter Registration Lists
+Second Ballot Request
+UPDATE!! Drop Box Locations
+OPT OUT Form
+Request for Voter Registration Removal
+Forms
+About The Clerk
+Calendar
+Media
+Contact
+Search
+The Essex County
+Clerk's Office
+Sample Ballots
+Sample Ballots for 2025 General Election
+Belleville
+Bloomfield
+Caldwell
+Cedar Grove
+East Orange
+Essex Fells
+Fairfield
+Glen Ridge
+Irvington
+Livingston
+Maplewood
+Millburn
+Montclair
+Newark
+North Caldwell
+Nutley
+Orange
+Roseland
+South Orange
+Verona
+West Caldwell
+West Orange
+News
+Featured Article
+Posted on:  {{item.NewsArticle_ReleaseDateTime | formatDateEvent}} - {{item.NewsArticle_ReleaseDateTime | formatTimeEvent}}
+Load More
+Load More
+Posted on: {{item.NewsArticle_ReleaseDateTime | formatDateEvent}}
+Load More
+Events
+{{item.Event_DateTime | formatDateEvent}}
+- {{item.Event_EndDateTime | formatDateEvent}}
+{{item.Event_Title}}
+Forms
+Eng
+Esp
+Web
+Site Map
+Site Map
+Follow Us
+Visit us on Facebook!
+Visit us on Instagram!
+Contact Us
+Note:
+All Fields Required
+Submit
+Our Offices
+Dr. Martin Luther King Justice Building
+495 Martin Luther King Jr. Boulevard.
+Newark,
+                    NJ 07102
+Tel:
+(973) 621.4920
+Email:
+info@clerk.essexcountynj.org
+Translate Website
+© 2026 Clerk's Office
+/
+×
+Resources
+{{item.CategoryLabel}}
+{{link.Label}}
+×
+Translate Website
+Tap a language to translate this page. Translation is provided by Google and may not be exact.
+Popular
+Spanish
+Portuguese
+Chinese (Simplified)
+Chinese (Traditional)
+Korean
+French
+More languages
+Italian
+Polish
+Arabic
+Hindi
+Russian
+German
+Vietnamese
+Haitian Creole
+Filipino
+Urdu
+Bengali
+×
+Date/Time:
+Location:
+Print
+×
+Date/Time:
+Location:
+Print
+×
+Search this site
+Find forms, services, election information, and more.
+Search
+Search

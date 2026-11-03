@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>
+     Essex County Board of County Commissioners Breakdown-of-Commissioner-Districts
+    </title>
+ <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css?ver=40.24838" rel="stylesheet">
+<link href="/css/all.css" rel="stylesheet">
+<link href="/css/responsive.css?ver=39.233" rel="stylesheet">
+  <link rel="stylesheet" href="/css/owl.carousel.css">
+  <link rel="stylesheet" href="/css/lightbox.min.css">
+ <link rel="stylesheet" href="/css/lightboxgallery-min.css">
+ <link rel="stylesheet" href="/css/lightboxgallery-min.css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <!-- Custom styles for this template -->
+
+  
+  </head>
+  <body>
+    
+
+  
+  <header>
+<div id="tob-bar">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-1 col-md-1 col-8">
+        <div class="scl-icns w-100">
+            <div class="logo-dv w-100 float-left">
+          <a href="/index.php"><img src="/images/logo.png" alt="logo"></a>
+        </div><!--logo-dv-->
+        </div><!--scl-icns-->
+      </div><!--col-3-->
+
+      <div class="col-lg-11 col-md-11 col-4 ">
+
+		      <div class="menu-dvs w-100 float-left">
+          <a id="toggle" href="#"><i class="fa fa-bars"></i> </a>
+
+                      <div id="overlay"></div>
+                       <nav id="menu">
+                               <ul >  <li><a href='/notice.php' target='_self' >Legal Notice</a><ul>  <li><a href='/notice.php' target=_self>Current Legal Notices </a></li>  <li><a href='/archived-notice.php' target=_self>Archived Legal Notices </a></li>         </ul>       </li>  <li><a href='/press_release.php' target='_self' >Press Release</a> </li>  <li><a href='/event.php' target='_self' >Events</a> </li>  <li><a href='#' target='_self' >Agenda</a><ul>  <li><a href='https://ecode360.com/ES1525/documents/Resolutions?category=Advise%20and%20Consent%20November%204%2C%202026' target=_blank>Advise & Consent November 4, 2026 </a></li>  <li><a href='https://ecode360.com/ES1525/documents/Agendas' target=_blank>Past Agendas </a></li>  <li><a href='https://ecode360.com/ES1525/document/753302010.pdf' target=_blank>November 4, 2026 Conference-Board Meeting </a></li>         </ul>       </li>  <li><a href='/cms/26/Members' target='_self' >Members</a> </li>  <li><a href='#' target='_self' >General Info</a><ul>  <li><a href='https://essexcountynj.org/treasurer/' target=_blank>Essex County Budget </a></li>  <li><a href='https://ecode360.com/ES1525' target=_blank>Code of the County of Essex </a></li>  <li><a href='/cms/12/Breakdown-of-Commissioner-Districts' target=_self>Breakdown of Commissioner Districts </a></li>  <li><a href='https://essexcountynj.org/index.php?section=opra' target=_blank>OPRA Information </a></li>  <li><a href='/cms/14/County-Roads' target=_self>County Roads </a></li>  <li><a href='/cms/15/Definition-of-the-County-Commissioners' target=_self>Definition of the County Commissioners </a></li>  <li><a href='https://ecfnj.com/docs/2026-COMMISSIONER-COMMITTEE-ASSIGNMENTS-PUBLIC.pdf' target=_blank>Committee Assignments </a></li>  <li><a href='https://www.youtube.com/playlist?list=PLFjJPpFtHUquO6jHLxaGXsat-0No1abxP' target=_blank>Commissioner Event Videos </a></li>         </ul>       </li>  <li><a href='#' target='_self' >Meetings</a><ul>  <li><a href='/cms/18/Meeting-Schedule-2026' target=_self>Meeting Schedule 2026 </a></li>  <li><a href='/cms/19/Committee-Meeting-Videos-(2013-2022)' target=_self>Committee Meeting Videos (2013-2022) </a></li>  <li><a href='/cms/20/Airing-of-Commissioner-Meetings' target=_self>Airing of Commissioner Meetings </a></li>  <li><a href='https://essexcountynj.new.swagit.com/views/390' target=_blank>Committee Meeting Video 2022 - Current  </a></li>         </ul>       </li>  <li><a href='/cms/30/Live-meeting' target='_blank' >Live meeting</a> </li>  <li><a href='/cms/22/Contact-Us' target='_self' >Contact Us</a> </li>  </ul>        
+
+                        </nav>
+						
+        </div><!--menu-dvs-->
+		
+      </div><!--col-9-->
+    </div><!--row-->
+  </div><!--container-->
+</div>
+ </header> 
+
+
+<div class="banner-top-img clearfix">
+    <div class="bannertopimg">
+                <img src="/_readwritedata/_header_images/1669219734.jpg" ID="img_header"  />
+            </div>
+ <section id="banner-info">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+              
+            </div><!--col-12-->
+        </div><!--row-->
+    </div><!--container-->
+</section>
+
+</div>
+ 
+<section class="definition-text">
+	<div class="container">
+		<div class="row">
+      <!-- <div class="col-lg-4 col-md-4">
+        <div class="left-img-inner w-100 float-left">
+        <img src="" alt="">
+        </div>
+      </div> -->
+      
+
+<!--  -->
+  
+    
+      <div class="col-md-4 con_left order-last order-md-first">
+                                    
+                                        <!-- left panel start here -->
+                                        <div class="leftpanel">
+                                                                                      <div class="linkhead">
+                                            
+                                                General Info                                               
+                                            </div>
+
+                                            
+                                            <div class="lftcont">
+                                                      <div class='nav_tree_lft'> <ul class='mtree transit'> <li class=''><a   class=''  href='https://essexcountynj.org/treasurer/' target=_blank> Essex County Budget </a>  </li> <li class=''><a   class=''  href='https://ecode360.com/ES1525' target=_blank> Code of the County of Essex </a>  </li> <li class=''><a   class='active-left'  href='/cms/12/Breakdown-of-Commissioner-Districts' target=_self> Breakdown of Commissioner Districts </a>  </li> <li class=''><a   class=''  href='https://essexcountynj.org/index.php?section=opra' target=_blank> OPRA Information </a>  </li> <li class=''><a   class=''  href='/cms/14/County-Roads' target=_self> County Roads </a>  </li> <li class=''><a   class=''  href='/cms/15/Definition-of-the-County-Commissioners' target=_self> Definition of the County Commissioners </a>  </li> <li class=''><a   class=''  href='https://ecfnj.com/docs/2026-COMMISSIONER-COMMITTEE-ASSIGNMENTS-PUBLIC.pdf' target=_blank> Committee Assignments </a>  </li> <li class=''><a   class=''  href='https://www.youtube.com/playlist?list=PLFjJPpFtHUquO6jHLxaGXsat-0No1abxP' target=_blank> Commissioner Event Videos </a>  </li>  </div> </ul>                                                  <!-- mayor image -->
+                                                                                                  <div class="left-img-inner w-100 float-left">
+                                                      <img src="/_readwritedata/_left_image/1669130841.jpg" />
+                                                  </div>
+                                                                                                
+                                            </div>
+                                            <!-- more info -->
+                                        </div>
+
+                                    </div>
+
+			<div class="col-lg-8 col-md-8 order-first order-md-last">
+        <div class="main-dvs-left w-100 float-left">
+        <div class="breadcrumb-dvs w-100 float-left">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/index.php"><i class="fa fa-home"></i></a></li>
+              <li class="breadcrumb-item" aria-current="page">General Info/ Breakdown of Commissioner Districts</li>
+            
+            </ol>
+          </nav>
+        </div><!--breadcrumb-dvs-->
+				<div class="defnt-dvsns w-100 float-left">
+
+                   
+    <h1>Breakdown of Commissioner Districts</h1>
+
+<table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+	<tbody>
+		<tr>
+			<th style="text-align:right"><a href="/images/districts.jpg" target="_blank">Download District Map</a></th>
+		</tr>
+		<tr>
+			<th>District 1 &ndash; (78 Districts) Newark: North Ward, East Ward, and Parts of Central, South &amp; West Wards</th>
+		</tr>
+		<tr>
+			<td><strong>Commissioner</strong> <strong>Robert Mercado</strong></td>
+		</tr>
+		<tr>
+			<td>
+			<table border="0" cellpadding="0" cellspacing="1" style="width:100%">
+				<tbody>
+					<tr>
+						<td colspan="2"><strong>Newark 78 Districts.</strong></td>
+					</tr>
+					<tr>
+						<td>North Ward (32)</td>
+						<td>1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 25 26 27 28 29 37 38 48 49</td>
+					</tr>
+					<tr>
+						<td>South Ward (2)</td>
+						<td>47 49</td>
+					</tr>
+					<tr>
+						<td>East Ward (23)</td>
+						<td>1 2 3 4 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 25 29 30</td>
+					</tr>
+					<tr>
+						<td>West Ward (6)</td>
+						<td>6&nbsp;9&nbsp;10 43 44&nbsp;46&nbsp;</td>
+					</tr>
+					<tr>
+						<td>Central Ward (15)
+						<p>&nbsp;</p>
+
+						<p>&nbsp;</p>
+						</td>
+						<td>3 29 32&nbsp;34 35 37 38 39 41&nbsp;43&nbsp;44&nbsp;45&nbsp;46&nbsp;47 49
+						<p>&nbsp;</p>
+
+						<p>&nbsp;</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<th>District 2 &ndash; (108 Districts) Newark: Parts of South &amp; Central Wards; Irvington, Maplewood</th>
+		</tr>
+		<tr>
+			<td><strong>Commissioner</strong> <strong><a href="https://ecfnj.com/freeholders/team/wayne-l-richardson/">Wayne L. Richardson</a></strong></td>
+		</tr>
+		<tr>
+			<td>
+			<table border="0" cellpadding="0" cellspacing="1" style="width:100%">
+				<tbody>
+					<tr>
+						<td colspan="2"><strong>Newark 53 Districts</strong></td>
+					</tr>
+					<tr>
+						<td>South Ward (38)</td>
+						<td>1 2 3 4 8 10 11 12 13 15 16 17 18 19 20 21 22 23 24 25 27 28 29 30 32 34 35 36 37 38 39 40 41 42 44 45 46&nbsp;48</td>
+					</tr>
+					<tr>
+						<td>Central Ward (15)</td>
+						<td>1 4 5 6 7 9 12 15 17 20 22 23 28 40 42</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Irvington 34 Districts</strong></td>
+					</tr>
+					<tr>
+						<td>North Ward</td>
+						<td>1 2 3 4 5 6 7 8 9</td>
+					</tr>
+					<tr>
+						<td>South Ward</td>
+						<td>1 2 3 5 7 8 9 10 11</td>
+					</tr>
+					<tr>
+						<td>East Ward</td>
+						<td>1 2 3 4 5 8 9</td>
+					</tr>
+					<tr>
+						<td>West Ward</td>
+						<td>1 2 3 4 6 7 8 9</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Maplewood 21 Districts</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22
+						<p>&nbsp;</p>
+
+						<p>&nbsp;</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<th>District 3 &ndash; (108 Districts) Newark: Part of West Ward; East Orange, Orange, South Orange</th>
+		</tr>
+		<tr>
+			<td><strong>Commissioner</strong> <strong><a href="https://ecfnj.com/freeholders/team/tyshammie-l-cooper/">Tyshammie L Cooper</a></strong></td>
+		</tr>
+		<tr>
+			<td>
+			<table border="0" cellpadding="0" cellspacing="1" style="width:100%">
+				<tbody>
+					<tr>
+						<td colspan="2"><strong>Newark 31 Districts</strong></td>
+					</tr>
+					<tr>
+						<td>West Ward</td>
+						<td>7 13 15 17 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41<br />
+						45 47 48 49</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>East Orange 48 Districts</strong></td>
+					</tr>
+					<tr>
+						<td>1st Ward</td>
+						<td>1 2 3 4 5 6 7 9 10 11</td>
+					</tr>
+					<tr>
+						<td>2nd Ward</td>
+						<td>1 2 3 4 7&nbsp;10 11 12</td>
+					</tr>
+					<tr>
+						<td>3rd Ward</td>
+						<td>1 2 3 4 5 6 9 10 11 12 14</td>
+					</tr>
+					<tr>
+						<td>4th Ward</td>
+						<td>1 2 4 5 6 7 10 13</td>
+					</tr>
+					<tr>
+						<td>5th Ward</td>
+						<td>1 3 4 5 6 7 8 9 10 12&nbsp;13</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>South Orange </strong>&nbsp;<strong>12 Districts</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2 3 4 6 7 8 9 10 11 12 13</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Orange 17 Districts</strong></td>
+					</tr>
+					<tr>
+						<td>North Ward</td>
+						<td>2&nbsp;3&nbsp;4&nbsp;5</td>
+					</tr>
+					<tr>
+						<td>South Ward</td>
+						<td>1&nbsp;2&nbsp;4&nbsp;5&nbsp;6</td>
+					</tr>
+					<tr>
+						<td>East Ward</td>
+						<td>1&nbsp;2&nbsp;4&nbsp;5</td>
+					</tr>
+					<tr>
+						<td>West Ward
+						<p>&nbsp;</p>
+
+						<p>&nbsp;</p>
+						</td>
+						<td>3&nbsp;4 5 6
+						<p>&nbsp;</p>
+
+						<p>&nbsp;</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<th>District 4 &ndash; (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange</th>
+		</tr>
+		<tr>
+			<td><strong>Commissioner <a href="https://ecfnj.com/freeholders/team/leonard-m-luciano/">Leonard M. Luciano</a></strong></td>
+		</tr>
+		<tr>
+			<td>
+			<table border="0" cellpadding="0" cellspacing="1" style="width:100%">
+				<tbody>
+					<tr>
+						<td colspan="2"><strong>Caldwell</strong>&nbsp;<strong>7 Districts.&nbsp; </strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2 3 4 5 6 7</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Cedar Grove 10 Districts</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2 3 4 5 6 7&nbsp;8&nbsp;9&nbsp;10</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Essex Fells&nbsp;2 Districts</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Fairfield</strong>&nbsp;<strong>5 Districts</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2 3 4&nbsp;5</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Livingston</strong>&nbsp;<strong>26 Districts</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22&nbsp;23&nbsp;24&nbsp;25&nbsp;26</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Millburn</strong>&nbsp;<strong>16 Districts</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>North Caldwell&nbsp;4 Districts</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2 3 4</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Roseland</strong>&nbsp;<strong>6 Districts</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2 3&nbsp;4&nbsp;5&nbsp;6&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Verona</strong>&nbsp;<strong>11 Districts</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2 3 4 5 6 7 8 9 10 11</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>West Caldwell</strong>&nbsp;<strong>9 Districts</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2 3 4 5 6 7 8 9</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>West Orange 37 Districts</strong></td>
+					</tr>
+					<tr>
+						<td>1st Ward</td>
+						<td>1 2 3 4 6 7 8 9</td>
+					</tr>
+					<tr>
+						<td>2nd Ward</td>
+						<td>1 2 3 4&nbsp;5</td>
+					</tr>
+					<tr>
+						<td>3rd Ward</td>
+						<td>1 2 3</td>
+					</tr>
+					<tr>
+						<td>4th Ward</td>
+						<td>1 2 3 4 5 6 7 8 9 10 11 12 13 14&nbsp;15&nbsp;16</td>
+					</tr>
+					<tr>
+						<td>5th Ward
+						<p>&nbsp;</p>
+
+						<p>&nbsp;</p>
+						</td>
+						<td>1 2 3 4 5
+						<p>&nbsp;</p>
+
+						<p>&nbsp;</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<th>District 5 &ndash; (123 Districts) Belleville, Bloomfield, Glen Ridge, Montclair, Nutley</th>
+		</tr>
+		<tr>
+			<td><strong>Commissioner</strong> <strong><a href="https://ecfnj.com/freeholders/team/carlos-m-pomares/">Carlos M. Pomares</a></strong></td>
+		</tr>
+		<tr>
+			<td>
+			<table border="0" cellpadding="0" cellspacing="1" style="width:100%">
+				<tbody>
+					<tr>
+						<td colspan="2"><strong>Belleville 26 Districts</strong></td>
+					</tr>
+					<tr>
+						<td>1st Ward</td>
+						<td>1&nbsp;2&nbsp;3&nbsp;4&nbsp;5&nbsp;6</td>
+					</tr>
+					<tr>
+						<td>2nd Ward</td>
+						<td>1 2 3 4 5 6 7&nbsp;8</td>
+					</tr>
+					<tr>
+						<td>3rd Ward</td>
+						<td>1&nbsp;2&nbsp;3&nbsp;4&nbsp;5&nbsp;6</td>
+					</tr>
+					<tr>
+						<td>4th Ward</td>
+						<td>1&nbsp;2&nbsp;3&nbsp;4&nbsp;5&nbsp;6</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Bloomfield 35 Districts</strong></td>
+					</tr>
+					<tr>
+						<td>1st Ward</td>
+						<td>2 3 4 5 6 7 8 9 10 11 12</td>
+					</tr>
+					<tr>
+						<td>2nd Ward</td>
+						<td>1 2 3 4 5 6 7 8 9 10 11</td>
+					</tr>
+					<tr>
+						<td>3rd Ward</td>
+						<td>1 2 4 5 6 7 8 9 10 11 12 13 14</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Glen Ridge 7 Districts</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">1 2 3 4 5 7 8</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Montclair 35 Districts</strong></td>
+					</tr>
+					<tr>
+						<td>1st Ward</td>
+						<td>1 2 3 4 5 6 7 8 9</td>
+					</tr>
+					<tr>
+						<td>2nd Ward</td>
+						<td>1 2 3 4 5 6 7 8 9 10</td>
+					</tr>
+					<tr>
+						<td>3rd Ward</td>
+						<td>1 2 3 4 5 6 7 8</td>
+					</tr>
+					<tr>
+						<td>4th Ward</td>
+						<td>1 2 3 4 5 6 7 8</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong>Nutley 20 Districts</strong></td>
+					</tr>
+					<tr>
+						<td>1st Ward</td>
+						<td>1 2 3 4 5 6 7</td>
+					</tr>
+					<tr>
+						<td>2nd Ward</td>
+						<td>1 2 3 4 5 6</td>
+					</tr>
+					<tr>
+						<td>3rd Ward</td>
+						<td>1 2 3 4 5 6 7</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+    <style>
+  .text-error {
+    color: red;
+    margin-top: 69px;
+  }
+
+  label.error {
+    color: red;
+    text-align: left;
+    display: block;
+  }
+
+  .text-center {
+    text-align: center!important;
+    margin-top: 68px;
+    color: red;
+}
+</style>		
+      </div><!--defnt-dvsns-->
+      </div><!--main-dvs-left-->
+			</div><!--col-12-->
+		</div><!--row-->
+	</div><!--container-->
+</section>
+<section id="con">
+<div id="contact-info">
+  <div class="container">
+    <div class="row">
+
+	  
+	    <div class="col-lg-4 col-md-4">
+        <div class="cont-info w-100 float-left">
+           <h2>Phone </h2>
+         </div><!--client-head-->
+
+         <div class="contact-detail w-100 float-left">
+           
+           <p style="color: #fff !important;"><i class="fa fa-phone"></i> <span style="color: #fff !important;"> (973) 621-4486 </span> </p>
+          
+         </div><!--contact-detail-->
+      </div><!--col-6-->
+	  
+	    <div class="col-lg-4 col-md-4">
+        <div class="cont-info w-100 float-left">
+           <h2>Fax </h2>
+         </div><!--client-head-->
+
+         <div class="contact-detail w-100 float-left">
+           
+           <p style="color: #fff !important;"><i class="fa fa-fax"></i> <span style="color: #fff !important;"> (973) 621-5695 </span> </p>
+		  
+          
+         </div><!--contact-detail-->
+      </div><!--col-6-->
+	  
+	    <div class="col-lg-4 col-md-4">
+        <div class="cont-info w-100 float-left">
+           <h2>Address </h2>
+         </div><!--client-head-->
+
+         <div class="contact-detail w-100 float-left">
+          
+           <p><i class="fa fa-map-marker"></i> <span>  Board of County Commissioners,<br>
+
+County of Essex<br>
+
+465 Dr. Martin Luther King Jr. Blvd.,<br>
+
+Room 558 Hall of Records,<br>
+
+Newark, New Jersey 07102</span></span> </p>
+          
+         </div><!--contact-detail-->
+      </div><!--col-6-->
+     
+    </div><!--row-->
+  </div><!--container-->
+</div>
+</section>
+
+<div class="foots-menu-main w-100 float-left">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-3 col-md-3">
+				<div class="foot-mnus-left w-100 float-left">
+					<h4>Important Links</h4>
+					<ul>
+                    <li><a  href="index.php">Home</a></li>
+                                  <li><a  href="/press_release.php">Press Release</a></li> 
+                                  <li><a  href="/event.php">Events</a></li> 
+                                  <li><a  href="/cms/26/Members">Members</a></li> 
+                                  <li><a  href="/cms/30/Live-meeting">Live meeting</a></li> 
+                                  <li><a  href="/cms/22/Contact-Us">Contact Us</a></li> 
+                        
+          </ul>
+				</div><!--foot-mnus-left-->
+			</div><!--col-3-->
+            
+                            <div class="col-lg-3 col-md-3">
+				    <div class="foot-mnus-left w-100 float-left">
+					    <h4>Legal Notice</h4>
+                        <ul>
+                                                            <li><a  href="/notice.php">Current Legal Notices</a></li> 
+                                                            <li><a  href="/archived-notice.php">Archived Legal Notices</a></li> 
+                                                    </ul>
+                    </div>
+                </div>    
+                                <div class="col-lg-3 col-md-3">
+				    <div class="foot-mnus-left w-100 float-left">
+					    <h4>Agenda</h4>
+                        <ul>
+                                                            <li><a  href="https://ecode360.com/ES1525/documents/Resolutions?category=Advise%20and%20Consent%20November%204%2C%202026">Advise & Consent November 4, 2026</a></li> 
+                                                            <li><a  href="https://ecode360.com/ES1525/documents/Agendas">Past Agendas</a></li> 
+                                                            <li><a  href="https://ecode360.com/ES1525/document/753302010.pdf">November 4, 2026 Conference-Board Meeting</a></li> 
+                                                    </ul>
+                    </div>
+                </div>    
+                                <div class="col-lg-3 col-md-3">
+				    <div class="foot-mnus-left w-100 float-left">
+					    <h4>General Info</h4>
+                        <ul>
+                                                            <li><a  href="https://essexcountynj.org/treasurer/">Essex County Budget</a></li> 
+                                                            <li><a  href="https://ecode360.com/ES1525">Code of the County of Essex</a></li> 
+                                                            <li><a  href="/cms/12/Breakdown-of-Commissioner-Districts">Breakdown of Commissioner Districts</a></li> 
+                                                            <li><a  href="https://essexcountynj.org/index.php?section=opra">OPRA Information</a></li> 
+                                                            <li><a  href="/cms/14/County-Roads">County Roads</a></li> 
+                                                            <li><a  href="/cms/15/Definition-of-the-County-Commissioners">Definition of the County Commissioners</a></li> 
+                                                            <li><a  href="https://ecfnj.com/docs/2026-COMMISSIONER-COMMITTEE-ASSIGNMENTS-PUBLIC.pdf">Committee Assignments</a></li> 
+                                                            <li><a  href="https://www.youtube.com/playlist?list=PLFjJPpFtHUquO6jHLxaGXsat-0No1abxP">Commissioner Event Videos</a></li> 
+                                                    </ul>
+                    </div>
+                </div>    
+                                <div class="col-lg-3 col-md-3">
+				    <div class="foot-mnus-left w-100 float-left">
+					    <h4>Meetings</h4>
+                        <ul>
+                                                            <li><a  href="/cms/18/Meeting-Schedule-2026">Meeting Schedule 2026</a></li> 
+                                                            <li><a  href="/cms/19/Committee-Meeting-Videos-(2013-2022)">Committee Meeting Videos (2013-2022)</a></li> 
+                                                            <li><a  href="/cms/20/Airing-of-Commissioner-Meetings">Airing of Commissioner Meetings</a></li> 
+                                                            <li><a  href="https://essexcountynj.new.swagit.com/views/390">Committee Meeting Video 2022 - Current </a></li> 
+                                                    </ul>
+                    </div>
+                </div>    
+                         
+			   
+		</div><!--row-->
+	</div><!--container-->
+</div><!--foots-menu-main-->
+
+<footer>
+  <div class="container">
+    <div class="row">
+   <div class="col-lg-12 col-md-12">
+<div class="footer-scl w-100 float-left">
+ 
+		<div class="row">
+		 <div class="col-lg-12 col-md-12 col-12"> <div class="app-dwon">  <p> Download the Commissioners App </p> </diV> </div>
+		 </div>
+		 
+		<div class="row">
+		
+			 <div class="col-lg-2 col-md-2 col-6"> <a href="#"> <img src="/images/app-icon.png"> </a> </div>
+			 <div class="col-lg-2 col-md-2 col-6"> <a href="https://play.google.com/store/apps/details?id=com.app.essexcountycommissionersnjj&gl=US&pli=1" target="_blank"> <img src="/images/play-icon.png"> </a></div>
+		</div>
+</div>
+</div>
+
+
+    </div><!--row-->
+	
+	<div class="row foot-top01">
+	
+	 
+	  
+	    <div class="col-lg-12 col-md-12">
+       
+        <div class="footer-scnd w-100 float-left">
+          <div class="row">
+            <div class="col-lg-12">
+              <p>&copy; Copyright County of Essex 2024. All right reserved.</p>
+            </div>
+
+          </div>
+
+        </div><!--footer-scnd-->
+
+       
+      </div><!--col-4-->
+	
+	   </div><!--row-->
+
+    
+  </div><!--container-->  
+</footer>
+
+
+
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+   function openModal(src) {
+    $("#fancybox-frame").attr("src",src);
+  //  $("#video1").modal('show');
+   }
+</script>
+
+<script>
+  
+
+$("#video1").on('hidden.bs.modal', function (e) {
+    $("#video1 iframe").attr("src", '');
+});
+
+</script>
+
+<script src="/js/lightbox-plus-jquery.min.js"></script>
+      <!--owl-carousel-->
+<script src="js/owl.carousel.js"></script>
+<script>
+            $(document).ready(function() {
+              var owl = $('#owlslide1');
+              owl.owlCarousel({
+                margin: 20,
+                autoplay: false,
+                nav: false,
+                loop: true,
+                responsive: {
+                  0: {
+                    items: 1
+                  },
+                  600: {
+                    items: 2
+                  },
+                  1000: {
+                    items: 4
+                  }
+                }
+              })
+            })
+          </script>
+		  
+		  
+		  <script>
+(function($){
+  var ico = $('<i class="fa fa-caret-right"></i>');
+  $('nav#menu li:has(ul) > a').append(ico);
+  $('nav#menu li:has(ul)').on('click',function(){
+    $(this).toggleClass('open');
+  });
+  $('a#toggle').on('click',function(e){
+    $('html').toggleClass('open-menu');
+    return false;
+  });
+  $('div#overlay').on('click',function(){
+    $('html').removeClass('open-menu');
+  })
+})(jQuery)
+
+</script>
+
+<script src="/js/lightboxgallery-min.js"></script>
+  <script type="text/javascript">
+  jQuery(function($) {
+    $(document).on('click', '.lightboxgallery-gallery-item', function(event) {
+      event.preventDefault();
+      $(this).lightboxgallery({
+        showCounter: true,
+        showTitle: true,
+        showDescription: true
+      });
+    });
+  });
+  </script>
+<!--bottom-to-top-->
+
+<script src="/js/jQuery.loadScroll.js"></script>
+<script>
+  $("#newsletter-btn-1").click(function() {
+    var form = $("#newsletter-form");
+    // if (form.valid() == true) {
+
+    $('#newsletter-btn-1').html("Wait..");
+    var FrmData = $("#newsletter-form").serialize();
+    $.ajax({
+
+      type: 'post',
+      url: 'ajax_action.php',
+      async: false,
+      data: {
+        FrmData: FrmData,
+        action: 'Newsletter',
+      },
+      success: (function(script_response) {
+        $('#newsletter-btn-1').html('submit');
+
+        var data = $.parseJSON(script_response);
+        if (data['success'] == 'true') {
+
+          $('#newsletter_msg').html(data['message']);
+
+
+          setTimeout(function() {
+            $('input').val("");
+            //window.location.href = "thank-you.php"; 
+          }, 500);
+
+
+        } else {
+          $('#newsletter_msg').html(data['message']);
+        }
+      })
+    });
+    //}			 
+  });
+</script>
+
+  </body>
+</html>

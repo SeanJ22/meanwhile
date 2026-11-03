@@ -1,0 +1,486 @@
+[
+  {
+    "physicalPage": 1,
+    "label": "Township of Belleville",
+    "nativeCharacterCount": 2343,
+    "municipality": "Belleville",
+    "localCandidateFieldOccurrences": 4,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-5",
+      "nj-cx-local-2026-essex-belleville-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 2,
+    "label": "Township of Belleville Ward 2",
+    "nativeCharacterCount": 2667,
+    "municipality": "Belleville",
+    "localCandidateFieldOccurrences": 5,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-5",
+      "nj-cx-local-2026-essex-belleville-township-council-2nd-ward",
+      "nj-cx-local-2026-essex-belleville-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 3,
+    "label": "Township of Bloomfield Ward 1",
+    "nativeCharacterCount": 2638,
+    "municipality": "Bloomfield",
+    "localCandidateFieldOccurrences": 5,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-5",
+      "nj-cx-local-2026-essex-bloomfield-township-council-1st-ward",
+      "nj-cx-local-2026-essex-bloomfield-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 4,
+    "label": "Township of Bloomfield Ward 2",
+    "nativeCharacterCount": 2633,
+    "municipality": "Bloomfield",
+    "localCandidateFieldOccurrences": 5,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-5",
+      "nj-cx-local-2026-essex-bloomfield-township-council-2nd-ward",
+      "nj-cx-local-2026-essex-bloomfield-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 5,
+    "label": "Township of Bloomfield Ward 3",
+    "nativeCharacterCount": 2632,
+    "municipality": "Bloomfield",
+    "localCandidateFieldOccurrences": 5,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-5",
+      "nj-cx-local-2026-essex-bloomfield-township-council-3rd-ward",
+      "nj-cx-local-2026-essex-bloomfield-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 6,
+    "label": "Borough of Caldwell",
+    "nativeCharacterCount": 2510,
+    "municipality": "Caldwell",
+    "localCandidateFieldOccurrences": 6,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-4",
+      "nj-cx-local-2026-essex-caldwell-mayor",
+      "nj-cx-local-2026-essex-caldwell-borough-council",
+      "nj-cx-local-2026-essex-caldwell-west-caldwell-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 7,
+    "label": "Township of Cedar Grove",
+    "nativeCharacterCount": 2162,
+    "municipality": "Cedar Grove",
+    "localCandidateFieldOccurrences": 4,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-4",
+      "nj-cx-local-2026-essex-cedar-grove-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 8,
+    "label": "City of East Orange",
+    "nativeCharacterCount": 1854,
+    "municipality": "East Orange",
+    "localCandidateFieldOccurrences": 3,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-3"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 9,
+    "label": "Borough of Essex Fells",
+    "nativeCharacterCount": 8967,
+    "municipality": "Essex Fells",
+    "localCandidateFieldOccurrences": 5,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-4",
+      "nj-cx-local-2026-essex-essex-fells-borough-council",
+      "nj-cx-local-2026-essex-essex-fells-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 10,
+    "label": "Township of Fairfield",
+    "nativeCharacterCount": 10813,
+    "municipality": "Fairfield",
+    "localCandidateFieldOccurrences": 6,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-4",
+      "nj-cx-local-2026-essex-fairfield-township-council",
+      "nj-cx-local-2026-essex-fairfield-west-essex-regional-fairfield-constituency",
+      "nj-cx-local-2026-essex-fairfield-board-of-education-township-of-fairfield"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 11,
+    "label": "Borough of Glen Ridge",
+    "nativeCharacterCount": 2686,
+    "municipality": "Glen Ridge",
+    "localCandidateFieldOccurrences": 5,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-5",
+      "nj-cx-local-2026-essex-glen-ridge-borough-council",
+      "nj-cx-local-2026-essex-glen-ridge-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 12,
+    "label": "Township of Irvington",
+    "nativeCharacterCount": 1866,
+    "municipality": "Irvington",
+    "localCandidateFieldOccurrences": 3,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-2"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 13,
+    "label": "Township of Livingston",
+    "nativeCharacterCount": 2570,
+    "municipality": "Livingston",
+    "localCandidateFieldOccurrences": 5,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-4",
+      "nj-cx-local-2026-essex-livingston-township-council",
+      "nj-cx-local-2026-essex-livingston-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 14,
+    "label": "Township of Maplewood",
+    "nativeCharacterCount": 2639,
+    "municipality": "Maplewood",
+    "localCandidateFieldOccurrences": 5,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-2",
+      "nj-cx-local-2026-essex-maplewood-township-committee",
+      "nj-cx-local-2026-essex-south-orange-maplewood-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 15,
+    "label": "Township of Millburn",
+    "nativeCharacterCount": 2785,
+    "municipality": "Millburn",
+    "localCandidateFieldOccurrences": 5,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-4",
+      "nj-cx-local-2026-essex-millburn-township-committee",
+      "nj-cx-local-2026-essex-millburn-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 16,
+    "label": "Township of Montclair CD10",
+    "nativeCharacterCount": 3009,
+    "municipality": "Montclair",
+    "localCandidateFieldOccurrences": 5,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-5",
+      "nj-cx-local-2026-essex-montclair-councilmember-at-large",
+      "nj-cx-local-2026-essex-montclair-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 17,
+    "label": "Township of Montclair CD11",
+    "nativeCharacterCount": 3042,
+    "municipality": "Montclair",
+    "localCandidateFieldOccurrences": 5,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-5",
+      "nj-cx-local-2026-essex-montclair-councilmember-at-large",
+      "nj-cx-local-2026-essex-montclair-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 18,
+    "label": "City of Newark CD8",
+    "nativeCharacterCount": 2024,
+    "municipality": "Newark",
+    "localCandidateFieldOccurrences": 3,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-1"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 19,
+    "label": "City of Newark CD10 Comm 1",
+    "nativeCharacterCount": 1870,
+    "municipality": "Newark",
+    "localCandidateFieldOccurrences": 3,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-1"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 20,
+    "label": "City of Newark CD10 Comm 2",
+    "nativeCharacterCount": 1876,
+    "municipality": "Newark",
+    "localCandidateFieldOccurrences": 3,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-2"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 21,
+    "label": "City of Newark CD10 Comm 3",
+    "nativeCharacterCount": 1868,
+    "municipality": "Newark",
+    "localCandidateFieldOccurrences": 3,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-3"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 22,
+    "label": "Borough of North Caldwell",
+    "nativeCharacterCount": 9224,
+    "municipality": "North Caldwell",
+    "localCandidateFieldOccurrences": 6,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-4",
+      "nj-cx-local-2026-essex-north-caldwell-mayor",
+      "nj-cx-local-2026-essex-north-caldwell-borough-council",
+      "nj-cx-local-2026-essex-north-caldwell-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 23,
+    "label": "Township of Nutley",
+    "nativeCharacterCount": 2449,
+    "municipality": "Nutley",
+    "localCandidateFieldOccurrences": 4,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-5",
+      "nj-cx-local-2026-essex-nutley-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 24,
+    "label": "City of Orange Township",
+    "nativeCharacterCount": 2322,
+    "municipality": "Orange",
+    "localCandidateFieldOccurrences": 4,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-3",
+      "nj-cx-local-2026-essex-orange-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 25,
+    "label": "Borough of Roseland",
+    "nativeCharacterCount": 9444,
+    "municipality": "Roseland",
+    "localCandidateFieldOccurrences": 7,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-4",
+      "nj-cx-local-2026-essex-roseland-mayor",
+      "nj-cx-local-2026-essex-roseland-borough-council",
+      "nj-cx-local-2026-essex-roseland-west-essex-regional-roseland-constituency",
+      "nj-cx-local-2026-essex-roseland-board-of-education-borough-of-roseland"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 26,
+    "label": "South Orange Village",
+    "nativeCharacterCount": 2387,
+    "municipality": "South Orange",
+    "localCandidateFieldOccurrences": 4,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-3",
+      "nj-cx-local-2026-essex-south-orange-maplewood-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 27,
+    "label": "Township of Verona",
+    "nativeCharacterCount": 2934,
+    "municipality": "Verona",
+    "localCandidateFieldOccurrences": 6,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-4",
+      "nj-cx-local-2026-essex-verona-township-council",
+      "nj-cx-local-2026-essex-verona-board-of-education-three-year-term",
+      "nj-cx-local-2026-essex-verona-board-of-education-unexpired-term"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 28,
+    "label": "Township of West Caldwell",
+    "nativeCharacterCount": 2557,
+    "municipality": "West Caldwell",
+    "localCandidateFieldOccurrences": 6,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-4",
+      "nj-cx-local-2026-essex-west-caldwell-mayor",
+      "nj-cx-local-2026-essex-west-caldwell-township-council",
+      "nj-cx-local-2026-essex-caldwell-west-caldwell-board-of-education"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  },
+  {
+    "physicalPage": 29,
+    "label": "Township of West Orange",
+    "nativeCharacterCount": 3313,
+    "municipality": "West Orange",
+    "localCandidateFieldOccurrences": 6,
+    "federalFieldsExcluded": 2,
+    "installedOrHeldLocalContestIds": [
+      "nj-cx-local-2026-essex-county-executive",
+      "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "nj-cx-local-2026-essex-commission-district-4",
+      "nj-cx-local-2026-essex-west-orange-mayor",
+      "nj-cx-local-2026-essex-west-orange-board-of-education",
+      "nj-cx-local-2026-essex-west-orange-councilmembers-at-large"
+    ],
+    "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+    "rawPdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3"
+  }
+]

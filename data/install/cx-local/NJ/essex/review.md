@@ -1,0 +1,13 @@
+Essex County, New Jersey — November3,2026
+
+Complete current29-page official county sample PDF acquired natively200, covering all22 municipalities and every listed variant. All136 local candidate-field occurrences map to48 unique complete named fields/137 choices and one held no-named EssexFellsBOE field. County executive and atlarge commissioners agree across all29 styles; atlarge commissioners have9 named choices for4seats, including the printed petition candidate. All5commissiondistrict fields retained. Federal/state/legislative fields remain outside this input.
+
+All49 unique local office blocks were visually inspected in native source crops. Exact source names, party rows, school/petition designations, voting limits and separate Verona full/unexpired fields retained. PersonalChoice/NoNominationMade/NoPetitionFiled are not people. Final named-write-in certification and comprehensive cancelled-office inventory have not been acquired.
+
+Exact existing school district IDs reused, distinguishing FairfieldEssex3405010 from same-name Cumberland3405040. Shared Caldwell-WestCaldwell and SouthOrange-Maplewood school fields deduplicated because both constituent samples print identical fields/candidates/limits; SOM official overview verifies election by voters in both municipalities. WestEssex school representatives are separate Fairfield/Roseland constituent elections, while both bond questions have the whole4municipality district electorate.
+
+21whole-municipality commissioner memberships supplied from current complete samples and the official geographic breakdown. No whole Newark link is fabricated; districts1/2/3 cover parts of the city. Four exact municipal ward IDs and all5commission district IDs have reader registry/crosswalk dependencies. The commission breakdown’s older officeholders are not candidate evidence. Belleville’s still-linked2011map is legacy discovery only; its2026polygon applicability is unverified.
+
+Three genuinely new questions retained with exact electorates/full official text and statements: WestEssexBond1/2 and FairfieldOpenSpace. The four WestEssex sample question variants agree after documented linewrap handling; semantic two-story hyphen preserved. The printed Question2 :Board typo remains unchanged. Existing held NJ/prepared eight NJ question/explanation rows, including nested ParkRidge/Warren and Bergen local lane identities remain outside incoming changed IDs.
+
+Raw native response hashes and saved reading-order/native-text hashes are independent. No production, publication, installation or git operations performed. Helpers and unused audit acquisition remain in scratch.

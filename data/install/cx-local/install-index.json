@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T07:04:27.889234+00:00",
+  "preparedAt": "2026-11-03T07:04:37.673953+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1639,6 +1639,28 @@
         "The June5office inventory omits the later Millington AldermanPosition7 vacancy field; the complete current September sample explicitly includes it and controls this addition. Official source URLs/times/native-byte hashes, complete raw PDFs/text, safe exact quotations and all access failures are retained. Candidate data is ready for parent focused merge/projection checks and River reader verification; no production or git operation was performed.",
         "Parent fresh fetch pins CX-VOTES commit 92b249b5ed11d6a9d39a227ca5cbc0b569860005. Both TN inputs, including explainer-expansion, were copied by parent, native file hashes verified and fully compared alongside held TN and all available TN lane inputs. Both CX-VOTES inputs contain measure records only and no overlapping Shelby candidate office/person identity. All 27 offices/53 people are new; all held and CX-VOTES measure records/explanations remain unchanged."
       ]
+    },
+    {
+      "state": "NJ",
+      "county": "Essex",
+      "populationRank": 66,
+      "manifest": "NJ/essex/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 48,
+      "measureContests": 3,
+      "candidacies": 137,
+      "newContests": 51,
+      "refreshedContests": 0,
+      "sourceInputSha256": "606e50b81e8c66393a25f483edd7b643b1c2924c0ce03456740706d07e10eb92",
+      "coverage": {
+        "samples": "Complete29-page official current county samplePDF, nativeHTTP200, all22 municipalities and every listed ward/congressional/commission variant. Published inventory coverage is complete; unpublished individual precinct variants not claimed.",
+        "candidateFields": "136 actual local candidate-field occurrences mapped to48 unique complete named contests/137 names and1held no-named EssexFellsBOE field. Atlarge commissioners vote4 with9 named candidates including one petition candidate; countywide fields checked across all29 styles.",
+        "schools": "Exact existing local school IDs, including FairfieldEssex geoid3405010 rather than same-name Cumberlanddistrict3405040. Shared CWC/SOM fields deduplicated across member municipalities. WestEssexFairfield/Roseland regional-board seats stay constituent-municipality fields, while bond questions stay whole district.",
+        "geography": "21 whole-municipality commissioner memberships verified from current samples plus official breakdown; no Newark whole-city link. Eight exact whole-municipality school memberships connect the three shared districts. Fivecommissiondistrict IDs andBellevilleWard2/BloomfieldWards1\u20133 require precise registry/reader joins; never widen.",
+        "measures": "Two exact numbered WestEssex districtwide bond questions, full common explanatory statement and conditionalQ2 dependency; one exact unnumbered FairfieldOpenSpace question and full statement. None present in compared held/remote/prepared/Bergen inputs. All existing questions/explanations unchanged.",
+        "status": "Empty NoPetitionFiled field held. Generic PersonalChoice/NoNominationMade blanks excluded. Final named-write-in certification and cancelled-office census not acquired; no zero or countywide absence claim.",
+        "sourceReview": "NativePDF raw hashes, full native text and geometric reading-order extraction independently fingerprinted. All49 unique local office blocks visually checked; zero unassigned candidate-font spans. Original question linewraps retained with an explicitly labelled readable dehyphenation transcription."
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -1664,17 +1686,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 63,
-    "packetsPrepared": 64,
-    "candidateAndRetentionContests": 3360,
-    "measureContests": 112,
-    "candidacyEntries": 7453,
-    "newContestEntriesAgainstCheckedInBaseline": 2797,
-    "distinctPreparedContestIds": 3426,
-    "distinctPreparedCandidateIds": 7356,
-    "distinctNewContestsAgainstCheckedInBaseline": 2772,
+    "countiesPrepared": 64,
+    "packetsPrepared": 65,
+    "candidateAndRetentionContests": 3408,
+    "measureContests": 115,
+    "candidacyEntries": 7590,
+    "newContestEntriesAgainstCheckedInBaseline": 2848,
+    "distinctPreparedContestIds": 3477,
+    "distinctPreparedCandidateIds": 7493,
+    "distinctNewContestsAgainstCheckedInBaseline": 2823,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 64
+    "distinctCountyHandoffs": 65
   },
   "remainingWork": [
     {

@@ -1,0 +1,440 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NJ",
+  "county": "Essex",
+  "countyFips": "34013",
+  "populationRank": 66,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Data-only partial NJ merge retaining every actual local named office field in the complete29-page current official county sample inventory; one empty-named school field held. Three exact genuinely new local questions. Existing state/federal/legislative and prepared measure/explanation facts remain unchanged. No production writes, installation, publication or git operations.",
+  "counts": {
+    "publishedSamples": 29,
+    "samplePhysicalPages": 29,
+    "municipalities": 22,
+    "printedLocalCandidateFieldOccurrences": 136,
+    "uniqueNamedCandidateFields": 48,
+    "countywideNamedFields": 2,
+    "commissionDistrictNamedFields": 5,
+    "municipalNamedFields": 22,
+    "localSchoolNamedFields": 17,
+    "regionalConstituentFields": 2,
+    "namedCandidates": 137,
+    "heldNoNamedFields": 1,
+    "newMeasureFields": 3,
+    "newContests": 51,
+    "refreshedContests": 0,
+    "wholeCommissionerMunicipalityMemberships": 21,
+    "wholeSchoolMunicipalityMemberships": 8,
+    "preciseUnmatchedDistrictIds": 9,
+    "namedWriteInsEstablished": 0,
+    "unassignedCandidateFontSpans": 0
+  },
+  "subjects": [
+    {
+      "id": "nj-cx-local-2026-essex-county-executive",
+      "title": "County Executive",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-county-commissioners-at-large",
+      "title": "Board of County Commissioners At Large",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-commission-district-5",
+      "title": "Board of County Commissioners 5th District",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/commission_district:5",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-belleville-board-of-education",
+      "title": "Belleville Town School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:belleville_town_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-belleville-township-council-2nd-ward",
+      "title": "Belleville \u2014 Township Council 2nd Ward",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:belleville_township/ward:2",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-bloomfield-township-council-1st-ward",
+      "title": "Bloomfield \u2014 Township Council 1st Ward",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:bloomfield_township/ward:1",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-bloomfield-board-of-education",
+      "title": "Bloomfield Township School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:bloomfield_township_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-bloomfield-township-council-2nd-ward",
+      "title": "Bloomfield \u2014 Township Council 2nd Ward",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:bloomfield_township/ward:2",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-bloomfield-township-council-3rd-ward",
+      "title": "Bloomfield \u2014 Township Council 3rd Ward",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:bloomfield_township/ward:3",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-commission-district-4",
+      "title": "Board of County Commissioners 4th District",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/commission_district:4",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-caldwell-mayor",
+      "title": "Caldwell \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:caldwell_borough",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-caldwell-borough-council",
+      "title": "Caldwell \u2014 Borough Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:caldwell_borough",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-caldwell-west-caldwell-board-of-education",
+      "title": "Caldwell-West Caldwell School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:caldwell_west_caldwell_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-cedar-grove-board-of-education",
+      "title": "Cedar Grove Township School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:cedar_grove_township_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-commission-district-3",
+      "title": "Board of County Commissioners 3rd District",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/commission_district:3",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-essex-fells-borough-council",
+      "title": "Essex Fells \u2014 Borough Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:essex_fells_borough",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-fairfield-township-council",
+      "title": "Fairfield \u2014 Township Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-fairfield-west-essex-regional-fairfield-constituency",
+      "title": "West Essex Regional Board of Education \u2014 Fairfield constituency",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-fairfield-board-of-education-township-of-fairfield",
+      "title": "Fairfield Township School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:fairfield_township_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-glen-ridge-borough-council",
+      "title": "Glen Ridge \u2014 Borough Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:glen_ridge_borough",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-glen-ridge-board-of-education",
+      "title": "Glen Ridge Borough School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:glen_ridge_borough_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-commission-district-2",
+      "title": "Board of County Commissioners 2nd District",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/commission_district:2",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-livingston-township-council",
+      "title": "Livingston \u2014 Township Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:livingston_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-livingston-board-of-education",
+      "title": "Livingston Township School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:livingston_township_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-maplewood-township-committee",
+      "title": "Maplewood \u2014 Township Committee",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:maplewood_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-south-orange-maplewood-board-of-education",
+      "title": "South Orange-Maplewood School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:south_orange_maplewood_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-millburn-township-committee",
+      "title": "Millburn \u2014 Township Committee",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:millburn_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-millburn-board-of-education",
+      "title": "Millburn Township School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:millburn_township_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-montclair-councilmember-at-large",
+      "title": "Montclair \u2014 Councilmember At Large",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:montclair_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-montclair-board-of-education",
+      "title": "Montclair Town School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:montclair_town_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-commission-district-1",
+      "title": "Board of County Commissioners 1st District",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/commission_district:1",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-north-caldwell-mayor",
+      "title": "North Caldwell \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:north_caldwell_borough",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-north-caldwell-borough-council",
+      "title": "North Caldwell \u2014 Borough Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:north_caldwell_borough",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-north-caldwell-board-of-education",
+      "title": "North Caldwell Borough School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:north_caldwell_borough_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-nutley-board-of-education",
+      "title": "Nutley Town School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:nutley_town_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-orange-board-of-education",
+      "title": "Orange City Township School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:orange_city_township_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-roseland-mayor",
+      "title": "Roseland \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:roseland_borough",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-roseland-borough-council",
+      "title": "Roseland \u2014 Borough Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:roseland_borough",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-roseland-west-essex-regional-roseland-constituency",
+      "title": "West Essex Regional Board of Education \u2014 Roseland constituency",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:roseland_borough",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-roseland-board-of-education-borough-of-roseland",
+      "title": "Roseland Borough School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:roseland_borough_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-verona-township-council",
+      "title": "Verona \u2014 Township Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:verona_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-verona-board-of-education-three-year-term",
+      "title": "Verona Borough School District \u2014 Board of Education \u2014 Three Year Term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:verona_borough_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-verona-board-of-education-unexpired-term",
+      "title": "Verona Borough School District \u2014 Board of Education \u2014 Unexpired Term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:verona_borough_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-west-caldwell-mayor",
+      "title": "West Caldwell \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:west_caldwell_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-west-caldwell-township-council",
+      "title": "West Caldwell \u2014 Township Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:west_caldwell_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-west-orange-mayor",
+      "title": "West Orange \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:west_orange_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-west-orange-board-of-education",
+      "title": "West Orange Town School District \u2014 Board of Education",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:west_orange_town_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-west-orange-councilmembers-at-large",
+      "title": "West Orange \u2014 Councilmembers At-Large",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:west_orange_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-west-essex-bond-question-1",
+      "title": "Bond Proposal Question 1",
+      "type": "MEASURE",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-west-essex-bond-question-2",
+      "title": "Bond Proposal Question 2",
+      "type": "MEASURE",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-essex-fairfield-open-space-trust-fund",
+      "title": "Municipal Public Question",
+      "type": "MEASURE",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    }
+  ],
+  "coverage": {
+    "samples": "Complete29-page official current county samplePDF, nativeHTTP200, all22 municipalities and every listed ward/congressional/commission variant. Published inventory coverage is complete; unpublished individual precinct variants not claimed.",
+    "candidateFields": "136 actual local candidate-field occurrences mapped to48 unique complete named contests/137 names and1held no-named EssexFellsBOE field. Atlarge commissioners vote4 with9 named candidates including one petition candidate; countywide fields checked across all29 styles.",
+    "schools": "Exact existing local school IDs, including FairfieldEssex geoid3405010 rather than same-name Cumberlanddistrict3405040. Shared CWC/SOM fields deduplicated across member municipalities. WestEssexFairfield/Roseland regional-board seats stay constituent-municipality fields, while bond questions stay whole district.",
+    "geography": "21 whole-municipality commissioner memberships verified from current samples plus official breakdown; no Newark whole-city link. Eight exact whole-municipality school memberships connect the three shared districts. Fivecommissiondistrict IDs andBellevilleWard2/BloomfieldWards1\u20133 require precise registry/reader joins; never widen.",
+    "measures": "Two exact numbered WestEssex districtwide bond questions, full common explanatory statement and conditionalQ2 dependency; one exact unnumbered FairfieldOpenSpace question and full statement. None present in compared held/remote/prepared/Bergen inputs. All existing questions/explanations unchanged.",
+    "status": "Empty NoPetitionFiled field held. Generic PersonalChoice/NoNominationMade blanks excluded. Final named-write-in certification and cancelled-office census not acquired; no zero or countywide absence claim.",
+    "sourceReview": "NativePDF raw hashes, full native text and geometric reading-order extraction independently fingerprinted. All49 unique local office blocks visually checked; zero unassigned candidate-font spans. Original question linewraps retained with an explicitly labelled readable dehyphenation transcription."
+  },
+  "preservation": {
+    "heldNJ": "All109 held contests and304 candidate core rows preserved outside incomingIDs.",
+    "cxVotes": "All eight prepared NJ question/explainer rows unchanged outside incomingIDs; latest branch head and every recursive nested NJ input compared.",
+    "otherLocal": "Bergen lane retained with existing identities; no exactly equivalent Essex candidate/measure field there."
+  },
+  "validation": {
+    "sourceHashesAndQuotes": "PASS: 11 captured sources and 221 exact saved-source quotes",
+    "focusedChecks": "PASS:1030 checks including all136 complete source fields, all49 distinct local office blocks visually checked, all29published pages/22municipalities and every recursive nested CX-VOTES NJ input",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sharedCheckedAt": "2026-11-03T06:56:31.102Z",
+    "focusedCheckedAt": "2026-11-03T06:58:23.413679+00:00",
+    "unrelatedHeldContestsPreserved": 109,
+    "unrelatedHeldCandidateCoreFieldsPreserved": 304,
+    "latestCxVotesCommit": "92b249b5ed11d6a9d39a227ca5cbc0b569860005",
+    "preparedQuestionIdsUnchanged": 8,
+    "productionWrites": "NONE",
+    "publication": false
+  },
+  "readerDependencies": "reader-dependencies.json: exact5commission and4ward IDs;21wholemunicipality commissioner joins plus8school joins provided. Newark partialdistrict and exactward polygon joins remain pending.",
+  "artifacts": [
+    "ballot-input/nj.json",
+    "source-support.json",
+    "all-local-candidate-blocks.json",
+    "published-sample-inventory.json",
+    "native-extraction-audit.json",
+    "visual-review-fields.json",
+    "school-electorate-review.json",
+    "reader-dependencies.json",
+    "new-measure-review.json",
+    "held-and-origin-comparison.json",
+    "status-review.json",
+    "validation-local.json",
+    "validation.json",
+    "review.md",
+    "cx-votes-nj-recursive-inventory.json"
+  ]
+}

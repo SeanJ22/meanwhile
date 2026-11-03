@@ -1,0 +1,972 @@
+[
+  {
+    "ordinal": 1,
+    "physicalPage": 1,
+    "municipality": "COUNTY",
+    "title": "County Executive",
+    "voteFor": 1,
+    "candidateNames": [
+      "Maritza MATHEWS",
+      "Joseph N. DiVINCENZO, Jr."
+    ],
+    "sourceClip": [
+      506.5793151855469,
+      133.39447021484375,
+      580.5762939453125,
+      351.3857116699219
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 2,
+    "physicalPage": 1,
+    "municipality": "COUNTY",
+    "title": "Board of County Commissioners At Large",
+    "voteFor": 4,
+    "candidateNames": [
+      "Demetrius ELEY",
+      "Daniela FERREIRA ALMEIDA",
+      "Douglas FREEMAN",
+      "Sahwa DeFRANK",
+      "Christine McGRATH",
+      "Abdur R. YASIN",
+      "Deborah ENGEL",
+      "Wayne RICHARDSON",
+      "Wynnie-Fred VICTOR HINDS"
+    ],
+    "sourceClip": [
+      578.576416015625,
+      133.39447021484375,
+      868.564453125,
+      479.3005065917969
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 3,
+    "physicalPage": 1,
+    "municipality": "COUNTY",
+    "title": "Board of County Commissioners 5th District",
+    "voteFor": 1,
+    "candidateNames": [
+      "Frank CONTELLA",
+      "Carlos POMARES"
+    ],
+    "sourceClip": [
+      866.564697265625,
+      133.39447021484375,
+      940.5617065429688,
+      351.3857116699219
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 4,
+    "physicalPage": 1,
+    "municipality": "Belleville",
+    "title": "Board of Education",
+    "voteFor": 2,
+    "candidateNames": [
+      "Gabrielle BENNETT MEANY",
+      "Kyle LU",
+      "Andrea MALDONADO",
+      "Lissa MISSAGGIA"
+    ],
+    "sourceClip": [
+      506.5793151855469,
+      578.33642578125,
+      796.5673217773438,
+      701.29150390625
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 5,
+    "physicalPage": 2,
+    "municipality": "Belleville",
+    "title": "Township Council 2nd Ward",
+    "voteFor": 1,
+    "candidateNames": [
+      "Thomas GRAZIANO"
+    ],
+    "sourceClip": [
+      294.9079895019531,
+      566.576904296875,
+      440.9019775390625,
+      698.41162109375
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 6,
+    "physicalPage": 3,
+    "municipality": "Bloomfield",
+    "title": "Township Council 1st Ward",
+    "voteFor": 1,
+    "candidateNames": [
+      "Rosalee GONZALEZ"
+    ],
+    "sourceClip": [
+      902.5631713867188,
+      133.39447021484375,
+      976.5601806640625,
+      354.2655944824219
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 7,
+    "physicalPage": 3,
+    "municipality": "Bloomfield",
+    "title": "Board of Education",
+    "voteFor": 3,
+    "candidateNames": [
+      "Quan R. MILLER",
+      "Maria A. DIAZ",
+      "Damaso SERRANO",
+      "Kasey DUDLEY",
+      "Nadeisha GREENE",
+      "Stephanie PARRY"
+    ],
+    "sourceClip": [
+      434.5823059082031,
+      578.33642578125,
+      868.5643310546875,
+      683.2921752929688
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 8,
+    "physicalPage": 4,
+    "municipality": "Bloomfield",
+    "title": "Township Council 2nd Ward",
+    "voteFor": 1,
+    "candidateNames": [
+      "Greg BABULA"
+    ],
+    "sourceClip": [
+      902.5631713867188,
+      133.39447021484375,
+      976.5601806640625,
+      354.2655944824219
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 9,
+    "physicalPage": 5,
+    "municipality": "Bloomfield",
+    "title": "Township Council 3rd Ward",
+    "voteFor": 1,
+    "candidateNames": [
+      "Sarah CRUZ"
+    ],
+    "sourceClip": [
+      902.5631713867188,
+      133.39447021484375,
+      976.5601806640625,
+      354.2655944824219
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 10,
+    "physicalPage": 6,
+    "municipality": "COUNTY",
+    "title": "Board of County Commissioners 4th District",
+    "voteFor": 1,
+    "candidateNames": [
+      "Adam KRAEMER",
+      "Leonard M. LUCIANO"
+    ],
+    "sourceClip": [
+      758.5689697265625,
+      133.39447021484375,
+      832.5659790039062,
+      351.3857116699219
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 11,
+    "physicalPage": 6,
+    "municipality": "Caldwell",
+    "title": "Mayor",
+    "voteFor": 1,
+    "candidateNames": [
+      "Garrett C. JONES",
+      "Kenneth JURGENSEN"
+    ],
+    "sourceClip": [
+      830.5662231445312,
+      133.39447021484375,
+      904.563232421875,
+      351.3857116699219
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 12,
+    "physicalPage": 6,
+    "municipality": "Caldwell",
+    "title": "Borough Council",
+    "voteFor": 2,
+    "candidateNames": [
+      "Andrew POLLARA",
+      "Brian BAMBRICK",
+      "Jonathan R. SAGALOW",
+      "Mark HEFTLER"
+    ],
+    "sourceClip": [
+      902.5631713867188,
+      133.39447021484375,
+      1048.55712890625,
+      351.3857116699219
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 13,
+    "physicalPage": 6,
+    "municipality": "Caldwell-West Caldwell",
+    "title": "Board of Education",
+    "voteFor": 1,
+    "candidateNames": [
+      "Marisa LANDOLFI-JEFFERSON"
+    ],
+    "sourceClip": [
+      578.576416015625,
+      578.33642578125,
+      724.5704345703125,
+      699.37158203125
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 14,
+    "physicalPage": 7,
+    "municipality": "Cedar Grove",
+    "title": "Board of Education",
+    "voteFor": 1,
+    "candidateNames": [
+      "Paul A. PALEK, JR."
+    ],
+    "sourceClip": [
+      578.576416015625,
+      578.33642578125,
+      724.5704345703125,
+      686.412109375
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 15,
+    "physicalPage": 8,
+    "municipality": "COUNTY",
+    "title": "Board of County Commissioners 3rd District",
+    "voteFor": 1,
+    "candidateNames": [
+      "Medinah MUHAMMAD"
+    ],
+    "sourceClip": [
+      866.564697265625,
+      133.39447021484375,
+      940.5617065429688,
+      354.2655944824219
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 16,
+    "physicalPage": 9,
+    "municipality": "Essex Fells",
+    "title": "Borough Council",
+    "voteFor": 2,
+    "candidateNames": [
+      "John KING",
+      "Bernard J. D'AVELLA"
+    ],
+    "sourceClip": [
+      700.2515258789062,
+      138.914306640625,
+      846.2455444335938,
+      309.8674011230469
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 17,
+    "physicalPage": 9,
+    "municipality": "Essex Fells",
+    "title": "Board of Education",
+    "voteFor": 1,
+    "candidateNames": [],
+    "sourceClip": [
+      389.7041015625,
+      589.3759765625,
+      535.6981201171875,
+      740.333984375
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 18,
+    "physicalPage": 10,
+    "municipality": "Fairfield",
+    "title": "Township Council",
+    "voteFor": 2,
+    "candidateNames": [
+      "Peter CAMPISI",
+      "Michael LATTIMER"
+    ],
+    "sourceClip": [
+      689.69189453125,
+      138.914306640625,
+      835.6859130859375,
+      309.8674011230469
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 19,
+    "physicalPage": 10,
+    "municipality": "Fairfield",
+    "title": "Board of Education West Essex Regional",
+    "voteFor": 2,
+    "candidateNames": [
+      "Laila CRISTOBAL",
+      "Jonathan SCHAER",
+      "Jason STREET"
+    ],
+    "sourceClip": [
+      281.70849609375,
+      580.0164184570312,
+      499.6994934082031,
+      715.930908203125
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 20,
+    "physicalPage": 10,
+    "municipality": "Fairfield",
+    "title": "Board of Education Township of Fairfield",
+    "voteFor": 2,
+    "candidateNames": [
+      "Melinda STREET",
+      "Anthony DePASCALE"
+    ],
+    "sourceClip": [
+      497.69970703125,
+      580.0164184570312,
+      643.6937255859375,
+      715.930908203125
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 21,
+    "physicalPage": 11,
+    "municipality": "Glen Ridge",
+    "title": "Borough Council",
+    "voteFor": 2,
+    "candidateNames": [
+      "David LEFKOVITS",
+      "LoriJeane MOODY"
+    ],
+    "sourceClip": [
+      866.564697265625,
+      133.39447021484375,
+      1012.5587158203125,
+      421.222900390625
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 22,
+    "physicalPage": 11,
+    "municipality": "Glen Ridge",
+    "title": "Board of Education",
+    "voteFor": 3,
+    "candidateNames": [
+      "Darleen L. GEARHART",
+      "Jocelyn M. GOTTLIEB",
+      "Gilbert A. MADDOCK"
+    ],
+    "sourceClip": [
+      542.577880859375,
+      578.33642578125,
+      760.56884765625,
+      690.4918823242188
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 23,
+    "physicalPage": 12,
+    "municipality": "COUNTY",
+    "title": "Board of County Commissioners 2nd District",
+    "voteFor": 1,
+    "candidateNames": [
+      "A'Dorian MURRAY-THOMAS"
+    ],
+    "sourceClip": [
+      866.564697265625,
+      133.39447021484375,
+      940.5617065429688,
+      365.3052062988281
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 24,
+    "physicalPage": 13,
+    "municipality": "Livingston",
+    "title": "Township Council",
+    "voteFor": 3,
+    "candidateNames": [
+      "Timothy S. FOLEY",
+      "Edward MEINHARDT",
+      "Ketan K. BHUPTANI",
+      "Stacey ABENSTEIN"
+    ],
+    "sourceClip": [
+      830.5662231445312,
+      133.39447021484375,
+      1048.5572509765625,
+      354.2655944824219
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 25,
+    "physicalPage": 13,
+    "municipality": "Livingston",
+    "title": "Board of Education",
+    "voteFor": 1,
+    "candidateNames": [
+      "Fang GONG",
+      "Neal Adam ASHINSKY"
+    ],
+    "sourceClip": [
+      578.576416015625,
+      578.33642578125,
+      724.5704345703125,
+      697.4517211914062
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 26,
+    "physicalPage": 14,
+    "municipality": "Maplewood",
+    "title": "Township Committee",
+    "voteFor": 2,
+    "candidateNames": [
+      "Victor De LUCA",
+      "John T. SULLIVAN"
+    ],
+    "sourceClip": [
+      866.564697265625,
+      133.39447021484375,
+      1012.5587158203125,
+      365.3052062988281
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 27,
+    "physicalPage": 14,
+    "municipality": "South Orange-Maplewood",
+    "title": "Board of Education",
+    "voteFor": 3,
+    "candidateNames": [
+      "Kevin DIAZ",
+      "Elizabeth CALLAHAN",
+      "William MEYER",
+      "Trish AZEEZ"
+    ],
+    "sourceClip": [
+      506.5793151855469,
+      578.33642578125,
+      796.5673217773438,
+      690.4918823242188
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 28,
+    "physicalPage": 15,
+    "municipality": "Millburn",
+    "title": "Township Committee",
+    "voteFor": 2,
+    "candidateNames": [
+      "Frank SACCOMANDI",
+      "Ben STOLLER",
+      "Beth ZALL",
+      "Bill BRAZELL"
+    ],
+    "sourceClip": [
+      866.564697265625,
+      133.39447021484375,
+      1012.5587158203125,
+      351.3857116699219
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 29,
+    "physicalPage": 15,
+    "municipality": "Millburn",
+    "title": "Board of Education",
+    "voteFor": 3,
+    "candidateNames": [
+      "Gyan S. MISHRA",
+      "Anna OSTROVSKY",
+      "Prasoon SAURABH",
+      "Christian GERMA",
+      "Cynthia LONGLEY RICHARDS",
+      "Priya SHIVANI",
+      "Andrew FINKELSTEIN"
+    ],
+    "sourceClip": [
+      398.5837097167969,
+      578.33642578125,
+      904.562744140625,
+      696.49169921875
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 30,
+    "physicalPage": 16,
+    "municipality": "Montclair",
+    "title": "Councilmember At Large",
+    "voteFor": 1,
+    "candidateNames": [
+      "Mariana HORTA",
+      "Antoinette (Toni) MARTIN",
+      "Kyle PORRO"
+    ],
+    "sourceClip": [
+      258.9093933105469,
+      566.576904296875,
+      476.900390625,
+      685.4520874023438
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 31,
+    "physicalPage": 16,
+    "municipality": "Montclair",
+    "title": "Board of Education",
+    "voteFor": 3,
+    "candidateNames": [
+      "David MOON",
+      "Richard REYNICS",
+      "Corey PIERSON",
+      "Brandie BOOKHART",
+      "George SIMPSON",
+      "Andrew W. GIDEON",
+      "Ayelet HARAN"
+    ],
+    "sourceClip": [
+      666.6527709960938,
+      566.576904296875,
+      1172.6318359375,
+      685.4520874023438
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 32,
+    "physicalPage": 18,
+    "municipality": "COUNTY",
+    "title": "Board of County Commissioners 1st District",
+    "voteFor": 1,
+    "candidateNames": [
+      "Wilson A. PICHARDO"
+    ],
+    "sourceClip": [
+      866.564697265625,
+      133.39447021484375,
+      940.5617065429688,
+      354.2655944824219
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 33,
+    "physicalPage": 22,
+    "municipality": "North Caldwell",
+    "title": "Mayor",
+    "voteFor": 1,
+    "candidateNames": [
+      "Kenneth TILTON"
+    ],
+    "sourceClip": [
+      657.773193359375,
+      138.914306640625,
+      727.4501953125,
+      312.9873046875
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 34,
+    "physicalPage": 22,
+    "municipality": "North Caldwell",
+    "title": "Borough Council",
+    "voteFor": 2,
+    "candidateNames": [
+      "Anthony FLORIA-CALLORI",
+      "Aimee LUERS-FRANCO"
+    ],
+    "sourceClip": [
+      725.4503784179688,
+      138.914306640625,
+      862.5643920898438,
+      374.90478515625
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 35,
+    "physicalPage": 22,
+    "municipality": "North Caldwell",
+    "title": "Board of Education",
+    "voteFor": 2,
+    "candidateNames": [
+      "David VED",
+      "Sapna PATEL MALIGE"
+    ],
+    "sourceClip": [
+      389.7041015625,
+      589.3759765625,
+      535.6981201171875,
+      694.331787109375
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 36,
+    "physicalPage": 23,
+    "municipality": "Nutley",
+    "title": "Board of Education",
+    "voteFor": 3,
+    "candidateNames": [
+      "Lisa DANCHAK-MARTIN",
+      "Joe BATTAGLIA",
+      "Salvatore BALSAMO",
+      "Michael MARSALA",
+      "Chris CORINO",
+      "Desiree M. BERNASCONI",
+      "Janine DELANEY"
+    ],
+    "sourceClip": [
+      398.5837097167969,
+      578.33642578125,
+      904.562744140625,
+      701.29150390625
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 37,
+    "physicalPage": 24,
+    "municipality": "Orange",
+    "title": "Board of Education",
+    "voteFor": 3,
+    "candidateNames": [
+      "Fatimah TURNER",
+      "Samantha DAVIS",
+      "Jeff LAMBERT WINGFIELD"
+    ],
+    "sourceClip": [
+      542.577880859375,
+      578.33642578125,
+      760.56884765625,
+      696.49169921875
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 38,
+    "physicalPage": 25,
+    "municipality": "Roseland",
+    "title": "Mayor",
+    "voteFor": 1,
+    "candidateNames": [
+      "James R. SPANGO"
+    ],
+    "sourceClip": [
+      660.653076171875,
+      138.914306640625,
+      727.9300537109375,
+      360.025390625
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 39,
+    "physicalPage": 25,
+    "municipality": "Roseland",
+    "title": "Borough Council",
+    "voteFor": 2,
+    "candidateNames": [
+      "Aaron ZABLOW",
+      "Jennifer ZABLOW",
+      "Chris BARDI",
+      "John BIRONT"
+    ],
+    "sourceClip": [
+      725.930419921875,
+      138.914306640625,
+      858.2454223632812,
+      360.025390625
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 40,
+    "physicalPage": 25,
+    "municipality": "Roseland",
+    "title": "Board of Education West Essex Regional",
+    "voteFor": 1,
+    "candidateNames": [
+      "Ruth DiGIOVANNI"
+    ],
+    "sourceClip": [
+      317.7070007324219,
+      589.3759765625,
+      463.70098876953125,
+      727.4503784179688
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 41,
+    "physicalPage": 25,
+    "municipality": "Roseland",
+    "title": "Board of Education Borough of Roseland",
+    "voteFor": 2,
+    "candidateNames": [
+      "Angelica CIANNI VILLOPOTO",
+      "Allison SCARAGGI"
+    ],
+    "sourceClip": [
+      461.7012023925781,
+      589.3759765625,
+      607.6951904296875,
+      727.4503784179688
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 42,
+    "physicalPage": 27,
+    "municipality": "Verona",
+    "title": "Township Council",
+    "voteFor": 1,
+    "candidateNames": [
+      "Jason WOODS",
+      "Katherine HARTWYK",
+      "Jacqueline \"Jackie\" ROSA",
+      "Corey SCHOR"
+    ],
+    "sourceClip": [
+      222.91090393066406,
+      566.576904296875,
+      512.89892578125,
+      696.49169921875
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 43,
+    "physicalPage": 27,
+    "municipality": "Verona",
+    "title": "Board of Education Three Year Term",
+    "voteFor": 1,
+    "candidateNames": [
+      "Daniel FRENKLAKH",
+      "Michael BOONE"
+    ],
+    "sourceClip": [
+      738.64990234375,
+      566.576904296875,
+      884.6439208984375,
+      695.5316772460938
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 44,
+    "physicalPage": 27,
+    "municipality": "Verona",
+    "title": "Board of Education Unexpired Term",
+    "voteFor": 1,
+    "candidateNames": [
+      "Anthony J. DEO",
+      "Diana FERRERA",
+      "Robert W. GOMAN I I I"
+    ],
+    "sourceClip": [
+      882.6439819335938,
+      566.576904296875,
+      1100.635009765625,
+      695.5316772460938
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction.",
+    "specialNameReview": "The source prints Robert W. GOMAN I I I; the exact printed spacing is retained."
+  },
+  {
+    "ordinal": 45,
+    "physicalPage": 28,
+    "municipality": "West Caldwell",
+    "title": "Mayor",
+    "voteFor": 1,
+    "candidateNames": [
+      "Joseph TEMPESTA, Jr."
+    ],
+    "sourceClip": [
+      830.5662231445312,
+      133.39447021484375,
+      904.563232421875,
+      304.3476867675781
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 46,
+    "physicalPage": 28,
+    "municipality": "West Caldwell",
+    "title": "Township Council",
+    "voteFor": 2,
+    "candidateNames": [
+      "Michael DOCTEROFF",
+      "Kathy L. CANALE"
+    ],
+    "sourceClip": [
+      902.5631713867188,
+      133.39447021484375,
+      1048.55712890625,
+      304.3476867675781
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 47,
+    "physicalPage": 29,
+    "municipality": "West Orange",
+    "title": "Mayor",
+    "voteFor": 1,
+    "candidateNames": [
+      "Joe KRAKOVIAK",
+      "Tammy WILLIAMS",
+      "Susan McCARTNEY",
+      "Susan SCARPA",
+      "Joyce L. RUDIN",
+      "Phillip A. ORPHANIDIS",
+      "Brian ROCK"
+    ],
+    "sourceClip": [
+      147.07400512695312,
+      581.936279296875,
+      653.052978515625,
+      693.851806640625
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 48,
+    "physicalPage": 29,
+    "municipality": "West Orange",
+    "title": "Board of Education",
+    "voteFor": 1,
+    "candidateNames": [
+      "Brendan T. MIMS",
+      "Maria VERA",
+      "Larry WEINTRAUB"
+    ],
+    "sourceClip": [
+      876.88427734375,
+      217.151123046875,
+      1094.875244140625,
+      329.06671142578125
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  },
+  {
+    "ordinal": 49,
+    "physicalPage": 29,
+    "municipality": "West Orange",
+    "title": "Councilmembers At-Large",
+    "voteFor": 2,
+    "candidateNames": [
+      "Matthew DVORIN",
+      "Jackie HENDY",
+      "Justin GOLDSMAN",
+      "Kenneth GIBBONS",
+      "Micaela BENNETT"
+    ],
+    "sourceClip": [
+      755.6890869140625,
+      581.21630859375,
+      1117.674072265625,
+      693.1317749023438
+    ],
+    "reviewed": true,
+    "review": "Native source clip inspected: complete named choices, placeholder status and voting limit agree with saved geometric extraction."
+  }
+]

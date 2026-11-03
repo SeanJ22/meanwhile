@@ -1,0 +1,480 @@
+[
+  {
+    "contestId": "nj-cx-local-2026-essex-belleville-board-of-education",
+    "styleLabels": [
+      "Township of Belleville",
+      "Township of Belleville Ward 2"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:belleville_town_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:belleville_town_school_district",
+      "state": "NJ",
+      "district": "belleville_town_school_district",
+      "label": "Belleville Town School District",
+      "geoid": "3401350",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-bloomfield-board-of-education",
+    "styleLabels": [
+      "Township of Bloomfield Ward 1",
+      "Township of Bloomfield Ward 2",
+      "Township of Bloomfield Ward 3"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:bloomfield_township_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:bloomfield_township_school_district",
+      "state": "NJ",
+      "district": "bloomfield_township_school_district",
+      "label": "Bloomfield Township School District",
+      "geoid": "3401830",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-caldwell-west-caldwell-board-of-education",
+    "styleLabels": [
+      "Borough of Caldwell",
+      "Township of West Caldwell"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:caldwell_west_caldwell_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:caldwell_west_caldwell_school_district",
+      "state": "NJ",
+      "district": "caldwell_west_caldwell_school_district",
+      "label": "Caldwell-West Caldwell School District",
+      "geoid": "3402580",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": [
+      "Caldwell",
+      "West Caldwell"
+    ]
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-cedar-grove-board-of-education",
+    "styleLabels": [
+      "Township of Cedar Grove"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:cedar_grove_township_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:cedar_grove_township_school_district",
+      "state": "NJ",
+      "district": "cedar_grove_township_school_district",
+      "label": "Cedar Grove Township School District",
+      "geoid": "3402850",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-essex-fells-board-of-education",
+    "styleLabels": [
+      "Borough of Essex Fells"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:essex_fells_borough_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:essex_fells_borough_school_district",
+      "state": "NJ",
+      "district": "essex_fells_borough_school_district",
+      "label": "Essex Fells Borough School District",
+      "geoid": "3404830",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/elsd-34.geojson",
+      "canonicalFileSha256": "3fced51ee78a906996a01ea1a311bc696e9d2e60da8a76921df861fe6f8bbfd3",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_elsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-fairfield-west-essex-regional-fairfield-constituency",
+    "styleLabels": [
+      "Township of Fairfield"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
+    "electorate": "EXACT_CONSTITUENT_MUNICIPALITY",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
+      "state": "NJ",
+      "district": "fairfield_township",
+      "label": "Fairfield township",
+      "lsad": "44",
+      "funcstat": "A",
+      "classfp": "T1",
+      "geoid": "3401322385",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/cousub-34.geojson",
+      "canonicalFileSha256": "c39efe463a0388713c9a2423149078d4bba1c368242e25c8fb7c8be725507353",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_cousub_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-fairfield-board-of-education-township-of-fairfield",
+    "styleLabels": [
+      "Township of Fairfield"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:fairfield_township_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:fairfield_township_school_district",
+      "state": "NJ",
+      "district": "fairfield_township_school_district",
+      "label": "Fairfield Township School District",
+      "geoid": "3405010",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/elsd-34.geojson",
+      "canonicalFileSha256": "3fced51ee78a906996a01ea1a311bc696e9d2e60da8a76921df861fe6f8bbfd3",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_elsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-glen-ridge-board-of-education",
+    "styleLabels": [
+      "Borough of Glen Ridge"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:glen_ridge_borough_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:glen_ridge_borough_school_district",
+      "state": "NJ",
+      "district": "glen_ridge_borough_school_district",
+      "label": "Glen Ridge Borough School District",
+      "geoid": "3405940",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-livingston-board-of-education",
+    "styleLabels": [
+      "Township of Livingston"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:livingston_township_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:livingston_township_school_district",
+      "state": "NJ",
+      "district": "livingston_township_school_district",
+      "label": "Livingston Township School District",
+      "geoid": "3408820",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-south-orange-maplewood-board-of-education",
+    "styleLabels": [
+      "Township of Maplewood",
+      "South Orange Village"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:south_orange_maplewood_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:south_orange_maplewood_school_district",
+      "state": "NJ",
+      "district": "south_orange_maplewood_school_district",
+      "label": "South Orange-Maplewood School District",
+      "geoid": "3415330",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": [
+      "Maplewood",
+      "South Orange"
+    ]
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-millburn-board-of-education",
+    "styleLabels": [
+      "Township of Millburn"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:millburn_township_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:millburn_township_school_district",
+      "state": "NJ",
+      "district": "millburn_township_school_district",
+      "label": "Millburn Township School District",
+      "geoid": "3410200",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-montclair-board-of-education",
+    "styleLabels": [
+      "Township of Montclair CD10",
+      "Township of Montclair CD11"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:montclair_town_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:montclair_town_school_district",
+      "state": "NJ",
+      "district": "montclair_town_school_district",
+      "label": "Montclair Town School District",
+      "geoid": "3410560",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-north-caldwell-board-of-education",
+    "styleLabels": [
+      "Borough of North Caldwell"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:north_caldwell_borough_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:north_caldwell_borough_school_district",
+      "state": "NJ",
+      "district": "north_caldwell_borough_school_district",
+      "label": "North Caldwell Borough School District",
+      "geoid": "3411520",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/elsd-34.geojson",
+      "canonicalFileSha256": "3fced51ee78a906996a01ea1a311bc696e9d2e60da8a76921df861fe6f8bbfd3",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_elsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-nutley-board-of-education",
+    "styleLabels": [
+      "Township of Nutley"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:nutley_town_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:nutley_town_school_district",
+      "state": "NJ",
+      "district": "nutley_town_school_district",
+      "label": "Nutley Town School District",
+      "geoid": "3411880",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-orange-board-of-education",
+    "styleLabels": [
+      "City of Orange Township"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:orange_city_township_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:orange_city_township_school_district",
+      "state": "NJ",
+      "district": "orange_city_township_school_district",
+      "label": "Orange City Township School District",
+      "geoid": "3412270",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-roseland-west-essex-regional-roseland-constituency",
+    "styleLabels": [
+      "Borough of Roseland"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/county:essex/place:roseland_borough",
+    "electorate": "EXACT_CONSTITUENT_MUNICIPALITY",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:roseland_borough",
+      "state": "NJ",
+      "district": "roseland_borough",
+      "label": "Roseland borough",
+      "lsad": "21",
+      "funcstat": "F",
+      "classfp": "C5",
+      "geoid": "3401364590",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/cousub-34.geojson",
+      "canonicalFileSha256": "c39efe463a0388713c9a2423149078d4bba1c368242e25c8fb7c8be725507353",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_cousub_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-roseland-board-of-education-borough-of-roseland",
+    "styleLabels": [
+      "Borough of Roseland"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:roseland_borough_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:roseland_borough_school_district",
+      "state": "NJ",
+      "district": "roseland_borough_school_district",
+      "label": "Roseland Borough School District",
+      "geoid": "3414250",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/elsd-34.geojson",
+      "canonicalFileSha256": "3fced51ee78a906996a01ea1a311bc696e9d2e60da8a76921df861fe6f8bbfd3",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_elsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-verona-board-of-education-three-year-term",
+    "styleLabels": [
+      "Township of Verona"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:verona_borough_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:verona_borough_school_district",
+      "state": "NJ",
+      "district": "verona_borough_school_district",
+      "label": "Verona Borough School District",
+      "geoid": "3416740",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-verona-board-of-education-unexpired-term",
+    "styleLabels": [
+      "Township of Verona"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:verona_borough_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:verona_borough_school_district",
+      "state": "NJ",
+      "district": "verona_borough_school_district",
+      "label": "Verona Borough School District",
+      "geoid": "3416740",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  },
+  {
+    "contestId": "nj-cx-local-2026-essex-west-orange-board-of-education",
+    "styleLabels": [
+      "Township of West Orange"
+    ],
+    "ocdId": "ocd-division/country:us/state:nj/school_district:west_orange_town_school_district",
+    "electorate": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "canonicalGeography": {
+      "ocdId": "ocd-division/country:us/state:nj/school_district:west_orange_town_school_district",
+      "state": "NJ",
+      "district": "west_orange_town_school_district",
+      "label": "West Orange Town School District",
+      "geoid": "3417610",
+      "clipCounties": [
+        "34013"
+      ],
+      "canonicalPath": "data/states/nj/geo/unsd-34.geojson",
+      "canonicalFileSha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+      "canonicalVintage": "2025",
+      "canonicalSource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_34_unsd_500k.zip"
+    },
+    "sharedMunicipalities": null
+  }
+]

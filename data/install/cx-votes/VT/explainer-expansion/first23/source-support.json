@@ -222,43 +222,6 @@
     ]
   },
   {
-    "contestId": "vt-local-2026-essex-junction-city-west-street-sewer-bonds",
-    "officialTownId": 271,
-    "officialTownName": "ESSEX JUNCTION CITY",
-    "officialEnrSourceRow": 6,
-    "projectIdBasis": "Stable project election/municipality/subject key; not represented as an official government question identifier.",
-    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
-    "sourceFile": "../official-inventory/sources/c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199.source",
-    "sourceSha256": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
-    "sourceTextFile": "../official-inventory/sources/b2c8a70d71514784a2940a40d5d418b03b3d79287e15c9cce6ca740072db3c46.extracted.txt",
-    "extractedTextSha256": "b2c8a70d71514784a2940a40d5d418b03b3d79287e15c9cce6ca740072db3c46",
-    "sourceTextExtractionMethod": "Verbatim bq official JSON string fields decoded from native JSON and HTML text extracted; only whitespace normalized for reading. Separate derivative SHA; never claimed original HTTP bytes.",
-    "exactQuestion": "Shall general obligation bonds or notes of the City of Essex Junction in an amount not to exceed Two Million Dollars and Zero Cents ($2,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the City’s sanitation fund, derived from the sanitation utility rates for a period not to exceed thirty years,, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing the West Street Force Main Replacement Project (the Project)?",
-    "excerptFile": "excerpts/6d4d79a8a085544e38ba77b8ca6f1fd885af0acb4ffad6915387e0c7f23ce35b.txt",
-    "excerptSha256": "6d4d79a8a085544e38ba77b8ca6f1fd885af0acb4ffad6915387e0c7f23ce35b",
-    "responseChoices": [
-      "YES",
-      "NO"
-    ],
-    "fields": {
-      "whatItDoes": [
-        "Shall general obligation bonds or notes of the City of Essex Junction in an amount not to exceed Two Million Dollars and Zero Cents ($2,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the City’s sanitation fund, derived from the sanitation utility rates for a period not to exceed thirty years,, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing the West Street Force Main Replacement Project (the Project)?"
-      ],
-      "yesMeans": [
-        "Shall general obligation bonds or notes of the City of Essex Junction in an amount not to exceed Two Million Dollars and Zero Cents ($2,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the City’s sanitation fund, derived from the sanitation utility rates for a period not to exceed thirty years,, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing the West Street Force Main Replacement Project (the Project)?"
-      ],
-      "noMeans": [
-        "Shall general obligation bonds or notes of the City of Essex Junction in an amount not to exceed Two Million Dollars and Zero Cents ($2,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the City’s sanitation fund, derived from the sanitation utility rates for a period not to exceed thirty years,, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing the West Street Force Main Replacement Project (the Project)?"
-      ]
-    },
-    "materialConditionsChecked": [
-      "All stated numeric caps, terms, effective years, funding-source limitations and use restrictions retained.",
-      "No unprovided tax rate, repayment term, existing voting method, sales proceeds or rejection consequence invented.",
-      "Current native general-election definition names2026-11-03; question rows came from its published town-file path.",
-      "Four-choice Bakersfield accessibility input has null yes/no meanings; no fictional yes/no vote directions."
-    ]
-  },
-  {
     "contestId": "vt-local-2026-essex-town-local-option-retail",
     "officialTownId": 81,
     "officialTownName": "ESSEX TOWN",

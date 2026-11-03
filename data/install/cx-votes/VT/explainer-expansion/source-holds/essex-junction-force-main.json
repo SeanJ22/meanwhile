@@ -1,0 +1,19 @@
+{
+  "state": "VT",
+  "contestId": "vt-local-2026-essex-junction-city-west-street-sewer-bonds",
+  "status": "HOLD_CURRENT_ELECTION_ASSOCIATION_UNCONFIRMED",
+  "notForPublication": true,
+  "removedFrom": "first23/ballot-input/vt.json",
+  "supersededReadyCommit": "b04c4c6a0",
+  "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+  "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+  "sourceRow": 6,
+  "problem": "Published currentENR town file contains an unlinked question row with cid1=cid2=cid3=0. Other similar unlinked rows include duplicate and potentially stale questions. Require current native municipal ballot or electionwarning to confirm this bond before installing.",
+  "currentOfficialLeads": [
+    "https://www.essexjunction.gov/news/item/voter-information-for-the-november-3-2026-general-election",
+    "https://www.essexjunction.gov/departments/clerk/voter-information"
+  ],
+  "productionWrites": false,
+  "readerDataIncluded": false,
+  "checkedAt": "2026-11-03T10:17:00.404395+00:00"
+}

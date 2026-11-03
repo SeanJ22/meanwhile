@@ -102,23 +102,6 @@
     ]
   },
   {
-    "contestId": "vt-local-2026-essex-junction-city-west-street-sewer-bonds",
-    "registeredDivision": [
-      "ocd-division/country:us/state:vt/county:chittenden/place:essex_junction_city",
-      "cousub",
-      "5000724400",
-      "Essex Junction city"
-    ],
-    "officialNamedElectorate": "Essex Junction city",
-    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
-    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
-    "negativeDivisions": [
-      "ocd-division/country:us/state:vt",
-      "ocd-division/country:us/state:vt/county:chittenden",
-      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
-    ]
-  },
-  {
     "contestId": "vt-local-2026-essex-town-local-option-retail",
     "registeredDivision": [
       "ocd-division/country:us/state:vt/county:chittenden/place:essex_town",

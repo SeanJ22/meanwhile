@@ -10,14 +10,17 @@
   "jurisdictionBindings": "jurisdiction-bindings.json",
   "sourceCaptures": "source-captures.json",
   "coverage": {
-    "newExplainedMeasures": 23,
+    "newExplainedMeasures": 22,
     "officialGeneralEnrQuestionRows": 37,
     "deduplicationPendingRows": [
       "Bradford duplicate formatting",
       "Berlin charter duplicate formatting"
     ],
     "nonEnrIndependentLocalInventoriesRemainOpen": true,
-    "allLocalComplete": false
+    "allLocalComplete": false,
+    "unconfirmedEnrEntriesHeld": [
+      "vt-local-2026-essex-junction-city-west-street-sewer-bonds"
+    ]
   },
   "installOperation": {
     "module": "scripts/assemble-ballot-package.mts",
@@ -38,5 +41,15 @@
     "sourceCaptureCredentialScan": "PASS",
     "productionWrites": 0,
     "appCodeChanges": 0
-  }
+  },
+  "sourceHolds": "../source-holds/essex-junction-force-main.json",
+  "supersedes": {
+    "priorReadyCommit": "b04c4c6a0",
+    "withdrawFromThisPacket": [
+      "vt-local-2026-essex-junction-city-west-street-sewer-bonds"
+    ],
+    "reason": "Published ENR question field has no assigned choices; currentNovember3 inclusion has not yet been confirmed in native municipal sample/warning. Preserve22 independently verified rows."
+  },
+  "criticalInstallNote": "Omitting this row from the corrected22 additive package does NOT retract it from an already-installed prior. River must conditionally remove these precise three reader rows from a fresh full current state snapshot through the existing registered publication functions. Do not install the old23 packet. No directSQL or new installer/app code.",
+  "conditionalRetraction": "../source-holds/essex-junction-withdrawal.json"
 }

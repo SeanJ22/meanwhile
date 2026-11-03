@@ -1,0 +1,169 @@
+{
+  "kind": "SOURCE_GUARDED_THREE_ROW_RETRACTION",
+  "state": "VT",
+  "contractId": "ballot-contests:VT",
+  "ballotKey": "VT:vt-2026-11-03-general",
+  "supersededReadyCommit": "b04c4c6a0",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "notAnAdditiveMerge": true,
+  "criticalInstallNote": "Omitting this row from the corrected22 additive package does NOT retract it from an already-installed prior. River must conditionally remove these precise three reader rows from a fresh full current state snapshot through the existing registered publication functions. Do not install the old23 packet. No directSQL or new installer/app code.",
+  "reason": "The official current ENR file contains this unlinked question with all choiceIDs zero. Both native current municipal General Election sample styles contain Proposal3/4 and no force-main bond or other local question. Current question inclusion is unconfirmed, so this proposal is withheld rather than assigned to November3.",
+  "sourceGuard": {
+    "allThreeRowsMustMatch": true,
+    "contests": {
+      "id": "vt-local-2026-essex-junction-city-west-street-sewer-bonds",
+      "electionId": "vt-2026-11-03-general",
+      "ocdId": "ocd-division/country:us/state:vt/county:chittenden/place:essex_junction_city",
+      "provenance.sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+      "provenance.collectedAt": "2026-11-03T10:02:23.469662+00:00",
+      "provenance.quoteSha256": "6d4d79a8a085544e38ba77b8ca6f1fd885af0acb4ffad6915387e0c7f23ce35b"
+    },
+    "measures": {
+      "id": "vt-local-2026-essex-junction-city-west-street-sewer-bonds:question",
+      "contestId": "vt-local-2026-essex-junction-city-west-street-sewer-bonds",
+      "provenance.sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+      "provenance.collectedAt": "2026-11-03T10:02:23.469662+00:00",
+      "questionTextSha256": "6d4d79a8a085544e38ba77b8ca6f1fd885af0acb4ffad6915387e0c7f23ce35b"
+    },
+    "measureRecords": {
+      "rowKeyField": "contestId",
+      "contestId": "vt-local-2026-essex-junction-city-west-street-sewer-bonds",
+      "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+      "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+      "whatItDoesSha256": "611836275170e18d6fb5f1d1de54a9d51422b6cc4b0caba5d251d69422fe5b27",
+      "yesMeansSha256": "f9c22db479a91821ef7cfe709c210fead605a93c4ade471f6b0d1a54c7d70ac4",
+      "noMeansSha256": "cc6d5074c9ab8c1b1662f0acfd3de83ea716e9748ca7a2195204bfc3246ca6b8"
+    },
+    "ifAllAbsent": "NO_OP_ALREADY_ABSENT",
+    "ifAnyRowChangedOrPartialMatch": "NO_OP_PRESERVE_NEWER_OR_DIFFERENT_FACTS_AND_REPORT_HOLD"
+  },
+  "existingPublicationPath": {
+    "readCurrent": {
+      "module": "lib/civic-data/manual-projections.ts",
+      "function": "readManualProjectionPrior",
+      "arguments": {
+        "contractId": "ballot-contests:VT",
+        "store": "existing registered River RoutineDataStore",
+        "now": "actual installation timestamp"
+      }
+    },
+    "inMemoryRemovalOnlyAfterGuard": {
+      "fullCurrentPayloadRequired": true,
+      "remove": [
+        {
+          "arrayPath": [
+            "payload",
+            "ballots",
+            "VT:vt-2026-11-03-general",
+            "contests"
+          ],
+          "matchKey": "id",
+          "matchValue": "vt-local-2026-essex-junction-city-west-street-sewer-bonds"
+        },
+        {
+          "arrayPath": [
+            "payload",
+            "ballots",
+            "VT:vt-2026-11-03-general",
+            "measures"
+          ],
+          "matchKey": "id",
+          "matchValue": "vt-local-2026-essex-junction-city-west-street-sewer-bonds:question"
+        },
+        {
+          "arrayPath": [
+            "payload",
+            "ballots",
+            "VT:vt-2026-11-03-general",
+            "measureRecords"
+          ],
+          "matchKey": "contestId",
+          "matchValue": "vt-local-2026-essex-junction-city-west-street-sewer-bonds"
+        }
+      ],
+      "preserveEveryOtherFactAndSource": true
+    },
+    "buildCheckedFullSnapshot": {
+      "module": "lib/civic-data/manual-projections.ts",
+      "function": "manualProjectionCandidate",
+      "arguments": {
+        "input": "full current ManualProjectionPackage with only guarded three rows removed; contractId ballot-contests:VT, existing sourceReceipt retained plus native currentcity proof receipts as appropriate",
+        "options": "No prior option that would reintroduce omitted rows; this is a checked full snapshot, not BallotContestMerge."
+      }
+    },
+    "publishCheckedSnapshot": {
+      "module": "lib/civic-data/promotion.ts",
+      "function": "processRegisteredManualCandidate",
+      "arguments": {
+        "store": "same existing registered River store",
+        "contractId": "ballot-contests:VT",
+        "candidate": "checked full snapshot from manualProjectionCandidate",
+        "now": "actual installation timestamp",
+        "expectedBaseVersionId": "fresh prior.versionId from readCurrent",
+        "options": {
+          "confirmUnchanged": false
+        }
+      }
+    },
+    "readback": "Existing typed reader publication readback must show the precise contest/question/explainer absent and all22 other new records plus all unrelated prior candidates/measures retained."
+  },
+  "sourceCaptures": [
+    {
+      "requestedUrl": "https://www.essexjunction.gov/departments/clerk/voter-information/sample-voter-ballots",
+      "finalUrl": "https://www.essexjunction.gov/departments/clerk/voter-information/sample-voter-ballots",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:17:22.160089+00:00",
+      "contentType": "text/html; charset=utf-8",
+      "rawHash": "939d7a229fc27e61606fcf4218e7ff2a8ca91f4e305ef35b8bc42aee5c245da1",
+      "sourceFile": "sources/939d7a229fc27e61606fcf4218e7ff2a8ca91f4e305ef35b8bc42aee5c245da1.source",
+      "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+    },
+    {
+      "requestedUrl": "https://www.essexjunction.gov/departments/clerk/voter-information/voter-warnings",
+      "finalUrl": "https://www.essexjunction.gov/departments/clerk/voter-information/voter-warnings",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:17:22.151082+00:00",
+      "contentType": "text/html; charset=utf-8",
+      "rawHash": "2f813664a225b0aa001d1b27160851725ed6af22b5c82003a74098582d4e8fb7",
+      "sourceFile": "sources/2f813664a225b0aa001d1b27160851725ed6af22b5c82003a74098582d4e8fb7.source",
+      "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+    },
+    {
+      "requestedUrl": "https://www.essexjunction.gov/fileadmin/files/Administration/Clerk/CHI_22_GENERAL_SAMPLE_Nov_2026.pdf",
+      "finalUrl": "https://www.essexjunction.gov/fileadmin/files/Administration/Clerk/CHI_22_GENERAL_SAMPLE_Nov_2026.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:17:40.334938+00:00",
+      "contentType": "application/pdf",
+      "rawHash": "43cc2fc9b983b069bb07d0a6fea73536ea9eece09c453ae0081092c5e46c7b84",
+      "sourceFile": "sources/43cc2fc9b983b069bb07d0a6fea73536ea9eece09c453ae0081092c5e46c7b84.pdf",
+      "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+    },
+    {
+      "requestedUrl": "https://www.essexjunction.gov/fileadmin/files/Administration/Clerk/CHI_23_GENERAL_SAMPLE_Nov_2026.pdf",
+      "finalUrl": "https://www.essexjunction.gov/fileadmin/files/Administration/Clerk/CHI_23_GENERAL_SAMPLE_Nov_2026.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:17:40.340992+00:00",
+      "contentType": "application/pdf",
+      "rawHash": "a384075f861f1fc0989c7572a24f03e9aea0b37cee5f3efc780d63f1b671f61d",
+      "sourceFile": "sources/a384075f861f1fc0989c7572a24f03e9aea0b37cee5f3efc780d63f1b671f61d.pdf",
+      "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+    },
+    {
+      "requestedUrl": "https://www.essexjunction.gov/fileadmin/files/Administration/Clerk/2026_General_Election_Warning.pdf",
+      "finalUrl": "https://www.essexjunction.gov/fileadmin/files/Administration/Clerk/2026_General_Election_Warning.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:17:40.333739+00:00",
+      "contentType": "application/pdf",
+      "rawHash": "3e28e9868069752b6b0cb86d173de81681683eab46729bbbe8e191ff28fc62dd",
+      "sourceFile": "sources/3e28e9868069752b6b0cb86d173de81681683eab46729bbbe8e191ff28fc62dd.pdf",
+      "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+    }
+  ],
+  "productionWritesPerformedHere": 0,
+  "appCodeChanges": 0,
+  "paidProviders": 0,
+  "modelCalls": 0,
+  "preparedAt": "2026-11-03T10:21:11.085583+00:00"
+}

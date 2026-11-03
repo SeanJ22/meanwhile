@@ -34,10 +34,9 @@
   "coverage": {
     "newLocalTaxQuestionsWithExplanations": 6,
     "openScopes": [
-      "Phenix City school-tax district electorate in Russell County requires exact scope evidence; current school geography intersects Lee County too.",
-      "Odenville School Attendance and Tax District differs from the city geography.",
-      "Union Grove Volunteer Fire District 16 fee requires its actual district scope."
-    ]
+      "Union Grove Volunteer Fire District16 fee requires its actual district scope; substantive source-linked explainer is now prepared in ../tax-district-geography/pending-scope-measures.json."
+    ],
+    "additionalTaxDistrictsResolved": "PhenixCity/Russell and Odenville are prepared in ../tax-district-geography/install.json with exact source-backed boundaries."
   },
   "operation": "Merge through existing runBallotPublication using this absolute ballot-input directory; preserve all unrelated ballot data. Native source archives may be referenced from the separately prepared local-amendments packet.",
   "sourceSupport": "source-support.json",

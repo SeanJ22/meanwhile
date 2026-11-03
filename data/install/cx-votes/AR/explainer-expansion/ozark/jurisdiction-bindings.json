@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "ar-cx-2026-ozark-refunding-bonds-replacement-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:ozark",
+      "place",
+      "0552970",
+      "Ozark city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-ozark-water-sewer-bonds-replacement-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:ozark",
+      "place",
+      "0552970",
+      "Ozark city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  }
+]

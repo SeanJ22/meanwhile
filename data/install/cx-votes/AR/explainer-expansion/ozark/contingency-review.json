@@ -1,0 +1,26 @@
+{
+  "nativeFields": [
+    {
+      "path": "sources/ar-uada-ozark-ballot-issue-election-2026-page-14.png",
+      "page1Based": 14,
+      "dpi": 160,
+      "scope": "Full shared official bond/tax conditions and native date header"
+    },
+    {
+      "path": "sources/ar-uada-ozark-ballot-issue-election-2026-page-15.png",
+      "page1Based": 15,
+      "dpi": 160,
+      "scope": "Two complete combined bond/replacementtax questions"
+    }
+  ],
+  "questionCount": 2,
+  "notSeparateStandaloneTax": true,
+  "conditions": [
+    "Both bond fields must be approved before any new bond issuance or replacement tax.",
+    "If either fails, current1%tax and existing bonding authority remain.",
+    "Seven-eighths net allocation solely debt; taxportion expires lastdayofquarter in which bonds/refunding bonds repaid.",
+    "One-eighth taxportion does not expire; supports SystemImprovements/otherCityfacilities operation/maintenance and debt.",
+    "Replacement1% begins dayafter current2015taxexpires; no fixedcalendar date inferred."
+  ],
+  "sourceScope": "Native official Ozarkballot pages14/15 of clerk-supplied countybundle; other pages not used for candidate or inventory work."
+}

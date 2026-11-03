@@ -1,0 +1,70 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "AR",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AR",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ar-cx-2026-hempstead-hospital-improvement-bonds",
+      "title": "Hempstead County — Hospital improvement bonds",
+      "ocdId": "ocd-division/country:us/state:ar/county:hempstead",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Hempstead%20County%20election%202026.pdf"
+    },
+    {
+      "id": "ar-cx-2026-randolph-justice-911-sales-use-tax",
+      "title": "Randolph County — Criminal justice and 911 sales and use tax",
+      "ocdId": "ocd-division/country:us/state:ar/county:randolph",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Randolph%20County%20ballot%20issue%20election%202026.pdf"
+    },
+    {
+      "id": "ar-cx-2026-corning-staggered-four-year-council-terms",
+      "title": "Corning — Staggered four-year council terms",
+      "ocdId": "ocd-division/country:us/state:ar/place:corning",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Corning%20Ballot%20Issue%20General%202026.pdf"
+    },
+    {
+      "id": "ar-cx-2026-pleasant-plains-staggered-four-year-council-terms",
+      "title": "Pleasant Plains — Staggered four-year council terms",
+      "ocdId": "ocd-division/country:us/state:ar/place:pleasant_plains",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Pleasant%20Plains%20ballot%20issue%20election%202026.pdf"
+    },
+    {
+      "id": "ar-cx-2026-lewisville-sales-use-tax",
+      "title": "Lewisville — Sales and use tax",
+      "ocdId": "ocd-division/country:us/state:ar/place:lewisville",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Lewisville%20ballot%20issue%20election%202026.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 5,
+    "newPlainLanguageExplanations": 5,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "AR",
+    "newMeasures": 5,
+    "newExplanations": 5,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

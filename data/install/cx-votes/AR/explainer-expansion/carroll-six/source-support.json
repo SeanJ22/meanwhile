@@ -1,0 +1,177 @@
+[
+  {
+    "contestId": "ar-cx-2026-eureka-springs-sales-use-tax",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Carroll%20County%202026%20ballot%20measures.docx",
+    "rawHash": "530020c5bf8f18593f9cd66753a3c5d69c7a10b78ed55d27a9769d4d5153558d",
+    "sourceFile": "sources/530020c5bf8f18593f9cd66753a3c5d69c7a10b78ed55d27a9769d4d5153558d.source",
+    "sourceTextFile": "sources/7340fb81f4d9e776f690dd412d232113087d2652abc0df287c4e9b44087e7798.txt",
+    "excerpt": "Adoption of a new 1% local sales and use tax within the City of Eureka Springs for a period of twenty (20) years, the net collections of which remaining after deduction of the administrative charges of the State of Arkansas and required rebates will be used first, as needed, to pay and secure the repayment of bonds approved by the voters and issued from time to time to finance capital improvements, and all obligations of the City with respect thereto, with the balance to be used to operate and maintain the City’s water and sewer system and to acquire, construct, and equip extensions, betterments, and improvements thereto.  The levy of the sales and use tax is not dependent on any bonds being approved or issued.",
+    "fields": {
+      "whatItDoes": [
+        "Adoption of a new 1% local sales and use tax within the City of Eureka Springs for a period of twenty (20) years, the net collections of which remaining after deduction of the administrative charges of the State of Arkansas and required rebates will be used first, as needed, to pay and secure the repayment of bonds approved by the voters and issued from time to time to finance capital improvements, and all obligations of the City with respect thereto, with the balance to be used to operate and maintain the City’s water and sewer system and to acquire, construct, and equip extensions, betterments, and improvements thereto.  The levy of the sales and use tax is not dependent on any bonds being approved or issued."
+      ],
+      "yesMeans": [
+        "Adoption of a new 1% local sales and use tax within the City of Eureka Springs for a period of twenty (20) years, the net collections of which remaining after deduction of the administrative charges of the State of Arkansas and required rebates will be used first, as needed, to pay and secure the repayment of bonds approved by the voters and issued from time to time to finance capital improvements, and all obligations of the City with respect thereto, with the balance to be used to operate and maintain the City’s water and sewer system and to acquire, construct, and equip extensions, betterments, and improvements thereto.  The levy of the sales and use tax is not dependent on any bonds being approved or issued."
+      ],
+      "noMeans": [
+        "Adoption of a new 1% local sales and use tax within the City of Eureka Springs for a period of twenty (20) years, the net collections of which remaining after deduction of the administrative charges of the State of Arkansas and required rebates will be used first, as needed, to pay and secure the repayment of bonds approved by the voters and issued from time to time to finance capital improvements, and all obligations of the City with respect thereto, with the balance to be used to operate and maintain the City’s water and sewer system and to acquire, construct, and equip extensions, betterments, and improvements thereto.  The levy of the sales and use tax is not dependent on any bonds being approved or issued."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+      "Net revenue is after state administrative charges and required rebates. Tax levy independent of bond approvals; no household bill, totalprojectcost or overlappingtaxinference."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Original DOCX word/document.xml text paragraphs, exact bounded operative question fields",
+      "scope": "Complete six fields; source XML and native DOCX preserved. Eureka Springs official sample PDF is independent companion support for its four fields."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-eureka-springs-water-bonds",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Carroll%20County%202026%20ballot%20measures.docx",
+    "rawHash": "530020c5bf8f18593f9cd66753a3c5d69c7a10b78ed55d27a9769d4d5153558d",
+    "sourceFile": "sources/530020c5bf8f18593f9cd66753a3c5d69c7a10b78ed55d27a9769d4d5153558d.source",
+    "sourceTextFile": "sources/17b35f66c57ee9ecfb4316575f5340ae7cb188c816dcc918ab7b37f46c83a206.txt",
+    "excerpt": "Bonds of the City of Eureka Springs in one or more series from time to time in the maximum aggregate principal amount of $10,000,000 to finance all or a portion of the costs of acquiring, constructing, improving, and equipping extensions, betterments, and improvements to the City’s water facilities, including particularly, without limitation, water line improvements, and, in order to pay the bonds, the pledge of the new 1% local sales and use tax levied within the City by Ordinance No. 2384, adopted May 11, 2026, if such tax is separately approved by the voters.",
+    "fields": {
+      "whatItDoes": [
+        "Bonds of the City of Eureka Springs in one or more series from time to time in the maximum aggregate principal amount of $10,000,000 to finance all or a portion of the costs of acquiring, constructing, improving, and equipping extensions, betterments, and improvements to the City’s water facilities, including particularly, without limitation, water line improvements, and, in order to pay the bonds, the pledge of the new 1% local sales and use tax levied within the City by Ordinance No. 2384, adopted May 11, 2026, if such tax is separately approved by the voters."
+      ],
+      "yesMeans": [
+        "Bonds of the City of Eureka Springs in one or more series from time to time in the maximum aggregate principal amount of $10,000,000 to finance all or a portion of the costs of acquiring, constructing, improving, and equipping extensions, betterments, and improvements to the City’s water facilities, including particularly, without limitation, water line improvements, and, in order to pay the bonds, the pledge of the new 1% local sales and use tax levied within the City by Ordinance No. 2384, adopted May 11, 2026, if such tax is separately approved by the voters."
+      ],
+      "noMeans": [
+        "Bonds of the City of Eureka Springs in one or more series from time to time in the maximum aggregate principal amount of $10,000,000 to finance all or a portion of the costs of acquiring, constructing, improving, and equipping extensions, betterments, and improvements to the City’s water facilities, including particularly, without limitation, water line improvements, and, in order to pay the bonds, the pledge of the new 1% local sales and use tax levied within the City by Ordinance No. 2384, adopted May 11, 2026, if such tax is separately approved by the voters."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+      "10M aggregate principal across one or more issues, not eachissue or totalrepayment; tax separately approved."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Original DOCX word/document.xml text paragraphs, exact bounded operative question fields",
+      "scope": "Complete six fields; source XML and native DOCX preserved. Eureka Springs official sample PDF is independent companion support for its four fields."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-eureka-springs-sewer-bonds",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Carroll%20County%202026%20ballot%20measures.docx",
+    "rawHash": "530020c5bf8f18593f9cd66753a3c5d69c7a10b78ed55d27a9769d4d5153558d",
+    "sourceFile": "sources/530020c5bf8f18593f9cd66753a3c5d69c7a10b78ed55d27a9769d4d5153558d.source",
+    "sourceTextFile": "sources/fa6c45bc8afdde7fa6fa19b196b87a995d8b5a968804077340f8d01eefc004ef.txt",
+    "excerpt": "Bonds of the City of Eureka Springs in one or more series from time to time in the maximum aggregate principal amount of $10,000,000 to finance all or a portion of the costs of acquiring, constructing, improving, and equipping extensions, betterments, and improvements to the City’s sewer facilities, including particularly, without limitation, sewer treatment plant improvements and sewer line improvements, and, in order to pay the bonds, the pledge of the new 1% local sales and use tax levied within the City by Ordinance No. 2384, adopted May 11, 2026, if such tax is separately approved by the voters.",
+    "fields": {
+      "whatItDoes": [
+        "Bonds of the City of Eureka Springs in one or more series from time to time in the maximum aggregate principal amount of $10,000,000 to finance all or a portion of the costs of acquiring, constructing, improving, and equipping extensions, betterments, and improvements to the City’s sewer facilities, including particularly, without limitation, sewer treatment plant improvements and sewer line improvements, and, in order to pay the bonds, the pledge of the new 1% local sales and use tax levied within the City by Ordinance No. 2384, adopted May 11, 2026, if such tax is separately approved by the voters."
+      ],
+      "yesMeans": [
+        "Bonds of the City of Eureka Springs in one or more series from time to time in the maximum aggregate principal amount of $10,000,000 to finance all or a portion of the costs of acquiring, constructing, improving, and equipping extensions, betterments, and improvements to the City’s sewer facilities, including particularly, without limitation, sewer treatment plant improvements and sewer line improvements, and, in order to pay the bonds, the pledge of the new 1% local sales and use tax levied within the City by Ordinance No. 2384, adopted May 11, 2026, if such tax is separately approved by the voters."
+      ],
+      "noMeans": [
+        "Bonds of the City of Eureka Springs in one or more series from time to time in the maximum aggregate principal amount of $10,000,000 to finance all or a portion of the costs of acquiring, constructing, improving, and equipping extensions, betterments, and improvements to the City’s sewer facilities, including particularly, without limitation, sewer treatment plant improvements and sewer line improvements, and, in order to pay the bonds, the pledge of the new 1% local sales and use tax levied within the City by Ordinance No. 2384, adopted May 11, 2026, if such tax is separately approved by the voters."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+      "10M aggregate principal across one or more issues, not eachissue or totalrepayment; tax separately approved."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Original DOCX word/document.xml text paragraphs, exact bounded operative question fields",
+      "scope": "Complete six fields; source XML and native DOCX preserved. Eureka Springs official sample PDF is independent companion support for its four fields."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-eureka-springs-pine-mountain-entertainment-district",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Carroll%20County%20Ballot%20Proof%20Eureka%20Springs%20City%20Limits.pdf",
+    "rawHash": "0361a2e96bb327760273c9af7beed6102a4ad026e2239c5b04c0a96e6f347f3d",
+    "sourceFile": "sources/0361a2e96bb327760273c9af7beed6102a4ad026e2239c5b04c0a96e6f347f3d.source",
+    "sourceTextFile": "sources/e7aefbd39e4cd0b85192f45f4ffd477e9f1c9bf3d124126524dad487dbf37b6f.txt",
+    "excerpt": "FOR the rejection of Ordinance 2357, an Ordinance to Authorize the Creation of a Permanent Entertainment District at Pine Mountain Village, Eureka Springs, Arkansas.\nAGAINST the rejection of Ordinance 2357, an Ordinance to Authorize the Creation of a Permanent Entertainment District at Pine Mountain Village, Eureka Springs, Arkansas.\nThat Ordinance No. 2357 of the City Council of Eureka Springs, Arkansas authorizes the Creation of a Permanent Entertainment District at Pine Mountain Village be referred to the people of said Municipality, to the end that the same may be approved or rejected by a vote of the voters.",
+    "fields": {
+      "whatItDoes": [
+        "FOR the rejection of Ordinance 2357, an Ordinance to Authorize the Creation of a Permanent Entertainment District at Pine Mountain Village, Eureka Springs, Arkansas.\nAGAINST the rejection of Ordinance 2357, an Ordinance to Authorize the Creation of a Permanent Entertainment District at Pine Mountain Village, Eureka Springs, Arkansas.",
+        "That Ordinance No. 2357 of the City Council of Eureka Springs, Arkansas authorizes the Creation of a Permanent Entertainment District at Pine Mountain Village be referred to the people of said Municipality, to the end that the same may be approved or rejected by a vote of the voters."
+      ],
+      "yesMeans": [
+        "FOR the rejection of Ordinance 2357, an Ordinance to Authorize the Creation of a Permanent Entertainment District at Pine Mountain Village, Eureka Springs, Arkansas.\nAGAINST the rejection of Ordinance 2357, an Ordinance to Authorize the Creation of a Permanent Entertainment District at Pine Mountain Village, Eureka Springs, Arkansas.",
+        "That Ordinance No. 2357 of the City Council of Eureka Springs, Arkansas authorizes the Creation of a Permanent Entertainment District at Pine Mountain Village be referred to the people of said Municipality, to the end that the same may be approved or rejected by a vote of the voters."
+      ],
+      "noMeans": [
+        "FOR the rejection of Ordinance 2357, an Ordinance to Authorize the Creation of a Permanent Entertainment District at Pine Mountain Village, Eureka Springs, Arkansas.\nAGAINST the rejection of Ordinance 2357, an Ordinance to Authorize the Creation of a Permanent Entertainment District at Pine Mountain Village, Eureka Springs, Arkansas.",
+        "That Ordinance No. 2357 of the City Council of Eureka Springs, Arkansas authorizes the Creation of a Permanent Entertainment District at Pine Mountain Village be referred to the people of said Municipality, to the end that the same may be approved or rejected by a vote of the voters."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+      "No alcohol, public-consumption, hours,license, tax, business or implementation rules inferred from entertainment-district label. Official title expressly refers ordinance to voters of whole municipality; district location is not substituted for electoral scope."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Native scanned PDF page2 crop [344,48,506,344] at220dpi, visually checked bounded transcript",
+      "scope": "Complete FOR/AGAINST rejection choices, exactly transcribed; not reversed by general approve-or-reject heading."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-holiday-island-sales-use-tax",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Carroll%20County%202026%20ballot%20measures.docx",
+    "rawHash": "530020c5bf8f18593f9cd66753a3c5d69c7a10b78ed55d27a9769d4d5153558d",
+    "sourceFile": "sources/530020c5bf8f18593f9cd66753a3c5d69c7a10b78ed55d27a9769d4d5153558d.source",
+    "sourceTextFile": "sources/60afe7a127266960154972a709dbc9ab9ea65af1c5a528530aec9930bac204b0.txt",
+    "excerpt": "On the question of levying a two and one half percent (2.5%) sales and compensating use tax within the city limits of Holiday Island beginning July 1, 2027, for the purpose of general fund expenses and capital improvements.",
+    "fields": {
+      "whatItDoes": [
+        "On the question of levying a two and one half percent (2.5%) sales and compensating use tax within the city limits of Holiday Island beginning July 1, 2027, for the purpose of general fund expenses and capital improvements."
+      ],
+      "yesMeans": [
+        "On the question of levying a two and one half percent (2.5%) sales and compensating use tax within the city limits of Holiday Island beginning July 1, 2027, for the purpose of general fund expenses and capital improvements."
+      ],
+      "noMeans": [
+        "On the question of levying a two and one half percent (2.5%) sales and compensating use tax within the city limits of Holiday Island beginning July 1, 2027, for the purpose of general fund expenses and capital improvements."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Original DOCX word/document.xml text paragraphs, exact bounded operative question fields",
+      "scope": "Complete six fields; source XML and native DOCX preserved. Eureka Springs official sample PDF is independent companion support for its four fields."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-holiday-island-sunday-alcohol-sales",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Carroll%20County%202026%20ballot%20measures.docx",
+    "rawHash": "530020c5bf8f18593f9cd66753a3c5d69c7a10b78ed55d27a9769d4d5153558d",
+    "sourceFile": "sources/530020c5bf8f18593f9cd66753a3c5d69c7a10b78ed55d27a9769d4d5153558d.source",
+    "sourceTextFile": "sources/b57f88463909cd9514c2be277f930b221fbe06f7c9a4dbddf991799a7a15925e.txt",
+    "excerpt": "To Authorize the sale of alcoholic beverages for off-premises consumption on Sunday in the City of Holiday Island, Arkansas, between the hours of 10:00 A.M. and 12:00 A.M.",
+    "fields": {
+      "whatItDoes": [
+        "To Authorize the sale of alcoholic beverages for off-premises consumption on Sunday in the City of Holiday Island, Arkansas, between the hours of 10:00 A.M. and 12:00 A.M."
+      ],
+      "yesMeans": [
+        "To Authorize the sale of alcoholic beverages for off-premises consumption on Sunday in the City of Holiday Island, Arkansas, between the hours of 10:00 A.M. and 12:00 A.M."
+      ],
+      "noMeans": [
+        "To Authorize the sale of alcoholic beverages for off-premises consumption on Sunday in the City of Holiday Island, Arkansas, between the hours of 10:00 A.M. and 12:00 A.M."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Original DOCX word/document.xml text paragraphs, exact bounded operative question fields",
+      "scope": "Complete six fields; source XML and native DOCX preserved. Eureka Springs official sample PDF is independent companion support for its four fields."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

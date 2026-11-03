@@ -1,0 +1,62 @@
+[
+  {
+    "contestId": "ar-cx-2026-hempstead-hospital-improvement-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/county:hempstead",
+      "county",
+      "05057",
+      "Hempstead County"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-randolph-justice-911-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/county:randolph",
+      "county",
+      "05121",
+      "Randolph County"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-corning-staggered-four-year-council-terms",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:corning",
+      "place",
+      "0515460",
+      "Corning city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-pleasant-plains-staggered-four-year-council-terms",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:pleasant_plains",
+      "place",
+      "0556270",
+      "Pleasant Plains town"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-lewisville-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:lewisville",
+      "place",
+      "0539640",
+      "Lewisville city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  }
+]

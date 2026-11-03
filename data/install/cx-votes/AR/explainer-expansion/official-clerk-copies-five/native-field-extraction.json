@@ -1,0 +1,42 @@
+[
+  {
+    "contestId": "ar-cx-2026-hempstead-hospital-improvement-bonds",
+    "nativeFieldImage": "sources/ar-uada-hempstead-county-election-2026-page-1.png",
+    "page1Based": 1,
+    "dpi": 160,
+    "transcript": "ar-uada-hempstead-county-election-2026.ocr",
+    "sourceDateScope": "November3,2026"
+  },
+  {
+    "contestId": "ar-cx-2026-randolph-justice-911-sales-use-tax",
+    "nativeFieldImage": "sources/ar-uada-randolph-county-ballot-issue-election-2026-page-1.png",
+    "page1Based": 1,
+    "dpi": 160,
+    "transcript": "ar-uada-randolph-county-ballot-issue-election-2026.ocr",
+    "sourceDateScope": "Nov. 3, 2026"
+  },
+  {
+    "contestId": "ar-cx-2026-corning-staggered-four-year-council-terms",
+    "nativeFieldImage": "sources/ar-uada-corning-ballot-issue-general-2026-page-1.png",
+    "page1Based": 1,
+    "dpi": 160,
+    "transcript": "ar-uada-corning-verified-field",
+    "sourceDateScope": "November3,2026"
+  },
+  {
+    "contestId": "ar-cx-2026-pleasant-plains-staggered-four-year-council-terms",
+    "nativeFieldImage": "sources/ar-uada-pleasant-plains-ballot-issue-election-2026-page-1.png",
+    "page1Based": 1,
+    "dpi": 160,
+    "transcript": "ar-uada-pleasant-plains-verified-field",
+    "sourceDateScope": "Nov. 3, 2026"
+  },
+  {
+    "contestId": "ar-cx-2026-lewisville-sales-use-tax",
+    "nativeFieldImage": "sources/ar-uada-lewisville-ballot-issue-election-2026-page-4.png",
+    "page1Based": 4,
+    "dpi": 160,
+    "transcript": "ar-uada-lewisville-ballot-issue-election-2026.ocr",
+    "sourceDateScope": "Nov. 3, 2026"
+  }
+]

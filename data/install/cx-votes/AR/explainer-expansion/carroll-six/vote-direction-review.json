@@ -1,0 +1,26 @@
+{
+  "contestId": "ar-cx-2026-eureka-springs-pine-mountain-entertainment-district",
+  "controllingSource": "Native official county sample page2, complete printed choices",
+  "nativeSampleSha256": "0361a2e96bb327760273c9af7beed6102a4ad026e2239c5b04c0a96e6f347f3d",
+  "nativeCrop": {
+    "path": "sources/ar-carroll-entertainment-native-field.png",
+    "page1Based": 2,
+    "cropPdfPoints": [
+      344,
+      48,
+      506,
+      344
+    ],
+    "dpi": 220
+  },
+  "printedFor": "FOR the rejection of Ordinance 2357",
+  "printedAgainst": "AGAINST the rejection of Ordinance 2357",
+  "yesMeaning": "Reject ordinance authorizing entertainment district.",
+  "noMeaning": "Do not reject ordinance.",
+  "clerkDocxScope": "Clerk DOCX summary supplies general approve-or-reject title and ordinance summary, but omits the operative rejection-choice lines. Native sample controls vote direction.",
+  "geography": "Native ballot title explicitly refers ordinance to voters of said Municipality; whole EurekaSprings place, not only PineMountainVillage footprint.",
+  "limitations": [
+    "Native sample Review/Proof watermark retained; not described as final certification.",
+    "No license/alcohol/public-consumption/hour or implementation effects inferred."
+  ]
+}

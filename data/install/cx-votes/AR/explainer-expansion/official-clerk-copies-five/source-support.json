@@ -1,0 +1,147 @@
+[
+  {
+    "contestId": "ar-cx-2026-hempstead-hospital-improvement-bonds",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Hempstead%20County%20election%202026.pdf",
+    "rawHash": "7fb951ef32057ff549a3ba666936ca4bc01235af103fb68d0a3b1e6a9e3765b4",
+    "sourceFile": "sources/7fb951ef32057ff549a3ba666936ca4bc01235af103fb68d0a3b1e6a9e3765b4.source",
+    "sourceTextFile": "sources/8a41fbb62e3aa0cfdde30ceda51abe3c8f91b678bfd155df6bf6daed6b85f1b8.txt",
+    "excerpt": "Bonds of Hempstead County in the maximum aggregate principal amount of\n$13,500,000 to finance all or a portion of the costs of acquiring, constructing,\nfurnishing and equipping improvements to the hospital facility owned by the\nCounty and, in order to pay the bonds, the pledge of the net collections of the\n0.75% local sales and use tax levied within the County pursuant to Ordinance No.\n2026-3, adopted March 26, 2026 (the \"Sales and Use Tax\"). Any collections of\nthe Sales and Use Tax not used for payment of the bonds will be used by the\nCounty for other lawful purposes.",
+    "fields": {
+      "whatItDoes": [
+        "Bonds of Hempstead County in the maximum aggregate principal amount of\n$13,500,000 to finance all or a portion of the costs of acquiring, constructing,\nfurnishing and equipping improvements to the hospital facility owned by the\nCounty and, in order to pay the bonds, the pledge of the net collections of the\n0.75% local sales and use tax levied within the County pursuant to Ordinance No.\n2026-3, adopted March 26, 2026 (the \"Sales and Use Tax\"). Any collections of\nthe Sales and Use Tax not used for payment of the bonds will be used by the\nCounty for other lawful purposes."
+      ],
+      "yesMeans": [
+        "Bonds of Hempstead County in the maximum aggregate principal amount of\n$13,500,000 to finance all or a portion of the costs of acquiring, constructing,\nfurnishing and equipping improvements to the hospital facility owned by the\nCounty and, in order to pay the bonds, the pledge of the net collections of the\n0.75% local sales and use tax levied within the County pursuant to Ordinance No.\n2026-3, adopted March 26, 2026 (the \"Sales and Use Tax\"). Any collections of\nthe Sales and Use Tax not used for payment of the bonds will be used by the\nCounty for other lawful purposes."
+      ],
+      "noMeans": [
+        "Bonds of Hempstead County in the maximum aggregate principal amount of\n$13,500,000 to finance all or a portion of the costs of acquiring, constructing,\nfurnishing and equipping improvements to the hospital facility owned by the\nCounty and, in order to pay the bonds, the pledge of the net collections of the\n0.75% local sales and use tax levied within the County pursuant to Ordinance No.\n2026-3, adopted March 26, 2026 (the \"Sales and Use Tax\"). Any collections of\nthe Sales and Use Tax not used for payment of the bonds will be used by the\nCounty for other lawful purposes."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+      "13.5M is maximum aggregate principal, not total repayment. Existing0.75% tax pledge, no new tax rate inferred; unused collections remain available for other lawful purposes."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Tesseract original scanned PDF; manually corrected bounded transcripts where noted after native visual review",
+      "scope": "Complete official operative question; original native PDF and field image preserved. Source date/caption issues explicitly retained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-randolph-justice-911-sales-use-tax",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Randolph%20County%20ballot%20issue%20election%202026.pdf",
+    "rawHash": "117d430e8c2d5ec6bcd68947efd7d669afc52838321879a8e34e54a27c32daf4",
+    "sourceFile": "sources/117d430e8c2d5ec6bcd68947efd7d669afc52838321879a8e34e54a27c32daf4.source",
+    "sourceTextFile": "sources/c17a51b46dd4a77726e20f646d08ca82695d2c7286755eed5e2c3c750e717cc1.txt",
+    "excerpt": "Adoption of a 0.25% local Sales and Use Tax within Randolph County (the\n\"County\"), the net collections of which remaining after deduction of the\nadministrative charges of the State of Arkansas and required rebates, will be\ndistributed only to the County and used to acquire, construct, improve, expand,\nequip, furnish, operate, and maintain (a) criminal justice facilities including a jail,\nsheriff's station, courtroom, and related administrative, law enforcement, and\njudicial facilities and (b) 9-1-1 emergency communication service facilities.",
+    "fields": {
+      "whatItDoes": [
+        "Adoption of a 0.25% local Sales and Use Tax within Randolph County (the\n\"County\"), the net collections of which remaining after deduction of the\nadministrative charges of the State of Arkansas and required rebates, will be\ndistributed only to the County and used to acquire, construct, improve, expand,\nequip, furnish, operate, and maintain (a) criminal justice facilities including a jail,\nsheriff's station, courtroom, and related administrative, law enforcement, and\njudicial facilities and (b) 9-1-1 emergency communication service facilities."
+      ],
+      "yesMeans": [
+        "Adoption of a 0.25% local Sales and Use Tax within Randolph County (the\n\"County\"), the net collections of which remaining after deduction of the\nadministrative charges of the State of Arkansas and required rebates, will be\ndistributed only to the County and used to acquire, construct, improve, expand,\nequip, furnish, operate, and maintain (a) criminal justice facilities including a jail,\nsheriff's station, courtroom, and related administrative, law enforcement, and\njudicial facilities and (b) 9-1-1 emergency communication service facilities."
+      ],
+      "noMeans": [
+        "Adoption of a 0.25% local Sales and Use Tax within Randolph County (the\n\"County\"), the net collections of which remaining after deduction of the\nadministrative charges of the State of Arkansas and required rebates, will be\ndistributed only to the County and used to acquire, construct, improve, expand,\nequip, furnish, operate, and maintain (a) criminal justice facilities including a jail,\nsheriff's station, courtroom, and related administrative, law enforcement, and\njudicial facilities and (b) 9-1-1 emergency communication service facilities."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Tesseract original scanned PDF; manually corrected bounded transcripts where noted after native visual review",
+      "scope": "Complete official operative question; original native PDF and field image preserved. Source date/caption issues explicitly retained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-corning-staggered-four-year-council-terms",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Corning%20Ballot%20Issue%20General%202026.pdf",
+    "rawHash": "5d821bd5efbcd6b645884dbdd5b9ecf1504cd0dd25bc479571774d9e6682413e",
+    "sourceFile": "sources/5d821bd5efbcd6b645884dbdd5b9ecf1504cd0dd25bc479571774d9e6682413e.source",
+    "sourceTextFile": "sources/0660a0d30d66a96237607d9cb9dd18f644d050d8bf2d11b98e2d58aa78824057.txt",
+    "excerpt": "FOR changing the terms of aldermen in the City of Corning from two-year terms to staggered four-year terms.\nThe questions of changing the terms of aldermen who make up the City Council of City of Corning from two-year to staggered four-year terms. Currently aldermen for each ward in the City of Corning are elected to two-year terms. If this question is approved, aldermen for South Ward Position 1 and North Ward Position 1 would be elected to a four-year term at the 2028 general election and those aldermen for South Ward Position 2 and North Ward Position 2 would be elected to a two-year term in the City of Corning general election, but would be elected to a four year term starting in the 2030 general election. If this question is approved, half of the City Council positions would be open for election for every general election after 2030. If this question is not approved, all of the aldermen positions for the City of Corning will be open for election every two years at the general election.",
+    "fields": {
+      "whatItDoes": [
+        "FOR changing the terms of aldermen in the City of Corning from two-year terms to staggered four-year terms.",
+        "The questions of changing the terms of aldermen who make up the City Council of City of Corning from two-year to staggered four-year terms. Currently aldermen for each ward in the City of Corning are elected to two-year terms. If this question is approved, aldermen for South Ward Position 1 and North Ward Position 1 would be elected to a four-year term at the 2028 general election and those aldermen for South Ward Position 2 and North Ward Position 2 would be elected to a two-year term in the City of Corning general election, but would be elected to a four year term starting in the 2030 general election. If this question is approved, half of the City Council positions would be open for election for every general election after 2030. If this question is not approved, all of the aldermen positions for the City of Corning will be open for election every two years at the general election."
+      ],
+      "yesMeans": [
+        "FOR changing the terms of aldermen in the City of Corning from two-year terms to staggered four-year terms.",
+        "The questions of changing the terms of aldermen who make up the City Council of City of Corning from two-year to staggered four-year terms. Currently aldermen for each ward in the City of Corning are elected to two-year terms. If this question is approved, aldermen for South Ward Position 1 and North Ward Position 1 would be elected to a four-year term at the 2028 general election and those aldermen for South Ward Position 2 and North Ward Position 2 would be elected to a two-year term in the City of Corning general election, but would be elected to a four year term starting in the 2030 general election. If this question is approved, half of the City Council positions would be open for election for every general election after 2030. If this question is not approved, all of the aldermen positions for the City of Corning will be open for election every two years at the general election."
+      ],
+      "noMeans": [
+        "FOR changing the terms of aldermen in the City of Corning from two-year terms to staggered four-year terms.",
+        "The questions of changing the terms of aldermen who make up the City Council of City of Corning from two-year to staggered four-year terms. Currently aldermen for each ward in the City of Corning are elected to two-year terms. If this question is approved, aldermen for South Ward Position 1 and North Ward Position 1 would be elected to a four-year term at the 2028 general election and those aldermen for South Ward Position 2 and North Ward Position 2 would be elected to a two-year term in the City of Corning general election, but would be elected to a four year term starting in the 2030 general election. If this question is approved, half of the City Council positions would be open for election for every general election after 2030. If this question is not approved, all of the aldermen positions for the City of Corning will be open for election every two years at the general election."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Tesseract original scanned PDF; manually corrected bounded transcripts where noted after native visual review",
+      "scope": "Complete official operative question; original native PDF and field image preserved. Source date/caption issues explicitly retained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-pleasant-plains-staggered-four-year-council-terms",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Pleasant%20Plains%20ballot%20issue%20election%202026.pdf",
+    "rawHash": "783035985279be9ed00312becbba905559b31795a53e808c38940631f4944673",
+    "sourceFile": "sources/783035985279be9ed00312becbba905559b31795a53e808c38940631f4944673.source",
+    "sourceTextFile": "sources/c439c9001e2e368214a15fcb8f34764662952367096d42688570ed9659c284b0.txt",
+    "excerpt": "FOR adoption to elect town council members for the town of Pleasant Plains, Arkansas, to staggered four-year terms per Arkansas Code Annotated §14-45-102, with council members representing positions one, three, and five to be elected to four-year terms beginning at the next general election (November 2028), with each council member holding positions two and four to be elected to a two-year term at the next general election (November 2028), and thereafter elected to four-year terms, resulting in staggered terms",
+    "fields": {
+      "whatItDoes": [
+        "FOR adoption to elect town council members for the town of Pleasant Plains, Arkansas, to staggered four-year terms per Arkansas Code Annotated §14-45-102, with council members representing positions one, three, and five to be elected to four-year terms beginning at the next general election (November 2028), with each council member holding positions two and four to be elected to a two-year term at the next general election (November 2028), and thereafter elected to four-year terms, resulting in staggered terms"
+      ],
+      "yesMeans": [
+        "FOR adoption to elect town council members for the town of Pleasant Plains, Arkansas, to staggered four-year terms per Arkansas Code Annotated §14-45-102, with council members representing positions one, three, and five to be elected to four-year terms beginning at the next general election (November 2028), with each council member holding positions two and four to be elected to a two-year term at the next general election (November 2028), and thereafter elected to four-year terms, resulting in staggered terms"
+      ],
+      "noMeans": [
+        "FOR adoption to elect town council members for the town of Pleasant Plains, Arkansas, to staggered four-year terms per Arkansas Code Annotated §14-45-102, with council members representing positions one, three, and five to be elected to four-year terms beginning at the next general election (November 2028), with each council member holding positions two and four to be elected to a two-year term at the next general election (November 2028), and thereafter elected to four-year terms, resulting in staggered terms"
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Tesseract original scanned PDF; manually corrected bounded transcripts where noted after native visual review",
+      "scope": "Complete official operative question; original native PDF and field image preserved. Source date/caption issues explicitly retained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-lewisville-sales-use-tax",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Lewisville%20ballot%20issue%20election%202026.pdf",
+    "rawHash": "a0350b227033434d04b9dd2242875f742c97d8492767997bd51737eeda763c9e",
+    "sourceFile": "sources/a0350b227033434d04b9dd2242875f742c97d8492767997bd51737eeda763c9e.source",
+    "sourceTextFile": "sources/8d31bf5f996c65aa791fffe664216af4c066dc3922e4c5fa5811b97650bfa6f7.txt",
+    "excerpt": "Adoption of a Two and One-Half Percent (2.5 %) local Sales and Use Tax within the city\nof Lewisville, Arkansas (the “City”), whereas the City has determined that the current\none percent (1%) sales and use tax is insufficient to meet the demands of city operations\ndue to inflation and escalating costs of all goods and services. The sales and use tax shall\nbe levied and collected only on the first $2,500 for each single transaction.",
+    "fields": {
+      "whatItDoes": [
+        "Adoption of a Two and One-Half Percent (2.5 %) local Sales and Use Tax within the city\nof Lewisville, Arkansas (the “City”), whereas the City has determined that the current\none percent (1%) sales and use tax is insufficient to meet the demands of city operations\ndue to inflation and escalating costs of all goods and services. The sales and use tax shall\nbe levied and collected only on the first $2,500 for each single transaction."
+      ],
+      "yesMeans": [
+        "Adoption of a Two and One-Half Percent (2.5 %) local Sales and Use Tax within the city\nof Lewisville, Arkansas (the “City”), whereas the City has determined that the current\none percent (1%) sales and use tax is insufficient to meet the demands of city operations\ndue to inflation and escalating costs of all goods and services. The sales and use tax shall\nbe levied and collected only on the first $2,500 for each single transaction."
+      ],
+      "noMeans": [
+        "Adoption of a Two and One-Half Percent (2.5 %) local Sales and Use Tax within the city\nof Lewisville, Arkansas (the “City”), whereas the City has determined that the current\none percent (1%) sales and use tax is insufficient to meet the demands of city operations\ndue to inflation and escalating costs of all goods and services. The sales and use tax shall\nbe levied and collected only on the first $2,500 for each single transaction."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+      "Printed page4 header says NOVEMBER3,20266. Native current official2026source listing and other filing pages identify2026; caption typo retained in original. No increase-by2.5%, repeal/replacementofcurrent1%, combinedrate, unstatedpurpose or currentrateeffect inferred. Transactionlimit is attributed to exact printed ballot wording."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Tesseract original scanned PDF; manually corrected bounded transcripts where noted after native visual review",
+      "scope": "Complete official operative question; original native PDF and field image preserved. Source date/caption issues explicitly retained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

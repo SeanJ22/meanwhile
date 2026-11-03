@@ -1,0 +1,74 @@
+[
+  {
+    "contestId": "ar-cx-2026-calhoun-road-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/county:calhoun",
+      "county",
+      "05013",
+      "Calhoun County"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-phillips-hospital-property-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/county:phillips",
+      "county",
+      "05107",
+      "Phillips County"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-lawrence-road-property-tax-increase",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/county:lawrence",
+      "county",
+      "05075",
+      "Lawrence County"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-black-rock-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:black_rock",
+      "place",
+      "0506700",
+      "Black Rock city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-el-dorado-sunday-alcohol-sales",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:el_dorado",
+      "place",
+      "0521070",
+      "El Dorado city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-parkin-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:parkin",
+      "place",
+      "0553600",
+      "Parkin city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  }
+]

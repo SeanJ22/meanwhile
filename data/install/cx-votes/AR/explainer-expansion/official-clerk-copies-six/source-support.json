@@ -1,0 +1,171 @@
+[
+  {
+    "contestId": "ar-cx-2026-calhoun-road-sales-use-tax",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Calhoun-County-2026-Local-Measure.docx",
+    "rawHash": "cb2285916f9d27b38fa7e286255d7497bc0385ade13a4b61a75ebb1513d29500",
+    "sourceFile": "sources/cb2285916f9d27b38fa7e286255d7497bc0385ade13a4b61a75ebb1513d29500.source",
+    "sourceTextFile": "sources/96a548584ae98baab57c0ef61ff3529a2a20a2bed1904152174adefa5d479aee.txt",
+    "excerpt": "Adoption of a 1% local Sales and Use Tax within Calhoun County (the \"County\"), the net collections of which remaining after deduction of the administrative charges of the State of Arkansas and required rebates, will be distributed only to the County and used for County Road Department Purposes.",
+    "fields": {
+      "whatItDoes": [
+        "Adoption of a 1% local Sales and Use Tax within Calhoun County (the \"County\"), the net collections of which remaining after deduction of the administrative charges of the State of Arkansas and required rebates, will be distributed only to the County and used for County Road Department Purposes."
+      ],
+      "yesMeans": [
+        "Adoption of a 1% local Sales and Use Tax within Calhoun County (the \"County\"), the net collections of which remaining after deduction of the administrative charges of the State of Arkansas and required rebates, will be distributed only to the County and used for County Road Department Purposes."
+      ],
+      "noMeans": [
+        "Adoption of a 1% local Sales and Use Tax within Calhoun County (the \"County\"), the net collections of which remaining after deduction of the administrative charges of the State of Arkansas and required rebates, will be distributed only to the County and used for County Road Department Purposes."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Original DOCX word/document.xml paragraphs or bounded native PDF column extraction",
+      "scope": "Complete operative question, visually checked on native PDF fields where applicable. No multi-column interleaving or secondary prose substituted."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-phillips-hospital-property-tax",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Phillips%20County%20hospital%20election%202026.pdf",
+    "rawHash": "5bc28e66fc5d4399c886c04bf7436991f5ad3d6d6941726a51684ee910949c43",
+    "sourceFile": "sources/5bc28e66fc5d4399c886c04bf7436991f5ad3d6d6941726a51684ee910949c43.source",
+    "sourceTextFile": "sources/49f222b04a9165d3793104f9c64e954ae694b5a0eedc0ab4d77f0a167cd45551.txt",
+    "excerpt": "FOR a 1 mill tax on real and personal\nproperty within Phillips County to be\nused for maintenance, operation and\nsupport of a public\nhospital..................................................",
+    "fields": {
+      "whatItDoes": [
+        "FOR a 1 mill tax on real and personal\nproperty within Phillips County to be\nused for maintenance, operation and\nsupport of a public\nhospital.................................................."
+      ],
+      "yesMeans": [
+        "FOR a 1 mill tax on real and personal\nproperty within Phillips County to be\nused for maintenance, operation and\nsupport of a public\nhospital.................................................."
+      ],
+      "noMeans": [
+        "FOR a 1 mill tax on real and personal\nproperty within Phillips County to be\nused for maintenance, operation and\nsupport of a public\nhospital.................................................."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Original DOCX word/document.xml paragraphs or bounded native PDF column extraction",
+      "scope": "Complete operative question, visually checked on native PDF fields where applicable. No multi-column interleaving or secondary prose substituted."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-lawrence-road-property-tax-increase",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Lawrence%20County%20election%202026.pdf",
+    "rawHash": "0be22c45fef589dfe476002ab880c57d3099d50092321ac5c09d9b6cb7a2c5d1",
+    "sourceFile": "sources/0be22c45fef589dfe476002ab880c57d3099d50092321ac5c09d9b6cb7a2c5d1.source",
+    "sourceTextFile": "sources/ddefa347f981c85aa2bad10f20f4e91030111101f775977c39efd560cbce7038.txt",
+    "excerpt": "FOR Increasing the Lawrence County\nRoad Millage Rate by One (1) Mill for a\nTotal of a Three (3) Mill Tax on Real and\nPersonal Property to be Used for\nLawrence County Road Maintenance\nWithin Lawrence County.",
+    "fields": {
+      "whatItDoes": [
+        "FOR Increasing the Lawrence County\nRoad Millage Rate by One (1) Mill for a\nTotal of a Three (3) Mill Tax on Real and\nPersonal Property to be Used for\nLawrence County Road Maintenance\nWithin Lawrence County."
+      ],
+      "yesMeans": [
+        "FOR Increasing the Lawrence County\nRoad Millage Rate by One (1) Mill for a\nTotal of a Three (3) Mill Tax on Real and\nPersonal Property to be Used for\nLawrence County Road Maintenance\nWithin Lawrence County."
+      ],
+      "noMeans": [
+        "FOR Increasing the Lawrence County\nRoad Millage Rate by One (1) Mill for a\nTotal of a Three (3) Mill Tax on Real and\nPersonal Property to be Used for\nLawrence County Road Maintenance\nWithin Lawrence County."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Original DOCX word/document.xml paragraphs or bounded native PDF column extraction",
+      "scope": "Complete operative question, visually checked on native PDF fields where applicable. No multi-column interleaving or secondary prose substituted."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-black-rock-sales-use-tax",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Lawrence%20County%20election%202026.pdf",
+    "rawHash": "0be22c45fef589dfe476002ab880c57d3099d50092321ac5c09d9b6cb7a2c5d1",
+    "sourceFile": "sources/0be22c45fef589dfe476002ab880c57d3099d50092321ac5c09d9b6cb7a2c5d1.source",
+    "sourceTextFile": "sources/9c572b30481d5a5ebd7c9430fabed95f60153c956a0dc64496853407421bb64c.txt",
+    "excerpt": "FOR adoption of a one-half of one percent\n(0.5%) local sales and use tax within the\ncity of Black Rock, Arkansas.",
+    "fields": {
+      "whatItDoes": [
+        "FOR adoption of a one-half of one percent\n(0.5%) local sales and use tax within the\ncity of Black Rock, Arkansas."
+      ],
+      "yesMeans": [
+        "FOR adoption of a one-half of one percent\n(0.5%) local sales and use tax within the\ncity of Black Rock, Arkansas."
+      ],
+      "noMeans": [
+        "FOR adoption of a one-half of one percent\n(0.5%) local sales and use tax within the\ncity of Black Rock, Arkansas."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+      "Printed heading says Ordinance440-2026 while operative ordinance text says442-2026. Exact conflicting captions retained in native source; no officialNumber assigned and no controlling number inferred."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Original DOCX word/document.xml paragraphs or bounded native PDF column extraction",
+      "scope": "Complete operative question, visually checked on native PDF fields where applicable. No multi-column interleaving or secondary prose substituted."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-el-dorado-sunday-alcohol-sales",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/El%20Dorado%20local%20ballot%20issue%202026.docx",
+    "rawHash": "8a5b226e9b22167297ef77fa108ccf97bd4815753a0163d6f7d3b299f56e4dff",
+    "sourceFile": "sources/8a5b226e9b22167297ef77fa108ccf97bd4815753a0163d6f7d3b299f56e4dff.source",
+    "sourceTextFile": "sources/d7be302e92435f811f7f23817b7cefe1b4a003a7ea80033ddcd8281b454053ea.txt",
+    "excerpt": "Vote FOR or AGAINST permitting the sale of alcoholic beverages for off premises consumption on Sunday within the city limits of El Dorado, Arkansas between the hours of 10:00 a.m. and 12:00 midnight.",
+    "fields": {
+      "whatItDoes": [
+        "Vote FOR or AGAINST permitting the sale of alcoholic beverages for off premises consumption on Sunday within the city limits of El Dorado, Arkansas between the hours of 10:00 a.m. and 12:00 midnight."
+      ],
+      "yesMeans": [
+        "Vote FOR or AGAINST permitting the sale of alcoholic beverages for off premises consumption on Sunday within the city limits of El Dorado, Arkansas between the hours of 10:00 a.m. and 12:00 midnight."
+      ],
+      "noMeans": [
+        "Vote FOR or AGAINST permitting the sale of alcoholic beverages for off premises consumption on Sunday within the city limits of El Dorado, Arkansas between the hours of 10:00 a.m. and 12:00 midnight."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Original DOCX word/document.xml paragraphs or bounded native PDF column extraction",
+      "scope": "Complete operative question, visually checked on native PDF fields where applicable. No multi-column interleaving or secondary prose substituted."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-parkin-sales-use-tax",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Parkin%20ballot%20issue%20election%202026.pdf",
+    "rawHash": "eeb6069bf931ceacabf702743e70455b3ddd24678dac070a46c20e1d89da167f",
+    "sourceFile": "sources/eeb6069bf931ceacabf702743e70455b3ddd24678dac070a46c20e1d89da167f.source",
+    "sourceTextFile": "sources/68418ad200e8aa8695c857e2f47f1a0b4df1538f76bd79b955d75487a239b1eb.txt",
+    "excerpt": "Adoption of a 2% local sales and use\ntax with the City of Parkin, Arkansas,\nfor the purpose of GENERAL FUND, to\nbe collected on a PERMANENT basis\nand it shall be levied and collected\ncontinuously until such time it is\nrepealed by a majority of the voters at a\ngeneral or special election.",
+    "fields": {
+      "whatItDoes": [
+        "Adoption of a 2% local sales and use\ntax with the City of Parkin, Arkansas,\nfor the purpose of GENERAL FUND, to\nbe collected on a PERMANENT basis\nand it shall be levied and collected\ncontinuously until such time it is\nrepealed by a majority of the voters at a\ngeneral or special election."
+      ],
+      "yesMeans": [
+        "Adoption of a 2% local sales and use\ntax with the City of Parkin, Arkansas,\nfor the purpose of GENERAL FUND, to\nbe collected on a PERMANENT basis\nand it shall be levied and collected\ncontinuously until such time it is\nrepealed by a majority of the voters at a\ngeneral or special election."
+      ],
+      "noMeans": [
+        "Adoption of a 2% local sales and use\ntax with the City of Parkin, Arkansas,\nfor the purpose of GENERAL FUND, to\nbe collected on a PERMANENT basis\nand it shall be levied and collected\ncontinuously until such time it is\nrepealed by a majority of the voters at a\ngeneral or special election."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Original DOCX word/document.xml paragraphs or bounded native PDF column extraction",
+      "scope": "Complete operative question, visually checked on native PDF fields where applicable. No multi-column interleaving or secondary prose substituted."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

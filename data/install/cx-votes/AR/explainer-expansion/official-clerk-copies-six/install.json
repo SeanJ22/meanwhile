@@ -1,0 +1,76 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "AR",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AR",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ar-cx-2026-calhoun-road-sales-use-tax",
+      "title": "Calhoun County — Road sales and use tax",
+      "ocdId": "ocd-division/country:us/state:ar/county:calhoun",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Calhoun-County-2026-Local-Measure.docx"
+    },
+    {
+      "id": "ar-cx-2026-phillips-hospital-property-tax",
+      "title": "Phillips County — Public hospital property tax",
+      "ocdId": "ocd-division/country:us/state:ar/county:phillips",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Phillips%20County%20hospital%20election%202026.pdf"
+    },
+    {
+      "id": "ar-cx-2026-lawrence-road-property-tax-increase",
+      "title": "Lawrence County — Road property-tax increase",
+      "ocdId": "ocd-division/country:us/state:ar/county:lawrence",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Lawrence%20County%20election%202026.pdf"
+    },
+    {
+      "id": "ar-cx-2026-black-rock-sales-use-tax",
+      "title": "Black Rock — Sales and use tax",
+      "ocdId": "ocd-division/country:us/state:ar/place:black_rock",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Lawrence%20County%20election%202026.pdf"
+    },
+    {
+      "id": "ar-cx-2026-el-dorado-sunday-alcohol-sales",
+      "title": "El Dorado — Sunday alcohol sales for consumption elsewhere",
+      "ocdId": "ocd-division/country:us/state:ar/place:el_dorado",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/El%20Dorado%20local%20ballot%20issue%202026.docx"
+    },
+    {
+      "id": "ar-cx-2026-parkin-sales-use-tax",
+      "title": "Parkin — General-fund sales and use tax",
+      "ocdId": "ocd-division/country:us/state:ar/place:parkin",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Parkin%20ballot%20issue%20election%202026.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 6,
+    "newPlainLanguageExplanations": 6,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "AR",
+    "newMeasures": 6,
+    "newExplanations": 6,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

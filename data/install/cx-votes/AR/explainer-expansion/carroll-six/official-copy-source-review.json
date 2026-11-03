@@ -1,0 +1,105 @@
+{
+  "publisher": "University of Arkansas System Division of Agriculture Cooperative Extension Service, distributing explicitly attributed clerk-supplied ballot documents",
+  "sourceClass": "OFFICIAL_PUBLISHER",
+  "notAnElectionBoardClaim": true,
+  "officialHostEvidence": {
+    "url": "https://yellcountyar.gov/other-county-agencies/agricultural-extension-office/",
+    "nativeHtmlSha256": "fbb325960bf2f2c85f2e4e3e8ec42137cb8344acee253021a7f52b0c4210d326",
+    "archivePath": "sources/fbb325960bf2f2c85f2e4e3e8ec42137cb8344acee253021a7f52b0c4210d326.government-linking.html",
+    "exactNativeHref": "https://www.uaex.uada.edu/counties/yell/default.aspx"
+  },
+  "currentElectionListing": {
+    "url": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/arkansas-voters-have-local-ballot-issues-to-decide-in-november-2026-election.aspx",
+    "nativeHtmlOriginalSha256": "6d16ddda941f74899c1fe57eda9d7920546a1d02490eaa723617d2ff1572bf8c",
+    "nativeCaptureAt": "2026-11-03T10:42:03.249501+00:00",
+    "archivedSanitizedHtml": "sources/uada-current-local-index.sanitized.html",
+    "sanitizedSha256": "4840db63786c6b1ec1406eb4a00cfaf8c70b3f591c939c31bec6287b0cdca15e",
+    "sanitizerVersion": "fx-cred-v1-2026-08-28",
+    "redactionScope": "Existing sanitizer plus removal of unrelated expired signed FortSmith ordinance URL; no measure document bytes or ballot wording changed.",
+    "extractedText": "sources/uada-current-local-index.parsed.txt",
+    "extractedTextSha256": "20095f694210dc329ea3b21657a3ae62988287bbd75c8183ffa98952538db2de",
+    "dateScope": "Article August28,2026, current captured November3; explicitly identifies Nov3,2026 general local issues and links these exact supplied documents.",
+    "limit": "University expressly says no central local-election database exists and list is non-exhaustive; source-supplied documents are evidence only for their individual questions."
+  },
+  "subjects": [
+    {
+      "contestId": "ar-cx-2026-eureka-springs-sales-use-tax",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Carroll%20County%202026%20ballot%20measures.docx",
+      "sourceAttribution": "Carroll County Clerk — official ballot wording distributed by UADA Extension",
+      "sourceFormat": "NATIVE_DOCX",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+        "Net revenue is after state administrative charges and required rebates. Tax levy independent of bond approvals; no household bill, totalprojectcost or overlappingtaxinference."
+      ],
+      "sourceReview": "Native clerk-supplied form or official county sample published by University of Arkansas System Division of Agriculture Cooperative Extension Service. Current official Extension index explicitly attributes source to named county clerk/sample and places the question in November3,2026 local-election list. Genuine county.gov native linking HTML identifies uaex.uada.edu. University distribution is labeled honestly, not a claim the university is the election board."
+    },
+    {
+      "contestId": "ar-cx-2026-eureka-springs-water-bonds",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Carroll%20County%202026%20ballot%20measures.docx",
+      "sourceAttribution": "Carroll County Clerk — official ballot wording distributed by UADA Extension",
+      "sourceFormat": "NATIVE_DOCX",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+        "10M aggregate principal across one or more issues, not eachissue or totalrepayment; tax separately approved."
+      ],
+      "sourceReview": "Native clerk-supplied form or official county sample published by University of Arkansas System Division of Agriculture Cooperative Extension Service. Current official Extension index explicitly attributes source to named county clerk/sample and places the question in November3,2026 local-election list. Genuine county.gov native linking HTML identifies uaex.uada.edu. University distribution is labeled honestly, not a claim the university is the election board."
+    },
+    {
+      "contestId": "ar-cx-2026-eureka-springs-sewer-bonds",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Carroll%20County%202026%20ballot%20measures.docx",
+      "sourceAttribution": "Carroll County Clerk — official ballot wording distributed by UADA Extension",
+      "sourceFormat": "NATIVE_DOCX",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+        "10M aggregate principal across one or more issues, not eachissue or totalrepayment; tax separately approved."
+      ],
+      "sourceReview": "Native clerk-supplied form or official county sample published by University of Arkansas System Division of Agriculture Cooperative Extension Service. Current official Extension index explicitly attributes source to named county clerk/sample and places the question in November3,2026 local-election list. Genuine county.gov native linking HTML identifies uaex.uada.edu. University distribution is labeled honestly, not a claim the university is the election board."
+    },
+    {
+      "contestId": "ar-cx-2026-eureka-springs-pine-mountain-entertainment-district",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Carroll%20County%20Ballot%20Proof%20Eureka%20Springs%20City%20Limits.pdf",
+      "sourceAttribution": "Carroll County Clerk — official ballot wording distributed by UADA Extension",
+      "sourceFormat": "NATIVE_PDF",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+        "No alcohol, public-consumption, hours,license, tax, business or implementation rules inferred from entertainment-district label. Official title expressly refers ordinance to voters of whole municipality; district location is not substituted for electoral scope."
+      ],
+      "sourceReview": "Native official county sample supplied through UADA Extension; full original PDF and native page2 field visually checked. Operative choices explicitly FOR the rejection / AGAINST the rejection, which control direction. Clerk DOCX summary omits these choice lines; no opposite meaning inferred from general approve-or-reject heading. Review watermark preserved; current official November2026 linked listing identifies sample. Genuine county.gov host linking evidence preserved."
+    },
+    {
+      "contestId": "ar-cx-2026-holiday-island-sales-use-tax",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Carroll%20County%202026%20ballot%20measures.docx",
+      "sourceAttribution": "Carroll County Clerk — official ballot wording distributed by UADA Extension",
+      "sourceFormat": "NATIVE_DOCX",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+      ],
+      "sourceReview": "Native clerk-supplied form or official county sample published by University of Arkansas System Division of Agriculture Cooperative Extension Service. Current official Extension index explicitly attributes source to named county clerk/sample and places the question in November3,2026 local-election list. Genuine county.gov native linking HTML identifies uaex.uada.edu. University distribution is labeled honestly, not a claim the university is the election board."
+    },
+    {
+      "contestId": "ar-cx-2026-holiday-island-sunday-alcohol-sales",
+      "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Carroll%20County%202026%20ballot%20measures.docx",
+      "sourceAttribution": "Carroll County Clerk — official ballot wording distributed by UADA Extension",
+      "sourceFormat": "NATIVE_DOCX",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+      ],
+      "sourceReview": "Native clerk-supplied form or official county sample published by University of Arkansas System Division of Agriculture Cooperative Extension Service. Current official Extension index explicitly attributes source to named county clerk/sample and places the question in November3,2026 local-election list. Genuine county.gov native linking HTML identifies uaex.uada.edu. University distribution is labeled honestly, not a claim the university is the election board."
+    }
+  ],
+  "nativeFieldArchives": [
+    "sources/ar-carroll-entertainment-verified-field.txt",
+    "sources/ar-carroll-eureka-springs-sales-use-tax-verified-field.txt",
+    "sources/ar-carroll-eureka-springs-sewer-bonds-verified-field.txt",
+    "sources/ar-carroll-eureka-springs-water-bonds-verified-field.txt",
+    "sources/ar-carroll-holiday-island-sales-use-tax-verified-field.txt",
+    "sources/ar-carroll-holiday-island-sunday-alcohol-sales-verified-field.txt"
+  ],
+  "scope": "Prepared only listed complete questions and exact whole-place/county identities. No ordinary candidate rows, polling facts, all-local absence or statewide local completeness claim."
+}

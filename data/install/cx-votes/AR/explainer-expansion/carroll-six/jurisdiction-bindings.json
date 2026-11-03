@@ -1,0 +1,74 @@
+[
+  {
+    "contestId": "ar-cx-2026-eureka-springs-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:eureka_springs",
+      "place",
+      "0522240",
+      "Eureka Springs city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-eureka-springs-water-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:eureka_springs",
+      "place",
+      "0522240",
+      "Eureka Springs city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-eureka-springs-sewer-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:eureka_springs",
+      "place",
+      "0522240",
+      "Eureka Springs city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-eureka-springs-pine-mountain-entertainment-district",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:eureka_springs",
+      "place",
+      "0522240",
+      "Eureka Springs city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-holiday-island-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:holiday_island",
+      "place",
+      "0532650",
+      "Holiday Island city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  },
+  {
+    "contestId": "ar-cx-2026-holiday-island-sunday-alcohol-sales",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:holiday_island",
+      "place",
+      "0532650",
+      "Holiday Island city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  }
+]

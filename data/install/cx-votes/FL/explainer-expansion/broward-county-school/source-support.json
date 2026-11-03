@@ -1,0 +1,220 @@
+[
+  {
+    "contestId": "fl-2026-broward-health-care-surtax",
+    "ocdId": "ocd-division/country:us/state:fl/county:broward",
+    "sourceUrl": "https://www.broward.org/Charter",
+    "rawPdfFile": "sources/c2e884556aaf5fe7a517d0f2641ebb785799786f36af55480f3583a07d21d801.pdf",
+    "rawPdfSha256": "c2e884556aaf5fe7a517d0f2641ebb785799786f36af55480f3583a07d21d801",
+    "nativeTextFile": "sources/036bb934d1b2fba46e9842a39488aa875c7a0545f8a0a543746b72dd481910f1.txt",
+    "questionTextFile": "sources/12541b83c2a720b85bd90192962f26a9d1a7cc13c3ccfc385fca353e532b1e31.txt",
+    "textFilePerMeasure": "sources/12541b83c2a720b85bd90192962f26a9d1a7cc13c3ccfc385fca353e532b1e31.txt",
+    "renderedPages": [
+      {
+        "file": "sources/cb4b636a03f282b4437b6076d43cbda21f551df983deaa4c57916d49658410d8.png",
+        "sourcePage": 3
+      },
+      {
+        "file": "sources/6e1a4df19577f78b623c2748555d589e5d1d381eb35fe50bba5a825e6ff1df74.png",
+        "sourcePage": 4
+      },
+      {
+        "file": "sources/ca4f9c13ec7087f3c082c43d1c5cc20f1a3d695a2be1834de68f9b8ee03df893.png",
+        "sourcePage": 5
+      },
+      {
+        "file": "sources/b65a6ee65a772594487f72e38dc533b642310fb287fbd7a8665fa3d92d559b54.png",
+        "sourcePage": 6
+      }
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Broward County fund (1) preventive heart and cancer tests, to the extent not covered by insurance, for qualified Broward County residents, (2) primary and preventive health care for indigent or medically poor residents, and (3) other health services, as described in a County health care plan, as periodically amended, by levying a one quarter of one percent sales surtax for five years subject to automatic repeal if a 1% infrastructure surtax is levied?"
+      ],
+      "yesMeans": [
+        "Shall Broward County fund (1) preventive heart and cancer tests, to the extent not covered by insurance, for qualified Broward County residents, (2) primary and preventive health care for indigent or medically poor residents, and (3) other health services, as described in a County health care plan, as periodically amended, by levying a one quarter of one percent sales surtax for five years subject to automatic repeal if a 1% infrastructure surtax is levied?"
+      ],
+      "noMeans": [
+        "Shall Broward County fund (1) preventive heart and cancer tests, to the extent not covered by insurance, for qualified Broward County residents, (2) primary and preventive health care for indigent or medically poor residents, and (3) other health services, as described in a County health care plan, as periodically amended, by levying a one quarter of one percent sales surtax for five years subject to automatic repeal if a 1% infrastructure surtax is levied?"
+      ]
+    },
+    "choices": [
+      "FOR THE 0.25 CENT TAX",
+      "AGAINST THE 0.25 CENT TAX"
+    ],
+    "hashScope": "Exact verbatim question plus newline plus exact relevant held official statement, or empty statement. Native certified original PDF hash retained separately.",
+    "jurisdictionQuote": "All registered and qualified electors in Broward County shall be eligible to vote in the referendum election.",
+    "reviewNote": "Complete qualified-resident/insurance and surtax-repeal conditions, ordinance-dependent plat process, auditor nomination/majority/qualification/vacancy conditions, and school levy versus fiscal-use dates, early repeal/reduction and monthly-report commitments retained.",
+    "officialPublication": {
+      "url": "https://www.broward.org/Charter",
+      "file": "sources/91a44b5e68b6c15b51cfaf142455639ebeb9b8d24dac44f0cd237262ea852b8e.html",
+      "sha256": "91a44b5e68b6c15b51cfaf142455639ebeb9b8d24dac44f0cd237262ea852b8e",
+      "nativeCaptureSha256": "91a44b5e68b6c15b51cfaf142455639ebeb9b8d24dac44f0cd237262ea852b8e",
+      "retrievedAt": "2026-11-03T09:23:58.744265+00:00"
+    }
+  },
+  {
+    "contestId": "fl-2026-broward-plat-approval",
+    "ocdId": "ocd-division/country:us/state:fl/county:broward",
+    "sourceUrl": "https://www.broward.org/Charter",
+    "rawPdfFile": "sources/fb744fc7996faf4dc7257c73ed0a9f11e55bf3c8f92e4cf36cfd70f1e7c65925.pdf",
+    "rawPdfSha256": "fb744fc7996faf4dc7257c73ed0a9f11e55bf3c8f92e4cf36cfd70f1e7c65925",
+    "nativeTextFile": "sources/5a389d7ce5aa6e5d8f47c0f9ca7168b06a8bd43d8a8aa740a24e213903f1d16c.txt",
+    "questionTextFile": "sources/1b44ff1e7e3b39bb18e7906855501cb4318198d71b5259ac3aca40b8c9dda127.txt",
+    "textFilePerMeasure": "sources/1b44ff1e7e3b39bb18e7906855501cb4318198d71b5259ac3aca40b8c9dda127.txt",
+    "renderedPages": [
+      {
+        "file": "sources/64d40335d36c4a5b4c4985b6ad5654cbd1cbdc0513e7b5d0459250ec9946df53.png",
+        "sourcePage": 1
+      },
+      {
+        "file": "sources/d839228a1ef14c02878bab8b4ceb7d6320b513b6fe0ed560944b1c4ebebc9932.png",
+        "sourcePage": 2
+      },
+      {
+        "file": "sources/c1def71540442ed0b368eeaa696e8efd4b4b3c40a8700a79880f3a1a94167a3c.png",
+        "sourcePage": 3
+      }
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Currently under the Broward County Charter, all plats in Broward County must be approved by the County Commission prior to recording; this proposal amends the Charter to allow the County Commission to provide, by ordinance, as permitted under state law, an alternative process for approving plats, such as administrative approval, which might enable more expeditious plat approval including by allowing approval when the County Commission is in recess."
+      ],
+      "yesMeans": [
+        "Currently under the Broward County Charter, all plats in Broward County must be approved by the County Commission prior to recording; this proposal amends the Charter to allow the County Commission to provide, by ordinance, as permitted under state law, an alternative process for approving plats, such as administrative approval, which might enable more expeditious plat approval including by allowing approval when the County Commission is in recess."
+      ],
+      "noMeans": [
+        "Currently under the Broward County Charter, all plats in Broward County must be approved by the County Commission prior to recording; this proposal amends the Charter to allow the County Commission to provide, by ordinance, as permitted under state law, an alternative process for approving plats, such as administrative approval, which might enable more expeditious plat approval including by allowing approval when the County Commission is in recess."
+      ]
+    },
+    "choices": [
+      "YES",
+      "NO"
+    ],
+    "hashScope": "Exact verbatim question plus newline plus exact relevant held official statement, or empty statement. Native certified original PDF hash retained separately.",
+    "jurisdictionQuote": "All registered and qualified electors in Broward County shall be eligible to vote in the referendum election.",
+    "reviewNote": "Complete qualified-resident/insurance and surtax-repeal conditions, ordinance-dependent plat process, auditor nomination/majority/qualification/vacancy conditions, and school levy versus fiscal-use dates, early repeal/reduction and monthly-report commitments retained.",
+    "officialPublication": {
+      "url": "https://www.broward.org/Charter",
+      "file": "sources/91a44b5e68b6c15b51cfaf142455639ebeb9b8d24dac44f0cd237262ea852b8e.html",
+      "sha256": "91a44b5e68b6c15b51cfaf142455639ebeb9b8d24dac44f0cd237262ea852b8e",
+      "nativeCaptureSha256": "91a44b5e68b6c15b51cfaf142455639ebeb9b8d24dac44f0cd237262ea852b8e",
+      "retrievedAt": "2026-11-03T09:23:58.744265+00:00"
+    }
+  },
+  {
+    "contestId": "fl-2026-broward-auditor-selection",
+    "ocdId": "ocd-division/country:us/state:fl/county:broward",
+    "sourceUrl": "https://www.broward.org/Charter",
+    "rawPdfFile": "sources/298913ad83947b005d73c7ad07e708ced2cef46a9f0b5789519d8a5faef14daa.pdf",
+    "rawPdfSha256": "298913ad83947b005d73c7ad07e708ced2cef46a9f0b5789519d8a5faef14daa",
+    "nativeTextFile": "sources/2859fd6cba8f6f4f9ac362ef5d092ab394927fbb48a2a1818fdb820e45d9b580.txt",
+    "questionTextFile": "sources/a70d65ff2400f79b22953ffe013f2fdede6c222ef3d1ca240431a2c1b7ef4324.txt",
+    "textFilePerMeasure": "sources/d3b6bcca182c6bcf60894a640dc028a4ac152255a48cfccf0cbbd29ef84754af.txt",
+    "renderedPages": [
+      {
+        "file": "sources/0ebed132e71cdfa0ecb96652638ce99e1c94da724168a430626d329697cfa8f9.png",
+        "sourcePage": 1
+      },
+      {
+        "file": "sources/78de80074721015ad497fc3a6741507ddbb80a50f40584189f8ea98c9a2b7230.png",
+        "sourcePage": 2
+      },
+      {
+        "file": "sources/ae6468647234ef9fa7876ac5cb6bc40254839183b1092876b04270e1bd5a3493.png",
+        "sourcePage": 3
+      },
+      {
+        "file": "sources/80f7d330f8d04c73b0f3d87fd6ceecb6c405521fd4ece1bc668eb1b4675a2ccf.png",
+        "sourcePage": 4
+      },
+      {
+        "file": "sources/aeaa443cff65b79482d32ac9ce5debeb062edb3b0558757ed47ecc3fb365f289.png",
+        "sourcePage": 5
+      }
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Currently under the Broward County Charter, an independent board nominates one individual for County Auditor, and the County Commission ratifies that selection upon determining the nominee is qualified. Should the Charter be amended to provide that the independent board nominates three individuals, thereby enabling the County Commission to appoint as County Auditor the qualified nominee it determines is best able to serve in that position?",
+        "Sec. 4.01. County Auditor. A. Effective January 1, 2018, tihere shall be an independent board comprised ... composed of the following individuals woo, that shall nominate an individual to three (3) candidates for the position of County Auditor, subject to ratification by a majority of the County Commission on or before July 1, 2018: ( 1) (2) (3) (4) (5) President of the Florida Institute of Certified Public Accountants, or designee; President of the Broward County League of Cities, or designee; President of the Broward County Bar Association, or designee; President of a local college or university, as determined by the County Commission, or designee; and President of the Institute of Internal Auditors, or designee. In the event that !f any of these individuals decline to appoint a member to the independent board, additional representatives shall be appointed from countywide business organizations, which organizations shall be selected by the County Commission. The intent of this provision is to ensure that there are five (5) members on the independent board woo nominate an individual to the position of County Auditor that nominates the three (3) candidates. B. The County Commission shall, by majority vote, appoint as County Auditor the candidate it determines is best able to serve in that position, provided the County Commission determines that the appointee meets the qualifications specified in this section. The individual appointed to the position of County Auditor shall be a person who holds and maintains an active Florida license to practice public accounting pursuant to Chapter 473, Florida Statutes, as may be amended from time to time, and shall have sufficient experience in governmental accounting and auditing practices. C. The County Auditor shall serve for a period of five (5) years from the date of ratification 3ppointment by a majority of the full County Commission. The County Commission may remove the individual serving as the County Auditor by an affirmative vote of one (1) more than that which would constitute a majority vote of the full County Commission. D. If the County Auditor's position shaU become§. vacant, the County Commission shall appoint, by a majority vote, an Interim County Auditor. The appointment of the Interim County Auditor shall not be authorized for more than ninety (90) days. During the ninety (90) day period, the independent board established in this Am6-le section shall meet in order to nominate a new individual to nominate three (3) candidates for the position of County Auditor, subject to the County Commission's ratification. The County Commission shall appoint the County Auditor from among those candidates by a majority vote in accordance with this section, provided the County Commission determines the appointee meets the qualifications specified in Section 4.01 .8."
+      ],
+      "yesMeans": [
+        "Currently under the Broward County Charter, an independent board nominates one individual for County Auditor, and the County Commission ratifies that selection upon determining the nominee is qualified. Should the Charter be amended to provide that the independent board nominates three individuals, thereby enabling the County Commission to appoint as County Auditor the qualified nominee it determines is best able to serve in that position?",
+        "Sec. 4.01. County Auditor. A. Effective January 1, 2018, tihere shall be an independent board comprised ... composed of the following individuals woo, that shall nominate an individual to three (3) candidates for the position of County Auditor, subject to ratification by a majority of the County Commission on or before July 1, 2018: ( 1) (2) (3) (4) (5) President of the Florida Institute of Certified Public Accountants, or designee; President of the Broward County League of Cities, or designee; President of the Broward County Bar Association, or designee; President of a local college or university, as determined by the County Commission, or designee; and President of the Institute of Internal Auditors, or designee. In the event that !f any of these individuals decline to appoint a member to the independent board, additional representatives shall be appointed from countywide business organizations, which organizations shall be selected by the County Commission. The intent of this provision is to ensure that there are five (5) members on the independent board woo nominate an individual to the position of County Auditor that nominates the three (3) candidates. B. The County Commission shall, by majority vote, appoint as County Auditor the candidate it determines is best able to serve in that position, provided the County Commission determines that the appointee meets the qualifications specified in this section. The individual appointed to the position of County Auditor shall be a person who holds and maintains an active Florida license to practice public accounting pursuant to Chapter 473, Florida Statutes, as may be amended from time to time, and shall have sufficient experience in governmental accounting and auditing practices. C. The County Auditor shall serve for a period of five (5) years from the date of ratification 3ppointment by a majority of the full County Commission. The County Commission may remove the individual serving as the County Auditor by an affirmative vote of one (1) more than that which would constitute a majority vote of the full County Commission. D. If the County Auditor's position shaU become§. vacant, the County Commission shall appoint, by a majority vote, an Interim County Auditor. The appointment of the Interim County Auditor shall not be authorized for more than ninety (90) days. During the ninety (90) day period, the independent board established in this Am6-le section shall meet in order to nominate a new individual to nominate three (3) candidates for the position of County Auditor, subject to the County Commission's ratification. The County Commission shall appoint the County Auditor from among those candidates by a majority vote in accordance with this section, provided the County Commission determines the appointee meets the qualifications specified in Section 4.01 .8."
+      ],
+      "noMeans": [
+        "Currently under the Broward County Charter, an independent board nominates one individual for County Auditor, and the County Commission ratifies that selection upon determining the nominee is qualified. Should the Charter be amended to provide that the independent board nominates three individuals, thereby enabling the County Commission to appoint as County Auditor the qualified nominee it determines is best able to serve in that position?",
+        "Sec. 4.01. County Auditor. A. Effective January 1, 2018, tihere shall be an independent board comprised ... composed of the following individuals woo, that shall nominate an individual to three (3) candidates for the position of County Auditor, subject to ratification by a majority of the County Commission on or before July 1, 2018: ( 1) (2) (3) (4) (5) President of the Florida Institute of Certified Public Accountants, or designee; President of the Broward County League of Cities, or designee; President of the Broward County Bar Association, or designee; President of a local college or university, as determined by the County Commission, or designee; and President of the Institute of Internal Auditors, or designee. In the event that !f any of these individuals decline to appoint a member to the independent board, additional representatives shall be appointed from countywide business organizations, which organizations shall be selected by the County Commission. The intent of this provision is to ensure that there are five (5) members on the independent board woo nominate an individual to the position of County Auditor that nominates the three (3) candidates. B. The County Commission shall, by majority vote, appoint as County Auditor the candidate it determines is best able to serve in that position, provided the County Commission determines that the appointee meets the qualifications specified in this section. The individual appointed to the position of County Auditor shall be a person who holds and maintains an active Florida license to practice public accounting pursuant to Chapter 473, Florida Statutes, as may be amended from time to time, and shall have sufficient experience in governmental accounting and auditing practices. C. The County Auditor shall serve for a period of five (5) years from the date of ratification 3ppointment by a majority of the full County Commission. The County Commission may remove the individual serving as the County Auditor by an affirmative vote of one (1) more than that which would constitute a majority vote of the full County Commission. D. If the County Auditor's position shaU become§. vacant, the County Commission shall appoint, by a majority vote, an Interim County Auditor. The appointment of the Interim County Auditor shall not be authorized for more than ninety (90) days. During the ninety (90) day period, the independent board established in this Am6-le section shall meet in order to nominate a new individual to nominate three (3) candidates for the position of County Auditor, subject to the County Commission's ratification. The County Commission shall appoint the County Auditor from among those candidates by a majority vote in accordance with this section, provided the County Commission determines the appointee meets the qualifications specified in Section 4.01 .8."
+      ]
+    },
+    "choices": [
+      "YES",
+      "NO"
+    ],
+    "hashScope": "Exact verbatim question plus newline plus exact relevant held official statement, or empty statement. Native certified original PDF hash retained separately.",
+    "jurisdictionQuote": "All registered and qualified electors in Broward County shall be eligible to vote in the referendum election.",
+    "reviewNote": "Complete qualified-resident/insurance and surtax-repeal conditions, ordinance-dependent plat process, auditor nomination/majority/qualification/vacancy conditions, and school levy versus fiscal-use dates, early repeal/reduction and monthly-report commitments retained.",
+    "officialPublication": {
+      "url": "https://www.broward.org/Charter",
+      "file": "sources/91a44b5e68b6c15b51cfaf142455639ebeb9b8d24dac44f0cd237262ea852b8e.html",
+      "sha256": "91a44b5e68b6c15b51cfaf142455639ebeb9b8d24dac44f0cd237262ea852b8e",
+      "nativeCaptureSha256": "91a44b5e68b6c15b51cfaf142455639ebeb9b8d24dac44f0cd237262ea852b8e",
+      "retrievedAt": "2026-11-03T09:23:58.744265+00:00"
+    }
+  },
+  {
+    "contestId": "fl-2026-broward-school-one-mill-renewal",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:broward_county_school_district",
+    "sourceUrl": "https://www.browardschools.com/school-board/referendum-2026",
+    "rawPdfFile": "sources/112680766807c539770e393a28f829b697a543bb5cde7b19e01e923c5d931d4e.pdf",
+    "rawPdfSha256": "112680766807c539770e393a28f829b697a543bb5cde7b19e01e923c5d931d4e",
+    "nativeTextFile": "sources/ca0756d2099c080e4fc5a3c98ec492ffdbb45b5737143582022f530c289fbb45.txt",
+    "questionTextFile": "sources/2e8ec2faa566edc1dac9b92f7fa9ece97775de100413897f1b2864355fdfe1fb.txt",
+    "textFilePerMeasure": "sources/1011dcaaa4590adf6f75a56c4bf5dc935e789720a5b82928a28d018d7e4491f0.txt",
+    "renderedPages": [
+      {
+        "file": "sources/7f84a02a304b5c780508df6f26f37280daf9adf829c2b8ad73bcaa500f3f218e.png",
+        "sourcePage": 4
+      },
+      {
+        "file": "sources/7e8731dcfc9c63fb6d64e0c93bae779b41b6b34300b36f06496031b85875f70f.png",
+        "sourcePage": 5
+      },
+      {
+        "file": "sources/6cd9c95c32afc0794ec9192052223dffe682f192246ed2194499871ffe7a1e9d.png",
+        "sourcePage": 6
+      },
+      {
+        "file": "sources/1461bd8b971c15a81520148e0c36bbf83958d70cf8aa0389e74b0a8d54e5d086.png",
+        "sourcePage": 7
+      }
+    ],
+    "fields": {
+      "whatItDoes": [
+        "To enhance school safety and mental health services, recruit and retain highly qualified teachers and essential employees, improve student achievement, and support critical school operations, shall the School Board of Broward County continue to levy a one-mill ad valorem property tax from January 1, 2027, through December 31, 2030, to fund school safety personnel, mental health services, increased compensation for teachers, and school-based and support staff for public and charter schools?",
+        "monthly reports on all receipts and expenditures in connection with such levy and will promptly post such reports on the School Board’s website for public inspection. NOW, THEREFORE, BE IT RESOLVED BY THE SCHOOL BOARD OF BROWARD COUNTY, FLORmA: ofAd Valorem Taxes for eran'n E es. Pursuant to the provisions Section 1. of Secu'on 101 1.71(9), Florida Statutes (2021), there is hereby levied and imposed a one (l) mill ad-valorem tax for operating expenses to enhance flmding for school safety and security stamng and mental health professionals, to provide flmding to recruit and retain teachers and eligible staE, and to fumd other essential insn'uction related expenses to preserve important programs for the beneht of traditional public and charter schools. Section 2. Term of Le_vy. The one (1) mill levy of ad valorem taxes for operating expenses shall commence January 1, 2027, and shall remain in full force and eE‘ect for four (4) years ending December 31, 2030, Imless repealed or reduced prior to that time by resolution of the School Board, which repeal or reduction may be eEectuated without referendum. Notwithstanding the foregoing, such collections shall be used to fund authorized expenditm‘es for the Escal years commencing July 1, 2027, through the conclusion of the 2030- 2031 Escal year ending June 30, 2031."
+      ],
+      "yesMeans": [
+        "To enhance school safety and mental health services, recruit and retain highly qualified teachers and essential employees, improve student achievement, and support critical school operations, shall the School Board of Broward County continue to levy a one-mill ad valorem property tax from January 1, 2027, through December 31, 2030, to fund school safety personnel, mental health services, increased compensation for teachers, and school-based and support staff for public and charter schools?",
+        "monthly reports on all receipts and expenditures in connection with such levy and will promptly post such reports on the School Board’s website for public inspection. NOW, THEREFORE, BE IT RESOLVED BY THE SCHOOL BOARD OF BROWARD COUNTY, FLORmA: ofAd Valorem Taxes for eran'n E es. Pursuant to the provisions Section 1. of Secu'on 101 1.71(9), Florida Statutes (2021), there is hereby levied and imposed a one (l) mill ad-valorem tax for operating expenses to enhance flmding for school safety and security stamng and mental health professionals, to provide flmding to recruit and retain teachers and eligible staE, and to fumd other essential insn'uction related expenses to preserve important programs for the beneht of traditional public and charter schools. Section 2. Term of Le_vy. The one (1) mill levy of ad valorem taxes for operating expenses shall commence January 1, 2027, and shall remain in full force and eE‘ect for four (4) years ending December 31, 2030, Imless repealed or reduced prior to that time by resolution of the School Board, which repeal or reduction may be eEectuated without referendum. Notwithstanding the foregoing, such collections shall be used to fund authorized expenditm‘es for the Escal years commencing July 1, 2027, through the conclusion of the 2030- 2031 Escal year ending June 30, 2031."
+      ],
+      "noMeans": [
+        "To enhance school safety and mental health services, recruit and retain highly qualified teachers and essential employees, improve student achievement, and support critical school operations, shall the School Board of Broward County continue to levy a one-mill ad valorem property tax from January 1, 2027, through December 31, 2030, to fund school safety personnel, mental health services, increased compensation for teachers, and school-based and support staff for public and charter schools?",
+        "monthly reports on all receipts and expenditures in connection with such levy and will promptly post such reports on the School Board’s website for public inspection. NOW, THEREFORE, BE IT RESOLVED BY THE SCHOOL BOARD OF BROWARD COUNTY, FLORmA: ofAd Valorem Taxes for eran'n E es. Pursuant to the provisions Section 1. of Secu'on 101 1.71(9), Florida Statutes (2021), there is hereby levied and imposed a one (l) mill ad-valorem tax for operating expenses to enhance flmding for school safety and security stamng and mental health professionals, to provide flmding to recruit and retain teachers and eligible staE, and to fumd other essential insn'uction related expenses to preserve important programs for the beneht of traditional public and charter schools. Section 2. Term of Le_vy. The one (1) mill levy of ad valorem taxes for operating expenses shall commence January 1, 2027, and shall remain in full force and eE‘ect for four (4) years ending December 31, 2030, Imless repealed or reduced prior to that time by resolution of the School Board, which repeal or reduction may be eEectuated without referendum. Notwithstanding the foregoing, such collections shall be used to fund authorized expenditm‘es for the Escal years commencing July 1, 2027, through the conclusion of the 2030- 2031 Escal year ending June 30, 2031."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Exact verbatim question plus newline plus exact relevant held official statement, or empty statement. Native certified original PDF hash retained separately.",
+    "jurisdictionQuote": "All registered and qualified electors in Broward County shall be eligible to vote in the referendum election.",
+    "reviewNote": "Complete qualified-resident/insurance and surtax-repeal conditions, ordinance-dependent plat process, auditor nomination/majority/qualification/vacancy conditions, and school levy versus fiscal-use dates, early repeal/reduction and monthly-report commitments retained.",
+    "officialPublication": {
+      "url": "https://www.browardschools.com/school-board/referendum-2026",
+      "file": "sources/e227ec4cc0222940d18c32e8b02532c123ddcbe730ba7bcbe66d5725b466e8ae.html",
+      "sha256": "e227ec4cc0222940d18c32e8b02532c123ddcbe730ba7bcbe66d5725b466e8ae",
+      "nativeCaptureSha256": "e227ec4cc0222940d18c32e8b02532c123ddcbe730ba7bcbe66d5725b466e8ae",
+      "retrievedAt": "2026-11-03T09:23:58.744946+00:00"
+    }
+  }
+]

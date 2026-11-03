@@ -1,0 +1,332 @@
+{
+  "preparedAt": "2026-11-03T09:17:08.554368+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt",
+      "sha256": "114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba",
+      "bytes": 17285,
+      "kind": "NATIVE_OFFICIAL_HTML_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+      "retrievedAt": "2026-11-03T09:04:49.260814+00:00",
+      "nativeCaptureSha256": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+      "representation": "Unaltered native HTMLParser text extraction; full sanitized original HTML retained separately."
+    },
+    {
+      "file": "sources/4deb36de04c24d90668dd0b61a8cb98219f0f16dadf6a06e67274d42856ca096.pdf",
+      "sha256": "4deb36de04c24d90668dd0b61a8cb98219f0f16dadf6a06e67274d42856ca096",
+      "bytes": 28621,
+      "kind": "ORIGINAL_OFFICIAL_FINAL_READING_SOURCE",
+      "sourceUrl": "https://mccmeetingspublic.blob.core.usgovcloudapi.net/mdrabchfl-meet-85e74e8ee02c422cb9bda22a28d8b1d7/ITEM-Attachment-001-8d4b5516f91e4561b78ae03e90fa9e3f.pdf",
+      "retrievedAt": "2026-11-03T09:09:58.874548+00:00",
+      "representation": "Native official final-reading source. Signature/ordinance-number blanks are not represented as executed signatures. Current county ballot summary identifies the enacted ordinance/actual proposed question."
+    },
+    {
+      "file": "sources/a5b74d79e3ace531b551abb64d9e540f56bb94fe3d2bd23ba7030ebff816d178.txt",
+      "sha256": "a5b74d79e3ace531b551abb64d9e540f56bb94fe3d2bd23ba7030ebff816d178",
+      "bytes": 13467,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/4deb36de04c24d90668dd0b61a8cb98219f0f16dadf6a06e67274d42856ca096.pdf"
+    },
+    {
+      "file": "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf",
+      "sha256": "35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524",
+      "bytes": 29277212,
+      "kind": "ORIGINAL_OFFICIAL_FINAL_READING_SOURCE",
+      "sourceUrl": "https://www.stpete.org/2026-07-23%20Agenda%20Packet%20w_AddsDeletes.pdf?t=202607171638300",
+      "retrievedAt": "2026-11-03T09:08:09.524560+00:00",
+      "representation": "Native official final-reading source. Signature/ordinance-number blanks are not represented as executed signatures. Current county ballot summary identifies the enacted ordinance/actual proposed question."
+    },
+    {
+      "file": "sources/f00f559682ff5366a4cb180eea17a22f1a8ab850bbe8593d7f31d45d9adabe3c.txt",
+      "sha256": "f00f559682ff5366a4cb180eea17a22f1a8ab850bbe8593d7f31d45d9adabe3c",
+      "bytes": 574717,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf"
+    },
+    {
+      "file": "sources/97c085a01a9161b0605bebdb0cdd61def6dfa48db3504f638ba777d2c96bb7a1.txt",
+      "sha256": "97c085a01a9161b0605bebdb0cdd61def6dfa48db3504f638ba777d2c96bb7a1",
+      "bytes": 265,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt"
+      ]
+    },
+    {
+      "file": "sources/4cce3c656f46b9a55ea8101a9f41d929f617ed69eb4281037edafae82c739224.txt",
+      "sha256": "4cce3c656f46b9a55ea8101a9f41d929f617ed69eb4281037edafae82c739224",
+      "bytes": 456,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt"
+      ]
+    },
+    {
+      "file": "sources/9bea68148c2199a0a12cf6cc2bce5ceaf42eeae253c165d20e0cd9eaf307e3be.txt",
+      "sha256": "9bea68148c2199a0a12cf6cc2bce5ceaf42eeae253c165d20e0cd9eaf307e3be",
+      "bytes": 334,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt"
+      ]
+    },
+    {
+      "file": "sources/11c81c71e50cec7f118ea1fc63b79e227232e507863e1fa4439cbb8794a3b02d.txt",
+      "sha256": "11c81c71e50cec7f118ea1fc63b79e227232e507863e1fa4439cbb8794a3b02d",
+      "bytes": 605,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt",
+        "sources/4deb36de04c24d90668dd0b61a8cb98219f0f16dadf6a06e67274d42856ca096.pdf"
+      ]
+    },
+    {
+      "file": "sources/63c60194f1b3acc19899a4c58b1fab741170fd552e64fcb5954e58e4ab4173a2.txt",
+      "sha256": "63c60194f1b3acc19899a4c58b1fab741170fd552e64fcb5954e58e4ab4173a2",
+      "bytes": 2319,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt",
+        "sources/4deb36de04c24d90668dd0b61a8cb98219f0f16dadf6a06e67274d42856ca096.pdf"
+      ]
+    },
+    {
+      "file": "sources/e488313ac5c3614a9a50aa2d8c2697fd30abec9d36afc69804cb3e9176971073.txt",
+      "sha256": "e488313ac5c3614a9a50aa2d8c2697fd30abec9d36afc69804cb3e9176971073",
+      "bytes": 6751,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt",
+        "sources/4deb36de04c24d90668dd0b61a8cb98219f0f16dadf6a06e67274d42856ca096.pdf"
+      ]
+    },
+    {
+      "file": "sources/8213eb36d0d9a3ac65f6e1727302c1c4c4c99ffbbe69329f222affc754436eef.txt",
+      "sha256": "8213eb36d0d9a3ac65f6e1727302c1c4c4c99ffbbe69329f222affc754436eef",
+      "bytes": 191,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt"
+      ]
+    },
+    {
+      "file": "sources/2f74be3cc04fd1d256f0929f19459b7f0dc156b96816c44ff7a0ed0d93ca9fa4.txt",
+      "sha256": "2f74be3cc04fd1d256f0929f19459b7f0dc156b96816c44ff7a0ed0d93ca9fa4",
+      "bytes": 389,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt"
+      ]
+    },
+    {
+      "file": "sources/0e8784ff928d162e32fc60532560cf3ad06c5b4300de7176d78112ca5d1849a4.txt",
+      "sha256": "0e8784ff928d162e32fc60532560cf3ad06c5b4300de7176d78112ca5d1849a4",
+      "bytes": 543,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt"
+      ]
+    },
+    {
+      "file": "sources/e4cf288d33c38ef602a4b4ac4bf5bc12b3e99fa86fb59bb526f9a8aae607d75c.txt",
+      "sha256": "e4cf288d33c38ef602a4b4ac4bf5bc12b3e99fa86fb59bb526f9a8aae607d75c",
+      "bytes": 471,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt"
+      ]
+    },
+    {
+      "file": "sources/4cb0f3fca4cc478e0616d60936af48ba31087a8d69e122a05804a77379a75ec1.txt",
+      "sha256": "4cb0f3fca4cc478e0616d60936af48ba31087a8d69e122a05804a77379a75ec1",
+      "bytes": 2583,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt",
+        "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf"
+      ]
+    },
+    {
+      "file": "sources/8988a53e970bf97ad2c8c3ac0cf1d539497f9b8c27026f67954656ce4fc5bce9.txt",
+      "sha256": "8988a53e970bf97ad2c8c3ac0cf1d539497f9b8c27026f67954656ce4fc5bce9",
+      "bytes": 1374,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt",
+        "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf"
+      ]
+    },
+    {
+      "file": "sources/ca360ad350a9e2830106afd7c40a5bf623874ae342dd503f086fbbe02da3141a.txt",
+      "sha256": "ca360ad350a9e2830106afd7c40a5bf623874ae342dd503f086fbbe02da3141a",
+      "bytes": 10868,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt",
+        "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf"
+      ]
+    },
+    {
+      "file": "sources/a1b18fbe3d53e45581e37ed7f194894490018037112c5583541489a76400c6be.txt",
+      "sha256": "a1b18fbe3d53e45581e37ed7f194894490018037112c5583541489a76400c6be",
+      "bytes": 353,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_TEXT",
+      "derivedFrom": [
+        "sources/114f1a796e8cb8651d259b4bb714d69db0e3ed3fe474ad0a89fc78b7d119d6ba.txt"
+      ]
+    },
+    {
+      "file": "sources/821b5baf5b637b8131201caac3477ef862a89497a8da353b4479ad9edb07336a.png",
+      "sha256": "821b5baf5b637b8131201caac3477ef862a89497a8da353b4479ad9edb07336a",
+      "bytes": 232410,
+      "kind": "RENDERED_NATIVE_OPERATIVE_LEGAL_PAGE",
+      "derivedFrom": "sources/4deb36de04c24d90668dd0b61a8cb98219f0f16dadf6a06e67274d42856ca096.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/99a7dec450a6dfc039d82087d301945c5a557fd200c508ae961560f048cf6aa7.png",
+      "sha256": "99a7dec450a6dfc039d82087d301945c5a557fd200c508ae961560f048cf6aa7",
+      "bytes": 231062,
+      "kind": "RENDERED_NATIVE_OPERATIVE_LEGAL_PAGE",
+      "derivedFrom": "sources/4deb36de04c24d90668dd0b61a8cb98219f0f16dadf6a06e67274d42856ca096.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/3d16f4c68907a01179c78962a25bda7a6f7be6e2b4072517658e68cc0af6752d.png",
+      "sha256": "3d16f4c68907a01179c78962a25bda7a6f7be6e2b4072517658e68cc0af6752d",
+      "bytes": 69085,
+      "kind": "RENDERED_NATIVE_OPERATIVE_LEGAL_PAGE",
+      "derivedFrom": "sources/4deb36de04c24d90668dd0b61a8cb98219f0f16dadf6a06e67274d42856ca096.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/ba973766fca06418e28c5e77c617b3c2acf89664aef35440437fd87eb79e0ac5.png",
+      "sha256": "ba973766fca06418e28c5e77c617b3c2acf89664aef35440437fd87eb79e0ac5",
+      "bytes": 178601,
+      "kind": "RENDERED_NATIVE_OPERATIVE_LEGAL_PAGE",
+      "derivedFrom": "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf",
+      "sourcePage": 178
+    },
+    {
+      "file": "sources/9f1f7a0a37c1228dbc4610761770abcfde37b72819f91598b5f5d641f0eced84.png",
+      "sha256": "9f1f7a0a37c1228dbc4610761770abcfde37b72819f91598b5f5d641f0eced84",
+      "bytes": 149562,
+      "kind": "RENDERED_NATIVE_OPERATIVE_LEGAL_PAGE",
+      "derivedFrom": "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf",
+      "sourcePage": 179
+    },
+    {
+      "file": "sources/1a025e3a0e54d4e299b0f2ed11cc112fc3b0a5e8422d5c58bb8add7040898303.png",
+      "sha256": "1a025e3a0e54d4e299b0f2ed11cc112fc3b0a5e8422d5c58bb8add7040898303",
+      "bytes": 145340,
+      "kind": "RENDERED_NATIVE_OPERATIVE_LEGAL_PAGE",
+      "derivedFrom": "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf",
+      "sourcePage": 193
+    },
+    {
+      "file": "sources/997f76c998b5b782f3ce1413880a647c046d6e65d7b4ace72d9ff94033138f10.png",
+      "sha256": "997f76c998b5b782f3ce1413880a647c046d6e65d7b4ace72d9ff94033138f10",
+      "bytes": 182824,
+      "kind": "RENDERED_NATIVE_OPERATIVE_LEGAL_PAGE",
+      "derivedFrom": "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf",
+      "sourcePage": 202
+    },
+    {
+      "file": "sources/244081c3d149e86f3b6fe830fc1a1e1df1d0f1ae2bafad01ca3a644ebfff0250.png",
+      "sha256": "244081c3d149e86f3b6fe830fc1a1e1df1d0f1ae2bafad01ca3a644ebfff0250",
+      "bytes": 173532,
+      "kind": "RENDERED_NATIVE_OPERATIVE_LEGAL_PAGE",
+      "derivedFrom": "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf",
+      "sourcePage": 203
+    },
+    {
+      "file": "sources/e88c006bbeea64b4a2dba560fe31fbf5348cd4450ec48b6bdd0455da8ef88d2f.png",
+      "sha256": "e88c006bbeea64b4a2dba560fe31fbf5348cd4450ec48b6bdd0455da8ef88d2f",
+      "bytes": 150804,
+      "kind": "RENDERED_NATIVE_OPERATIVE_LEGAL_PAGE",
+      "derivedFrom": "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf",
+      "sourcePage": 205
+    },
+    {
+      "file": "sources/7012e565e95d593dcf35f07b89fb2e9ee05f3548f7252dc01417728866493e96.png",
+      "sha256": "7012e565e95d593dcf35f07b89fb2e9ee05f3548f7252dc01417728866493e96",
+      "bytes": 120801,
+      "kind": "RENDERED_NATIVE_OPERATIVE_LEGAL_PAGE",
+      "derivedFrom": "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf",
+      "sourcePage": 206
+    },
+    {
+      "file": "sources/a322c3cbe105cdcae658692998a39f8f4ffee78385906ac9abf525c31acf6a86.png",
+      "sha256": "a322c3cbe105cdcae658692998a39f8f4ffee78385906ac9abf525c31acf6a86",
+      "bytes": 156936,
+      "kind": "RENDERED_NATIVE_OPERATIVE_LEGAL_PAGE",
+      "derivedFrom": "sources/35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524.pdf",
+      "sourcePage": 207
+    },
+    {
+      "file": "sources/4143259fb4509c5b9b061af0910d0f7f202ff66d4f367abee1e2c05909ddc0c1.html",
+      "sha256": "4143259fb4509c5b9b061af0910d0f7f202ff66d4f367abee1e2c05909ddc0c1",
+      "bytes": 141848,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+      "retrievedAt": "2026-11-03T09:04:49.260814+00:00",
+      "nativeCaptureSha256": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Full sanitized official linking or primary HTML. Original capture hash identifies native bytes retained in scratch, and stored hash identifies sanitized bytes."
+    },
+    {
+      "file": "sources/b35525b308b24c706d6a096bc877f55185ff3f95b1d637933f8633d41dc95f8e.html",
+      "sha256": "b35525b308b24c706d6a096bc877f55185ff3f95b1d637933f8633d41dc95f8e",
+      "bytes": 294453,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://pinellas.gov/building-departments-in-pinellas-county/",
+      "retrievedAt": "2026-11-03T09:11:33.171057+00:00",
+      "nativeCaptureSha256": "b35525b308b24c706d6a096bc877f55185ff3f95b1d637933f8633d41dc95f8e",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Full sanitized official linking or primary HTML. Original capture hash identifies native bytes retained in scratch, and stored hash identifies sanitized bytes."
+    },
+    {
+      "file": "sources/94c8e5a411e84205ae4d4ffeb485fbb621b81add4583777b66d3df24ac5260e0.html",
+      "sha256": "94c8e5a411e84205ae4d4ffeb485fbb621b81add4583777b66d3df24ac5260e0",
+      "bytes": 81026,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://madeirabeachfl.gov/meetings/",
+      "retrievedAt": "2026-11-03T09:11:33.171658+00:00",
+      "nativeCaptureSha256": "3283e5c99bdbb7dc65be7044343ca4c7f3a6edc25f85f493f2e8154671bbda88",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Full sanitized official linking or primary HTML. Original capture hash identifies native bytes retained in scratch, and stored hash identifies sanitized bytes."
+    },
+    {
+      "file": "sources/d31c01818d9a34baad12ad22b4a5768a6950b8e9b9c9a11d0b03cc5aebc4d092.html",
+      "sha256": "d31c01818d9a34baad12ad22b4a5768a6950b8e9b9c9a11d0b03cc5aebc4d092",
+      "bytes": 42856,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://meetings.municode.com/adaHtmlDocument/index?cc=MDRABCHFL&ip=True&me=85e74e8ee02c422cb9bda22a28d8b1d7",
+      "retrievedAt": "2026-11-03T09:09:33.529899+00:00",
+      "nativeCaptureSha256": "d31c01818d9a34baad12ad22b4a5768a6950b8e9b9c9a11d0b03cc5aebc4d092",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Full sanitized official linking or primary HTML. Original capture hash identifies native bytes retained in scratch, and stored hash identifies sanitized bytes."
+    },
+    {
+      "file": "sources/9380db4d5bfb075071db07ecb9b50f7a7aef591c2d61bad8f573818730e7d31c.html",
+      "sha256": "9380db4d5bfb075071db07ecb9b50f7a7aef591c2d61bad8f573818730e7d31c",
+      "bytes": 881775,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.stpete.org/government/mayor___city_council/city_council/agendas.php",
+      "retrievedAt": "2026-11-03T09:07:17.549964+00:00",
+      "nativeCaptureSha256": "9380db4d5bfb075071db07ecb9b50f7a7aef591c2d61bad8f573818730e7d31c",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Full sanitized official linking or primary HTML. Original capture hash identifies native bytes retained in scratch, and stored hash identifies sanitized bytes."
+    },
+    {
+      "file": "sources/669726eee580fb12729785f17591d855528df8558d801a9e8848f18126c3dc7f.web-extraction.json",
+      "sha256": "669726eee580fb12729785f17591d855528df8558d801a9e8848f18126c3dc7f",
+      "bytes": 4350,
+      "kind": "CAPTURED_SOURCE_TEXT",
+      "sourceUrl": "https://madeirabeach-fl.municodemeetings.com/bc-boc/page/board-commissioners-regular-meeting-166",
+      "captureDateUtc": "2026-11-03",
+      "representation": "Saved web connector extraction of the official city-delegated August12 meeting hub. This is captured source text and link references, not native HTML or PDF response bytes. Its native runtime HTTP503 attempt is preserved only in acquisition scratch."
+    }
+  ]
+}

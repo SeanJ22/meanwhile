@@ -1,0 +1,268 @@
+{
+  "preparedAt": "2026-11-03T09:32:57.333499+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/c2e884556aaf5fe7a517d0f2641ebb785799786f36af55480f3583a07d21d801.pdf",
+      "sha256": "c2e884556aaf5fe7a517d0f2641ebb785799786f36af55480f3583a07d21d801",
+      "bytes": 360475,
+      "kind": "ORIGINAL_CERTIFIED_ADOPTED_OFFICIAL_RESOLUTION",
+      "sourceUrl": "https://www.browardcdn.org/api/public/content/90e6aa308ce047c2a8c7fba6606395d0?v=67ba50c1",
+      "retrievedAt": "2026-11-03T09:24:40.290983+00:00"
+    },
+    {
+      "file": "sources/036bb934d1b2fba46e9842a39488aa875c7a0545f8a0a543746b72dd481910f1.txt",
+      "sha256": "036bb934d1b2fba46e9842a39488aa875c7a0545f8a0a543746b72dd481910f1",
+      "bytes": 14441,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/c2e884556aaf5fe7a517d0f2641ebb785799786f36af55480f3583a07d21d801.pdf"
+    },
+    {
+      "file": "sources/12541b83c2a720b85bd90192962f26a9d1a7cc13c3ccfc385fca353e532b1e31.txt",
+      "sha256": "12541b83c2a720b85bd90192962f26a9d1a7cc13c3ccfc385fca353e532b1e31",
+      "bytes": 462,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_TEXT",
+      "derivedFrom": "sources/c2e884556aaf5fe7a517d0f2641ebb785799786f36af55480f3583a07d21d801.pdf"
+    },
+    {
+      "file": "sources/cb4b636a03f282b4437b6076d43cbda21f551df983deaa4c57916d49658410d8.png",
+      "sha256": "cb4b636a03f282b4437b6076d43cbda21f551df983deaa4c57916d49658410d8",
+      "bytes": 158341,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/c2e884556aaf5fe7a517d0f2641ebb785799786f36af55480f3583a07d21d801.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/6e1a4df19577f78b623c2748555d589e5d1d381eb35fe50bba5a825e6ff1df74.png",
+      "sha256": "6e1a4df19577f78b623c2748555d589e5d1d381eb35fe50bba5a825e6ff1df74",
+      "bytes": 151074,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/c2e884556aaf5fe7a517d0f2641ebb785799786f36af55480f3583a07d21d801.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/ca4f9c13ec7087f3c082c43d1c5cc20f1a3d695a2be1834de68f9b8ee03df893.png",
+      "sha256": "ca4f9c13ec7087f3c082c43d1c5cc20f1a3d695a2be1834de68f9b8ee03df893",
+      "bytes": 146346,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/c2e884556aaf5fe7a517d0f2641ebb785799786f36af55480f3583a07d21d801.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/b65a6ee65a772594487f72e38dc533b642310fb287fbd7a8665fa3d92d559b54.png",
+      "sha256": "b65a6ee65a772594487f72e38dc533b642310fb287fbd7a8665fa3d92d559b54",
+      "bytes": 103101,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/c2e884556aaf5fe7a517d0f2641ebb785799786f36af55480f3583a07d21d801.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/fb744fc7996faf4dc7257c73ed0a9f11e55bf3c8f92e4cf36cfd70f1e7c65925.pdf",
+      "sha256": "fb744fc7996faf4dc7257c73ed0a9f11e55bf3c8f92e4cf36cfd70f1e7c65925",
+      "bytes": 2130414,
+      "kind": "ORIGINAL_CERTIFIED_ADOPTED_OFFICIAL_RESOLUTION",
+      "sourceUrl": "https://www.browardcdn.org/api/public/content/08bfb28498d442a9a55a7db943027b8a?v=8fa35b0b",
+      "retrievedAt": "2026-11-03T09:24:40.291828+00:00"
+    },
+    {
+      "file": "sources/5a389d7ce5aa6e5d8f47c0f9ca7168b06a8bd43d8a8aa740a24e213903f1d16c.txt",
+      "sha256": "5a389d7ce5aa6e5d8f47c0f9ca7168b06a8bd43d8a8aa740a24e213903f1d16c",
+      "bytes": 11683,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/fb744fc7996faf4dc7257c73ed0a9f11e55bf3c8f92e4cf36cfd70f1e7c65925.pdf"
+    },
+    {
+      "file": "sources/1b44ff1e7e3b39bb18e7906855501cb4318198d71b5259ac3aca40b8c9dda127.txt",
+      "sha256": "1b44ff1e7e3b39bb18e7906855501cb4318198d71b5259ac3aca40b8c9dda127",
+      "bytes": 453,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_TEXT",
+      "derivedFrom": "sources/fb744fc7996faf4dc7257c73ed0a9f11e55bf3c8f92e4cf36cfd70f1e7c65925.pdf"
+    },
+    {
+      "file": "sources/64d40335d36c4a5b4c4985b6ad5654cbd1cbdc0513e7b5d0459250ec9946df53.png",
+      "sha256": "64d40335d36c4a5b4c4985b6ad5654cbd1cbdc0513e7b5d0459250ec9946df53",
+      "bytes": 217142,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/fb744fc7996faf4dc7257c73ed0a9f11e55bf3c8f92e4cf36cfd70f1e7c65925.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/d839228a1ef14c02878bab8b4ceb7d6320b513b6fe0ed560944b1c4ebebc9932.png",
+      "sha256": "d839228a1ef14c02878bab8b4ceb7d6320b513b6fe0ed560944b1c4ebebc9932",
+      "bytes": 253145,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/fb744fc7996faf4dc7257c73ed0a9f11e55bf3c8f92e4cf36cfd70f1e7c65925.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/c1def71540442ed0b368eeaa696e8efd4b4b3c40a8700a79880f3a1a94167a3c.png",
+      "sha256": "c1def71540442ed0b368eeaa696e8efd4b4b3c40a8700a79880f3a1a94167a3c",
+      "bytes": 226355,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/fb744fc7996faf4dc7257c73ed0a9f11e55bf3c8f92e4cf36cfd70f1e7c65925.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/298913ad83947b005d73c7ad07e708ced2cef46a9f0b5789519d8a5faef14daa.pdf",
+      "sha256": "298913ad83947b005d73c7ad07e708ced2cef46a9f0b5789519d8a5faef14daa",
+      "bytes": 158445,
+      "kind": "ORIGINAL_CERTIFIED_ADOPTED_OFFICIAL_RESOLUTION",
+      "sourceUrl": "https://www.browardcdn.org/api/public/content/008b238002cc4e28b1abe5b0c965408f?v=58e24460",
+      "retrievedAt": "2026-11-03T09:24:41.184952+00:00"
+    },
+    {
+      "file": "sources/2859fd6cba8f6f4f9ac362ef5d092ab394927fbb48a2a1818fdb820e45d9b580.txt",
+      "sha256": "2859fd6cba8f6f4f9ac362ef5d092ab394927fbb48a2a1818fdb820e45d9b580",
+      "bytes": 14124,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/298913ad83947b005d73c7ad07e708ced2cef46a9f0b5789519d8a5faef14daa.pdf"
+    },
+    {
+      "file": "sources/a70d65ff2400f79b22953ffe013f2fdede6c222ef3d1ca240431a2c1b7ef4324.txt",
+      "sha256": "a70d65ff2400f79b22953ffe013f2fdede6c222ef3d1ca240431a2c1b7ef4324",
+      "bytes": 444,
+      "kind": "VERBATIM_PRINTED_QUESTION_TRANSCRIPTION",
+      "derivedFrom": "sources/298913ad83947b005d73c7ad07e708ced2cef46a9f0b5789519d8a5faef14daa.pdf",
+      "sourcePages": [
+        4,
+        5
+      ],
+      "extractionMethod": "Verbatim native rendered question transcription; native OCR has damaged glyphs. No explanatory words added to the quoted question. Whitespace normalized."
+    },
+    {
+      "file": "sources/d3b6bcca182c6bcf60894a640dc028a4ac152255a48cfccf0cbbd29ef84754af.txt",
+      "sha256": "d3b6bcca182c6bcf60894a640dc028a4ac152255a48cfccf0cbbd29ef84754af",
+      "bytes": 3302,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_TEXT",
+      "derivedFrom": "sources/298913ad83947b005d73c7ad07e708ced2cef46a9f0b5789519d8a5faef14daa.pdf"
+    },
+    {
+      "file": "sources/0ebed132e71cdfa0ecb96652638ce99e1c94da724168a430626d329697cfa8f9.png",
+      "sha256": "0ebed132e71cdfa0ecb96652638ce99e1c94da724168a430626d329697cfa8f9",
+      "bytes": 210097,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/298913ad83947b005d73c7ad07e708ced2cef46a9f0b5789519d8a5faef14daa.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/78de80074721015ad497fc3a6741507ddbb80a50f40584189f8ea98c9a2b7230.png",
+      "sha256": "78de80074721015ad497fc3a6741507ddbb80a50f40584189f8ea98c9a2b7230",
+      "bytes": 264815,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/298913ad83947b005d73c7ad07e708ced2cef46a9f0b5789519d8a5faef14daa.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/ae6468647234ef9fa7876ac5cb6bc40254839183b1092876b04270e1bd5a3493.png",
+      "sha256": "ae6468647234ef9fa7876ac5cb6bc40254839183b1092876b04270e1bd5a3493",
+      "bytes": 280359,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/298913ad83947b005d73c7ad07e708ced2cef46a9f0b5789519d8a5faef14daa.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/80f7d330f8d04c73b0f3d87fd6ceecb6c405521fd4ece1bc668eb1b4675a2ccf.png",
+      "sha256": "80f7d330f8d04c73b0f3d87fd6ceecb6c405521fd4ece1bc668eb1b4675a2ccf",
+      "bytes": 262903,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/298913ad83947b005d73c7ad07e708ced2cef46a9f0b5789519d8a5faef14daa.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/aeaa443cff65b79482d32ac9ce5debeb062edb3b0558757ed47ecc3fb365f289.png",
+      "sha256": "aeaa443cff65b79482d32ac9ce5debeb062edb3b0558757ed47ecc3fb365f289",
+      "bytes": 222193,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/298913ad83947b005d73c7ad07e708ced2cef46a9f0b5789519d8a5faef14daa.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/112680766807c539770e393a28f829b697a543bb5cde7b19e01e923c5d931d4e.pdf",
+      "sha256": "112680766807c539770e393a28f829b697a543bb5cde7b19e01e923c5d931d4e",
+      "bytes": 1074685,
+      "kind": "ORIGINAL_CERTIFIED_ADOPTED_OFFICIAL_RESOLUTION",
+      "sourceUrl": "https://www.browardschools.com/fs/resource-manager/view/57363dd4-7a92-4225-b5b7-3ba9ef0a62dc",
+      "retrievedAt": "2026-11-03T09:25:46.325634+00:00"
+    },
+    {
+      "file": "sources/ca0756d2099c080e4fc5a3c98ec492ffdbb45b5737143582022f530c289fbb45.txt",
+      "sha256": "ca0756d2099c080e4fc5a3c98ec492ffdbb45b5737143582022f530c289fbb45",
+      "bytes": 18000,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/112680766807c539770e393a28f829b697a543bb5cde7b19e01e923c5d931d4e.pdf"
+    },
+    {
+      "file": "sources/2e8ec2faa566edc1dac9b92f7fa9ece97775de100413897f1b2864355fdfe1fb.txt",
+      "sha256": "2e8ec2faa566edc1dac9b92f7fa9ece97775de100413897f1b2864355fdfe1fb",
+      "bytes": 495,
+      "kind": "VERBATIM_PRINTED_QUESTION_TRANSCRIPTION",
+      "derivedFrom": "sources/112680766807c539770e393a28f829b697a543bb5cde7b19e01e923c5d931d4e.pdf",
+      "sourcePages": [
+        6,
+        7
+      ],
+      "extractionMethod": "Verbatim native rendered question transcription; native OCR has damaged glyphs. No explanatory words added to the quoted question. Whitespace normalized."
+    },
+    {
+      "file": "sources/1011dcaaa4590adf6f75a56c4bf5dc935e789720a5b82928a28d018d7e4491f0.txt",
+      "sha256": "1011dcaaa4590adf6f75a56c4bf5dc935e789720a5b82928a28d018d7e4491f0",
+      "bytes": 1831,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_TEXT",
+      "derivedFrom": "sources/112680766807c539770e393a28f829b697a543bb5cde7b19e01e923c5d931d4e.pdf"
+    },
+    {
+      "file": "sources/7f84a02a304b5c780508df6f26f37280daf9adf829c2b8ad73bcaa500f3f218e.png",
+      "sha256": "7f84a02a304b5c780508df6f26f37280daf9adf829c2b8ad73bcaa500f3f218e",
+      "bytes": 390261,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/112680766807c539770e393a28f829b697a543bb5cde7b19e01e923c5d931d4e.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/7e8731dcfc9c63fb6d64e0c93bae779b41b6b34300b36f06496031b85875f70f.png",
+      "sha256": "7e8731dcfc9c63fb6d64e0c93bae779b41b6b34300b36f06496031b85875f70f",
+      "bytes": 422125,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/112680766807c539770e393a28f829b697a543bb5cde7b19e01e923c5d931d4e.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/6cd9c95c32afc0794ec9192052223dffe682f192246ed2194499871ffe7a1e9d.png",
+      "sha256": "6cd9c95c32afc0794ec9192052223dffe682f192246ed2194499871ffe7a1e9d",
+      "bytes": 332815,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/112680766807c539770e393a28f829b697a543bb5cde7b19e01e923c5d931d4e.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/1461bd8b971c15a81520148e0c36bbf83958d70cf8aa0389e74b0a8d54e5d086.png",
+      "sha256": "1461bd8b971c15a81520148e0c36bbf83958d70cf8aa0389e74b0a8d54e5d086",
+      "bytes": 413261,
+      "kind": "RENDERED_NATIVE_QUESTION_OR_OPERATIVE_PAGE",
+      "derivedFrom": "sources/112680766807c539770e393a28f829b697a543bb5cde7b19e01e923c5d931d4e.pdf",
+      "sourcePage": 7
+    },
+    {
+      "file": "sources/91a44b5e68b6c15b51cfaf142455639ebeb9b8d24dac44f0cd237262ea852b8e.html",
+      "sha256": "91a44b5e68b6c15b51cfaf142455639ebeb9b8d24dac44f0cd237262ea852b8e",
+      "bytes": 246337,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.broward.org/Charter",
+      "retrievedAt": "2026-11-03T09:23:58.744265+00:00",
+      "nativeCaptureSha256": "91a44b5e68b6c15b51cfaf142455639ebeb9b8d24dac44f0cd237262ea852b8e",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication and direct certified-resolution link. Stored and native capture hashes are distinct identities; native bytes remain in acquisition scratch."
+    },
+    {
+      "file": "sources/e227ec4cc0222940d18c32e8b02532c123ddcbe730ba7bcbe66d5725b466e8ae.html",
+      "sha256": "e227ec4cc0222940d18c32e8b02532c123ddcbe730ba7bcbe66d5725b466e8ae",
+      "bytes": 168422,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.browardschools.com/school-board/referendum-2026",
+      "retrievedAt": "2026-11-03T09:23:58.744946+00:00",
+      "nativeCaptureSha256": "e227ec4cc0222940d18c32e8b02532c123ddcbe730ba7bcbe66d5725b466e8ae",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication and direct certified-resolution link. Stored and native capture hashes are distinct identities; native bytes remain in acquisition scratch."
+    }
+  ]
+}

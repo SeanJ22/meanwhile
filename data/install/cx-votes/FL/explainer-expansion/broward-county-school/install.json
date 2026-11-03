@@ -1,0 +1,59 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T09:32:57.333499+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-broward-health-care-surtax",
+      "title": "Broward County — Health care services sales surtax",
+      "ocdId": "ocd-division/country:us/state:fl/county:broward"
+    },
+    {
+      "id": "fl-2026-broward-plat-approval",
+      "title": "Broward County — Alternative process for plat approval",
+      "ocdId": "ocd-division/country:us/state:fl/county:broward"
+    },
+    {
+      "id": "fl-2026-broward-auditor-selection",
+      "title": "Broward County — County-auditor selection process",
+      "ocdId": "ocd-division/country:us/state:fl/county:broward"
+    },
+    {
+      "id": "fl-2026-broward-school-one-mill-renewal",
+      "title": "Broward County schools — One-mill property-tax renewal",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:broward_county_school_district"
+    }
+  ],
+  "operation": "Merge four verified county/school questions and neutral explanations, preserving prior candidate and measure facts.",
+  "coverageLimit": "Establishes the three proposals listed on the current County Charter page and the countywide school levy. Municipal Broward inventories continue.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T09:38:41.668Z",
+    "preparedRecords": 4,
+    "originalSourceHashes": "PASS; four certified adopted originals, current issuer publication native/stored identities retained",
+    "exactSupportQuotes": "PASS",
+    "sourceSemanticAndNativeRenderReading": "PASS; complete official question transcription verified against native rendered originals; surtax qualified-resident/insurance/automatic-repeal condition, ordinance-dependent plat procedure, auditor majority/qualification/vacancy conditions and school levy/fiscal-use dates, early repeal/reduction and public monthly reports retained",
+    "publisherIdentification": "Current Broward County Charter and School Board referendum publications directly link the retained certified adopted resolutions and match the exact governmental scopes. Issuer names, clerk certifications and seals identify the originals. No .gov-host or isOfficialSource delegation result is claimed for these non-.gov publishers.",
+    "normalPublicationAdmission": "PASS; exact-byte receipts for every projected source URL",
+    "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "2541963f58fdd8b88c2198ba4a4e7197742691b79ccbed4d408999b2cfe4a8cb",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

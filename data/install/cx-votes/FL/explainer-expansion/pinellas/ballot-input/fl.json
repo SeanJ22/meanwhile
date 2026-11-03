@@ -1,0 +1,1341 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-2026-belleair-planning-agency",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:belleair",
+          "divisionVintage": "2026",
+          "title": "Belleair — No. 1 Charter Amendment: Planning agency",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall Section 5.04 of the Charter for the Town of Belleair be amended to remove the requirement that the Town Commission appoint a planning and zoning board because the language is unnecessary since Florida law requires the Town to appoint a local planning agency?"
+          }
+        },
+        {
+          "id": "fl-2026-belleair-charter-review-month",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:belleair",
+          "divisionVintage": "2026",
+          "title": "Belleair — No. 2 Charter Amendment: Charter-review timing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall Section 10.01 of the Charter for the Town of Belleair be amended to change the month the Charter Review Committee is established from June to May beginning in 2036 thereby providing the Charter Review Committee sufficient time to perform its duties and provide the Town with the time necessary to meet Pinellas County Supervisor of Elections deadlines allowing proposed amendments to be on the ballot for the general election the following November?"
+          }
+        },
+        {
+          "id": "fl-2026-largo-candidate-petitions",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:largo",
+          "divisionVintage": "2026",
+          "title": "Largo — Referendum: Candidate-petition availability",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall section 7.02(a) of the City of Largo Charter be amended to change the date that petitions for candidates for Mayor and City Commission are first available to March 15 of each year of a regular city election, or a date selected by the City Commission for a special election, all as more fully described in Ordinance No. 2025-24?"
+          }
+        },
+        {
+          "id": "fl-2026-madeira-election-month",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:madeira_beach",
+          "divisionVintage": "2026",
+          "title": "Madeira Beach — No. 1 Charter Amendment: November elections",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall the City of Madeira Beach Charter be amended to change the date of regular municipal elections from March to November, so City elections occur in conjunction with the State General Election?"
+          }
+        },
+        {
+          "id": "fl-2026-madeira-candidate-qualifying",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:madeira_beach",
+          "divisionVintage": "2026",
+          "title": "Madeira Beach — No. 2 Charter Amendment: June candidate qualifying",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall the City of Madeira Beach Charter be amended to change the municipal candidate qualifying period from the first two full weeks in December, excluding weekends, to the first two full weeks in June, excluding weekends, to align with the revised November Municipal General Election schedule?"
+          }
+        },
+        {
+          "id": "fl-2026-madeira-transition-terms",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:madeira_beach",
+          "divisionVintage": "2026",
+          "title": "Madeira Beach — No. 3 Charter Amendment: Temporary term extensions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall the City Charter be amended to temporarily extend the terms of Commissioner District 3 and Commissioner District 4 until certification of the November 2027 election results; and the terms of Commissioner District 1, Commissioner District 2, and Mayor-Commissioner until certification of the November 2028 election results in order to implement the transition from March Municipal Elections to November Municipal General Elections?"
+          }
+        },
+        {
+          "id": "fl-2026-redington-commissioner-terms",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:redington_shores",
+          "divisionVintage": "2026",
+          "title": "Redington Shores — No. 1 Referendum: Commissioner terms",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Charter section 5 currently provides that the term of office for a Commissioner is two years. Should section 5 of the Charter be amended to convert terms of the Commissioners to three years?"
+          }
+        },
+        {
+          "id": "fl-2026-redington-mayor-2027-term",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:redington_shores",
+          "divisionVintage": "2026",
+          "title": "Redington Shores — No. 2 Referendum: Mayor’s 2027 term",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Charter section 5 currently provides that the term of office for the Mayor is three years. If Referendum Question No. 1 passes extending the term of office for a Commissioner to three years should the Charter be amended to provide the term of office for the Mayor following the 2027 General Election only be two years to maintain staggered terms of office for the Mayor and Commissioners?"
+          }
+        },
+        {
+          "id": "fl-2026-st-petersburg-water-bonds",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg",
+          "divisionVintage": "2026",
+          "title": "St. Petersburg — No. 1 Referendum: Water and stormwater bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall the City finance storm resilience improvements, including but not limited to, floodwater protection, stormwater pump stations, drainage infrastructure, as well as wastewater collection and treatment facilities, drinking water distribution and supply facilities, by issuing general obligation bonds in one or more series, not exceeding $600,000,000, bearing interest not exceeding maximum legal rates, maturing not more than 30 years from each issuance date, pledging the City's full faith, credit, and unlimited ad valorem taxing power?"
+          }
+        },
+        {
+          "id": "fl-2026-st-petersburg-jamestown-lots",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg",
+          "divisionVintage": "2026",
+          "title": "St. Petersburg — No. 1 Charter Amendment: Jamestown vacant lots",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "The City Charter Park and Waterfront Map contains a composite parcel identified as “Jamestown” composed of: Unity Park, recreational open space within Jamestown apartments, and nine City-owned lots in the adjacent neighborhood that are vacant and closed to the public. Shall the City Charter be amended to remove those nine vacant lots from the Map to allow subsequent / separate land use changes and potential sale of those lots for affordable or workforce housing?"
+          }
+        },
+        {
+          "id": "fl-2026-st-petersburg-harborage-lease",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg",
+          "divisionVintage": "2026",
+          "title": "St. Petersburg — No. 2 Referendum: Harborage Marina lease",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "May City Council approve amendment of the lease of City-owned submerged lands at Harborage Marina subject to conditions in ordinance 640-H? Such amendment would extend the term of the lease to 30 years and require the tenant to construct new improvements at no cost to the City, including 200 linear feet of docks, boat lifts, and expanded restrooms. Those improvements would be owned by the City at the end of the lease."
+          }
+        },
+        {
+          "id": "fl-2026-st-petersburg-port-lease-limit",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg",
+          "divisionVintage": "2026",
+          "title": "St. Petersburg — No. 2 Charter Amendment: Port lease limit",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "The City Charter currently limits leases at the Port of St. Petersburg to 10 years without approval by citywide referendum. Shall the Charter be amended to increase that limitation to 25 years? That amendment would make the Port consistent with adjacent Albert Whitted Airport and provide the City with additional flexibility to enter into agreements with private entities for redevelopment of Port facilities. That amendment would not change the permitted use of the Port."
+          }
+        },
+        {
+          "id": "fl-2026-st-petersburg-election-cleanup",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg",
+          "divisionVintage": "2026",
+          "title": "St. Petersburg — No. 3 Charter Amendment: Election schedule and charter review",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "In 2022, voters in a citywide referendum approved amendment of the City Charter to reschedule elections for Mayor and Council Members to even-numbered years so that City elections would align with national and state elections beginning in 2024. Shall the Charter be amended to make technical, clarifying, and conforming changes necessary and appropriate to fully effectuate the intent of the 2022 referendum, including alignment of the Charter-review process with the current election schedule?"
+          }
+        },
+        {
+          "id": "fl-2026-treasure-island-development-votes",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:treasure_island",
+          "divisionVintage": "2026",
+          "title": "Treasure Island — Referendum: Development approval votes",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall the Treasure Island City Charter Section 3.07(c) be amended to require that “a supermajority vote of four members of the board of commissioners shall be required for the approval of any planned developments or special area plans?” This provision will become effective immediately upon approval by the electors or as otherwise provided by law."
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "fl-2026-belleair-planning-agency:measure",
+          "contestId": "fl-2026-belleair-planning-agency",
+          "questionText": "Shall Section 5.04 of the Charter for the Town of Belleair be amended to remove the requirement that the Town Commission appoint a planning and zoning board because the language is unnecessary since Florida law requires the Town to appoint a local planning agency?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall Section 5.04 of the Charter for the Town of Belleair be amended to remove the requirement that the Town Commission appoint a planning and zoning board because the language is unnecessary since Florida law requires the Town to appoint a local planning agency?"
+          }
+        },
+        {
+          "id": "fl-2026-belleair-charter-review-month:measure",
+          "contestId": "fl-2026-belleair-charter-review-month",
+          "questionText": "Shall Section 10.01 of the Charter for the Town of Belleair be amended to change the month the Charter Review Committee is established from June to May beginning in 2036 thereby providing the Charter Review Committee sufficient time to perform its duties and provide the Town with the time necessary to meet Pinellas County Supervisor of Elections deadlines allowing proposed amendments to be on the ballot for the general election the following November?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall Section 10.01 of the Charter for the Town of Belleair be amended to change the month the Charter Review Committee is established from June to May beginning in 2036 thereby providing the Charter Review Committee sufficient time to perform its duties and provide the Town with the time necessary to meet Pinellas County Supervisor of Elections deadlines allowing proposed amendments to be on the ballot for the general election the following November?"
+          }
+        },
+        {
+          "id": "fl-2026-largo-candidate-petitions:measure",
+          "contestId": "fl-2026-largo-candidate-petitions",
+          "questionText": "Shall section 7.02(a) of the City of Largo Charter be amended to change the date that petitions for candidates for Mayor and City Commission are first available to March 15 of each year of a regular city election, or a date selected by the City Commission for a special election, all as more fully described in Ordinance No. 2025-24?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall section 7.02(a) of the City of Largo Charter be amended to change the date that petitions for candidates for Mayor and City Commission are first available to March 15 of each year of a regular city election, or a date selected by the City Commission for a special election, all as more fully described in Ordinance No. 2025-24?"
+          }
+        },
+        {
+          "id": "fl-2026-madeira-election-month:measure",
+          "contestId": "fl-2026-madeira-election-month",
+          "questionText": "Shall the City of Madeira Beach Charter be amended to change the date of regular municipal elections from March to November, so City elections occur in conjunction with the State General Election?",
+          "officialStatement": "Section 2. That\n\nSection 6. This Ordinance shall take effect immediately upon its passage and adoption, provided, however, it shall not be effective until such is approved by the electorate at a referendum election thereon to ratify the terms and conditions of this Ordinance. In the event that any of the referendum questions shall be defeated, then this Ordinance shall be of no further force and effect.",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall the City of Madeira Beach Charter be amended to change the date of regular municipal elections from March to November, so City elections occur in conjunction with the State General Election?"
+          }
+        },
+        {
+          "id": "fl-2026-madeira-candidate-qualifying:measure",
+          "contestId": "fl-2026-madeira-candidate-qualifying",
+          "questionText": "Shall the City of Madeira Beach Charter be amended to change the municipal candidate qualifying period from the first two full weeks in December, excluding weekends, to the first two full weeks in June, excluding weekends, to align with the revised November Municipal General Election schedule?",
+          "officialStatement": "Section 1. That Section 3.3, Nomination of Board of Commissioners, Subsection (A), Filing, of the Charter of the City of Madeira Beach shall be amended to read as follows: (A). Filing. Every person who shall desire to become a candidate for nomination under the provisions of this Charter to the office of Mayor and District-Commissioner, shall qualify to become such candidate by filing with the City Clerk during the candidate qualifying period held during the first two full weeks in December June, excluding weekends, beginning at Noon on Monday, the first day of the qualifying period and ending at Noon on Friday, the last day of the qualifying period. Under no circumstances shall the City Clerk accept any nomination petitions or filing fees after the close of the filing period as stated herein. Every person's application is to have his/her name printed upon the ballot as a candidate for nomination to the office for which he/she aspires, in which application, he/she shall declare from the district he/she is a candidate or so declare if he/she is a candidate for Mayor. All applications shall be accompanied by an affidavit the candidate is an elector and a resident of the City of Madeira Beach, Florida, for one (1) year immediately prior to the date of said application and has been a resident of said district for which he/she declares himself/herself to be a candidate for a period of six (6) months prior to the date of said application. With said application shall be filed a petition which shall indicate prominently the district from which the Petitioner is a candidate, or if he/she be a candidate for Mayor.\n\nSection 6. This Ordinance shall take effect immediately upon its passage and adoption, provided, however, it shall not be effective until such is approved by the electorate at a referendum election thereon to ratify the terms and conditions of this Ordinance. In the event that any of the referendum questions shall be defeated, then this Ordinance shall be of no further force and effect.",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall the City of Madeira Beach Charter be amended to change the municipal candidate qualifying period from the first two full weeks in December, excluding weekends, to the first two full weeks in June, excluding weekends, to align with the revised November Municipal General Election schedule?"
+          }
+        },
+        {
+          "id": "fl-2026-madeira-transition-terms:measure",
+          "contestId": "fl-2026-madeira-transition-terms",
+          "questionText": "Shall the City Charter be amended to temporarily extend the terms of Commissioner District 3 and Commissioner District 4 until certification of the November 2027 election results; and the terms of Commissioner District 1, Commissioner District 2, and Mayor-Commissioner until certification of the November 2028 election results in order to implement the transition from March Municipal Elections to November Municipal General Elections?",
+          "officialStatement": "Section 3.3, Nomination of Board of Commissioners, Subsection (A), Filing, of the Charter of the City of Madeira Beach shall be amended to read as follows: (A). Filing. Every person who shall desire to become a candidate for nomination under the provisions of this Charter to the office of Mayor and District-Commissioner, shall qualify to become such candidate by filing with the City Clerk during the candidate qualifying period held during the first two full weeks in December June, excluding weekends, beginning at Noon on Monday, the first day of the qualifying period and ending at Noon on Friday, the last day of the qualifying period. Under no circumstances shall the City Clerk accept any nomination petitions or filing fees after the close of the filing period as stated herein. Every person's application is to have his/her name printed upon the ballot as a candidate for nomination to the office for which he/she aspires, in which application, he/she shall declare from the district he/she is a candidate or so declare if he/she is a candidate for Mayor. All applications shall be accompanied by an affidavit the candidate is an elector and a resident of the City of Madeira Beach, Florida, for one (1) year immediately prior to the date of said application and has been a resident of said district for which he/she declares himself/herself to be a candidate for a period of six (6) months prior to the date of said application. With said application shall be filed a petition which shall indicate prominently the district from which the Petitioner is a candidate, or if he/she be a candidate for Mayor. Section 2. That Section 3.4, Manner of Holding Elections, Subsection A, of the Charter of the City of Madeira Beach shall be amended to read as follows: A. All Municipal elections shall be held in the city on the first Tuesday after the second first Monday in March November, with the exception of the Presidential Preference Primary Election (every four (4) years) when the city election shall be held on the same day as the Presidential Preference Primary Election, of each year for the purpose of electing successors to elective offices. Elections for Commissioners of District One (1) and Two (2) shall be held in even-numbered years. Elections for Commissioners of Districts Three (3) and Four (4) shall be held in odd-numbered years. The term for the Commissioners of Districts shall be for two (2) years. The term for Mayor-Commissioner shall be for three (3) years allowing the seat to alternate with the Commissioners of Districts. In order to implement the transition Ordinance 2026-07 Page 2 of 5 from March municipal elections to November municipal general elections the terms of office for Commissioner District 1, Commissioner District 2, and Mayor- Commissioner scheduled to expire in March 2028 shall instead expire upon certification of the November 2028 municipal general election results and installation of successors. In order to continue the staggered election cycle the terms of office for Commissioner District 3 and Commissioner District 4 scheduled to expire in March 2027 shall instead expire upon certification of the November 2027 municipal general election results and installation of successors. Section 3. That Section 2.2, Board of Commissioners Created; Qualifications; Term of Office; and Vacancies, Subparagraph B, Qualifications and Term of Office, of the Charter of the City of Madeira Beach shall be amended to read as follows: B. Qualifications and Term of Office. The Commission members shall have been qualified electors and residents of the City of Madeira Beach, Florida, for one (1) year immediately prior to their qualifying for election, and in addition, each District-Commissioner shall be a resident of said district in which the candidate seeks to be a candidate for a period of six (6) months prior to the date of said application. The term of office for all District Commissioners shall be for a period of two (2) years. The Mayor may reside at the time of the election anywhere within the City of Madeira Beach, Florida; and the term of office for the Mayor shall be for a period of three (3) years. The terms of all members of the Commission, including the Mayor, will begin at the Board of Commissioners first regular meeting following the election and certification thereof, and shall continue until their successor has been duly elected and installed under this Charter. In order to implement the transition from March municipal elections to November municipal general elections the terms of office for Commissioner District 1, Commissioner District 2, and Mayor-Commissioner scheduled to expire in March 2028 shall instead expire upon certification of the November 2028 municipal general election results and installation of successors. In order to continue the staggered election cycle the terms of office for Commissioner District 3 and Commissioner District 4 scheduled to expire in March 2027 shall instead expire upon certification of the November 2027 municipal general election results and installation of successors. All vacancies occurring in the Commission between elections shall be filled in accordance with Section 2.2(E) of this Charter. Section 4. That Section 4.8, Induction of Board of Commissioners into Office; Meetings, of the Charter of the City of Madeira Beach shall be amended to read as follows: The first meeting of each newly elected member of the Board of Commissioners for induction into office shall be at a Board of Commissioners meeting to be held on or before the last day of the month in which the election was held and certification thereof. The Board of Commissioners may hold such meetings at such times as they may prescribe, but not less frequently than once each month. Meetings of the Board of Commissioners shall be open to the public in accordance with the Florida Statutes. Ordinance 2026-07 Page 3 of 5\n\nSection 6. This Ordinance shall take effect immediately upon its passage and adoption, provided, however, it shall not be effective until such is approved by the electorate at a referendum election thereon to ratify the terms and conditions of this Ordinance. In the event that any of the referendum questions shall be defeated, then this Ordinance shall be of no further force and effect.",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall the City Charter be amended to temporarily extend the terms of Commissioner District 3 and Commissioner District 4 until certification of the November 2027 election results; and the terms of Commissioner District 1, Commissioner District 2, and Mayor-Commissioner until certification of the November 2028 election results in order to implement the transition from March Municipal Elections to November Municipal General Elections?"
+          }
+        },
+        {
+          "id": "fl-2026-redington-commissioner-terms:measure",
+          "contestId": "fl-2026-redington-commissioner-terms",
+          "questionText": "Charter section 5 currently provides that the term of office for a Commissioner is two years. Should section 5 of the Charter be amended to convert terms of the Commissioners to three years?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Charter section 5 currently provides that the term of office for a Commissioner is two years. Should section 5 of the Charter be amended to convert terms of the Commissioners to three years?"
+          }
+        },
+        {
+          "id": "fl-2026-redington-mayor-2027-term:measure",
+          "contestId": "fl-2026-redington-mayor-2027-term",
+          "questionText": "Charter section 5 currently provides that the term of office for the Mayor is three years. If Referendum Question No. 1 passes extending the term of office for a Commissioner to three years should the Charter be amended to provide the term of office for the Mayor following the 2027 General Election only be two years to maintain staggered terms of office for the Mayor and Commissioners?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Charter section 5 currently provides that the term of office for the Mayor is three years. If Referendum Question No. 1 passes extending the term of office for a Commissioner to three years should the Charter be amended to provide the term of office for the Mayor following the 2027 General Election only be two years to maintain staggered terms of office for the Mayor and Commissioners?"
+          }
+        },
+        {
+          "id": "fl-2026-st-petersburg-water-bonds:measure",
+          "contestId": "fl-2026-st-petersburg-water-bonds",
+          "questionText": "Shall the City finance storm resilience improvements, including but not limited to, floodwater protection, stormwater pump stations, drainage infrastructure, as well as wastewater collection and treatment facilities, drinking water distribution and supply facilities, by issuing general obligation bonds in one or more series, not exceeding $600,000,000, bearing interest not exceeding maximum legal rates, maturing not more than 30 years from each issuance date, pledging the City's full faith, credit, and unlimited ad valorem taxing power?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall the City finance storm resilience improvements, including but not limited to, floodwater protection, stormwater pump stations, drainage infrastructure, as well as wastewater collection and treatment facilities, drinking water distribution and supply facilities, by issuing general obligation bonds in one or more series, not exceeding $600,000,000, bearing interest not exceeding maximum legal rates, maturing not more than 30 years from each issuance date, pledging the City's full faith, credit, and unlimited ad valorem taxing power?"
+          }
+        },
+        {
+          "id": "fl-2026-st-petersburg-jamestown-lots:measure",
+          "contestId": "fl-2026-st-petersburg-jamestown-lots",
+          "questionText": "The City Charter Park and Waterfront Map contains a composite parcel identified as “Jamestown” composed of: Unity Park, recreational open space within Jamestown apartments, and nine City-owned lots in the adjacent neighborhood that are vacant and closed to the public. Shall the City Charter be amended to remove those nine vacant lots from the Map to allow subsequent / separate land use changes and potential sale of those lots for affordable or workforce housing?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "The City Charter Park and Waterfront Map contains a composite parcel identified as “Jamestown” composed of: Unity Park, recreational open space within Jamestown apartments, and nine City-owned lots in the adjacent neighborhood that are vacant and closed to the public. Shall the City Charter be amended to remove those nine vacant lots from the Map to allow subsequent / separate land use changes and potential sale of those lots for affordable or workforce housing?"
+          }
+        },
+        {
+          "id": "fl-2026-st-petersburg-harborage-lease:measure",
+          "contestId": "fl-2026-st-petersburg-harborage-lease",
+          "questionText": "May City Council approve amendment of the lease of City-owned submerged lands at Harborage Marina subject to conditions in ordinance 640-H? Such amendment would extend the term of the lease to 30 years and require the tenant to construct new improvements at no cost to the City, including 200 linear feet of docks, boat lifts, and expanded restrooms. Those improvements would be owned by the City at the end of the lease.",
+          "officialStatement": "SECTION 3—AUTHORIZATION FOR AMENDMENT: If the 2026 Referendum is ap- proved by a majority vote, the City is authorized to amend the Current Lease subject to the following conditions (each, an “Amendment”): (A) Authority to Amend. Authorization to amend the Current Lease in accordance with this section is not limited to a single Amendment, and multiple Amendments may be approved pursuant to this section as long as no aspect of an Amendment is inconsistent with the 2004 Referendum, the 2018 Referendum, or the 2026 Referendum (with any conflict among those referenda resolved in favor of the later referendum). But if the first Amendment ap- proved in accordance with this section (the “Initial Amendment”) is not fully executed on or before December 31, 2027, the authority provided by the 2026 Referendum will expire at the end of that date. (B) Approval Process. A City Council resolution receiving at least six affirmative votes is required to approve each Amendment, (C) Premises. The area subject to the Current Lease must not be expanded beyond what was authorized under the 2018 Referendum. (D) Duration. The maximum duration of the Current Lease must be no more than 30 years from the effective date of the Initial Amendment.\n\n00899049 / v06 4 of 5 Harborage Extension (E) Improvements. The Current Lease must require the tenant to complete construction of the following improvements at no cost to the City: (1) 200 linear feet of new docks at the location shown on the Improvement Diagram, with fire suppression, water, and electric service. (2) New boat lifts at the location shown in the Improvement Diagram. (3) Expanded restrooms. (F) Ownership. Pursuant to the terms of the Current Lease, each improvement described in subsection (E) becomes property of the City upon expiration or earlier termination of the Current Lease. (G) Nature of Conditions. These conditions are intended to establish certain minimum stand- ards for each Amendment, and they do not prevent an Amendment or the Current Lease from including provisions that provide more detail than these conditions or that concern matters not mentioned in these conditions. ",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "May City Council approve amendment of the lease of City-owned submerged lands at Harborage Marina subject to conditions in ordinance 640-H? Such amendment would extend the term of the lease to 30 years and require the tenant to construct new improvements at no cost to the City, including 200 linear feet of docks, boat lifts, and expanded restrooms. Those improvements would be owned by the City at the end of the lease."
+          }
+        },
+        {
+          "id": "fl-2026-st-petersburg-port-lease-limit:measure",
+          "contestId": "fl-2026-st-petersburg-port-lease-limit",
+          "questionText": "The City Charter currently limits leases at the Port of St. Petersburg to 10 years without approval by citywide referendum. Shall the Charter be amended to increase that limitation to 25 years? That amendment would make the Port consistent with adjacent Albert Whitted Airport and provide the City with additional flexibility to enter into agreements with private entities for redevelopment of Port facilities. That amendment would not change the permitted use of the Port.",
+          "officialStatement": "SECTION 4—CHARTER AMENDMENT: If the Referendum is approved by a majority vote, the City shall file a revised version of the St. Petersburg City Charter with the Department of State that will amend Charter subsection 1.02(c)(4)A as follows, effective upon filing:\n\n00891885 / v03* 4 of 5 Port Limitation (4) Properties with Longer Term Lease Limitation. A. Properties with Twenty-five (25) Year Lease Limitation. As pro- vided for in Section 1.02(c)(2), the following properties may be leased for a period not exceeding twenty-five (25) years upon the approval of a Resolution of City Council receiving an affirmative vote from at least six (6) members of City Council: 1. Albert Whitted Airport Lot 2, Block 1, Albert Whitted Airport Second Replat and Addition as recorded in Plat Book 112 Pages 23 and 24, Public Records of Pinellas County, Florida. 2. Airport / Port Operations Area (parcel E) ",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "The City Charter currently limits leases at the Port of St. Petersburg to 10 years without approval by citywide referendum. Shall the Charter be amended to increase that limitation to 25 years? That amendment would make the Port consistent with adjacent Albert Whitted Airport and provide the City with additional flexibility to enter into agreements with private entities for redevelopment of Port facilities. That amendment would not change the permitted use of the Port."
+          }
+        },
+        {
+          "id": "fl-2026-st-petersburg-election-cleanup:measure",
+          "contestId": "fl-2026-st-petersburg-election-cleanup",
+          "questionText": "In 2022, voters in a citywide referendum approved amendment of the City Charter to reschedule elections for Mayor and Council Members to even-numbered years so that City elections would align with national and state elections beginning in 2024. Shall the Charter be amended to make technical, clarifying, and conforming changes necessary and appropriate to fully effectuate the intent of the 2022 referendum, including alignment of the Charter-review process with the current election schedule?",
+          "officialStatement": "(E) Accordingly, the Charter should be amended to make technical, clarifying, and conforming changes that are necessary and appropriate to fully effectuate the 2022 Referendum. Those “cleanup” amendments can be generally described as follows: (1) Charter section 5.05 should be amended to require that municipal primary and gen- eral elections will occur on the same dates as the state primary and general elections. That section should also clarify that, if the state returns to a two-primary system (which it had through 2005 and which recent legislation proposed the rein- troduction of), the municipal primary election will coincide with the first state primary election, rather than the second state primary election (which would be a smaller, runoff election). That approach will ensure that municipal elections remain aligned with state elections regardless of any future change to the schedule for state elections. (2) Charter section 5.05 should also be amended to improve readability (the relevant portions are currently large blocks of text that are difficult to parse) and consistency (with state law and with other provisions of the Charter) and to reflect current prac- tices for administration of elections (e.g., that voting takes place in multiple polling places established by the Pinellas County Supervisor of Elections, rather than a single place established by the City). (3) Charter section 8.01 should be amended to require that the Charter Review Com- mission (“CRC”) will be formed in years ending in nine and that any amendment\n\n00899590 / v03S 3 of 8 Election Schedule Cleanup proposed by CRC will be placed on the ballot of municipal general election in years ending in zero. That approach is consistent with the 2022 Referendum, which moved future elections later by one year to accomplish the transition to even-year elections. (F) Pursuant to Florida Statutes section 166.031, the Charter may be amended pursuant to a referendum put to a vote of the electors at a general election held within the municipality, and a referendum to amend the Charter as described in this section will be held in conjunc- tion with the municipal general election scheduled for November 3, 2026. (G) For the reasons described in these findings, the actions taken by this ordinance serve a valid municipal purpose and are in the best interests of the City, and this ordinance is adopted in consideration of these findings. SECTION 2—DATE OF REFERENDUM: The City Council hereby calls the Charter amendment referendum described in this ordinance (the “Referendum”) to be placed on the ballot of the municipal general election scheduled for November 3, 2026. SECTION 3—FORMATTING CONVENTIONS: With respect to the potential amendment of the Charter set forth in this ordinance, additions are indicated by underlining, deletions are in- dicated by strikethrough text, and unchanged paragraphs omitted for brevity are indicated by three ellipsis dots on a separate line. SECTION 4—CHARTER AMENDMENT: If the Referendum is approved by a majority vote, the City shall file a revised version of the St. Petersburg City Charter with the Florida De- partment of State that will amend the Charter as stated in this section, with those amendments effective upon filing. (A) Charter section 5.05, subsections (a)–(b), will be amended as follows: Sec. 5.05. Elections. (a) Primary elections. (1) On the Tuesday which is ten weeks prior to each general munici- pal election, there shall be held date of each state primary election, the City shall hold a nonpartisan primary election for the nomination of candidates for Council Members and Mayor, if ap- plicable, which primary shall be called by the Council by proper resolution,. If there are two state primary elections, the municipal primary election will be held on the date of the earlier of the two state primary elections.\n\n00899590 / v03S 4 of 8 Election Schedule Cleanup (2) notice of which Notice of the municipal primary election shall be published for five consecutive days in a daily newspaper pub- lished of general circulation in the City, which shall contain a list of such candidates, the offices to be filled and the time when and the place where such election shall be held, and the . That notice must include the date of the election, a list of the offices and candidates that will appear on the ballot for the election, and in- formation about methods of voting in the election (which may be provided through reference to information provided by the Super- visor of Elections). The last publication of that notice shall appear at least ten (10) days prior to the date of holding said the primary election. (3) The two candidates from each district receiving the highest num- ber of votes cast by the electors of said district shall be declared the primary nominees, and shall be entitled to have their names printed placed on the ballot to be used in the general municipal election. (4) If a candidate for Mayor receives more than fifty percent (50%) of the votes cast in the primary election, then that candidate shall be considered duly elected and shall not be required to be placed on the general election ballot. If no candidate for Mayor receives more than fifty percent (50%) of the vote in the primary election, then the two candidates for Mayor receiving the highest number of votes cast by the electors at large shall be declared the primary nominees, and shall be entitled to have their names printed on the ballot to be used in the general municipal election. (5) Only the names entitled to be on the ballot pursuant to this sSub- section 5.05(a) and no others shall be certified by the City Clerk as candidates duly nominated for office. (6) A tie between two (2) or more candidates for the same nomina- tion shall be decided by lot under the direction of the City Clerk. (7) If there are only two (2) candidates for nomination for an office in a primary election, no primary election shall be held for that office and both candidates shall be certified by the City Clerk as candidates duly nominated for that office.\n\n00899590 / v03S 5 of 8 Election Schedule Cleanup (8) In situations where If there is only one candidate for nomination to an office, neither the primary election nor the general election will be held for that office and the candidate shall be declared elected to that office. (b) General elections. (1) On the first Tuesday following the first Monday in November of each odd-numbered year date of each state general election, the City shall hold a municipal general municipal election shall be held. (2) The City Clerk, on or before the tenth day before the general mu- nicipal election, shall cause a notice of that election to be published calling such election for three (3) consecutive days in a daily newspaper published of general circulation in the City, which shall contain a list of such candidates, the office to be filled, and the time when and the place where such election will be heldmust include the same items required under subsec- tion (a) for notice of a primary election. (3) In the general municipal election, the electors of the City at large shall, from among the candidates on the ballot, vote for one can- didate from each district and, if applicable, for one candidate for Mayor; the candidate from each district receiving the highest number of votes shall be declared elected as Council Member from said district, and the candidate for Mayor receiving the high- est number of votes shall be declared elected as Mayor. (4) A tie between two (2) or more candidates for the same office shall be decided by lot under the direction of the City Clerk. . . . (B) Charter section 8.01, subsections (a), (b), (d), and (f), will be amended as follows: Sec. 8.01. Charter Review Commission. (a) Purpose; Frequency. A Charter Review Commission consisting of nine members must be established every ten years for the purpose of review- ing, on behalf of the citizens of St. Petersburg, the operation of City government and proposing amendments to this Charter to be placed on\n\n00899590 / v03S 6 of 8 Election Schedule Cleanup the ballot of the municipal general election occurring in each year end- ing in nine zero. (b) Appointments. (1) No later than August 1 of each year ending in eight nine, the Mayor, with approval of City Council, shall establish a standard application to be used by each person applying to serve on the Charter Review Commission. At a minimum, that standard appli- cation must be submitted prior to appointment and must confirm, under penalty of perjury, that the applicant satisfies the qualifications established by this section. This provision does not prevent a Council Member or the Mayor from requesting addi- tional information from an applicant through a supplemental application, interview, or otherwise. (2) No later than September 15 of each year ending in eight nine, each Council Member and the Mayor shall appoint one member to the Charter Review Commission by submitting the name of that appointment in writing to the City Clerk. . . . (d) Procedures. . . . (2) In November of each year ending in eight nine, the Charter Re- view Commission shall hold an organizational meeting, and at that organizational meeting, the body shall elect a Chair and Vice Chair from among its membership. Further meetings of the Char- ter Review Commission shall be held upon the call of the Chair or any three members of the Charter Review Commission. A ma- jority of the members of the Charter Review Commission constitutes a quorum. . . . (f) Report and Amendments. . . .\n\n00899590 / v03S 7 of 8 Election Schedule Cleanup (2) The Charter Review Commission shall submit the report required by this section no later than the earliest to occur of the following dates in each year ending in nine zero: (i) July 31 preceding the applicable election or (ii) 15 days prior to the last regular meeting of City Council scheduled to occur before the deadline estab- lished by the Supervisor of Elections for placing a charter amendment on the ballot of the applicable election. Following submission of the report in accordance with this subsection (2), the Chair of City Council shall place that report on the agenda of a regular meeting of City Council prior to the deadline established by the Supervisor of Elections. . . . ",
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "In 2022, voters in a citywide referendum approved amendment of the City Charter to reschedule elections for Mayor and Council Members to even-numbered years so that City elections would align with national and state elections beginning in 2024. Shall the Charter be amended to make technical, clarifying, and conforming changes necessary and appropriate to fully effectuate the intent of the 2022 referendum, including alignment of the Charter-review process with the current election schedule?"
+          }
+        },
+        {
+          "id": "fl-2026-treasure-island-development-votes:measure",
+          "contestId": "fl-2026-treasure-island-development-votes",
+          "questionText": "Shall the Treasure Island City Charter Section 3.07(c) be amended to require that “a supermajority vote of four members of the board of commissioners shall be required for the approval of any planned developments or special area plans?” This provision will become effective immediately upon approval by the electors or as otherwise provided by law.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+            "sourceOrg": "Pinellas County Supervisor of Elections",
+            "collectedAt": "2026-11-03T09:04:49.260814+00:00",
+            "verifiedAt": "2026-11-03T09:17:08.554368+00:00",
+            "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+            "quote": "Shall the Treasure Island City Charter Section 3.07(c) be amended to require that “a supermajority vote of four members of the board of commissioners shall be required for the approval of any planned developments or special area plans?” This provision will become effective immediately upon approval by the electors or as otherwise provided by law."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "fl-2026-belleair-planning-agency",
+          "whatItDoes": "Removes the Town Charter requirement that the Town Commission appoint a planning and zoning board. The question explains that Florida law already requires the town to appoint a local planning agency.",
+          "yesMeans": "Approve removing this specific charter requirement; the state-law requirement for a local planning agency remains.",
+          "noMeans": "Reject removing this charter requirement.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "97c085a01a9161b0605bebdb0cdd61def6dfa48db3504f638ba777d2c96bb7a1",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-belleair-charter-review-month",
+          "whatItDoes": "Beginning in 2036, moves the month for establishing the town’s Charter Review Committee from June to May. This gives the committee and town more time before election-office deadlines for proposed charter amendments on the following November general-election ballot.",
+          "yesMeans": "Approve establishing the Charter Review Committee in May instead of June beginning in 2036.",
+          "noMeans": "Reject this proposed change to the committee’s start month.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "4cce3c656f46b9a55ea8101a9f41d929f617ed69eb4281037edafae82c739224",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-largo-candidate-petitions",
+          "whatItDoes": "Sets March 15 as the first day candidate petitions for mayor and City Commission are available in a regular city-election year. For a special election, the City Commission would choose the date, under Ordinance 2025-24.",
+          "yesMeans": "Approve the March 15 regular-election date and a Commission-selected special-election date for making candidate petitions available.",
+          "noMeans": "Reject this proposed candidate-petition date amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "9bea68148c2199a0a12cf6cc2bce5ceaf42eeae253c165d20e0cd9eaf307e3be",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-madeira-election-month",
+          "whatItDoes": "Moves regular municipal elections from March to the first Tuesday after the first Monday in November and removes the exception for holding city elections with the presidential-preference primary. Districts One and Two continue in even-numbered years and Districts Three and Four in odd-numbered years. This is part of a three-question package: Ordinance 2026-07 takes effect only if all three questions pass.",
+          "yesMeans": "Approve the November election schedule as part of the package that requires all three questions to pass.",
+          "noMeans": "Reject this question; under the ordinance, defeat of any one of the three questions prevents the package from taking effect.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "36af6db982c918155a5019f217c93eca693e2db4a17f4c88afd4abd9d890eeca",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-madeira-candidate-qualifying",
+          "whatItDoes": "Moves municipal candidate qualifying from the first two full weeks in December to the first two full weeks in June, excluding weekends. It begins at noon on the first Monday and ends at noon on the final Friday. Ordinance 2026-07 takes effect only if all three city questions pass.",
+          "yesMeans": "Approve the June qualifying period as part of the package that requires all three questions to pass.",
+          "noMeans": "Reject this question; under the ordinance, defeat of any one of the three questions prevents the package from taking effect.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "26a9f4509e4e5845c59d589e8c43aac5b59edb238fcf1559a32a1a6d73a18175",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-madeira-transition-terms",
+          "whatItDoes": "Extends District Three and Four commissioners’ terms from March 2027 until the November 2027 election results are certified and successors installed. It extends District One and Two commissioners’ and the mayor-commissioner’s terms from March 2028 until the November 2028 results are certified and successors installed. It also updates the start and installation of new terms to account for election certification. Ordinance 2026-07 takes effect only if all three city questions pass.",
+          "yesMeans": "Approve these temporary term extensions and certification-related procedures as part of the package that requires all three questions to pass.",
+          "noMeans": "Reject this question; under the ordinance, defeat of any one of the three questions prevents the package from taking effect.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "413b5044c1a88253d54bf391d4588fc36e57aa87e93970f663ddabd7bc3fb13e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-redington-commissioner-terms",
+          "whatItDoes": "Changes commissioners’ terms of office from two years to three years.",
+          "yesMeans": "Approve three-year commissioner terms.",
+          "noMeans": "Reject changing commissioner terms from two years to three years.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "8213eb36d0d9a3ac65f6e1727302c1c4c4c99ffbbe69329f222affc754436eef",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-redington-mayor-2027-term",
+          "whatItDoes": "If Question One passes, makes the mayor’s term following the 2027 general election two years instead of the usual three years. This one-time change is intended to maintain staggered terms for the mayor and commissioners.",
+          "yesMeans": "Approve the two-year mayoral term following the 2027 election, only if Question One also passes.",
+          "noMeans": "Reject this proposed conditional change to the mayor’s 2027 term.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "2f74be3cc04fd1d256f0929f19459b7f0dc156b96816c44ff7a0ed0d93ca9fa4",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-st-petersburg-water-bonds",
+          "whatItDoes": "Authorizes up to $600 million in general obligation bonds, issued in one or more series, for storm resilience, flood protection and stormwater, wastewater and drinking-water improvements. Each series would mature within 30 years of issuance and bear interest no higher than the legal maximum. The city would pledge its full faith and credit and its power to levy property taxes without a stated millage cap to repay the bonds.",
+          "yesMeans": "Approve the bonds for the listed improvements, with the stated amount, interest and maturity limits and property-tax pledge.",
+          "noMeans": "Reject this proposed bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "0e8784ff928d162e32fc60532560cf3ad06c5b4300de7176d78112ca5d1849a4",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-st-petersburg-jamestown-lots",
+          "whatItDoes": "Removes nine city-owned vacant lots, currently closed to the public, from the Charter’s Park and Waterfront Map. The lots are part of the composite Jamestown parcel, which also includes Unity Park and recreational open space at Jamestown apartments. Removing these nine lots would allow later, separate land-use changes and a possible sale for affordable or workforce housing. The question itself does not make those later land-use changes or sell the lots.",
+          "yesMeans": "Approve removing the nine vacant lots from the map so later land-use and possible housing-sale decisions can be considered separately.",
+          "noMeans": "Reject removing these nine lots from the Charter map.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "e4cf288d33c38ef602a4b4ac4bf5bc12b3e99fa86fb59bb526f9a8aae607d75c",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-st-petersburg-harborage-lease",
+          "whatItDoes": "Allows one or more Harborage Marina lease amendments under Ordinance 640-H, each requiring at least six City Council votes. The first amendment must be fully executed by December 31, 2027, or this authority expires. The lease could last no more than 30 years from that first amendment’s effective date and could not expand the leased area. The tenant must build, at no city cost, 200 linear feet of docks with fire-suppression, water and electric service, new boat lifts and expanded restrooms. The city receives ownership of these improvements when the lease expires or ends earlier. Amendments must remain consistent with applicable referendum conditions, with later referendums controlling any conflict.",
+          "yesMeans": "Authorize the Council to approve the lease amendments within the stated deadline, voting threshold, term, area and construction conditions.",
+          "noMeans": "Reject this proposed lease-amendment authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "c38240e03d2fc9bab32772b2b97397c6e35a6082dcf33d87ff9826466a08a788",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-st-petersburg-port-lease-limit",
+          "whatItDoes": "Raises the Port of St. Petersburg’s lease limit without another citywide referendum from ten years to 25 years. A lease within the new limit would still require at least six City Council votes. The amendment does not change the Port’s permitted uses. If voters approve, the charter change takes effect when the revised charter is filed with the state.",
+          "yesMeans": "Approve the 25-year lease limit with the six-vote Council approval requirement and unchanged permitted uses.",
+          "noMeans": "Reject raising this lease limit from ten years to 25 years.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "9abe4f386802143f5b5b63160870b6fe07e599d0cc059e4bc6748a5b785e473a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-st-petersburg-election-cleanup",
+          "whatItDoes": "Updates the Charter to carry out the 2022 decision to hold city elections in even-numbered years. City primaries and general elections would use state election dates; if the state has two primaries, the city uses the earlier one. It updates election-notice and administration wording. The ten-year charter-review process would begin in years ending in nine, with proposed amendments voted on in years ending in zero. In the year ending in nine, the mayor and Council must establish the standard application form by August 1, appointments must be made by September 15, and the review commission must organize in November. The review report is due in the year ending in zero by the earlier of July 31 or 15 days before the last regular Council meeting before the ballot-submission deadline. Voter-approved changes take effect when the revised charter is filed with the state.",
+          "yesMeans": "Approve these election-administration and charter-review timing changes to implement the even-year schedule.",
+          "noMeans": "Reject these proposed charter changes.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "c821988747a32d4291cdee2ba5a821dc5ca055923579ac74d9ae728a2be67d41",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-treasure-island-development-votes",
+          "whatItDoes": "Requires four members of the Board of Commissioners to vote yes to approve any planned development or special area plan. The provision would take effect immediately upon voter approval, or as otherwise provided by law.",
+          "yesMeans": "Approve requiring four affirmative Commission votes for these development and special-area plans.",
+          "noMeans": "Reject this proposed four-vote approval requirement.",
+          "parts": [],
+          "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+          "sourceHash": "a1b18fbe3d53e45581e37ed7f194894490018037112c5583541489a76400c6be",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:17:08.554368+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:17:08.554368+00:00",
+    "reviewedBy": "CX-VOTES direct official-question and full operative-source reading; no provider calls",
+    "sources": [
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "finalUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:24.342Z",
+        "httpStatus": 200,
+        "rawHash": "461c5f7f145c4ab962a4e76b8de144a9b125bef5b751606c94187a35216604db",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.831Z",
+        "httpStatus": 200,
+        "rawHash": "71e1eca18215e9ee481414b3cc0b128de7d20ed9cc36669a75e9a8c3a81576a7",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.107Z",
+        "httpStatus": 200,
+        "rawHash": "0b453293300bf92b94865c7146e759916b97124ee3bb11645088bc73e5935372",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.804Z",
+        "httpStatus": 200,
+        "rawHash": "7084e3d9008cc6d85dc3775970c414d4386d6677c86e4e8b987b2446a64733fe",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.657Z",
+        "httpStatus": 200,
+        "rawHash": "801c72e16e7689e15c639c9c42902fe7ee42bebf7cfcc3229a50b507fabcad0e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.522Z",
+        "httpStatus": 200,
+        "rawHash": "b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.411Z",
+        "httpStatus": 200,
+        "rawHash": "409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.089Z",
+        "httpStatus": 200,
+        "rawHash": "b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.650Z",
+        "httpStatus": 200,
+        "rawHash": "51f53116d8cf9b79bdce23bdfaeb5c3adb169c4997ba004c3fe24b5717ef9a67",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.046Z",
+        "httpStatus": 200,
+        "rawHash": "7816bec8439edb080760b6087c817e308285694c6a96dd5f6cffa4b71c610e63",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.983Z",
+        "httpStatus": 200,
+        "rawHash": "9cccd61589f047f607ab0cef93dc3b036e66f122a538b8048198ccaac76dfc3d",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.627Z",
+        "httpStatus": 200,
+        "rawHash": "7d4fae7a6b646c9aad9ee64076e4b19673e89058f6457c740cc00af0ccb060e3",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.857Z",
+        "httpStatus": 200,
+        "rawHash": "e8940328a2726451d3bfc28468d01bbe248646e534c4bc78ab5947d915008ba8",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.586Z",
+        "httpStatus": 200,
+        "rawHash": "e2c15bd5ee4bd642102cfbf42fc00f1d8a485bd6dc5ac31c3af7f2ec92d9a90e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.410Z",
+        "httpStatus": 200,
+        "rawHash": "6afcea8c86d61743d068f146ad619c062ea5f5eb48f3d6bc1c1b076738c1b456",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Replayed all 55 complete local referendum questions from official master pages 19–73, exact printed local candidate names and vote limits. Only established county-wide, municipal mayor and at-large scopes projected; district or residential-area offices remain separate."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021 states that the eleventh judicial circuit is composed of Miami-Dade County."
+      },
+      {
+        "requestedUrl": "https://www.cityofdoral.com/Government-Center",
+        "finalUrl": "https://www.cityofdoral.com/Government-Center",
+        "publisher": "Doral municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.249835+00:00",
+        "httpStatus": 200,
+        "rawHash": "7317cec4d40d5774e58bc9aa89d10eba291594e209cf46427cd809478ef91cb0",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.hialeahfl.gov/169/Overview",
+        "finalUrl": "https://www.hialeahfl.gov/169/Overview",
+        "publisher": "Hialeah municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:57.558631+00:00",
+        "httpStatus": 200,
+        "rawHash": "f77c0a81537d4374f5d20fe5aaa4dd5bbff508906fe412e3dc867a5c449aca4e",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "finalUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "publisher": "Sunny Isles Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.487943+00:00",
+        "httpStatus": 200,
+        "rawHash": "9588e6970eb91e57b1a03f53a424d05a2719b0f801fc4237653d448b2011d914",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "finalUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "publisher": "Pinecrest municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.918266+00:00",
+        "httpStatus": 200,
+        "rawHash": "f617a5044e79bd05292353baf3bcc3b21664e1ec2dff43231eb9be57373303bb",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "finalUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "publisher": "Cutler Bay municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:08.208099+00:00",
+        "httpStatus": 200,
+        "rawHash": "42754b1b79830d6242643460bc1c2a5914875860e655d9b937c77735c8c2cdd3",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.southmiamifl.gov/113/Mayor-Commission",
+        "finalUrl": "https://www.somifl.gov/m/directory/department?did=4",
+        "publisher": "South Miami municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:38:24.121063+00:00",
+        "httpStatus": 200,
+        "rawHash": "59685f13e13e578856153d4f1b723fd9eaa8c8e3b276ab62680dea10f2da39d2",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "finalUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "publisher": "North Miami Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:09.096471+00:00",
+        "httpStatus": 200,
+        "rawHash": "355afb41eb88ee7b54b7e4e07b1e0cc5f32f653ee25c368db261666bb3e4ecf9",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "All 20 circuit definitions parsed from Florida Statutes 26.021 and matched to all 67 unique existing county divisions. Each entire county belongs to exactly one circuit."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:49:15.305881+00:00",
+        "httpStatus": 200,
+        "rawHash": "93e42cdfca0f35640ee35ade7c87eb72c5feed5c043eb63eba64ff7964454e61",
+        "reviewedEvidence": "All six appellate districts parsed from Florida Statutes 35.02–35.044, collectively covering all 20 circuits. Combined with section 26.021, this establishes 67 exact whole-county appellate memberships. No partial county is inferred."
+      },
+      {
+        "requestedUrl": "https://www.coralgables.com/department/city-commission",
+        "finalUrl": "https://www.coralgables.com/department/city-commission",
+        "publisher": "Coral Gables municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:22.085521+00:00",
+        "httpStatus": 200,
+        "rawHash": "11e14ae71de08a1d7ceb3e57fc8af4b43b9e7489ab56704e0a731631f5df8069",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "publisher": "Miami-Dade County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:20.904818+00:00",
+        "httpStatus": 200,
+        "rawHash": "29c71144edc323aa0a563ce0e6dd00be68b181a5fe004cb149204f241c67efe6",
+        "reviewedEvidence": "Official current map establishes COMMISSION DISTRICT 5; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "finalUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "publisher": "Miami-Dade County Public Schools",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:24.308954+00:00",
+        "httpStatus": 200,
+        "rawHash": "0eb0b12fa5a301c0056c7d7fe71109f8ef0fe704ccb4cb7988c2706697fa2894",
+        "reviewedEvidence": "Official current map establishes School Board District 1; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Both exact printed runoff candidate names and the vote-for-one instruction replayed."
+      },
+      {
+        "requestedUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "finalUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.016645+00:00",
+        "httpStatus": 200,
+        "rawHash": "94bf152e683cf32ecfecf5d5502831a021b510841ac56086978e00f10caed793",
+        "reviewedEvidence": "Current municipal election authority confirms November 3, 2026 runoff for Residential Area Seat 4, four-year term, both candidates, and that residential council seats are elected by their area."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.258159+00:00",
+        "httpStatus": 200,
+        "rawHash": "cc75a68c2dcbeab0a7c84a992e49b9e87c1b3971cc9c0138373922d38ca9e13b",
+        "reviewedEvidence": "Official 2026 election notice supplies the complete metes-and-bounds description of Residential Area Seat 4. Current exact canonical council_district:4 ID checked without widening to the city."
+      },
+      {
+        "requestedUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "finalUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:34:08.006625+00:00",
+        "httpStatus": 200,
+        "rawHash": "f313b7d7cca721df7b8aa8c019c8c55af2025365fba51dbe92c13cda323d8af0",
+        "reviewedEvidence": "Current official city district-map index independently identifies the Seat 4 map URL; current 2026 election notice supplies the full scope description."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.205430+00:00",
+        "httpStatus": 200,
+        "rawHash": "337f466ef1d36c5b46a86fe794603be15da79acd3bdab85665d229d82be662a3",
+        "reviewedEvidence": "Exact county clerk, county mayor, Circuit 9 Group 1 candidate lists and full school-tax question from the official November 3 composite. Composite explicitly warns that individual ballots contain only applicable races."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.426510+00:00",
+        "httpStatus": 200,
+        "rawHash": "6f930af9b78938006f90cd7709c19612dbe8d475768ea57702999fd705656d97",
+        "reviewedEvidence": "All 330 full official November precinct ballot styles replayed. Each imported countywide candidate and the complete English school-tax question occurs in every style. Soil, district commissioner, school-board district and CDD races are not widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021(9) explicitly establishes exactly Orange and Osceola as whole-county members of Circuit 9. Canonical circuit_court:9 is independently verified in the complete current OCD registry."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:52:21.487981+00:00",
+        "httpStatus": 200,
+        "rawHash": "a6115b68fd504b0888871f511a995069a222f7963dc7b7ba1cb6550800d092f0",
+        "reviewedEvidence": "Certified general roster contains 31 unopposed core entries: 28 State House, two State Senate, and one U.S. House. These certified records are preserved, with explicit unopposed context; the roster is not a printed-ballot denominator."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.142032+00:00",
+        "httpStatus": 200,
+        "rawHash": "2c2313f00a088cbd5944809556aea809cdf2c55a870c898ea57516aeeee8706e",
+        "reviewedEvidence": "Florida Statutes 101.151(7) explicitly excludes unopposed candidates, except justices or judges seeking retention, from the general election ballot. No certified record is deleted or hidden."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:38.531872+00:00",
+        "httpStatus": 200,
+        "rawHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+        "reviewedEvidence": "All seven imported candidate contests replayed with all 17 exact printed names and vote limits; full English text of all three countywide referendum questions. CDD races and the Country Run special-tax-district question are excluded pending exact scope proof."
+      },
+      {
+        "requestedUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "finalUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "publisher": "Hillsborough County",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.047821+00:00",
+        "httpStatus": 200,
+        "rawHash": "e1169c9218a554ba7dbdcfffa09131652efcec8d1ff0c8f2d762f241da819cd8",
+        "reviewedEvidence": "Current official board directory explicitly labels Districts 5 and 7 countywide, while identifying the separate District 1 and District 3 offices. Current canonical partial districts 1/3 are preserved precisely."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218/School-Board-Fact-Sheet-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:01:43.394502+00:00",
+        "httpStatus": 200,
+        "rawHash": "29baa4e03d2c374559e75ab57bb99c4d93c3a2e32a7537986a5b2d7e49eb16c1",
+        "reviewedEvidence": "Official 2026 School Board qualifying/electorate table explicitly labels District 6 countywide and Districts 2/4 single-member; four-year term is stated. This is county-specific and is not inferred for other Florida school boards."
+      },
+      {
+        "requestedUrl": "https://www.templeterrace.gov/791/Elections",
+        "finalUrl": "https://www.templeterrace.gov/791/Elections",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:02:17.706255+00:00",
+        "httpStatus": 200,
+        "rawHash": "9d30404e4c48d4da070f39c70d22d3e28522b16eab461dba49585bbd4c7dd65f",
+        "reviewedEvidence": "Current November 3 municipal election page lists the complete five qualified candidates for three council positions."
+      },
+      {
+        "requestedUrl": "https://templeterrace.gov/Archive.aspx?ADID=8463",
+        "finalUrl": "https://templeterrace.gov/ArchiveCenter/ViewFile/Item/8463",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:43.873527+00:00",
+        "httpStatus": 200,
+        "rawHash": "ae5239fbb9b5dfbcce7f1b51e25adb51efda52d837d9376a04f1e6b52c43f22d",
+        "reviewedEvidence": "Official annual city report explicitly establishes four-year at-large council elections. Current 2026 city election notice confirms the same undivided council contest and five qualified names; county sample provides vote-for-three instruction."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1083",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1083/11-03-26-Lee-County-BOCC-Single-Member-Districts-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "042efe9a7a27eafbc0291f58a937a9fa7fe9ceb1d7aff8156e43f4f4cf5ec50c",
+        "retrievedAt": "2026-11-03T03:44:05.111851+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1080",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1080/11-03-26-Lee-County-BOCC-CharterAmendment-TERM-LIMITS-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "658c18689bd8ad5d6feea2cd24327895d4867dc9afdc8e61238b104a29db1bea",
+        "retrievedAt": "2026-11-03T03:44:44.506753+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1086/11-03-26-TFMB-Charter-Amendment-Referendums-ENG?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+        "retrievedAt": "2026-11-03T03:44:05.112178+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1092",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1092/11-03-26-Lee-County-Mosquito-FMB-Mosquito-Control-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20",
+        "retrievedAt": "2026-11-03T03:44:05.112573+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1093",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1093/11-03-26-Iona-McGregor-FMB-Fire-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba",
+        "retrievedAt": "2026-11-03T03:44:05.314059+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816",
+        "finalUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816/General-Election---November-3-2026---State-Representative-District-53-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hernando County official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:36.276054+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "finalUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "publisher": "Duval County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:45.933140+00:00",
+        "httpStatus": 200,
+        "rawHash": "1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "finalUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "publisher": "Walton County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:32.531103+00:00",
+        "httpStatus": 200,
+        "rawHash": "1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "publisher": "Leon County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:39.125912+00:00",
+        "httpStatus": 200,
+        "rawHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "reviewedEvidence": "Complete native2026GeneralElectionGuide. Page7has five county charter amendments, two school-district tax questions and one nonbinding county advisory question. Eight bounded question fields extracted and checked; original bytes and source images retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903470+00:00",
+        "httpStatus": 200,
+        "rawHash": "73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12",
+        "reviewedEvidence": "Leon County Ordinance26-08; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903771+00:00",
+        "httpStatus": 200,
+        "rawHash": "282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9",
+        "reviewedEvidence": "Leon County Ordinance26-12; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "publisher": "Leon County Board of County Commissioners and School Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.904280+00:00",
+        "httpStatus": 200,
+        "rawHash": "6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766",
+        "reviewedEvidence": "Leon County Resolution26-32 and attached School Board resolution; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:07:27.875535+00:00",
+        "httpStatus": 200,
+        "rawHash": "a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1",
+        "reviewedEvidence": "Leon County Ordinance 26-06; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.895395+00:00",
+        "httpStatus": 200,
+        "rawHash": "335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a",
+        "reviewedEvidence": "Leon County Ordinance 26-05; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.896140+00:00",
+        "httpStatus": 200,
+        "rawHash": "c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141",
+        "reviewedEvidence": "Leon County Ordinance 26-07; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:18.595782+00:00",
+        "httpStatus": 200,
+        "rawHash": "771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c",
+        "reviewedEvidence": "Leon County Resolution 26-08; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+        "finalUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa",
+        "publisher": "Pinellas County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:04:49.260814+00:00",
+        "httpStatus": 200,
+        "rawHash": "5aa6a9061c121759c9226b32466c81c4e2bfb87ee5c8e3a25afde8ef11d610ac",
+        "reviewedEvidence": "Exact current official local questions, or full final-reading proposal whose ballot summary matches the current county publication. Material coupled-vote condition, Council threshold, deadline, lease limit and administrative timing read from native official text."
+      },
+      {
+        "requestedUrl": "https://mccmeetingspublic.blob.core.usgovcloudapi.net/mdrabchfl-meet-85e74e8ee02c422cb9bda22a28d8b1d7/ITEM-Attachment-001-8d4b5516f91e4561b78ae03e90fa9e3f.pdf",
+        "finalUrl": "https://mccmeetingspublic.blob.core.usgovcloudapi.net/mdrabchfl-meet-85e74e8ee02c422cb9bda22a28d8b1d7/ITEM-Attachment-001-8d4b5516f91e4561b78ae03e90fa9e3f.pdf",
+        "publisher": "City of Madeira Beach",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:09:58.874548+00:00",
+        "httpStatus": 200,
+        "rawHash": "4deb36de04c24d90668dd0b61a8cb98219f0f16dadf6a06e67274d42856ca096",
+        "reviewedEvidence": "Exact current official local questions, or full final-reading proposal whose ballot summary matches the current county publication. Material coupled-vote condition, Council threshold, deadline, lease limit and administrative timing read from native official text."
+      },
+      {
+        "requestedUrl": "https://www.stpete.org/2026-07-23%20Agenda%20Packet%20w_AddsDeletes.pdf?t=202607171638300",
+        "finalUrl": "https://cms5.revize.com/revize/stpete/2026-07-23%20Agenda%20Packet%20w_AddsDeletes.pdf?t=202607171638300",
+        "publisher": "City of St. Petersburg",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:08:09.524560+00:00",
+        "httpStatus": 200,
+        "rawHash": "35dc04b047b8204b346d443c980dd065cf2f1d7fa85fed4893fe5746752cd524",
+        "reviewedEvidence": "Exact current official local questions, or full final-reading proposal whose ballot summary matches the current county publication. Material coupled-vote condition, Council threshold, deadline, lease limit and administrative timing read from native official text."
+      }
+    ]
+  }
+}

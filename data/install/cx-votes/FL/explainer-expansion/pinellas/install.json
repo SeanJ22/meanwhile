@@ -1,0 +1,111 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T09:17:08.554368+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-belleair-planning-agency",
+      "title": "Belleair — No. 1 Charter Amendment: Planning agency",
+      "ocdId": "ocd-division/country:us/state:fl/place:belleair"
+    },
+    {
+      "id": "fl-2026-belleair-charter-review-month",
+      "title": "Belleair — No. 2 Charter Amendment: Charter-review timing",
+      "ocdId": "ocd-division/country:us/state:fl/place:belleair"
+    },
+    {
+      "id": "fl-2026-largo-candidate-petitions",
+      "title": "Largo — Referendum: Candidate-petition availability",
+      "ocdId": "ocd-division/country:us/state:fl/place:largo"
+    },
+    {
+      "id": "fl-2026-madeira-election-month",
+      "title": "Madeira Beach — No. 1 Charter Amendment: November elections",
+      "ocdId": "ocd-division/country:us/state:fl/place:madeira_beach"
+    },
+    {
+      "id": "fl-2026-madeira-candidate-qualifying",
+      "title": "Madeira Beach — No. 2 Charter Amendment: June candidate qualifying",
+      "ocdId": "ocd-division/country:us/state:fl/place:madeira_beach"
+    },
+    {
+      "id": "fl-2026-madeira-transition-terms",
+      "title": "Madeira Beach — No. 3 Charter Amendment: Temporary term extensions",
+      "ocdId": "ocd-division/country:us/state:fl/place:madeira_beach"
+    },
+    {
+      "id": "fl-2026-redington-commissioner-terms",
+      "title": "Redington Shores — No. 1 Referendum: Commissioner terms",
+      "ocdId": "ocd-division/country:us/state:fl/place:redington_shores"
+    },
+    {
+      "id": "fl-2026-redington-mayor-2027-term",
+      "title": "Redington Shores — No. 2 Referendum: Mayor’s 2027 term",
+      "ocdId": "ocd-division/country:us/state:fl/place:redington_shores"
+    },
+    {
+      "id": "fl-2026-st-petersburg-water-bonds",
+      "title": "St. Petersburg — No. 1 Referendum: Water and stormwater bonds",
+      "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg"
+    },
+    {
+      "id": "fl-2026-st-petersburg-jamestown-lots",
+      "title": "St. Petersburg — No. 1 Charter Amendment: Jamestown vacant lots",
+      "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg"
+    },
+    {
+      "id": "fl-2026-st-petersburg-harborage-lease",
+      "title": "St. Petersburg — No. 2 Referendum: Harborage Marina lease",
+      "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg"
+    },
+    {
+      "id": "fl-2026-st-petersburg-port-lease-limit",
+      "title": "St. Petersburg — No. 2 Charter Amendment: Port lease limit",
+      "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg"
+    },
+    {
+      "id": "fl-2026-st-petersburg-election-cleanup",
+      "title": "St. Petersburg — No. 3 Charter Amendment: Election schedule and charter review",
+      "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg"
+    },
+    {
+      "id": "fl-2026-treasure-island-development-votes",
+      "title": "Treasure Island — Referendum: Development approval votes",
+      "ocdId": "ocd-division/country:us/state:fl/place:treasure_island"
+    }
+  ],
+  "operation": "Merge14 source-checked local questions and neutral explanations, preserving prior candidate and measure facts.",
+  "coverageLimit": "Complete local-question list published on this current county General Election information page; wider Florida local inventory remains open.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T09:20:04.273Z",
+    "preparedRecords": 14,
+    "originalSourceHashes": "PASS; full native final-reading PDF originals retained once and sanitized primary HTML stores original/stored identities separately",
+    "exactSupportQuotes": "PASS",
+    "sourceSemanticReview": "PASS; all14 current questions and neutral what/yes/no checked. Full-source Madeira all-three-votes condition, StPete six-vote Council thresholds, first-amendment deadline, lease-area/term/ownership conditions and charter-review timing included.",
+    "nativeLegalRenderReview": "PASS; Madeira final pages2,3,5 and StPete operative lease/port/administrative redlines read; stale July Madeira no-additional-term clause excluded because absent from final proposal",
+    "officialAuthority": "PASS; all record and question source links are the current county .gov primary publication. Supplemental native city documents retain .gov delegation or truthful web-mediated city-provider source chain.",
+    "normalPublicationAdmission": "PASS",
+    "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "coverageLimit": "Complete local-question list on the captured current official county information page; other county inventories remain open.",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "e167b069f68543b39eec3f5cc145f950c85b7e019fe1138ba2e27939f360b3b0",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

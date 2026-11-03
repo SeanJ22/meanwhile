@@ -1,0 +1,12 @@
+{
+  "state": "WA",
+  "records": 12,
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "genericBallotProblems": "PASS",
+  "sourceAuthorityEnforced": true,
+  "heldInputUnrelatedContestsPreserved": 156,
+  "heldInputCandidatesPreserved": 275,
+  "priorBasis": "Saved repository official-source state input; no production read or write",
+  "newContests": 12
+}

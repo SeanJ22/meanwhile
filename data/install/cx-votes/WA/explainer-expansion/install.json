@@ -1,0 +1,75 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "WA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "wa-2026-king-measure-102252",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102252&groupname=City"
+    },
+    {
+      "id": "wa-2026-king-measure-102249",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102249&groupname=City"
+    },
+    {
+      "id": "wa-2026-king-measure-102244",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102244&groupname=City"
+    },
+    {
+      "id": "wa-2026-king-measure-102240",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102240&groupname=City"
+    },
+    {
+      "id": "wa-2026-king-measure-102243",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102243&groupname=City"
+    },
+    {
+      "id": "wa-2026-king-measure-102310",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?cid=102310&groupname=City&lang=en-US"
+    },
+    {
+      "id": "wa-2026-king-measure-102260",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102260&groupname=City"
+    },
+    {
+      "id": "wa-2026-king-measure-102239",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102239&groupname=City"
+    },
+    {
+      "id": "wa-2026-king-measure-102259",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102259&groupname=School"
+    },
+    {
+      "id": "wa-2026-king-measure-102241",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102241&groupname=School"
+    },
+    {
+      "id": "wa-2026-king-measure-102242",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102242&groupname=School"
+    },
+    {
+      "id": "wa-2026-king-measure-102257",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102257&groupname=School"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state WA and this absolute ballot-input directory. Preserve unrelated candidates, contests and explanations. No app release.",
+  "coverage": {
+    "repairedExistingExplanations": 0,
+    "newLocalMeasuresWithExplanations": 12,
+    "localCompleteness": "Additional official local inventories remain under acquisition."
+  },
+  "sourceSupport": "source-support.json",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "actualReaderWithHeldTranslations": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS",
+    "sourceArtifactHashesAndCredentials": "PASS"
+  },
+  "nextOwner": "River: install as data and check these explanations and official source links live."
+}

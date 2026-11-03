@@ -1,0 +1,103 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-03T04:16:58.910Z",
+  "records": [
+    {
+      "state": "WA",
+      "contestId": "wa-2026-king-measure-102252",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "WA",
+      "contestId": "wa-2026-king-measure-102249",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "WA",
+      "contestId": "wa-2026-king-measure-102244",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "WA",
+      "contestId": "wa-2026-king-measure-102240",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "WA",
+      "contestId": "wa-2026-king-measure-102243",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "WA",
+      "contestId": "wa-2026-king-measure-102310",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "WA",
+      "contestId": "wa-2026-king-measure-102260",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "WA",
+      "contestId": "wa-2026-king-measure-102239",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "WA",
+      "contestId": "wa-2026-king-measure-102259",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "WA",
+      "contestId": "wa-2026-king-measure-102241",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "WA",
+      "contestId": "wa-2026-king-measure-102242",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "WA",
+      "contestId": "wa-2026-king-measure-102257",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    }
+  ],
+  "productionWrites": 0
+}

@@ -1,0 +1,56 @@
+{
+  "state": "WA",
+  "checkedAt": "2026-11-03T04:13:31.026707+00:00",
+  "freshReaderAuditAt": "2026-11-03T03:42:49.335Z",
+  "officialNovemberStatewideMeasureCount": 3,
+  "officialNovemberStatewideMeasureLabels": [
+    "IL26-001",
+    "IL26-638",
+    "IP26-645"
+  ],
+  "statewideSource": {
+    "url": "https://www.sos.wa.gov/about-office/news/2026/secretary-state-certifies-candidates-and-measures-november-general-election",
+    "retrievedAt": "2026-11-03T03:42:42.814989+00:00",
+    "documentSha256": "c5d98a8e63ac48c2c2316b1dbff09104e80e5f1725205169771ef9de9a140499",
+    "capturedBytes": 191882,
+    "evidenceFile": "/workspace/work/election-day/explainers-only/west/sources/wa-4bb1c6fe72dc.html",
+    "kind": "DOCUMENT_BYTES"
+  },
+  "heldMeasures": 4,
+  "heldStatewideMeasureCount": 3,
+  "heldStatewideContestIds": [
+    "wa-sos-2026-general-initiative-il26-001",
+    "wa-sos-2026-general-initiative-il26-638",
+    "wa-sos-2026-general-initiative-ip26-645"
+  ],
+  "statewidePresenceComparison": "MATCH",
+  "heldNotInCurrentOfficialInventory": [],
+  "preparedUsefulExplanationRecords": 12,
+  "preparedRecordIds": [
+    "wa-2026-king-measure-102252",
+    "wa-2026-king-measure-102249",
+    "wa-2026-king-measure-102244",
+    "wa-2026-king-measure-102240",
+    "wa-2026-king-measure-102243",
+    "wa-2026-king-measure-102310",
+    "wa-2026-king-measure-102260",
+    "wa-2026-king-measure-102239",
+    "wa-2026-king-measure-102259",
+    "wa-2026-king-measure-102241",
+    "wa-2026-king-measure-102242",
+    "wa-2026-king-measure-102257"
+  ],
+  "localInventory": {
+    "heldLocalMeasures": 1,
+    "newPreparedLocalMeasures": 12,
+    "sourceReadyScopeUnresolved": 2,
+    "checkedInventory": "The state certifies three statewide measures. King County’s official inventory has 15 local questions: Seattle’s existing measure, twelve newly prepared city/school measures, and two special-district questions with source text but unresolved exact eligibility scope.",
+    "remaining": "The other 38 county local inventories remain open. Fire District 20 and Cemetery District 1 must not be widened to King County or a whole city."
+  },
+  "allLocalMeasureCoverageComplete": false,
+  "qualityMethod": "Targeted substance checks and source recovery for actual placeholders or identified material omissions. Nonempty text does not prove usefulness. This is not a full semantic review of every held record.",
+  "productionWrites": 0,
+  "paidCalls": 0,
+  "appCodeChanges": false,
+  "nextOwner": "Root reviews the prepared data and marks READY. River installs as data and checks live readers. Unmeasured local inventories remain standing work."
+}

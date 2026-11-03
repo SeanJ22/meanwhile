@@ -1,0 +1,102 @@
+[
+  {
+    "jurisdiction": "King County Fire Protection District No. 20",
+    "sourceContestId": "102253",
+    "record": {
+      "contestId": "wa-2026-king-measure-102253",
+      "whatItDoes": "Would authorize King County Fire Protection District 20 to borrow up to $16 million through general obligation bonds, repaid within 20 years through annual additional property taxes. It would improve emergency-response support facilities and infrastructure on two district-owned sites, renovate the existing fire station, and buy firefighting and emergency-response equipment. The estimated tax rate is $0.28 per $1,000 of assessed value. Qualifying homeowners may be eligible for exemptions.",
+      "yesMeans": "An APPROVED vote would authorize these fire-district bonds and property taxes to repay them.",
+      "noMeans": "A REJECTED vote would reject this bond and repayment-tax authorization.",
+      "parts": [],
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102253&groupname=SpecialPurposeDistrict",
+      "sourceHash": "ce3ed1b9b0031436463598262e94f5f50bfd31c5a0746804d5fe39c28884e00e",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T03:58:52.527591+00:00",
+      "citation": "measure-source"
+    },
+    "support": {
+      "contestId": "wa-2026-king-measure-102253",
+      "state": "WA",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102253&groupname=SpecialPurposeDistrict",
+      "sourceHash": "ce3ed1b9b0031436463598262e94f5f50bfd31c5a0746804d5fe39c28884e00e",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "excerptSha256": "3368486165f82d19a53b13d5f23ba958664a18f12c34f23665ba995d23753601",
+      "fields": {
+        "whatItDoes": [
+          "The Board of Fire Commissioners of King County Fire Protection District No. 20 adopted Resolution No. 2026-002, concerning emergency response facilities to protect public health, life and property. This proposition would authorize the District to: improve emergency response support facilities and infrastructure on two sites owned by the District; renovate and modernize the existing fire station; acquire firefighting and emergency response apparatus; issue no more than $16,000,000 of general obligation bonds maturing within 20 years; and levy annual excess property taxes to repay the bonds, all as provided in Resolution No. 2026-002. Should this proposition be:",
+          "King County Fire Protection District No. 20 provides fire suppression and rescue services, emergency medical services, and fire prevention and community education to protect life and property from the adverse effects of fires, medical emergencies or exposure to dangerous conditions. The Board of Fire Commissioners has determined the inadequate size and aging and outdated facilities of the District, and the need to improve site security and resilience, operational readiness and efficiency, and community, firefighter and emergency responder safety, require the District to improve emergency response support facilities and infrastructure on two sites owned by the District. The improvements include renovating and modernizing the existing fire station, and acquiring firefighting and emergency response apparatus. If approved, this proposition would authorize no more than $16,000,000 of general obligation bonds that would mature within a maximum of 20 years and be repaid from annual excess property taxes. The estimated tax rate is approximately $0.28 per $1,000 of assessed value. Exemptions from taxes may be available to certain homeowners. For more information, contact the King County Department of Assessments, 206-296-3920.",
+          "Approved Rejected"
+        ],
+        "yesMeans": [
+          "The Board of Fire Commissioners of King County Fire Protection District No. 20 adopted Resolution No. 2026-002, concerning emergency response facilities to protect public health, life and property. This proposition would authorize the District to: improve emergency response support facilities and infrastructure on two sites owned by the District; renovate and modernize the existing fire station; acquire firefighting and emergency response apparatus; issue no more than $16,000,000 of general obligation bonds maturing within 20 years; and levy annual excess property taxes to repay the bonds, all as provided in Resolution No. 2026-002. Should this proposition be:",
+          "King County Fire Protection District No. 20 provides fire suppression and rescue services, emergency medical services, and fire prevention and community education to protect life and property from the adverse effects of fires, medical emergencies or exposure to dangerous conditions. The Board of Fire Commissioners has determined the inadequate size and aging and outdated facilities of the District, and the need to improve site security and resilience, operational readiness and efficiency, and community, firefighter and emergency responder safety, require the District to improve emergency response support facilities and infrastructure on two sites owned by the District. The improvements include renovating and modernizing the existing fire station, and acquiring firefighting and emergency response apparatus. If approved, this proposition would authorize no more than $16,000,000 of general obligation bonds that would mature within a maximum of 20 years and be repaid from annual excess property taxes. The estimated tax rate is approximately $0.28 per $1,000 of assessed value. Exemptions from taxes may be available to certain homeowners. For more information, contact the King County Department of Assessments, 206-296-3920.",
+          "Approved Rejected"
+        ],
+        "noMeans": [
+          "The Board of Fire Commissioners of King County Fire Protection District No. 20 adopted Resolution No. 2026-002, concerning emergency response facilities to protect public health, life and property. This proposition would authorize the District to: improve emergency response support facilities and infrastructure on two sites owned by the District; renovate and modernize the existing fire station; acquire firefighting and emergency response apparatus; issue no more than $16,000,000 of general obligation bonds maturing within 20 years; and levy annual excess property taxes to repay the bonds, all as provided in Resolution No. 2026-002. Should this proposition be:",
+          "King County Fire Protection District No. 20 provides fire suppression and rescue services, emergency medical services, and fire prevention and community education to protect life and property from the adverse effects of fires, medical emergencies or exposure to dangerous conditions. The Board of Fire Commissioners has determined the inadequate size and aging and outdated facilities of the District, and the need to improve site security and resilience, operational readiness and efficiency, and community, firefighter and emergency responder safety, require the District to improve emergency response support facilities and infrastructure on two sites owned by the District. The improvements include renovating and modernizing the existing fire station, and acquiring firefighting and emergency response apparatus. If approved, this proposition would authorize no more than $16,000,000 of general obligation bonds that would mature within a maximum of 20 years and be repaid from annual excess property taxes. The estimated tax rate is approximately $0.28 per $1,000 of assessed value. Exemptions from taxes may be available to certain homeowners. For more information, contact the King County Department of Assessments, 206-296-3920.",
+          "Approved Rejected"
+        ]
+      },
+      "sourceFile": "sources/ce3ed1b9b0031436463598262e94f5f50bfd31c5a0746804d5fe39c28884e00e.html",
+      "sourceCheckedAt": "2026-11-03T03:47:02.500432+00:00",
+      "reviewNotes": [
+        "Only official ballot text and election-office explanatory statement used. Voter arguments and rebuttals excluded.",
+        "NO/REJECTED means rejection of this proposal; no service-cut, dissolution or future-tax outcome inferred."
+      ],
+      "excerptFile": "sources/3368486165f82d19a53b13d5f23ba958664a18f12c34f23665ba995d23753601.txt"
+    },
+    "status": "SOURCE_READY_SCOPE_UNRESOLVED",
+    "blocking": "Exact district identity and its eligibility boundaries are not established by the already-held address geography. Do not widen this measure to King County or a whole city."
+  },
+  {
+    "jurisdiction": "King County Cemetery District No. 1",
+    "sourceContestId": "102254",
+    "record": {
+      "contestId": "wa-2026-king-measure-102254",
+      "whatItDoes": "Would permanently raise King County Cemetery District 1’s regular property tax rate from about $0.02816 to $0.05 per $1,000 of assessed value beginning in 2027. Revenue would support cemetery operations, burial records, equipment, green-burial practices and acquiring additional property. It would not change the cemetery’s ownership or governance. The new total rate equals $5 a year per $100,000 of assessed value.",
+      "yesMeans": "An APPROVED vote would authorize this permanent cemetery-district property tax increase.",
+      "noMeans": "A REJECTED vote would reject the proposed levy increase.",
+      "parts": [],
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102254&groupname=SpecialPurposeDistrict",
+      "sourceHash": "02dee2c4bce1824eafd4b896593579e6c0e70e7d24f9470e2a29933ef4d6e7f9",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T03:58:52.527591+00:00",
+      "citation": "measure-source"
+    },
+    "support": {
+      "contestId": "wa-2026-king-measure-102254",
+      "state": "WA",
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102254&groupname=SpecialPurposeDistrict",
+      "sourceHash": "02dee2c4bce1824eafd4b896593579e6c0e70e7d24f9470e2a29933ef4d6e7f9",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "excerptSha256": "be46b0f8b0653c444d2da3761fd6b830be560155563eccde0881a2584182f691",
+      "fields": {
+        "whatItDoes": [
+          "To support operational expenses, modernize and maintain burial records, acquire essential equipment, advance the development of green burial practices, and facilitate the acquisition of additional property, the Board of King County Cemetery District No. 1 adopted Resolution No. 295 proposing a permanent increase in its regular property tax levy from approximately $.03 ($.02816) to $.05 per $1000 of assessed valuation beginning in 2027. Should this proposition be:",
+          "This measure concerns the continued stewardship and preservation of the Vashon Cemetery. The cemetery serves as the final resting place for generations of island residents and is a significant historical and community resource. Funds generated by this measure would support routine maintenance, preservation of cemetery records, repair and upkeep of facilities, and protection of the site's historical character to help ensure that the cemetery remains safe, accessible, and well maintained, while preserving its role as a place of remembrance and reflection for current and future generations. The measure does not change ownership or governance of the cemetery. An increase of two cents per $1000 of assessed valuation results in an annual property tax increase, per $100,000 of assessed property tax value, of two dollars per year. If approved, the property tax levy increase would result in a total levy of five dollars ($5.00) per $100,000 of assessed value.",
+          "Approved Rejected"
+        ],
+        "yesMeans": [
+          "To support operational expenses, modernize and maintain burial records, acquire essential equipment, advance the development of green burial practices, and facilitate the acquisition of additional property, the Board of King County Cemetery District No. 1 adopted Resolution No. 295 proposing a permanent increase in its regular property tax levy from approximately $.03 ($.02816) to $.05 per $1000 of assessed valuation beginning in 2027. Should this proposition be:",
+          "This measure concerns the continued stewardship and preservation of the Vashon Cemetery. The cemetery serves as the final resting place for generations of island residents and is a significant historical and community resource. Funds generated by this measure would support routine maintenance, preservation of cemetery records, repair and upkeep of facilities, and protection of the site's historical character to help ensure that the cemetery remains safe, accessible, and well maintained, while preserving its role as a place of remembrance and reflection for current and future generations. The measure does not change ownership or governance of the cemetery. An increase of two cents per $1000 of assessed valuation results in an annual property tax increase, per $100,000 of assessed property tax value, of two dollars per year. If approved, the property tax levy increase would result in a total levy of five dollars ($5.00) per $100,000 of assessed value.",
+          "Approved Rejected"
+        ],
+        "noMeans": [
+          "To support operational expenses, modernize and maintain burial records, acquire essential equipment, advance the development of green burial practices, and facilitate the acquisition of additional property, the Board of King County Cemetery District No. 1 adopted Resolution No. 295 proposing a permanent increase in its regular property tax levy from approximately $.03 ($.02816) to $.05 per $1000 of assessed valuation beginning in 2027. Should this proposition be:",
+          "This measure concerns the continued stewardship and preservation of the Vashon Cemetery. The cemetery serves as the final resting place for generations of island residents and is a significant historical and community resource. Funds generated by this measure would support routine maintenance, preservation of cemetery records, repair and upkeep of facilities, and protection of the site's historical character to help ensure that the cemetery remains safe, accessible, and well maintained, while preserving its role as a place of remembrance and reflection for current and future generations. The measure does not change ownership or governance of the cemetery. An increase of two cents per $1000 of assessed valuation results in an annual property tax increase, per $100,000 of assessed property tax value, of two dollars per year. If approved, the property tax levy increase would result in a total levy of five dollars ($5.00) per $100,000 of assessed value.",
+          "Approved Rejected"
+        ]
+      },
+      "sourceFile": "sources/02dee2c4bce1824eafd4b896593579e6c0e70e7d24f9470e2a29933ef4d6e7f9.html",
+      "sourceCheckedAt": "2026-11-03T03:47:02.519066+00:00",
+      "reviewNotes": [
+        "Only official ballot text and election-office explanatory statement used. Voter arguments and rebuttals excluded.",
+        "NO/REJECTED means rejection of this proposal; no service-cut, dissolution or future-tax outcome inferred."
+      ],
+      "excerptFile": "sources/be46b0f8b0653c444d2da3761fd6b830be560155563eccde0881a2584182f691.txt"
+    },
+    "status": "SOURCE_READY_SCOPE_UNRESOLVED",
+    "blocking": "Exact district identity and its eligibility boundaries are not established by the already-held address geography. Do not widen this measure to King County or a whole city."
+  }
+]

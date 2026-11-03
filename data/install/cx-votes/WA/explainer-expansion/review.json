@@ -1,0 +1,23 @@
+{
+  "state": "WA",
+  "status": "PREPARED_FOR_ROOT_REVIEW",
+  "newExplainedMeasures": 12,
+  "officialKingCountyListLocalMeasures": 15,
+  "existingExplainedSeattleMeasure": 1,
+  "sourceReadyScopeUnresolved": 2,
+  "statewideOfficialMeasureCount": 3,
+  "sourceScope": "Official King County2026 general-election measure index and every local question/explanatory page. This is a county inventory, not a statewide local-measure denominator.",
+  "geography": "8exact city identities and4school measure identities from already-held derived geography. School legal numbers crosschecked in heldNCES directory. No newalias or widened county membership.",
+  "checks": {
+    "MeasureRecordContract": "PASS",
+    "exactSourceQuotesAndHashes": "PASS",
+    "sourceGovernmentHosts": "PASS",
+    "officialElectionDateOnEveryPage": "PASS",
+    "existingGeographicIDs": "PASS"
+  },
+  "productionWrites": 0,
+  "paidCalls": 0,
+  "appCodeChanges": false,
+  "operation": "Merge partial ballot-input/wa.json through existing ballot data publication. Preserve unrelated contests, candidates and explanations. Root reviews and marksREADY; River installs and verifies live.",
+  "liveStatus": "Not installed or live-checked by this agent."
+}

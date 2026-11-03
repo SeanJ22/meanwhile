@@ -1,0 +1,95 @@
+{
+  "sourceFile": "data/derived/zip-divisions/98.json",
+  "sourceFileSha256": "a9009e3bbd8ac4aa06c24959986b38013bfc0aba45070424e23099e6132b97ce",
+  "rule": "Use exact already-held division identity; no new aliases or broader county/city districtMemberships created.",
+  "rows": [
+    {
+      "contestId": "wa-2026-king-measure-102252",
+      "jurisdiction": "City of Bothell",
+      "ocdId": "ocd-division/country:us/state:wa/place:bothell"
+    },
+    {
+      "contestId": "wa-2026-king-measure-102249",
+      "jurisdiction": "City of Clyde Hill",
+      "ocdId": "ocd-division/country:us/state:wa/place:clyde_hill"
+    },
+    {
+      "contestId": "wa-2026-king-measure-102244",
+      "jurisdiction": "City of Issaquah",
+      "ocdId": "ocd-division/country:us/state:wa/place:issaquah"
+    },
+    {
+      "contestId": "wa-2026-king-measure-102240",
+      "jurisdiction": "City of Kenmore",
+      "ocdId": "ocd-division/country:us/state:wa/place:kenmore"
+    },
+    {
+      "contestId": "wa-2026-king-measure-102243",
+      "jurisdiction": "City of Lake Forest Park",
+      "ocdId": "ocd-division/country:us/state:wa/place:lake_forest_park"
+    },
+    {
+      "contestId": "wa-2026-king-measure-102310",
+      "jurisdiction": "City of Milton",
+      "ocdId": "ocd-division/country:us/state:wa/place:milton"
+    },
+    {
+      "contestId": "wa-2026-king-measure-102260",
+      "jurisdiction": "City of SeaTac",
+      "ocdId": "ocd-division/country:us/state:wa/place:seatac"
+    },
+    {
+      "contestId": "wa-2026-king-measure-102239",
+      "jurisdiction": "City of Shoreline",
+      "ocdId": "ocd-division/country:us/state:wa/place:shoreline"
+    },
+    {
+      "contestId": "wa-2026-king-measure-102259",
+      "jurisdiction": "Auburn School District No. 408",
+      "ocdId": "ocd-division/country:us/state:wa/school_district:auburn_school_district"
+    },
+    {
+      "contestId": "wa-2026-king-measure-102241",
+      "jurisdiction": "Highline School District No. 401",
+      "ocdId": "ocd-division/country:us/state:wa/school_district:highline_school_district"
+    },
+    {
+      "contestId": "wa-2026-king-measure-102242",
+      "jurisdiction": "Highline School District No. 401",
+      "ocdId": "ocd-division/country:us/state:wa/school_district:highline_school_district"
+    },
+    {
+      "contestId": "wa-2026-king-measure-102257",
+      "jurisdiction": "Kent School District No. 415",
+      "ocdId": "ocd-division/country:us/state:wa/school_district:kent_school_district"
+    }
+  ],
+  "schoolDistrictNumberEvidence": [
+    {
+      "nces_leaid": "5300300",
+      "school_year": "2025-2026",
+      "state": "WA",
+      "lea_name": "Auburn School District",
+      "state_leaid": "WA-17408",
+      "website": ""
+    },
+    {
+      "nces_leaid": "5303540",
+      "school_year": "2025-2026",
+      "state": "WA",
+      "lea_name": "Highline School District",
+      "state_leaid": "WA-17401",
+      "website": "http://www.highlineschools.org/"
+    },
+    {
+      "nces_leaid": "5303960",
+      "school_year": "2025-2026",
+      "state": "WA",
+      "lea_name": "Kent School District",
+      "state_leaid": "WA-17415",
+      "website": ""
+    }
+  ],
+  "schoolSourceFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+  "schoolSourceSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d"
+}

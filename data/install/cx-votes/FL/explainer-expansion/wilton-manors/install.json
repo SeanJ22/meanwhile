@@ -1,0 +1,44 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T11:02:42.304Z",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-wilton-manors-extraordinary-vacancies",
+      "title": "Wilton Manors — Filling extraordinary commission vacancies",
+      "ocdId": "ocd-division/country:us/state:fl/place:wilton_manors"
+    }
+  ],
+  "operation": "Merge the current source-verified City Charter question and its neutral question-supported explanation while preserving prior candidates and measures.",
+  "coverageLimit": "The one referendum expressly published on the current official Wilton Manors election page. Linked full ordinance currently404; explanation is bounded to the complete current question, and full-law recovery remains standing work. No broader county/state completeness claim.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T11:03:21.751Z",
+    "preparedRecords": 1,
+    "originalSourceHash": "PASS; native complete current official City.gov HTML identity verified, complete sanitized copy separately hashed",
+    "exactSupportQuotes": "PASS; every field support quote appears in the relevant complete current official question and in the original native text after whitespace normalization",
+    "sourceSemanticReading": "PASS; neutral question-supported explanation preserves Manager/Assistant Manager, mayor/two first appointments, those appointees choosing two more members, Governor replacement and more-than180calendar-day special-election trigger. No unstated full-ordinance conditions invented.",
+    "primaryPublisher": "Direct current City.gov election publication explicitly lists one referendum and complete question/YES-NOchoices. Full linked ordinance404; its full-law recovery remains open, and no signature/full-law source claim is made.",
+    "normalPublicationAdmission": "PASS; exact-byte receipt for projected source URL",
+    "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "d63617cb0c8dae62ba1c48c22a1ef78db696259f9edf91e90a4b90120e156e5c",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

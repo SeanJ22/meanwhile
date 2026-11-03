@@ -1,0 +1,26 @@
+{
+  "preparedAt": "2026-11-03T11:02:42.304Z",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/cef581f8c748393768fbfabd7b7cd55ba77411d02f3e2778a32f6df9c7d6ab32.html",
+      "sha256": "cef581f8c748393768fbfabd7b7cd55ba77411d02f3e2778a32f6df9c7d6ab32",
+      "bytes": 120337,
+      "kind": "SANITIZED_OFFICIAL_PRIMARY_QUESTION_PAGE",
+      "sourceUrl": "https://www.wiltonmanors.gov/1006/2026-Municipal-Election",
+      "retrievedAt": "2026-11-03T10:09:37.311084+00:00",
+      "nativeCaptureSha256": "efbd4ec103ab6d9b934713554924231ceefdbc28c969e1a5caafe14dc090d5e6",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized native current official City election publication, containing its one Charter question and YES/NO choices. Native and stored identities are distinct. No full-ordinance or signature claim."
+    },
+    {
+      "file": "sources/ad27b29fe6641b963bf920f6f7d85f62943a239fe064a1b0c227b09691d52188.txt",
+      "sha256": "ad27b29fe6641b963bf920f6f7d85f62943a239fe064a1b0c227b09691d52188",
+      "bytes": 674,
+      "kind": "RELEVANT_OFFICIAL_CURRENT_QUESTION",
+      "derivedFrom": "sources/cef581f8c748393768fbfabd7b7cd55ba77411d02f3e2778a32f6df9c7d6ab32.html",
+      "sourceSectionTitle": "FILLING EXTRAORDINARY VACANCIES OF ALL COMMISSIONERS AND THE MAYOR",
+      "extractionMethod": "Native primary HTML text, whitespace normalized. The question and introductory one-referendum statement are verified against the unaltered native text extraction. Choice checkbox spacing alone normalized; no operative ordinance text invented."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "contestId": "fl-2026-wilton-manors-extraordinary-vacancies",
+    "ocdId": "ocd-division/country:us/state:fl/place:wilton_manors",
+    "sourceUrl": "https://www.wiltonmanors.gov/1006/2026-Municipal-Election",
+    "primarySourceFile": "sources/cef581f8c748393768fbfabd7b7cd55ba77411d02f3e2778a32f6df9c7d6ab32.html",
+    "storedPrimarySha256": "cef581f8c748393768fbfabd7b7cd55ba77411d02f3e2778a32f6df9c7d6ab32",
+    "nativeCaptureSha256": "efbd4ec103ab6d9b934713554924231ceefdbc28c969e1a5caafe14dc090d5e6",
+    "retrievedAt": "2026-11-03T10:09:37.311084+00:00",
+    "textFilePerMeasure": "sources/ad27b29fe6641b963bf920f6f7d85f62943a239fe064a1b0c227b09691d52188.txt",
+    "sourceSectionTitle": "FILLING EXTRAORDINARY VACANCIES OF ALL COMMISSIONERS AND THE MAYOR",
+    "fields": {
+      "whatItDoes": [
+        "The Charter currently authorizes the Governor to fill vacancies if all commissioners, including the mayor, are removed from office. Shall the Charter be amended to provide for the City Manager, or Assistant City Manager, to appoint a mayor and two commissioners, for those appointees to appoint two additional members of the commission, and for the interim commission to call a Special Election if there is more than 180 calendar days remaining in the unexpired term(s)?"
+      ],
+      "yesMeans": [
+        "The Charter currently authorizes the Governor to fill vacancies if all commissioners, including the mayor, are removed from office. Shall the Charter be amended to provide for the City Manager, or Assistant City Manager, to appoint a mayor and two commissioners, for those appointees to appoint two additional members of the commission, and for the interim commission to call a Special Election if there is more than 180 calendar days remaining in the unexpired term(s)?"
+      ],
+      "noMeans": [
+        "The Charter currently authorizes the Governor to fill vacancies if all commissioners, including the mayor, are removed from office. Shall the Charter be amended to provide for the City Manager, or Assistant City Manager, to appoint a mayor and two commissioners, for those appointees to appoint two additional members of the commission, and for the interim commission to call a Special Election if there is more than 180 calendar days remaining in the unexpired term(s)?"
+      ]
+    },
+    "choices": [
+      "YES",
+      "NO"
+    ],
+    "jurisdictionQuote": "The 2026 Municipal Election will be held on Tuesday, November 3, 2026.",
+    "reviewNote": "Question-supported explanation only: retains Manager/Assistant Manager, first three appointees and two additional appointments, Governor replacement, and more-than180calendar-day trigger in unexpired term(s). No invented appointment qualifications, deadlines, election date, certification effect or fewer-days procedure. Full linked ordinance404and public search found no matching published document; full-law recovery remains open without withholding the complete current official question."
+  }
+]

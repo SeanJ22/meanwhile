@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-03T11:03:21.751Z",
+  "preparedRecords": 1,
+  "originalSourceHash": "PASS; native complete current official City.gov HTML identity verified, complete sanitized copy separately hashed",
+  "exactSupportQuotes": "PASS; every field support quote appears in the relevant complete current official question and in the original native text after whitespace normalization",
+  "sourceSemanticReading": "PASS; neutral question-supported explanation preserves Manager/Assistant Manager, mayor/two first appointments, those appointees choosing two more members, Governor replacement and more-than180calendar-day special-election trigger. No unstated full-ordinance conditions invented.",
+  "primaryPublisher": "Direct current City.gov election publication explicitly lists one referendum and complete question/YES-NOchoices. Full linked ordinance404; its full-law recovery remains open, and no signature/full-law source claim is made.",
+  "normalPublicationAdmission": "PASS; exact-byte receipt for projected source URL",
+  "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0
+}

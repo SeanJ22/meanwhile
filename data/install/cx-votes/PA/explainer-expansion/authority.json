@@ -1,0 +1,31 @@
+{
+  "scope": "Four newly found local questions only; statewide/local PA inventory remains incomplete. Lehigh7 excluded as already prepared.",
+  "officialGovernmentPdfSources": [
+    [
+      "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+      "e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05"
+    ],
+    [
+      "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf",
+      "485b95ec1ff6b751553a6eb907bebf7888e015f849b20e2fae1f155a302dcbff"
+    ],
+    [
+      "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+      "6e259cc79a7726bd98c73bd2eeb2e308ca1e84b524a909c224a7c7046752b7da"
+    ],
+    [
+      "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/2026GEWolf.pdf?t=202607311116460",
+      "5fccf6099e5fdc3d2302824e880655704474f3e51428ecc8df0ff79b70f5edf0"
+    ]
+  ],
+  "lycomingElectionIndexPath": "sources/22d135045d1dac71da23c5672400faa8a339f51c50b35551574f8343b33d4405.html",
+  "lycomingPublishedWolfLink": {
+    "text": "Notice of Wolf Township Ballot Question",
+    "url": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter Services/2026GEWolf.pdf?t=202607311116460"
+  },
+  "lancasterPublicViewerSelection": {
+    "schoolDistrict": "Donegal School District",
+    "precinctId": "3801"
+  },
+  "previousOfficialLancasterAuthorityProof": "data/install/cx-votes/PA/ballot-additions/source-support.json"
+}

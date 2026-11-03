@@ -1,0 +1,56 @@
+{
+  "packetPath": "ballot-input/pa.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+      "finalUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+      "rawPath": "../ballot-additions/sources/e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05.source",
+      "rawHash": "e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05",
+      "textPath": "sources/b921f72156f3b2e64a6b2e91403a8f8e1eb33f5115573aeda68475df85e67d58.txt",
+      "textSha256": "b921f72156f3b2e64a6b2e91403a8f8e1eb33f5115573aeda68475df85e67d58",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "pa-local-2026:cambria-cassandra-merger"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf",
+      "finalUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf",
+      "rawPath": "../ballot-additions/sources/485b95ec1ff6b751553a6eb907bebf7888e015f849b20e2fae1f155a302dcbff.source",
+      "rawHash": "485b95ec1ff6b751553a6eb907bebf7888e015f849b20e2fae1f155a302dcbff",
+      "textPath": "sources/6145a0abf8b3c12de44f825f56dafb5e7fe2c9227f7d279aa629a647c049d6f7.txt",
+      "textSha256": "6145a0abf8b3c12de44f825f56dafb5e7fe2c9227f7d279aa629a647c049d6f7",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "pa-local-2026:huntingdon-dudley-council-size"
+      ]
+    },
+    {
+      "requestedUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+      "finalUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+      "rawPath": "../ballot-additions/sources/6e259cc79a7726bd98c73bd2eeb2e308ca1e84b524a909c224a7c7046752b7da.source",
+      "rawHash": "6e259cc79a7726bd98c73bd2eeb2e308ca1e84b524a909c224a7c7046752b7da",
+      "textPath": "../ballot-additions/sources/01710080697eddc1e0619ddb30eaa796ee4c669eacdce084b62ab723a6202af4.txt",
+      "textSha256": "01710080697eddc1e0619ddb30eaa796ee4c669eacdce084b62ab723a6202af4",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "pa-local-2026:lancaster-county-library-tax"
+      ]
+    },
+    {
+      "requestedUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/2026GEWolf.pdf?t=202607311116460",
+      "finalUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/2026GEWolf.pdf?t=202607311116460",
+      "rawPath": "sources/5fccf6099e5fdc3d2302824e880655704474f3e51428ecc8df0ff79b70f5edf0.source",
+      "rawHash": "5fccf6099e5fdc3d2302824e880655704474f3e51428ecc8df0ff79b70f5edf0",
+      "textPath": "sources/555fa4cd5052b6a8af40136afcc843698ea105092d083504d4fbf1a91b4c8fc2.txt",
+      "textSha256": "555fa4cd5052b6a8af40136afcc843698ea105092d083504d4fbf1a91b4c8fc2",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "pa-local-2026:lycoming-wolf-township-supervisors"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

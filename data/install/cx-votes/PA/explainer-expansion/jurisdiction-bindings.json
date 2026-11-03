@@ -1,0 +1,58 @@
+[
+  {
+    "contestId": "pa-local-2026:cambria-cassandra-merger",
+    "ocdId": "ocd-division/country:us/state:pa/county:cambria/place:cassandra_borough",
+    "registeredDivisionIndex": 581,
+    "registeredDivision": [
+      "ocd-division/country:us/state:pa/county:cambria/place:cassandra_borough",
+      "cousub",
+      "4202111616",
+      "Cassandra borough"
+    ],
+    "registryPath": "data/derived/registration/pa.json",
+    "registrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "basis": "Exact existing Census county or county-subdivision government named in the official current ballot question; no new jurisdiction IDs inferred."
+  },
+  {
+    "contestId": "pa-local-2026:huntingdon-dudley-council-size",
+    "ocdId": "ocd-division/country:us/state:pa/county:huntingdon/place:dudley_borough",
+    "registeredDivisionIndex": 1290,
+    "registeredDivision": [
+      "ocd-division/country:us/state:pa/county:huntingdon/place:dudley_borough",
+      "cousub",
+      "4206120152",
+      "Dudley borough"
+    ],
+    "registryPath": "data/derived/registration/pa.json",
+    "registrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "basis": "Exact existing Census county or county-subdivision government named in the official current ballot question; no new jurisdiction IDs inferred."
+  },
+  {
+    "contestId": "pa-local-2026:lancaster-county-library-tax",
+    "ocdId": "ocd-division/country:us/state:pa/county:lancaster",
+    "registeredDivisionIndex": 1459,
+    "registeredDivision": [
+      "ocd-division/country:us/state:pa/county:lancaster",
+      "county",
+      "42071",
+      "Lancaster County"
+    ],
+    "registryPath": "data/derived/registration/pa.json",
+    "registrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "basis": "Exact existing Census county or county-subdivision government named in the official current ballot question; no new jurisdiction IDs inferred."
+  },
+  {
+    "contestId": "pa-local-2026:lycoming-wolf-township-supervisors",
+    "ocdId": "ocd-division/country:us/state:pa/county:lycoming/place:wolf_township",
+    "registeredDivisionIndex": 1729,
+    "registeredDivision": [
+      "ocd-division/country:us/state:pa/county:lycoming/place:wolf_township",
+      "cousub",
+      "4208185984",
+      "Wolf township"
+    ],
+    "registryPath": "data/derived/registration/pa.json",
+    "registrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "basis": "Exact existing Census county or county-subdivision government named in the official current ballot question; no new jurisdiction IDs inferred."
+  }
+]

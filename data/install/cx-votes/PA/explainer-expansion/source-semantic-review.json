@@ -1,0 +1,48 @@
+{
+  "reviewedAt": "2026-11-03T04:40:33.690609+00:00",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "reviewedBy": "CX-VOTES official local ballot source preparation agent",
+  "independentPeerReviewPerformed": false,
+  "sourceSemanticReview": "PASS",
+  "packetSha256": "a412a53a35ffe2094d35ef002812d02fda67024c36c53e48144d3bee25456766",
+  "recordsReviewed": 4,
+  "rootReplay": "REQUESTED",
+  "materialChecks": [
+    "Cassandra merger targetPortageTownship,county andJan1,2027date retained; question repeats identically3times.",
+    "Dudley council7to3 complete exact question captured from its own printed rectangle.",
+    "Lancaster library-only purpose,alltaxablerealestate and0.55mills retained;0.55mills equals$0.55per$1000byexactunitconversion.",
+    "Wolf board3to5,Yes>Noapproval,No>=Yesrejection,2027extra6year/4yeartermsinadditiontonormalraces,andlaterfirstMondayJanuaryexpiration-basedelections retained.",
+    "All4jurisdictions are actual existing Census government rows.",
+    "Lehigh7omittedasalready prepared."
+  ],
+  "results": [
+    {
+      "contestId": "pa-local-2026:cambria-cassandra-merger",
+      "sourceSemantics": "PASS",
+      "voteDirections": "PASS",
+      "neutrality": "PASS",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION"
+    },
+    {
+      "contestId": "pa-local-2026:huntingdon-dudley-council-size",
+      "sourceSemantics": "PASS",
+      "voteDirections": "PASS",
+      "neutrality": "PASS",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION"
+    },
+    {
+      "contestId": "pa-local-2026:lancaster-county-library-tax",
+      "sourceSemantics": "PASS",
+      "voteDirections": "PASS",
+      "neutrality": "PASS",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION"
+    },
+    {
+      "contestId": "pa-local-2026:lycoming-wolf-township-supervisors",
+      "sourceSemantics": "PASS",
+      "voteDirections": "PASS",
+      "neutrality": "PASS",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION"
+    }
+  ]
+}

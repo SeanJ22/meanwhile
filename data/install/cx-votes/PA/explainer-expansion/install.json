@@ -1,0 +1,61 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "PA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:PA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 4,
+    "newPlainLanguageExplanations": 4,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "LOCAL_INVENTORY_NOT_ESTABLISHED"
+  },
+  "subjects": [
+    {
+      "id": "pa-local-2026:cambria-cassandra-merger",
+      "ocdId": "ocd-division/country:us/state:pa/county:cambria/place:cassandra_borough",
+      "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf"
+    },
+    {
+      "id": "pa-local-2026:huntingdon-dudley-council-size",
+      "ocdId": "ocd-division/country:us/state:pa/county:huntingdon/place:dudley_borough",
+      "sourceUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf"
+    },
+    {
+      "id": "pa-local-2026:lancaster-county-library-tax",
+      "ocdId": "ocd-division/country:us/state:pa/county:lancaster",
+      "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx"
+    },
+    {
+      "id": "pa-local-2026:lycoming-wolf-township-supervisors",
+      "ocdId": "ocd-division/country:us/state:pa/county:lycoming/place:wolf_township",
+      "sourceUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/2026GEWolf.pdf?t=202607311116460"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT",
+    "rootPublicationAdmission": "PASS",
+    "rootActualReaderReplay": "PENDING_ROOT"
+  },
+  "sourceFormat": "Original official PDF bytes; complete printed questions and the full Wolf Township official plain-English statement retained. Existing ballot-additions source artifacts reused by fingerprint where possible.",
+  "reviewedScratchPacketSha256": "a412a53a35ffe2094d35ef002812d02fda67024c36c53e48144d3bee25456766",
+  "canonicalInputSha256": "7403587d269b841f7abef25b767a2fc32412ed3d16c448b1ca90592c08f7a41b",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

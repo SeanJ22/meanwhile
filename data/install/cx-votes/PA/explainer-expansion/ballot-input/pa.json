@@ -1,0 +1,247 @@
+{
+  "ballots": {
+    "PA:pa-2026-general": {
+      "election": {
+        "id": "pa-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "PA"
+      },
+      "contests": [
+        {
+          "id": "pa-local-2026:cambria-cassandra-merger",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/county:cambria/place:cassandra_borough",
+          "divisionVintage": "2023",
+          "title": "Cassandra Borough merger into Portage Township",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+            "sourceOrg": "Cambria County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:09.086387+00:00",
+            "verifiedAt": "2026-11-03T04:39:15.083954+00:00",
+            "quote": "Shall the Borough of Cassandra, County of Cambria, Commonwealth of Pennsylvania be merged into the Township of Portage, Cambria County, Commonwealth of Pennsylvania, Effective January 1, 2027."
+          }
+        },
+        {
+          "id": "pa-local-2026:huntingdon-dudley-council-size",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/county:huntingdon/place:dudley_borough",
+          "divisionVintage": "2023",
+          "title": "Dudley Borough Council size",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf",
+            "sourceOrg": "Huntingdon County Board of Elections",
+            "collectedAt": "2026-11-02T22:36:13.743217+00:00",
+            "verifiedAt": "2026-11-03T04:39:15.083954+00:00",
+            "quote": "SHALL THE SIZE OF THE BOROUGH COUNCIL OF DUDLEY BE REDUCED FROM SEVEN MEMBERS TO THREE MEMBERS?"
+          }
+        },
+        {
+          "id": "pa-local-2026:lancaster-county-library-tax",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/county:lancaster",
+          "divisionVintage": "2023",
+          "title": "Lancaster County library tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+          "provenance": {
+            "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+            "sourceOrg": "Lancaster County Board of Elections",
+            "collectedAt": "2026-11-02T21:43:59.997257+00:00",
+            "verifiedAt": "2026-11-03T04:39:15.083954+00:00",
+            "quote": "Shall the County of Lancaster establish a dedicated Library tax to provide for the maintenance of, and aid to, public Libraries in Lancaster County at the rate of .55 mills on the dollar on all taxable real estate within the County of Lancaster?"
+          }
+        },
+        {
+          "id": "pa-local-2026:lycoming-wolf-township-supervisors",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/county:lycoming/place:wolf_township",
+          "divisionVintage": "2023",
+          "title": "Wolf Township Board of Supervisors size",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/2026GEWolf.pdf?t=202607311116460",
+          "provenance": {
+            "sourceUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/2026GEWolf.pdf?t=202607311116460",
+            "sourceOrg": "Lycoming County Voter Services",
+            "collectedAt": "2026-11-03T04:29:00.209653+00:00",
+            "verifiedAt": "2026-11-03T04:39:15.083954+00:00",
+            "quote": "Should two additional supervisors be elected to serve in this township?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "pa-local-2026:cambria-cassandra-merger#question",
+          "contestId": "pa-local-2026:cambria-cassandra-merger",
+          "questionText": "Shall the Borough of Cassandra, County of Cambria, Commonwealth of Pennsylvania be merged into the Township of Portage, Cambria County, Commonwealth of Pennsylvania, Effective January 1, 2027.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+            "sourceOrg": "Cambria County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:09.086387+00:00",
+            "verifiedAt": "2026-11-03T04:39:15.083954+00:00",
+            "quote": "Shall the Borough of Cassandra, County of Cambria, Commonwealth of Pennsylvania be merged into the Township of Portage, Cambria County, Commonwealth of Pennsylvania, Effective January 1, 2027."
+          }
+        },
+        {
+          "id": "pa-local-2026:huntingdon-dudley-council-size#question",
+          "contestId": "pa-local-2026:huntingdon-dudley-council-size",
+          "questionText": "SHALL THE SIZE OF THE BOROUGH COUNCIL OF DUDLEY BE REDUCED FROM SEVEN MEMBERS TO THREE MEMBERS?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf",
+            "sourceOrg": "Huntingdon County Board of Elections",
+            "collectedAt": "2026-11-02T22:36:13.743217+00:00",
+            "verifiedAt": "2026-11-03T04:39:15.083954+00:00",
+            "quote": "SHALL THE SIZE OF THE BOROUGH COUNCIL OF DUDLEY BE REDUCED FROM SEVEN MEMBERS TO THREE MEMBERS?"
+          }
+        },
+        {
+          "id": "pa-local-2026:lancaster-county-library-tax#question",
+          "contestId": "pa-local-2026:lancaster-county-library-tax",
+          "questionText": "Shall the County of Lancaster establish a dedicated Library tax to provide for the maintenance of, and aid to, public Libraries in Lancaster County at the rate of .55 mills on the dollar on all taxable real estate within the County of Lancaster?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+            "sourceOrg": "Lancaster County Board of Elections",
+            "collectedAt": "2026-11-02T21:43:59.997257+00:00",
+            "verifiedAt": "2026-11-03T04:39:15.083954+00:00",
+            "quote": "Shall the County of Lancaster establish a dedicated Library tax to provide for the maintenance of, and aid to, public Libraries in Lancaster County at the rate of .55 mills on the dollar on all taxable real estate within the County of Lancaster?"
+          }
+        },
+        {
+          "id": "pa-local-2026:lycoming-wolf-township-supervisors#question",
+          "contestId": "pa-local-2026:lycoming-wolf-township-supervisors",
+          "questionText": "Should two additional supervisors be elected to serve in this township?",
+          "officialStatement": "The purpose of the ballot question is to determine whether the electors of Wolf\nTownship favor increasing the size of the township’s Board of Supervisors to five\nmembers from the current number of three members. Wolf Township would then\nhave five elected Supervisors instead of three elected Supervisors.\n\nIf the question is approved as a result of the number of “Yes” votes being greater\nthan the number of “No” votes, then one additional Supervisor would be elected\nto a six-year term and one additional Supervisor would be elected to a four-year\nterm on the 2027 municipal ballot in order to effect the increase, in addition to the\nnormal number of Supervisors to be elected. Thereafter, Supervisors would be\nelected corresponding to the number of Supervisors whose terms are scheduled to\nexpire on the first Monday of the following January.\n\nIf the question is not approved as a result of the number of “No” votes being\ngreater than or equal to the number of “Yes” votes, then the number of elected\nSupervisors for Wolf Township would remain at three.",
+          "provenance": {
+            "sourceUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/2026GEWolf.pdf?t=202607311116460",
+            "sourceOrg": "Lycoming County Voter Services",
+            "collectedAt": "2026-11-03T04:29:00.209653+00:00",
+            "verifiedAt": "2026-11-03T04:39:15.083954+00:00",
+            "quote": "Should two additional supervisors be elected to serve in this township?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "pa-local-2026:cambria-cassandra-merger",
+          "whatItDoes": "Merges Cassandra Borough in Cambria County into Portage Township in Cambria County, effective January 1, 2027.",
+          "yesMeans": "Approve merging Cassandra Borough into Portage Township on January 1, 2027.",
+          "noMeans": "Reject this proposed merger.",
+          "parts": [],
+          "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+          "sourceHash": "e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:39:15.083954+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "pa-local-2026:huntingdon-dudley-council-size",
+          "whatItDoes": "Reduces Dudley Borough Council from 7 members to 3 members.",
+          "yesMeans": "Approve reducing the council to 3 members.",
+          "noMeans": "Reject reducing the council from 7 members to 3.",
+          "parts": [],
+          "sourceUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf",
+          "sourceHash": "485b95ec1ff6b751553a6eb907bebf7888e015f849b20e2fae1f155a302dcbff",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:39:15.083954+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "pa-local-2026:lancaster-county-library-tax",
+          "whatItDoes": "Establishes a dedicated Lancaster County tax on all taxable real estate to maintain and support public libraries. The rate would be 0.55 mills, equal to $0.55 for each $1,000 of taxable real estate value.",
+          "yesMeans": "Approve the dedicated library tax at 0.55 mills on all taxable real estate in the county.",
+          "noMeans": "Reject this proposed county library tax.",
+          "parts": [],
+          "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+          "sourceHash": "6e259cc79a7726bd98c73bd2eeb2e308ca1e84b524a909c224a7c7046752b7da",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:39:15.083954+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "pa-local-2026:lycoming-wolf-township-supervisors",
+          "whatItDoes": "Increases Wolf Township’s elected Board of Supervisors from 3 members to 5. It passes only if Yes votes outnumber No votes. At the 2027 municipal election, voters would elect one additional supervisor for 6 years and one for 4 years, in addition to the supervisors normally elected. Later elections would fill the number of seats whose terms expire on the first Monday of the following January.",
+          "yesMeans": "Approve expanding the board to 5 members using the described 2027 and later election schedule.",
+          "noMeans": "Keep 3 elected supervisors. A tie also rejects the proposed expansion.",
+          "parts": [],
+          "sourceUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/2026GEWolf.pdf?t=202607311116460",
+          "sourceHash": "5fccf6099e5fdc3d2302824e880655704474f3e51428ecc8df0ff79b70f5edf0",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:39:15.083954+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:39:15.083954+00:00",
+    "reviewedBy": "CX-VOTES four additional current official Pennsylvania local question explanations",
+    "sources": [
+      {
+        "requestedUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+        "finalUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+        "httpStatus": 200,
+        "rawHash": "e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05",
+        "retrievedAt": "2026-11-02T22:01:09.086387+00:00",
+        "publisher": "Cambria County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Exact current November3,2026 official sample ballot or official local referendum notice. Full printed question and every supplied official plain-English paragraph saved. Existing known Census jurisdiction verified. Cassandra wording repeats identically in3master-ballot copies; Dudley complete question captured from its own printed rectangle; Lancaster viewer is a saved public school/precinct selection; Wolf notice is linked by the county current election page."
+      },
+      {
+        "requestedUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf",
+        "finalUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "485b95ec1ff6b751553a6eb907bebf7888e015f849b20e2fae1f155a302dcbff",
+        "retrievedAt": "2026-11-02T22:36:13.743217+00:00",
+        "publisher": "Huntingdon County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Exact current November3,2026 official sample ballot or official local referendum notice. Full printed question and every supplied official plain-English paragraph saved. Existing known Census jurisdiction verified. Cassandra wording repeats identically in3master-ballot copies; Dudley complete question captured from its own printed rectangle; Lancaster viewer is a saved public school/precinct selection; Wolf notice is linked by the county current election page."
+      },
+      {
+        "requestedUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+        "finalUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+        "httpStatus": 200,
+        "rawHash": "6e259cc79a7726bd98c73bd2eeb2e308ca1e84b524a909c224a7c7046752b7da",
+        "retrievedAt": "2026-11-02T21:43:59.997257+00:00",
+        "publisher": "Lancaster County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Exact current November3,2026 official sample ballot or official local referendum notice. Full printed question and every supplied official plain-English paragraph saved. Existing known Census jurisdiction verified. Cassandra wording repeats identically in3master-ballot copies; Dudley complete question captured from its own printed rectangle; Lancaster viewer is a saved public school/precinct selection; Wolf notice is linked by the county current election page.",
+        "publicSelection": {
+          "schoolDistrict": "Donegal School District",
+          "precinctId": "3801"
+        }
+      },
+      {
+        "requestedUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/2026GEWolf.pdf?t=202607311116460",
+        "finalUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/2026GEWolf.pdf?t=202607311116460",
+        "httpStatus": 200,
+        "rawHash": "5fccf6099e5fdc3d2302824e880655704474f3e51428ecc8df0ff79b70f5edf0",
+        "retrievedAt": "2026-11-03T04:29:00.209653+00:00",
+        "publisher": "Lycoming County Voter Services",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Exact current November3,2026 official sample ballot or official local referendum notice. Full printed question and every supplied official plain-English paragraph saved. Existing known Census jurisdiction verified. Cassandra wording repeats identically in3master-ballot copies; Dudley complete question captured from its own printed rectangle; Lancaster viewer is a saved public school/precinct selection; Wolf notice is linked by the county current election page."
+      }
+    ]
+  }
+}

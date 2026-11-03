@@ -1,0 +1,26 @@
+{
+  "sourceUrl": "https://www.garlandcountyvote.org/uploads/6/3/0/4/63045401/2026_general_sample_ballots_all.pdf",
+  "nativePdfSha256": "bbc9d35fe596246c01edb373150d8d1bb19d0235615b117c2cc63ff7df7a963c",
+  "nativeCaptureTime": "2026-10-20T23:16:49.047651+00:00",
+  "priorPublishedQualification": {
+    "repositoryPath": "data/ballot/2026-general/ar.json",
+    "sourceReceiptObservation": {
+      "requestedUrl": "https://www.garlandcountyvote.org/uploads/6/3/0/4/63045401/2026_general_sample_ballots_all.pdf",
+      "finalUrl": "https://www.garlandcountyvote.org/uploads/6/3/0/4/63045401/2026_general_sample_ballots_all.pdf",
+      "retrievedAt": "2026-10-20T23:16:49.047651+00:00",
+      "httpStatus": 200,
+      "rawHash": "bbc9d35fe596246c01edb373150d8d1bb19d0235615b117c2cc63ff7df7a963c",
+      "publisher": "Garland County Election Commission",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewOutcome": "SUPPORTED",
+      "reviewedEvidence": "Saved official November 3, 2026 county sample ballot. scripts/ba01-south-ar-core.py replays complete legislative office/district/name/party blocks and deduplicates repeated ballot styles; existing verified rows remain."
+    },
+    "comparison": "ExactsameURL/nativePDFSHA/publisher/ELECTION_AUTHORITYclass/priorSUPPORTEDreview. Existingpublishedsourcequalification preserved, not arbitrarilychanged or newlyinvented."
+  },
+  "admissionScope": "ActualBallotContestMerge/checkAuthority,manualProjectionCandidate,authorityForManualReceipt andreader/geography/sourcebyte/quotechecksPASS. Sourcequalificationreusesexactalready-publishedauthorityobservation. Optionalhost-onlyisOfficialSource helper lacksadditionalGovHTMLlink and is not falselyreportedPASS. No newGovwebsite/linkclaim.",
+  "sourceScope": "Complete heldofficialcountypublicsample forNovember3,2026, includingfullcountywide library5 androad6 fields. Reviewwatermark retained; notcalledseparatefinalcertification or Arkansas alllocalcompleteness.",
+  "conditions": {
+    "Library": "Continuing0.9milldebtservicepropertytaxbacksup34.8Maggregateprincipal acrossoneormorelibrarycapitalbondissues. Nofixedterm,totalrepayment orcurrentoperatinglibrarytax inferred.",
+    "Road": "Continuesexisting0.625%sales/usetaxJuly1,2027–June30,2032. Netafterstatecharges/rebates splitpercapitacountyandmunicipalities. No rateincrease,explicitshares or currenttaxexpiration inferred."
+  }
+}

@@ -1,0 +1,61 @@
+[
+  {
+    "contestId": "ar-cx-2026-garland-library-bonds-tax",
+    "sourceUrl": "https://www.garlandcountyvote.org/uploads/6/3/0/4/63045401/2026_general_sample_ballots_all.pdf",
+    "rawHash": "bbc9d35fe596246c01edb373150d8d1bb19d0235615b117c2cc63ff7df7a963c",
+    "sourceFile": "sources/bbc9d35fe596246c01edb373150d8d1bb19d0235615b117c2cc63ff7df7a963c.source",
+    "sourceTextFile": "sources/1abf9196d60668e898321911beda392d32b77e97d40ff63e881986d3c692f6f5.txt",
+    "excerpt": "VOTE FOR or AGAINST the levy of a\nnine tenths of one (.9) mill ad valorem\ntax on the assessed value of all\ntaxable real and personal property\nwithin the County of Garland,\nArkansas, with the nine tenths of one\n(.9) mill tax to be pledged as a\ncontinuing debt service tax to the\nrepayment of an issue or issues of\nbonds not to exceed Thirty-Four\nMillion Eight Hundred Thousand and\nNO/100 Dollars ($34,800,000) in\naggregate principal amount, to\nfinance the acquiring, constructing\nand equipping of land and additional\ncapital improvements for the public\nlibraries owned and operated by the\nGarland County Library Board and to\nauthorize the issuance of the bonds\non such terms and conditions as shall\nbe approved by the County.",
+    "fields": {
+      "whatItDoes": [
+        "VOTE FOR or AGAINST the levy of a\nnine tenths of one (.9) mill ad valorem\ntax on the assessed value of all\ntaxable real and personal property\nwithin the County of Garland,\nArkansas, with the nine tenths of one\n(.9) mill tax to be pledged as a\ncontinuing debt service tax to the\nrepayment of an issue or issues of\nbonds not to exceed Thirty-Four\nMillion Eight Hundred Thousand and\nNO/100 Dollars ($34,800,000) in\naggregate principal amount, to\nfinance the acquiring, constructing\nand equipping of land and additional\ncapital improvements for the public\nlibraries owned and operated by the\nGarland County Library Board and to\nauthorize the issuance of the bonds\non such terms and conditions as shall\nbe approved by the County."
+      ],
+      "yesMeans": [
+        "VOTE FOR or AGAINST the levy of a\nnine tenths of one (.9) mill ad valorem\ntax on the assessed value of all\ntaxable real and personal property\nwithin the County of Garland,\nArkansas, with the nine tenths of one\n(.9) mill tax to be pledged as a\ncontinuing debt service tax to the\nrepayment of an issue or issues of\nbonds not to exceed Thirty-Four\nMillion Eight Hundred Thousand and\nNO/100 Dollars ($34,800,000) in\naggregate principal amount, to\nfinance the acquiring, constructing\nand equipping of land and additional\ncapital improvements for the public\nlibraries owned and operated by the\nGarland County Library Board and to\nauthorize the issuance of the bonds\non such terms and conditions as shall\nbe approved by the County."
+      ],
+      "noMeans": [
+        "VOTE FOR or AGAINST the levy of a\nnine tenths of one (.9) mill ad valorem\ntax on the assessed value of all\ntaxable real and personal property\nwithin the County of Garland,\nArkansas, with the nine tenths of one\n(.9) mill tax to be pledged as a\ncontinuing debt service tax to the\nrepayment of an issue or issues of\nbonds not to exceed Thirty-Four\nMillion Eight Hundred Thousand and\nNO/100 Dollars ($34,800,000) in\naggregate principal amount, to\nfinance the acquiring, constructing\nand equipping of land and additional\ncapital improvements for the public\nlibraries owned and operated by the\nGarland County Library Board and to\nauthorize the issuance of the bonds\non such terms and conditions as shall\nbe approved by the County."
+      ]
+    },
+    "semanticConditions": [
+      "No householdbill, totalrepaymentcost, fixedannualrevenue or unstatedpurposeallocation inferred.",
+      "Aggregate34.8Mprincipal ceiling acrossoneormorebondissues, not eachissue or totalrepayment. Continuingdebtservicetax, no fixedexpiration inferred."
+    ],
+    "inventoryScope": "Complete held county2026generalpublicsamplePDF contains2countywidequestions:library5 androadtax6, bothprepared. Repeatedstyles not treatedasdistinctquestions. No Arkansas alllocalcompleteness.",
+    "textExtraction": {
+      "tool": "SavednativePDF text extraction",
+      "scope": "Complete contiguous operativecountyfields through finalpublishedsentence; allfinancialduration/aggregation/netallocationterms preserved."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-garland-road-sales-use-tax-continuation",
+    "sourceUrl": "https://www.garlandcountyvote.org/uploads/6/3/0/4/63045401/2026_general_sample_ballots_all.pdf",
+    "rawHash": "bbc9d35fe596246c01edb373150d8d1bb19d0235615b117c2cc63ff7df7a963c",
+    "sourceFile": "sources/bbc9d35fe596246c01edb373150d8d1bb19d0235615b117c2cc63ff7df7a963c.source",
+    "sourceTextFile": "sources/1abf9196d60668e898321911beda392d32b77e97d40ff63e881986d3c692f6f5.txt",
+    "excerpt": "The continuation of the levy of\n0.625% local sales and use Tax\nwithin the County to finance all or a\nportion of the costs of improvements\nto existing, roads, streets, and related\nstructures, including particularly,\nwithout limitation, overpasses,\nunderpasses, bridges and sidewalks,\nand any necessary land, easements,\nrights of way and related intersection\nimprovements, drainage and traffic\ncontrol devices and improvements\ntherefor (collectively, the\n\"Improvements\"). If the question is\napproved, there will be a continuation\nof the existing levy within the County\nof a 0.625% sales and use tax, the\nnet collections of which after the\nState of Arkansas deducts its\nadministrative charges and required\nrebates will be divided per capita\namong the County and the\nMunicipalities within in the County\npursuant to state law. The term of the\nsales and use tax levy shall be July 1,\n2027, through June 30, 2032.",
+    "fields": {
+      "whatItDoes": [
+        "The continuation of the levy of\n0.625% local sales and use Tax\nwithin the County to finance all or a\nportion of the costs of improvements\nto existing, roads, streets, and related\nstructures, including particularly,\nwithout limitation, overpasses,\nunderpasses, bridges and sidewalks,\nand any necessary land, easements,\nrights of way and related intersection\nimprovements, drainage and traffic\ncontrol devices and improvements\ntherefor (collectively, the\n\"Improvements\"). If the question is\napproved, there will be a continuation\nof the existing levy within the County\nof a 0.625% sales and use tax, the\nnet collections of which after the\nState of Arkansas deducts its\nadministrative charges and required\nrebates will be divided per capita\namong the County and the\nMunicipalities within in the County\npursuant to state law. The term of the\nsales and use tax levy shall be July 1,\n2027, through June 30, 2032."
+      ],
+      "yesMeans": [
+        "The continuation of the levy of\n0.625% local sales and use Tax\nwithin the County to finance all or a\nportion of the costs of improvements\nto existing, roads, streets, and related\nstructures, including particularly,\nwithout limitation, overpasses,\nunderpasses, bridges and sidewalks,\nand any necessary land, easements,\nrights of way and related intersection\nimprovements, drainage and traffic\ncontrol devices and improvements\ntherefor (collectively, the\n\"Improvements\"). If the question is\napproved, there will be a continuation\nof the existing levy within the County\nof a 0.625% sales and use tax, the\nnet collections of which after the\nState of Arkansas deducts its\nadministrative charges and required\nrebates will be divided per capita\namong the County and the\nMunicipalities within in the County\npursuant to state law. The term of the\nsales and use tax levy shall be July 1,\n2027, through June 30, 2032."
+      ],
+      "noMeans": [
+        "The continuation of the levy of\n0.625% local sales and use Tax\nwithin the County to finance all or a\nportion of the costs of improvements\nto existing, roads, streets, and related\nstructures, including particularly,\nwithout limitation, overpasses,\nunderpasses, bridges and sidewalks,\nand any necessary land, easements,\nrights of way and related intersection\nimprovements, drainage and traffic\ncontrol devices and improvements\ntherefor (collectively, the\n\"Improvements\"). If the question is\napproved, there will be a continuation\nof the existing levy within the County\nof a 0.625% sales and use tax, the\nnet collections of which after the\nState of Arkansas deducts its\nadministrative charges and required\nrebates will be divided per capita\namong the County and the\nMunicipalities within in the County\npursuant to state law. The term of the\nsales and use tax levy shall be July 1,\n2027, through June 30, 2032."
+      ]
+    },
+    "semanticConditions": [
+      "No householdbill, totalrepaymentcost, fixedannualrevenue or unstatedpurposeallocation inferred.",
+      "Existingtaxcontinuation, not a rateincrease. Exact5yeartermretained.",
+      "Netdistributionpercapitaamongcounty/municipalities, not countyonallocation. No explicitsharepercentage or currenttaxexpiration inferred."
+    ],
+    "inventoryScope": "Complete held county2026generalpublicsamplePDF contains2countywidequestions:library5 androadtax6, bothprepared. Repeatedstyles not treatedasdistinctquestions. No Arkansas alllocalcompleteness.",
+    "textExtraction": {
+      "tool": "SavednativePDF text extraction",
+      "scope": "Complete contiguous operativecountyfields through finalpublishedsentence; allfinancialduration/aggregation/netallocationterms preserved."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

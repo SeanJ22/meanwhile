@@ -1,0 +1,53 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "AR",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AR",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ar-cx-2026-garland-library-bonds-tax",
+      "title": "Garland County — Issue 5: Library bonds and repayment tax",
+      "ocdId": "ocd-division/country:us/state:ar/county:garland",
+      "sourceUrl": "https://www.garlandcountyvote.org/uploads/6/3/0/4/63045401/2026_general_sample_ballots_all.pdf"
+    },
+    {
+      "id": "ar-cx-2026-garland-road-sales-use-tax-continuation",
+      "title": "Garland County — Issue 6: Continue road sales and use tax",
+      "ocdId": "ocd-division/country:us/state:ar/county:garland",
+      "sourceUrl": "https://www.garlandcountyvote.org/uploads/6/3/0/4/63045401/2026_general_sample_ballots_all.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 2,
+    "newPlainLanguageExplanations": 2,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "AR",
+    "newMeasures": 2,
+    "newExplanations": 2,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "REUSED_EXACT_PUBLISHED_ELECTION_AUTHORITY_OBSERVATION",
+    "optionalGovHostnameHelper": "NO_NEW_GOV_LINK_CLAIMED; priorpublishedqualificationpreserved",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

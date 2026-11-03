@@ -1,0 +1,17 @@
+{
+  "state": "AR",
+  "newMeasures": 2,
+  "newExplanations": 2,
+  "measureRecordIssue": "PASS",
+  "sourceBytesAndExactQuestions": "PASS",
+  "officialSourceAuthority": "REUSED_EXACT_PUBLISHED_ELECTION_AUTHORITY_OBSERVATION",
+  "optionalGovHostnameHelper": "NO_NEW_GOV_LINK_CLAIMED; priorpublishedqualificationpreserved",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "readerAttachmentWithExistingTranslations": "PASS",
+  "actualJurisdictionSelection": "PASS",
+  "statewideWidening": "NONE",
+  "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+  "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+}

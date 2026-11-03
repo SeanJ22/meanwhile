@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "ar-cx-2026-garland-library-bonds-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/county:garland",
+      "county",
+      "05051",
+      "Garland County"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Eachoperativefield explicitlytaxwithinwholeGarlandCounty; libraryalltaxablereal/personalproperty and roadtaxcountywide. Exact existingCensus2025GarlandCounty, notHotSpringscity or printedprecinctsubset."
+  },
+  {
+    "contestId": "ar-cx-2026-garland-road-sales-use-tax-continuation",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/county:garland",
+      "county",
+      "05051",
+      "Garland County"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Eachoperativefield explicitlytaxwithinwholeGarlandCounty; libraryalltaxablereal/personalproperty and roadtaxcountywide. Exact existingCensus2025GarlandCounty, notHotSpringscity or printedprecinctsubset."
+  }
+]

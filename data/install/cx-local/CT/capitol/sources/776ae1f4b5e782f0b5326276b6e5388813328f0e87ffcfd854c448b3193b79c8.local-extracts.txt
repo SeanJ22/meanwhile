@@ -1,0 +1,530 @@
+PAGE 1 / Judge of Probate / RECT [626.95, 140.0, 682.9499999999999, 437.36231536865233]
+9
+Judge of
+Probate
+VoteForOne
+9A
+Sophia H.
+Shaikh
+9E
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Tolland, Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 2
+Senatorial District 35
+Assembly District 53
+Voting District 1
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteForOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteForOne
+2A
+Joe
+Courtney
+2B
+George Patrick
+Austin
+2D
+George Patrick
+Austin
+3
+State Senator
+VoteForOne
+3A
+Ethan
+Werstler
+3B
+Jeffrey
+Gordon
+3C
+Ethan
+Werstler
+3D
+Jeffrey
+Gordon
+4
+State
+Representative
+VoteForOne
+4A
+Michelle Doucette
+Cunningham
+4B
+Tammy
+Nuccio
+4C
+Michelle Doucette
+Cunningham
+4D
+Tammy
+Nuccio
+5
+Secretary of
+the State
+VoteForOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteForOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteForOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteForOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteForOne
+9A
+Sophia H.
+Shaikh
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Write-in Votes
+1E
+2E
+3E
+4E
+5E
+6E
+7E
+8E
+9E
+THSRoofImprovements,ArtificialTurfFieldReplacementProject
+1. ShalltheTown ofTolland appropriate$6,500,000forroofimprovementsandartificial turf fieldreplacement atTolland HighSchool
+andauthorizetheissuanceof general obligation bonds andnotes inthesame amount tofinancesaidappropriation?
+Yes
+No
+Sample Ballot
+
+
+PAGE 2 / Judge of Probate / RECT [626.95, 140.0, 682.9499999999999, 437.36231536865233]
+9
+Judge of
+Probate
+VoteForOne
+9A
+Sophia H.
+Shaikh
+9E
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Tolland, Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 2
+Senatorial District 35
+Assembly District 53
+Voting District 2
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteForOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteForOne
+2A
+Joe
+Courtney
+2B
+George Patrick
+Austin
+2D
+George Patrick
+Austin
+3
+State Senator
+VoteForOne
+3A
+Ethan
+Werstler
+3B
+Jeffrey
+Gordon
+3C
+Ethan
+Werstler
+3D
+Jeffrey
+Gordon
+4
+State
+Representative
+VoteForOne
+4A
+Michelle Doucette
+Cunningham
+4B
+Tammy
+Nuccio
+4C
+Michelle Doucette
+Cunningham
+4D
+Tammy
+Nuccio
+5
+Secretary of
+the State
+VoteForOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteForOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteForOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteForOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteForOne
+9A
+Sophia H.
+Shaikh
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Write-in Votes
+1E
+2E
+3E
+4E
+5E
+6E
+7E
+8E
+9E
+THSRoofImprovements,ArtificialTurfFieldReplacementProject
+1. ShalltheTown ofTolland appropriate$6,500,000forroofimprovementsandartificial turf fieldreplacement atTolland HighSchool
+andauthorizetheissuanceof general obligation bonds andnotes inthesame amount tofinancesaidappropriation?
+Yes
+No
+Sample Ballot
+
+
+PAGE 3 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.36231536865233]
+9
+Judge of
+Probate
+VoteForOne
+9A
+Sophia H.
+Shaikh
+9E
+
+PAGE 3 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Tolland, Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 2
+Senatorial District 35
+Assembly District 8
+Voting District 3
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteForOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteForOne
+2A
+Joe
+Courtney
+2B
+George Patrick
+Austin
+2D
+George Patrick
+Austin
+3
+State Senator
+VoteForOne
+3A
+Ethan
+Werstler
+3B
+Jeffrey
+Gordon
+3C
+Ethan
+Werstler
+3D
+Jeffrey
+Gordon
+4
+State
+Representative
+VoteForOne
+4A
+Francis
+Lombard
+4B
+William
+Gifford
+4C
+Francis
+Lombard
+4D
+William
+Gifford
+5
+Secretary of
+the State
+VoteForOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteForOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteForOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteForOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteForOne
+9A
+Sophia H.
+Shaikh
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Write-in Votes
+1E
+2E
+3E
+5D
+5E
+6E
+7E
+8E
+9E
+THSRoofImprovements,ArtificialTurfFieldReplacementProject
+1. ShalltheTown ofTolland appropriate$6,500,000forroofimprovementsandartificial turf fieldreplacement atTolland HighSchool
+andauthorizetheissuanceof general obligation bonds andnotes inthesame amount tofinancesaidappropriation?
+Yes
+No
+Sample Ballot
+

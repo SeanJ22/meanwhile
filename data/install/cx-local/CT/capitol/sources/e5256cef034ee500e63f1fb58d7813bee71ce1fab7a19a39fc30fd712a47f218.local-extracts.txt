@@ -1,0 +1,1357 @@
+PAGE 1 / Judge of Probate / RECT [612.85, 140.0, 668.75, 482.72247619628905]
+9 
+Judge of 
+Probate 
+Vote for One
+9A 
+Mary C. 
+Deneen
+9B 
+Mary C. 
+Deneen
+9F
+
+PAGE 1 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 482.72247619628905]
+10 
+Registrar of 
+Voters 
+Vote for One
+10A 
+Jillian A. 
+Brimecombe
+10B 
+Victoria 
+Virgo-Christie
+10F
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+State of Connecticut 
+Official Ballot
+Windsor, Connecticut
+State Election
+November 3, 2026
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 2 
+Assembly District 5 
+Voting District 1
+Office 
+Party
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One
+2 
+Representative 
+in Congress 
+Vote for One
+3 
+State Senator 
+Vote for One
+4 
+State 
+Representative 
+Vote for One
+5 
+Secretary of 
+the State 
+Vote for One
+6 
+Treasurer 
+Vote for One
+7 
+Comptroller 
+Vote for One
+8 
+Attorney 
+General 
+Vote for One
+9 
+Judge of 
+Probate 
+Vote for One
+10 
+Registrar of 
+Voters 
+Vote for One
+Democratic 
+Party
+1A 
+Ned Lamont and 
+Susan Bysiewicz
+2A 
+Luke 
+Bronin
+3A 
+Maryam 
+Khan
+4A 
+Kyle 
+Anderson
+5A 
+Stephanie 
+Thomas
+6A 
+Erick 
+Russell
+7A 
+Sean 
+Scanlon
+8A 
+William 
+Tong
+9A 
+Mary C. 
+Deneen
+10A 
+Jillian A. 
+Brimecombe
+Republican 
+Party
+1B 
+Ryan Fazio and 
+Matt Corey
+2B 
+Amy 
+Chai
+3B 
+Tim 
+Knotts
+5B 
+Peter 
+Lumaj
+6B 
+Fred 
+Wilms
+7B 
+Jennifer S. 
+Tooker
+8B 
+John 
+Bolton
+9B 
+Mary C. 
+Deneen
+10B 
+Victoria 
+Virgo-Christie
+Working 
+Families Party
+1C 
+Ned Lamont and 
+Susan Bysiewicz
+5C 
+Stephanie 
+Thomas
+6C 
+Erick 
+Russell
+7C 
+Sean 
+Scanlon
+8C 
+William 
+Tong
+Independent 
+Party
+1D 
+Ryan Fazio and 
+Matt Corey
+5D 
+Stephanie 
+Thomas
+6D 
+Fred 
+Wilms
+7D 
+Sean 
+Scanlon
+Green Party
+2E 
+Mary L. 
+Sanders
+Write-in Votes
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+10F
+
+
+PAGE 2 / Judge of Probate / RECT [612.85, 140.0, 668.75, 482.7217590332031]
+9 
+Judge of 
+Probate 
+Vote for One
+9A 
+Mary C. 
+Deneen
+9B 
+Mary C. 
+Deneen
+9F
+
+PAGE 2 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 482.7217590332031]
+10 
+Registrar of 
+Voters 
+Vote for One
+10A 
+Jillian A. 
+Brimecombe
+10B 
+Victoria 
+Virgo-Christie
+10F
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Windsor, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 2 
+Assembly District 5 
+Voting District 2
+Office 
+Party
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One
+2 
+Representative 
+in Congress 
+Vote for One
+3 
+State Senator 
+Vote for One
+4 
+State 
+Representative 
+Vote for One
+5 
+Secretary of 
+the State 
+Vote for One
+6 
+Treasurer 
+Vote for One
+7 
+Comptroller 
+Vote for One
+8 
+Attorney 
+General 
+Vote for One
+9 
+Judge of 
+Probate 
+Vote for One
+10 
+Registrar of 
+Voters 
+Vote for One
+Democratic 
+Party
+1A 
+Ned Lamont and 
+Susan Bysiewicz
+2A 
+Luke 
+Bronin
+3A 
+Maryam 
+Khan
+4A 
+Kyle 
+Anderson
+5A 
+Stephanie 
+Thomas
+6A 
+Erick 
+Russell
+7A 
+Sean 
+Scanlon
+8A 
+William 
+Tong
+9A 
+Mary C. 
+Deneen
+10A 
+Jillian A. 
+Brimecombe
+Republican 
+Party
+1B 
+Ryan Fazio and 
+Matt Corey
+2B 
+Amy 
+Chai
+3B 
+Tim 
+Knotts
+5B 
+Peter 
+Lumaj
+6B 
+Fred 
+Wilms
+7B 
+Jennifer S. 
+Tooker
+8B 
+John 
+Bolton
+9B 
+Mary C. 
+Deneen
+10B 
+Victoria 
+Virgo-Christie
+Working 
+Families Party
+1C 
+Ned Lamont and 
+Susan Bysiewicz
+5C 
+Stephanie 
+Thomas
+6C 
+Erick 
+Russell
+7C 
+Sean 
+Scanlon
+8C 
+William 
+Tong
+Independent 
+Party
+1D 
+Ryan Fazio and 
+Matt Corey
+5D 
+Stephanie 
+Thomas
+6D 
+Fred 
+Wilms
+7D 
+Sean 
+Scanlon
+Green Party
+2E 
+Mary L. 
+Sanders
+Write-in Votes
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+10F
+Sample Ballot
+
+
+PAGE 3 / Judge of Probate / RECT [612.85, 140.0, 668.75, 482.72182006835936]
+9 
+Judge of 
+Probate 
+Vote for One
+9A 
+Mary C. 
+Deneen
+9B 
+Mary C. 
+Deneen
+9F
+
+PAGE 3 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 482.72182006835936]
+10 
+Registrar of 
+Voters 
+Vote for One
+10A 
+Jillian A. 
+Brimecombe
+10B 
+Victoria 
+Virgo-Christie
+10F
+
+PAGE 3 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Windsor, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 2 
+Assembly District 5 
+Voting District 3
+Office 
+Party
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One
+2 
+Representative 
+in Congress 
+Vote for One
+3 
+State Senator 
+Vote for One
+4 
+State 
+Representative 
+Vote for One
+5 
+Secretary of 
+the State 
+Vote for One
+6 
+Treasurer 
+Vote for One
+7 
+Comptroller 
+Vote for One
+8 
+Attorney 
+General 
+Vote for One
+9 
+Judge of 
+Probate 
+Vote for One
+10 
+Registrar of 
+Voters 
+Vote for One
+Democratic
+Party
+1A 
+Ned Lamont and 
+Susan Bysiewicz
+2A 
+Luke 
+Bronin
+3A 
+Maryam 
+Khan
+4A 
+Kyle 
+Anderson
+5A 
+Stephanie 
+Thomas
+6A 
+Erick 
+Russell
+7A 
+Sean 
+Scanlon
+8A 
+William 
+Tong
+9A 
+Mary C. 
+Deneen
+10A 
+Jillian A. 
+Brimecombe
+Republican
+Party
+1B 
+Ryan Fazio and 
+Matt Corey
+2B 
+Amy 
+Chai
+3B 
+Tim 
+Knotts
+5B 
+Peter 
+Lumaj
+6B 
+Fred 
+Wilms
+7B 
+Jennifer S. 
+Tooker
+8B 
+John 
+Bolton
+9B 
+Mary C. 
+Deneen
+10B 
+Victoria 
+Virgo-Christie
+Working 
+Families Party
+1C 
+Ned Lamont and 
+Susan Bysiewicz
+5C 
+Stephanie 
+Thomas
+6C 
+Erick 
+Russell
+7C 
+Sean 
+Scanlon
+8C 
+William 
+Tong
+Independent 
+Party
+1D 
+Ryan Fazio and 
+Matt Corey
+5D 
+Stephanie 
+Thomas
+6D 
+Fred 
+Wilms
+7D 
+Sean 
+Scanlon
+Green Party
+2E 
+Mary L. 
+Sanders
+Write-in Votes
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+10F
+Sample Ballot
+
+
+PAGE 4 / Judge of Probate / RECT [612.85, 140.0, 668.75, 482.72783203125]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Mary C. 
+Deneen 
+9B 
+Mary C. 
+Deneen 
+9F
+
+PAGE 4 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 482.72783203125]
+10 
+Registrar of 
+Voters 
+Vote for One 
+10A 
+Jillian A. 
+Brimecombe 
+10B 
+Victoria 
+Virgo-Christie 
+10F
+
+PAGE 4 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+Windsor, Connecticut 
+State Election 
+November 3, 2026 
+State of Connecticut 
+Official Ballot 
+Congressional District 1 
+Senatorial District 2 
+Assembly District 60 
+Voting District 4 
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+10 
+Registrar of 
+Voters 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Maryam 
+Khan 
+4A 
+Jane 
+Garibay 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Mary C. 
+Deneen 
+10A 
+Jillian A. 
+Brimecombe 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Tim 
+Knotts 
+4B 
+Chantelle 
+Ankerman 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Mary C. 
+Deneen 
+10B 
+Victoria 
+Virgo-Christie 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+4C 
+Jane 
+Garibay 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+4D 
+Jane 
+Garibay 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+2E 
+Green Party 
+Mary L.
+Sanders 
+Write-in Votes 
+1F 
+2F 
+3F 
+4F 
+5F 
+6F 
+7F 
+8F 
+9F 
+10F 
+Be sure to read the instructions on the reverse side of this ballot. 
+Sheet 1 of 1 
+
+
+PAGE 5 / Judge of Probate / RECT [612.85, 140.0, 668.75, 482.72783203125]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Mary C. 
+Deneen 
+9B 
+Mary C. 
+Deneen 
+9F
+
+PAGE 5 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 482.72783203125]
+10 
+Registrar of 
+Voters 
+Vote for One 
+10A 
+Jillian A. 
+Brimecombe 
+10B 
+Victoria 
+Virgo-Christie 
+10F
+
+PAGE 5 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+Windsor, Connecticut 
+State Election 
+November 3, 2026 
+State of Connecticut 
+Official Ballot 
+Congressional District 1 
+Senatorial District 2 
+Assembly District 60 
+Voting District 5 
+Office 
+1 
+2 
+3 
+4 
+5 
+6 
+7 
+8 
+9 
+10 
+Party 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+Representative 
+in Congress 
+Vote for One 
+State Senator 
+Vote for One 
+State 
+Representative 
+Vote for One 
+Secretary of 
+the State 
+Vote for One 
+Treasurer 
+Vote for One 
+Comptroller 
+Vote for One 
+Attorney 
+General 
+Vote for One 
+Judge of 
+Probate 
+Vote for One 
+Registrar of 
+Voters 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Maryam 
+Khan 
+4A 
+Jane 
+Garibay 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Mary C. 
+Deneen 
+10A 
+Jillian A. 
+Brimecombe 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Tim 
+Knotts 
+4B 
+Chantelle 
+Ankerman 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Mary C. 
+Deneen 
+10B 
+Victoria 
+Virgo-Christie 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+4C 
+Jane 
+Garibay 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+4D 
+Jane 
+Garibay 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+2E 
+Green Party 
+Mary L.
+Sanders 
+Write-in Votes 
+1F 
+2F 
+3F 
+4F 
+5F 
+6F 
+7F 
+8F 
+9F 
+10F 
+Be sure to read the instructions on the reverse side of this ballot. 
+Sheet 1 of 1 
+
+
+PAGE 6 / Judge of Probate / RECT [612.85, 140.0, 668.75, 482.72783203125]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Mary C. 
+Deneen 
+9B 
+Mary C. 
+Deneen 
+9F
+
+PAGE 6 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 482.72783203125]
+10 
+Registrar of 
+Voters 
+Vote for One 
+10A 
+Jillian A. 
+Brimecombe 
+10B 
+Victoria 
+Virgo-Christie 
+10F
+
+PAGE 6 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+Windsor, Connecticut 
+State Election 
+November 3, 2026 
+State of Connecticut 
+Official Ballot 
+Congressional District 1 
+Senatorial District 2 
+Assembly District 60 
+Voting District 6 
+Office 
+1 
+2 
+3 
+4 
+5 
+6 
+7 
+8 
+9 
+10 
+Party 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+Representative 
+in Congress 
+Vote for One 
+State Senator 
+Vote for One 
+State 
+Representative 
+Vote for One 
+Secretary of 
+the State 
+Vote for One 
+Treasurer 
+Vote for One 
+Comptroller 
+Vote for One 
+Attorney 
+General 
+Vote for One 
+Judge of 
+Probate 
+Vote for One 
+Registrar of 
+Voters 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Maryam 
+Khan 
+4A 
+Jane 
+Garibay 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Mary C. 
+Deneen 
+10A 
+Jillian A. 
+Brimecombe 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Tim 
+Knotts 
+4B 
+Chantelle 
+Ankerman 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Mary C. 
+Deneen 
+10B 
+Victoria 
+Virgo-Christie 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+4C 
+Jane 
+Garibay 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+4D 
+Jane 
+Garibay 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+2E 
+Green Party 
+Mary L.
+Sanders 
+Write-in Votes 
+1F 
+2F 
+3F 
+4F 
+5F 
+6F 
+7F 
+8F 
+9F 
+10F 
+Be sure to read the instructions on the reverse side of this ballot. 
+Sheet 1 of 1 
+
+
+PAGE 7 / Judge of Probate / RECT [612.85, 140.0, 668.75, 482.72783203125]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Mary C. 
+Deneen 
+9B 
+Mary C. 
+Deneen 
+9F
+
+PAGE 7 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 482.72783203125]
+10 
+Registrar of 
+Voters 
+Vote for One 
+10A 
+Jillian A. 
+Brimecombe 
+10B 
+Victoria 
+Virgo-Christie 
+10F
+
+PAGE 7 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+Windsor, Connecticut 
+State Election 
+November 3, 2026 
+State of Connecticut 
+Official Ballot 
+Congressional District 1 
+Senatorial District 7 
+Assembly District 60 
+Voting District 7 
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+10 
+Registrar of 
+Voters 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+David W. 
+Kiner 
+4A 
+Jane 
+Garibay 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Mary C. 
+Deneen 
+10A 
+Jillian A. 
+Brimecombe 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+John A. 
+Kissel 
+4B 
+Chantelle 
+Ankerman 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Mary C. 
+Deneen 
+10B 
+Victoria 
+Virgo-Christie 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+David W. 
+Kiner 
+4C 
+Jane 
+Garibay 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+John A. 
+Kissel 
+4D 
+Jane 
+Garibay 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+Write-in Votes 
+1F 
+2F 
+3F 
+4F 
+5F 
+6F 
+7F 
+8F 
+9F 
+10F 
+Be sure to read the instructions on the reverse side of this ballot. 
+Sheet 1 of 1 
+

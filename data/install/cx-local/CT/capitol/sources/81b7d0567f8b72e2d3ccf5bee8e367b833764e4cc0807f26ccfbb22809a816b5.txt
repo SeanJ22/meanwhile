@@ -1,0 +1,2506 @@
+window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-BZ6XV0YWBM');
+Court Locator | Connecticut Probate Courts
+{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/132","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"ak_geo":{"gmap_api_key":"AIzaSyBm3sgwFKcBxAvSDxBDkaT6Ed6aWD7JG_c"},"user":{"uid":0,"permissionsHash":"5a4337fca96afef5fec605f066bfee534982664403e7e7337933eb30457e7cae"}}
+Skip to main content
+Connecticut
+Probate Courts
+Case Lookup
+Court Locations
+Resource Library
+Public Meetings
+Administrator's Office
+Find it Fast
+Trusts & Estates
+Overview
+Forms
+User Guides
+eFiling
+Fees & Expenses
+Children's Matters
+Overview
+Forms
+User Guides
+Kinship & Respite Funds
+eFiling
+eBilling
+Fees & Expenses
+Mental Health Commitments
+Overview
+Forms
+eFiling
+eBilling
+Fees & Expenses
+Intellectual Disability
+Overview
+Forms
+User Guides
+eFiling
+eBilling
+Fees & Expenses
+Conservatorship
+Overview
+Forms
+User Guides
+Standards of Practice
+Professional Conservator
+FAQ
+eFiling
+eBilling
+Fees & Expenses
+Other Matters
+Overview
+Forms
+Name Changes
+eFiling
+Fees & Expenses
+About the Court
+Overview
+Court Rules & Statutes
+Regulations
+Assistance for the Disabled (ADA)
+Probate Mediation
+Court-Appointed Professionals
+Candidates for Probate Judge
+Council on Probate Judicial Conduct
+FAQ
+eFiling
+eBilling
+Trusts & Estates
+Overview
+Forms
+User Guides
+eFiling
+Fees & Expenses
+Children's Matters
+Overview
+Forms
+User Guides
+Kinship & Respite Funds
+eFiling
+eBilling
+Fees & Expenses
+Mental Health Commitments
+Overview
+Forms
+eFiling
+eBilling
+Fees & Expenses
+Intellectual Disability
+Overview
+Forms
+User Guides
+eFiling
+eBilling
+Fees & Expenses
+Conservatorship
+Overview
+Forms
+User Guides
+Standards of Practice
+Professional Conservator
+FAQ
+eFiling
+eBilling
+Fees & Expenses
+Other Matters
+Overview
+Forms
+Name Changes
+eFiling
+Fees & Expenses
+About the Court
+Overview
+Court Rules & Statutes
+Regulations
+Assistance for the Disabled (ADA)
+Probate Mediation
+Court-Appointed Professionals
+Candidates for Probate Judge
+Council on Probate Judicial Conduct
+FAQ
+eFiling
+eBilling
+Case Lookup
+Court Locations
+Resource Library
+Public Meetings
+Administrator's Office
+Close
+.pinshape {
+                fill: none;
+                stroke: #3daea3;
+                stroke-linecap: round;
+                stroke-miterlimit: 10;
+                stroke-width: 2.4px;
+              }
+Court Locations
+Please start by selecting a town to get the contact information for the Probate Court in your area.
+Select a Town Here
+Andover
+Ansonia
+Ashford
+Avon
+Barkhamsted
+Beacon Falls
+Berlin
+Bethany
+Bethel
+Bethlehem
+Bloomfield
+Bolton
+Bozrah
+Branford
+Bridgeport
+Bridgewater
+Bristol
+Brookfield
+Brooklyn
+Burlington
+Canaan
+Canterbury
+Canton
+Central Connecticut Regional Children's Probate Court
+Chaplin
+Cheshire
+Chester
+Clinton
+Colchester
+Colebrook
+Columbia
+Cornwall
+Coventry
+Cromwell
+Danbury
+Danielson
+Darien
+Deep River
+Derby
+Durham
+East Granby
+East Haddam
+East Hampton
+East Hartford
+East Haven
+East Lyme
+East Windsor
+Eastford
+Easton
+Ellington
+Enfield
+Essex
+Fairfield
+Farmington
+Franklin
+Glastonbury
+Goshen
+Granby
+Greenwich
+Griswold
+Groton
+Guilford
+Haddam
+Hamden
+Hampton
+Hartford
+Hartford Regional Children's Probate Court
+Hartland
+Harwinton
+Hebron
+Kent
+Killingly
+Killingworth
+Lebanon
+Ledyard
+Lisbon
+Litchfield
+Lyme
+Madison
+Manchester
+Mansfield
+Marlborough
+Meriden
+Middlebury
+Middlefield
+Middletown
+Milford
+Monroe
+Montville
+Morris
+Mystic
+Naugatuck
+New Britain
+New Canaan
+New Fairfield
+New Hartford
+New Haven
+New Haven Regional Children's Probate Court
+New London
+New London Regional Children's Probate Court
+New Milford
+Newington
+Newtown
+Niantic
+Norfolk
+North Branford
+North Canaan
+North Haven
+North Stonington
+Northeast Regional Children's Probate Court
+Norwalk
+Norwich
+Old Lyme
+Old Saybrook
+Orange
+Oxford
+Plainfield
+Plainville
+Plymouth
+Pomfret
+Portland
+Preston
+Prospect
+Putnam
+Redding
+Ridgefield
+Rocky Hill
+Roxbury
+Salem
+Salisbury
+Scotland
+Seymour
+Sharon
+Shelton
+Sherman
+Simsbury
+Somers
+South Windsor
+Southbury
+Southington
+Sprague
+Stafford
+Stamford
+Sterling
+Stonington
+Stratford
+Suffield
+Thomaston
+Thompson
+Tolland
+Torrington
+Trumbull
+Union
+Vernon
+Voluntown
+Wallingford
+Warren
+Washington
+Waterbury
+Waterbury Regional Children's Probate Court
+Waterford
+Watertown
+West Hartford
+West Haven
+Westbrook
+Weston
+Westport
+Wethersfield
+Willington
+Wilton
+Winchester
+Windham
+Windsor
+Windsor Locks
+Winsted
+Wolcott
+Woodbridge
+Woodbury
+Woodstock
+reset
+CT Probate Courts
+Hartford Probate Court
+(PD-01)
+Judge
+Foye A. Smith
+Chief Clerk
+Monica Gonzalez
+Telephone
+(860) 757-9150
+Fax
+(860) 724-1503
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Hartford
+Hartford Probate Court
+(PD‑01)
+250 Constitution Plaza, 3rd Floor
+Hartford
+,
+CT
+06103-2814
+United States
+Get directions
+Judge
+Foye A. Smith
+Chief Clerk
+Monica Gonzalez
+Telephone
+(860) 757-9150
+Fax
+(860) 724-1503
+Hours
+Mon - Fri 8:30 - 4:30
+West Hartford Probate Court
+(PD-02)
+Judge
+Owen P. Eagan
+Chief Clerk
+Lori A. P. Errico
+Telephone
+(860) 561-7940
+Fax
+(860) 561-7591
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+West Hartford
+West Hartford Probate Court
+(PD‑02)
+50 South Main Street, Rm. 318
+West Hartford
+,
+CT
+06107
+United States
+Get directions
+Judge
+Owen P. Eagan
+Chief Clerk
+Lori A. P. Errico
+Telephone
+(860) 561-7940
+Fax
+(860) 561-7591
+Hours
+Mon - Fri 8:30 - 4:30
+Tobacco Valley Probate Court
+(PD-03)
+Judge
+Daniel N. Mara
+Chief Clerk
+Louis A. Taylor
+Telephone
+(860) 627-1450
+Fax
+(860) 654-8919
+Hours
+Mon - Wed 8:00 - 4:00, Thurs 8:00 - 6:00, Fri 8:00 - 1:00
+Cities / Towns
+Bloomfield
+East Granby
+Suffield
+Windsor Locks
+Tobacco Valley Probate Court
+(PD‑03)
+Town Office Building, 50 Church Street
+Windsor Locks
+,
+CT
+06096
+United States
+Get directions
+Judge
+Daniel N. Mara
+Chief Clerk
+Louis A. Taylor
+Telephone
+(860) 627-1450
+Fax
+(860) 654-8919
+Hours
+Mon - Wed 8:00 - 4:00, Thurs 8:00 - 6:00, Fri 8:00 - 1:00
+Greater Windsor Probate Court
+(PD-04)
+Judge
+Mary C. Deneen
+Chief Clerk
+Annette T. Tarascio
+Telephone
+(860)644-2511 x 2371
+Fax
+(860) 648-5047
+Hours
+Mon - Fri 8:00 - 4:00
+Cities / Towns
+East Windsor
+South Windsor
+Windsor
+Greater Windsor Probate Court
+(PD‑04)
+Town Hall, 1540 Sullivan Avenue
+South Windsor
+,
+CT
+06074-2786
+United States
+Get directions
+Judge
+Mary C. Deneen
+Chief Clerk
+Annette T. Tarascio
+Telephone
+(860)644-2511 x 2371
+Fax
+(860) 648-5047
+Hours
+Mon - Fri 8:00 - 4:00
+East Hartford Probate Court
+(PD-05)
+Judge
+Richard P. Gentile
+Chief Clerk
+Idaliz Gomez
+Telephone
+(860) 291-7278
+Fax
+(860) 291-7211
+Hours
+Mon - Fri 8:30 a.m. - 4:30 p.m.
+Cities / Towns
+East Hartford
+East Hartford Probate Court
+(PD‑05)
+Town Hall, 740 Main Street
+East Hartford
+,
+CT
+06108
+United States
+Get directions
+Judge
+Richard P. Gentile
+Chief Clerk
+Idaliz Gomez
+Telephone
+(860) 291-7278
+Fax
+(860) 291-7211
+Hours
+Mon - Fri 8:30 a.m. - 4:30 p.m.
+Glastonbury - Hebron Probate Court
+(PD-06)
+Judge
+Sean Michael Peoples
+Chief Clerk
+Matthew Cella
+Telephone
+(860) 652-7629
+Fax
+(860) 368-2520
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Glastonbury
+Hebron
+Glastonbury - Hebron Probate Court
+(PD‑06)
+2143 Main Street, P.O. Box 6523
+Glastonbury
+,
+CT
+06033-6523
+United States
+Get directions
+Judge
+Sean Michael Peoples
+Chief Clerk
+Matthew Cella
+Telephone
+(860) 652-7629
+Fax
+(860) 368-2520
+Hours
+Mon - Fri 8:30 - 4:30
+Newington Probate Court
+(PD-07)
+Judge
+Robert A. Randich
+Chief Clerk
+Rose Anne Adamowich
+Telephone
+(860) 665-1285
+Fax
+(860) 665-1331
+Hours
+8:30 A.M.-4:30 P.M., Mon.-Thurs.; 8:00 A.M.-4:00 P.M., Fri.
+Cities / Towns
+Newington
+Rocky Hill
+Wethersfield
+Newington Probate Court
+(PD‑07)
+66 Cedar Street, Rear
+Newington
+,
+CT
+06111
+United States
+Get directions
+Judge
+Robert A. Randich
+Chief Clerk
+Rose Anne Adamowich
+Telephone
+(860) 665-1285
+Fax
+(860) 665-1331
+Hours
+8:30 A.M.-4:30 P.M., Mon.-Thurs.; 8:00 A.M.-4:00 P.M., Fri.
+Berlin Probate Court
+(PD-08)
+Judge
+William C. Rivera
+Chief Clerk
+Susan Meagher
+Telephone
+(860) 826-2696
+Fax
+(860) 826-2695
+Hours
+M - F 8:30 - 4:30,July and August M -TH 8:00 - 4:30, F 8:00 - 2:00
+Cities / Towns
+Berlin
+New Britain
+Berlin Probate Court
+(PD‑08)
+One Liberty Square
+New Britain
+,
+CT
+06051
+United States
+Get directions
+Judge
+William C. Rivera
+Chief Clerk
+Susan Meagher
+Telephone
+(860) 826-2696
+Fax
+(860) 826-2695
+Hours
+M - F 8:30 - 4:30,July and August M -TH 8:00 - 4:30, F 8:00 - 2:00
+Simsbury Regional Probate Court
+(PD-09)
+Judge
+David C. Shepard
+Chief Clerk
+Lisa A. Sargent
+Telephone
+(860) 658-3277
+Fax
+(860) 658-3204
+Hours
+Mon 8:00 - 5:30, Tues - Thurs 8:00 - 4:30, Fri 8:00 - 1:00
+Cities / Towns
+Avon
+Canton
+Granby
+Simsbury
+Simsbury Regional Probate Court
+(PD‑09)
+933 Hopmeadow Street
+Simsbury
+,
+CT
+06070
+United States
+Get directions
+Judge
+David C. Shepard
+Chief Clerk
+Lisa A. Sargent
+Telephone
+(860) 658-3277
+Fax
+(860) 658-3204
+Hours
+Mon 8:00 - 5:30, Tues - Thurs 8:00 - 4:30, Fri 8:00 - 1:00
+Farmington Regional Probate Court
+(PD-10)
+Judge
+Paul R. Bedard
+Chief Clerk
+William D. Kinley, Esq.
+Telephone
+(860) 675-2360
+Fax
+(860) 673-8262
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Burlington
+Farmington
+Plainville
+Farmington Regional Probate Court
+(PD‑10)
+One Monteith Drive, Main Floor
+Farmington
+,
+CT
+06032
+United States
+Get directions
+Judge
+Paul R. Bedard
+Chief Clerk
+William D. Kinley, Esq.
+Telephone
+(860) 675-2360
+Fax
+(860) 673-8262
+Hours
+Mon - Fri 8:30 - 4:30
+North Central Connecticut
+(PD-11)
+Judge
+Carolyn L. McCaffrey
+Chief Clerk
+Chandler Davis
+Telephone
+(860) 253-6305
+Fax
+(860) 253-6388
+Hours
+Mon - Fri 9:00 - 5:00
+Cities / Towns
+Enfield
+Somers
+Stafford
+Union
+North Central Connecticut
+(PD‑11)
+820 Enfield Street
+Enfield
+,
+CT
+06082
+United States
+Get directions
+Judge
+Carolyn L. McCaffrey
+Chief Clerk
+Chandler Davis
+Telephone
+(860) 253-6305
+Fax
+(860) 253-6388
+Hours
+Mon - Fri 9:00 - 5:00
+Ellington Probate Court
+(PD-12)
+Judge
+Elisa H. Bartlett
+Chief Clerk
+Julie Anderson
+Telephone
+(860) 872-0519
+Fax
+(860) 870-5140
+Hours
+Mon, Wed, Thurs 8:00 - 4:30, Tues 8:00 - 6:00, Fri 8:00 - 12:00
+Cities / Towns
+Ellington
+Vernon
+Ellington Probate Court
+(PD‑12)
+32 Park Place
+Vernon
+,
+CT
+06066-0268
+United States
+Get directions
+Judge
+Elisa H. Bartlett
+Chief Clerk
+Julie Anderson
+Telephone
+(860) 872-0519
+Fax
+(860) 870-5140
+Hours
+Mon, Wed, Thurs 8:00 - 4:30, Tues 8:00 - 6:00, Fri 8:00 - 12:00
+Greater Manchester Probate Court
+(PD-13)
+Judge
+Michael M. Darby
+Chief Clerk
+Natalie Moon
+Telephone
+(860) 647-3227
+Fax
+(860) 647-3236
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Andover
+Bolton
+Columbia
+Manchester
+Greater Manchester Probate Court
+(PD‑13)
+66 Center Street
+Manchester
+,
+CT
+06040-5003
+United States
+Get directions
+Judge
+Michael M. Darby
+Chief Clerk
+Natalie Moon
+Telephone
+(860) 647-3227
+Fax
+(860) 647-3236
+Hours
+Mon - Fri 8:30 - 4:30
+Region # 14 Probate Court
+(PD-14)
+Judge
+Jennifer L. Berkenstock
+Chief Clerk
+Debra C. Daniels
+Telephone
+(860) 295-6239
+Fax
+(860) 295-6122
+Hours
+Mon - Wed 8:30 - 4:30, Thurs 8:30 - 5:00, Fri 8:30 - 4:00
+Cities / Towns
+East Haddam
+East Hampton
+Marlborough
+Portland
+Region # 14 Probate Court
+(PD‑14)
+9 Austin Drive, Suite 211
+Marlborough
+,
+CT
+06447
+United States
+Get directions
+Judge
+Jennifer L. Berkenstock
+Chief Clerk
+Debra C. Daniels
+Telephone
+(860) 295-6239
+Fax
+(860) 295-6122
+Hours
+Mon - Wed 8:30 - 4:30, Thurs 8:30 - 5:00, Fri 8:30 - 4:00
+Middletown Probate Court
+(PD-15)
+Judge
+Phrances Leverton Szewczyk
+Chief Clerk
+Brandi Pillarella
+Telephone
+(860) 347-7424
+Fax
+(860) 346-1520
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Cromwell
+Durham
+Middlefield
+Middletown
+Middletown Probate Court
+(PD‑15)
+94 Court Street
+Middletown
+,
+CT
+06457
+United States
+Get directions
+Judge
+Phrances Leverton Szewczyk
+Chief Clerk
+Brandi Pillarella
+Telephone
+(860) 347-7424
+Fax
+(860) 346-1520
+Hours
+Mon - Fri 8:30 - 4:30
+Meriden Probate Court
+(PD-16)
+Judge
+Ariana F. Ceneviva
+Chief Clerk
+Janet Firulli
+Telephone
+(203) 630-4150
+Fax
+(203) 630-4043
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Meriden
+Meriden Probate Court
+(PD‑16)
+City Hall, 142 E. Main Street, Room 113
+Meriden
+,
+CT
+06450
+United States
+Get directions
+Judge
+Ariana F. Ceneviva
+Chief Clerk
+Janet Firulli
+Telephone
+(203) 630-4150
+Fax
+(203) 630-4043
+Hours
+Mon - Fri 8:30 - 4:30
+Wallingford Probate Court
+(PD-17)
+Judge
+Patrick M. Birney
+Chief Clerk
+Elvira Cleary
+Telephone
+(203) 294-2100
+Fax
+(203) 294-2109
+Hours
+Mon - Fri 9:00 - 5:00
+Cities / Towns
+Wallingford
+Wallingford Probate Court
+(PD‑17)
+Town Hall, 45 South Main Street, Room 114
+Wallingford
+,
+CT
+06492
+United States
+Get directions
+Judge
+Patrick M. Birney
+Chief Clerk
+Elvira Cleary
+Telephone
+(203) 294-2100
+Fax
+(203) 294-2109
+Hours
+Mon - Fri 9:00 - 5:00
+Cheshire - Southington Probate Court
+(PD-18)
+Judge
+Matthew J. Jalowiec
+Chief Clerk
+Margherita Bergstrand
+Telephone
+(203) 271-6608
+Fax
+(203) 271-3735
+Hours
+Mon - Fri 8:30 - 4:00
+Cities / Towns
+Cheshire
+Southington
+Cheshire - Southington Probate Court
+(PD‑18)
+84 South Main Street
+Cheshire
+,
+CT
+06410
+United States
+Get directions
+Judge
+Matthew J. Jalowiec
+Chief Clerk
+Margherita Bergstrand
+Telephone
+(203) 271-6608
+Fax
+(203) 271-3735
+Hours
+Mon - Fri 8:30 - 4:00
+Bristol-Plymouth Probate Court
+(PD-19)
+Judge
+William A. Hamzy
+Chief Clerk
+Wendy Murphy
+Telephone
+(860) 584-6230
+Fax
+(860) 845-1312
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Bristol
+Plymouth
+Bristol-Plymouth Probate Court
+(PD‑19)
+240 Stafford Avenue
+Bristol
+,
+CT
+06010-4682
+United States
+Get directions
+Judge
+William A. Hamzy
+Chief Clerk
+Wendy Murphy
+Telephone
+(860) 584-6230
+Fax
+(860) 845-1312
+Hours
+Mon - Fri 8:30 - 4:30
+Waterbury Probate Court
+(PD-20)
+Judge
+Matthew P. Vaccarelli
+Chief Clerk
+Tracy L. Biolo
+Telephone
+(203) 755-1127
+Fax
+(203) 597-0824
+Hours
+8:30 A.M.-4:30 P.M., Mon.-Fri.
+Cities / Towns
+Waterbury
+Wolcott
+Waterbury Probate Court
+(PD‑20)
+21 West Main Street, 4th Floor
+Waterbury
+,
+CT
+06702
+United States
+Get directions
+Judge
+Matthew P. Vaccarelli
+Chief Clerk
+Tracy L. Biolo
+Telephone
+(203) 755-1127
+Fax
+(203) 597-0824
+Hours
+8:30 A.M.-4:30 P.M., Mon.-Fri.
+Naugatuck Probate Court
+(PD-21)
+Judge
+Rosa C. Rebimbas
+Chief Clerk
+Catherine Ernsky
+Telephone
+(203) 720-7046
+Fax
+(203) 632-8490
+Hours
+Mon - Thurs 8:00 - 5:00, Fri 8:00 - 2:00
+Cities / Towns
+Beacon Falls
+Middlebury
+Naugatuck
+Prospect
+Naugatuck Probate Court
+(PD‑21)
+150 Meadow Street
+Naugatuck
+,
+CT
+06770
+United States
+Get directions
+Judge
+Rosa C. Rebimbas
+Chief Clerk
+Catherine Ernsky
+Telephone
+(203) 720-7046
+Fax
+(203) 632-8490
+Hours
+Mon - Thurs 8:00 - 5:00, Fri 8:00 - 2:00
+Region # 22 Probate Court
+(PD-22)
+Judge
+David K. Labriola
+Chief Clerk
+Amanda A. Cesarello
+Telephone
+(203) 262-0641
+Fax
+(203) 262-0001
+Hours
+Mon - Thurs 8:00 - 4:30, Fri 8:00 - 2:00
+Cities / Towns
+Bethlehem
+Oxford
+Roxbury
+Southbury
+Washington
+Watertown
+Woodbury
+Region # 22 Probate Court
+(PD‑22)
+501 Main Street South, P.O. Box 720
+Southbury
+,
+CT
+06488-0674
+United States
+Get directions
+Judge
+David K. Labriola
+Chief Clerk
+Amanda A. Cesarello
+Telephone
+(203) 262-0641
+Fax
+(203) 262-0001
+Hours
+Mon - Thurs 8:00 - 4:30, Fri 8:00 - 2:00
+Torrington Area Probate Court
+(PD-23)
+Judge
+James P. Steck
+Chief Clerk
+Gale L. Pellegren
+Telephone
+(860) 489-2215
+Fax
+(860) 496-5910
+Hours
+Mon - Wed 8:00 - 5:00, Thurs 8:00 - 6:30, Fri 8:00 - 12:30
+Cities / Towns
+Barkhamsted
+Colebrook
+Goshen
+Hartland
+New Hartford
+Torrington
+Winchester
+Winsted
+Torrington Area Probate Court
+(PD‑23)
+Municipal Building, 140 Main Street
+Torrington
+,
+CT
+06790
+United States
+Get directions
+Judge
+James P. Steck
+Chief Clerk
+Gale L. Pellegren
+Telephone
+(860) 489-2215
+Fax
+(860) 496-5910
+Hours
+Mon - Wed 8:00 - 5:00, Thurs 8:00 - 6:30, Fri 8:00 - 12:30
+Litchfield Hills Probate Court
+(PD-24)
+Judge
+Jordan M. Richards
+Chief Clerk
+Tanya M. Matulis
+Telephone
+(860) 567-8065
+Fax
+(860) 567-2538
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Canaan
+Cornwall
+Harwinton
+Kent
+Litchfield
+Morris
+Norfolk
+North Canaan
+Salisbury
+Sharon
+Thomaston
+Warren
+Litchfield Hills Probate Court
+(PD‑24)
+74 West Street, P.O. Box 505
+Litchfield
+,
+CT
+06759
+United States
+Get directions
+Judge
+Jordan M. Richards
+Chief Clerk
+Tanya M. Matulis
+Telephone
+(860) 567-8065
+Fax
+(860) 567-2538
+Hours
+Mon - Fri 8:30 - 4:30
+Tolland - Mansfield Probate Court
+(PD-25)
+Judge
+Sophia H. Shaikh
+Chief Clerk
+Shonta Browdy
+Telephone
+(860) 871-3640
+Fax
+(860) 871-3641
+Hours
+Mon, Wed, Thurs 8:00 - 5:30, Tues 8:00 - 7:30
+Cities / Towns
+Coventry
+Mansfield
+Tolland
+Willington
+Tolland - Mansfield Probate Court
+(PD‑25)
+21 Tolland Green
+Tolland
+,
+CT
+06084
+United States
+Get directions
+Judge
+Sophia H. Shaikh
+Chief Clerk
+Shonta Browdy
+Telephone
+(860) 871-3640
+Fax
+(860) 871-3641
+Hours
+Mon, Wed, Thurs 8:00 - 5:30, Tues 8:00 - 7:30
+Northeast Probate Court
+(PD-26)
+Judge
+Gabrielle Labonte
+Chief Clerk
+Brenda Duquette
+Telephone
+(860) 928-4844
+Fax
+(860) 928-4766
+Hours
+Mon - Thurs 8:15 - 4:45, Fri 8:15 - 3:00
+Cities / Towns
+Ashford
+Brooklyn
+Eastford
+Pomfret
+Putnam
+Thompson
+Woodstock
+Northeast Probate Court
+(PD‑26)
+84 Providence Street, P.O. Box 471
+Putnam
+,
+CT
+06260
+United States
+Get directions
+Judge
+Gabrielle Labonte
+Chief Clerk
+Brenda Duquette
+Telephone
+(860) 928-4844
+Fax
+(860) 928-4766
+Hours
+Mon - Thurs 8:15 - 4:45, Fri 8:15 - 3:00
+Plainfield - Killingly Probate Court
+(PD-27)
+Judge
+Carolanne Rowe
+Chief Clerk
+Michelle R. Gunn
+Telephone
+(860) 230-3031
+Fax
+(860) 564-0126
+Hours
+Mon - Thurs 7:30 - 5:30
+Cities / Towns
+Canterbury
+Danielson
+Killingly
+Plainfield
+Sterling
+Plainfield - Killingly Probate Court
+(PD‑27)
+Town Hall, 8 Community Avenue
+Plainfield
+,
+CT
+06374
+United States
+Get directions
+Judge
+Carolanne Rowe
+Chief Clerk
+Michelle R. Gunn
+Telephone
+(860) 230-3031
+Fax
+(860) 564-0126
+Hours
+Mon - Thurs 7:30 - 5:30
+Windham - Colchester Probate Court
+(PD-28)
+Judge
+George A. Baker
+Chief Clerk
+Heather R. Robinson
+Telephone
+(860) 465-3049
+Fax
+(860) 465-2162
+Hours
+Mon - Thurs 7:00 - 5:00, Fri Closed
+Cities / Towns
+Chaplin
+Colchester
+Hampton
+Lebanon
+Scotland
+Windham
+Windham - Colchester Probate Court
+(PD‑28)
+979 Main Street, P.O. Box 34
+Willimantic
+,
+CT
+06226
+United States
+Get directions
+Judge
+George A. Baker
+Chief Clerk
+Heather R. Robinson
+Telephone
+(860) 465-3049
+Fax
+(860) 465-2162
+Hours
+Mon - Thurs 7:00 - 5:00, Fri Closed
+Norwich Probate Court
+(PD-29)
+Judge
+Charles K. Norris
+Chief Clerk
+Samantha Shanaberger
+Telephone
+(860) 887-2160
+Fax
+(860) 887-2401
+Hours
+Mon - Fri 8:00 - 4:00
+Cities / Towns
+Bozrah
+Franklin
+Griswold
+Lisbon
+Norwich
+Preston
+Sprague
+Voluntown
+Norwich Probate Court
+(PD‑29)
+100 Broadway, Room 122, City Hall
+Norwich
+,
+CT
+06360-0038
+United States
+Get directions
+Judge
+Charles K. Norris
+Chief Clerk
+Samantha Shanaberger
+Telephone
+(860) 887-2160
+Fax
+(860) 887-2401
+Hours
+Mon - Fri 8:00 - 4:00
+Southeastern CT Regional Probate Court
+(PD-30)
+Judge
+Elizabeth L. Leamon
+Chief Clerk
+Jill A. Millovitsch
+Telephone
+(860) 441-6655
+Fax
+(860) 441-6657
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Groton
+Ledyard
+Mystic
+North Stonington
+Stonington
+Southeastern CT Regional Probate Court
+(PD‑30)
+Town Hall, 45 Fort Hill Road
+Groton
+,
+CT
+06340
+United States
+Get directions
+Judge
+Elizabeth L. Leamon
+Chief Clerk
+Jill A. Millovitsch
+Telephone
+(860) 441-6655
+Fax
+(860) 441-6657
+Hours
+Mon - Fri 8:30 - 4:30
+New London Probate Court
+(PD-31)
+Judge
+Mathew H. Greene
+Chief Clerk
+Tammy L. Bartelli
+Telephone
+(860) 443-7121
+Fax
+(860) 437-8155
+Hours
+Mon - Fri 8:00 - 4:00
+Cities / Towns
+New London
+Waterford
+New London Probate Court
+(PD‑31)
+181 State Street, Room 2, P.O. Box 148
+New London
+,
+CT
+06320
+United States
+Get directions
+Judge
+Mathew H. Greene
+Chief Clerk
+Tammy L. Bartelli
+Telephone
+(860) 443-7121
+Fax
+(860) 437-8155
+Hours
+Mon - Fri 8:00 - 4:00
+Niantic Regional Probate Court
+(PD-32)
+Judge
+Jeffrey A. McNamara
+Chief Clerk
+Christine D. Lena
+Telephone
+(860) 739-6052
+Fax
+(860) 739-6738
+Hours
+Mon, Tues 8:00 - 4:30, Wed, Thurs 8:00 - 5:00, Fri 8:00 - 1:00
+Cities / Towns
+East Lyme
+Montville
+Niantic
+Old Lyme
+Salem
+Niantic Regional Probate Court
+(PD‑32)
+118 Pennsylvania Avenue
+Niantic
+,
+CT
+06357
+United States
+Get directions
+Judge
+Jeffrey A. McNamara
+Chief Clerk
+Christine D. Lena
+Telephone
+(860) 739-6052
+Fax
+(860) 739-6738
+Hours
+Mon, Tues 8:00 - 4:30, Wed, Thurs 8:00 - 5:00, Fri 8:00 - 1:00
+Saybrook Probate Court
+(PD-33)
+Judge
+Jeannine M. Lewis
+Chief Clerk
+Laurie Buckley
+Telephone
+(860) 510-5028
+Fax
+(860) 388-3734
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Chester
+Clinton
+Deep River
+Essex
+Haddam
+Killingworth
+Lyme
+Old Saybrook
+Westbrook
+Saybrook Probate Court
+(PD‑33)
+302 Main Street, 2nd Floor
+Old Saybrook
+,
+CT
+06475-2384
+United States
+Get directions
+Judge
+Jeannine M. Lewis
+Chief Clerk
+Laurie Buckley
+Telephone
+(860) 510-5028
+Fax
+(860) 388-3734
+Hours
+Mon - Fri 8:30 - 4:30
+Madison - Guilford Probate Court
+(PD-34)
+Judge
+Seth C. Klaskin
+Chief Clerk
+Karen Parzych
+Telephone
+(203) 245-5661
+Fax
+(203) 245-5653
+Hours
+Mon - Fri 8:00 - 4:00
+Cities / Towns
+Guilford
+Madison
+Madison - Guilford Probate Court
+(PD‑34)
+8 Meeting House Lane
+Madison
+,
+CT
+06443
+United States
+Get directions
+Judge
+Seth C. Klaskin
+Chief Clerk
+Karen Parzych
+Telephone
+(203) 245-5661
+Fax
+(203) 245-5653
+Hours
+Mon - Fri 8:00 - 4:00
+Branford - North Branford Probate Court
+(PD-35)
+Judge
+Charles E. Tiernan, III
+Chief Clerk
+Shari Moon
+Telephone
+(203) 488-0318
+Fax
+(203) 315-4715
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Branford
+North Branford
+Branford - North Branford Probate Court
+(PD‑35)
+1019 Main Street, P.O. Box 150
+Branford
+,
+CT
+06405-0150
+United States
+Get directions
+Judge
+Charles E. Tiernan, III
+Chief Clerk
+Shari Moon
+Telephone
+(203) 488-0318
+Fax
+(203) 315-4715
+Hours
+Mon - Fri 8:30 - 4:30
+East Haven - North Haven Probate Court
+(PD-36)
+Judge
+Michael R. Brandt
+Chief Clerk
+Mary-Beth Luzzi
+Telephone
+(203) 468-3895
+Fax
+(203) 468-5155
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+East Haven
+North Haven
+East Haven - North Haven Probate Court
+(PD‑36)
+595 Thompson Avenue
+East Haven
+,
+CT
+06512
+United States
+Get directions
+Judge
+Michael R. Brandt
+Chief Clerk
+Mary-Beth Luzzi
+Telephone
+(203) 468-3895
+Fax
+(203) 468-5155
+Hours
+Mon - Fri 8:30 - 4:30
+Hamden - Bethany Probate Court
+(PD-37)
+Judge
+Michael Dolan
+Chief Clerk
+Christine L. Panzo
+Telephone
+(203) 287-7082
+Fax
+(203) 287-7087
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Bethany
+Hamden
+Hamden - Bethany Probate Court
+(PD‑37)
+Govt. Center, 2750 Dixwell Avenue
+Hamden
+,
+CT
+06518
+United States
+Get directions
+Judge
+Michael Dolan
+Chief Clerk
+Christine L. Panzo
+Telephone
+(203) 287-7082
+Fax
+(203) 287-7087
+Hours
+Mon - Fri 8:30 - 4:30
+New Haven Probate Court
+(PD-38)
+Judge
+Americo R. Carchia
+Chief Clerk
+Patrizia Clark
+Telephone
+(203) 946-4880
+Fax
+(203) 946-5962
+Hours
+Mon - Fri 9:00 - 5:00
+Cities / Towns
+New Haven
+New Haven Probate Court
+(PD‑38)
+200 Orange Street, 1st Floor, P.O. Box 905
+New Haven
+,
+CT
+06504-0905
+United States
+Get directions
+Judge
+Americo R. Carchia
+Chief Clerk
+Patrizia Clark
+Telephone
+(203) 946-4880
+Fax
+(203) 946-5962
+Hours
+Mon - Fri 9:00 - 5:00
+West Haven Probate Court
+(PD-39)
+Judge
+Timothy Gunning
+Chief Clerk
+Tracy Morrissey
+Telephone
+(203) 937-3552
+Fax
+(203) 937-3556
+Hours
+Monday-Thursday 8:00 a.m. to 5:00 p.m.; Friday 8:00 a.m. to 3:30 p.m.
+Cities / Towns
+West Haven
+West Haven Probate Court
+(PD‑39)
+355 Main Street, P.O. Box 127
+West Haven
+,
+CT
+06516
+United States
+Get directions
+Judge
+Timothy Gunning
+Chief Clerk
+Tracy Morrissey
+Telephone
+(203) 937-3552
+Fax
+(203) 937-3556
+Hours
+Monday-Thursday 8:00 a.m. to 5:00 p.m.; Friday 8:00 a.m. to 3:30 p.m.
+Milford - Orange Probate Court
+(PD-40)
+Judge
+Ben Gettinger
+Chief Clerk
+Elizabeth J. Davis
+Telephone
+(203) 783-3205
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Milford
+Orange
+Milford - Orange Probate Court
+(PD‑40)
+70 West River Street, P.O. Box 414
+Milford
+,
+CT
+06460-0414
+United States
+Get directions
+Judge
+Ben Gettinger
+Chief Clerk
+Elizabeth J. Davis
+Telephone
+(203) 783-3205
+Hours
+Mon - Fri 8:30 - 4:30
+Derby Probate Court
+(PD-41)
+Judge
+Clifford P. Hoyle
+Chief Clerk
+Kay Jeanette
+Telephone
+(203) 734-1277
+Fax
+(203) 736-1434
+Hours
+Mon - Thurs 8:00 - 5:00, Fri 8:00 - 1:00
+Cities / Towns
+Ansonia
+Derby
+Seymour
+Woodbridge
+Derby Probate Court
+(PD‑41)
+City Hall, 253 Main Street, 2nd Floor
+Ansonia
+,
+CT
+06401
+United States
+Get directions
+Judge
+Clifford P. Hoyle
+Chief Clerk
+Kay Jeanette
+Telephone
+(203) 734-1277
+Fax
+(203) 736-1434
+Hours
+Mon - Thurs 8:00 - 5:00, Fri 8:00 - 1:00
+Shelton Probate Court
+(PD-42)
+Judge
+Fred J. Anthony
+Chief Clerk
+Anne Marie Marcinczyk
+Telephone
+(203) 924-8462
+Fax
+(203) 924-8943
+Hours
+Mon - Fri 9:00 - 5:00
+Cities / Towns
+Shelton
+Shelton Probate Court
+(PD‑42)
+40 White Street, P.O. Box 127
+Shelton
+,
+CT
+06484
+United States
+Get directions
+Judge
+Fred J. Anthony
+Chief Clerk
+Anne Marie Marcinczyk
+Telephone
+(203) 924-8462
+Fax
+(203) 924-8943
+Hours
+Mon - Fri 9:00 - 5:00
+Danbury Probate Court
+(PD-43)
+Judge
+Joseph DaSilva, Jr.
+Chief Clerk
+Jessie L. Grecke
+Telephone
+(203) 797-4521
+Fax
+(203) 796-1563
+Hours
+Mon - Thurs 7:30 - 5:30, Fri Closed
+Cities / Towns
+Danbury
+Danbury Probate Court
+(PD‑43)
+City Hall Building, 155 Deer Hill Avenue
+Danbury
+,
+CT
+06810
+United States
+Get directions
+Judge
+Joseph DaSilva, Jr.
+Chief Clerk
+Jessie L. Grecke
+Telephone
+(203) 797-4521
+Fax
+(203) 796-1563
+Hours
+Mon - Thurs 7:30 - 5:30, Fri Closed
+Housatonic Probate Court
+(PD-44)
+Judge
+Martin F. Landgrebe
+Chief Clerk
+Nanci Howard
+Telephone
+(860) 355-6029
+Fax
+(860) 355-6024
+Hours
+Mon., Tues., Wed. 8:00 - 4:30, Thurs. 8:00 - 6:00, Fri. 8:00 - 3:00
+Cities / Towns
+Bridgewater
+Brookfield
+New Fairfield
+New Milford
+Sherman
+Housatonic Probate Court
+(PD‑44)
+47 Bridge Street
+New Milford
+,
+CT
+06776
+United States
+Get directions
+Judge
+Martin F. Landgrebe
+Chief Clerk
+Nanci Howard
+Telephone
+(860) 355-6029
+Fax
+(860) 355-6024
+Hours
+Mon., Tues., Wed. 8:00 - 4:30, Thurs. 8:00 - 6:00, Fri. 8:00 - 3:00
+Northern Fairfield County
+(PD-45)
+Judge
+Steven Boa DeMoura
+Chief Clerk
+Jacqueline G. Buckle
+Telephone
+(203) 794-8508
+Fax
+(203) 778-7517
+Hours
+Mon - Wed 8:00 - 4:30, Thurs 8:00 - 6:00, Fri 8:00 - 12:00
+Cities / Towns
+Bethel
+Newtown
+Redding
+Ridgefield
+Northern Fairfield County
+(PD‑45)
+1 School Street
+Bethel
+,
+CT
+06801
+United States
+Get directions
+Judge
+Steven Boa DeMoura
+Chief Clerk
+Jacqueline G. Buckle
+Telephone
+(203) 794-8508
+Fax
+(203) 778-7517
+Hours
+Mon - Wed 8:00 - 4:30, Thurs 8:00 - 6:00, Fri 8:00 - 12:00
+Trumbull Probate Court
+(PD-46)
+Judge
+T. R. Rowe
+Chief Clerk
+Gail Hanna
+Telephone
+(203) 452-5068
+Fax
+(203) 452-5092
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Easton
+Monroe
+Trumbull
+Trumbull Probate Court
+(PD‑46)
+Town Hall, 5866 Main Street
+Trumbull
+,
+CT
+06611-5416
+United States
+Get directions
+Judge
+T. R. Rowe
+Chief Clerk
+Gail Hanna
+Telephone
+(203) 452-5068
+Fax
+(203) 452-5092
+Hours
+Mon - Fri 8:30 - 4:30
+Stratford Probate Court
+(PD-47)
+Judge
+Max L. Rosenberg
+Chief Clerk
+Heidi Manente
+Telephone
+(203) 385-4023
+Fax
+(203) 375-6253
+Hours
+Mon - Thurs 8:00 - 5:00, Fri 8:00 - 12:00
+Cities / Towns
+Stratford
+Stratford Probate Court
+(PD‑47)
+468 Birdseye Street, 2nd Floor
+Stratford
+,
+CT
+06615
+United States
+Get directions
+Judge
+Max L. Rosenberg
+Chief Clerk
+Heidi Manente
+Telephone
+(203) 385-4023
+Fax
+(203) 375-6253
+Hours
+Mon - Thurs 8:00 - 5:00, Fri 8:00 - 12:00
+Bridgeport Probate Court
+(PD-48)
+Judge
+Paul J. Ganim
+Chief Clerk
+Lydia Tejera
+Telephone
+(203) 576-3945
+Fax
+(203) 576-7898
+Hours
+Mon - Thurs 8:30 - 5:00, Fri 8:30 - 4:00
+Cities / Towns
+Bridgeport
+Bridgeport Probate Court
+(PD‑48)
+Government Center, 999 Broad Street
+Bridgeport
+,
+CT
+06604
+United States
+Get directions
+Judge
+Paul J. Ganim
+Chief Clerk
+Lydia Tejera
+Telephone
+(203) 576-3945
+Fax
+(203) 576-7898
+Hours
+Mon - Thurs 8:30 - 5:00, Fri 8:30 - 4:00
+Fairfield Probate Court
+(PD-49)
+Judge
+Katherine E. Caulfield
+Chief Clerk
+Diane Auray
+Telephone
+(203) 256-3041
+Fax
+(203) 256-3044
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Fairfield
+Fairfield Probate Court
+(PD‑49)
+Independence Hall, 725 Old Post Road
+Fairfield
+,
+CT
+06824-6684
+United States
+Get directions
+Judge
+Katherine E. Caulfield
+Chief Clerk
+Diane Auray
+Telephone
+(203) 256-3041
+Fax
+(203) 256-3044
+Hours
+Mon - Fri 8:30 - 4:30
+Westport Probate Court
+(PD-50)
+Judge
+Lisa K. Wexler
+Chief Clerk
+Audrey J. Williams
+Telephone
+(203) 341-1100
+Fax
+(203) 341-1102
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Weston
+Westport
+Westport Probate Court
+(PD‑50)
+Town Hall, 110 Myrtle Avenue, Room 100
+Westport
+,
+CT
+06880
+United States
+Get directions
+Judge
+Lisa K. Wexler
+Chief Clerk
+Audrey J. Williams
+Telephone
+(203) 341-1100
+Fax
+(203) 341-1102
+Hours
+Mon - Fri 8:30 - 4:30
+Norwalk - Wilton Probate Court
+(PD-51)
+Judge
+Douglas Stern
+Chief Clerk
+Diane K. Ely
+Telephone
+(203) 854-7737
+Fax
+(203) 854-7825
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Norwalk
+Wilton
+Norwalk - Wilton Probate Court
+(PD‑51)
+125 East Avenue
+Norwalk
+,
+CT
+06851
+United States
+Get directions
+Judge
+Douglas Stern
+Chief Clerk
+Diane K. Ely
+Telephone
+(203) 854-7737
+Fax
+(203) 854-7825
+Hours
+Mon - Fri 8:30 - 4:30
+Darien - New Canaan Probate Court
+(PD-52)
+Judge
+William P. Osterndorf
+Chief Clerk
+Shelagh Kuhsel
+Telephone
+(203) 656-7342
+Fax
+(203) 656-0774
+Hours
+Mon - Thurs 7:30 - 5:30
+Cities / Towns
+Darien
+New Canaan
+Darien - New Canaan Probate Court
+(PD‑52)
+Town Hall, 2 Renshaw Road
+Darien
+,
+CT
+06820
+United States
+Get directions
+Judge
+William P. Osterndorf
+Chief Clerk
+Shelagh Kuhsel
+Telephone
+(203) 656-7342
+Fax
+(203) 656-0774
+Hours
+Mon - Thurs 7:30 - 5:30
+Stamford Probate Court
+(PD-53)
+Judge
+Gerald M. Fox, III
+Chief Clerk
+Nelly Slocum
+Telephone
+(203) 323-2149
+Fax
+(203) 964-1830
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Stamford
+Stamford Probate Court
+(PD‑53)
+888 Washington Blvd., 8th Floor, P.O. Box 10152
+Stamford
+,
+CT
+06904-2152
+United States
+Get directions
+Judge
+Gerald M. Fox, III
+Chief Clerk
+Nelly Slocum
+Telephone
+(203) 323-2149
+Fax
+(203) 964-1830
+Hours
+Mon - Fri 8:30 - 4:30
+Greenwich Probate Court
+(PD-54)
+Judge
+David W. Hopper
+Chief Clerk
+Courtney Kane-Hayes
+Telephone
+(203) 622-7879
+Fax
+(203) 622-6451
+Hours
+Mon - Fri 8:00 - 4:00
+Cities / Towns
+Greenwich
+Greenwich Probate Court
+(PD‑54)
+101 Field Point Road, P.O. Box 2540
+Greenwich
+,
+CT
+06836-2540
+United States
+Get directions
+Judge
+David W. Hopper
+Chief Clerk
+Courtney Kane-Hayes
+Telephone
+(203) 622-7879
+Fax
+(203) 622-6451
+Hours
+Mon - Fri 8:00 - 4:00
+New Haven Regional Children's Probate Court
+(PD-55)
+Judge
+Michael R. Brandt
+Chief Clerk
+Tara Courtmanche, Esq.
+Telephone
+(203) 773-9556
+Fax
+(203) 773-9685
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+New Haven Regional Children's Probate Court
+New Haven Regional Children's Probate Court
+(PD‑55)
+873 State Street
+New Haven
+,
+CT
+06511-3923
+United States
+Get directions
+Judge
+Michael R. Brandt
+Chief Clerk
+Tara Courtmanche, Esq.
+Telephone
+(203) 773-9556
+Fax
+(203) 773-9685
+Hours
+Mon - Fri 8:30 - 4:30
+Central Connecticut Regional Children's Probate Court
+(PD-56)
+Judge
+Joseph D. Marino
+Chief Clerk
+Dalianice Del Valle
+Telephone
+(203) 235-1014
+Fax
+(203) 235-1075
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Central Connecticut Regional Children's Probate Court
+Central Connecticut Regional Children's Probate Court
+(PD‑56)
+1501 East Main Street, Suite 203
+Meriden
+,
+CT
+06450
+United States
+Get directions
+Judge
+Joseph D. Marino
+Chief Clerk
+Dalianice Del Valle
+Telephone
+(203) 235-1014
+Fax
+(203) 235-1075
+Hours
+Mon - Fri 8:30 - 4:30
+New London Regional Children's Probate Court
+(PD-57)
+Judge
+Jeffrey A. McNamara
+Chief Clerk
+Amy Cox
+Telephone
+(860) 437-6253
+Fax
+(860) 437-6259
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+New London Regional Children's Probate Court
+New London Regional Children's Probate Court
+(PD‑57)
+One Union Plaza
+New London
+,
+CT
+06320
+United States
+Get directions
+Judge
+Jeffrey A. McNamara
+Chief Clerk
+Amy Cox
+Telephone
+(860) 437-6253
+Fax
+(860) 437-6259
+Hours
+Mon - Fri 8:30 - 4:30
+Waterbury Regional Children's Probate Court
+(PD-58)
+Judge
+Fred J. Anthony
+Chief Clerk
+Sherri McPartland, Esq.
+Telephone
+(203) 573-5080
+Fax
+(203) 573-5088
+Hours
+8:30 A.M.-4:30 P.M., Mon.-Fri.
+Cities / Towns
+Waterbury Regional Children's Probate Court
+Waterbury Regional Children's Probate Court
+(PD‑58)
+65 Center Street
+Waterbury
+,
+CT
+06702
+United States
+Get directions
+Judge
+Fred J. Anthony
+Chief Clerk
+Sherri McPartland, Esq.
+Telephone
+(203) 573-5080
+Fax
+(203) 573-5088
+Hours
+8:30 A.M.-4:30 P.M., Mon.-Fri.
+Northeast Regional Children's Probate Court
+(PD-59)
+Judge
+Carolanne Rowe
+Chief Clerk
+Mary Ann Champney
+Telephone
+(860) 450-2653
+Fax
+860-450-2657
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Northeast Regional Children's Probate Court
+Northeast Regional Children's Probate Court
+(PD‑59)
+387A Tuckie Road, PO Box 205
+North Windham
+,
+CT
+06256
+United States
+Get directions
+Judge
+Carolanne Rowe
+Chief Clerk
+Mary Ann Champney
+Telephone
+(860) 450-2653
+Fax
+860-450-2657
+Hours
+Mon - Fri 8:30 - 4:30
+Hartford Regional Children's Probate Court
+(PD-60)
+Judge
+Richard P. Gentile
+Chief Clerk
+Kemston N. Best
+Telephone
+860-289-1564
+Fax
+860-289-1575
+Hours
+Mon - Fri 8:30 - 4:30
+Cities / Towns
+Hartford Regional Children's Probate Court
+Hartford Regional Children's Probate Court
+(PD‑60)
+50 Chapman Place, Suite 109
+East Hartford
+,
+CT
+06108
+United States
+Get directions
+Judge
+Richard P. Gentile
+Chief Clerk
+Kemston N. Best
+Telephone
+860-289-1564
+Fax
+860-289-1575
+Hours
+Mon - Fri 8:30 - 4:30
+Downloadable Court Directory & Maps
+Download Court Directory
+Download Map of Probate Districts
+Download Regional Locations & Courts
+Connecticut
+Probate Courts
+Trusts & Estates
+Children's Matters
+Mental Health Commitments
+Intellectual Disabilities
+Conservatorship
+Other Matters
+Office of the Probate Court Administrator
+186 Newington Road
+West Hartford, CT 06110
+Hours of Operation
+8:00am - 5:00pm
+Resource Library
+Forms
+User Guides
+Court Rules & Regulations
+Reports
+Online Tools
+Case Lookup
+Court Location Finder
+Fees & Expenses Tool
+eFiling
+eBilling
+About the Courts
+Administrator's Office
+Rules of Procedure
+Mediation Support
+Assistance for the Disabled
+News
+English
+English
+Español
+¿hablas español? Pruebe nuestra herramienta de traducción
+¿hablas español?
+Find It Fast
+Close
+Forms and Documents
+Forms
+Children's Matters
+- Adoption
+- DCF Voluntary Services
+- Emancipation
+- Guardianship of Estate
+- Guardianship of Person
+- Parentage
+- Termination of Parental Rights
+- Uniform Transfer to Minors Act (UTMA)
+Conservatorship
+Intellectual Disabilities
+Mental Health Commitments
+- Adult Commitment
+- Child Commitment
+- Drug & Alcohol Commitment
+- ElectroConvulsive Therapy
+- Involuntary Medication
+Other Matters
+- Cemetery Associations
+- Confirmation of Gender Change
+- Foreign Subpoena
+- Health Care/End of Life Disputes
+- Name Change
+- Power of Attorney
+- Protective Services for the Elderly
+- Quarantine, Isolation, Vaccination
+- Release of Financial Hold
+- Restore Rights to Purchase, Possess or Transport Firearms
+- Sterilization
+PC Form
+Trusts & Estates
+- Decedent's Estate
+- Trust
+View all forms
+Documents
+User Guides
+Reports
+Public Meetings
+Online Tools
+Case Lookup Tool
+Court Location Finder
+Fees & Expenses Tools
+eFiling
+eBilling
+Close
+(function(){ var s = document.createElement('script'); var h = document.querySelector('head') || document.body; s.src = 'https://acsbapp.com/apps/app/dist/js/app.js'; s.async = true; s.onload = function(){ acsbJS.init({ statementLink : '', footerHtml : '', hideMobile : false, hideTrigger : false, disableBgProcess : false, language : 'en', position : 'left', leadColor : '#3371e7', triggerColor : '#d8343e', triggerRadius : '50%', triggerPositionX : 'left', triggerPositionY : 'bottom', triggerIcon : 'people', triggerSize : 'medium', triggerOffsetX : 20, triggerOffsetY : 20, mobile : { triggerSize : 'small', triggerPositionX : 'right', triggerPositionY : 'bottom', triggerOffsetX : 10, triggerOffsetY : 10, triggerRadius : '50%' } }); }; h.appendChild(s); })();

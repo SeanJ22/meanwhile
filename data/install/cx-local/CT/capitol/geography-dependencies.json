@@ -1,0 +1,347 @@
+[
+  {
+    "contestId": "ct-cx-local-2026-probate-district-13",
+    "title": "Judge of Probate — Greater Manchester Probate Court (District 13)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:13",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 13 comprises Andover, Bolton, Columbia, Manchester. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 4
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-9",
+    "title": "Judge of Probate — Simsbury Regional Probate Court (District 9)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:9",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 9 comprises Avon, Canton, Granby, Simsbury. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 4
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-8",
+    "title": "Judge of Probate — Berlin Probate Court (District 8)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:8",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 8 comprises Berlin, New Britain. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 2
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-3",
+    "title": "Judge of Probate — Tobacco Valley Probate Court (District 3)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:3",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 3 comprises Bloomfield, East Granby, Suffield, Windsor Locks. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 4
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-25",
+    "title": "Judge of Probate — Tolland - Mansfield Probate Court (District 25)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:25",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 25 comprises Coventry, Mansfield, Tolland, Willington. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 4
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-5",
+    "title": "Judge of Probate — East Hartford Probate Court (District 5)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:5",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 5 comprises East Hartford. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 1
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-4",
+    "title": "Judge of Probate — Greater Windsor Probate Court (District 4)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:4",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 4 comprises East Windsor, South Windsor, Windsor. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 3
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-12",
+    "title": "Judge of Probate — Ellington Probate Court (District 12)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:12",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 12 comprises Ellington, Vernon. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 2
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-11",
+    "title": "Judge of Probate — North Central Connecticut (District 11)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:11",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 11 comprises Enfield, Somers, Stafford, Union. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 4
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-10",
+    "title": "Judge of Probate — Farmington Regional Probate Court (District 10)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:10",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 10 comprises Burlington, Farmington, Plainville. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 3
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-6",
+    "title": "Judge of Probate — Glastonbury - Hebron Probate Court (District 6)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:6",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 6 comprises Glastonbury, Hebron. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 2
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-1",
+    "title": "Judge of Probate — Hartford Probate Court (District 1)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:1",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 1 comprises Hartford. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 1
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-14",
+    "title": "Judge of Probate — Region # 14 Probate Court (District 14)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:14",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 14 comprises East Haddam, East Hampton, Marlborough, Portland. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 4
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-7",
+    "title": "Judge of Probate — Newington Probate Court (District 7)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:7",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 7 comprises Newington, Rocky Hill, Wethersfield. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 3
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-18",
+    "title": "Judge of Probate — Cheshire - Southington Probate Court (District 18)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:18",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 18 comprises Cheshire, Southington. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 2
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-2",
+    "title": "Judge of Probate — West Hartford Probate Court (District 2)",
+    "ocdId": "ocd-division/country:us/state:ct/probate_district:2",
+    "exactRegistryMatch": false,
+    "scope": "Probate District 2 comprises West Hartford. All whole-town members are included under CGS section45a-2; no planning-region electorate is substituted.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": 1
+  },
+  {
+    "contestId": "ct-cx-local-2026-berlin-registrar-of-voters",
+    "title": "Berlin — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:berlin_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Berlin electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-berlin-board-of-education",
+    "title": "Berlin — Board of Education (Non-Partisan)",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:berlin_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Berlin electorate. The field appears with the same choices on every supplied town precinct sample. This is one nonpartisan three-seat field spanning printed columns11–13; vote for up to three.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "readerBodyLink": "Town-wide board electorate is proven by all3samples. Existing Berlin School District registry body identity is available for River linkage; no unverified district boundary substitution."
+  },
+  {
+    "contestId": "ct-cx-local-2026-bloomfield-registrar-of-voters",
+    "title": "Bloomfield — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:bloomfield_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Bloomfield electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-columbia-registrar-of-voters",
+    "title": "Columbia — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:columbia_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Columbia electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-east-hartford-registrar-of-voters",
+    "title": "East Hartford — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:east_hartford_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide East Hartford electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-east-windsor-registrar-of-voters",
+    "title": "East Windsor — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:east_windsor_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide East Windsor electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-ellington-registrar-of-voters",
+    "title": "Ellington — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:ellington_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Ellington electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-enfield-registrar-of-voters",
+    "title": "Enfield — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:enfield_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Enfield electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-farmington-registrar-of-voters",
+    "title": "Farmington — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:farmington_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Farmington electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-glastonbury-registrar-of-voters",
+    "title": "Glastonbury — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:glastonbury_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Glastonbury electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-mansfield-registrar-of-voters",
+    "title": "Mansfield — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:mansfield_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Mansfield electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-marlborough-registrar-of-voters",
+    "title": "Marlborough — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:marlborough_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Marlborough electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-newington-registrar-of-voters",
+    "title": "Newington — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:newington_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Newington electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-rocky-hill-registrar-of-voters",
+    "title": "Rocky Hill — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:rocky_hill_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Rocky Hill electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-simsbury-registrar-of-voters",
+    "title": "Simsbury — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:simsbury_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Simsbury electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-somers-registrar-of-voters",
+    "title": "Somers — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:somers_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Somers electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-suffield-registrar-of-voters",
+    "title": "Suffield — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:suffield_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Suffield electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-west-hartford-registrar-of-voters",
+    "title": "West Hartford — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:west_hartford_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide West Hartford electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-windsor-registrar-of-voters",
+    "title": "Windsor — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:windsor_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Windsor electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  },
+  {
+    "contestId": "ct-cx-local-2026-windsor-locks-registrar-of-voters",
+    "title": "Windsor Locks — Registrar of Voters",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:windsor_locks_town",
+    "exactRegistryMatch": true,
+    "scope": "Town-wide Windsor Locks electorate. The field appears with the same choices on every supplied town precinct sample.",
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_JOINS",
+    "wholeTownMembershipsIncluded": null,
+    "retainedPolygonFile": "geography-source-polygons.geojson"
+  }
+]

@@ -1,0 +1,474 @@
+[
+  {
+    "sourceKey": "berlin-boe-current-reader",
+    "requestedUrl": "https://r.jina.ai/https://www.berlinct.gov/egov/apps/document/center.egov?id=7806&view=item",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:58:36.017073+00:00",
+    "sha256": "450e80754e4c1571734ea0fa50c5cc93a9dd3bbd06e48a9176b492b4193796d3",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/berlin-boe-current-reader.source"
+  },
+  {
+    "sourceKey": "berlin-charter-native",
+    "requestedUrl": "https://www.berlinct.gov/egov/documents/1663680769_35472.pdf",
+    "httpStatus": 404,
+    "retrievedAt": "2026-11-03T05:53:02.024772+00:00",
+    "sha256": "f668226f22c3ad742f4665c93313a12984ab1150335aafb05a93c947bd21c0c4",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/berlin-charter-native.source"
+  },
+  {
+    "sourceKey": "berlin-charter-reader",
+    "requestedUrl": "https://r.jina.ai/https://www.berlinct.gov/egov/documents/1663680769_35472.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:54:50.631672+00:00",
+    "sha256": "a65ee894747520525fe5df493d8a68e93a740ae8aee96d91f20a482c19049964",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/berlin-charter-reader.source"
+  },
+  {
+    "sourceKey": "candidate-list-native",
+    "requestedUrl": "https://portal.ct.gov/sots/election-services/candidate-lists-for-office/list-of-candidates",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:53:02.761855+00:00",
+    "sha256": "1edfe14efba8eadb05e5bdf4e9ca6c7e267288d407dff542cce1affa564fd259",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/candidate-list-native.source"
+  },
+  {
+    "sourceKey": "ems-public-candidates-native",
+    "requestedUrl": "https://ctemspublic.tgstg.net/Default.aspx?action=Candidates",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T05:54:47.067712+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/ems-public-candidates-native.source"
+  },
+  {
+    "sourceKey": "ems-public-candidates-reader",
+    "requestedUrl": "https://r.jina.ai/https://ctemspublic.tgstg.net/Default.aspx?action=Candidates",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:54:47.867592+00:00",
+    "sha256": "01242a18fd7adc73ee997b282135bab7d537301dfc781882fc691a913faddde1",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/ems-public-candidates-reader.source"
+  },
+  {
+    "sourceKey": "filed-candidates-native",
+    "requestedUrl": "https://portal.ct.gov/sots/election-services/candidate-lists-for-office/filed-candidates",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:53:03.036845+00:00",
+    "sha256": "244f613bf040ac9ddc6be2d837c35211e8c0a059910c58ed064e1fe5c8ecab7c",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/filed-candidates-native.source"
+  },
+  {
+    "sourceKey": "probate-court-list-native",
+    "requestedUrl": "https://www.ctprobate.gov/Documents/Region%20List.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:53.000412+00:00",
+    "sha256": "3e547cdd819f6501a1566eee8d1d9646aed6ba3d3d7d5f83f3fd5647ed0c2906",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/probate-court-list-native.source"
+  },
+  {
+    "sourceKey": "probate-law-native",
+    "requestedUrl": "https://www.cga.ct.gov/current/pub/chap_801.htm",
+    "httpStatus": 503,
+    "retrievedAt": "2026-11-03T05:47:52.554438+00:00",
+    "sha256": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/probate-law-native.source"
+  },
+  {
+    "sourceKey": "probate-law-reader",
+    "requestedUrl": "https://r.jina.ai/https://www.cga.ct.gov/current/pub/chap_801.htm",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:56.674486+00:00",
+    "sha256": "fd5337546d0b8b51694bf45bad7648114751543ba96cf426e68e8f9431dec528",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/probate-law-reader.source"
+  },
+  {
+    "sourceKey": "probate-locator-native",
+    "requestedUrl": "https://www.ctprobate.gov/court-locator",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:53.097594+00:00",
+    "sha256": "81b7d0567f8b72e2d3ccf5bee8e367b833764e4cc0807f26ccfbb22809a816b5",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/probate-locator-native.source"
+  },
+  {
+    "sourceKey": "region-member-municipalities-native",
+    "requestedUrl": "https://crcogct.gov/about/member-municipalities/",
+    "httpStatus": 404,
+    "retrievedAt": "2026-11-03T05:58:32.528953+00:00",
+    "sha256": "f36031e30250ef1a5bf4139779a8a073c41447596bd4d34b398604e0aa9a2c00",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/region-member-municipalities-native.source"
+  },
+  {
+    "sourceKey": "region-members-gov-native",
+    "requestedUrl": "https://crcogct.gov/about/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:58:32.832825+00:00",
+    "sha256": "e683adaff637d0f68dc4b79bc66bfa4c2760a982bc31a7eabdcab96af41ed580",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/region-members-gov-native.source"
+  },
+  {
+    "sourceKey": "region-members-native",
+    "requestedUrl": "https://crcog.org/about-crcog/",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T05:47:53.011570+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/region-members-native.source"
+  },
+  {
+    "sourceKey": "region-members-reader",
+    "requestedUrl": "https://r.jina.ai/https://crcog.org/about-crcog/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:54:51.035316+00:00",
+    "sha256": "ec1006e35ee67356289fb16c2fdfd70ad534e5914ad747b6aa0899d57d923edc",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/region-members-reader.source"
+  },
+  {
+    "sourceKey": "region-town-geo-native",
+    "requestedUrl": "https://gis.crcog.org/arcgis/rest/services/Boundaries/MapServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:46:23.660961+00:00",
+    "sha256": "9512580b899c6a2ad3f15f53357ed9e9acc0c8784c3eb118eabdc18b891aa8fd",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/region-town-geo-native.source"
+  },
+  {
+    "sourceKey": "region-town-meta-native",
+    "requestedUrl": "https://gis.crcog.org/arcgis/rest/services/Boundaries/MapServer/2?f=pjson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:46:21.369295+00:00",
+    "sha256": "85fd733feda23d91c1f63550e6bda580407190ab6c0abbf3c35b5e86a03ed77d",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/region-town-meta-native.source"
+  },
+  {
+    "sourceKey": "sample-andover",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/andover_sample_ada.pdf?rev=5cfdbdb54428458a95cac91cc1c81c2c&hash=2275ED2D4933F66237158C5274A4437B",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:04.696901+00:00",
+    "sha256": "afe870dad7c608bd9e05774baf05b01140ee5fadef0e6cec25bef719dfef24c6",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-andover.source"
+  },
+  {
+    "sourceKey": "sample-avon",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/avon_sample_ada.pdf?rev=deb43be221724710b3ea2659feb6cad9&hash=FF7A9481FA54109A5540070C281172E7",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:06.146241+00:00",
+    "sha256": "56580cce961ac4a541440caeb36fb46b37c5e98d9b7a9149d1dff2f6e8266e5d",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-avon.source"
+  },
+  {
+    "sourceKey": "sample-berlin",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:07.370899+00:00",
+    "sha256": "f9f02ce80ad4bec57bf07afae02d61e9ba831ee63ef1ec81b219801ca5b4e8a9",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-berlin.source"
+  },
+  {
+    "sourceKey": "sample-bloomfield",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bloomfield_sample_ada.pdf?rev=f74be64ccc7b4bb78447434eabc4d6aa&hash=E32C937F10C8242F39B7E009AB63470D",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:07.606403+00:00",
+    "sha256": "7592fef4f86e611565968250b23f279f6a2c7e2838a29ecefabe2249de7c1636",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-bloomfield.source"
+  },
+  {
+    "sourceKey": "sample-bolton",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bolton_sample_ada.pdf?rev=8ef72dba81e842adaa1f63f811565088&hash=74F10EEC959A8382E8E8AE2832BE562C",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:07.837206+00:00",
+    "sha256": "3c66a4275322fb8a3cd763f8d3067e14d63408f64155975485cca9795596859c",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-bolton.source"
+  },
+  {
+    "sourceKey": "sample-canton",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/canton-sample.pdf?rev=bd651d2005fe47cf81e44e3f975294e5&hash=56C563308D51D38510D224D15DABCD3D",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:09.119824+00:00",
+    "sha256": "c72b5b97564d447c31a2b2a6d11a8c86e96c19454c90995125a894be5390b71b",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-canton.source"
+  },
+  {
+    "sourceKey": "sample-columbia",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/columbia_sample.pdf?rev=14e9db85b3ca4260a88cb722d7ada879&hash=9E650C738A53F6AFDA57D13CD6078B77",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:08.918021+00:00",
+    "sha256": "bd08f998598d773cf130e99bb430508e2b3848c0ff69122c430fca8c4cc20c85",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-columbia.source"
+  },
+  {
+    "sourceKey": "sample-coventry",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/coventry_sample_ada.pdf?rev=860968423e1049f9a7960fc070e16dac&hash=524E8D4D3205F24F3F52AD7B1B2ED699",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:09.596106+00:00",
+    "sha256": "1aed8084ed28773c00b24b4011586dd5f4891dbb49699fa79f48d232a85feed2",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-coventry.source"
+  },
+  {
+    "sourceKey": "sample-east-granby",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east-granby_sample.pdf?rev=98c9437ab8e74d9d87a505c828146a3f&hash=FF7E1B973526D1DC7E3A3C4A1FC53FEB",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:10.634718+00:00",
+    "sha256": "920380ea04593e4f536f2b087f4a126ab5f42bd52bd96d8a1d4daa32c257b474",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-east-granby.source"
+  },
+  {
+    "sourceKey": "sample-east-hartford",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_hartford_sample_updated_ada.pdf?rev=8f44ac28d15145f1913ad45d793cf06b&hash=BA4E76A75B2C31839FADF2AF38469628",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:11.363844+00:00",
+    "sha256": "4b4983945ea3bcfb4b7caa5b8301c2a92150fc882fa77c9c123d9d535c0d6dd9",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-east-hartford.source"
+  },
+  {
+    "sourceKey": "sample-east-windsor",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_windsor_sample_ada.pdf?rev=2d961f4ab5be47cdad81e7fa05cf597b&hash=FEF2D2EEEE104E8F879042EF14E3E664",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:04.655263+00:00",
+    "sha256": "09e9d81cc0b7c3354a40b9f16e949f7b790d6189e689c9c7b4a90c4659163b26",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-east-windsor.source"
+  },
+  {
+    "sourceKey": "sample-ellington",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/ellington_sample_ada.pdf?rev=5e9d59938f5645af8f50aab8a894b996&hash=F636886DA25BC58A42A90FED51F7A909",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:07.132885+00:00",
+    "sha256": "d01562a6f9b465165060974404b896d20b610579e17b8d84ec4a2d86a22ce615",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-ellington.source"
+  },
+  {
+    "sourceKey": "sample-enfield",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/enfield_sample.pdf?rev=3757318bbe6441ce99e039ec48818e77&hash=58663D641E3430554DA0E883A395777F",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:07.665332+00:00",
+    "sha256": "3c5e0da54db0b49376703fe5816da44eecc912f57c3a04f43bec225cfcea6563",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-enfield.source"
+  },
+  {
+    "sourceKey": "sample-farmington",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/farmington_sample.pdf?rev=3287644108bb41adba1c09b2311d6423&hash=5E6AC29D970D44C0D3A603A42C434C7F",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:06.481853+00:00",
+    "sha256": "aca4d9a87235b6166e6044378d8847889e886637c4c651edc680bbe07a564f30",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-farmington.source"
+  },
+  {
+    "sourceKey": "sample-glastonbury",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/glastonbury_sample.pdf?rev=4af01e8a658743049f074879bf687b5f&hash=493DA6EBBF28F70B74BAB40D31C8395C",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:07.690022+00:00",
+    "sha256": "a76477b15fdf7288ec70d2d58b05da87a360ce881b7c93a0eecfe33916b9ba07",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-glastonbury.source"
+  },
+  {
+    "sourceKey": "sample-granby",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/granby_sample.pdf?rev=df36fdcaf4fa46969e075b2049a6b2b8&hash=3F9DA4A08ED6DC61B2155F7A0D9180CD",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:08.237423+00:00",
+    "sha256": "f79423b0cf1d4eabfc797514d1182d2425f09d034c8dd724bf8cbdb5cae091af",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-granby.source"
+  },
+  {
+    "sourceKey": "sample-hartford",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hartford_sample_ada.pdf?rev=d8f4a1a565594543a660f2851c2a7e33&hash=2250FCFA437B93EF46DF981B8BA53BA8",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:08.374328+00:00",
+    "sha256": "bd01dfdf4a93da41bd1ee6cf8b9111746864a82ce445e5c8a5efdacea82d9a8c",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-hartford.source"
+  },
+  {
+    "sourceKey": "sample-hebron",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hebron_sample_ada.pdf?rev=7fc8732486334231a9288b01356a0e4e&hash=5223A1018F32615D7F7BD5BF3C11518B",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:08.475730+00:00",
+    "sha256": "74bc21120a4907f32d659bea137b259aad8ff7143237600d3f4418d0c70b6ec8",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-hebron.source"
+  },
+  {
+    "sourceKey": "sample-index-native",
+    "requestedUrl": "https://portal.ct.gov/sots/election-services/town-ballots/2026-november-town-election-ballots",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:46:21.676043+00:00",
+    "sha256": "a466f91066b3b75a6702a5b1c4949f0203481f594c6f6179f7dbb76c4976a515",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-index-native.source"
+  },
+  {
+    "sourceKey": "sample-index-reader",
+    "requestedUrl": "https://r.jina.ai/https://portal.ct.gov/sots/election-services/town-ballots/2026-november-town-election-ballots",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:46:25.304615+00:00",
+    "sha256": "5ede0a10cc2edcacae18ae3e0d05faac8bbdaad34bf5035850ef11a3f38ca5d8",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-index-reader.source"
+  },
+  {
+    "sourceKey": "sample-manchester",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/manchester_sample_ada-(1).pdf?rev=89268b4bd2274a62b9230c67bb0300de&hash=C25F821489FD9AC520E18EB539EB0B72",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:09.887691+00:00",
+    "sha256": "2f99e2b283733bd895d489c96dfd2df107d716738ae71ab8673e9ed5de372991",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-manchester.source"
+  },
+  {
+    "sourceKey": "sample-mansfield",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/mansfield_sample.pdf?rev=18f1e18aa4b8400092e2c38236b3317c&hash=8A8AA7B7AC5DFF85693E2396516B6BE0",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:10.308859+00:00",
+    "sha256": "d5696f8a153d1762bca7d88f33833f60a7d89ca8b9e564e2f47d652e50760124",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-mansfield.source"
+  },
+  {
+    "sourceKey": "sample-marlborough",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/marlborough_sample.pdf?rev=891a463f33c14b798b91c7910d1da1a3&hash=5F8EC2C5D678C71FC257DEC6437A2735",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:10.482820+00:00",
+    "sha256": "16b00789c547224fc4fbfbedfffb4d29f364bac09f98adab8c01994f6ac8590c",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-marlborough.source"
+  },
+  {
+    "sourceKey": "sample-new-britain",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/new_britain_sample_ada.pdf?rev=8020fdb826da487282a364240352b86f&hash=A295C6FAAC08B5EE60A62B9AD8480515",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:05.488006+00:00",
+    "sha256": "44fd5f154d843dde592be2193c9f4a21ab7cb16ca3578f1d9370c02aeabc609b",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-new-britain.source"
+  },
+  {
+    "sourceKey": "sample-newington",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/newington_sample_ada.pdf?rev=c661065a2f064183836d49a4099fc586&hash=D9F7B0B72EC9DF79D13D8C0603260AFD",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:06.992269+00:00",
+    "sha256": "9b396d8bc35fbca505bf094b0c27967c0952e0b09ae711b65895f43e1f2ca9f6",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-newington.source"
+  },
+  {
+    "sourceKey": "sample-plainville",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/plainville_sample_ada.pdf?rev=2c81f1917a224e1b8919ca7e79daf2f6&hash=17797789BA422A4885A6584B0FDA24FB",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:08.750176+00:00",
+    "sha256": "3c7cbf1a040b8dc4a20756144e2b47786214e680010b7828443c65985e77c211",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-plainville.source"
+  },
+  {
+    "sourceKey": "sample-rocky-hill",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/rocky-hill_sample.pdf?rev=ccf5b9e6713c43d8b2fa1de0580feaac&hash=2F9C64C90A2696BCB45A9C729BF8AE96",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:10.896832+00:00",
+    "sha256": "5d3261c75bb785a79c7674152f886889a5f0de9cb5f2c490a9287e9c7c24e6e1",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-rocky-hill.source"
+  },
+  {
+    "sourceKey": "sample-simsbury",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/simsbury-sample.pdf?rev=7807760a6eb4430f9f8f11ef30e44f9a&hash=545639178209DD255D2963ED8DF20A14",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:10.927073+00:00",
+    "sha256": "dc109b0637ddeb03c94c86461beac8b6d672d4addec6ca61f5a41c5e4dc4ccd1",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-simsbury.source"
+  },
+  {
+    "sourceKey": "sample-somers",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/somers_sample.pdf?rev=2a7ab068bcc4476387c974e6720cfa84&hash=3DFEEEE74E96F5AFF94DA7C6AA4FB909",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:10.894559+00:00",
+    "sha256": "bea5884995d9e82e292ddb0614e90d54f82541e419b7c2d2a7140c0da8117dbb",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-somers.source"
+  },
+  {
+    "sourceKey": "sample-south-windsor",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/south-windsor-sample.pdf?rev=9213ff261dc7412ca389a9dd45e8fe9f&hash=3075A75CA3E24FEBA60D9E6881605A46",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:04.278874+00:00",
+    "sha256": "86b2642d046a5de67a2381ce07e67d7dcb232a7e8de5ec0fe6ccbd3894481689",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-south-windsor.source"
+  },
+  {
+    "sourceKey": "sample-southington",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/southington_sample_ada.pdf?rev=806962a856aa4e85937650e625749dee&hash=5413508FDF3644F6DC7C7422B1E5EE77",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:05.140272+00:00",
+    "sha256": "5d3d766c6db37ca48aedae05487fc42d0021695d261e089427364ad7501f952f",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-southington.source"
+  },
+  {
+    "sourceKey": "sample-stafford",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/stafford-sample.pdf?rev=da945c4ce5ed4f598305b03c37be8831&hash=B4E2976B40D885D27D6C0D44BDEBD782",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:05.959241+00:00",
+    "sha256": "780d137b5177aafb837027e7d0b29c413bdab23a648aa5c2ff3800c6966dd894",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-stafford.source"
+  },
+  {
+    "sourceKey": "sample-suffield",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/suffield_sample_ada.pdf?rev=3f97bd4540c34cdc99faab712b7f6be7&hash=F9D19B4913FC797D52E81043AFE61ED2",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:08.002550+00:00",
+    "sha256": "7059920f4fa6edad3de3070169c4b4cb3e67886d83ad04fa03e8848364f0a0de",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-suffield.source"
+  },
+  {
+    "sourceKey": "sample-tolland",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/tolland-sample.pdf?rev=2c6a2eb368bc42ada15f224b7bffabcc&hash=6364DAEBA1AE1C149CC7CC825FF4E08F",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:09.241726+00:00",
+    "sha256": "776ae1f4b5e782f0b5326276b6e5388813328f0e87ffcfd854c448b3193b79c8",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-tolland.source"
+  },
+  {
+    "sourceKey": "sample-vernon",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/vernon_sample.pdf?rev=55d0dce621ce4e91b63145c4b5e489d6&hash=7515179CFB09DC7E7B3B03848343472B",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:08.114004+00:00",
+    "sha256": "fa92fff1729c3c36363fa21b7e8588902922c1d3863e6dbfbf2d952e91f8f531",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-vernon.source"
+  },
+  {
+    "sourceKey": "sample-west-hartford",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/west_hartford_sample_ada.pdf?rev=5f05cfb322124a8983c68d84ee8ae3cf&hash=CAB6415BF5808F69E0627084B9C386E5",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:09.184676+00:00",
+    "sha256": "80387bf6b2fbad7a6e030fd5178a30cb6fab6b0c77f7fdc0f73091eab1e531e9",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-west-hartford.source"
+  },
+  {
+    "sourceKey": "sample-wethersfield",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/wethersfield_sample_ada.pdf?rev=5d645e1482d641eaaa5c0aa8db4b1472&hash=6988E4F9DD07917668513E738C23ADC6",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:09.437054+00:00",
+    "sha256": "c2826b27a6f6937ddefed5212aaeda102605d7e1ac001d64e08176a49785b216",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-wethersfield.source"
+  },
+  {
+    "sourceKey": "sample-willington",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/willington_sample_ada.pdf?rev=54ce6864e8014b608f996efdefe59053&hash=79EDC7D1727557EDEFFAB86491AA6B2D",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:10.009392+00:00",
+    "sha256": "0fc5d3a3b4d0dc01ea884aba3eb21b0d35aa7fe92024a1691f3d4e432d01bf74",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-willington.source"
+  },
+  {
+    "sourceKey": "sample-windsor-locks",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_locks_sample_updated_ada.pdf?rev=8027256fe7f34bd4b35f31db83bf40a7&hash=800700EB56671524D688DEFBBD8B0D4D",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:10.304063+00:00",
+    "sha256": "074554439c1057e2432168a720088504170633a9bc1deb56d8c83657c6872a51",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-windsor-locks.source"
+  },
+  {
+    "sourceKey": "sample-windsor",
+    "requestedUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_sample_ada.pdf?rev=bedc995f02a44da9a4bcf07cfe455ed8&hash=4B6B8EE8A1D429275F6063DFDE6EAC86",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:10.136875+00:00",
+    "sha256": "e5256cef034ee500e63f1fb58d7813bee71ce1fab7a19a39fc30fd712a47f218",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/sample-windsor.source"
+  },
+  {
+    "sourceKey": "state-candidate-index-native",
+    "requestedUrl": "https://portal.ct.gov/sots/election-services/candidate-lists-for-office",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:47:52.522740+00:00",
+    "sha256": "8cc4183b0b36af2a530870ee4fe8933b24c09d749e1b27865f75ff7cbee0cf93",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/state-candidate-index-native.source"
+  },
+  {
+    "sourceKey": "writein-index-native",
+    "requestedUrl": "https://portal.ct.gov/sots/election-services/write-in-candidates/write-in-application",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:53:02.778377+00:00",
+    "sha256": "f1b613b1584df5dd04759a5eb64c6c356988fabdcc2164f57710e35ee919352e",
+    "scratchSourceFile": "/workspace/cx-local-work/capitol-ct/writein-index-native.source"
+  }
+]

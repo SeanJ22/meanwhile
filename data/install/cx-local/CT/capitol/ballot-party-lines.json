@@ -1,0 +1,840 @@
+[
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-13:thomas-a-robinson",
+    "contestId": "ct-cx-local-2026-probate-district-13",
+    "name": "Thomas A. Robinson",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/andover_sample_ada.pdf?rev=5cfdbdb54428458a95cac91cc1c81c2c&hash=2275ED2D4933F66237158C5274A4437B",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-9:david-c-shepard",
+    "contestId": "ct-cx-local-2026-probate-district-9",
+    "name": "David C. Shepard",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/avon_sample_ada.pdf?rev=deb43be221724710b3ea2659feb6cad9&hash=FF7A9481FA54109A5540070C281172E7",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-8:william-c-rivera",
+    "contestId": "ct-cx-local-2026-probate-district-8",
+    "name": "William C. Rivera",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-8:paul-thomas-edwards-sr",
+    "contestId": "ct-cx-local-2026-probate-district-8",
+    "name": "Paul Thomas Edwards, Sr.",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "9B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-3:daniel-n-mara",
+    "contestId": "ct-cx-local-2026-probate-district-3",
+    "name": "Daniel N. Mara",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bloomfield_sample_ada.pdf?rev=f74be64ccc7b4bb78447434eabc4d6aa&hash=E32C937F10C8242F39B7E009AB63470D",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-3:mark-e-blackaby",
+    "contestId": "ct-cx-local-2026-probate-district-3",
+    "name": "Mark E. Blackaby",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "9B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bloomfield_sample_ada.pdf?rev=f74be64ccc7b4bb78447434eabc4d6aa&hash=E32C937F10C8242F39B7E009AB63470D",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-25:sophia-h-shaikh",
+    "contestId": "ct-cx-local-2026-probate-district-25",
+    "name": "Sophia H. Shaikh",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/coventry_sample_ada.pdf?rev=860968423e1049f9a7960fc070e16dac&hash=524E8D4D3205F24F3F52AD7B1B2ED699",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-5:richard-p-gentile",
+    "contestId": "ct-cx-local-2026-probate-district-5",
+    "name": "Richard P. Gentile",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_hartford_sample_updated_ada.pdf?rev=8f44ac28d15145f1913ad45d793cf06b&hash=BA4E76A75B2C31839FADF2AF38469628",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-4:mary-c-deneen",
+    "contestId": "ct-cx-local-2026-probate-district-4",
+    "name": "Mary C. Deneen",
+    "printedPartyLines": [
+      "Democratic Party",
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "9A",
+      "9B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_windsor_sample_ada.pdf?rev=2d961f4ab5be47cdad81e7fa05cf597b&hash=FEF2D2EEEE104E8F879042EF14E3E664",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-12:elisa-h-bartlett",
+    "contestId": "ct-cx-local-2026-probate-district-12",
+    "name": "Elisa H. Bartlett",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/ellington_sample_ada.pdf?rev=5e9d59938f5645af8f50aab8a894b996&hash=F636886DA25BC58A42A90FED51F7A909",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-11:carolyn-mccaffrey",
+    "contestId": "ct-cx-local-2026-probate-district-11",
+    "name": "Carolyn McCaffrey",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "9B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/enfield_sample.pdf?rev=3757318bbe6441ce99e039ec48818e77&hash=58663D641E3430554DA0E883A395777F",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-10:paul-r-bedard",
+    "contestId": "ct-cx-local-2026-probate-district-10",
+    "name": "Paul R. Bedard",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/farmington_sample.pdf?rev=3287644108bb41adba1c09b2311d6423&hash=5E6AC29D970D44C0D3A603A42C434C7F",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-6:sean-michael-peoples",
+    "contestId": "ct-cx-local-2026-probate-district-6",
+    "name": "Sean Michael Peoples",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/glastonbury_sample.pdf?rev=4af01e8a658743049f074879bf687b5f&hash=493DA6EBBF28F70B74BAB40D31C8395C",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-1:foye-a-smith",
+    "contestId": "ct-cx-local-2026-probate-district-1",
+    "name": "Foye A Smith",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hartford_sample_ada.pdf?rev=d8f4a1a565594543a660f2851c2a7e33&hash=2250FCFA437B93EF46DF981B8BA53BA8",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-14:mark-alan-balaban",
+    "contestId": "ct-cx-local-2026-probate-district-14",
+    "name": "Mark Alan Balaban",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/marlborough_sample.pdf?rev=891a463f33c14b798b91c7910d1da1a3&hash=5F8EC2C5D678C71FC257DEC6437A2735",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-7:robert-a-randich",
+    "contestId": "ct-cx-local-2026-probate-district-7",
+    "name": "Robert A. Randich",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/newington_sample_ada.pdf?rev=c661065a2f064183836d49a4099fc586&hash=D9F7B0B72EC9DF79D13D8C0603260AFD",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-7:julie-costello",
+    "contestId": "ct-cx-local-2026-probate-district-7",
+    "name": "Julie Costello",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "9B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/newington_sample_ada.pdf?rev=c661065a2f064183836d49a4099fc586&hash=D9F7B0B72EC9DF79D13D8C0603260AFD",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-18:matt-jalowiec",
+    "contestId": "ct-cx-local-2026-probate-district-18",
+    "name": "Matt Jalowiec",
+    "printedPartyLines": [
+      "Democratic Party",
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "9A",
+      "9B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/southington_sample_ada.pdf?rev=806962a856aa4e85937650e625749dee&hash=5413508FDF3644F6DC7C7422B1E5EE77",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-probate-district-2:owen-p-eagan",
+    "contestId": "ct-cx-local-2026-probate-district-2",
+    "name": "Owen P. Eagan",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "9A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/west_hartford_sample_ada.pdf?rev=5f05cfb322124a8983c68d84ee8ae3cf&hash=CAB6415BF5808F69E0627084B9C386E5",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-berlin-registrar-of-voters:christy-miano",
+    "contestId": "ct-cx-local-2026-berlin-registrar-of-voters",
+    "name": "Christy Miano",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-berlin-registrar-of-voters:joan-veley",
+    "contestId": "ct-cx-local-2026-berlin-registrar-of-voters",
+    "name": "Joan Veley",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-berlin-board-of-education:megan-a-pelloth",
+    "contestId": "ct-cx-local-2026-berlin-board-of-education",
+    "name": "Megan A. Pelloth",
+    "printedPartyLines": [],
+    "printedBallotCells": [
+      "11F"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-berlin-board-of-education:jennifer-anne-jurgen",
+    "contestId": "ct-cx-local-2026-berlin-board-of-education",
+    "name": "Jennifer Anne Jurgen",
+    "printedPartyLines": [],
+    "printedBallotCells": [
+      "12F"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-berlin-board-of-education:brian-michael-delude",
+    "contestId": "ct-cx-local-2026-berlin-board-of-education",
+    "name": "Brian Michael Delude",
+    "printedPartyLines": [],
+    "printedBallotCells": [
+      "13F"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-bloomfield-registrar-of-voters:jennifer-a-marshall-nealy",
+    "contestId": "ct-cx-local-2026-bloomfield-registrar-of-voters",
+    "name": "Jennifer A. Marshall-Nealy",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bloomfield_sample_ada.pdf?rev=f74be64ccc7b4bb78447434eabc4d6aa&hash=E32C937F10C8242F39B7E009AB63470D",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-bloomfield-registrar-of-voters:robert-ike",
+    "contestId": "ct-cx-local-2026-bloomfield-registrar-of-voters",
+    "name": "Robert Ike",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bloomfield_sample_ada.pdf?rev=f74be64ccc7b4bb78447434eabc4d6aa&hash=E32C937F10C8242F39B7E009AB63470D",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-columbia-registrar-of-voters:nelisa-field-reagan",
+    "contestId": "ct-cx-local-2026-columbia-registrar-of-voters",
+    "name": "Nelisa Field Reagan",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/columbia_sample.pdf?rev=14e9db85b3ca4260a88cb722d7ada879&hash=9E650C738A53F6AFDA57D13CD6078B77",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-columbia-registrar-of-voters:gayle-mulligan",
+    "contestId": "ct-cx-local-2026-columbia-registrar-of-voters",
+    "name": "Gayle Mulligan",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/columbia_sample.pdf?rev=14e9db85b3ca4260a88cb722d7ada879&hash=9E650C738A53F6AFDA57D13CD6078B77",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-east-hartford-registrar-of-voters:veronica-rosario",
+    "contestId": "ct-cx-local-2026-east-hartford-registrar-of-voters",
+    "name": "Veronica Rosario",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_hartford_sample_updated_ada.pdf?rev=8f44ac28d15145f1913ad45d793cf06b&hash=BA4E76A75B2C31839FADF2AF38469628",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-east-hartford-registrar-of-voters:mary-j-mourey",
+    "contestId": "ct-cx-local-2026-east-hartford-registrar-of-voters",
+    "name": "Mary J. Mourey",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_hartford_sample_updated_ada.pdf?rev=8f44ac28d15145f1913ad45d793cf06b&hash=BA4E76A75B2C31839FADF2AF38469628",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-east-windsor-registrar-of-voters:denise-menard",
+    "contestId": "ct-cx-local-2026-east-windsor-registrar-of-voters",
+    "name": "Denise Menard",
+    "printedPartyLines": [
+      "Petitioning Candidate"
+    ],
+    "printedBallotCells": [
+      "10F"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_windsor_sample_ada.pdf?rev=2d961f4ab5be47cdad81e7fa05cf597b&hash=FEF2D2EEEE104E8F879042EF14E3E664",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-east-windsor-registrar-of-voters:michael-j-kowalski",
+    "contestId": "ct-cx-local-2026-east-windsor-registrar-of-voters",
+    "name": "Michael J. Kowalski",
+    "printedPartyLines": [
+      "Petitioning Candidate"
+    ],
+    "printedBallotCells": [
+      "10G"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_windsor_sample_ada.pdf?rev=2d961f4ab5be47cdad81e7fa05cf597b&hash=FEF2D2EEEE104E8F879042EF14E3E664",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-ellington-registrar-of-voters:joann-scott",
+    "contestId": "ct-cx-local-2026-ellington-registrar-of-voters",
+    "name": "Joann Scott",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/ellington_sample_ada.pdf?rev=5e9d59938f5645af8f50aab8a894b996&hash=F636886DA25BC58A42A90FED51F7A909",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-ellington-registrar-of-voters:jennifer-dzen",
+    "contestId": "ct-cx-local-2026-ellington-registrar-of-voters",
+    "name": "Jennifer Dzen",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/ellington_sample_ada.pdf?rev=5e9d59938f5645af8f50aab8a894b996&hash=F636886DA25BC58A42A90FED51F7A909",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-enfield-registrar-of-voters:beth-jerez",
+    "contestId": "ct-cx-local-2026-enfield-registrar-of-voters",
+    "name": "Beth Jerez",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/enfield_sample.pdf?rev=3757318bbe6441ce99e039ec48818e77&hash=58663D641E3430554DA0E883A395777F",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-enfield-registrar-of-voters:thomas-kienzler",
+    "contestId": "ct-cx-local-2026-enfield-registrar-of-voters",
+    "name": "Thomas Kienzler",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/enfield_sample.pdf?rev=3757318bbe6441ce99e039ec48818e77&hash=58663D641E3430554DA0E883A395777F",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-farmington-registrar-of-voters:beth-kintner",
+    "contestId": "ct-cx-local-2026-farmington-registrar-of-voters",
+    "name": "Beth Kintner",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/farmington_sample.pdf?rev=3287644108bb41adba1c09b2311d6423&hash=5E6AC29D970D44C0D3A603A42C434C7F",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-farmington-registrar-of-voters:ann-newbury",
+    "contestId": "ct-cx-local-2026-farmington-registrar-of-voters",
+    "name": "Ann Newbury",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/farmington_sample.pdf?rev=3287644108bb41adba1c09b2311d6423&hash=5E6AC29D970D44C0D3A603A42C434C7F",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-glastonbury-registrar-of-voters:beth-lundy",
+    "contestId": "ct-cx-local-2026-glastonbury-registrar-of-voters",
+    "name": "Beth Lundy",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/glastonbury_sample.pdf?rev=4af01e8a658743049f074879bf687b5f&hash=493DA6EBBF28F70B74BAB40D31C8395C",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-glastonbury-registrar-of-voters:lisbeth-becker",
+    "contestId": "ct-cx-local-2026-glastonbury-registrar-of-voters",
+    "name": "Lisbeth Becker",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/glastonbury_sample.pdf?rev=4af01e8a658743049f074879bf687b5f&hash=493DA6EBBF28F70B74BAB40D31C8395C",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-mansfield-registrar-of-voters:ronald-manizza",
+    "contestId": "ct-cx-local-2026-mansfield-registrar-of-voters",
+    "name": "Ronald Manizza",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/mansfield_sample.pdf?rev=18f1e18aa4b8400092e2c38236b3317c&hash=8A8AA7B7AC5DFF85693E2396516B6BE0",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-mansfield-registrar-of-voters:alfred-e-fratoni",
+    "contestId": "ct-cx-local-2026-mansfield-registrar-of-voters",
+    "name": "Alfred E. Fratoni",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/mansfield_sample.pdf?rev=18f1e18aa4b8400092e2c38236b3317c&hash=8A8AA7B7AC5DFF85693E2396516B6BE0",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-marlborough-registrar-of-voters:sandra-cameron-adams",
+    "contestId": "ct-cx-local-2026-marlborough-registrar-of-voters",
+    "name": "Sandra Cameron-Adams",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/marlborough_sample.pdf?rev=891a463f33c14b798b91c7910d1da1a3&hash=5F8EC2C5D678C71FC257DEC6437A2735",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-marlborough-registrar-of-voters:michele-anne-kacy",
+    "contestId": "ct-cx-local-2026-marlborough-registrar-of-voters",
+    "name": "Michele Anne Kacy",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/marlborough_sample.pdf?rev=891a463f33c14b798b91c7910d1da1a3&hash=5F8EC2C5D678C71FC257DEC6437A2735",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-newington-registrar-of-voters:jennifer-b-sehmi",
+    "contestId": "ct-cx-local-2026-newington-registrar-of-voters",
+    "name": "Jennifer B. Sehmi",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/newington_sample_ada.pdf?rev=c661065a2f064183836d49a4099fc586&hash=D9F7B0B72EC9DF79D13D8C0603260AFD",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-newington-registrar-of-voters:theresa-norine-claffey-avey",
+    "contestId": "ct-cx-local-2026-newington-registrar-of-voters",
+    "name": "Theresa Norine Claffey Avey",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/newington_sample_ada.pdf?rev=c661065a2f064183836d49a4099fc586&hash=D9F7B0B72EC9DF79D13D8C0603260AFD",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-rocky-hill-registrar-of-voters:phillip-theroux",
+    "contestId": "ct-cx-local-2026-rocky-hill-registrar-of-voters",
+    "name": "Phillip Theroux",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/rocky-hill_sample.pdf?rev=ccf5b9e6713c43d8b2fa1de0580feaac&hash=2F9C64C90A2696BCB45A9C729BF8AE96",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-rocky-hill-registrar-of-voters:thomas-pugliese",
+    "contestId": "ct-cx-local-2026-rocky-hill-registrar-of-voters",
+    "name": "Thomas Pugliese",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/rocky-hill_sample.pdf?rev=ccf5b9e6713c43d8b2fa1de0580feaac&hash=2F9C64C90A2696BCB45A9C729BF8AE96",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-simsbury-registrar-of-voters:karen-e-cortes",
+    "contestId": "ct-cx-local-2026-simsbury-registrar-of-voters",
+    "name": "Karen E. Cortes",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/simsbury-sample.pdf?rev=7807760a6eb4430f9f8f11ef30e44f9a&hash=545639178209DD255D2963ED8DF20A14",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-simsbury-registrar-of-voters:jennifer-batchelar",
+    "contestId": "ct-cx-local-2026-simsbury-registrar-of-voters",
+    "name": "Jennifer Batchelar",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/simsbury-sample.pdf?rev=7807760a6eb4430f9f8f11ef30e44f9a&hash=545639178209DD255D2963ED8DF20A14",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-somers-registrar-of-voters:joseph-robidoux",
+    "contestId": "ct-cx-local-2026-somers-registrar-of-voters",
+    "name": "Joseph Robidoux",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/somers_sample.pdf?rev=2a7ab068bcc4476387c974e6720cfa84&hash=3DFEEEE74E96F5AFF94DA7C6AA4FB909",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-somers-registrar-of-voters:david-p-mccaffrey",
+    "contestId": "ct-cx-local-2026-somers-registrar-of-voters",
+    "name": "David P. McCaffrey",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/somers_sample.pdf?rev=2a7ab068bcc4476387c974e6720cfa84&hash=3DFEEEE74E96F5AFF94DA7C6AA4FB909",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-suffield-registrar-of-voters:darlene-fahey-burrell",
+    "contestId": "ct-cx-local-2026-suffield-registrar-of-voters",
+    "name": "Darlene Fahey Burrell",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/suffield_sample_ada.pdf?rev=3f97bd4540c34cdc99faab712b7f6be7&hash=F9D19B4913FC797D52E81043AFE61ED2",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-suffield-registrar-of-voters:laura-brady",
+    "contestId": "ct-cx-local-2026-suffield-registrar-of-voters",
+    "name": "Laura Brady",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/suffield_sample_ada.pdf?rev=3f97bd4540c34cdc99faab712b7f6be7&hash=F9D19B4913FC797D52E81043AFE61ED2",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-west-hartford-registrar-of-voters:elizabeth-rousseau",
+    "contestId": "ct-cx-local-2026-west-hartford-registrar-of-voters",
+    "name": "Elizabeth Rousseau",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/west_hartford_sample_ada.pdf?rev=5f05cfb322124a8983c68d84ee8ae3cf&hash=CAB6415BF5808F69E0627084B9C386E5",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-west-hartford-registrar-of-voters:beth-kyle",
+    "contestId": "ct-cx-local-2026-west-hartford-registrar-of-voters",
+    "name": "Beth Kyle",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/west_hartford_sample_ada.pdf?rev=5f05cfb322124a8983c68d84ee8ae3cf&hash=CAB6415BF5808F69E0627084B9C386E5",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-windsor-registrar-of-voters:jillian-a-brimecombe",
+    "contestId": "ct-cx-local-2026-windsor-registrar-of-voters",
+    "name": "Jillian A. Brimecombe",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_sample_ada.pdf?rev=bedc995f02a44da9a4bcf07cfe455ed8&hash=4B6B8EE8A1D429275F6063DFDE6EAC86",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-windsor-registrar-of-voters:victoria-virgo-christie",
+    "contestId": "ct-cx-local-2026-windsor-registrar-of-voters",
+    "name": "Victoria Virgo-Christie",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_sample_ada.pdf?rev=bedc995f02a44da9a4bcf07cfe455ed8&hash=4B6B8EE8A1D429275F6063DFDE6EAC86",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-windsor-locks-registrar-of-voters:suzanne-o-brien",
+    "contestId": "ct-cx-local-2026-windsor-locks-registrar-of-voters",
+    "name": "Suzanne O'Brien",
+    "printedPartyLines": [
+      "Democratic Party"
+    ],
+    "printedBallotCells": [
+      "10A"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_locks_sample_updated_ada.pdf?rev=8027256fe7f34bd4b35f31db83bf40a7&hash=800700EB56671524D688DEFBBD8B0D4D",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  },
+  {
+    "candidateId": "ct-cx-local-2026-windsor-locks-registrar-of-voters:jennifer-juszczynski",
+    "contestId": "ct-cx-local-2026-windsor-locks-registrar-of-voters",
+    "name": "Jennifer Juszczynski",
+    "printedPartyLines": [
+      "Republican Party"
+    ],
+    "printedBallotCells": [
+      "10B"
+    ],
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_locks_sample_updated_ada.pdf?rev=8027256fe7f34bd4b35f31db83bf40a7&hash=800700EB56671524D688DEFBBD8B0D4D",
+    "sourcePage": 1,
+    "note": "One person per office; cross-endorsement retains every printed party line. A blank write-in cell is not a person."
+  }
+]

@@ -1,0 +1,663 @@
+PAGE 1 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.36243743896483]
+9 
+Judge of 
+Probate 
+Vote for One
+9A
+Paul R.
+Bedard
+9E
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+State of Connecticut 
+Official Ballot
+Plainville, Connecticut
+State Election
+November 3, 2026
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 5 
+Senatorial District 31 
+Assembly District 22 
+Voting District 1
+Office
+Party
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One
+2 
+Representative 
+in Congress 
+Vote for One
+3 
+State Senator 
+Vote for One
+4 
+State 
+Representative 
+Vote for One
+5 
+Secretary of 
+the State 
+Vote for One
+6 
+Treasurer 
+Vote for One
+7 
+Comptroller 
+Vote for One
+8 
+Attorney 
+General 
+Vote for One
+9 
+Judge of 
+Probate 
+Vote for One
+Democratic
+Party
+1A
+Ned Lamont and
+Susan Bysiewicz
+2A
+Jahana
+Hayes
+3A
+Laurel
+LaPorte-Grimes
+4A
+Rebecca
+Martinez
+5A
+Stephanie
+Thomas
+6A
+Erick
+Russell
+7A
+Sean
+Scanlon
+8A
+William
+Tong
+9A
+Paul R.
+Bedard
+Republican
+Party
+1B
+Ryan Fazio and
+Matt Corey
+2B
+Chris
+Shea
+3B
+Henri
+Martin
+4B
+Richard
+Mette
+5B
+Peter
+Lumaj
+6B
+Fred
+Wilms
+7B
+Jennifer S.
+Tooker
+8B
+John
+Bolton
+Working 
+Families Party
+1C
+Ned Lamont and
+Susan Bysiewicz
+2C
+Jahana
+Hayes
+4C
+Rebecca
+Martinez
+5C
+Stephanie
+Thomas
+6C
+Erick
+Russell
+7C
+Sean
+Scanlon
+8C
+William
+Tong
+Independent
+Party
+1D
+Ryan Fazio and
+Matt Corey
+4D
+Richard
+Mette
+5D
+Stephanie
+Thomas
+6D
+Fred
+Wilms
+7D
+Sean
+Scanlon
+Write-in Votes
+1E
+2E
+3E
+4E
+5E
+6E
+7E
+8E
+9E
+
+
+PAGE 2 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.36243743896483]
+9 
+Judge of 
+Probate 
+Vote for One
+9A
+Paul R.
+Bedard
+9E
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Plainville, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 5 
+Senatorial District 31 
+Assembly District 22 
+Voting District 2
+Office
+Party
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One
+2 
+Representative 
+in Congress 
+Vote for One
+3 
+State Senator 
+Vote for One
+4 
+State 
+Representative 
+Vote for One
+5 
+Secretary of 
+the State 
+Vote for One
+6 
+Treasurer 
+Vote for One
+7 
+Comptroller 
+Vote for One
+8 
+Attorney 
+General 
+Vote for One
+9 
+Judge of 
+Probate 
+Vote for One
+Democratic
+Party
+1A
+Ned Lamont and
+Susan Bysiewicz
+2A
+Jahana
+Hayes
+3A
+Laurel
+LaPorte-Grimes
+4A
+Rebecca
+Martinez
+5A
+Stephanie
+Thomas
+6A
+Erick
+Russell
+7A
+Sean
+Scanlon
+8A
+William
+Tong
+9A
+Paul R.
+Bedard
+Republican
+Party
+1B
+Ryan Fazio and
+Matt Corey
+2B
+Chris
+Shea
+3B
+Henri
+Martin
+4B
+Richard
+Mette
+5B
+Peter
+Lumaj
+6B
+Fred
+Wilms
+7B
+Jennifer S.
+Tooker
+8B
+John
+Bolton
+Working 
+Families Party
+1C
+Ned Lamont and
+Susan Bysiewicz
+2C
+Jahana
+Hayes
+4C
+Rebecca
+Martinez
+5C
+Stephanie
+Thomas
+6C
+Erick
+Russell
+7C
+Sean
+Scanlon
+8C
+William
+Tong
+Independent
+Party
+1D
+Ryan Fazio and
+Matt Corey
+4D
+Richard
+Mette
+5D
+Stephanie
+Thomas
+6D
+Fred
+Wilms
+7D
+Sean
+Scanlon
+Write-in Votes
+1E
+2E
+3E
+4E
+5E
+6E
+7E
+8E
+9E
+Sample Ballot
+
+
+PAGE 3 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.36243743896483]
+9 
+Judge of 
+Probate 
+Vote for One
+9A
+Paul R.
+Bedard
+9E
+
+PAGE 3 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Plainville, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 5 
+Senatorial District 31 
+Assembly District 22 
+Voting District 3
+Office
+Party
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One
+2 
+Representative 
+in Congress 
+Vote for One
+3 
+State Senator 
+Vote for One
+4 
+State 
+Representative 
+Vote for One
+5 
+Secretary of 
+the State 
+Vote for One
+6 
+Treasurer 
+Vote for One
+7 
+Comptroller 
+Vote for One
+8 
+Attorney 
+General 
+Vote for One
+9 
+Judge of 
+Probate 
+Vote for One
+Democratic
+Party
+1A
+Ned Lamont and
+Susan Bysiewicz
+2A
+Jahana
+Hayes
+3A
+Laurel
+LaPorte-Grimes
+4A
+Rebecca
+Martinez
+5A
+Stephanie
+Thomas
+6A
+Erick
+Russell
+7A
+Sean
+Scanlon
+8A
+William
+Tong
+9A
+Paul R.
+Bedard
+Republican
+Party
+1B
+Ryan Fazio and
+Matt Corey
+2B
+Chris
+Shea
+3B
+Henri
+Martin
+4B
+Richard
+Mette
+5B
+Peter
+Lumaj
+6B
+Fred
+Wilms
+7B
+Jennifer S.
+Tooker
+8B
+John
+Bolton
+Working 
+Families Party
+1C
+Ned Lamont and
+Susan Bysiewicz
+2C
+Jahana
+Hayes
+4C
+Rebecca
+Martinez
+5C
+Stephanie
+Thomas
+6C
+Erick
+Russell
+7C
+Sean
+Scanlon
+8C
+William
+Tong
+Independent
+Party
+1D
+Ryan Fazio and
+Matt Corey
+4D
+Richard
+Mette
+5D
+Stephanie
+Thomas
+6D
+Fred
+Wilms
+7D
+Sean
+Scanlon
+Write-in Votes
+1E
+2E
+3E
+4E
+5E
+6E
+7E
+8E
+9E
+Sample Ballot
+
+
+PAGE 4 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.36243743896483]
+9 
+Judge of 
+Probate 
+Vote for One
+9A
+Paul R.
+Bedard
+9E
+
+PAGE 4 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Plainville, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Sheet 1 of 1
+Congressional District 5 
+Senatorial District 31 
+Assembly District 22 
+Voting District 4
+Office
+Party
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One
+2 
+Representative 
+in Congress 
+Vote for One
+3 
+State Senator 
+Vote for One
+4 
+State 
+Representative 
+Vote for One
+5 
+Secretary of 
+the State 
+Vote for One
+6 
+Treasurer 
+Vote for One
+7 
+Comptroller 
+Vote for One
+8 
+Attorney 
+General 
+Vote for One
+9 
+Judge of 
+Probate 
+Vote for One
+Democratic
+Party
+1A
+Ned Lamont and
+Susan Bysiewicz
+2A
+Jahana
+Hayes
+3A
+Laurel
+LaPorte-Grimes
+4A
+Rebecca
+Martinez
+5A
+Stephanie
+Thomas
+6A
+Erick
+Russell
+7A
+Sean
+Scanlon
+8A
+William
+Tong
+9A
+Paul R.
+Bedard
+Republican
+Party
+1B
+Ryan Fazio and
+Matt Corey
+2B
+Chris
+Shea
+3B
+Henri
+Martin
+4B
+Richard
+Mette
+5B
+Peter
+Lumaj
+6B
+Fred
+Wilms
+7B
+Jennifer S.
+Tooker
+8B
+John
+Bolton
+Working 
+Families Party
+1C
+Ned Lamont and
+Susan Bysiewicz
+2C
+Jahana
+Hayes
+4C
+Rebecca
+Martinez
+5C
+Stephanie
+Thomas
+6C
+Erick
+Russell
+7C
+Sean
+Scanlon
+8C
+William
+Tong
+Independent
+Party
+1D
+Ryan Fazio and
+Matt Corey
+4D
+Richard
+Mette
+5D
+Stephanie
+Thomas
+6D
+Fred
+Wilms
+7D
+Sean
+Scanlon
+Write-in Votes
+1E
+2E
+3E
+4E
+5E
+6E
+7E
+8E
+9E
+Be sure to read the instructions on the reverse side of this ballot.
+Sample Ballot
+

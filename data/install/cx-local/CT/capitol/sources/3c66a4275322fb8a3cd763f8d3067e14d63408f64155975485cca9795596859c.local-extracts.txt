@@ -1,0 +1,341 @@
+PAGE 1 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.3603240966797]
+9 
+Judge of
+Probate 
+Vote for One 
+9A 
+Thomas A. 
+Robinson 
+9E
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+State of Connecticut 
+Official Ballot 
+Bolton, Connecticut 
+State Election 
+November 3, 2026 
+Be sure to read the instructions on the reverse side of this ballot. 
+Sheet 1 of 1 
+Congressional District 2
+Senatorial District 4 
+Assembly District 8
+Voting District 1 
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative
+in Congress
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative
+Vote for One 
+5 
+Secretary of
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller
+Vote for One 
+8 
+Attorney
+General 
+Vote for One 
+9 
+Judge of
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A
+Joe 
+Courtney 
+3A 
+MD 
+Rahman 
+4A 
+Francis 
+Lombard 
+5A 
+Stephanie
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Thomas A. 
+Robinson 
+Republican
+Party 
+1B 
+Ryan Fazio and
+Matt Corey 
+2B 
+George Patrick
+Austin 
+3B 
+Jenn 
+Jennings 
+4B 
+William 
+Gifford 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+Working
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+MD 
+Rahman 
+4C 
+Francis 
+Lombard 
+5C 
+Stephanie
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent
+Party 
+1D 
+Ryan Fazio and
+Matt Corey 
+2D 
+George Patrick
+Austin 
+4D 
+William 
+Gifford 
+5D 
+Stephanie
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+ 
+Write-in Votes 
+1E 
+2E 
+3E 
+4E 
+5E 
+6E 
+7E 
+8E 
+9E 
+
+
+PAGE 2 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.36070556640624]
+9 
+Judge of
+Probate 
+Vote for One 
+9A 
+Thomas A. 
+Robinson 
+9E
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+Bolton, Connecticut 
+State Election 
+November 3, 2026 
+State of Connecticut 
+Official Ballot 
+Sheet 1 of 1 
+Congressional District 2
+Senatorial District 4 
+Assembly District 55
+Voting District 2 
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative
+in Congress
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative
+Vote for One 
+5 
+Secretary of
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One
+7 
+Comptroller
+Vote for One 
+8 
+Attorney
+General 
+Vote for One
+9 
+Judge of
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Joe 
+Courtney 
+3A 
+MD 
+Rahman 
+4A 
+Ellen 
+Paul 
+5A 
+Stephanie
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Thomas A. 
+Robinson 
+Republican
+Party 
+1B 
+Ryan Fazio and
+Matt Corey 
+2B 
+George Patrick
+Austin 
+3B 
+Jenn 
+Jennings 
+4B 
+Steve 
+Weir 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+Working
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+MD 
+Rahman 
+4C 
+Ellen 
+Paul 
+5C 
+Stephanie
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent
+Party 
+1D 
+Ryan Fazio and
+Matt Corey 
+2D 
+George Patrick
+Austin 
+4D 
+Steve 
+Weir 
+5D 
+Stephanie
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+ 
+ 
+Write-in Votes 
+1E 
+2E 
+3E 
+4E 
+5E 
+6E 
+7E 
+8E 
+9E
+Be sure to read the instructions on the reverse side of this ballot. 
+ 
+

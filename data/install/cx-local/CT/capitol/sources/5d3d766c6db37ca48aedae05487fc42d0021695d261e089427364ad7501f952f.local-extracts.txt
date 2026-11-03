@@ -1,0 +1,1627 @@
+PAGE 1 / Judge of Probate / RECT [626.95, 140.0, 682.9499999999999, 482.7236663818359]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Matt 
+Jalowiec 
+9B 
+Matt 
+Jalowiec 
+9F
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+State of Connecticut 
+Official Ballot 
+Southington, Connecticut
+State Election
+November 3, 2026 
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 16 
+Assembly District 81 
+Voting District 1 
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Jack 
+Perry 
+4A 
+Chris 
+Poulos 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Matt 
+Jalowiec 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Rob 
+Sampson 
+4B 
+Timothy J. 
+Wilk 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Matt 
+Jalowiec 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+Rob 
+Sampson 
+4D 
+Chris 
+Poulos 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+Write-in Votes 
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+Vote on the Questions(s)
+1. "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a 
+fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and 
+community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+Yes
+No
+
+
+PAGE 2 / Judge of Probate / RECT [627.0500000000001, 140.0, 682.9499999999999, 482.72389526367186]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Matt 
+Jalowiec 
+9B 
+Matt 
+Jalowiec 
+9F
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+Southington, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 16 
+Assembly District 81 
+Voting District 2 
+Vote on the Questions(s)
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Jack 
+Perry 
+4A 
+Chris 
+Poulos 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Matt 
+Jalowiec 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Rob 
+Sampson 
+4B 
+Timothy J. 
+Wilk 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Matt 
+Jalowiec 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+Rob 
+Sampson 
+4D 
+Chris 
+Poulos 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders
+ 
+Write-in Votes 
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+1. "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a 
+fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and 
+community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+Yes
+No
+
+
+PAGE 3 / Judge of Probate / RECT [627.0500000000001, 140.0, 682.9499999999999, 482.7240325927734]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Matt 
+Jalowiec 
+9B 
+Matt 
+Jalowiec 
+9F
+
+PAGE 3 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+Southington, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 16 
+Assembly District 81 
+Voting District 3 
+Vote on the Questions(s)
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Jack 
+Perry 
+4A 
+Chris 
+Poulos 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Matt 
+Jalowiec 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Rob 
+Sampson 
+4B 
+Timothy J. 
+Wilk 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Matt 
+Jalowiec 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+ 
+3D 
+Rob 
+Sampson 
+4D 
+Chris 
+Poulos 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+Write-in Votes 
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+1. "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a 
+fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and 
+community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+Yes
+No
+
+
+PAGE 4 / Judge of Probate / RECT [627.0500000000001, 140.0, 682.9499999999999, 482.72467346191405]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Matt 
+Jalowiec 
+9B 
+Matt 
+Jalowiec 
+9F
+
+PAGE 4 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Southington, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 16 
+Assembly District 81 
+Voting District 4 
+Vote on the Questions(s)
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Jack 
+Perry 
+4A 
+Chris 
+Poulos 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Matt 
+Jalowiec 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Rob 
+Sampson 
+4B 
+Timothy J. 
+Wilk 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Matt 
+Jalowiec 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+Rob 
+Sampson 
+4D 
+Chris 
+Poulos 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders
+ 
+Write-in Votes 
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+1. "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a 
+fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and 
+community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+Yes
+No
+Sample Ballot
+
+
+PAGE 5 / Judge of Probate / RECT [627.0500000000001, 140.0, 682.9499999999999, 482.7250549316406]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Matt 
+Jalowiec 
+9B 
+Matt 
+Jalowiec 
+9F
+
+PAGE 5 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+Southington, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 16 
+Assembly District 80 
+Voting District 5 
+Vote on the Questions(s)
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Jack 
+Perry 
+4A 
+Cheryl 
+Hilton 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Matt 
+Jalowiec 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Rob 
+Sampson 
+4B 
+Gale L. 
+Mastrofrancesco 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Matt 
+Jalowiec 
+Working 
+Families
+ 
+ Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+Rob 
+Sampson 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party
+2E 
+Mary L. 
+Sanders 
+Write-in Votes 
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+1. "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a 
+fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and 
+community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+Yes
+No
+
+
+PAGE 6 / Judge of Probate / RECT [627.0500000000001, 140.0, 682.9499999999999, 482.7237121582031]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Matt 
+Jalowiec 
+9B 
+Matt 
+Jalowiec 
+9F
+
+PAGE 6 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Southington, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 16 
+Assembly District 80 
+Voting District 6 
+Vote on the Questions(s)
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Jack 
+Perry 
+4A 
+Cheryl 
+Hilton 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Matt 
+Jalowiec 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Rob 
+Sampson 
+4B 
+Gale L. 
+Mastrofrancesco 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Matt 
+Jalowiec 
+Working 
+Families
+ 
+ Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+ 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+Rob 
+Sampson 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+Write-in Votes 
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+1. "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a 
+fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and 
+community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+Yes
+No
+Sample Ballot
+
+
+PAGE 7 / Judge of Probate / RECT [627.0500000000001, 140.0, 682.9499999999999, 482.72389526367186]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Matt 
+Jalowiec 
+9B 
+Matt 
+Jalowiec 
+9F
+
+PAGE 7 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+Southington, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 16 
+Assembly District 22 
+Voting District 7 
+Vote on the Questions(s)
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Jack 
+Perry 
+4A 
+Rebecca 
+Martinez 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Matt 
+Jalowiec 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Rob 
+Sampson 
+4B 
+Richard 
+Mette 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Matt 
+Jalowiec 
+Working 
+Families
+ 
+ Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+4C 
+Rebecca 
+Martinez 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+ 
+3D 
+Rob 
+Sampson 
+4D 
+Richard 
+Mette 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+Write-in Votes 
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+1. "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a 
+fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and 
+community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+Yes
+No
+
+
+PAGE 8 / Judge of Probate / RECT [627.0500000000001, 140.0, 682.9499999999999, 482.7228729248047]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Matt 
+Jalowiec 
+9B 
+Matt 
+Jalowiec 
+9F
+
+PAGE 8 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Southington, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 16 
+Assembly District 30 
+Voting District 8 
+Vote on the Questions(s)
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Jack 
+Perry 
+4A 
+Linda 
+Pierce 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Matt 
+Jalowiec 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Rob 
+Sampson 
+4B 
+Donna M. 
+Veach 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Matt 
+Jalowiec 
+Working 
+Families
+ 
+ Party 
+ 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+ 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+Rob 
+Sampson 
+4D 
+Donna M. 
+Veach 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders
+ 
+Write-in Votes 
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+1. "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a 
+fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and 
+community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+Yes
+No
+Sample Ballot
+
+
+PAGE 9 / Judge of Probate / RECT [627.0500000000001, 140.0, 682.9499999999999, 482.7236358642578]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Matt 
+Jalowiec 
+9B 
+Matt 
+Jalowiec 
+9F
+
+PAGE 9 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+Southington, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 16 
+Assembly District 30 
+Voting District 9 
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Jack 
+Perry 
+4A 
+Linda 
+Pierce 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Matt 
+Jalowiec 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Rob 
+Sampson 
+4B 
+Donna M. 
+Veach 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Matt 
+Jalowiec 
+Working 
+Families
+ 
+ Party 
+ 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+Rob 
+Sampson 
+4D 
+Donna M. 
+Veach 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders
+ 
+Write-in Votes 
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F 
+Vote on the Questions(s) 
+1. "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a 
+fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and 
+community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?" 
+Yes
+No 
+Be sure to read the instructions on the reverse side of this ballot.
+

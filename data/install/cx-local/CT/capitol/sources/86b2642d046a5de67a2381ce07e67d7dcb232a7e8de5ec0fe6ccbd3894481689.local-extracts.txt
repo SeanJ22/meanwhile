@@ -1,0 +1,902 @@
+PAGE 1 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 482.72230834960936]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Mary C.
+Deneen
+9B
+Mary C.
+Deneen
+9F
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+SouthWindsor,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Vote on the Question(s)
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Luke
+Bronin
+2B
+Amy
+Chai
+2E
+Mary L.
+Sanders
+3
+State Senator
+VoteforOne
+3A
+Saud
+Anwar
+3B
+Eliott
+Hughes
+3C
+Saud
+Anwar
+4
+State
+Representative
+VoteforOne
+4A
+Kyle
+Anderson
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Mary C.
+Deneen
+9B
+Mary C.
+Deneen
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+GreenParty
+Write-in Votes
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+1. Shall the resolution appropriating and authorizing
+bonds in the amount of $15,000,000 for the planning,
+design, construction and/or replacement of Town-wide
+Road Paving, Traffic Signals, Safety Devices, Culverts,
+Sidewalks And Drainage Improvements be approved?
+Yes
+No
+Sample Ballot
+
+
+PAGE 2 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 528.0823394775391]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Mary C.
+Deneen
+9B
+Mary C.
+Deneen
+9G
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+SouthWindsor,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Vote on the Question(s)
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Luke
+Bronin
+2B
+Amy
+Chai
+2E
+Mary L.
+Sanders
+3
+State Senator
+VoteforOne
+3A
+Saud
+Anwar
+3B
+Eliott
+Hughes
+3C
+Saud
+Anwar
+4
+State
+Representative
+VoteforOne
+4A
+Harrison
+Amadasun
+4B
+Tom
+Delnicki
+4D
+Tom
+Delnicki
+4F
+Harrison
+Amadasun
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Mary C.
+Deneen
+9B
+Mary C.
+Deneen
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+GreenParty
+United
+Community
+Party
+Write-in Votes
+1G
+2G
+3G
+4G
+5G
+6G
+7G
+8G
+9G
+1. Shall the resolution appropriating and authorizing
+bonds in the amount of $15,000,000 for the planning,
+design, construction and/or replacement of Town-wide
+Road Paving, Traffic Signals, Safety Devices, Culverts,
+Sidewalks And Drainage Improvements be approved?
+Yes
+No
+Sample Ballot
+
+
+PAGE 3 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 528.0823394775391]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Mary C.
+Deneen
+9B
+Mary C.
+Deneen
+9G
+
+PAGE 3 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+SouthWindsor,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Vote on the Question(s)
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Luke
+Bronin
+2B
+Amy
+Chai
+2E
+Mary L.
+Sanders
+3
+State Senator
+VoteforOne
+3A
+Saud
+Anwar
+3B
+Eliott
+Hughes
+3C
+Saud
+Anwar
+4
+State
+Representative
+VoteforOne
+4A
+Harrison
+Amadasun
+4B
+Tom
+Delnicki
+4D
+Tom
+Delnicki
+4F
+Harrison
+Amadasun
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Mary C.
+Deneen
+9B
+Mary C.
+Deneen
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+GreenParty
+United
+Community
+Party
+Write-in Votes
+1G
+2G
+3G
+4G
+5G
+6G
+7G
+8G
+9G
+1. Shall the resolution appropriating and authorizing
+bonds in the amount of $15,000,000 for the planning,
+design, construction and/or replacement of Town-wide
+Road Paving, Traffic Signals, Safety Devices, Culverts,
+Sidewalks And Drainage Improvements be approved?
+Yes
+No
+Sample Ballot
+
+
+PAGE 4 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 528.0823394775391]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Mary C.
+Deneen
+9B
+Mary C.
+Deneen
+9G
+
+PAGE 4 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+SouthWindsor,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Vote on the Question(s)
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Luke
+Bronin
+2B
+Amy
+Chai
+2E
+Mary L.
+Sanders
+3
+State Senator
+VoteforOne
+3A
+Saud
+Anwar
+3B
+Eliott
+Hughes
+3C
+Saud
+Anwar
+4
+State
+Representative
+VoteforOne
+4A
+Harrison
+Amadasun
+4B
+Tom
+Delnicki
+4D
+Tom
+Delnicki
+4F
+Harrison
+Amadasun
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Mary C.
+Deneen
+9B
+Mary C.
+Deneen
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+GreenParty
+United
+Community
+Party
+Write-in Votes
+1G
+2G
+3G
+4G
+5G
+6G
+7G
+8G
+9G
+1. Shall the resolution appropriating and authorizing
+bonds in the amount of $15,000,000 for the planning,
+design, construction and/or replacement of Town-wide
+Road Paving, Traffic Signals, Safety Devices, Culverts,
+Sidewalks And Drainage Improvements be approved?
+Yes
+No
+Sample Ballot
+
+
+PAGE 5 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 528.0823394775391]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Mary C.
+Deneen
+9B
+Mary C.
+Deneen
+9G
+
+PAGE 5 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+SouthWindsor,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Vote on the Question(s)
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Luke
+Bronin
+2B
+Amy
+Chai
+2E
+Mary L.
+Sanders
+3
+State Senator
+VoteforOne
+3A
+Saud
+Anwar
+3B
+Eliott
+Hughes
+3C
+Saud
+Anwar
+4
+State
+Representative
+VoteforOne
+4A
+Harrison
+Amadasun
+4B
+Tom
+Delnicki
+4D
+Tom
+Delnicki
+4F
+Harrison
+Amadasun
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Mary C.
+Deneen
+9B
+Mary C.
+Deneen
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+GreenParty
+United
+Community
+Party
+Write-in Votes
+1G
+2G
+3G
+4G
+5G
+6G
+7G
+8G
+9G
+1. Shall the resolution appropriating and authorizing
+bonds in the amount of $15,000,000 for the planning,
+design, construction and/or replacement of Town-wide
+Road Paving, Traffic Signals, Safety Devices, Culverts,
+Sidewalks And Drainage Improvements be approved?
+Yes
+No
+Sample Ballot
+

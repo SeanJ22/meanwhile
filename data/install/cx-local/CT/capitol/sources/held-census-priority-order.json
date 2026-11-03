@@ -1,0 +1,807 @@
+{
+  "sourceUrl": "https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/counties/totals/co-est2025-alldata.csv",
+  "sha256": "4f5a499d851e2cb48fd7a5405e5a9235453a8a66933657aacd10df0e264f35d5",
+  "retrievedAt": "2026-11-03T03:41:42.493385+00:00",
+  "counties": [
+    {
+      "rank": 1,
+      "stateName": "California",
+      "county": "Los Angeles County",
+      "fips": "06037",
+      "population": 9694934,
+      "populationYear": 2025
+    },
+    {
+      "rank": 2,
+      "stateName": "Illinois",
+      "county": "Cook County",
+      "fips": "17031",
+      "population": 5194625,
+      "populationYear": 2025
+    },
+    {
+      "rank": 3,
+      "stateName": "Texas",
+      "county": "Harris County",
+      "fips": "48201",
+      "population": 5045026,
+      "populationYear": 2025
+    },
+    {
+      "rank": 4,
+      "stateName": "Arizona",
+      "county": "Maricopa County",
+      "fips": "04013",
+      "population": 4689558,
+      "populationYear": 2025
+    },
+    {
+      "rank": 5,
+      "stateName": "California",
+      "county": "San Diego County",
+      "fips": "06073",
+      "population": 3282248,
+      "populationYear": 2025
+    },
+    {
+      "rank": 6,
+      "stateName": "California",
+      "county": "Orange County",
+      "fips": "06059",
+      "population": 3149507,
+      "populationYear": 2025
+    },
+    {
+      "rank": 7,
+      "stateName": "Florida",
+      "county": "Miami-Dade County",
+      "fips": "12086",
+      "population": 2802029,
+      "populationYear": 2025
+    },
+    {
+      "rank": 8,
+      "stateName": "Texas",
+      "county": "Dallas County",
+      "fips": "48113",
+      "population": 2661397,
+      "populationYear": 2025
+    },
+    {
+      "rank": 9,
+      "stateName": "New York",
+      "county": "Kings County",
+      "fips": "36047",
+      "population": 2653963,
+      "populationYear": 2025
+    },
+    {
+      "rank": 10,
+      "stateName": "California",
+      "county": "Riverside County",
+      "fips": "06065",
+      "population": 2544916,
+      "populationYear": 2025
+    },
+    {
+      "rank": 11,
+      "stateName": "Nevada",
+      "county": "Clark County",
+      "fips": "32003",
+      "population": 2407226,
+      "populationYear": 2025
+    },
+    {
+      "rank": 12,
+      "stateName": "New York",
+      "county": "Queens County",
+      "fips": "36081",
+      "population": 2358182,
+      "populationYear": 2025
+    },
+    {
+      "rank": 13,
+      "stateName": "Washington",
+      "county": "King County",
+      "fips": "53033",
+      "population": 2344939,
+      "populationYear": 2025
+    },
+    {
+      "rank": 14,
+      "stateName": "Texas",
+      "county": "Tarrant County",
+      "fips": "48439",
+      "population": 2248466,
+      "populationYear": 2025
+    },
+    {
+      "rank": 15,
+      "stateName": "California",
+      "county": "San Bernardino County",
+      "fips": "06071",
+      "population": 2224091,
+      "populationYear": 2025
+    },
+    {
+      "rank": 16,
+      "stateName": "Texas",
+      "county": "Bexar County",
+      "fips": "48029",
+      "population": 2160088,
+      "populationYear": 2025
+    },
+    {
+      "rank": 17,
+      "stateName": "Florida",
+      "county": "Broward County",
+      "fips": "12011",
+      "population": 2013317,
+      "populationYear": 2025
+    },
+    {
+      "rank": 18,
+      "stateName": "California",
+      "county": "Santa Clara County",
+      "fips": "06085",
+      "population": 1914391,
+      "populationYear": 2025
+    },
+    {
+      "rank": 19,
+      "stateName": "Michigan",
+      "county": "Wayne County",
+      "fips": "26163",
+      "population": 1769038,
+      "populationYear": 2025
+    },
+    {
+      "rank": 20,
+      "stateName": "Massachusetts",
+      "county": "Middlesex County",
+      "fips": "25017",
+      "population": 1669979,
+      "populationYear": 2025
+    },
+    {
+      "rank": 21,
+      "stateName": "New York",
+      "county": "New York County",
+      "fips": "36061",
+      "population": 1664862,
+      "populationYear": 2025
+    },
+    {
+      "rank": 22,
+      "stateName": "California",
+      "county": "Alameda County",
+      "fips": "06001",
+      "population": 1636630,
+      "populationYear": 2025
+    },
+    {
+      "rank": 23,
+      "stateName": "California",
+      "county": "Sacramento County",
+      "fips": "06067",
+      "population": 1618460,
+      "populationYear": 2025
+    },
+    {
+      "rank": 24,
+      "stateName": "Florida",
+      "county": "Palm Beach County",
+      "fips": "12099",
+      "population": 1575726,
+      "populationYear": 2025
+    },
+    {
+      "rank": 25,
+      "stateName": "Pennsylvania",
+      "county": "Philadelphia County",
+      "fips": "42101",
+      "population": 1574281,
+      "populationYear": 2025
+    },
+    {
+      "rank": 26,
+      "stateName": "Florida",
+      "county": "Hillsborough County",
+      "fips": "12057",
+      "population": 1574115,
+      "populationYear": 2025
+    },
+    {
+      "rank": 27,
+      "stateName": "New York",
+      "county": "Suffolk County",
+      "fips": "36103",
+      "population": 1546090,
+      "populationYear": 2025
+    },
+    {
+      "rank": 28,
+      "stateName": "Florida",
+      "county": "Orange County",
+      "fips": "12095",
+      "population": 1528002,
+      "populationYear": 2025
+    },
+    {
+      "rank": 29,
+      "stateName": "New York",
+      "county": "Bronx County",
+      "fips": "36005",
+      "population": 1406332,
+      "populationYear": 2025
+    },
+    {
+      "rank": 30,
+      "stateName": "New York",
+      "county": "Nassau County",
+      "fips": "36059",
+      "population": 1398939,
+      "populationYear": 2025
+    },
+    {
+      "rank": 31,
+      "stateName": "Texas",
+      "county": "Travis County",
+      "fips": "48453",
+      "population": 1389670,
+      "populationYear": 2025
+    },
+    {
+      "rank": 32,
+      "stateName": "Ohio",
+      "county": "Franklin County",
+      "fips": "39049",
+      "population": 1361536,
+      "populationYear": 2025
+    },
+    {
+      "rank": 33,
+      "stateName": "Texas",
+      "county": "Collin County",
+      "fips": "48085",
+      "population": 1297179,
+      "populationYear": 2025
+    },
+    {
+      "rank": 34,
+      "stateName": "Michigan",
+      "county": "Oakland County",
+      "fips": "26125",
+      "population": 1288337,
+      "populationYear": 2025
+    },
+    {
+      "rank": 35,
+      "stateName": "Minnesota",
+      "county": "Hennepin County",
+      "fips": "27053",
+      "population": 1284784,
+      "populationYear": 2025
+    },
+    {
+      "rank": 36,
+      "stateName": "North Carolina",
+      "county": "Wake County",
+      "fips": "37183",
+      "population": 1257235,
+      "populationYear": 2025
+    },
+    {
+      "rank": 37,
+      "stateName": "North Carolina",
+      "county": "Mecklenburg County",
+      "fips": "37119",
+      "population": 1233383,
+      "populationYear": 2025
+    },
+    {
+      "rank": 38,
+      "stateName": "Ohio",
+      "county": "Cuyahoga County",
+      "fips": "39035",
+      "population": 1232925,
+      "populationYear": 2025
+    },
+    {
+      "rank": 39,
+      "stateName": "Pennsylvania",
+      "county": "Allegheny County",
+      "fips": "42003",
+      "population": 1225035,
+      "populationYear": 2025
+    },
+    {
+      "rank": 40,
+      "stateName": "Utah",
+      "county": "Salt Lake County",
+      "fips": "49035",
+      "population": 1220916,
+      "populationYear": 2025
+    },
+    {
+      "rank": 41,
+      "stateName": "California",
+      "county": "Contra Costa County",
+      "fips": "06013",
+      "population": 1170070,
+      "populationYear": 2025
+    },
+    {
+      "rank": 42,
+      "stateName": "Virginia",
+      "county": "Fairfax County",
+      "fips": "51059",
+      "population": 1167873,
+      "populationYear": 2025
+    },
+    {
+      "rank": 43,
+      "stateName": "Georgia",
+      "county": "Fulton County",
+      "fips": "13121",
+      "population": 1098791,
+      "populationYear": 2025
+    },
+    {
+      "rank": 44,
+      "stateName": "Arizona",
+      "county": "Pima County",
+      "fips": "04019",
+      "population": 1074685,
+      "populationYear": 2025
+    },
+    {
+      "rank": 45,
+      "stateName": "Maryland",
+      "county": "Montgomery County",
+      "fips": "24031",
+      "population": 1074582,
+      "populationYear": 2025
+    },
+    {
+      "rank": 46,
+      "stateName": "Texas",
+      "county": "Denton County",
+      "fips": "48121",
+      "population": 1069346,
+      "populationYear": 2025
+    },
+    {
+      "rank": 47,
+      "stateName": "Florida",
+      "county": "Duval County",
+      "fips": "12031",
+      "population": 1062963,
+      "populationYear": 2025
+    },
+    {
+      "rank": 48,
+      "stateName": "California",
+      "county": "Fresno County",
+      "fips": "06019",
+      "population": 1035456,
+      "populationYear": 2025
+    },
+    {
+      "rank": 49,
+      "stateName": "Georgia",
+      "county": "Gwinnett County",
+      "fips": "13135",
+      "population": 1018099,
+      "populationYear": 2025
+    },
+    {
+      "rank": 50,
+      "stateName": "New York",
+      "county": "Westchester County",
+      "fips": "36119",
+      "population": 1015743,
+      "populationYear": 2025
+    },
+    {
+      "rank": 51,
+      "stateName": "Connecticut",
+      "county": "Capitol Planning Region",
+      "fips": "09110",
+      "population": 994115,
+      "populationYear": 2025
+    },
+    {
+      "rank": 52,
+      "stateName": "Indiana",
+      "county": "Marion County",
+      "fips": "18097",
+      "population": 992196,
+      "populationYear": 2025
+    },
+    {
+      "rank": 53,
+      "stateName": "Missouri",
+      "county": "St. Louis County",
+      "fips": "29189",
+      "population": 990911,
+      "populationYear": 2025
+    },
+    {
+      "rank": 54,
+      "stateName": "Hawaii",
+      "county": "Honolulu County",
+      "fips": "15003",
+      "population": 988703,
+      "populationYear": 2025
+    },
+    {
+      "rank": 55,
+      "stateName": "New Jersey",
+      "county": "Bergen County",
+      "fips": "34003",
+      "population": 977026,
+      "populationYear": 2025
+    },
+    {
+      "rank": 56,
+      "stateName": "Texas",
+      "county": "Fort Bend County",
+      "fips": "48157",
+      "population": 975191,
+      "populationYear": 2025
+    },
+    {
+      "rank": 57,
+      "stateName": "Maryland",
+      "county": "Prince George's County",
+      "fips": "24033",
+      "population": 970374,
+      "populationYear": 2025
+    },
+    {
+      "rank": 58,
+      "stateName": "Florida",
+      "county": "Pinellas County",
+      "fips": "12103",
+      "population": 948563,
+      "populationYear": 2025
+    },
+    {
+      "rank": 59,
+      "stateName": "New York",
+      "county": "Erie County",
+      "fips": "36029",
+      "population": 946741,
+      "populationYear": 2025
+    },
+    {
+      "rank": 60,
+      "stateName": "Washington",
+      "county": "Pierce County",
+      "fips": "53053",
+      "population": 946288,
+      "populationYear": 2025
+    },
+    {
+      "rank": 61,
+      "stateName": "Illinois",
+      "county": "DuPage County",
+      "fips": "17043",
+      "population": 934298,
+      "populationYear": 2025
+    },
+    {
+      "rank": 62,
+      "stateName": "California",
+      "county": "Kern County",
+      "fips": "06029",
+      "population": 927068,
+      "populationYear": 2025
+    },
+    {
+      "rank": 63,
+      "stateName": "Wisconsin",
+      "county": "Milwaukee County",
+      "fips": "55079",
+      "population": 924216,
+      "populationYear": 2025
+    },
+    {
+      "rank": 64,
+      "stateName": "Texas",
+      "county": "Hidalgo County",
+      "fips": "48215",
+      "population": 921549,
+      "populationYear": 2025
+    },
+    {
+      "rank": 65,
+      "stateName": "Tennessee",
+      "county": "Shelby County",
+      "fips": "47157",
+      "population": 910226,
+      "populationYear": 2025
+    },
+    {
+      "rank": 66,
+      "stateName": "New Jersey",
+      "county": "Essex County",
+      "fips": "34013",
+      "population": 896379,
+      "populationYear": 2025
+    },
+    {
+      "rank": 67,
+      "stateName": "Massachusetts",
+      "county": "Worcester County",
+      "fips": "25027",
+      "population": 888502,
+      "populationYear": 2025
+    },
+    {
+      "rank": 68,
+      "stateName": "Michigan",
+      "county": "Macomb County",
+      "fips": "26099",
+      "population": 886221,
+      "populationYear": 2025
+    },
+    {
+      "rank": 69,
+      "stateName": "New Jersey",
+      "county": "Middlesex County",
+      "fips": "34023",
+      "population": 883335,
+      "populationYear": 2025
+    },
+    {
+      "rank": 70,
+      "stateName": "Texas",
+      "county": "El Paso County",
+      "fips": "48141",
+      "population": 877858,
+      "populationYear": 2025
+    },
+    {
+      "rank": 71,
+      "stateName": "Pennsylvania",
+      "county": "Montgomery County",
+      "fips": "42091",
+      "population": 877643,
+      "populationYear": 2025
+    },
+    {
+      "rank": 72,
+      "stateName": "Florida",
+      "county": "Lee County",
+      "fips": "12071",
+      "population": 875607,
+      "populationYear": 2025
+    },
+    {
+      "rank": 73,
+      "stateName": "Florida",
+      "county": "Polk County",
+      "fips": "12105",
+      "population": 874790,
+      "populationYear": 2025
+    },
+    {
+      "rank": 74,
+      "stateName": "Washington",
+      "county": "Snohomish County",
+      "fips": "53061",
+      "population": 870656,
+      "populationYear": 2025
+    },
+    {
+      "rank": 75,
+      "stateName": "Maryland",
+      "county": "Baltimore County",
+      "fips": "24005",
+      "population": 847650,
+      "populationYear": 2025
+    },
+    {
+      "rank": 76,
+      "stateName": "Ohio",
+      "county": "Hamilton County",
+      "fips": "39061",
+      "population": 838418,
+      "populationYear": 2025
+    },
+    {
+      "rank": 77,
+      "stateName": "California",
+      "county": "Ventura County",
+      "fips": "06111",
+      "population": 830851,
+      "populationYear": 2025
+    },
+    {
+      "rank": 78,
+      "stateName": "Massachusetts",
+      "county": "Essex County",
+      "fips": "25009",
+      "population": 826653,
+      "populationYear": 2025
+    },
+    {
+      "rank": 79,
+      "stateName": "California",
+      "county": "San Francisco County",
+      "fips": "06075",
+      "population": 826079,
+      "populationYear": 2025
+    },
+    {
+      "rank": 80,
+      "stateName": "California",
+      "county": "San Joaquin County",
+      "fips": "06077",
+      "population": 823815,
+      "populationYear": 2025
+    },
+    {
+      "rank": 81,
+      "stateName": "Oklahoma",
+      "county": "Oklahoma County",
+      "fips": "40109",
+      "population": 822125,
+      "populationYear": 2025
+    },
+    {
+      "rank": 82,
+      "stateName": "Oregon",
+      "county": "Multnomah County",
+      "fips": "41051",
+      "population": 795391,
+      "populationYear": 2025
+    },
+    {
+      "rank": 83,
+      "stateName": "Kentucky",
+      "county": "Jefferson County",
+      "fips": "21111",
+      "population": 795222,
+      "populationYear": 2025
+    },
+    {
+      "rank": 84,
+      "stateName": "Georgia",
+      "county": "Cobb County",
+      "fips": "13067",
+      "population": 793345,
+      "populationYear": 2025
+    },
+    {
+      "rank": 85,
+      "stateName": "Massachusetts",
+      "county": "Suffolk County",
+      "fips": "25025",
+      "population": 791891,
+      "populationYear": 2025
+    },
+    {
+      "rank": 86,
+      "stateName": "Texas",
+      "county": "Montgomery County",
+      "fips": "48339",
+      "population": 781194,
+      "populationYear": 2025
+    },
+    {
+      "rank": 87,
+      "stateName": "Georgia",
+      "county": "DeKalb County",
+      "fips": "13089",
+      "population": 774394,
+      "populationYear": 2025
+    },
+    {
+      "rank": 88,
+      "stateName": "Utah",
+      "county": "Utah County",
+      "fips": "49049",
+      "population": 759859,
+      "populationYear": 2025
+    },
+    {
+      "rank": 89,
+      "stateName": "Colorado",
+      "county": "El Paso County",
+      "fips": "08041",
+      "population": 757040,
+      "populationYear": 2025
+    },
+    {
+      "rank": 90,
+      "stateName": "Texas",
+      "county": "Williamson County",
+      "fips": "48491",
+      "population": 752827,
+      "populationYear": 2025
+    },
+    {
+      "rank": 91,
+      "stateName": "New York",
+      "county": "Monroe County",
+      "fips": "36055",
+      "population": 750506,
+      "populationYear": 2025
+    },
+    {
+      "rank": 92,
+      "stateName": "Tennessee",
+      "county": "Davidson County",
+      "fips": "47037",
+      "population": 745904,
+      "populationYear": 2025
+    },
+    {
+      "rank": 93,
+      "stateName": "California",
+      "county": "San Mateo County",
+      "fips": "06081",
+      "population": 743568,
+      "populationYear": 2025
+    },
+    {
+      "rank": 94,
+      "stateName": "Colorado",
+      "county": "Denver County",
+      "fips": "08031",
+      "population": 740613,
+      "populationYear": 2025
+    },
+    {
+      "rank": 95,
+      "stateName": "Massachusetts",
+      "county": "Norfolk County",
+      "fips": "25021",
+      "population": 739749,
+      "populationYear": 2025
+    },
+    {
+      "rank": 96,
+      "stateName": "New Jersey",
+      "county": "Hudson County",
+      "fips": "34017",
+      "population": 735033,
+      "populationYear": 2025
+    },
+    {
+      "rank": 97,
+      "stateName": "Missouri",
+      "county": "Jackson County",
+      "fips": "29095",
+      "population": 732994,
+      "populationYear": 2025
+    },
+    {
+      "rank": 98,
+      "stateName": "Illinois",
+      "county": "Lake County",
+      "fips": "17097",
+      "population": 719339,
+      "populationYear": 2025
+    },
+    {
+      "rank": 99,
+      "stateName": "Illinois",
+      "county": "Will County",
+      "fips": "17197",
+      "population": 712253,
+      "populationYear": 2025
+    },
+    {
+      "rank": 100,
+      "stateName": "Oklahoma",
+      "county": "Tulsa County",
+      "fips": "40143",
+      "population": 698782,
+      "populationYear": 2025
+    }
+  ]
+}

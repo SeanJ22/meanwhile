@@ -1,0 +1,701 @@
+PAGE 1 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 528.0823623657227]
+9
+Judge of
+Probate
+VoteforOne
+9A
+William C.
+Rivera
+9B
+Paul Thomas
+Edwards, Sr.
+9G
+
+PAGE 1 / Registrar of Voters / RECT [671.15, 140.0, 727.25, 528.0823623657227]
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Christy
+Miano
+10B
+Joan
+Veley
+10G
+
+PAGE 1 / Board of Education Non-Partisan / RECT [727.95, 140.0, 939.75, 528.0823623657227]
+11
+12
+13
+BoardofEducationNonPartisan
+VoteforUptoThree
+11F
+Megan A.
+Pelloth
+12F
+Jennifer Anne
+Jurgen
+13F
+Brian Michael
+Delude
+11G
+12G
+13G
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+Berlin,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 1
+Senatorial District 6
+Assembly District 83
+Voting District 1
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Luke
+Bronin
+2B
+Amy
+Chai
+2E
+Mary L.
+Sanders
+3
+State Senator
+VoteforOne
+3A
+Rick
+Lopes
+3B
+Tremell
+Collins
+3C
+Rick
+Lopes
+4
+State
+Representative
+VoteforOne
+4A
+Chad
+Cardillo
+4B
+Bob
+Ham
+4C
+Chad
+Cardillo
+4D
+Chad
+Cardillo
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+William C.
+Rivera
+9B
+Paul Thomas
+Edwards, Sr.
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Christy
+Miano
+10B
+Joan
+Veley
+11
+12
+13
+BoardofEducationNonPartisan
+VoteforUptoThree
+11F
+Megan A.
+Pelloth
+12F
+Jennifer Anne
+Jurgen
+13F
+Brian Michael
+Delude
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+GreenParty
+Write-in Votes
+1G
+2G
+3G
+4G
+5G
+6G
+7G
+8G
+9G
+10G
+11G
+12G
+13G
+Sample Ballot
+
+
+PAGE 2 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 528.0823471069336]
+9
+Judge of
+Probate
+VoteforOne
+9A
+William C.
+Rivera
+9B
+Paul Thomas
+Edwards, Sr.
+9G
+
+PAGE 2 / Registrar of Voters / RECT [671.15, 140.0, 727.25, 528.0823471069336]
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Christy
+Miano
+10B
+Joan
+Veley
+10G
+
+PAGE 2 / Board of Education Non-Partisan / RECT [727.95, 140.0, 939.75, 528.0823471069336]
+11
+12
+13
+BoardofEducationNonPartisan
+VoteforUptoThree
+11F
+Megan A.
+Pelloth
+12F
+Jennifer Anne
+Jurgen
+13F
+Brian Michael
+Delude
+11G
+12G
+13G
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+Berlin,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 1
+Senatorial District 6
+Assembly District 30
+Voting District 2
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Luke
+Bronin
+2B
+Amy
+Chai
+2E
+Mary L.
+Sanders
+3
+State Senator
+VoteforOne
+3A
+Rick
+Lopes
+3B
+Tremell
+Collins
+3C
+Rick
+Lopes
+4
+State
+Representative
+VoteforOne
+4A
+Linda
+Pierce
+4B
+Donna M.
+Veach
+4D
+Donna M.
+Veach
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+William C.
+Rivera
+9B
+Paul Thomas
+Edwards, Sr.
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Christy
+Miano
+10B
+Joan
+Veley
+11
+12
+13
+BoardofEducationNonPartisan
+VoteforUptoThree
+11F
+Megan A.
+Pelloth
+12F
+Jennifer Anne
+Jurgen
+13F
+Brian Michael
+Delude
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+GreenParty
+Write-in Votes
+1G
+2G
+3G
+4G
+5G
+6G
+7G
+8G
+9G
+10G
+11G
+12G
+13G
+Sample Ballot
+
+
+PAGE 3 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 528.0823471069336]
+9
+Judge of
+Probate
+VoteforOne
+9A
+William C.
+Rivera
+9B
+Paul Thomas
+Edwards, Sr.
+9G
+
+PAGE 3 / Registrar of Voters / RECT [671.15, 140.0, 727.25, 528.0823471069336]
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Christy
+Miano
+10B
+Joan
+Veley
+10G
+
+PAGE 3 / Board of Education Non-Partisan / RECT [727.95, 140.0, 939.75, 528.0823471069336]
+11
+12
+13
+BoardofEducationNonPartisan
+VoteforUptoThree
+11F
+Megan A.
+Pelloth
+12F
+Jennifer Anne
+Jurgen
+13F
+Brian Michael
+Delude
+11G
+12G
+13G
+
+PAGE 3 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+Berlin,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 1
+Senatorial District 6
+Assembly District 30
+Voting District 3
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Luke
+Bronin
+2B
+Amy
+Chai
+2E
+Mary L.
+Sanders
+3
+State Senator
+VoteforOne
+3A
+Rick
+Lopes
+3B
+Tremell
+Collins
+3C
+Rick
+Lopes
+4
+State
+Representative
+VoteforOne
+4A
+Linda
+Pierce
+4B
+Donna M.
+Veach
+4D
+Donna M.
+Veach
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+William C.
+Rivera
+9B
+Paul Thomas
+Edwards, Sr.
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Christy
+Miano
+10B
+Joan
+Veley
+11
+12
+13
+BoardofEducationNonPartisan
+VoteforUptoThree
+11F
+Megan A.
+Pelloth
+12F
+Jennifer Anne
+Jurgen
+13F
+Brian Michael
+Delude
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+GreenParty
+Write-in Votes
+1G
+2G
+3G
+4G
+5G
+6G
+7G
+8G
+9G
+10G
+11G
+12G
+13G
+Sample Ballot
+

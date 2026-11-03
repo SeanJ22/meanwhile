@@ -1,0 +1,510 @@
+PAGE 1 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 482.7240783691406]
+9 
+Judge of 
+Probate 
+Vote
+ 
+ For One 
+9A 
+Robert A. 
+Randich 
+9B 
+Julie 
+Costello 
+9F
+
+PAGE 1 / Registrar of Voters / RECT [671.15, 140.0, 727.25, 482.7240783691406]
+10 
+Registrar of 
+Voters
+ 
+Vote
+ 
+ For One 
+10A 
+Jennifer B. 
+Sehmi 
+10B 
+Theresa Norine
+Claffey Avey 
+10F
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+Sample Ballot
+State of Connecticut 
+Official Ballot 
+Newington, Connecticut
+State Election
+November 3, 2026 
+Congressional District 1 
+Senatorial Dist
+r
+ict 9 
+A
+s
+sembly D
+i
+strict 2
+7
+ Voting District 1, 2, 4, 5, 7
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet 1 of 1
+Vote on the Question(s) 
+Fire Station #4 Project 
+1. Shall the Town of Newington Appropriate $7,800,000 
+for the construction of a new Fir
+e
+ Station #4 
+l
+ocated at 
+8
+4 F
+ifth Street and authorize the issua
+n
+ce of g
+e
+ne
+r
+al ob
+l
+i
+g
+ation bonds or 
+n
+ote
+s
+ 
+o
+f
+ 
+t he town in an amount not to exceed $7,80
+0,000 to finance the appropriation, or so 
+m
+uch as may
+ 
+b
+e
+ necessary after deducting grants to be recei
+v
+ed
+ 
+for th
+e projec
+t
+?
+Yes
+No 
+Office 
+Party 
+1 
+Governor & 
+Lieutenant 
+Governor 
+Vote
+ 
+ For One 
+2 
+Representative 
+in Congress 
+Vote
+ 
+ For One 
+3 
+State Senator 
+Vote For One 
+4 
+State 
+Representative 
+Vote
+ 
+ For One 
+5 
+Secretary of 
+the State
+ 
+Vote
+ 
+ For One 
+6 
+Treasurer 
+Vote For One 
+7 
+Comptroller 
+Vote For One 
+8 
+Attorney 
+General 
+Vote
+ 
+ For One 
+9 
+Judge of 
+Probate 
+Vote
+ 
+ For One 
+10 
+Registrar of 
+Voters
+ 
+Vote
+ 
+ For One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Matt 
+Lesser 
+4A 
+Gary 
+Turco 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Robert A. 
+Randich 
+10A 
+Jennifer B. 
+Sehmi 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Grant W. 
+Polomsky 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Julie 
+Costello 
+10B 
+Theresa Norine 
+Claffey Avey 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+Matt 
+Lesser 
+4C 
+Gary 
+Turco 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+Gwen 
+Samuel 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+Write-in Votes 
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+10F
+
+
+PAGE 2 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 482.72349853515624]
+9 
+Judge of 
+Probate 
+Vote For One 
+9A 
+Robert A. 
+Randich 
+9B 
+Julie 
+Costello 
+9F
+
+PAGE 2 / Registrar of Voters / RECT [671.15, 140.0, 727.25, 482.72349853515624]
+10 
+Registrar of 
+Voters 
+Vote For One 
+10A 
+Jennifer B. 
+Sehmi 
+10B 
+Theresa Norine
+Claffey Avey 
+10F
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+Newington, Connecticut
+State Election
+November 3, 2026
+State of Connecticut 
+Official Ballot
+Sheet 1 of 1
+Congressional District 1 
+Senatorial District 9 
+Assembly District 20 
+Voting District 3, 6 
+Vote on the Question(s) 
+Fire Station #4 Project 
+1. Shall the Town of Newington Appropriate $7,800,000 
+for the construction of a new Fir
+e
+ Station #4 
+l
+ocated at 
+8
+4 F
+ifth Street and authorize the issua
+n
+ce of g
+e
+ne
+r
+al ob
+l
+i
+g
+ation bonds or 
+n
+otes
+ 
+o
+f
+ 
+t
+he tow
+n
+ in an amount not to exceed $7,800,000 
+to fin
+ance the appropriation, or so much as may be ne
+c essary after deducti
+n
+g
+ grants to be receiv
+e
+d 
+f
+or the 
+project?
+Yes
+No 
+Office 
+Party 
+1 
+Governor & 
+Lieutenant 
+Governor 
+Vote For One 
+2 
+Representative 
+in Congress 
+Vote For One 
+3 
+State Senator 
+Vote For One 
+4 
+State 
+Representative 
+Vote For One 
+5 
+Secretary of 
+the State 
+Vote For One 
+6 
+Treasurer 
+Vote For One 
+7 
+Comptroller 
+Vote For One 
+8 
+Attorney 
+General 
+Vote For One 
+9 
+Judge of 
+Probate 
+Vote For One 
+10 
+Registrar of 
+Voters 
+Vote For One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Matt 
+Lesser 
+4A 
+Kate 
+Farrar 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Robert A. 
+Randich 
+10A 
+Jennifer B. 
+Sehmi 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Grant W. 
+Polomsky 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Julie 
+Costello 
+10B 
+Theresa Norine 
+Claffey Avey 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+Matt 
+Lesser 
+4C 
+Kate 
+Farrar 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+Gwen 
+Samuel 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+Write-in Votes 
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+10F 
+Sample Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+

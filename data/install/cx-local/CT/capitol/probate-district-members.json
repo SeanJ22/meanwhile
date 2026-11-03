@@ -1,0 +1,142 @@
+{
+  "1": {
+    "district": 1,
+    "towns": [
+      "Hartford"
+    ],
+    "quote": "(1) The town of Hartford."
+  },
+  "2": {
+    "district": 2,
+    "towns": [
+      "West Hartford"
+    ],
+    "quote": "(2) The town of West Hartford."
+  },
+  "3": {
+    "district": 3,
+    "towns": [
+      "Bloomfield",
+      "East Granby",
+      "Suffield",
+      "Windsor Locks"
+    ],
+    "quote": "(3) The towns of Bloomfield, East Granby, Suffield and Windsor Locks."
+  },
+  "4": {
+    "district": 4,
+    "towns": [
+      "East Windsor",
+      "South Windsor",
+      "Windsor"
+    ],
+    "quote": "(4) The towns of East Windsor, South Windsor and Windsor."
+  },
+  "5": {
+    "district": 5,
+    "towns": [
+      "East Hartford"
+    ],
+    "quote": "(5) The town of East Hartford."
+  },
+  "6": {
+    "district": 6,
+    "towns": [
+      "Glastonbury",
+      "Hebron"
+    ],
+    "quote": "(6) The towns of Glastonbury and Hebron."
+  },
+  "7": {
+    "district": 7,
+    "towns": [
+      "Newington",
+      "Rocky Hill",
+      "Wethersfield"
+    ],
+    "quote": "(7) The towns of Newington, Rocky Hill and Wethersfield."
+  },
+  "8": {
+    "district": 8,
+    "towns": [
+      "Berlin",
+      "New Britain"
+    ],
+    "quote": "(8) The towns of Berlin and New Britain."
+  },
+  "9": {
+    "district": 9,
+    "towns": [
+      "Avon",
+      "Canton",
+      "Granby",
+      "Simsbury"
+    ],
+    "quote": "(9) The towns of Avon, Canton, Granby and Simsbury."
+  },
+  "10": {
+    "district": 10,
+    "towns": [
+      "Burlington",
+      "Farmington",
+      "Plainville"
+    ],
+    "quote": "(10) The towns of Burlington, Farmington and Plainville."
+  },
+  "11": {
+    "district": 11,
+    "towns": [
+      "Enfield",
+      "Somers",
+      "Stafford",
+      "Union"
+    ],
+    "quote": "(11) The towns of Enfield, Somers, Stafford and Union."
+  },
+  "12": {
+    "district": 12,
+    "towns": [
+      "Ellington",
+      "Vernon"
+    ],
+    "quote": "(12) The towns of Ellington and Vernon."
+  },
+  "13": {
+    "district": 13,
+    "towns": [
+      "Andover",
+      "Bolton",
+      "Columbia",
+      "Manchester"
+    ],
+    "quote": "(13) The towns of Andover, Bolton, Columbia and Manchester."
+  },
+  "14": {
+    "district": 14,
+    "towns": [
+      "East Haddam",
+      "East Hampton",
+      "Marlborough",
+      "Portland"
+    ],
+    "quote": "(14) The towns of East Haddam, East Hampton, Marlborough and Portland."
+  },
+  "18": {
+    "district": 18,
+    "towns": [
+      "Cheshire",
+      "Southington"
+    ],
+    "quote": "(18) The towns of Cheshire and Southington."
+  },
+  "25": {
+    "district": 25,
+    "towns": [
+      "Coventry",
+      "Mansfield",
+      "Tolland",
+      "Willington"
+    ],
+    "quote": "(25) The towns of Coventry, Mansfield, Tolland and Willington."
+  }
+}

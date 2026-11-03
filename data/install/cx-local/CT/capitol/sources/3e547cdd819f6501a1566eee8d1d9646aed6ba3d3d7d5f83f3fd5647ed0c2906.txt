@@ -1,0 +1,172 @@
+List of Regional Locations and Court Names 
+REGION 3 
+26 
+Northeast 
+Ashford, Brooklyn, Eastford, Pomfret, 
+Putnam, Thompson, Woodstock 
+27 
+Plainfield-Killingly Regional 
+Canterbury, Killingly, Plainfield, 
+Sterling 
+25 
+Tolland-Mansfield 
+Coventry, Mansfield, Tolland, 
+Willington 
+28 
+Windham-Colchester 
+Chaplin, Colchester, Hampton, 
+Lebanon, Scotland, Windham 
+REGION 4 
+48 
+Bridgeport 
+43 
+Danbury 
+52 
+Darien-New Canaan 
+49 
+Fairfield 
+54 
+Greenwich 
+44 
+Housatonic 
+Bridgewater, Brookfield, New Fairfield, 
+New Milford, Sherman 
+45 
+Northern Fairfield County 
+Bethel, Newtown, Redding, Ridgefield 
+51 
+Norwalk-Wilton 
+42 
+Shelton 
+53 
+Stamford 
+47 
+Stratford 
+46 
+Trumbull 
+Easton, Monroe, Trumbull 
+50 
+Westport 
+Weston, Westport 
+REGION 5 
+35 
+Branford-No. Branford 
+34 
+Madison-Guilford 
+36 
+East Haven-North Haven 
+37 
+Hamden-Bethany 
+40 
+Milford-Orange 
+38 
+New Haven 
+39 
+West Haven 
+REGION 1 
+18 
+Cheshire-Southington 
+41 
+Derby 
+Ansonia, Derby, Seymour, 
+Woodbridge 
+24 
+Litchfield Hills 
+Canaan, Cornwall, Kent, Harwinton, 
+Litchfield, Morris, Norfolk, North 
+Canaan, Salisbury, Sharon, Thomaston, 
+Warren 
+21 
+Naugatuck 
+Beacon Falls, Middlebury, 
+Naugatuck, Prospect 
+19 
+Bristol-Plymouth 
+22 
+Region # 22 
+Bethlehem, Oxford, Roxbury, 
+Southbury, Washington, Watertown, 
+Woodbury 
+23 
+Torrington Area 
+Barkhamsted, Colebrook, Goshen, 
+Hartland, New Hartford, Torrington, 
+Winchester 
+20 
+Waterbury 
+Waterbury, Wolcott 
+REGION 2 
+5 
+East Hartford 
+12 
+Ellington 
+Ellington, Vernon 
+10 
+Farmington Regional 
+Farmington, Burlington, Plainville 
+6 
+Glastonbury - Hebron 
+13 
+Greater Manchester 
+Andover, Bolton, Columbia, 
+Manchester 
+4 
+Greater Windsor 
+East Windsor, South Windsor, 
+Windsor 
+1 
+Hartford 
+7 
+Newington 
+Newington, Rocky Hill, 
+Wethersfield 
+11 
+North Central Connecticut 
+Enfield, Somers, Stafford, Union 
+9 
+Simsbury Regional 
+Avon, Canton, Granby, Simsbury 
+3 
+Tobacco Valley 
+Bloomfield, East Granby, Suffield, 
+Windsor Locks 
+2 
+West Hartford 
+REGION 6 
+8 
+Berlin 
+Berlin, New Britain 
+16 
+Meriden 
+15 
+Middletown 
+Cromwell, Durham, Middlefield, 
+Middletown 
+14 
+Region # 14 
+East Haddam, East Hampton, 
+Marlborough, Portland 
+33 
+Saybrook 
+Chester, Clinton, Deep River, Essex, 
+Haddam, Killingworth, Lyme, Old 
+Saybrook, Westbrook 
+17 
+Wallingford 
+REGION 7 
+31 
+New London 
+New London, Waterford 
+32 
+Niantic Regional 
+East & Old Lyme, Montville, 
+Niantic, Salem 
+29 
+Norwich 
+Bozrah, Franklin, Griswold, Lisbon, 
+Norwich, Preston, Sprague, Voluntown 
+30 
+Southeastern CT Regional 
+Groton, Ledyard, North Stonington, 
+Stonington 
+5/6/2024 

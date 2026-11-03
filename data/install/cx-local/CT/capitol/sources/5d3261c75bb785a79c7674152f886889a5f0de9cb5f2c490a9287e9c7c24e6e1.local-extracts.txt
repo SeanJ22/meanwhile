@@ -1,0 +1,725 @@
+PAGE 1 / Judge of Probate / RECT [612.85, 140.0, 668.75, 505.52208251953124]
+9
+Judge of
+Probate
+Juez del
+Tribunal
+Testamentario
+VoteforOne
+Voteporuno
+9A
+Robert A.
+Randich
+9B
+Julie
+Costello
+9F
+
+PAGE 1 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 505.52208251953124]
+10
+Registrar of
+Voters
+Registrador De
+Votantes
+VoteforOne
+Voteporuno
+10A
+Phillip
+Theroux
+10B
+Thomas
+Pugliese
+10F
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Rocky Hill,Connecticut
+StateElection
+Elección Estatal
+November 3,2026
+3de Noviembre de2026
+State of Connecticut
+Estado de Connecticut
+Official Ballot/Papeleta Oficial
+Be sure to read the instructions on the reverse side of this ballot.
+Asegúrese de leer las instrucciones en el reverso de esta boleta.
+Sheet1of1
+Pagina1de1
+Congressional District/Distrito Congresional 1
+Senatorial District/Distrito Senatorial 9
+Assembly District/Distrito de la Asamblea 29
+Probate District /Distrito 7
+Voting District/Distrito Electoral 1
+Office
+Cargo
+Party
+Partido
+1
+Governor and
+Lieutenant
+Governor
+Gobernador y Vice
+Gobernador
+VoteforOne
+Voteporuno
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+Representante
+de congreso
+VoteforOne
+Voteporuno
+2A
+Luke
+Bronin
+2B
+Amy
+Chai
+2E
+Mary L.
+Sanders
+3
+State Senator
+Senador
+Estatal
+VoteforOne
+Voteporuno
+3A
+Matt
+Lesser
+3B
+Grant W.
+Polomsky
+3C
+Matt
+Lesser
+3D
+Gwen
+Samuel
+4
+State
+Representative
+Representante
+Estatal
+VoteforOne
+Voteporuno
+4A
+Kerry Szeps
+Wood
+4D
+Kerry Szeps
+Wood
+5
+Secretary of
+the State
+Secretario del
+Estado
+VoteforOne
+Voteporuno
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+Tesorero
+VoteforOne
+Voteporuno
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+Contralor
+VoteforOne
+Voteporuno
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+Secretario de
+Justicia
+VoteforOne
+Voteporuno
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+Juez del
+Tribunal
+Testamentario
+VoteforOne
+Voteporuno
+9A
+Robert A.
+Randich
+9B
+Julie
+Costello
+10
+Registrar of
+Voters
+Registrador De
+Votantes
+VoteforOne
+Voteporuno
+10A
+Phillip
+Theroux
+10B
+Thomas
+Pugliese
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Green Party
+Write-in Votes
+Votos por Escrito
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+10F
+Sample Ballot 
+
+
+PAGE 2 / Judge of Probate / RECT [612.85, 140.0, 668.75, 505.52208251953124]
+9
+Judge of
+Probate
+Juez del
+Tribunal
+Testamentario
+VoteforOne
+Voteporuno
+9A
+Robert A.
+Randich
+9B
+Julie
+Costello
+9F
+
+PAGE 2 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 505.52208251953124]
+10
+Registrar of
+Voters
+Registrador De
+Votantes
+VoteforOne
+Voteporuno
+10A
+Phillip
+Theroux
+10B
+Thomas
+Pugliese
+10F
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Rocky Hill,Connecticut
+StateElection
+Elección Estatal
+November 3,2026
+3de Noviembre de2026
+State of Connecticut
+Estado de Connecticut
+Official Ballot/Papeleta Oficial
+Be sure to read the instructions on the reverse side of this ballot.
+Asegúrese de leer las instrucciones en el reverso de esta boleta.
+Sheet1of1
+Pagina1de1
+Congressional District/Distrito Congresional 1
+Senatorial District/Distrito Senatorial 9
+Assembly District/Distrito de la Asamblea 29
+Probate District /Distrito 7
+Voting District/Distrito Electoral 2
+Office
+Cargo
+Party
+Partido
+1
+Governor and
+Lieutenant
+Governor
+Gobernador y Vice
+Gobernador
+VoteforOne
+Voteporuno
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+Representante
+de congreso
+VoteforOne
+Voteporuno
+2A
+Luke
+Bronin
+2B
+Amy
+Chai
+2E
+Mary L.
+Sanders
+3
+State Senator
+Senador
+Estatal
+VoteforOne
+Voteporuno
+3A
+Matt
+Lesser
+3B
+Grant W.
+Polomsky
+3C
+Matt
+Lesser
+3D
+Gwen
+Samuel
+4
+State
+Representative
+Representante
+Estatal
+VoteforOne
+Voteporuno
+4A
+Kerry Szeps
+Wood
+4D
+Kerry Szeps
+Wood
+5
+Secretary of
+the State
+Secretario del
+Estado
+VoteforOne
+Voteporuno
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+Tesorero
+VoteforOne
+Voteporuno
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+Contralor
+VoteforOne
+Voteporuno
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+Secretario de
+Justicia
+VoteforOne
+Voteporuno
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+Juez del
+Tribunal
+Testamentario
+VoteforOne
+Voteporuno
+9A
+Robert A.
+Randich
+9B
+Julie
+Costello
+10
+Registrar of
+Voters
+Registrador De
+Votantes
+VoteforOne
+Voteporuno
+10A
+Phillip
+Theroux
+10B
+Thomas
+Pugliese
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Green Party
+Write-in Votes
+Votos por Escrito
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+10F
+Sample Ballot 
+
+
+PAGE 3 / Judge of Probate / RECT [612.85, 140.0, 668.75, 505.52208251953124]
+9
+Judge of
+Probate
+Juez del
+Tribunal
+Testamentario
+VoteforOne
+Voteporuno
+9A
+Robert A.
+Randich
+9B
+Julie
+Costello
+9F
+
+PAGE 3 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 505.52208251953124]
+10
+Registrar of
+Voters
+Registrador De
+Votantes
+VoteforOne
+Voteporuno
+10A
+Phillip
+Theroux
+10B
+Thomas
+Pugliese
+10F
+
+PAGE 3 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Rocky Hill,Connecticut
+StateElection
+Elección Estatal
+November 3,2026
+3de Noviembre de2026
+State of Connecticut
+Estado de Connecticut
+Official Ballot/Papeleta Oficial
+Be sure to read the instructions on the reverse side of this ballot.
+Asegúrese de leer las instrucciones en el reverso de esta boleta.
+Sheet1of1
+Pagina1de1
+Congressional District/Distrito Congresional 1
+Senatorial District/Distrito Senatorial 9
+Assembly District/Distrito de la Asamblea 29
+Probate District /Distrito 7
+Voting District/Distrito Electoral 3
+Office
+Cargo
+Party
+Partido
+1
+Governor and
+Lieutenant
+Governor
+Gobernador y Vice
+Gobernador
+VoteforOne
+Voteporuno
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+Representante
+de congreso
+VoteforOne
+Voteporuno
+2A
+Luke
+Bronin
+2B
+Amy
+Chai
+2E
+Mary L.
+Sanders
+3
+State Senator
+Senador
+Estatal
+VoteforOne
+Voteporuno
+3A
+Matt
+Lesser
+3B
+Grant W.
+Polomsky
+3C
+Matt
+Lesser
+3D
+Gwen
+Samuel
+4
+State
+Representative
+Representante
+Estatal
+VoteforOne
+Voteporuno
+4A
+Kerry Szeps
+Wood
+4D
+Kerry Szeps
+Wood
+5
+Secretary of
+the State
+Secretario del
+Estado
+VoteforOne
+Voteporuno
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+Tesorero
+VoteforOne
+Voteporuno
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+Contralor
+VoteforOne
+Voteporuno
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+Secretario de
+Justicia
+VoteforOne
+Voteporuno
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+Juez del
+Tribunal
+Testamentario
+VoteforOne
+Voteporuno
+9A
+Robert A.
+Randich
+9B
+Julie
+Costello
+10
+Registrar of
+Voters
+Registrador De
+Votantes
+VoteforOne
+Voteporuno
+10A
+Phillip
+Theroux
+10B
+Thomas
+Pugliese
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Green Party
+Write-in Votes
+Votos por Escrito
+1F
+2F
+3F
+4F
+5F
+6F
+7F
+8F
+9F
+10F
+Sample Ballot 
+

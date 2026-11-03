@@ -1,0 +1,178 @@
+[
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:1",
+    "name": "Hartford Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Hartford Probate Court\n(PD-01)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:2",
+    "name": "West Hartford Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "West Hartford Probate Court\n(PD-02)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:3",
+    "name": "Tobacco Valley Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Tobacco Valley Probate Court\n(PD-03)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:4",
+    "name": "Greater Windsor Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Greater Windsor Probate Court\n(PD-04)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:5",
+    "name": "East Hartford Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "East Hartford Probate Court\n(PD-05)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:6",
+    "name": "Glastonbury - Hebron Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Glastonbury - Hebron Probate Court\n(PD-06)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:7",
+    "name": "Newington Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Newington Probate Court\n(PD-07)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:8",
+    "name": "Berlin Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Berlin Probate Court\n(PD-08)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:9",
+    "name": "Simsbury Regional Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Simsbury Regional Probate Court\n(PD-09)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:10",
+    "name": "Farmington Regional Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Farmington Regional Probate Court\n(PD-10)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:11",
+    "name": "North Central Connecticut",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "North Central Connecticut\n(PD-11)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:12",
+    "name": "Ellington Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Ellington Probate Court\n(PD-12)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:13",
+    "name": "Greater Manchester Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Greater Manchester Probate Court\n(PD-13)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:14",
+    "name": "Region # 14 Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Region # 14 Probate Court\n(PD-14)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:18",
+    "name": "Cheshire - Southington Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Cheshire - Southington Probate Court\n(PD-18)"
+    }
+  },
+  {
+    "districtOcdId": "ocd-division/country:us/state:ct/probate_district:25",
+    "name": "Tolland - Mansfield Probate Court",
+    "provenance": {
+      "sourceUrl": "https://www.ctprobate.gov/court-locator",
+      "sourceOrg": "Connecticut Probate Courts",
+      "collectedAt": "2026-11-03T05:47:53.097594+00:00",
+      "verifiedAt": "2026-11-03T05:47:53.097594+00:00",
+      "quote": "Tolland - Mansfield Probate Court\n(PD-25)"
+    }
+  }
+]

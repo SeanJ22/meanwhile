@@ -1,0 +1,402 @@
+[
+  {
+    "town": "Andover",
+    "pagesAudited": 1,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/andover_sample_ada.pdf?rev=5cfdbdb54428458a95cac91cc1c81c2c&hash=2275ED2D4933F66237158C5274A4437B",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "South Windsor",
+    "pagesAudited": 5,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/south-windsor-sample.pdf?rev=9213ff261dc7412ca389a9dd45e8fe9f&hash=3075A75CA3E24FEBA60D9E6881605A46",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "East Windsor",
+    "pagesAudited": 2,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_windsor_sample_ada.pdf?rev=2d961f4ab5be47cdad81e7fa05cf597b&hash=FEF2D2EEEE104E8F879042EF14E3E664",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "New Britain",
+    "pagesAudited": 4,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/new_britain_sample_ada.pdf?rev=8020fdb826da487282a364240352b86f&hash=A295C6FAAC08B5EE60A62B9AD8480515",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Southington",
+    "pagesAudited": 9,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/southington_sample_ada.pdf?rev=806962a856aa4e85937650e625749dee&hash=5413508FDF3644F6DC7C7422B1E5EE77",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Avon",
+    "pagesAudited": 3,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/avon_sample_ada.pdf?rev=deb43be221724710b3ea2659feb6cad9&hash=FF7A9481FA54109A5540070C281172E7",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Ellington",
+    "pagesAudited": 3,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/ellington_sample_ada.pdf?rev=5e9d59938f5645af8f50aab8a894b996&hash=F636886DA25BC58A42A90FED51F7A909",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Stafford",
+    "pagesAudited": 3,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/stafford-sample.pdf?rev=da945c4ce5ed4f598305b03c37be8831&hash=B4E2976B40D885D27D6C0D44BDEBD782",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Enfield",
+    "pagesAudited": 2,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/enfield_sample.pdf?rev=3757318bbe6441ce99e039ec48818e77&hash=58663D641E3430554DA0E883A395777F",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Berlin",
+    "pagesAudited": 3,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters",
+      "Board of Education Non-Partisan"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Farmington",
+    "pagesAudited": 7,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/farmington_sample.pdf?rev=3287644108bb41adba1c09b2311d6423&hash=5E6AC29D970D44C0D3A603A42C434C7F",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Newington",
+    "pagesAudited": 2,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/newington_sample_ada.pdf?rev=c661065a2f064183836d49a4099fc586&hash=D9F7B0B72EC9DF79D13D8C0603260AFD",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Suffield",
+    "pagesAudited": 1,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/suffield_sample_ada.pdf?rev=3f97bd4540c34cdc99faab712b7f6be7&hash=F9D19B4913FC797D52E81043AFE61ED2",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Bloomfield",
+    "pagesAudited": 5,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bloomfield_sample_ada.pdf?rev=f74be64ccc7b4bb78447434eabc4d6aa&hash=E32C937F10C8242F39B7E009AB63470D",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Glastonbury",
+    "pagesAudited": 6,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/glastonbury_sample.pdf?rev=4af01e8a658743049f074879bf687b5f&hash=493DA6EBBF28F70B74BAB40D31C8395C",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Bolton",
+    "pagesAudited": 2,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bolton_sample_ada.pdf?rev=8ef72dba81e842adaa1f63f811565088&hash=74F10EEC959A8382E8E8AE2832BE562C",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Granby",
+    "pagesAudited": 2,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/granby_sample.pdf?rev=df36fdcaf4fa46969e075b2049a6b2b8&hash=3F9DA4A08ED6DC61B2155F7A0D9180CD",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Tolland",
+    "pagesAudited": 3,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/tolland-sample.pdf?rev=2c6a2eb368bc42ada15f224b7bffabcc&hash=6364DAEBA1AE1C149CC7CC825FF4E08F",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Vernon",
+    "pagesAudited": 5,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/vernon_sample.pdf?rev=55d0dce621ce4e91b63145c4b5e489d6&hash=7515179CFB09DC7E7B3B03848343472B",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Hartford",
+    "pagesAudited": 24,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hartford_sample_ada.pdf?rev=d8f4a1a565594543a660f2851c2a7e33&hash=2250FCFA437B93EF46DF981B8BA53BA8",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Canton",
+    "pagesAudited": 1,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/canton-sample.pdf?rev=bd651d2005fe47cf81e44e3f975294e5&hash=56C563308D51D38510D224D15DABCD3D",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Hebron",
+    "pagesAudited": 1,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hebron_sample_ada.pdf?rev=7fc8732486334231a9288b01356a0e4e&hash=5223A1018F32615D7F7BD5BF3C11518B",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Plainville",
+    "pagesAudited": 4,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/plainville_sample_ada.pdf?rev=2c81f1917a224e1b8919ca7e79daf2f6&hash=17797789BA422A4885A6584B0FDA24FB",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "West Hartford",
+    "pagesAudited": 5,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/west_hartford_sample_ada.pdf?rev=5f05cfb322124a8983c68d84ee8ae3cf&hash=CAB6415BF5808F69E0627084B9C386E5",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Columbia",
+    "pagesAudited": 1,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/columbia_sample.pdf?rev=14e9db85b3ca4260a88cb722d7ada879&hash=9E650C738A53F6AFDA57D13CD6078B77",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Wethersfield",
+    "pagesAudited": 3,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/wethersfield_sample_ada.pdf?rev=5d645e1482d641eaaa5c0aa8db4b1472&hash=6988E4F9DD07917668513E738C23ADC6",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Willington",
+    "pagesAudited": 1,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/willington_sample_ada.pdf?rev=54ce6864e8014b608f996efdefe59053&hash=79EDC7D1727557EDEFFAB86491AA6B2D",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Coventry",
+    "pagesAudited": 2,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/coventry_sample_ada.pdf?rev=860968423e1049f9a7960fc070e16dac&hash=524E8D4D3205F24F3F52AD7B1B2ED699",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Rocky Hill",
+    "pagesAudited": 3,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/rocky-hill_sample.pdf?rev=ccf5b9e6713c43d8b2fa1de0580feaac&hash=2F9C64C90A2696BCB45A9C729BF8AE96",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Manchester",
+    "pagesAudited": 4,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/manchester_sample_ada-(1).pdf?rev=89268b4bd2274a62b9230c67bb0300de&hash=C25F821489FD9AC520E18EB539EB0B72",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Mansfield",
+    "pagesAudited": 4,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/mansfield_sample.pdf?rev=18f1e18aa4b8400092e2c38236b3317c&hash=8A8AA7B7AC5DFF85693E2396516B6BE0",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Windsor",
+    "pagesAudited": 7,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_sample_ada.pdf?rev=bedc995f02a44da9a4bcf07cfe455ed8&hash=4B6B8EE8A1D429275F6063DFDE6EAC86",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Marlborough",
+    "pagesAudited": 1,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/marlborough_sample.pdf?rev=891a463f33c14b798b91c7910d1da1a3&hash=5F8EC2C5D678C71FC257DEC6437A2735",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Windsor Locks",
+    "pagesAudited": 2,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_locks_sample_updated_ada.pdf?rev=8027256fe7f34bd4b35f31db83bf40a7&hash=800700EB56671524D688DEFBBD8B0D4D",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "East Granby",
+    "pagesAudited": 1,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east-granby_sample.pdf?rev=98c9437ab8e74d9d87a505c828146a3f&hash=FF7E1B973526D1DC7E3A3C4A1FC53FEB",
+    "printedLocalFields": [
+      "Judge of Probate"
+    ],
+    "registrarStatus": "NOT_PRINTED_IN_SUPPLIED_CURRENT_SAMPLES",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "East Hartford",
+    "pagesAudited": 7,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_hartford_sample_updated_ada.pdf?rev=8f44ac28d15145f1913ad45d793cf06b&hash=BA4E76A75B2C31839FADF2AF38469628",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Simsbury",
+    "pagesAudited": 4,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/simsbury-sample.pdf?rev=7807760a6eb4430f9f8f11ef30e44f9a&hash=545639178209DD255D2963ED8DF20A14",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  },
+  {
+    "town": "Somers",
+    "pagesAudited": 1,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/somers_sample.pdf?rev=2a7ab068bcc4476387c974e6720cfa84&hash=3DFEEEE74E96F5AFF94DA7C6AA4FB909",
+    "printedLocalFields": [
+      "Judge of Probate",
+      "Registrar of Voters"
+    ],
+    "registrarStatus": "PRINTED",
+    "absenceMeaning": "No cancellation, term-cycle or no-candidate conclusion inferred from an unprinted field."
+  }
+]

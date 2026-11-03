@@ -1,0 +1,662 @@
+PAGE 1 / Judge of Probate / RECT [628.65, 140.0, 684.65, 505.53175659179686]
+9 
+Judge of 
+Probate 
+Juez del 
+Tribunal 
+Testamentario 
+Vote for One 
+Vote por Uno 
+9A 
+Robert A. 
+Randich 
+9B 
+Julie 
+Costello 
+9F
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+Sample Ballot
+State of Connecticut 
+Estado de Connecticut 
+Official Ballot/Papeleta Oficial 
+Wethersfield, Connecticut 
+State Election 
+Elección Estatal 
+November 3, 2026 
+3 de noviembre de 2026 
+Congressional District/Distrito Congresional 1 
+Senatorial District/Distrito Senatorial 9 
+Assembly District/Distrito de la Asamblea 28 
+Voting District/Distrito Electoral 1 
+Office 
+Cargo 
+Party 
+Partido 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Gobernador y 
+Vicegobernador 
+Vote for One 
+Vote por Uno 
+2 
+Representative in 
+Congress 
+Representante en 
+el Congreso 
+Vote for One 
+Vote por Uno 
+3 
+State Senator 
+Senador 
+Estatal 
+Vote for One 
+Vote por Uno 
+4 
+State 
+Representative 
+Representante 
+estatal 
+Vote for One 
+Vote por Uno 
+5 
+Secretary of 
+the State 
+Secretario del 
+Estado 
+Vote for One 
+Vote por Uno 
+6 
+Treasurer 
+Tesorero 
+Vote for One 
+Vote por Uno 
+7 
+Comptroller 
+Contralor 
+Vote for One 
+Vote por Uno 
+8 
+Attorney 
+General 
+Fiscal General 
+Vote for One 
+Vote por Uno 
+9 
+Judge of 
+Probate 
+Juez del 
+Tribunal 
+Testamentario 
+Vote for One 
+Vote por Uno 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Matt 
+Lesser 
+4A 
+Amy Morrin 
+Bello 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Robert A. 
+Randich 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Grant W. 
+Polomsky 
+4B 
+William S. 
+Davidson 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Julie 
+Costello 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+Matt 
+Lesser 
+4C 
+Amy Morrin 
+Bello 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+Gwen 
+Samuel 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+Write-in Votes 
+Votos por Escrito 
+1F 
+2F 
+3F 
+4F 
+5F 
+6F 
+7F 
+8F 
+9F 
+Vote on the Question(s) 
+Vota sobre las pregunta 
+1. "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of 
+a ladder truck and a rescue truck for the Wethersfield Fire Department and 
+authorize the issuance of bonds or notes of the town in an amount not to 
+exceed $4,000,000 to finance the appropriation?" 
+1. "¿Debería el Municipio de Wethersfield asignar $4,000,000 para la compra 
+de un camión con escalera y un camión de rescate para el Departamento de 
+Bomberos de Wethersfield y authorizar la emisión de bonos o pagarés del 
+municipio por un monto que no exceda los $4,000,000 para financiar dicha 
+asignación?" 
+Yes/Sí 
+No/No 
+Be sure to read the instructions on the reverse side of this ballot. 
+Asegúrese de leer las instrucciones en el reverso de esta papeleta. 
+Sheet 1 of 1 
+Página 1 de 1 
+
+
+PAGE 2 / Judge of Probate / RECT [628.65, 140.0, 684.65, 505.5237609863281]
+9 
+Judge of 
+Probate 
+Juez del 
+Tribunal 
+Testamentario 
+Vote for One 
+Vote por Uno 
+9A 
+Robert A. 
+Randich 
+9B 
+Julie 
+Costello 
+9F
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+State of Connecticut 
+Sample Ballot
+Congressional District/Distrito Congresional 1 
+Senatorial District/Distrito Senatorial 1 
+Assembly District/Distrito de la Asamblea 29 
+Voting District/Distrito Electoral 2 
+State Election 
+November 3, 2026 
+Elección Estatal 
+Wethersfield, Connecticut 
+3 de noviembre de 2026 
+Estado de Connecticut 
+Official Ballot/Papeleta Oficial 
+Office 
+Cargo 
+Party 
+Partido 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Gobernador y 
+Vicegobernador 
+Vote for One 
+Vote por Uno 
+2 
+Representative in 
+Congress 
+Representante en 
+el Congreso 
+Vote for One 
+Vote por Uno 
+3 
+State Senator 
+Senador 
+Estatal 
+Vote for One 
+Vote por Uno 
+4 
+State 
+Representative 
+Representante 
+estatal 
+Vote for One 
+Vote por Uno 
+5 
+Secretary of 
+the State 
+Secretario del 
+Estado 
+Vote for One 
+Vote por Uno 
+6 
+Treasurer 
+Tesorero 
+Vote for One 
+Vote por Uno 
+7 
+Comptroller 
+Contralor 
+Vote for One 
+Vote por Uno 
+8 
+Attorney 
+General 
+Fiscal General 
+Vote for One 
+Vote por Uno 
+9 
+Judge of 
+Probate 
+Juez del 
+Tribunal 
+Testamentario 
+Vote for One 
+Vote por Uno 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+John W. 
+Fonfara 
+4A 
+Kerry Szeps 
+Wood 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Robert A. 
+Randich 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Julie 
+Costello 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+4D 
+Kerry Szeps 
+Wood 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+3E 
+Luis 
+Delgado 
+Write-in Votes 
+Votos por Escrito 
+1F 
+2F 
+3F 
+4F 
+5F 
+6F 
+7F 
+8F 
+9F 
+Vote on the Question(s) 
+Vota sobre las pregunta 
+1. "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of 
+a ladder truck and a rescue truck for the Wethersfield Fire Department and 
+authorize the issuance of bonds or notes of the town in an amount not to 
+exceed $4,000,000 to finance the appropriation?" 
+1. "¿Debería el Municipio de Wethersfield asignar $4,000,000 para la compra 
+de un camión con escalera y un camión de rescate para el Departamento de 
+Bomberos de Wethersfield y authorizar la emisión de bonos o pagarés del 
+municipio por un monto que no exceda los $4,000,000 para financiar dicha 
+asignación?" 
+Yes/Sí 
+No/No 
+Be sure to read the instructions on the reverse side of this ballot. 
+Asegúrese de leer las instrucciones en el reverso de esta papeleta. 
+Sheet 1 of 1 
+Página 1 de 1 
+
+
+PAGE 3 / Judge of Probate / RECT [628.65, 140.0, 684.65, 505.5237609863281]
+9 
+Judge of 
+Probate 
+Juez del 
+Tribunal 
+Testamentario 
+Vote for One 
+Vote por Uno 
+9A 
+Robert A. 
+Randich 
+9B 
+Julie 
+Costello 
+9F
+
+PAGE 3 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+State of Connecticut 
+Sample Ballot
+Congressional District/Distrito Congresional 1 
+Senatorial District/Distrito Senatorial 1 
+Assembly District/Distrito de la Asamblea 28 
+Voting District/Distrito Electoral 3, 4, 5, 6 
+State Election 
+November 3, 2026 
+Elección Estatal 
+Wethersfield, Connecticut 
+3 de noviembre de 2026 
+Estado de Connecticut 
+Official Ballot/Papeleta Oficial 
+Office 
+Cargo 
+Party 
+Partido 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Gobernador y 
+Vicegobernador 
+Vote for One 
+Vote por Uno 
+2 
+Representative in 
+Congress 
+Representante en 
+el Congreso 
+Vote for One 
+Vote por Uno 
+3 
+State Senator 
+Senador 
+Estatal 
+Vote for One 
+Vote por Uno 
+4 
+State 
+Representative 
+Representante 
+estatal 
+Vote for One 
+Vote por Uno 
+5 
+Secretary of 
+the State 
+Secretario del 
+Estado 
+Vote for One 
+Vote por Uno 
+6 
+Treasurer 
+Tesorero 
+Vote for One 
+Vote por Uno 
+7 
+Comptroller 
+Contralor 
+Vote for One 
+Vote por Uno 
+8 
+Attorney 
+General 
+Fiscal General 
+Vote for One 
+Vote por Uno 
+9 
+Judge of 
+Probate 
+Juez del 
+Tribunal 
+Testamentario 
+Vote for One 
+Vote por Uno 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+John W. 
+Fonfara 
+4A 
+Amy Morrin 
+Bello 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Robert A. 
+Randich 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+4B 
+William S. 
+Davidson 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Julie 
+Costello 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+4C 
+Amy Morrin 
+Bello 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+3E 
+Luis 
+Delgado 
+Write-in Votes 
+Votos por Escrito 
+1F 
+2F 
+3F 
+4F 
+5F 
+6F 
+7F 
+8F 
+9F 
+Vote on the Question(s) 
+Vota sobre las pregunta 
+1. "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of 
+a ladder truck and a rescue truck for the Wethersfield Fire Department and 
+authorize the issuance of bonds or notes of the town in an amount not to 
+exceed $4,000,000 to finance the appropriation?" 
+1. "¿Debería el Municipio de Wethersfield asignar $4,000,000 para la compra 
+de un camión con escalera y un camión de rescate para el Departamento de 
+Bomberos de Wethersfield y authorizar la emisión de bonos o pagarés del 
+municipio por un monto que no exceda los $4,000,000 para financiar dicha 
+asignación?" 
+Yes/Sí 
+No/No 
+Be sure to read the instructions on the reverse side of this ballot. 
+Asegúrese de leer las instrucciones en el reverso de esta papeleta. 
+Sheet 1 of 1 
+Página 1 de 1 
+

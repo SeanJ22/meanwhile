@@ -1,0 +1,491 @@
+PAGE 1 / Judge of Probate / RECT [612.85, 140.0, 668.75, 505.5233642578125]
+9 
+Judge of 
+Probate 
+Juez del 
+Tribunal 
+Testamentario 
+Vote for One 
+Vote por uno 
+9A 
+Daniel N. 
+Mara 
+9B 
+Mark E. 
+Blackaby 
+9F
+
+PAGE 1 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 505.5233642578125]
+10 
+Registrar of 
+Voters 
+Registrador de 
+votantes 
+Vote for One 
+Vote por uno 
+10A 
+Suzanne 
+O'Brien 
+10B 
+Jennifer 
+Juszczynski 
+10F
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+State of Connecticut 
+Estado de Connecticut Official 
+Ballot/Papeleta Oficial 
+ 
+Windsor Locks, 
+Connecticut 
+State Election 
+Elección Estatal 
+November 3, 2026 
+3 de noviembre de 2026 
+Congressional District/Distrito Congresional 1 
+Senatorial District/Distrito Senatorial 7 
+Assembly District/Distrito de la Asamblea 61 
+Voting District One/Distrito Electorales Uno 
+Office 
+Cargo 
+Party 
+Partido 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Gobernador y 
+Vicegobernador 
+Vote for One 
+Vote por uno 
+2 
+Representative 
+in Congress 
+Representante 
+en el Congreso 
+Vote for One 
+Vote por uno 
+3 
+State Senator 
+Senador 
+Estatal 
+Vote for One 
+Vote por uno 
+4 
+State 
+Representative 
+Representante 
+estatal 
+Vote for One 
+Vote por uno 
+5 
+Secretary of 
+the State 
+Secretario del 
+Estado 
+Vote for One 
+Vote por uno 
+6 
+Treasurer 
+Tesorero 
+Vote for One 
+Vote por uno 
+7 
+Comptroller 
+Contralor 
+Vote for One 
+Vote por uno 
+8 
+Attorney 
+General 
+Fiscal General 
+Vote for One 
+Vote por uno 
+9 
+Judge of 
+Probate 
+Juez del 
+Tribunal 
+Testamentario 
+Vote for One 
+Vote por uno 
+10 
+Registrar of 
+Voters 
+Registrador de 
+votantes 
+Vote for One 
+Vote por uno 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+David W. 
+Kiner 
+4A 
+James 
+Mol 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Daniel N. 
+Mara 
+10A 
+Suzanne 
+O'Brien 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+John A. 
+Kissel 
+4B 
+Tami 
+Zawistowski 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Mark E. 
+Blackaby 
+10B 
+Jennifer 
+Juszczynski 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+David W. 
+Kiner 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+John A. 
+Kissel 
+4D 
+Tami 
+Zawistowski 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+Write-in Votes 
+Votos por Escrito 
+1F 
+2F 
+3F 
+4F 
+5F 
+6F 
+7F 
+8F 
+9F 
+10F 
+Be sure to read the instructions on the reverse side of this ballot. 
+Asegúrese de leer las instrucciones en el reverso de esta boleta. 
+Sheet 1 of 1 
+Página 1 de 1 
+
+
+PAGE 2 / Judge of Probate / RECT [612.85, 140.0, 668.75, 505.52330322265624]
+9 
+Judge of 
+Probate 
+Juez del 
+Tribunal 
+Testamentario 
+Vote for One 
+Vote por uno 
+9A 
+Daniel N. 
+Mara 
+9B 
+Mark E. 
+Blackaby 
+9F
+
+PAGE 2 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 505.52330322265624]
+10 
+Registrar of 
+Voters 
+Registrador de 
+votantes 
+Vote for One 
+Vote por uno 
+10A 
+Suzanne 
+O'Brien 
+10B 
+Jennifer 
+Juszczynski 
+10F
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+State of Connecticut 
+Sample Ballot
+Estado de Connecticut Official 
+Ballot/Papeleta Oficial 
+State Election 
+November 3, 2026 
+Windsor Locks,
+Elección Estatal 
+3 de noviembre de 2026 
+Connecticut 
+Congressional District/Distrito Congresional 1 
+Senatorial District/Distrito Senatorial 7 
+Assembly District/Distrito de la Asamblea 60 
+Voting District Two/Distrito Electorales Dos 
+Office 
+Cargo 
+Party 
+Partido 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Gobernador y 
+Vicegobernador 
+Vote for One 
+Vote por uno 
+2 
+Representative 
+in Congress 
+Representante 
+en el Congreso 
+Vote for One 
+Vote por uno 
+3 
+State Senator 
+Senador 
+Estatal 
+Vote for One 
+Vote por uno 
+4 
+State 
+Representative 
+Representante 
+estatal 
+Vote for One 
+Vote por uno 
+5 
+Secretary of 
+the State 
+Secretario del 
+Estado 
+Vote for One 
+Vote por uno 
+6 
+Treasurer 
+Tesorero 
+Vote for One 
+Vote por uno 
+7 
+Comptroller 
+Contralor 
+Vote for One 
+Vote por uno 
+8 
+Attorney 
+General 
+Fiscal General 
+Vote for One 
+Vote por uno 
+9 
+Judge of 
+Probate 
+Juez del 
+Tribunal 
+Testamentario 
+Vote for One 
+Vote por uno 
+10 
+Registrar of 
+Voters 
+Registrador de 
+votantes 
+Vote for One 
+Vote por uno 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+David W. 
+Kiner 
+4A 
+Jane 
+Garibay 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Daniel N. 
+Mara 
+10A 
+Suzanne 
+O'Brien 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+John A. 
+Kissel 
+4B 
+Chantelle 
+Ankerman 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Mark E. 
+Blackaby 
+10B 
+Jennifer 
+Juszczynski 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+David W. 
+Kiner 
+4C 
+Jane 
+Garibay 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+3D 
+John A. 
+Kissel 
+4D 
+Jane 
+Garibay 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+Write-in Votes 
+Votos por Escrito 
+1F 
+2F 
+3F 
+4F 
+5F 
+6F 
+7F 
+8F 
+9F 
+10F 
+Be sure to read the instructions on the reverse side of this ballot. 
+Asegúrese de leer las instrucciones en el reverso de esta boleta. 
+Sheet 1 of 1 
+Página 1 de 1 
+

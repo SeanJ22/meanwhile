@@ -1,0 +1,973 @@
+[
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/andover_sample_ada.pdf?rev=5cfdbdb54428458a95cac91cc1c81c2c&hash=2275ED2D4933F66237158C5274A4437B",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/andover_sample_ada.pdf?rev=5cfdbdb54428458a95cac91cc1c81c2c&hash=2275ED2D4933F66237158C5274A4437B",
+    "sourceCheckedAt": "2026-11-03T05:47:04.696901+00:00",
+    "sha256": "afe870dad7c608bd9e05774baf05b01140ee5fadef0e6cec25bef719dfef24c6",
+    "sourceFile": "sources/afe870dad7c608bd9e05774baf05b01140ee5fadef0e6cec25bef719dfef24c6.pdf",
+    "excerptFile": "sources/afe870dad7c608bd9e05774baf05b01140ee5fadef0e6cec25bef719dfef24c6.local-extracts.txt",
+    "excerptSha256": "548e5a82a2922aa34b3c287c0a090d704c50e9f6da5c35a1da38c2ef66f749f5",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Andover: 1 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/south-windsor-sample.pdf?rev=9213ff261dc7412ca389a9dd45e8fe9f&hash=3075A75CA3E24FEBA60D9E6881605A46",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/south-windsor-sample.pdf?rev=9213ff261dc7412ca389a9dd45e8fe9f&hash=3075A75CA3E24FEBA60D9E6881605A46",
+    "sourceCheckedAt": "2026-11-03T05:47:04.278874+00:00",
+    "sha256": "86b2642d046a5de67a2381ce07e67d7dcb232a7e8de5ec0fe6ccbd3894481689",
+    "sourceFile": "sources/86b2642d046a5de67a2381ce07e67d7dcb232a7e8de5ec0fe6ccbd3894481689.pdf",
+    "excerptFile": "sources/86b2642d046a5de67a2381ce07e67d7dcb232a7e8de5ec0fe6ccbd3894481689.local-extracts.txt",
+    "excerptSha256": "7294ed905712820df4e77c76a63e132f551a167e5eb187770827b6e08d7fc4e1",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for South Windsor: 5 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_windsor_sample_ada.pdf?rev=2d961f4ab5be47cdad81e7fa05cf597b&hash=FEF2D2EEEE104E8F879042EF14E3E664",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_windsor_sample_ada.pdf?rev=2d961f4ab5be47cdad81e7fa05cf597b&hash=FEF2D2EEEE104E8F879042EF14E3E664",
+    "sourceCheckedAt": "2026-11-03T05:47:04.655263+00:00",
+    "sha256": "09e9d81cc0b7c3354a40b9f16e949f7b790d6189e689c9c7b4a90c4659163b26",
+    "sourceFile": "sources/09e9d81cc0b7c3354a40b9f16e949f7b790d6189e689c9c7b4a90c4659163b26.pdf",
+    "excerptFile": "sources/09e9d81cc0b7c3354a40b9f16e949f7b790d6189e689c9c7b4a90c4659163b26.local-extracts.txt",
+    "excerptSha256": "6b49dc6504c388c7a75eae8b13c68e483d9a9795a9ffcba3bd2de206e2231d84",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for East Windsor: 2 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/new_britain_sample_ada.pdf?rev=8020fdb826da487282a364240352b86f&hash=A295C6FAAC08B5EE60A62B9AD8480515",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/new_britain_sample_ada.pdf?rev=8020fdb826da487282a364240352b86f&hash=A295C6FAAC08B5EE60A62B9AD8480515",
+    "sourceCheckedAt": "2026-11-03T05:47:05.488006+00:00",
+    "sha256": "44fd5f154d843dde592be2193c9f4a21ab7cb16ca3578f1d9370c02aeabc609b",
+    "sourceFile": "sources/44fd5f154d843dde592be2193c9f4a21ab7cb16ca3578f1d9370c02aeabc609b.pdf",
+    "excerptFile": "sources/44fd5f154d843dde592be2193c9f4a21ab7cb16ca3578f1d9370c02aeabc609b.local-extracts.txt",
+    "excerptSha256": "15e4ba32094606e4c29b4d3fbe9a62edaf995c97621a332ae7cfedf267b4cc2e",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for New Britain: 4 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/southington_sample_ada.pdf?rev=806962a856aa4e85937650e625749dee&hash=5413508FDF3644F6DC7C7422B1E5EE77",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/southington_sample_ada.pdf?rev=806962a856aa4e85937650e625749dee&hash=5413508FDF3644F6DC7C7422B1E5EE77",
+    "sourceCheckedAt": "2026-11-03T05:47:05.140272+00:00",
+    "sha256": "5d3d766c6db37ca48aedae05487fc42d0021695d261e089427364ad7501f952f",
+    "sourceFile": "sources/5d3d766c6db37ca48aedae05487fc42d0021695d261e089427364ad7501f952f.pdf",
+    "excerptFile": "sources/5d3d766c6db37ca48aedae05487fc42d0021695d261e089427364ad7501f952f.local-extracts.txt",
+    "excerptSha256": "31cabbd203b7bd729fb73d734ddf29ac27d4964b73d369a8bd260399139eca93",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Southington: 9 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/avon_sample_ada.pdf?rev=deb43be221724710b3ea2659feb6cad9&hash=FF7A9481FA54109A5540070C281172E7",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/avon_sample_ada.pdf?rev=deb43be221724710b3ea2659feb6cad9&hash=FF7A9481FA54109A5540070C281172E7",
+    "sourceCheckedAt": "2026-11-03T05:47:06.146241+00:00",
+    "sha256": "56580cce961ac4a541440caeb36fb46b37c5e98d9b7a9149d1dff2f6e8266e5d",
+    "sourceFile": "sources/56580cce961ac4a541440caeb36fb46b37c5e98d9b7a9149d1dff2f6e8266e5d.pdf",
+    "excerptFile": "sources/56580cce961ac4a541440caeb36fb46b37c5e98d9b7a9149d1dff2f6e8266e5d.local-extracts.txt",
+    "excerptSha256": "d7009bfdc3747b7fac907ee6544885565c8237783e5c36b5777b0cc67e327cb7",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Avon: 3 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/ellington_sample_ada.pdf?rev=5e9d59938f5645af8f50aab8a894b996&hash=F636886DA25BC58A42A90FED51F7A909",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/ellington_sample_ada.pdf?rev=5e9d59938f5645af8f50aab8a894b996&hash=F636886DA25BC58A42A90FED51F7A909",
+    "sourceCheckedAt": "2026-11-03T05:47:07.132885+00:00",
+    "sha256": "d01562a6f9b465165060974404b896d20b610579e17b8d84ec4a2d86a22ce615",
+    "sourceFile": "sources/d01562a6f9b465165060974404b896d20b610579e17b8d84ec4a2d86a22ce615.pdf",
+    "excerptFile": "sources/d01562a6f9b465165060974404b896d20b610579e17b8d84ec4a2d86a22ce615.local-extracts.txt",
+    "excerptSha256": "a334f9afebbfb18e19c1548500fd769920d2db6e61829fcb51217f707a8a2430",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Ellington: 3 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/stafford-sample.pdf?rev=da945c4ce5ed4f598305b03c37be8831&hash=B4E2976B40D885D27D6C0D44BDEBD782",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/stafford-sample.pdf?rev=da945c4ce5ed4f598305b03c37be8831&hash=B4E2976B40D885D27D6C0D44BDEBD782",
+    "sourceCheckedAt": "2026-11-03T05:47:05.959241+00:00",
+    "sha256": "780d137b5177aafb837027e7d0b29c413bdab23a648aa5c2ff3800c6966dd894",
+    "sourceFile": "sources/780d137b5177aafb837027e7d0b29c413bdab23a648aa5c2ff3800c6966dd894.pdf",
+    "excerptFile": "sources/780d137b5177aafb837027e7d0b29c413bdab23a648aa5c2ff3800c6966dd894.local-extracts.txt",
+    "excerptSha256": "c1e00c1b7ffa4b030e07fa3e2499f4b5be5efacdb31d552a5eb5d0b6d70b7636",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Stafford: 3 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/enfield_sample.pdf?rev=3757318bbe6441ce99e039ec48818e77&hash=58663D641E3430554DA0E883A395777F",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/enfield_sample.pdf?rev=3757318bbe6441ce99e039ec48818e77&hash=58663D641E3430554DA0E883A395777F",
+    "sourceCheckedAt": "2026-11-03T05:47:07.665332+00:00",
+    "sha256": "3c5e0da54db0b49376703fe5816da44eecc912f57c3a04f43bec225cfcea6563",
+    "sourceFile": "sources/3c5e0da54db0b49376703fe5816da44eecc912f57c3a04f43bec225cfcea6563.pdf",
+    "excerptFile": "sources/3c5e0da54db0b49376703fe5816da44eecc912f57c3a04f43bec225cfcea6563.local-extracts.txt",
+    "excerptSha256": "9d69949bb3526d0dd4daf9f91d457abfa51695ba5e9ad7418ad402e880605725",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Enfield: 2 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "sourceCheckedAt": "2026-11-03T05:47:07.370899+00:00",
+    "sha256": "f9f02ce80ad4bec57bf07afae02d61e9ba831ee63ef1ec81b219801ca5b4e8a9",
+    "sourceFile": "sources/f9f02ce80ad4bec57bf07afae02d61e9ba831ee63ef1ec81b219801ca5b4e8a9.pdf",
+    "excerptFile": "sources/f9f02ce80ad4bec57bf07afae02d61e9ba831ee63ef1ec81b219801ca5b4e8a9.local-extracts.txt",
+    "excerptSha256": "964e571d1aeb0766fe98eb1b073c08ed544be609f1194a440451caf95b181b0b",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Berlin: 3 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/farmington_sample.pdf?rev=3287644108bb41adba1c09b2311d6423&hash=5E6AC29D970D44C0D3A603A42C434C7F",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/farmington_sample.pdf?rev=3287644108bb41adba1c09b2311d6423&hash=5E6AC29D970D44C0D3A603A42C434C7F",
+    "sourceCheckedAt": "2026-11-03T05:47:06.481853+00:00",
+    "sha256": "aca4d9a87235b6166e6044378d8847889e886637c4c651edc680bbe07a564f30",
+    "sourceFile": "sources/aca4d9a87235b6166e6044378d8847889e886637c4c651edc680bbe07a564f30.pdf",
+    "excerptFile": "sources/aca4d9a87235b6166e6044378d8847889e886637c4c651edc680bbe07a564f30.local-extracts.txt",
+    "excerptSha256": "736fead91518f1ee3ddddf081209ff2cb20bae69b0dd058353a16d06c43add51",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Farmington: 7 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/newington_sample_ada.pdf?rev=c661065a2f064183836d49a4099fc586&hash=D9F7B0B72EC9DF79D13D8C0603260AFD",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/newington_sample_ada.pdf?rev=c661065a2f064183836d49a4099fc586&hash=D9F7B0B72EC9DF79D13D8C0603260AFD",
+    "sourceCheckedAt": "2026-11-03T05:47:06.992269+00:00",
+    "sha256": "9b396d8bc35fbca505bf094b0c27967c0952e0b09ae711b65895f43e1f2ca9f6",
+    "sourceFile": "sources/9b396d8bc35fbca505bf094b0c27967c0952e0b09ae711b65895f43e1f2ca9f6.pdf",
+    "excerptFile": "sources/9b396d8bc35fbca505bf094b0c27967c0952e0b09ae711b65895f43e1f2ca9f6.local-extracts.txt",
+    "excerptSha256": "ad8624ab43ce6fc0668cbf1af361dd9079db690605266467ce958889bc340ba4",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Newington: 2 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/suffield_sample_ada.pdf?rev=3f97bd4540c34cdc99faab712b7f6be7&hash=F9D19B4913FC797D52E81043AFE61ED2",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/suffield_sample_ada.pdf?rev=3f97bd4540c34cdc99faab712b7f6be7&hash=F9D19B4913FC797D52E81043AFE61ED2",
+    "sourceCheckedAt": "2026-11-03T05:47:08.002550+00:00",
+    "sha256": "7059920f4fa6edad3de3070169c4b4cb3e67886d83ad04fa03e8848364f0a0de",
+    "sourceFile": "sources/7059920f4fa6edad3de3070169c4b4cb3e67886d83ad04fa03e8848364f0a0de.pdf",
+    "excerptFile": "sources/7059920f4fa6edad3de3070169c4b4cb3e67886d83ad04fa03e8848364f0a0de.local-extracts.txt",
+    "excerptSha256": "f3a23dfeaabb6ea50072ee8e5f7426653d8e26bbcff8a889800d5dcce341b283",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Suffield: 1 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bloomfield_sample_ada.pdf?rev=f74be64ccc7b4bb78447434eabc4d6aa&hash=E32C937F10C8242F39B7E009AB63470D",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bloomfield_sample_ada.pdf?rev=f74be64ccc7b4bb78447434eabc4d6aa&hash=E32C937F10C8242F39B7E009AB63470D",
+    "sourceCheckedAt": "2026-11-03T05:47:07.606403+00:00",
+    "sha256": "7592fef4f86e611565968250b23f279f6a2c7e2838a29ecefabe2249de7c1636",
+    "sourceFile": "sources/7592fef4f86e611565968250b23f279f6a2c7e2838a29ecefabe2249de7c1636.pdf",
+    "excerptFile": "sources/7592fef4f86e611565968250b23f279f6a2c7e2838a29ecefabe2249de7c1636.local-extracts.txt",
+    "excerptSha256": "919287890747bb32b3e9daf2f64c5ae8869a3971ee0cb473501723f8facbf771",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Bloomfield: 5 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/glastonbury_sample.pdf?rev=4af01e8a658743049f074879bf687b5f&hash=493DA6EBBF28F70B74BAB40D31C8395C",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/glastonbury_sample.pdf?rev=4af01e8a658743049f074879bf687b5f&hash=493DA6EBBF28F70B74BAB40D31C8395C",
+    "sourceCheckedAt": "2026-11-03T05:47:07.690022+00:00",
+    "sha256": "a76477b15fdf7288ec70d2d58b05da87a360ce881b7c93a0eecfe33916b9ba07",
+    "sourceFile": "sources/a76477b15fdf7288ec70d2d58b05da87a360ce881b7c93a0eecfe33916b9ba07.pdf",
+    "excerptFile": "sources/a76477b15fdf7288ec70d2d58b05da87a360ce881b7c93a0eecfe33916b9ba07.local-extracts.txt",
+    "excerptSha256": "54e5c6191d64a34a13b0473b8d624ac4126ab9059b5af09eb5dc572d0f99c9e2",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Glastonbury: 6 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bolton_sample_ada.pdf?rev=8ef72dba81e842adaa1f63f811565088&hash=74F10EEC959A8382E8E8AE2832BE562C",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bolton_sample_ada.pdf?rev=8ef72dba81e842adaa1f63f811565088&hash=74F10EEC959A8382E8E8AE2832BE562C",
+    "sourceCheckedAt": "2026-11-03T05:47:07.837206+00:00",
+    "sha256": "3c66a4275322fb8a3cd763f8d3067e14d63408f64155975485cca9795596859c",
+    "sourceFile": "sources/3c66a4275322fb8a3cd763f8d3067e14d63408f64155975485cca9795596859c.pdf",
+    "excerptFile": "sources/3c66a4275322fb8a3cd763f8d3067e14d63408f64155975485cca9795596859c.local-extracts.txt",
+    "excerptSha256": "f57d314ed50bf543e6bdd1b69db6664c85608de6bac22beb8dea719ad07ec653",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Bolton: 2 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/granby_sample.pdf?rev=df36fdcaf4fa46969e075b2049a6b2b8&hash=3F9DA4A08ED6DC61B2155F7A0D9180CD",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/granby_sample.pdf?rev=df36fdcaf4fa46969e075b2049a6b2b8&hash=3F9DA4A08ED6DC61B2155F7A0D9180CD",
+    "sourceCheckedAt": "2026-11-03T05:47:08.237423+00:00",
+    "sha256": "f79423b0cf1d4eabfc797514d1182d2425f09d034c8dd724bf8cbdb5cae091af",
+    "sourceFile": "sources/f79423b0cf1d4eabfc797514d1182d2425f09d034c8dd724bf8cbdb5cae091af.pdf",
+    "excerptFile": "sources/f79423b0cf1d4eabfc797514d1182d2425f09d034c8dd724bf8cbdb5cae091af.local-extracts.txt",
+    "excerptSha256": "039e432bf9c10c2d6f2d0386ca4d62e82b7d69043bb97ea71a47e3bf8eacf74d",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Granby: 2 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/tolland-sample.pdf?rev=2c6a2eb368bc42ada15f224b7bffabcc&hash=6364DAEBA1AE1C149CC7CC825FF4E08F",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/tolland-sample.pdf?rev=2c6a2eb368bc42ada15f224b7bffabcc&hash=6364DAEBA1AE1C149CC7CC825FF4E08F",
+    "sourceCheckedAt": "2026-11-03T05:47:09.241726+00:00",
+    "sha256": "776ae1f4b5e782f0b5326276b6e5388813328f0e87ffcfd854c448b3193b79c8",
+    "sourceFile": "sources/776ae1f4b5e782f0b5326276b6e5388813328f0e87ffcfd854c448b3193b79c8.pdf",
+    "excerptFile": "sources/776ae1f4b5e782f0b5326276b6e5388813328f0e87ffcfd854c448b3193b79c8.local-extracts.txt",
+    "excerptSha256": "9c7f69a56d8e0c208963d01ebc8eca05ea87dfebf1f27b0e531b5d828ab47d22",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Tolland: 3 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/vernon_sample.pdf?rev=55d0dce621ce4e91b63145c4b5e489d6&hash=7515179CFB09DC7E7B3B03848343472B",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/vernon_sample.pdf?rev=55d0dce621ce4e91b63145c4b5e489d6&hash=7515179CFB09DC7E7B3B03848343472B",
+    "sourceCheckedAt": "2026-11-03T05:47:08.114004+00:00",
+    "sha256": "fa92fff1729c3c36363fa21b7e8588902922c1d3863e6dbfbf2d952e91f8f531",
+    "sourceFile": "sources/fa92fff1729c3c36363fa21b7e8588902922c1d3863e6dbfbf2d952e91f8f531.pdf",
+    "excerptFile": "sources/fa92fff1729c3c36363fa21b7e8588902922c1d3863e6dbfbf2d952e91f8f531.local-extracts.txt",
+    "excerptSha256": "4319fbfa5ca9a14b83d701ec676625f78ad893b3e45ca04307e6d6950b3356c5",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Vernon: 5 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hartford_sample_ada.pdf?rev=d8f4a1a565594543a660f2851c2a7e33&hash=2250FCFA437B93EF46DF981B8BA53BA8",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hartford_sample_ada.pdf?rev=d8f4a1a565594543a660f2851c2a7e33&hash=2250FCFA437B93EF46DF981B8BA53BA8",
+    "sourceCheckedAt": "2026-11-03T05:47:08.374328+00:00",
+    "sha256": "bd01dfdf4a93da41bd1ee6cf8b9111746864a82ce445e5c8a5efdacea82d9a8c",
+    "sourceFile": "sources/bd01dfdf4a93da41bd1ee6cf8b9111746864a82ce445e5c8a5efdacea82d9a8c.pdf",
+    "excerptFile": "sources/bd01dfdf4a93da41bd1ee6cf8b9111746864a82ce445e5c8a5efdacea82d9a8c.local-extracts.txt",
+    "excerptSha256": "43cde6478e907f2ee5fad4a12a5eee2b64b0a1cfce060d450ce98ced9b8b48f8",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Hartford: 24 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/canton-sample.pdf?rev=bd651d2005fe47cf81e44e3f975294e5&hash=56C563308D51D38510D224D15DABCD3D",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/canton-sample.pdf?rev=bd651d2005fe47cf81e44e3f975294e5&hash=56C563308D51D38510D224D15DABCD3D",
+    "sourceCheckedAt": "2026-11-03T05:47:09.119824+00:00",
+    "sha256": "c72b5b97564d447c31a2b2a6d11a8c86e96c19454c90995125a894be5390b71b",
+    "sourceFile": "sources/c72b5b97564d447c31a2b2a6d11a8c86e96c19454c90995125a894be5390b71b.pdf",
+    "excerptFile": "sources/c72b5b97564d447c31a2b2a6d11a8c86e96c19454c90995125a894be5390b71b.local-extracts.txt",
+    "excerptSha256": "7fc92a35436fba28b7d89b9e1fc6d2d12d438cb4186a5d66256881ecd662260f",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Canton: 1 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hebron_sample_ada.pdf?rev=7fc8732486334231a9288b01356a0e4e&hash=5223A1018F32615D7F7BD5BF3C11518B",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hebron_sample_ada.pdf?rev=7fc8732486334231a9288b01356a0e4e&hash=5223A1018F32615D7F7BD5BF3C11518B",
+    "sourceCheckedAt": "2026-11-03T05:47:08.475730+00:00",
+    "sha256": "74bc21120a4907f32d659bea137b259aad8ff7143237600d3f4418d0c70b6ec8",
+    "sourceFile": "sources/74bc21120a4907f32d659bea137b259aad8ff7143237600d3f4418d0c70b6ec8.pdf",
+    "excerptFile": "sources/74bc21120a4907f32d659bea137b259aad8ff7143237600d3f4418d0c70b6ec8.local-extracts.txt",
+    "excerptSha256": "fe5a4dff5bddce4fe188d2bc099f048d718407aa6be8b959fb483a634ff4f5a2",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Hebron: 1 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/plainville_sample_ada.pdf?rev=2c81f1917a224e1b8919ca7e79daf2f6&hash=17797789BA422A4885A6584B0FDA24FB",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/plainville_sample_ada.pdf?rev=2c81f1917a224e1b8919ca7e79daf2f6&hash=17797789BA422A4885A6584B0FDA24FB",
+    "sourceCheckedAt": "2026-11-03T05:47:08.750176+00:00",
+    "sha256": "3c7cbf1a040b8dc4a20756144e2b47786214e680010b7828443c65985e77c211",
+    "sourceFile": "sources/3c7cbf1a040b8dc4a20756144e2b47786214e680010b7828443c65985e77c211.pdf",
+    "excerptFile": "sources/3c7cbf1a040b8dc4a20756144e2b47786214e680010b7828443c65985e77c211.local-extracts.txt",
+    "excerptSha256": "1756ce04ac9c64c51446af2024b12f66617908ac0a0b61bedf0262dd3940e566",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Plainville: 4 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/west_hartford_sample_ada.pdf?rev=5f05cfb322124a8983c68d84ee8ae3cf&hash=CAB6415BF5808F69E0627084B9C386E5",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/west_hartford_sample_ada.pdf?rev=5f05cfb322124a8983c68d84ee8ae3cf&hash=CAB6415BF5808F69E0627084B9C386E5",
+    "sourceCheckedAt": "2026-11-03T05:47:09.184676+00:00",
+    "sha256": "80387bf6b2fbad7a6e030fd5178a30cb6fab6b0c77f7fdc0f73091eab1e531e9",
+    "sourceFile": "sources/80387bf6b2fbad7a6e030fd5178a30cb6fab6b0c77f7fdc0f73091eab1e531e9.pdf",
+    "excerptFile": "sources/80387bf6b2fbad7a6e030fd5178a30cb6fab6b0c77f7fdc0f73091eab1e531e9.local-extracts.txt",
+    "excerptSha256": "fa8120bfd89db2d1f8525204bb4ef4e309b8ceec8584e0418629d7b241e52849",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for West Hartford: 5 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/columbia_sample.pdf?rev=14e9db85b3ca4260a88cb722d7ada879&hash=9E650C738A53F6AFDA57D13CD6078B77",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/columbia_sample.pdf?rev=14e9db85b3ca4260a88cb722d7ada879&hash=9E650C738A53F6AFDA57D13CD6078B77",
+    "sourceCheckedAt": "2026-11-03T05:47:08.918021+00:00",
+    "sha256": "bd08f998598d773cf130e99bb430508e2b3848c0ff69122c430fca8c4cc20c85",
+    "sourceFile": "sources/bd08f998598d773cf130e99bb430508e2b3848c0ff69122c430fca8c4cc20c85.pdf",
+    "excerptFile": "sources/bd08f998598d773cf130e99bb430508e2b3848c0ff69122c430fca8c4cc20c85.local-extracts.txt",
+    "excerptSha256": "6e31872af68974a75bef59e0d65e223a888c8426aeca23d3e125c5ca170cf5fd",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Columbia: 1 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/wethersfield_sample_ada.pdf?rev=5d645e1482d641eaaa5c0aa8db4b1472&hash=6988E4F9DD07917668513E738C23ADC6",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/wethersfield_sample_ada.pdf?rev=5d645e1482d641eaaa5c0aa8db4b1472&hash=6988E4F9DD07917668513E738C23ADC6",
+    "sourceCheckedAt": "2026-11-03T05:47:09.437054+00:00",
+    "sha256": "c2826b27a6f6937ddefed5212aaeda102605d7e1ac001d64e08176a49785b216",
+    "sourceFile": "sources/c2826b27a6f6937ddefed5212aaeda102605d7e1ac001d64e08176a49785b216.pdf",
+    "excerptFile": "sources/c2826b27a6f6937ddefed5212aaeda102605d7e1ac001d64e08176a49785b216.local-extracts.txt",
+    "excerptSha256": "28fc775a5a2d2ff72426f905bf1285c63e558b79a267f95be26eac18f68ed05e",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Wethersfield: 3 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/willington_sample_ada.pdf?rev=54ce6864e8014b608f996efdefe59053&hash=79EDC7D1727557EDEFFAB86491AA6B2D",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/willington_sample_ada.pdf?rev=54ce6864e8014b608f996efdefe59053&hash=79EDC7D1727557EDEFFAB86491AA6B2D",
+    "sourceCheckedAt": "2026-11-03T05:47:10.009392+00:00",
+    "sha256": "0fc5d3a3b4d0dc01ea884aba3eb21b0d35aa7fe92024a1691f3d4e432d01bf74",
+    "sourceFile": "sources/0fc5d3a3b4d0dc01ea884aba3eb21b0d35aa7fe92024a1691f3d4e432d01bf74.pdf",
+    "excerptFile": "sources/0fc5d3a3b4d0dc01ea884aba3eb21b0d35aa7fe92024a1691f3d4e432d01bf74.local-extracts.txt",
+    "excerptSha256": "482f3d34fd9ff68a0ab6a32386fb0ee59bb56e4074cef7a3085c7dbca9095a31",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Willington: 1 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/coventry_sample_ada.pdf?rev=860968423e1049f9a7960fc070e16dac&hash=524E8D4D3205F24F3F52AD7B1B2ED699",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/coventry_sample_ada.pdf?rev=860968423e1049f9a7960fc070e16dac&hash=524E8D4D3205F24F3F52AD7B1B2ED699",
+    "sourceCheckedAt": "2026-11-03T05:47:09.596106+00:00",
+    "sha256": "1aed8084ed28773c00b24b4011586dd5f4891dbb49699fa79f48d232a85feed2",
+    "sourceFile": "sources/1aed8084ed28773c00b24b4011586dd5f4891dbb49699fa79f48d232a85feed2.pdf",
+    "excerptFile": "sources/1aed8084ed28773c00b24b4011586dd5f4891dbb49699fa79f48d232a85feed2.local-extracts.txt",
+    "excerptSha256": "f9da8f6f2b7453ac28c7d64bb848084acbc040b2c96d7f0070656d13b6445606",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Coventry: 2 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/rocky-hill_sample.pdf?rev=ccf5b9e6713c43d8b2fa1de0580feaac&hash=2F9C64C90A2696BCB45A9C729BF8AE96",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/rocky-hill_sample.pdf?rev=ccf5b9e6713c43d8b2fa1de0580feaac&hash=2F9C64C90A2696BCB45A9C729BF8AE96",
+    "sourceCheckedAt": "2026-11-03T05:47:10.896832+00:00",
+    "sha256": "5d3261c75bb785a79c7674152f886889a5f0de9cb5f2c490a9287e9c7c24e6e1",
+    "sourceFile": "sources/5d3261c75bb785a79c7674152f886889a5f0de9cb5f2c490a9287e9c7c24e6e1.pdf",
+    "excerptFile": "sources/5d3261c75bb785a79c7674152f886889a5f0de9cb5f2c490a9287e9c7c24e6e1.local-extracts.txt",
+    "excerptSha256": "525e03d1dde259b1f7d7687a6a02d3af054bd3a219a51f658a79357daa828ad7",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Rocky Hill: 3 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/manchester_sample_ada-(1).pdf?rev=89268b4bd2274a62b9230c67bb0300de&hash=C25F821489FD9AC520E18EB539EB0B72",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/manchester_sample_ada-(1).pdf?rev=89268b4bd2274a62b9230c67bb0300de&hash=C25F821489FD9AC520E18EB539EB0B72",
+    "sourceCheckedAt": "2026-11-03T05:47:09.887691+00:00",
+    "sha256": "2f99e2b283733bd895d489c96dfd2df107d716738ae71ab8673e9ed5de372991",
+    "sourceFile": "sources/2f99e2b283733bd895d489c96dfd2df107d716738ae71ab8673e9ed5de372991.pdf",
+    "excerptFile": "sources/2f99e2b283733bd895d489c96dfd2df107d716738ae71ab8673e9ed5de372991.local-extracts.txt",
+    "excerptSha256": "6f43774ac9ddfb506f801482faf93992c0a7a1a9c7a86f9c42fc9fb5a1401342",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Manchester: 4 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/mansfield_sample.pdf?rev=18f1e18aa4b8400092e2c38236b3317c&hash=8A8AA7B7AC5DFF85693E2396516B6BE0",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/mansfield_sample.pdf?rev=18f1e18aa4b8400092e2c38236b3317c&hash=8A8AA7B7AC5DFF85693E2396516B6BE0",
+    "sourceCheckedAt": "2026-11-03T05:47:10.308859+00:00",
+    "sha256": "d5696f8a153d1762bca7d88f33833f60a7d89ca8b9e564e2f47d652e50760124",
+    "sourceFile": "sources/d5696f8a153d1762bca7d88f33833f60a7d89ca8b9e564e2f47d652e50760124.pdf",
+    "excerptFile": "sources/d5696f8a153d1762bca7d88f33833f60a7d89ca8b9e564e2f47d652e50760124.local-extracts.txt",
+    "excerptSha256": "853588b022573a27e62b7d897f7b0e8589e60b8865eda3ddb44321294854132d",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Mansfield: 4 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_sample_ada.pdf?rev=bedc995f02a44da9a4bcf07cfe455ed8&hash=4B6B8EE8A1D429275F6063DFDE6EAC86",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_sample_ada.pdf?rev=bedc995f02a44da9a4bcf07cfe455ed8&hash=4B6B8EE8A1D429275F6063DFDE6EAC86",
+    "sourceCheckedAt": "2026-11-03T05:47:10.136875+00:00",
+    "sha256": "e5256cef034ee500e63f1fb58d7813bee71ce1fab7a19a39fc30fd712a47f218",
+    "sourceFile": "sources/e5256cef034ee500e63f1fb58d7813bee71ce1fab7a19a39fc30fd712a47f218.pdf",
+    "excerptFile": "sources/e5256cef034ee500e63f1fb58d7813bee71ce1fab7a19a39fc30fd712a47f218.local-extracts.txt",
+    "excerptSha256": "2f74dd0a47cd7d116eb2a16b9f0f6e179cc77df3055a75b9725dab8505f4fc43",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Windsor: 7 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/marlborough_sample.pdf?rev=891a463f33c14b798b91c7910d1da1a3&hash=5F8EC2C5D678C71FC257DEC6437A2735",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/marlborough_sample.pdf?rev=891a463f33c14b798b91c7910d1da1a3&hash=5F8EC2C5D678C71FC257DEC6437A2735",
+    "sourceCheckedAt": "2026-11-03T05:47:10.482820+00:00",
+    "sha256": "16b00789c547224fc4fbfbedfffb4d29f364bac09f98adab8c01994f6ac8590c",
+    "sourceFile": "sources/16b00789c547224fc4fbfbedfffb4d29f364bac09f98adab8c01994f6ac8590c.pdf",
+    "excerptFile": "sources/16b00789c547224fc4fbfbedfffb4d29f364bac09f98adab8c01994f6ac8590c.local-extracts.txt",
+    "excerptSha256": "07c0e3eaa4cdf50402134066c2d1599b61b0565f96f3e48c66cd7bce8bda38a7",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Marlborough: 1 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_locks_sample_updated_ada.pdf?rev=8027256fe7f34bd4b35f31db83bf40a7&hash=800700EB56671524D688DEFBBD8B0D4D",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_locks_sample_updated_ada.pdf?rev=8027256fe7f34bd4b35f31db83bf40a7&hash=800700EB56671524D688DEFBBD8B0D4D",
+    "sourceCheckedAt": "2026-11-03T05:47:10.304063+00:00",
+    "sha256": "074554439c1057e2432168a720088504170633a9bc1deb56d8c83657c6872a51",
+    "sourceFile": "sources/074554439c1057e2432168a720088504170633a9bc1deb56d8c83657c6872a51.pdf",
+    "excerptFile": "sources/074554439c1057e2432168a720088504170633a9bc1deb56d8c83657c6872a51.local-extracts.txt",
+    "excerptSha256": "687673481270d99c2cc927d9a561b0c1dee2a8c00325d8fb6417fe3a7932468c",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Windsor Locks: 2 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east-granby_sample.pdf?rev=98c9437ab8e74d9d87a505c828146a3f&hash=FF7E1B973526D1DC7E3A3C4A1FC53FEB",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east-granby_sample.pdf?rev=98c9437ab8e74d9d87a505c828146a3f&hash=FF7E1B973526D1DC7E3A3C4A1FC53FEB",
+    "sourceCheckedAt": "2026-11-03T05:47:10.634718+00:00",
+    "sha256": "920380ea04593e4f536f2b087f4a126ab5f42bd52bd96d8a1d4daa32c257b474",
+    "sourceFile": "sources/920380ea04593e4f536f2b087f4a126ab5f42bd52bd96d8a1d4daa32c257b474.pdf",
+    "excerptFile": "sources/920380ea04593e4f536f2b087f4a126ab5f42bd52bd96d8a1d4daa32c257b474.local-extracts.txt",
+    "excerptSha256": "d96bdc415ca12165a116e84c1547e31cb02bfdb0c386cb278073e135bac65dc4",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for East Granby: 1 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_hartford_sample_updated_ada.pdf?rev=8f44ac28d15145f1913ad45d793cf06b&hash=BA4E76A75B2C31839FADF2AF38469628",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_hartford_sample_updated_ada.pdf?rev=8f44ac28d15145f1913ad45d793cf06b&hash=BA4E76A75B2C31839FADF2AF38469628",
+    "sourceCheckedAt": "2026-11-03T05:47:11.363844+00:00",
+    "sha256": "4b4983945ea3bcfb4b7caa5b8301c2a92150fc882fa77c9c123d9d535c0d6dd9",
+    "sourceFile": "sources/4b4983945ea3bcfb4b7caa5b8301c2a92150fc882fa77c9c123d9d535c0d6dd9.pdf",
+    "excerptFile": "sources/4b4983945ea3bcfb4b7caa5b8301c2a92150fc882fa77c9c123d9d535c0d6dd9.local-extracts.txt",
+    "excerptSha256": "5f9d60b757dbf5a8cd3c519151b8aa2658d975f812dbadd43cdd66890474ba79",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for East Hartford: 7 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/simsbury-sample.pdf?rev=7807760a6eb4430f9f8f11ef30e44f9a&hash=545639178209DD255D2963ED8DF20A14",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/simsbury-sample.pdf?rev=7807760a6eb4430f9f8f11ef30e44f9a&hash=545639178209DD255D2963ED8DF20A14",
+    "sourceCheckedAt": "2026-11-03T05:47:10.927073+00:00",
+    "sha256": "dc109b0637ddeb03c94c86461beac8b6d672d4addec6ca61f5a41c5e4dc4ccd1",
+    "sourceFile": "sources/dc109b0637ddeb03c94c86461beac8b6d672d4addec6ca61f5a41c5e4dc4ccd1.pdf",
+    "excerptFile": "sources/dc109b0637ddeb03c94c86461beac8b6d672d4addec6ca61f5a41c5e4dc4ccd1.local-extracts.txt",
+    "excerptSha256": "81e72ccfc99dc68aea49085374757f16a353e0a098e5ad1f1e7562f94d03ec4a",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Simsbury: 4 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/somers_sample.pdf?rev=2a7ab068bcc4476387c974e6720cfa84&hash=3DFEEEE74E96F5AFF94DA7C6AA4FB909",
+    "finalUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/somers_sample.pdf?rev=2a7ab068bcc4476387c974e6720cfa84&hash=3DFEEEE74E96F5AFF94DA7C6AA4FB909",
+    "sourceCheckedAt": "2026-11-03T05:47:10.894559+00:00",
+    "sha256": "bea5884995d9e82e292ddb0614e90d54f82541e419b7c2d2a7140c0da8117dbb",
+    "sourceFile": "sources/bea5884995d9e82e292ddb0614e90d54f82541e419b7c2d2a7140c0da8117dbb.pdf",
+    "excerptFile": "sources/bea5884995d9e82e292ddb0614e90d54f82541e419b7c2d2a7140c0da8117dbb.local-extracts.txt",
+    "excerptSha256": "28618015cc16c839a781a0d7ff22b0db2abae1e725393a7d71847e10f0b60d9b",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Complete current official November 3, 2026 town-produced sample hosted by SOTS for Somers: 1 pages. Every supplied page/local grid column audited. Same-town local choices and party rows agree across all supplied precinct variants.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF exact get_textbox rectangle clips for complete local office columns; full-page get_text(sort=False) also retained. Rectangles and page numbers are saved. No reconstructed candidate rows or quotes."
+    }
+  },
+  {
+    "role": "OFFICIAL_ELECTORATE_RULE",
+    "sourceUrl": "https://www.cga.ct.gov/current/pub/chap_801.htm",
+    "finalUrl": "https://www.cga.ct.gov/current/pub/chap_801.htm",
+    "sourceCheckedAt": "2026-11-03T05:47:56.674486+00:00",
+    "sha256": "fd5337546d0b8b51694bf45bad7648114751543ba96cf426e68e8f9431dec528",
+    "sourceFile": "sources/fd5337546d0b8b51694bf45bad7648114751543ba96cf426e68e8f9431dec528.source",
+    "excerptFile": "sources/fd5337546d0b8b51694bf45bad7648114751543ba96cf426e68e8f9431dec528.source",
+    "excerptSha256": "fd5337546d0b8b51694bf45bad7648114751543ba96cf426e68e8f9431dec528",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete exact captured text, not original origin bytes",
+    "evidence": "Current CGS section 45a-2 enumerates all 54 probate districts and their whole-town memberships. The 16 observed elected courts have 44 whole-town members, including six towns beyond Capitol. Court scope is exact statutory scope, never the planning region. Native current statute request503; exact official-source reader text200 retained.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.cga.ct.gov/current/pub/chap_801.htm",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved capture; native HTML deterministic lxml text where present; native PDF PyMuPDF text where present."
+    }
+  },
+  {
+    "role": "OFFICIAL_GEOGRAPHY",
+    "sourceUrl": "https://www.ctprobate.gov/court-locator",
+    "finalUrl": "https://www.ctprobate.gov/court-locator",
+    "sourceCheckedAt": "2026-11-03T05:47:53.097594+00:00",
+    "sha256": "81b7d0567f8b72e2d3ccf5bee8e367b833764e4cc0807f26ccfbb22809a816b5",
+    "sourceFile": "sources/81b7d0567f8b72e2d3ccf5bee8e367b833764e4cc0807f26ccfbb22809a816b5.source",
+    "excerptFile": "sources/81b7d0567f8b72e2d3ccf5bee8e367b833764e4cc0807f26ccfbb22809a816b5.txt",
+    "excerptSha256": "9e8e869c94db56ae190765f5cc99e0535d13abd9536214ba55bdfb48dcd23b6d",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Current official court locator confirms PD numbers and court names. Regional Children courts are administrative assignments, not added as elected races; only 16 actual sample offices enter input.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Exact saved capture; native HTML deterministic lxml text where present; native PDF PyMuPDF text where present."
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://portal.ct.gov/sots/election-services/town-ballots/2026-november-town-election-ballots",
+    "finalUrl": "https://portal.ct.gov/sots/election-services/town-ballots/2026-november-town-election-ballots",
+    "sourceCheckedAt": "2026-11-03T05:46:21.676043+00:00",
+    "sha256": "a466f91066b3b75a6702a5b1c4949f0203481f594c6f6179f7dbb76c4976a515",
+    "sourceFile": "sources/a466f91066b3b75a6702a5b1c4949f0203481f594c6f6179f7dbb76c4976a515.source",
+    "excerptFile": "sources/a466f91066b3b75a6702a5b1c4949f0203481f594c6f6179f7dbb76c4976a515.txt",
+    "excerptSha256": "6750ecd549d6e2341ac07ec90800b95559417d1a794619cc2e1364432737ebf4",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Current SOTS November 3 sample index, updated October21, links every one of the38 member town PDFs.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Exact saved capture; native HTML deterministic lxml text where present; native PDF PyMuPDF text where present."
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://crcogct.gov/about/",
+    "finalUrl": "https://crcogct.gov/about/",
+    "sourceCheckedAt": "2026-11-03T05:58:32.832825+00:00",
+    "sha256": "e683adaff637d0f68dc4b79bc66bfa4c2760a982bc31a7eabdcab96af41ed580",
+    "sourceFile": "sources/e683adaff637d0f68dc4b79bc66bfa4c2760a982bc31a7eabdcab96af41ed580.source",
+    "excerptFile": "sources/e683adaff637d0f68dc4b79bc66bfa4c2760a982bc31a7eabdcab96af41ed580.txt",
+    "excerptSha256": "189e375835bd290d8ea268c0d2de1c36bc32b97fbcafc600e37ad8e7cf4ae15c",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Current official regional description: voluntary council guided by chief elected officials of38 municipalities, not a separately elected county government.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Exact saved capture; native HTML deterministic lxml text where present; native PDF PyMuPDF text where present."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.crcog.org/arcgis/rest/services/Boundaries/MapServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "finalUrl": "https://gis.crcog.org/arcgis/rest/services/Boundaries/MapServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T05:46:23.660961+00:00",
+    "sha256": "9512580b899c6a2ad3f15f53357ed9e9acc0c8784c3eb118eabdc18b891aa8fd",
+    "sourceFile": "sources/9512580b899c6a2ad3f15f53357ed9e9acc0c8784c3eb118eabdc18b891aa8fd.source",
+    "excerptFile": "sources/9512580b899c6a2ad3f15f53357ed9e9acc0c8784c3eb118eabdc18b891aa8fd.source",
+    "excerptSha256": "9512580b899c6a2ad3f15f53357ed9e9acc0c8784c3eb118eabdc18b891aa8fd",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Native official regional GIS has exactly38 member-town polygons, matching held Census town list. Town geometry retained unchanged; legacy former-county fields are ignored.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Exact saved capture; native HTML deterministic lxml text where present; native PDF PyMuPDF text where present."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.crcog.org/arcgis/rest/services/Boundaries/MapServer/2?f=pjson",
+    "finalUrl": "https://gis.crcog.org/arcgis/rest/services/Boundaries/MapServer/2?f=pjson",
+    "sourceCheckedAt": "2026-11-03T05:46:21.369295+00:00",
+    "sha256": "85fd733feda23d91c1f63550e6bda580407190ab6c0abbf3c35b5e86a03ed77d",
+    "sourceFile": "sources/85fd733feda23d91c1f63550e6bda580407190ab6c0abbf3c35b5e86a03ed77d.source",
+    "excerptFile": "sources/85fd733feda23d91c1f63550e6bda580407190ab6c0abbf3c35b5e86a03ed77d.source",
+    "excerptSha256": "85fd733feda23d91c1f63550e6bda580407190ab6c0abbf3c35b5e86a03ed77d",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Native official member-town layer metadata.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Exact saved capture; native HTML deterministic lxml text where present; native PDF PyMuPDF text where present."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.ctprobate.gov/Documents/Region%20List.pdf",
+    "finalUrl": "https://www.ctprobate.gov/Documents/Region%20List.pdf",
+    "sourceCheckedAt": "2026-11-03T05:47:53.000412+00:00",
+    "sha256": "3e547cdd819f6501a1566eee8d1d9646aed6ba3d3d7d5f83f3fd5647ed0c2906",
+    "sourceFile": "sources/3e547cdd819f6501a1566eee8d1d9646aed6ba3d3d7d5f83f3fd5647ed0c2906.pdf",
+    "excerptFile": "sources/3e547cdd819f6501a1566eee8d1d9646aed6ba3d3d7d5f83f3fd5647ed0c2906.txt",
+    "excerptSha256": "05aee266dc22714185a2250f4bfdfc50b9dbee141d1e59aa21d7cc0f0b349d03",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Official May2024 district-name/member reference corroborates current statute. No incumbency claims from directory.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Exact saved capture; native HTML deterministic lxml text where present; native PDF PyMuPDF text where present."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://portal.ct.gov/sots/election-services/candidate-lists-for-office",
+    "finalUrl": "https://portal.ct.gov/sots/election-services/candidate-lists-for-office",
+    "sourceCheckedAt": "2026-11-03T05:47:52.522740+00:00",
+    "sha256": "8cc4183b0b36af2a530870ee4fe8933b24c09d749e1b27865f75ff7cbee0cf93",
+    "sourceFile": "sources/8cc4183b0b36af2a530870ee4fe8933b24c09d749e1b27865f75ff7cbee0cf93.source",
+    "excerptFile": "sources/8cc4183b0b36af2a530870ee4fe8933b24c09d749e1b27865f75ff7cbee0cf93.txt",
+    "excerptSha256": "8cfcc59705538cb764b733b4f00510da0f39503f2326d561ee0a1453d3bf3f52",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Public candidate-index discovery retained. Linked list pages expose old archives; no current named write-in certification acquired.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Exact saved capture; native HTML deterministic lxml text where present; native PDF PyMuPDF text where present."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://portal.ct.gov/sots/election-services/write-in-candidates/write-in-application",
+    "finalUrl": "https://portal.ct.gov/sots/election-services/write-in-candidates/write-in-application",
+    "sourceCheckedAt": "2026-11-03T05:53:02.778377+00:00",
+    "sha256": "f1b613b1584df5dd04759a5eb64c6c356988fabdcc2164f57710e35ee919352e",
+    "sourceFile": "sources/f1b613b1584df5dd04759a5eb64c6c356988fabdcc2164f57710e35ee919352e.source",
+    "excerptFile": "sources/f1b613b1584df5dd04759a5eb64c6c356988fabdcc2164f57710e35ee919352e.txt",
+    "excerptSha256": "c55ca1f7c727d1bcfec71faa507b3f3d3d140773e6d1d3349d515c9c5ad41b4c",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Current2026 write-in registration application is linked, but it is not a named qualified list. Blank sample slots are not people.",
+    "captureMetadata": {
+      "provider": "native official public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Exact saved capture; native HTML deterministic lxml text where present; native PDF PyMuPDF text where present."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ctemspublic.tgstg.net/Default.aspx?action=Candidates",
+    "finalUrl": "https://ctemspublic.tgstg.net/Default.aspx?action=Candidates",
+    "sourceCheckedAt": "2026-11-03T05:54:47.867592+00:00",
+    "sha256": "01242a18fd7adc73ee997b282135bab7d537301dfc781882fc691a913faddde1",
+    "sourceFile": "sources/01242a18fd7adc73ee997b282135bab7d537301dfc781882fc691a913faddde1.source",
+    "excerptFile": "sources/01242a18fd7adc73ee997b282135bab7d537301dfc781882fc691a913faddde1.source",
+    "excerptSha256": "01242a18fd7adc73ee997b282135bab7d537301dfc781882fc691a913faddde1",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete exact captured text, not original origin bytes",
+    "evidence": "Known official public candidate portal returns empty reader content; native route403. No current eligibility/status fact asserted from this failed route.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://ctemspublic.tgstg.net/Default.aspx?action=Candidates",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved capture; native HTML deterministic lxml text where present; native PDF PyMuPDF text where present."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/counties/totals/co-est2025-alldata.csv",
+    "sourceFile": "sources/held-census-priority-order.json",
+    "excerptFile": "sources/held-census-priority-order.json",
+    "sha256": "dbcd982fee6870c82fea0d547c1461a67091616bef61e9466efee9440d14ab73",
+    "excerptSha256": "dbcd982fee6870c82fea0d547c1461a67091616bef61e9466efee9440d14ab73",
+    "captureFormat": "HELD_LOCAL_DERIVED_JSON",
+    "hashScope": "Exact held top100 derivation. Original Census CSV URL/hash/retrieval time are included inside; this is not a new network response.",
+    "evidence": "Population priority51: Capitol Planning Region09110, population994115 in2025. Planning-region county equivalent used only to bound research."
+  }
+]

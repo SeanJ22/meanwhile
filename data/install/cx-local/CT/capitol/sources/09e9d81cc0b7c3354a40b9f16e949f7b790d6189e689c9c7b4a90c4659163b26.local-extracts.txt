@@ -1,0 +1,406 @@
+PAGE 1 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 573.4521209716797]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Mary C. 
+Deneen 
+9B 
+Mary C. 
+Deneen 
+9H
+
+PAGE 1 / Registrar of Voters / RECT [671.15, 140.0, 727.25, 573.4521209716797]
+10 
+Registrar of 
+Voters 
+Vote for One 
+10F 
+Denise 
+Menard 
+10G 
+Michael J. 
+Kowalski 
+10H
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+Sample Ballot 
+State of Connecticut 
+Official Ballot 
+East Windsor, Connecticut 
+State Election 
+November 3, 2026 
+Congressional District 1, 1 
+Senatorial District 3, 3 
+Assembly District 57, 57 
+Voting District 1-0, 2-0 
+Be sure to read the instructions on the reverse side of this ballot. 
+Sheet 1 of 1 
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+10 
+Registrar of 
+Voters 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Luke 
+Bronin 
+3A 
+Saud 
+Anwar 
+4A 
+Jaime S. 
+Foster 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Mary C. 
+Deneen 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Eliott 
+Hughes 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Mary C. 
+Deneen 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+Saud 
+Anwar 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+ 
+ 
+ 
+4D 
+Jaime S. 
+Foster 
+5D 
+Stephanie 
+Thomas 
+ 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+Petitioning 
+Candidate 
+10F 
+Denise 
+Menard 
+Petitioning 
+Candidate 
+10G 
+Michael J. 
+Kowalski 
+Write-in Votes 
+1H 
+2H 
+3H 
+4H 
+5H 
+6H 
+7H 
+8H 
+9H 
+10H 
+
+
+PAGE 2 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 573.4474212646485]
+9 
+Judge of 
+Probate 
+Vote for One 
+9A 
+Mary C. 
+Deneen 
+9B 
+Mary C. 
+Deneen 
+9H
+
+PAGE 2 / Registrar of Voters / RECT [671.15, 140.0, 727.25, 573.4474212646485]
+10 
+Registrar of 
+Voters 
+Vote for One 
+10F 
+Denise 
+Menard 
+10G 
+Michael J. 
+Kowalski 
+ 
+10H
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+State of Connecticut 
+Official Ballot 
+East Windsor, Connecticut 
+State Election 
+November 3, 2026 
+Sheet 1 of 1 
+Congressional District 1, 1 
+Senatorial District 3, 3 
+Assembly District 59, 59 
+Voting District 1-02, 2-02 
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative 
+in Congress 
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative 
+Vote for One 
+5 
+Secretary of 
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller 
+Vote for One 
+8 
+Attorney 
+General 
+Vote for One 
+9 
+Judge of 
+Probate 
+Vote for One 
+10 
+Registrar of 
+Voters 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+ 
+ 
+2A 
+Luke 
+Bronin 
+3A 
+Saud 
+Anwar 
+4A 
+Rick 
+LeBorious 
+5A 
+Stephanie 
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Mary C. 
+Deneen 
+Republican 
+Party 
+1B 
+Ryan Fazio and 
+Matt Corey 
+2B 
+Amy 
+Chai 
+3B 
+Eliott 
+Hughes 
+4B 
+Carol 
+Hall 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+ 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Mary C. 
+Deneen 
+Working 
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+Saud 
+Anwar 
+5C 
+Stephanie 
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+ 
+ 
+Independent 
+Party 
+1D 
+Ryan Fazio and 
+Matt Corey 
+5D 
+Stephanie 
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Green Party 
+2E 
+Mary L. 
+Sanders 
+Petitioning 
+Candidate 
+10F 
+Denise 
+Menard 
+Petitioning 
+Candidate 
+10G 
+Michael J. 
+Kowalski 
+ 
+Write-in Votes 
+1H 
+2H 
+3H 
+4H 
+5H 
+6H 
+7H 
+8H 
+9H 
+10H 
+Be sure to read the instructions on the reverse side of this ballot. 
+Sample Ballot 
+

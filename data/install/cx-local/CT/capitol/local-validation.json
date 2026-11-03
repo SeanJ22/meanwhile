@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-11-03T06:06:39.135885+00:00",
+  "sourceCount": 49,
+  "sourceHashesAndExcerptHashes": "PASS",
+  "exactQuotes": 156,
+  "inputExactQuotes": 140,
+  "officialMemberTownSamples": 38,
+  "samplePagesIndependentlyReextracted": 144,
+  "localOffices": 36,
+  "distinctNamedChoices": 60,
+  "crossEndorsedPeopleDeduplicated": 2,
+  "probateCourts": 16,
+  "wholeTownCourtMemberships": 44,
+  "registrarFields": 19,
+  "schoolFields": 1,
+  "nativeTownGeometriesUnchanged": 38,
+  "regionwideOfficesCreated": 0,
+  "namedWriteInQualification": "PENDING_OFFICIAL_LIST;NO_ZERO_ASSERTION",
+  "productionWrites": false,
+  "publication": "NOT_RUN",
+  "printedNamedBallotLines": 62
+}

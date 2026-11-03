@@ -1,0 +1,195 @@
+PAGE 1 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.36226959228514]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Thomas A.
+Robinson
+9E
+
+PAGE 1 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 437.36226959228514]
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Nelisa Field
+Reagan
+10B
+Gayle
+Mulligan
+10E
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Columbia, Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 2
+Senatorial District 19
+Assembly District 8
+Voting District 1
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Joe
+Courtney
+2B
+George Patrick
+Austin
+2D
+George Patrick
+Austin
+3
+State Senate
+VoteforOne
+3A
+Catherine
+Osten
+3B
+Jason
+Guidone
+3C
+Catherine
+Osten
+3D
+Catherine
+Osten
+4
+State
+Representative
+VoteforOne
+4A
+Francis
+Lombard
+4B
+William
+Gifford
+4C
+Francis
+Lombard
+4D
+William
+Gifford
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Thomas A.
+Robinson
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Nelisa Field
+Reagan
+10B
+Gayle
+Mulligan
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Write-in Votes
+1E
+2E
+3E
+4E
+5E
+6E
+7E
+8E
+9E
+10E
+Sample Ballot
+

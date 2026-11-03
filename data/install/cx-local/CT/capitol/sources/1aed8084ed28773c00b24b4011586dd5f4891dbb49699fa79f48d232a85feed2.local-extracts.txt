@@ -1,0 +1,376 @@
+PAGE 1 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 437.3653060913086]
+9 
+Judge of
+Probate 
+Vote for One 
+9A 
+Sophia H.
+Shaikh 
+9E
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+Sample Ballot
+State of Connecticut 
+Official Ballot 
+Coventry, Connecticut 
+State Election 
+November 3, 2026 
+Be sure to read the instructions on the reverse side of this ballot. 
+Sheet 1 of 1 
+Congressional District 2
+Senatorial District 35 
+Assembly District 8
+Voting District 1 
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative
+in Congress
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative
+Vote for One 
+5 
+Secretary of
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller
+Vote for One 
+8 
+Attorney
+General 
+Vote for One 
+9 
+Judge of
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Joe 
+Courtney 
+3A 
+Ethan 
+Werstler 
+4A 
+Francis 
+Lombard 
+5A 
+Stephanie
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Sophia H.
+Shaikh 
+Republican
+Party 
+1B 
+Ryan Fazio and
+Matt Corey 
+2B 
+George Patrick
+Austin 
+3B 
+Jeffrey
+Gordon 
+4B 
+William 
+Gifford 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S 
+Tooker 
+8B 
+John 
+Bolton 
+Working
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+Ethan 
+Werstler 
+4C 
+Francis 
+Lombard 
+5C 
+Stephanie
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent
+Party 
+1D 
+Ryan Fazio and
+Matt Corey 
+2D 
+George Patrick
+Austin 
+3D 
+Jeffrey
+Gordon 
+4D 
+William 
+Gifford 
+5D 
+Stephanie
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Write-in Votes 
+1E 
+2E 
+3E 
+4E 
+5E 
+6E 
+7E 
+8E 
+9E 
+Vote on the Questions(s) 
+Question One 
+1. Shall Section 9-3(a) and 9-3(e), which are proposed to be
+renumbered as 7-3(a) and 7-3(d), be amended to adjust the threshold
+at which authorizations for appropriations, bonds or notes must be
+approved at a town meeting and/or referendum from a fixed dollar
+amount to a percentage of the current tax levy? 
+Yes 
+No 
+Question Two 
+2. Shall additional provisions of the Coventry Town Charter be
+amended other than as provided in Question One above, all as
+recommended in the final report of the Charter Revision Commission
+dated July 29, 2026 and as on file with the Coventry Town Clerk? 
+Yes 
+No 
+
+
+PAGE 2 / Judge of Probate / RECT [614.5500000000001, 140.0, 670.4499999999999, 437.3642074584961]
+9 
+Judge of
+Probate 
+Vote for One 
+9A 
+Sophia H.
+Shaikh 
+9E
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 1044.0, 648.0]
+Coventry, Connecticut 
+State Election 
+November 3, 2026 
+State of Connecticut 
+Official Ballot 
+Sheet 1 of 1 
+Congressional District 2
+Senatorial District 35 
+Assembly District 8
+Voting District 2 
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative
+in Congress
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State
+Representative
+Vote for One 
+5 
+Secretary of
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller
+Vote for One 
+8 
+Attorney
+General 
+Vote for One 
+9 
+Judge of
+Probate 
+Vote for One 
+Democratic 
+Party 
+1A 
+Ned Lamont and 
+Susan Bysiewicz 
+2A 
+Joe 
+Courtney 
+3A 
+Ethan 
+Werstler 
+4A 
+Francis 
+Lombard 
+5A 
+Stephanie
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Sophia H.
+Shaikh 
+Republican
+Party 
+1B 
+Ryan Fazio and
+Matt Corey 
+2B 
+George Patrick
+Austin 
+3B 
+Jeffrey
+Gordon 
+4B 
+William 
+Gifford 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S 
+Tooker 
+8B 
+John 
+Bolton 
+Working
+Families Party 
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+Ethan 
+Werstler 
+4C 
+Francis 
+Lombard 
+5C 
+Stephanie
+Thomas 
+6C 
+Erick 
+Russell 
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent
+Party 
+1D 
+Ryan Fazio and
+Matt Corey 
+2D 
+George Patrick
+Austin 
+3D 
+Jeffrey
+Gordon 
+ 
+4D 
+William 
+Gifford 
+5D 
+Stephanie
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Write-in Votes 
+1E 
+2E 
+3E 
+4E 
+5E 
+6E 
+7E 
+8E 
+9E 
+Vote on the Questions(s) 
+Question One 
+1. Shall Section 9-3(a) and 9-3(e), which are proposed to be
+renumbered as 7-3(a) and 7-3(d), be amended to adjust the threshold
+at which authorizations for appropriations, bonds or notes must be
+approved at a town meeting and/or referendum from a fixed dollar
+amount to a percentage of the current tax levy? 
+Yes 
+No 
+Question Two 
+2. Shall additional provisions of the Coventry Town Charter be
+amended other than as provided in Question One above, all as
+recommended in the final report of the Charter Revision Commission
+dated July 29, 2026 and as on file with the Coventry Town Clerk? 
+Yes 
+No 
+Be sure to read the instructions on the reverse side of this ballot. 
+Sample Ballot
+

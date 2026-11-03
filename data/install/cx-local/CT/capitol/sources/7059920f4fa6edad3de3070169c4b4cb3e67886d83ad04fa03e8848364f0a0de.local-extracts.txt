@@ -1,0 +1,203 @@
+PAGE 1 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.3642303466797]
+9 
+Judge of
+Probate 
+Vote for One 
+9A 
+Daniel N. 
+Mara 
+9B 
+Mark E. 
+Blackaby 
+9E
+
+PAGE 1 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 437.3642303466797]
+10 
+Registrar of
+Voters 
+Vote for One 
+10A 
+Darlene Fahey
+Burrell 
+10B 
+Laura 
+Brady 
+10E
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Sample Ballot
+State of Connecticut 
+Official Ballot 
+Suffield, Connecticut 
+State Election 
+November 3, 2026 
+Congressional District 2
+Senatorial District 7 
+Assembly District 61
+Voting District 1 
+Office 
+Party 
+1 
+Governor and 
+Lieutenant 
+Governor 
+Vote for One 
+2 
+Representative
+in Congress
+Vote for One 
+3 
+State Senator 
+Vote for One 
+4 
+State 
+Representative
+Vote for One 
+5 
+Secretary of
+the State 
+Vote for One 
+6 
+Treasurer 
+Vote for One 
+7 
+Comptroller
+Vote for One 
+8 
+Attorney
+General 
+Vote for One 
+9 
+Judge of
+Probate 
+Vote for One 
+10 
+Registrar of
+Voters 
+Vote for One 
+Democratic
+Party 
+1A 
+Ned Lamont and
+Susan Bysiewicz
+2A 
+Joe 
+Courtney 
+3A 
+David W. 
+Kiner 
+4A 
+James 
+Mol 
+5A 
+Stephanie
+Thomas 
+6A 
+Erick 
+Russell 
+7A 
+Sean 
+Scanlon 
+8A 
+William 
+Tong 
+9A 
+Daniel N. 
+Mara 
+10A 
+Darlene Fahey
+Burrell 
+ 
+ 
+ 
+Republican
+Party 
+1B 
+Ryan Fazio and
+Matt Corey 
+2B 
+George Patrick
+Austin 
+3B 
+John A. 
+Kissel 
+4B 
+Tami 
+Zawistowski 
+5B 
+Peter 
+Lumaj 
+6B 
+Fred 
+Wilms 
+7B 
+Jennifer S. 
+Tooker 
+8B 
+John 
+Bolton 
+9B 
+Mark E. 
+Blackaby 
+10B 
+Laura 
+Brady 
+Working
+Families Party
+1C 
+Ned Lamont and 
+Susan Bysiewicz 
+3C 
+David W. 
+Kiner 
+5C 
+Stephanie
+Thomas 
+6C 
+Erick 
+Russell
+7C 
+Sean 
+Scanlon 
+8C 
+William 
+Tong 
+Independent
+Party 
+ 
+ 
+1D 
+Ryan Fazio and
+Matt Corey 
+2D 
+George Patrick
+Austin 
+3D 
+John A. 
+Kissel 
+4D 
+Tami 
+Zawistowski 
+5D 
+Stephanie
+Thomas 
+6D 
+Fred 
+Wilms 
+7D 
+Sean 
+Scanlon 
+Write-in Votes 
+1E 
+2E 
+3E 
+4E 
+5E 
+6E 
+7E 
+8E 
+9E 
+10E 
+Be sure to read the instructions on the reverse side of this ballot. 
+Sheet 1 of 1 
+

@@ -1,0 +1,1314 @@
+PAGE 1 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.3623306274414]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+9E
+
+PAGE 1 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 437.3623306274414]
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+10E
+
+PAGE 1 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Farmington,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 5
+Senatorial District 5
+Assembly District 21
+Voting District 01-01
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Jahana
+Hayes
+2B
+Chris
+Shea
+2C
+Jahana
+Hayes
+3
+State Senator
+VoteforOne
+3A
+Derek
+Slap
+4
+State
+Representative
+VoteforOne
+4A
+Mike
+Demicco
+4B
+Gary
+Palumbo
+4C
+Mike
+Demicco
+4D
+Mike
+Demicco
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Write-in Votes
+1E
+2E
+3E
+4E
+5E
+6E
+7E
+8E
+9E
+10E
+Sample Ballot
+
+
+PAGE 2 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.36229248046874]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+9E
+
+PAGE 2 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 437.36229248046874]
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+10E
+
+PAGE 2 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Farmington,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 5
+Senatorial District 6
+Assembly District 21
+Voting District 01-02
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Jahana
+Hayes
+2B
+Chris
+Shea
+2C
+Jahana
+Hayes
+3
+State Senator
+VoteforOne
+3A
+Rick
+Lopes
+3B
+Tremell
+Collins
+3C
+Rick
+Lopes
+4
+State
+Representative
+VoteforOne
+4A
+Mike
+Demicco
+4B
+Gary
+Palumbo
+4C
+Mike
+Demicco
+4D
+Mike
+Demicco
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Write-in Votes
+1E
+2E
+3E
+4E
+5E
+6E
+7E
+8E
+9E
+10E
+Sample Ballot
+
+
+PAGE 3 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.3623306274414]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+9E
+
+PAGE 3 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 437.3623306274414]
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+10E
+
+PAGE 3 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Farmington,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 5
+Senatorial District 5
+Assembly District 22
+Voting District 01-03
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Jahana
+Hayes
+2B
+Chris
+Shea
+2C
+Jahana
+Hayes
+3
+State Senator
+VoteforOne
+3A
+Derek
+Slap
+4
+State
+Representative
+VoteforOne
+4A
+Rebecca
+Martinez
+4B
+Richard
+Mette
+4C
+Rebecca
+Martinez
+5D
+Richard
+Mette
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Write-in Votes
+1E
+2E
+3E
+5E
+5E
+6E
+7E
+8E
+9E
+10E
+Sample Ballot
+
+
+PAGE 4 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.3623306274414]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+9E
+
+PAGE 4 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 437.3623306274414]
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+10E
+
+PAGE 4 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Farmington,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 5
+Senatorial District 5
+Assembly District 21
+Voting District 01-04
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Jahana
+Hayes
+2B
+Chris
+Shea
+2C
+Jahana
+Hayes
+3
+State Senator
+VoteforOne
+3A
+Derek
+Slap
+4
+State
+Representative
+VoteforOne
+4A
+Mike
+Demicco
+4B
+Gary
+Palumbo
+4C
+Mike
+Demicco
+4D
+Mike
+Demicco
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Write-in Votes
+1E
+2E
+3E
+4E
+5E
+6E
+7E
+8E
+9E
+10E
+Sample Ballot
+
+
+PAGE 5 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.3623306274414]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+9E
+
+PAGE 5 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 437.3623306274414]
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+10E
+
+PAGE 5 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Farmington,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 5
+Senatorial District 5
+Assembly District 22
+Voting District 02-05
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Jahana
+Hayes
+2B
+Chris
+Shea
+2C
+Jahana
+Hayes
+3
+State Senator
+VoteforOne
+3A
+Derek
+Slap
+4
+State
+Representative
+VoteforOne
+4A
+Rebecca
+Martinez
+4B
+Richard
+Mette
+4C
+Rebecca
+Martinez
+5D
+Richard
+Mette
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Write-in Votes
+1E
+2E
+3E
+5E
+5E
+6E
+7E
+8E
+9E
+10E
+Sample Ballot
+
+
+PAGE 6 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.3623306274414]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+9E
+
+PAGE 6 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 437.3623306274414]
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+10E
+
+PAGE 6 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Farmington,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 5
+Senatorial District 5
+Assembly District 21
+Voting District 02-06
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Jahana
+Hayes
+2B
+Chris
+Shea
+2C
+Jahana
+Hayes
+3
+State Senator
+VoteforOne
+3A
+Derek
+Slap
+4
+State
+Representative
+VoteforOne
+4A
+Mike
+Demicco
+4B
+Gary
+Palumbo
+4C
+Mike
+Demicco
+4D
+Mike
+Demicco
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Write-in Votes
+1E
+2E
+3E
+4E
+5E
+6E
+7E
+8E
+9E
+10E
+Sample Ballot
+
+
+PAGE 7 / Judge of Probate / RECT [612.85, 140.0, 668.75, 437.3623306274414]
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+9E
+
+PAGE 7 / Registrar of Voters / RECT [669.45, 140.0, 725.4499999999999, 437.3623306274414]
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+10E
+
+PAGE 7 / FULL_PAGE / RECT [0.0, 0.0, 828.0, 648.0]
+Farmington,Connecticut
+StateElection
+November3, 2026
+State of Connecticut
+Official Ballot
+Be sure to read the instructions on the reverse side of this ballot.
+Sheet1of1
+Congressional District 5
+Senatorial District 5
+Assembly District 21
+Voting District 02-07
+Office
+Party
+1
+Governor and
+Lieutenant
+Governor
+VoteforOne
+1A
+Ned Lamont and
+Susan Bysiewicz
+1B
+Ryan Fazio and
+Matt Corey
+1C
+Ned Lamont and
+Susan Bysiewicz
+1D
+Ryan Fazio and
+Matt Corey
+2
+Representative
+in Congress
+VoteforOne
+2A
+Jahana
+Hayes
+2B
+Chris
+Shea
+2C
+Jahana
+Hayes
+3
+State Senator
+VoteforOne
+3A
+Derek
+Slap
+4
+State
+Representative
+VoteforOne
+4A
+Mike
+Demicco
+4B
+Gary
+Palumbo
+4C
+Mike
+Demicco
+4D
+Mike
+Demicco
+5
+Secretary of
+the State
+VoteforOne
+5A
+Stephanie
+Thomas
+5B
+Peter
+Lumaj
+5C
+Stephanie
+Thomas
+5D
+Stephanie
+Thomas
+6
+Treasurer
+VoteforOne
+6A
+Erick
+Russell
+6B
+Fred
+Wilms
+6C
+Erick
+Russell
+6D
+Fred
+Wilms
+7
+Comptroller
+VoteforOne
+7A
+Sean
+Scanlon
+7B
+Jennifer S.
+Tooker
+7C
+Sean
+Scanlon
+7D
+Sean
+Scanlon
+8
+Attorney
+General
+VoteforOne
+8A
+William
+Tong
+8B
+John
+Bolton
+8C
+William
+Tong
+9
+Judge of
+Probate
+VoteforOne
+9A
+Paul R.
+Bedard
+10
+Registrar of
+Voters
+VoteforOne
+10A
+Beth
+Kintner
+10B
+Ann
+Newbury
+Democratic
+Party
+Republican
+Party
+Working
+FamiliesParty
+Independent
+Party
+Write-in Votes
+1E
+2E
+3E
+4E
+5E
+6E
+7E
+8E
+9E
+10E
+Sample Ballot
+

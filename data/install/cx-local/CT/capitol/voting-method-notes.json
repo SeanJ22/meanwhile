@@ -1,0 +1,362 @@
+[
+  {
+    "contestId": "ct-cx-local-2026-probate-district-13",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/andover_sample_ada.pdf?rev=5cfdbdb54428458a95cac91cc1c81c2c&hash=2275ED2D4933F66237158C5274A4437B",
+    "pdfPage": 1,
+    "quote": "9 \nJudge of \nProbate \nVote for One\n \n9A \nThomas A. \nRobinson \n \n9E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-9",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/avon_sample_ada.pdf?rev=deb43be221724710b3ea2659feb6cad9&hash=FF7A9481FA54109A5540070C281172E7",
+    "pdfPage": 1,
+    "quote": "9 \nJudge of \nProbate \nVote for One \n9A \nDavid C. \nShepard \n9E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-8",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "pdfPage": 1,
+    "quote": "9\nJudge of\nProbate\nVoteforOne\n9A\nWilliam C.\nRivera\n9B\nPaul Thomas\nEdwards, Sr.\n9G",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-3",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bloomfield_sample_ada.pdf?rev=f74be64ccc7b4bb78447434eabc4d6aa&hash=E32C937F10C8242F39B7E009AB63470D",
+    "pdfPage": 1,
+    "quote": "9 \nJudge of\nProbate \nVote for One \n9A \nDaniel N. \nMara \n9B \nMark E. \nBlackaby \n9F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-25",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/coventry_sample_ada.pdf?rev=860968423e1049f9a7960fc070e16dac&hash=524E8D4D3205F24F3F52AD7B1B2ED699",
+    "pdfPage": 1,
+    "quote": "9 \nJudge of\nProbate \nVote for One \n9A \nSophia H.\nShaikh \n9E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-5",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_hartford_sample_updated_ada.pdf?rev=8f44ac28d15145f1913ad45d793cf06b&hash=BA4E76A75B2C31839FADF2AF38469628",
+    "pdfPage": 1,
+    "quote": "9\nJudge of\nProbate\nJuez del\nTribunal\nTestamentario\nVoteforOne\nVoteporUno\n9A\nRichard P.\nGentile\n9F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-4",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 1,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_windsor_sample_ada.pdf?rev=2d961f4ab5be47cdad81e7fa05cf597b&hash=FEF2D2EEEE104E8F879042EF14E3E664",
+    "pdfPage": 1,
+    "quote": "9 \nJudge of \nProbate \nVote for One \n9A \nMary C. \nDeneen \n9B \nMary C. \nDeneen \n9H",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-12",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/ellington_sample_ada.pdf?rev=5e9d59938f5645af8f50aab8a894b996&hash=F636886DA25BC58A42A90FED51F7A909",
+    "pdfPage": 1,
+    "quote": "9 \nJudge of \nProbate \nVote for One \n9A \nElisa H. \nBartlett \n9E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-11",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/enfield_sample.pdf?rev=3757318bbe6441ce99e039ec48818e77&hash=58663D641E3430554DA0E883A395777F",
+    "pdfPage": 1,
+    "quote": "9\nJudge of\nProbate\nVoteforOne\n9B\nCarolyn\nMcCaffrey\n9E\nCharterberevised",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-10",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/farmington_sample.pdf?rev=3287644108bb41adba1c09b2311d6423&hash=5E6AC29D970D44C0D3A603A42C434C7F",
+    "pdfPage": 1,
+    "quote": "9\nJudge of\nProbate\nVoteforOne\n9A\nPaul R.\nBedard\n9E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-6",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/glastonbury_sample.pdf?rev=4af01e8a658743049f074879bf687b5f&hash=493DA6EBBF28F70B74BAB40D31C8395C",
+    "pdfPage": 1,
+    "quote": "9\nJudge of\nProbate\nVoteforOne\n9A\nSean Michael\nPeoples\n9E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-1",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/hartford_sample_ada.pdf?rev=d8f4a1a565594543a660f2851c2a7e33&hash=2250FCFA437B93EF46DF981B8BA53BA8",
+    "pdfPage": 1,
+    "quote": "9 \nJudge of \nProbate \nJuez del \nTribunal \nTestamentario \nVote for one \nVote por uno \n9A \nFoye A \nSmith \n9F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-14",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/marlborough_sample.pdf?rev=891a463f33c14b798b91c7910d1da1a3&hash=5F8EC2C5D678C71FC257DEC6437A2735",
+    "pdfPage": 1,
+    "quote": "9\nJudge of\nProbate\nVoteforOne\n9A\nMark Alan\nBalaban\n9E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-7",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/newington_sample_ada.pdf?rev=c661065a2f064183836d49a4099fc586&hash=D9F7B0B72EC9DF79D13D8C0603260AFD",
+    "pdfPage": 1,
+    "quote": "9 \nJudge of \nProbate \nVote\n \n For One \n9A \nRobert A. \nRandich \n9B \nJulie \nCostello \n9F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-18",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 1,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/southington_sample_ada.pdf?rev=806962a856aa4e85937650e625749dee&hash=5413508FDF3644F6DC7C7422B1E5EE77",
+    "pdfPage": 1,
+    "quote": "9 \nJudge of \nProbate \nVote for One \n9A \nMatt \nJalowiec \n9B \nMatt \nJalowiec \n9F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-probate-district-2",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/west_hartford_sample_ada.pdf?rev=5f05cfb322124a8983c68d84ee8ae3cf&hash=CAB6415BF5808F69E0627084B9C386E5",
+    "pdfPage": 1,
+    "quote": "9 \nJudge of \nProbate \nJuez del \nTribunal \nTestamentario \nVote for One \nVote por Uno \n9A \nOwen P. \nEagan \n9F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-berlin-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "pdfPage": 1,
+    "quote": "10\nRegistrar of\nVoters\nVoteforOne\n10A\nChristy\nMiano\n10B\nJoan\nVeley\n10G",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-berlin-board-of-education",
+    "voteFor": 3,
+    "method": "PRINTED_VOTE_FOR_UP_TO_THREE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/berlin-sample.pdf?rev=47400e35b7fd495aa0c18265a126a195&hash=CAB5A5C43977C2249397051EBEA2BADF",
+    "pdfPage": 1,
+    "quote": "11\n12\n13\nBoardofEducationNonPartisan\nVoteforUptoThree\n11F\nMegan A.\nPelloth\n12F\nJennifer Anne\nJurgen\n13F\nBrian Michael\nDelude\n11G\n12G\n13G",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-bloomfield-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/bloomfield_sample_ada.pdf?rev=f74be64ccc7b4bb78447434eabc4d6aa&hash=E32C937F10C8242F39B7E009AB63470D",
+    "pdfPage": 1,
+    "quote": "10 \nRegistrar of\nVoters \nVote for One \n10A \nJennifer A. \nMarshall-Nealy \n10B \nRobert \nIke \n10F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-columbia-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/columbia_sample.pdf?rev=14e9db85b3ca4260a88cb722d7ada879&hash=9E650C738A53F6AFDA57D13CD6078B77",
+    "pdfPage": 1,
+    "quote": "10\nRegistrar of\nVoters\nVoteforOne\n10A\nNelisa Field\nReagan\n10B\nGayle\nMulligan\n10E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-east-hartford-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_hartford_sample_updated_ada.pdf?rev=8f44ac28d15145f1913ad45d793cf06b&hash=BA4E76A75B2C31839FADF2AF38469628",
+    "pdfPage": 1,
+    "quote": "10\nRegistrar of\nVoters\nRegistrador de\nVotantes\nVoteforOne\nVoteporUno\n10A\nVeronica\nRosario\n10B\nMary J.\nMourey\n10F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-east-windsor-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/east_windsor_sample_ada.pdf?rev=2d961f4ab5be47cdad81e7fa05cf597b&hash=FEF2D2EEEE104E8F879042EF14E3E664",
+    "pdfPage": 1,
+    "quote": "10 \nRegistrar of \nVoters \nVote for One \n10F \nDenise \nMenard \n10G \nMichael J. \nKowalski \n10H",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-ellington-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/ellington_sample_ada.pdf?rev=5e9d59938f5645af8f50aab8a894b996&hash=F636886DA25BC58A42A90FED51F7A909",
+    "pdfPage": 1,
+    "quote": "10 \nRegistrar of \nVoters \nVote for One \n10A \nJoann \nScott \n10B \nJennifer \nDzen \n10E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-enfield-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/enfield_sample.pdf?rev=3757318bbe6441ce99e039ec48818e77&hash=58663D641E3430554DA0E883A395777F",
+    "pdfPage": 1,
+    "quote": "10\nRegistrar of\nVoters\nVoteforOne\n10A\nBeth\nJerez\n10B\nThomas\nKienzler\n10E\ndasproposed",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-farmington-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/farmington_sample.pdf?rev=3287644108bb41adba1c09b2311d6423&hash=5E6AC29D970D44C0D3A603A42C434C7F",
+    "pdfPage": 1,
+    "quote": "10\nRegistrar of\nVoters\nVoteforOne\n10A\nBeth\nKintner\n10B\nAnn\nNewbury\n10E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-glastonbury-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/glastonbury_sample.pdf?rev=4af01e8a658743049f074879bf687b5f&hash=493DA6EBBF28F70B74BAB40D31C8395C",
+    "pdfPage": 1,
+    "quote": "10\nRegistrar of\nVoters\nVoteforOne\n10A\nBeth\nLundy\n10B\nLisbeth\nBecker\n10E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-mansfield-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/mansfield_sample.pdf?rev=18f1e18aa4b8400092e2c38236b3317c&hash=8A8AA7B7AC5DFF85693E2396516B6BE0",
+    "pdfPage": 1,
+    "quote": "10\nRegistrar of\nVoters\nVoteforOne\n10A\nRonald\nManizza\n10B\nAlfred E.\nFratoni\n10E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-marlborough-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/marlborough_sample.pdf?rev=891a463f33c14b798b91c7910d1da1a3&hash=5F8EC2C5D678C71FC257DEC6437A2735",
+    "pdfPage": 1,
+    "quote": "10\nRegistrar of Voters\nVoteforOne\n10A\nSandra\nCameron-Adams\n10B\nMichele Anne\nKacy\n10E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-newington-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/newington_sample_ada.pdf?rev=c661065a2f064183836d49a4099fc586&hash=D9F7B0B72EC9DF79D13D8C0603260AFD",
+    "pdfPage": 1,
+    "quote": "10 \nRegistrar of \nVoters\n \nVote\n \n For One \n10A \nJennifer B. \nSehmi \n10B \nTheresa Norine\nClaffey Avey \n10F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-rocky-hill-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/rocky-hill_sample.pdf?rev=ccf5b9e6713c43d8b2fa1de0580feaac&hash=2F9C64C90A2696BCB45A9C729BF8AE96",
+    "pdfPage": 1,
+    "quote": "10\nRegistrar of\nVoters\nRegistrador De\nVotantes\nVoteforOne\nVoteporuno\n10A\nPhillip\nTheroux\n10B\nThomas\nPugliese\n10F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-simsbury-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/simsbury-sample.pdf?rev=7807760a6eb4430f9f8f11ef30e44f9a&hash=545639178209DD255D2963ED8DF20A14",
+    "pdfPage": 1,
+    "quote": "10\nRegistrar of\nVoters\nVoteforOne\n10A\nKaren E.\nCortes\n10B\nJennifer\nBatchelar\n10E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-somers-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/somers_sample.pdf?rev=2a7ab068bcc4476387c974e6720cfa84&hash=3DFEEEE74E96F5AFF94DA7C6AA4FB909",
+    "pdfPage": 1,
+    "quote": "10\nRegistrar of\nVoters\nVoteforOne\n10A\nJoseph\nRobidoux\n10B\nDavid P.\nMcCaffrey\n10E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-suffield-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/suffield_sample_ada.pdf?rev=3f97bd4540c34cdc99faab712b7f6be7&hash=F9D19B4913FC797D52E81043AFE61ED2",
+    "pdfPage": 1,
+    "quote": "10 \nRegistrar of\nVoters \nVote for One \n10A \nDarlene Fahey\nBurrell \n10B \nLaura \nBrady \n10E",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-west-hartford-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/west_hartford_sample_ada.pdf?rev=5f05cfb322124a8983c68d84ee8ae3cf&hash=CAB6415BF5808F69E0627084B9C386E5",
+    "pdfPage": 1,
+    "quote": "10 \nRegistrar of \nVoters \nRegistrador de \nVotantes \nVote for One \nVote por Uno \n10A \nElizabeth \nRousseau \n10B \nBeth \nKyle \n10F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-windsor-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_sample_ada.pdf?rev=bedc995f02a44da9a4bcf07cfe455ed8&hash=4B6B8EE8A1D429275F6063DFDE6EAC86",
+    "pdfPage": 1,
+    "quote": "10 \nRegistrar of \nVoters \nVote for One\n10A \nJillian A. \nBrimecombe\n10B \nVictoria \nVirgo-Christie\n10F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  },
+  {
+    "contestId": "ct-cx-local-2026-windsor-locks-registrar-of-voters",
+    "voteFor": 1,
+    "method": "PRINTED_VOTE_FOR_ONE",
+    "crossEndorsedPeopleDeduplicated": 0,
+    "sourceUrl": "https://portal.ct.gov/-/media/sots/electionservices/town_ballots/2026/nov-ada-2026/windsor_locks_sample_updated_ada.pdf?rev=8027256fe7f34bd4b35f31db83bf40a7&hash=800700EB56671524D688DEFBBD8B0D4D",
+    "pdfPage": 1,
+    "quote": "10 \nRegistrar of \nVoters \nRegistrador de \nvotantes \nVote for One \nVote por uno \n10A \nSuzanne \nO'Brien \n10B \nJennifer \nJuszczynski \n10F",
+    "limit": "No winner-allocation or registrar party-representation rule inferred beyond the printed vote instruction."
+  }
+]

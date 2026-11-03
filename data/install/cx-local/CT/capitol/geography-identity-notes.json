@@ -1,0 +1,16 @@
+{
+  "planningRegionOcdId": "ocd-division/country:us/state:ct/county:capitol",
+  "planningRegionFips": "09110",
+  "planningRegionIsCountyGovernment": false,
+  "townOcdParentSpelling": "ocd-division/country:us/state:ct/county:capitol_planning_region",
+  "townIds": "Exact38existingcousubIDs reused. No regionwide elected office minted and no whole-region candidate electorate used.",
+  "outsideCapitolCourtMembers": [
+    "Burlington",
+    "Cheshire",
+    "East Haddam",
+    "East Hampton",
+    "Portland",
+    "Union"
+  ],
+  "readerVisibility": "Court districts require the44whole-town joins; region-root naming reconciliation remains withRiver."
+}

@@ -1,0 +1,26 @@
+{
+  "status": "COMPLETE_PRINTED_LOCAL_CANDIDATE_BLOCKS_IN_ALL38OFFICIAL_MEMBER_TOWN_SAMPLE_PACKETS",
+  "memberTowns": 38,
+  "samplePdfPagesAudited": 144,
+  "localContests": 36,
+  "printedNamedPeople": 60,
+  "probateCourtContests": 16,
+  "townRegistrarContests": 19,
+  "berlinSchoolContests": 1,
+  "berlinSchoolNames": 3,
+  "wholeTownCourtMemberships": 44,
+  "courtMembersBeyondRegion": 6,
+  "registeredTownScopeIdsPreserved": true,
+  "regionwideOfficesCreated": 0,
+  "declaredWriteInStatus": "Current official named qualification list remains pending. Blank write-in slots are not people; ordinary printed blocks are complete.",
+  "unrelatedStatewideLegislativeAndMeasures": "UNCHANGED_BY_OMISSION",
+  "otherOrdinaryLocalFields": "No other local candidate columns appear on all 144 supplied pages. No cancellation or term-cycle conclusion is inferred for unprinted registrar fields.",
+  "heldInputSha256": "2c65d16a5f4013495d3c15a978a38c3517c4dce56d50eace96947b7b5245cf23",
+  "registryInputSha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+  "priorInputPathsScanned": [
+    "/workspace/meanwhile/data/ballot/2026-general/ct.json"
+  ],
+  "populationRank": 51,
+  "population2025": 994115,
+  "printedNamedBallotLinesInCanonicalOffices": 62
+}

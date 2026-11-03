@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-11-03T10:25:03.421Z",
+  "links": [
+    {
+      "from": "https://www.fresnocountyca.gov/Departments/Information-Technology-Services-Department/GIS-Geographic-Information-Systems",
+      "to": "https://datasharing-cofgisonline.hub.arcgis.com/pages/our-data",
+      "proof": "Native HTML actual href verified by existing pageLinksSource; original hash d5e03dabdc01b8923076593cc168c5a9e236fa28a536d95254ac62ba54490a55"
+    },
+    {
+      "from": "https://datasharing-cofgisonline.hub.arcgis.com/pages/our-data",
+      "to": "https://www.arcgis.com/sharing/rest/content/items/e1b8e092e2154e6d8298dffc3c919267/data?f=json",
+      "proof": "Public hub site data has catalog group fc36e295dee844d095e84f96229c4e36; same group observed in native hub HTML."
+    },
+    {
+      "from": "https://www.arcgis.com/sharing/rest/content/items/e1b8e092e2154e6d8298dffc3c919267/data?f=json",
+      "to": "https://www.arcgis.com/sharing/rest/search?q=group%3Afc36e295dee844d095e84f96229c4e36%20hospital&num=100&f=json",
+      "proof": "Public search restricted to the actual hub catalog group and hospital title; total1 current result."
+    },
+    {
+      "from": "https://www.arcgis.com/sharing/rest/search?q=group%3Afc36e295dee844d095e84f96229c4e36%20hospital&num=100&f=json",
+      "to": "https://services3.arcgis.com/ibgDyuD2DLBge82s/arcgis/rest/services/ELECTIONS_HOSPITAL_DISTRICTS_VW/FeatureServer?f=pjson",
+      "proof": "Catalog result item d6aa8b3697cf4ef591cb286af4600332, owner COF_ISD_PROD, explicitly supplies this service URL."
+    },
+    {
+      "from": "https://services3.arcgis.com/ibgDyuD2DLBge82s/arcgis/rest/services/ELECTIONS_HOSPITAL_DISTRICTS_VW/FeatureServer?f=pjson",
+      "to": "https://services3.arcgis.com/ibgDyuD2DLBge82s/arcgis/rest/services/ELECTIONS_HOSPITAL_DISTRICTS_VW/FeatureServer/43?f=pjson",
+      "proof": "Service metadata lists exact ELECTIONS_HOSPITAL_DISTRICTS layer43; metadata last edited October30,2026."
+    },
+    {
+      "from": "https://services3.arcgis.com/ibgDyuD2DLBge82s/arcgis/rest/services/ELECTIONS_HOSPITAL_DISTRICTS_VW/FeatureServer/43?f=pjson",
+      "to": "https://services3.arcgis.com/ibgDyuD2DLBge82s/arcgis/rest/services/ELECTIONS_HOSPITAL_DISTRICTS_VW/FeatureServer/43/query?where=CD_HOSDIST%3D%27H16%27&outFields=OBJECTID%2CCD_HOSDIST%2CNM_HOSDIST%2CCD_ZONDIST%2CNM_ZONDIST&returnGeometry=true&outSR=4326&f=geojson",
+      "proof": "Query exact CD_HOSDIST H16; name Sierra Kings Health Care; all five distinct zones1–5, independently counted5."
+    }
+  ],
+  "excludedOlderLayers": [
+    "Hospital_Districts itemcd7e4b8cab5f4413bd51188cf2df3e8a2019",
+    "HealthCareDistricts item1794fdcb30494257a4db13e9e6ff9eb8June2022"
+  ],
+  "notUsed": "Old LAFCO2019 map/SOI, city boundaries or hospital catchment approximations.",
+  "nativeHubIdentityProof": {
+    "sourceUrl": "https://datasharing-cofgisonline.hub.arcgis.com/pages/our-data",
+    "nativeSha256": "3e749262f0ec168129092a77749e4417bf464cfc8e50b8eed0bb82d0e02b1b1c",
+    "retrievedAt": "2026-11-03T10:16:07.587517+00:00",
+    "proofFile": "sources/3e749262f0ec168129092a77749e4417bf464cfc8e50b8eed0bb82d0e02b1b1c.site-proof.json",
+    "method": "Deterministic decodeURIComponent-equivalent of native window.__SITE; exact selected fields, no inferred hyperlink or government claim."
+  }
+}

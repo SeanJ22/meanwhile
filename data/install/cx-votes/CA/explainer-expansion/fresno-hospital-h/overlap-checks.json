@@ -1,0 +1,9 @@
+{
+  "completeZctaFeatures": 19,
+  "positivePolygonIntersections": 13,
+  "zipEdges": 13,
+  "zctaEdges": 13,
+  "allPositiveZctasKnownPostal": true,
+  "districts": 1,
+  "limits": "All full native district zones are dissolved; complete enclosing2020Census ZCTAs intersected. Existing project postal links may add ZIP-only edges. No household addresses used."
+}

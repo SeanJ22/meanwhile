@@ -1,0 +1,15 @@
+{
+  "heldReference": "data/derived/registration/ca.json",
+  "heldReferenceSha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+  "government": [
+    "123255",
+    "ca:special:sierra-kings-healthcare-district",
+    "SIERRA-KINGS HEALTHCARE DISTRICT",
+    "SPECIAL DISTRICT",
+    -1,
+    "NO_CENSUS_GEOGRAPHY",
+    -1
+  ],
+  "placeId": "ocd-division/country:us/state:ca/special_district:sierra_kings_healthcare_district",
+  "basis": "Exact held named government PID123255; registration explicitly has NO_CENSUS_GEOGRAPHY. New source-defined electoral place is not claimed to be a Census identifier."
+}

@@ -1,0 +1,40 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-fresno-h",
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/resolution_redacted.pdf"
+    }
+  ],
+  "operation": "Load this exact current source-defined healthcare district through existing loadStatePlaceMap, then merge question/explainer through existing runBallotPublication. Link held government PID123255. Preserve unrelated geography, contests and candidates. No app/registry edits or release.",
+  "sourceSupport": "source-support.json",
+  "coverage": {
+    "state": "CA",
+    "county": "Fresno",
+    "officialCountyDenominator": 9,
+    "denominatorSource": "Official amendedAugust14,2026letter-assignment PDF expressly states total9; letterCnotused.",
+    "preparedLabels": [
+      "H"
+    ],
+    "preparedAttached": 1,
+    "scope": "Only exact measures and electorates in this packet. Remaining county measures and other local inventories remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "validation": "source-reader-check.json and reader-map-check.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "placeMapFile": "map.json",
+  "placeMapSha256": "32875d5d51dd96372cf5b785820738c67caf2fc9b468073a6a7b19f3a8695781",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

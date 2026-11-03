@@ -1,0 +1,41 @@
+{
+  "source": "Current official County of Fresno open-data catalog election district layer43, last edited October30,2026.",
+  "captureEdition": 2026,
+  "underlyingLegalBoundaryDate": "Not stated; current election layer publication date is retained, not invented as a legal annexation date.",
+  "unionOperation": "Deterministic polygon-clipping union of all five native CD_HOSDIST H16 district electoral zones. Native components retained in source capture; no buffer, rounding, simplification, repair, guessed parcel or widened service/SOI area.",
+  "specs": [
+    {
+      "id": "ocd-division/country:us/state:ca/special_district:sierra_kings_healthcare_district",
+      "name": "Sierra Kings Healthcare District",
+      "file": "ca-742e89df13c6.json",
+      "sourceUrl": "https://services3.arcgis.com/ibgDyuD2DLBge82s/arcgis/rest/services/ELECTIONS_HOSPITAL_DISTRICTS_VW/FeatureServer/43/query?where=CD_HOSDIST%3D%27H16%27&outFields=OBJECTID%2CCD_HOSDIST%2CNM_HOSDIST%2CCD_ZONDIST%2CNM_ZONDIST&returnGeometry=true&outSR=4326&f=geojson",
+      "field": "CD_HOSDIST",
+      "value": "H16",
+      "oids": [
+        1,
+        2,
+        3,
+        5,
+        6
+      ],
+      "zoneCodes": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "pid": "123255"
+    }
+  ],
+  "nativeFeatureCount": 5,
+  "completeZctaFeatures": 19,
+  "enclosingEnvelope": [
+    -119.574928301168,
+    36.560991795292395,
+    -118.36661602830199,
+    36.8377624240953
+  ],
+  "sourceDataLastEdited": "2026-10-30T22:15:40.675Z",
+  "govAuthority": "source-authority-chain.json"
+}

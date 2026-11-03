@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-03T10:22:52.837Z",
+  "status": "PASS",
+  "exactDivisionReaderSelection": "PASS",
+  "outsideSelectionsExcluded": "PASS",
+  "scope": "Sierra Kings H exact source-defined District electorate; current official map installs first.",
+  "checks": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:sierra_kings_healthcare_district",
+      "contests": [
+        "ca-2026-fresno-h"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:fresno",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:fresno",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:sanger",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:fowler",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:orange_cove",
+      "contests": [],
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

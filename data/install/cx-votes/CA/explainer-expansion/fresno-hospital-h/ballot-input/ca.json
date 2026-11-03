@@ -1,0 +1,157 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-fresno-h",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:sierra_kings_healthcare_district",
+          "title": "Sierra Kings hospital lease and purchase option — Measure H",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/resolution_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:31.934627+00:00",
+            "verifiedAt": "2026-11-03T10:22:51.341566+00:00",
+            "quote": "Shall the measure to assure continued operation of Sierra Kings Health Care District’s hospital facility at 372 West Cypress Avenue, Reedley, California, as an acute care hospital, in accordance with District Board Resolution No. 328 adopted July 27, 2026, by having the District enter with Reedley Community Hospital, the existing operator, a twenty year lease with options to extend the lease and purchase the property, with no new taxes, bonds, or assessments on District residents, be adopted?"
+          },
+          "measureTextUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/resolution_redacted.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-fresno-h-text",
+          "contestId": "ca-2026-fresno-h",
+          "officialNumber": "Measure H",
+          "questionText": "Shall the measure to assure continued operation of Sierra Kings Health Care District’s hospital facility at 372 West Cypress Avenue, Reedley, California, as an acute care hospital, in accordance with District Board Resolution No. 328 adopted July 27, 2026, by having the District enter with Reedley Community Hospital, the existing operator, a twenty year lease with options to extend the lease and purchase the property, with no new taxes, bonds, or assessments on District residents, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/resolution_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:31.934627+00:00",
+            "verifiedAt": "2026-11-03T10:22:51.341566+00:00",
+            "quote": "Shall the measure to assure continued operation of Sierra Kings Health Care District’s hospital facility at 372 West Cypress Avenue, Reedley, California, as an acute care hospital, in accordance with District Board Resolution No. 328 adopted July 27, 2026, by having the District enter with Reedley Community Hospital, the existing operator, a twenty year lease with options to extend the lease and purchase the property, with no new taxes, bonds, or assessments on District residents, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Authorizes Sierra Kings Health Care District to replace its existing hospital lease with a new 20-year lease to Reedley Community Hospital, with two five-year renewal options, a purchase option and a right of first refusal. The transaction covers the Reedley hospital facility and an adjacent parcel and requires continued hospital operation and maintenance.",
+          "yesMeans": "Approve the new hospital lease and possible future sale under its purchase option, subject to the required fair-market-value review. The measure itself imposes no new taxes, bonds or assessments on District residents.",
+          "noMeans": "Do not authorize this proposed new lease and purchase-option transaction.",
+          "contestId": "ca-2026-fresno-h",
+          "parts": [
+            {
+              "id": "ca-2026-fresno-h#operation",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Hospital and operator",
+              "what": "Reedley Community Hospital, an Adventist Health System affiliate and the existing operator, would lease the hospital premises plus an adjacent District-owned parcel. The proposed transaction requires continued operation and maintenance as a full-time general acute-care hospital with around-the-clock walk-in basic emergency care during the new lease."
+            },
+            {
+              "id": "ca-2026-fresno-h#term",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Lease duration and start",
+              "what": "The initial term is 20 years, followed by two possible five-year renewals. The new lease replaces the voter-approved 2011 lease and starts on the first day of the first calendar month after District voters approve it. The renewal terms are options rather than an automatic 30-year initial commitment."
+            },
+            {
+              "id": "ca-2026-fresno-h#sale",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Purchase rights and remaining negotiations",
+              "what": "The proposed transaction includes an option to buy the leased property and a right of first refusal. Voter authorization does not itself exercise the purchase option. Resolution 328 approves a memorandum of understanding for the District and operator to continue good-faith negotiations and execute the new lease, subject to voter approval and a fair-market-value appraisal. The District's chief executive may make minor, nonsubstantive changes before execution."
+            },
+            {
+              "id": "ca-2026-fresno-h#appraisal",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Fair-market-value and voter safeguards",
+              "what": "The new lease involves more than half the District's assets, requiring District voter approval under the cited health-care district law. The Board's approval is subject to obtaining a fair-market-value appraisal. The official analysis explains that a qualified independent consultant or appraiser must determine that the consideration is fair and reasonable."
+            },
+            {
+              "id": "ca-2026-fresno-h#vote",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Vote and taxes",
+              "what": "A majority of votes cast must approve MeasureH. The proposal does not create new taxes, bonds or assessments. It authorizes the specified lease and purchase-option arrangement rather than changing the underlying health-care district law."
+            }
+          ],
+          "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/resolution_redacted.pdf",
+          "sourceHash": "61a658945f3ace3de19a9103dea73dc67cf1c1b5555700760e64519a23284764",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:22:51.341566+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:22:51.341566+00:00",
+    "reviewedBy": "CX-VOTES current Fresno official source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "finalUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "httpStatus": 200,
+        "rawHash": "4bebce1ec5f55b0f783263909e0afeeeabcc387f488f4afd09b072d6e36abfd1",
+        "retrievedAt": "2026-11-03T09:50:35.448457+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official election inventory"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "httpStatus": 200,
+        "rawHash": "f60c8f84772377222fb4934ada6e7b4410289716165a44f095b9a49998cea87f",
+        "retrievedAt": "2026-11-03T09:51:13.425713+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current amended nine-measure designation list"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/resolution_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/resolution_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "61a658945f3ace3de19a9103dea73dc67cf1c1b5555700760e64519a23284764",
+        "retrievedAt": "2026-11-03T09:52:31.934627+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/measure-h-impartial-analysis_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/measure-h-impartial-analysis_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "810cc27a5fb404759f61bbec42ccec9b193aabdc786714ebc4873103e50a147f",
+        "retrievedAt": "2026-11-03T09:51:12.593295+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/Departments/Information-Technology-Services-Department/GIS-Geographic-Information-Systems",
+        "finalUrl": "https://www.fresnocountyca.gov/Departments/Information-Technology-Services-Department/GIS-Geographic-Information-Systems",
+        "httpStatus": 200,
+        "rawHash": "d5e03dabdc01b8923076593cc168c5a9e236fa28a536d95254ac62ba54490a55",
+        "retrievedAt": "2026-11-03T10:12:06.224241+00:00",
+        "publisher": "County of Fresno Information Technology Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Actual .gov hyperlink to public County open-data hub; hub catalog lists the public current ELECTIONS_HOSPITAL_DISTRICTS_VW service whose layer43 gives exact five H16 voting zones. Original native lineage captured."
+      }
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "state": "CA",
+  "county": "Fresno",
+  "status": "PASS",
+  "districts": 1,
+  "nativeZones": 5,
+  "nativeComponentInteriorControls": 8,
+  "dissolvedPolygons": 2,
+  "currentGeometry": "PASS exact deterministic union of all five H16 native district zones; no guessed city or SOI boundary",
+  "sourceHashes": "PASS",
+  "completeEnclosingZctas": 19,
+  "actualLoader": "PASS offline memory fixture",
+  "heldGovernmentLinks": 1,
+  "heldGovernmentPid": "123255",
+  "actualPointReaderChecks": [
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    }
+  ],
+  "countyOrCityAloneExcluded": "PASS",
+  "actualZipReaderChecks": 13,
+  "zipEdges": 13,
+  "zctaEdges": 13,
+  "governmentAuthority": "Current .gov GIS→public County open-data catalog→current election district service/layer43, source last edited October30,2026.",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "limits": "Geometric controls are synthetic interior points, never household addresses. River installs and checks the live result. Capture-year2026 is not claimed as the underlying legal annexation date."
+}

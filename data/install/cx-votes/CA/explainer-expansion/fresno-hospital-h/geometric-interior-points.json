@@ -1,0 +1,90 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:sierra_kings_healthcare_district",
+    "zone": "1",
+    "sourceObjectId": 1,
+    "component": 0,
+    "point": [
+      -119.44295575937599,
+      36.6023084322713
+    ],
+    "basis": "Deterministic native component interior; no voter, household or residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:sierra_kings_healthcare_district",
+    "zone": "4",
+    "sourceObjectId": 2,
+    "component": 0,
+    "point": [
+      -119.4958653692715,
+      36.6088060984093
+    ],
+    "basis": "Deterministic native component interior; no voter, household or residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:sierra_kings_healthcare_district",
+    "zone": "2",
+    "sourceObjectId": 3,
+    "component": 0,
+    "point": [
+      -118.728268903426,
+      36.747422264746504
+    ],
+    "basis": "Deterministic native component interior; no voter, household or residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:sierra_kings_healthcare_district",
+    "zone": "2",
+    "sourceObjectId": 3,
+    "component": 1,
+    "point": [
+      -119.43963139012351,
+      36.648426651117745
+    ],
+    "basis": "Deterministic native component interior; no voter, household or residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:sierra_kings_healthcare_district",
+    "zone": "3",
+    "sourceObjectId": 5,
+    "component": 0,
+    "point": [
+      -119.50062942455651,
+      36.59034712936575
+    ],
+    "basis": "Deterministic native component interior; no voter, household or residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:sierra_kings_healthcare_district",
+    "zone": "5",
+    "sourceObjectId": 6,
+    "component": 0,
+    "point": [
+      -119.426320469207,
+      36.589515153835805
+    ],
+    "basis": "Deterministic native component interior; no voter, household or residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:sierra_kings_healthcare_district",
+    "zone": "5",
+    "sourceObjectId": 6,
+    "component": 1,
+    "point": [
+      -119.4514788652335,
+      36.60066074230325
+    ],
+    "basis": "Deterministic native component interior; no voter, household or residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:sierra_kings_healthcare_district",
+    "zone": "5",
+    "sourceObjectId": 6,
+    "component": 2,
+    "point": [
+      -119.45767387600549,
+      36.6007698328081
+    ],
+    "basis": "Deterministic native component interior; no voter, household or residential address."
+  }
+]

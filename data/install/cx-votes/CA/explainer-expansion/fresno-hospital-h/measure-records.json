@@ -1,0 +1,50 @@
+[
+  {
+    "whatItDoes": "Authorizes Sierra Kings Health Care District to replace its existing hospital lease with a new 20-year lease to Reedley Community Hospital, with two five-year renewal options, a purchase option and a right of first refusal. The transaction covers the Reedley hospital facility and an adjacent parcel and requires continued hospital operation and maintenance.",
+    "yesMeans": "Approve the new hospital lease and possible future sale under its purchase option, subject to the required fair-market-value review. The measure itself imposes no new taxes, bonds or assessments on District residents.",
+    "noMeans": "Do not authorize this proposed new lease and purchase-option transaction.",
+    "contestId": "ca-2026-fresno-h",
+    "parts": [
+      {
+        "id": "ca-2026-fresno-h#operation",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Hospital and operator",
+        "what": "Reedley Community Hospital, an Adventist Health System affiliate and the existing operator, would lease the hospital premises plus an adjacent District-owned parcel. The proposed transaction requires continued operation and maintenance as a full-time general acute-care hospital with around-the-clock walk-in basic emergency care during the new lease."
+      },
+      {
+        "id": "ca-2026-fresno-h#term",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Lease duration and start",
+        "what": "The initial term is 20 years, followed by two possible five-year renewals. The new lease replaces the voter-approved 2011 lease and starts on the first day of the first calendar month after District voters approve it. The renewal terms are options rather than an automatic 30-year initial commitment."
+      },
+      {
+        "id": "ca-2026-fresno-h#sale",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Purchase rights and remaining negotiations",
+        "what": "The proposed transaction includes an option to buy the leased property and a right of first refusal. Voter authorization does not itself exercise the purchase option. Resolution 328 approves a memorandum of understanding for the District and operator to continue good-faith negotiations and execute the new lease, subject to voter approval and a fair-market-value appraisal. The District's chief executive may make minor, nonsubstantive changes before execution."
+      },
+      {
+        "id": "ca-2026-fresno-h#appraisal",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Fair-market-value and voter safeguards",
+        "what": "The new lease involves more than half the District's assets, requiring District voter approval under the cited health-care district law. The Board's approval is subject to obtaining a fair-market-value appraisal. The official analysis explains that a qualified independent consultant or appraiser must determine that the consideration is fair and reasonable."
+      },
+      {
+        "id": "ca-2026-fresno-h#vote",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Vote and taxes",
+        "what": "A majority of votes cast must approve MeasureH. The proposal does not create new taxes, bonds or assessments. It authorizes the specified lease and purchase-option arrangement rather than changing the underlying health-care district law."
+      }
+    ],
+    "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/resolution_redacted.pdf",
+    "sourceHash": "61a658945f3ace3de19a9103dea73dc67cf1c1b5555700760e64519a23284764",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T10:22:51.341566+00:00",
+    "citation": "measure-source"
+  }
+]

@@ -1,0 +1,212 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4302",
+    "sourceAgencyCode": "0308",
+    "sourceAgencyName": "Barron Area School District (0308)",
+    "officialQuestionDistrict": "Shall the Barron Area School District, Barron and Dunn Counties, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:barron_area_school_district",
+      "unsd",
+      "5500870",
+      "Barron Area School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4404",
+    "sourceAgencyCode": "1890",
+    "sourceAgencyName": "Fox Point J2 School District (1890)",
+    "officialQuestionDistrict": "Shall the Joint School District Number 2, Villages of Fox Point and Bayside, Milwaukee\r\nand Ozaukee Counties, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:fox_point_joint_no_2_school_district",
+      "elsd",
+      "5504800",
+      "Fox Point Joint No. 2 School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4393",
+    "sourceAgencyCode": "2898",
+    "sourceAgencyName": "Lake Mills Area School District (2898)",
+    "officialQuestionDistrict": "Shall the Lake Mills Area School District, Jefferson County, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:lake_mills_area_school_district",
+      "unsd",
+      "5507710",
+      "Lake Mills Area School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4384",
+    "sourceAgencyCode": "3367",
+    "sourceAgencyName": "Mayville School District (3367)",
+    "officialQuestionDistrict": "Shall the School District of Mayville, Dodge County, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:mayville_school_district",
+      "unsd",
+      "5508880",
+      "Mayville School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4402",
+    "sourceAgencyCode": "3640",
+    "sourceAgencyName": "Minocqua J1 School District (3640)",
+    "officialQuestionDistrict": "Shall the Joint School District Number 1, Towns of Minocqua, Hazelhurst and Lake Tomahawk, Oneida County, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:minocqua_joint_no_1_school_district",
+      "elsd",
+      "5509690",
+      "Minocqua Joint No. 1 School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4377",
+    "sourceAgencyCode": "4606",
+    "sourceAgencyName": "Princeton School District (4606)",
+    "officialQuestionDistrict": "Shall the School District of Princeton, Green Lake and Marquette Counties,",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:princeton_school_district",
+      "unsd",
+      "5512300",
+      "Princeton School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4378",
+    "sourceAgencyCode": "4606",
+    "sourceAgencyName": "Princeton School District (4606)",
+    "officialQuestionDistrict": "Shall the School District of Princeton, Green Lake and Marquette Counties, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:princeton_school_district",
+      "unsd",
+      "5512300",
+      "Princeton School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4361",
+    "sourceAgencyCode": "4872",
+    "sourceAgencyName": "Ripon Area School District (4872)",
+    "officialQuestionDistrict": "Shall the Ripon Area School District, Fond du Lac, Winnebago and Green Lake Counties, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:ripon_area_school_district",
+      "unsd",
+      "5513020",
+      "Ripon Area School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4394",
+    "sourceAgencyCode": "5138",
+    "sourceAgencyName": "Seymour Community School District (5138)",
+    "officialQuestionDistrict": "Shall the Seymour Community School District, Outagamie and Shawano Counties, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:seymour_community_school_district",
+      "unsd",
+      "5513530",
+      "Seymour Community School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4380",
+    "sourceAgencyCode": "5376",
+    "sourceAgencyName": "Siren School District (5376)",
+    "officialQuestionDistrict": "Shall the School District of Siren, Burnett County, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:siren_school_district",
+      "unsd",
+      "5513890",
+      "Siren School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4417",
+    "sourceAgencyCode": "5432",
+    "sourceAgencyName": "Somerset School District (5432)",
+    "officialQuestionDistrict": "Shall the School District of Somerset, located in St. Croix\r\nCounty, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:somerset_school_district",
+      "unsd",
+      "5514010",
+      "Somerset School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4409",
+    "sourceAgencyCode": "5457",
+    "sourceAgencyName": "Southern Door County School District (5457)",
+    "officialQuestionDistrict": "Shall the Southern Door County School District, Door County, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:southern_door_county_school_district",
+      "unsd",
+      "5514130",
+      "Southern Door County School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4385",
+    "sourceAgencyCode": "0126",
+    "sourceAgencyName": "Tomorrow River School District (0126)",
+    "officialQuestionDistrict": "Shall the School District of the Tomorrow River, Portage County, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:tomorrow_river_school_district",
+      "unsd",
+      "5500330",
+      "Tomorrow River School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4424",
+    "sourceAgencyCode": "6384",
+    "sourceAgencyName": "Weyauwega-Fremont School District (6384)",
+    "officialQuestionDistrict": "Shall the School District of Weyauwega-Fremont, Waupaca, Winnebago and Waushara Counties, ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:weyauwega_fremont_school_district",
+      "unsd",
+      "5516500",
+      "Weyauwega-Fremont School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4324",
+    "sourceAgencyCode": "6678",
+    "sourceAgencyName": "Wisconsin Dells School District (6678)",
+    "officialQuestionDistrict": "Shall the School District of ",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:wisconsin_dells_school_district",
+      "unsd",
+      "5517040",
+      "Wisconsin Dells School District"
+    ],
+    "registry": "repository:data/derived/registration/wi.json",
+    "basis": "Exact unique school-district identity and joint-district number in the official statewide report and its question; whole existing Census school electorate, no county widening."
+  }
+]

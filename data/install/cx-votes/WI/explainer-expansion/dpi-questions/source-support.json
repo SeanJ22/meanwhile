@@ -1,0 +1,347 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4302",
+    "agencyCode": "0308",
+    "reportedReferendumId": 4302,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Shall the Barron Area School District, Barron and Dunn Counties, Wisconsin be authorized\r\nto exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,500,000 per year for\r\nfive years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for\r\nnon-recurring purposes consisting of operational and maintenance expenses?",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/b46c218155819240e040aca8abf5af02c1331065f4cf85988d1c8109b99ceb2c.txt",
+    "questionExcerptSha256": "b46c218155819240e040aca8abf5af02c1331065f4cf85988d1c8109b99ceb2c",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Barron Area School District, Barron and Dunn Counties, Wisconsin be authorized\r\nto exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,500,000 per year for\r\nfive years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for\r\nnon-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the Barron Area School District, Barron and Dunn Counties, Wisconsin be authorized\r\nto exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,500,000 per year for\r\nfive years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for\r\nnon-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the Barron Area School District, Barron and Dunn Counties, Wisconsin be authorized\r\nto exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,500,000 per year for\r\nfive years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for\r\nnon-recurring purposes consisting of operational and maintenance expenses?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4404",
+    "agencyCode": "1890",
+    "reportedReferendumId": 4404,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Shall the Joint School District Number 2, Villages of Fox Point and Bayside, Milwaukee\r\nand Ozaukee Counties, Wisconsin be authorized to exceed the revenue limit specified in Section\r\n121.91, Wisconsin Statutes, by $3,950,000 beginning with the 2027-2028 school year, for recurring\r\npurposes in order to maintain instructional programs, operations, and services?",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/267bb2dedd10bee8d1416e0fb46bff051a742608d3c4c9963ef6d0375ec3991d.txt",
+    "questionExcerptSha256": "267bb2dedd10bee8d1416e0fb46bff051a742608d3c4c9963ef6d0375ec3991d",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Joint School District Number 2, Villages of Fox Point and Bayside, Milwaukee\r\nand Ozaukee Counties, Wisconsin be authorized to exceed the revenue limit specified in Section\r\n121.91, Wisconsin Statutes, by $3,950,000 beginning with the 2027-2028 school year, for recurring\r\npurposes in order to maintain instructional programs, operations, and services?"
+      ],
+      "yesMeans": [
+        "Shall the Joint School District Number 2, Villages of Fox Point and Bayside, Milwaukee\r\nand Ozaukee Counties, Wisconsin be authorized to exceed the revenue limit specified in Section\r\n121.91, Wisconsin Statutes, by $3,950,000 beginning with the 2027-2028 school year, for recurring\r\npurposes in order to maintain instructional programs, operations, and services?"
+      ],
+      "noMeans": [
+        "Shall the Joint School District Number 2, Villages of Fox Point and Bayside, Milwaukee\r\nand Ozaukee Counties, Wisconsin be authorized to exceed the revenue limit specified in Section\r\n121.91, Wisconsin Statutes, by $3,950,000 beginning with the 2027-2028 school year, for recurring\r\npurposes in order to maintain instructional programs, operations, and services?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4393",
+    "agencyCode": "2898",
+    "reportedReferendumId": 4393,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Shall the Lake Mills Area School District, Jefferson County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,900,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses, including educational programming, staff salaries and benefits, technology, maintenance, and transportation expenses?",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/c25faecd35aef5fdf80d48e9566ea07208367fe1e117c0b2985e17217e996d60.txt",
+    "questionExcerptSha256": "c25faecd35aef5fdf80d48e9566ea07208367fe1e117c0b2985e17217e996d60",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Lake Mills Area School District, Jefferson County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,900,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses, including educational programming, staff salaries and benefits, technology, maintenance, and transportation expenses?"
+      ],
+      "yesMeans": [
+        "Shall the Lake Mills Area School District, Jefferson County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,900,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses, including educational programming, staff salaries and benefits, technology, maintenance, and transportation expenses?"
+      ],
+      "noMeans": [
+        "Shall the Lake Mills Area School District, Jefferson County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,900,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses, including educational programming, staff salaries and benefits, technology, maintenance, and transportation expenses?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4384",
+    "agencyCode": "3367",
+    "reportedReferendumId": 4384,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Shall the School District of Mayville, Dodge County, Wisconsin\r\nbe authorized to exceed the revenue limit specified in Section\r\n121.91, Wisconsin Statutes, by $950,000 per year for seven years,\r\nbeginning with the 2027-2028 school year and ending with the\r\n2033-2034 school year, for non-recurring purposes consisting of\r\noperational and maintenance expenses, including to maintain\r\ndistrict facilities, for school safety and security, student\r\ntransportation, and educational programming?",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/40a85a99e27bdbdb8041ce193ae40551230ac56d5cd6e51ca2dc3b344bddbc7e.txt",
+    "questionExcerptSha256": "40a85a99e27bdbdb8041ce193ae40551230ac56d5cd6e51ca2dc3b344bddbc7e",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Mayville, Dodge County, Wisconsin\r\nbe authorized to exceed the revenue limit specified in Section\r\n121.91, Wisconsin Statutes, by $950,000 per year for seven years,\r\nbeginning with the 2027-2028 school year and ending with the\r\n2033-2034 school year, for non-recurring purposes consisting of\r\noperational and maintenance expenses, including to maintain\r\ndistrict facilities, for school safety and security, student\r\ntransportation, and educational programming?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Mayville, Dodge County, Wisconsin\r\nbe authorized to exceed the revenue limit specified in Section\r\n121.91, Wisconsin Statutes, by $950,000 per year for seven years,\r\nbeginning with the 2027-2028 school year and ending with the\r\n2033-2034 school year, for non-recurring purposes consisting of\r\noperational and maintenance expenses, including to maintain\r\ndistrict facilities, for school safety and security, student\r\ntransportation, and educational programming?"
+      ],
+      "noMeans": [
+        "Shall the School District of Mayville, Dodge County, Wisconsin\r\nbe authorized to exceed the revenue limit specified in Section\r\n121.91, Wisconsin Statutes, by $950,000 per year for seven years,\r\nbeginning with the 2027-2028 school year and ending with the\r\n2033-2034 school year, for non-recurring purposes consisting of\r\noperational and maintenance expenses, including to maintain\r\ndistrict facilities, for school safety and security, student\r\ntransportation, and educational programming?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4402",
+    "agencyCode": "3640",
+    "reportedReferendumId": 4402,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Question:  Shall the Joint School District Number 1, Towns of Minocqua, Hazelhurst and Lake Tomahawk, Oneida County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,500,000 beginning with the 2027-2028 school year, for recurring purposes consisting of operational expenses, maintenance expenses, and debt service for capital improvements?",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/499567000485711d76924671a1894e0bf9814d50549d93befe7c05bfcd99366c.txt",
+    "questionExcerptSha256": "499567000485711d76924671a1894e0bf9814d50549d93befe7c05bfcd99366c",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Joint School District Number 1, Towns of Minocqua, Hazelhurst and Lake Tomahawk, Oneida County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,500,000 beginning with the 2027-2028 school year, for recurring purposes consisting of operational expenses, maintenance expenses, and debt service for capital improvements?"
+      ],
+      "yesMeans": [
+        "Shall the Joint School District Number 1, Towns of Minocqua, Hazelhurst and Lake Tomahawk, Oneida County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,500,000 beginning with the 2027-2028 school year, for recurring purposes consisting of operational expenses, maintenance expenses, and debt service for capital improvements?"
+      ],
+      "noMeans": [
+        "Shall the Joint School District Number 1, Towns of Minocqua, Hazelhurst and Lake Tomahawk, Oneida County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,500,000 beginning with the 2027-2028 school year, for recurring purposes consisting of operational expenses, maintenance expenses, and debt service for capital improvements?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4377",
+    "agencyCode": "4606",
+    "reportedReferendumId": 4377,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Question Number II: Shall the School District of Princeton, Green Lake and Marquette Counties,Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $14,000,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district-wide safety and security improvements, including construction of secure entrances, building systems, infrastructure and capital maintenance improvements; renovations to instructional spaces; site and track improvements; and acquisition of furnishings, fixtures and equipment?\r\n",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/26e515be3cacecbfc69dff6578ed5f823296816cdc7dd1d971bbe79bb83781b6.txt",
+    "questionExcerptSha256": "26e515be3cacecbfc69dff6578ed5f823296816cdc7dd1d971bbe79bb83781b6",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Princeton, Green Lake and Marquette Counties,Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $14,000,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district-wide safety and security improvements, including construction of secure entrances, building systems, infrastructure and capital maintenance improvements; renovations to instructional spaces; site and track improvements; and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Princeton, Green Lake and Marquette Counties,Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $14,000,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district-wide safety and security improvements, including construction of secure entrances, building systems, infrastructure and capital maintenance improvements; renovations to instructional spaces; site and track improvements; and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "noMeans": [
+        "Shall the School District of Princeton, Green Lake and Marquette Counties,Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $14,000,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district-wide safety and security improvements, including construction of secure entrances, building systems, infrastructure and capital maintenance improvements; renovations to instructional spaces; site and track improvements; and acquisition of furnishings, fixtures and equipment?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4378",
+    "agencyCode": "4606",
+    "reportedReferendumId": 4378,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Question Number I:  Shall the School District of Princeton, Green Lake and Marquette Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $575,000 for the 2027-2028 school year and by $1,200,000 per year for three years, beginning with the 2028-2029 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of costs associated with educational programming and staffing, ongoing maintenance and operations?\n\n2028                                                   $575,000                                           2031\n\n2029                                                   $1,200,000                                        2031\n\n2030                                                   $1,200,000                                        2031  \n\n2031                                                   $1,200,000                                        2031\nTotal: $4,175,000\n\n",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/8f3cb5ddb72cca1ee2d35f1d93a38dd5d63904e1e3779640582a5c859383f42c.txt",
+    "questionExcerptSha256": "8f3cb5ddb72cca1ee2d35f1d93a38dd5d63904e1e3779640582a5c859383f42c",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Princeton, Green Lake and Marquette Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $575,000 for the 2027-2028 school year and by $1,200,000 per year for three years, beginning with the 2028-2029 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of costs associated with educational programming and staffing, ongoing maintenance and operations?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Princeton, Green Lake and Marquette Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $575,000 for the 2027-2028 school year and by $1,200,000 per year for three years, beginning with the 2028-2029 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of costs associated with educational programming and staffing, ongoing maintenance and operations?"
+      ],
+      "noMeans": [
+        "Shall the School District of Princeton, Green Lake and Marquette Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $575,000 for the 2027-2028 school year and by $1,200,000 per year for three years, beginning with the 2028-2029 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of costs associated with educational programming and staffing, ongoing maintenance and operations?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4361",
+    "agencyCode": "4872",
+    "reportedReferendumId": 4361,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Shall the Ripon Area School District, Fond du Lac, Winnebago and Green Lake Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for the 2027-2028 school year and by $1,350,000 per year for the 2028-2029 school year through the 2032-2033 school year, on a non-recurring basis, for the purpose of maintaining current educational programming, academic resources, and district operations?",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/ac7529c1414f75c04abca7773b677768d8b170446e630d5838e3123095e340df.txt",
+    "questionExcerptSha256": "ac7529c1414f75c04abca7773b677768d8b170446e630d5838e3123095e340df",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Ripon Area School District, Fond du Lac, Winnebago and Green Lake Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for the 2027-2028 school year and by $1,350,000 per year for the 2028-2029 school year through the 2032-2033 school year, on a non-recurring basis, for the purpose of maintaining current educational programming, academic resources, and district operations?"
+      ],
+      "yesMeans": [
+        "Shall the Ripon Area School District, Fond du Lac, Winnebago and Green Lake Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for the 2027-2028 school year and by $1,350,000 per year for the 2028-2029 school year through the 2032-2033 school year, on a non-recurring basis, for the purpose of maintaining current educational programming, academic resources, and district operations?"
+      ],
+      "noMeans": [
+        "Shall the Ripon Area School District, Fond du Lac, Winnebago and Green Lake Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for the 2027-2028 school year and by $1,350,000 per year for the 2028-2029 school year through the 2032-2033 school year, on a non-recurring basis, for the purpose of maintaining current educational programming, academic resources, and district operations?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4394",
+    "agencyCode": "5138",
+    "reportedReferendumId": 4394,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Shall the Seymour Community School District, Outagamie and Shawano Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,000,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses, including expenses related to staffing and to maintain programs and services?",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/dfbd5a3345d1d0b2d5a117968ec7597b4b6cb2c35d168445df9fc7d8af989cf1.txt",
+    "questionExcerptSha256": "dfbd5a3345d1d0b2d5a117968ec7597b4b6cb2c35d168445df9fc7d8af989cf1",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Seymour Community School District, Outagamie and Shawano Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,000,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses, including expenses related to staffing and to maintain programs and services?"
+      ],
+      "yesMeans": [
+        "Shall the Seymour Community School District, Outagamie and Shawano Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,000,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses, including expenses related to staffing and to maintain programs and services?"
+      ],
+      "noMeans": [
+        "Shall the Seymour Community School District, Outagamie and Shawano Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,000,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses, including expenses related to staffing and to maintain programs and services?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4380",
+    "agencyCode": "5376",
+    "reportedReferendumId": 4380,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Shall the School District of Siren, Burnett County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91 Wisconsin Statues, by $750,000.00 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses, including to maintain educational and elective programming at Siren School District.",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/0adf1375d19a1304794a143c6ea3148dc7c37d9689451c604be55feafece27b1.txt",
+    "questionExcerptSha256": "0adf1375d19a1304794a143c6ea3148dc7c37d9689451c604be55feafece27b1",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Siren, Burnett County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91 Wisconsin Statues, by $750,000.00 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses, including to maintain educational and elective programming at Siren School District."
+      ],
+      "yesMeans": [
+        "Shall the School District of Siren, Burnett County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91 Wisconsin Statues, by $750,000.00 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses, including to maintain educational and elective programming at Siren School District."
+      ],
+      "noMeans": [
+        "Shall the School District of Siren, Burnett County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91 Wisconsin Statues, by $750,000.00 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses, including to maintain educational and elective programming at Siren School District."
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4417",
+    "agencyCode": "5432",
+    "reportedReferendumId": 4417,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "QUESTION: Shall the School District of Somerset, located in St. Croix\r\nCounty, Wisconsin, be authorized to exceed the revenue limit specified\r\nin Section 121.91, Wisconsin Statutes, by $1,400,000 per year for five\r\nyears, beginning with the 2027-2028 school year and ending with the\r\n2031-2032 school year, for non-recurring purposes consisting of\r\noperational expenses, including but not limited to staffing, facility\r\nmaintenance, and maintaining programs and services?",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/dba0df2d06b8a79fb906cfbb3dc4b065dee098d97e2f67fc9f46bfc4746b70b9.txt",
+    "questionExcerptSha256": "dba0df2d06b8a79fb906cfbb3dc4b065dee098d97e2f67fc9f46bfc4746b70b9",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Somerset, located in St. Croix\r\nCounty, Wisconsin, be authorized to exceed the revenue limit specified\r\nin Section 121.91, Wisconsin Statutes, by $1,400,000 per year for five\r\nyears, beginning with the 2027-2028 school year and ending with the\r\n2031-2032 school year, for non-recurring purposes consisting of\r\noperational expenses, including but not limited to staffing, facility\r\nmaintenance, and maintaining programs and services?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Somerset, located in St. Croix\r\nCounty, Wisconsin, be authorized to exceed the revenue limit specified\r\nin Section 121.91, Wisconsin Statutes, by $1,400,000 per year for five\r\nyears, beginning with the 2027-2028 school year and ending with the\r\n2031-2032 school year, for non-recurring purposes consisting of\r\noperational expenses, including but not limited to staffing, facility\r\nmaintenance, and maintaining programs and services?"
+      ],
+      "noMeans": [
+        "Shall the School District of Somerset, located in St. Croix\r\nCounty, Wisconsin, be authorized to exceed the revenue limit specified\r\nin Section 121.91, Wisconsin Statutes, by $1,400,000 per year for five\r\nyears, beginning with the 2027-2028 school year and ending with the\r\n2031-2032 school year, for non-recurring purposes consisting of\r\noperational expenses, including but not limited to staffing, facility\r\nmaintenance, and maintaining programs and services?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4409",
+    "agencyCode": "5457",
+    "reportedReferendumId": 4409,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Shall the Southern Door County School District, Door County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,055,000 per year for 3 years, beginning with the 2026-2027 school year and ending with the 2028-2029 school year, for non-recurring purposes consisting of operational expenses for teacher and staff compensation, restoring select teaching positions, and maintaining school facilities?",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/45d70833d33bc85c11dd5f1307d036b1550a0bf8c0556bdf0812bbf84ca4d56c.txt",
+    "questionExcerptSha256": "45d70833d33bc85c11dd5f1307d036b1550a0bf8c0556bdf0812bbf84ca4d56c",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Southern Door County School District, Door County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,055,000 per year for 3 years, beginning with the 2026-2027 school year and ending with the 2028-2029 school year, for non-recurring purposes consisting of operational expenses for teacher and staff compensation, restoring select teaching positions, and maintaining school facilities?"
+      ],
+      "yesMeans": [
+        "Shall the Southern Door County School District, Door County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,055,000 per year for 3 years, beginning with the 2026-2027 school year and ending with the 2028-2029 school year, for non-recurring purposes consisting of operational expenses for teacher and staff compensation, restoring select teaching positions, and maintaining school facilities?"
+      ],
+      "noMeans": [
+        "Shall the Southern Door County School District, Door County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,055,000 per year for 3 years, beginning with the 2026-2027 school year and ending with the 2028-2029 school year, for non-recurring purposes consisting of operational expenses for teacher and staff compensation, restoring select teaching positions, and maintaining school facilities?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4385",
+    "agencyCode": "0126",
+    "reportedReferendumId": 4385,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Shall the School District of the Tomorrow River, Portage County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,100,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes?",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/826e04975773bd648d9b7608cf870d7e14ae456f327e24396268561023e3017d.txt",
+    "questionExcerptSha256": "826e04975773bd648d9b7608cf870d7e14ae456f327e24396268561023e3017d",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of the Tomorrow River, Portage County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,100,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes?"
+      ],
+      "yesMeans": [
+        "Shall the School District of the Tomorrow River, Portage County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,100,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes?"
+      ],
+      "noMeans": [
+        "Shall the School District of the Tomorrow River, Portage County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,100,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4424",
+    "agencyCode": "6384",
+    "reportedReferendumId": 4424,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "Shall the School District of Weyauwega-Fremont, Waupaca, Winnebago and Waushara Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $8,450,000 for the public purpose of paying the cost of a school facility improvement project consisting of: safety, security, building infrastructure and site improvements at Fremont Elementary School, Weyauwega Elementary School and Weyauwega Middle School; construction of a secure entrance at Weyauwega Elementary School; district-wide capital maintenance; and acquisition of furnishings, fixtures, and equipment?",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/10275a294b2ebd2e2320b2a8e8acf9fac85432a35a9d3ad50dc349e818454338.txt",
+    "questionExcerptSha256": "10275a294b2ebd2e2320b2a8e8acf9fac85432a35a9d3ad50dc349e818454338",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Weyauwega-Fremont, Waupaca, Winnebago and Waushara Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $8,450,000 for the public purpose of paying the cost of a school facility improvement project consisting of: safety, security, building infrastructure and site improvements at Fremont Elementary School, Weyauwega Elementary School and Weyauwega Middle School; construction of a secure entrance at Weyauwega Elementary School; district-wide capital maintenance; and acquisition of furnishings, fixtures, and equipment?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Weyauwega-Fremont, Waupaca, Winnebago and Waushara Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $8,450,000 for the public purpose of paying the cost of a school facility improvement project consisting of: safety, security, building infrastructure and site improvements at Fremont Elementary School, Weyauwega Elementary School and Weyauwega Middle School; construction of a secure entrance at Weyauwega Elementary School; district-wide capital maintenance; and acquisition of furnishings, fixtures, and equipment?"
+      ],
+      "noMeans": [
+        "Shall the School District of Weyauwega-Fremont, Waupaca, Winnebago and Waushara Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $8,450,000 for the public purpose of paying the cost of a school facility improvement project consisting of: safety, security, building infrastructure and site improvements at Fremont Elementary School, Weyauwega Elementary School and Weyauwega Middle School; construction of a secure entrance at Weyauwega Elementary School; district-wide capital maintenance; and acquisition of furnishings, fixtures, and equipment?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4324",
+    "agencyCode": "6678",
+    "reportedReferendumId": 4324,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "originalSourceFile": "sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "originalSourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "originalRowFullDescription": "\"Shall the School District of Wisconsin Dells, Sauk, Adams, Columbia, Juneau and Marquette Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,800,000 beginning with the 2026-2027 school year, for recurring purposes consisting of maintaining current elementary, middle and high School class sizes, technology equipment, existing career and technical education programming, along with operational costs associated with all school buildings?\"",
+    "questionExtraction": "Exact literal question beginning Shall and ending at the first question mark, or the source-provided final period when no question mark is printed. Prefix labels and appended annual-amount table are separate source metadata. No resolution was rewritten as a ballot question.",
+    "questionExcerptFile": "sources/31ddb7f360f16558b2bfa9ddf40f8e5a7bdb6a412e251cce27ad5a4d4e4f8b08.txt",
+    "questionExcerptSha256": "31ddb7f360f16558b2bfa9ddf40f8e5a7bdb6a412e251cce27ad5a4d4e4f8b08",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Wisconsin Dells, Sauk, Adams, Columbia, Juneau and Marquette Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,800,000 beginning with the 2026-2027 school year, for recurring purposes consisting of maintaining current elementary, middle and high School class sizes, technology equipment, existing career and technical education programming, along with operational costs associated with all school buildings?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Wisconsin Dells, Sauk, Adams, Columbia, Juneau and Marquette Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,800,000 beginning with the 2026-2027 school year, for recurring purposes consisting of maintaining current elementary, middle and high School class sizes, technology equipment, existing career and technical education programming, along with operational costs associated with all school buildings?"
+      ],
+      "noMeans": [
+        "Shall the School District of Wisconsin Dells, Sauk, Adams, Columbia, Juneau and Marquette Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,800,000 beginning with the 2026-2027 school year, for recurring purposes consisting of maintaining current elementary, middle and high School class sizes, technology equipment, existing career and technical education programming, along with operational costs associated with all school buildings?"
+      ]
+    }
+  }
+]

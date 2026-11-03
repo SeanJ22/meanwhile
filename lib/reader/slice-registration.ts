@@ -8,7 +8,7 @@ import { groupedBy } from "./slices.ts";
 export interface PlaceRegistration {
   readonly governments: readonly RegistrationGovernmentListing[];
   readonly divisions: readonly Division[];
-  /** Each government's place in the state's registration, in step with `governments`: readers list governments in that order. */
+  /** Each government's place in the state's list ordered by the name it is paid under, in step with `governments`: readers list governments in that order. */
   readonly order: readonly number[];
 }
 

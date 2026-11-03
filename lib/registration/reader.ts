@@ -61,13 +61,13 @@ const normalizedGovernment = (value: string) => {
   return `btrim(regexp_replace(replace(regexp_replace(${flat},'^(.+?),\\s*(CITY|TOWN|TOWNSHIP|VILLAGE|BOROUGH|COUNTY)\\s+OF$','\\2 OF \\1'),',',''),'\\s+',' ','g'))`;
 };
 
-/** The state's registered governments that name any of these divisions, each with its place in the registration's own order and its .gov domains and whether its name is its own alone, and those divisions' registration rows. */
+/** The state's registered governments that name any of these divisions, each with its place in the state's list ordered by the name it is paid under, and its .gov domains and whether its name is its own alone, and those divisions' registration rows. */
 export const PLACE_REGISTRATION_SQL = `WITH registration AS MATERIALIZED (
   SELECT reader_payload_node(payload) AS payload FROM civic_data_promotions WHERE key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
 ), identities AS MATERIALIZED (
-  SELECT g,ord,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities,
+  SELECT g,row_number() OVER (ORDER BY upper(g->>'state'),recipient_identity,g->>'id') AS ord,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities,
     count(*) OVER (PARTITION BY upper(g->>'state'),recipient_identity) AS recipient_names
-  FROM (SELECT named.g,member.ordinal_index AS ord,${normalizedGovernment("named.g->>'name'")} AS identity,${federalGovernmentNameSql("named.g->>'name'")} AS recipient_identity
+  FROM (SELECT named.g,${normalizedGovernment("named.g->>'name'")} AS identity,${federalGovernmentNameSql("named.g->>'name'")} AS recipient_identity
     FROM registration,LATERAL reader_payload_members(payload->'governments') member,
       LATERAL (SELECT reader_payload_node(member.item) AS original) header,
       LATERAL (SELECT original || jsonb_build_object('name',reader_payload_value(original->'name')) AS g) named) inventory

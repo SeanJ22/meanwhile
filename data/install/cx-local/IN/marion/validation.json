@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-11-03T06:29:26.367Z",
+  "state": "IN",
+  "sources": 679,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 206,
+  "newContests": 66,
+  "refreshedContests": 3,
+  "candidacies": 118,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 139,
+  "unrelatedCandidateCoreFieldsPreserved": 271,
+  "unrelatedCandidateAliasEnrichments": 271,
+  "unmatchedReaderDivisionCount": 5,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:in/court_of_appeals:2",
+    "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:2",
+    "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:3",
+    "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:4",
+    "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:5"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:in/court_of_appeals:2",
+    "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:2",
+    "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:3",
+    "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:4",
+    "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:5"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

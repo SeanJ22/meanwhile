@@ -1,0 +1,609 @@
+{
+  "localCandidateRows": 100,
+  "candidateFields": 51,
+  "matchedAllPrintedNames": true,
+  "records": [
+    {
+      "name": "Ryan Mears",
+      "party": "Democratic",
+      "office": "Prosecuting Attorney of Marion County, 19th Judicial Circuit",
+      "filedDate": "1/27/2026"
+    },
+    {
+      "name": "Philip Foust",
+      "party": "Republican",
+      "office": "Prosecuting Attorney of Marion County, 19th Judicial Circuit",
+      "filedDate": "2/5/2026"
+    },
+    {
+      "name": "KATE SWEENEY BELL",
+      "party": "Democratic",
+      "office": "Marion County Circuit Court Clerk",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "ROBBIN STEWART",
+      "party": "Republican",
+      "office": "Marion County Circuit Court Clerk",
+      "filedDate": "2/4/2026"
+    },
+    {
+      "name": "MYLA A. ELDRIDGE",
+      "party": "Democratic",
+      "office": "Marion County Auditor",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "FAITH JAMES KIMBROUGH",
+      "party": "Democratic",
+      "office": "Marion County Recorder",
+      "filedDate": "1/8/2026"
+    },
+    {
+      "name": "KELVIS T. WILLIAMS",
+      "party": "Democratic",
+      "office": "Marion County Sheriff",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "TOM VAUGHN",
+      "party": "Republican",
+      "office": "Marion County Sheriff",
+      "filedDate": "7/2/2026"
+    },
+    {
+      "name": "JOSEPH P. O'CONNOR",
+      "party": "Democratic",
+      "office": "Marion County Assessor",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "LADONNA FREEMAN",
+      "party": "Democratic",
+      "office": "Center Township Trustee, Marion County",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "ELISE FECTEAU",
+      "party": "Democratic",
+      "office": "Decatur Township Trustee, Marion County",
+      "filedDate": "6/22/2026"
+    },
+    {
+      "name": "JASON HOLLIDAY",
+      "party": "Republican",
+      "office": "Decatur Township Trustee, Marion County",
+      "filedDate": "1/9/2026"
+    },
+    {
+      "name": "TEMICA S KEY",
+      "party": "Democratic",
+      "office": "Franklin Township Trustee, Marion County",
+      "filedDate": "6/17/2026"
+    },
+    {
+      "name": "DANNY MEADOR",
+      "party": "Republican",
+      "office": "Franklin Township Trustee, Marion County",
+      "filedDate": "1/14/2026"
+    },
+    {
+      "name": "LISA CHAVIS",
+      "party": "Democratic",
+      "office": "Lawrence Township Trustee, Marion County",
+      "filedDate": "1/14/2026"
+    },
+    {
+      "name": "BEN BROWN",
+      "party": "Democratic",
+      "office": "Perry Township Trustee, Marion County",
+      "filedDate": "2/4/2026"
+    },
+    {
+      "name": "PATTY HAGENMAIER",
+      "party": "Republican",
+      "office": "Perry Township Trustee, Marion County",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "ANNETTE M. JOHNSON",
+      "party": "Democratic",
+      "office": "Pike Township Trustee, Marion County",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "JAMES A. TAYLOR",
+      "party": "Democratic",
+      "office": "Warren Township Trustee, Marion County",
+      "filedDate": "2/4/2026"
+    },
+    {
+      "name": "FRANK T. SHORT",
+      "party": "Democratic",
+      "office": "Washington Township Trustee, Marion County",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "KAREN S. MOMPER",
+      "party": "Republican",
+      "office": "Washington Township Trustee, Marion County",
+      "filedDate": "7/2/2026"
+    },
+    {
+      "name": "JEB BARDON",
+      "party": "Democratic",
+      "office": "Wayne Township Trustee, Marion County",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "KENT E. WELLS",
+      "party": "Republican",
+      "office": "Wayne Township Trustee, Marion County",
+      "filedDate": "2/2/2026"
+    },
+    {
+      "name": "Brenda Annette Roper",
+      "party": "Democratic",
+      "office": "Judge of the Marion Small Claims Court, Center Twp.",
+      "filedDate": "1/8/2026"
+    },
+    {
+      "name": "Jonathan P. Sturgill",
+      "party": "Republican",
+      "office": "Judge of the Marion Small Claims Court, Decatur Twp.",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "John A. Kitley, Jr.",
+      "party": "Republican",
+      "office": "Judge of the Marion Small Claims Court, Franklin Twp.",
+      "filedDate": "1/9/2026"
+    },
+    {
+      "name": "Kimberly J. Bacon",
+      "party": "Democratic",
+      "office": "Judge of the Marion Small Claims Court, Lawrence Twp.",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "Jami R. Sayeed",
+      "party": "Democratic",
+      "office": "Judge of the Marion Small Claims Court, Perry Twp. ",
+      "filedDate": "2/6/2026"
+    },
+    {
+      "name": "Cheryl Rivera",
+      "party": "Republican",
+      "office": "Judge of the Marion Small Claims Court, Perry Twp. ",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "Doug Stephens",
+      "party": "Democratic",
+      "office": "Judge of the Marion Small Claims Court, Pike Twp.",
+      "filedDate": "1/8/2026"
+    },
+    {
+      "name": "Garland E. Graves",
+      "party": "Democratic",
+      "office": "Judge of the Marion Small Claims Court, Warren Twp.",
+      "filedDate": "1/8/2026"
+    },
+    {
+      "name": "Steven G Poore",
+      "party": "Democratic",
+      "office": "Judge of the Marion Small Claims Court, Washington Twp.",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "Gerald B. Coleman",
+      "party": "Democratic",
+      "office": "Judge of the Marion Small Claims Court, Wayne Twp.",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "BRIAN DOWNARD",
+      "party": "(  )",
+      "office": "Marion Beech Grove Public School Board, At Large",
+      "filedDate": "5/27/2026"
+    },
+    {
+      "name": "MADISON WEST",
+      "party": "(  )",
+      "office": "Marion Beech Grove Public School Board, At Large",
+      "filedDate": "6/15/2026"
+    },
+    {
+      "name": "JANNIS KING",
+      "party": "Independent",
+      "office": "Marion Beech Grove Public School Board, At Large",
+      "filedDate": "6/15/2026"
+    },
+    {
+      "name": "RANDI BERRYMAN",
+      "party": "(  )",
+      "office": "Marion Decatur Township School Board, At Large",
+      "filedDate": "6/16/2026"
+    },
+    {
+      "name": "TERESA A. BURNS",
+      "party": "(  )",
+      "office": "Marion Decatur Township School Board, At Large",
+      "filedDate": "6/16/2026"
+    },
+    {
+      "name": "STEVE JACOBI",
+      "party": "(  )",
+      "office": "Marion Decatur Township School Board, At Large",
+      "filedDate": "6/17/2026"
+    },
+    {
+      "name": "PATRICE JOHNSON",
+      "party": "(  )",
+      "office": "Marion Decatur Township School Board, At Large",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "KRISTYN D. STODDARD",
+      "party": "Independent",
+      "office": "Marion Decatur Township School Board, At Large",
+      "filedDate": "6/15/2026"
+    },
+    {
+      "name": "JUDITH COLLINS",
+      "party": "Republican",
+      "office": "Marion Decatur Township School Board, At Large",
+      "filedDate": "6/16/2026"
+    },
+    {
+      "name": "DALE HENSON",
+      "party": "Republican",
+      "office": "Marion Decatur Township School Board, At Large",
+      "filedDate": "6/16/2026"
+    },
+    {
+      "name": "CHASE LYDAY",
+      "party": "Republican",
+      "office": "Marion Decatur Township School Board, At Large",
+      "filedDate": "6/17/2026"
+    },
+    {
+      "name": "DAWN DOWNER",
+      "party": "(  )",
+      "office": "Marion Franklin Township School Board, At Large",
+      "filedDate": "6/15/2026"
+    },
+    {
+      "name": "ANTONIO DEWAYNE KEY, SR",
+      "party": "Democratic",
+      "office": "Marion Franklin Township School Board, At Large",
+      "filedDate": "6/17/2026"
+    },
+    {
+      "name": "KOMAL (KOMAL KAUR) CHOHAN",
+      "party": "Independent",
+      "office": "Marion Franklin Township School Board, At Large",
+      "filedDate": "6/15/2026"
+    },
+    {
+      "name": "TIM MCVEY",
+      "party": "Republican",
+      "office": "Marion Franklin Township School Board, At Large",
+      "filedDate": "6/11/2026"
+    },
+    {
+      "name": "ZACHARY SMITH HOWARD",
+      "party": "Republican",
+      "office": "Marion Franklin Township School Board, NE Quadrant",
+      "filedDate": "5/19/2026"
+    },
+    {
+      "name": "MATT MORGAN",
+      "party": "Republican",
+      "office": "Marion Franklin Township School Board, SE Quadrant",
+      "filedDate": "6/16/2026"
+    },
+    {
+      "name": "LARRY J. WALKER",
+      "party": "Republican",
+      "office": "Marion Franklin Township School Board, SE Quadrant",
+      "filedDate": "6/4/2026"
+    },
+    {
+      "name": "ANGELIA LOIS MOORE",
+      "party": "Democratic",
+      "office": "Marion Indianapolis Public School Board, At Large",
+      "filedDate": "6/18/2026"
+    },
+    {
+      "name": "ALEXANDER S. NYIRENDAH",
+      "party": "Democratic",
+      "office": "Marion Indianapolis Public School Board, At Large",
+      "filedDate": "5/28/2026"
+    },
+    {
+      "name": "SACHA NICOLE SHARP",
+      "party": "Democratic",
+      "office": "Marion Indianapolis Public School Board, At Large",
+      "filedDate": "6/3/2026"
+    },
+    {
+      "name": "HEATHER HOUSTON",
+      "party": "Independent",
+      "office": "Marion Indianapolis Public School Board, At Large",
+      "filedDate": "6/3/2026"
+    },
+    {
+      "name": "BRYAN DUARTE",
+      "party": "Democratic",
+      "office": "Marion Indianapolis Public School Board, District 2",
+      "filedDate": "6/16/2026"
+    },
+    {
+      "name": "HASAAN RASHID",
+      "party": "Democratic",
+      "office": "Marion Indianapolis Public School Board, District 2",
+      "filedDate": "5/26/2026"
+    },
+    {
+      "name": "LOREN EUGENE HEGER",
+      "party": "Democratic",
+      "office": "Marion Indianapolis Public School Board, District 3",
+      "filedDate": "5/19/2026"
+    },
+    {
+      "name": "HOPE DUKE STAR",
+      "party": "Democratic",
+      "office": "Marion Indianapolis Public School Board, District 3",
+      "filedDate": "6/16/2026"
+    },
+    {
+      "name": "DAQAVISE D. WINSTON",
+      "party": "Democratic",
+      "office": "Marion Indianapolis Public School Board, District 3",
+      "filedDate": "6/17/2026"
+    },
+    {
+      "name": "DEREK REDELMAN",
+      "party": "Independent",
+      "office": "Marion Indianapolis Public School Board, District 3",
+      "filedDate": "6/17/2026"
+    },
+    {
+      "name": "LINDSEY CORNETT",
+      "party": "(  )",
+      "office": "Marion Indianapolis Public School Board, District 4",
+      "filedDate": "6/18/2026"
+    },
+    {
+      "name": "CHRIS BULTMAN",
+      "party": "Democratic",
+      "office": "Marion Indianapolis Public School Board, District 4",
+      "filedDate": "6/16/2026"
+    },
+    {
+      "name": "NICOLE CAREY",
+      "party": "Democratic",
+      "office": "Marion Indianapolis Public School Board, District 5",
+      "filedDate": "5/19/2026"
+    },
+    {
+      "name": "YURI SMITH, SR.",
+      "party": "Democratic",
+      "office": "Marion Indianapolis Public School Board, District 5",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "PEARL TAYLOR",
+      "party": "Democratic",
+      "office": "Marion Indianapolis Public School Board, District 5",
+      "filedDate": "6/17/2026"
+    },
+    {
+      "name": "MARIA BERTRAM CARTAGENA",
+      "party": "(  )",
+      "office": "Marion Lawrence Township School Board, At Large",
+      "filedDate": "5/28/2026"
+    },
+    {
+      "name": "JESSICA DUNN",
+      "party": "(  )",
+      "office": "Marion Lawrence Township School Board, At Large",
+      "filedDate": "5/28/2026"
+    },
+    {
+      "name": "LARRY BROWN",
+      "party": "(  )",
+      "office": "Marion Lawrence Township School Board, District 2",
+      "filedDate": "6/18/2026"
+    },
+    {
+      "name": "CRAIG J WILLEY",
+      "party": "(  )",
+      "office": "Marion Lawrence Township School Board, District 2",
+      "filedDate": "6/18/2026"
+    },
+    {
+      "name": "BRIANNA BIBLE",
+      "party": "Democratic",
+      "office": "Marion Perry Township Public School Board, At Large",
+      "filedDate": "6/18/2026"
+    },
+    {
+      "name": "LEE SHIVELY",
+      "party": "Independent",
+      "office": "Marion Perry Township Public School Board, At Large",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "CHRIS LEWIS",
+      "party": "Republican",
+      "office": "Marion Perry Township Public School Board, At Large",
+      "filedDate": "6/15/2026"
+    },
+    {
+      "name": "ALONZO ANDERSON",
+      "party": "Democratic",
+      "office": "Marion Pike Township School Board, At Large",
+      "filedDate": "6/15/2026"
+    },
+    {
+      "name": "WAYNE L. MOORE",
+      "party": "Democratic",
+      "office": "Marion Pike Township School Board, At Large",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "SHERIE LATOYA SCOTT",
+      "party": "Democratic",
+      "office": "Marion Pike Township School Board, At Large",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "TERRY A. WEBSTER, SR.",
+      "party": "Democratic",
+      "office": "Marion Pike Township School Board, At Large",
+      "filedDate": "6/15/2026"
+    },
+    {
+      "name": "TERRI AMOS",
+      "party": "(  )",
+      "office": "Marion Warren Township School Board, At Large",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "RACHEL M BURKE",
+      "party": "(  )",
+      "office": "Marion Warren Township School Board, At Large",
+      "filedDate": "6/16/2026"
+    },
+    {
+      "name": "JERRY CRITES",
+      "party": "(  )",
+      "office": "Marion Warren Township School Board, At Large",
+      "filedDate": "6/15/2026"
+    },
+    {
+      "name": "SAMANTHA DOUGLAS",
+      "party": "(  )",
+      "office": "Marion Warren Township School Board, At Large",
+      "filedDate": "6/12/2026"
+    },
+    {
+      "name": "KEVIN S. HUMPHREY, SR",
+      "party": "(  )",
+      "office": "Marion Warren Township School Board, At Large",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "STEVE (COACH) TUTSIE",
+      "party": "Independent",
+      "office": "Marion Warren Township School Board, At Large",
+      "filedDate": "6/16/2026"
+    },
+    {
+      "name": "LESLIE BOWLES",
+      "party": "(  )",
+      "office": "Marion Washington Township Public School Board, At Large",
+      "filedDate": "6/15/2026"
+    },
+    {
+      "name": "JOCELYN SISSON",
+      "party": "(  )",
+      "office": "Marion Washington Township Public School Board, District 2",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "BENJAMIN WAKEFIELD",
+      "party": "(  )",
+      "office": "Marion Wayne Township Public School Board, At Large",
+      "filedDate": "6/10/2026"
+    },
+    {
+      "name": "BRANDON BOWMAN",
+      "party": "Democratic",
+      "office": "Marion Wayne Township Public School Board, At Large",
+      "filedDate": "6/8/2026"
+    },
+    {
+      "name": "MIKEAL GORDON",
+      "party": "Democratic",
+      "office": "Marion Wayne Township Public School Board, At Large",
+      "filedDate": "6/9/2026"
+    },
+    {
+      "name": "RAIMEKA GRAHAM",
+      "party": "Democratic",
+      "office": "Marion Wayne Township Public School Board, At Large",
+      "filedDate": "6/17/2026"
+    },
+    {
+      "name": "KENNETH ALLEN",
+      "party": "Democratic",
+      "office": "Constable of Small Claims Court, Center Township, Marion County",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "MELVIN (MAJOR) HALL, II",
+      "party": "Independent",
+      "office": "Constable of Small Claims Court, Center Township, Marion County",
+      "filedDate": "7/1/2026"
+    },
+    {
+      "name": "LUKE W. SCHMITT",
+      "party": "Republican",
+      "office": "Constable of Small Claims Court, Decatur Township, Marion County",
+      "filedDate": "1/16/2026"
+    },
+    {
+      "name": "JEFF DUHAMELL",
+      "party": "Republican",
+      "office": "Constable of Small Claims Court, Franklin Township, Marion County",
+      "filedDate": "1/20/2026"
+    },
+    {
+      "name": "TRACEY DEJUAN CANTRELL",
+      "party": "Democratic",
+      "office": "Constable of Small Claims Court, Lawrence Township, Marion County",
+      "filedDate": "2/2/2026"
+    },
+    {
+      "name": "JERRY MELVIN",
+      "party": "Democratic",
+      "office": "Constable of Small Claims Court, Perry Township, Marion County",
+      "filedDate": "7/6/2026"
+    },
+    {
+      "name": "DAVID TAYLOR",
+      "party": "Republican",
+      "office": "Constable of Small Claims Court, Perry Township, Marion County",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "PAUL WOODS",
+      "party": "Democratic",
+      "office": "Constable of Small Claims Court, Pike Township, Marion County",
+      "filedDate": "1/8/2026"
+    },
+    {
+      "name": "OSNEL L ANDRE, SR.",
+      "party": "Democratic",
+      "office": "Constable of Small Claims Court, Warren Township, Marion County",
+      "filedDate": "1/9/2026"
+    },
+    {
+      "name": "STEVE MILLER",
+      "party": "Democratic",
+      "office": "Constable of Small Claims Court, Washington Township, Marion County",
+      "filedDate": "1/7/2026"
+    },
+    {
+      "name": "KEVIN J. KELLY",
+      "party": "Democratic",
+      "office": "Constable of Small Claims Court, Wayne Township, Marion County",
+      "filedDate": "1/7/2026"
+    }
+  ],
+  "sourceUrl": "https://www.in.gov/sos/elections/files/Candidate_List_Abbreviated_20260922_011251PM.xlsx",
+  "textMethod": "Exact native XLSX cells decoded deterministically; abbreviated fields contain no candidate addresses."
+}

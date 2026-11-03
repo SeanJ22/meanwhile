@@ -3,19 +3,19 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:27:19.666599+00:00",
+  "preparedAt": "2026-11-03T06:29:37.684027+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
   "nextCounty": {
-    "rank": 52,
-    "stateName": "Indiana",
-    "county": "Marion County",
-    "fips": "18097",
-    "population": 992196,
+    "rank": 55,
+    "stateName": "New Jersey",
+    "county": "Bergen County",
+    "fips": "34003",
+    "population": 977026,
     "populationYear": 2025,
-    "state": "IN"
+    "state": "NJ"
   },
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
@@ -1303,6 +1303,42 @@
       }
     },
     {
+      "state": "IN",
+      "county": "Marion",
+      "populationRank": 52,
+      "manifest": "IN/marion/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 69,
+      "measureContests": 0,
+      "candidacies": 118,
+      "newContests": 66,
+      "refreshedContests": 3,
+      "sourceInputSha256": "7069beac69aa38916306a7258639d6fb0acc7aa61842c377a839fd1dee29389e",
+      "coverage": {
+        "preparedContests": 69,
+        "preparedNamedChoices": 118,
+        "candidateFields": 51,
+        "candidateNames": 100,
+        "retentionQuestions": 18,
+        "retentionNames": 18,
+        "marionSuperiorRetentions": 14,
+        "sharedAppellateRetentions": 4,
+        "newContests": 66,
+        "newNames": 115,
+        "refreshedHeldContests": 3,
+        "refreshedHeldNames": 3,
+        "currentLinkedSamplePdfs": 653,
+        "samplePages": 1306,
+        "completeLinkedSampleCensus": true,
+        "allMappedSplitCoverage": false,
+        "missingBallotLinkFeatures": 5,
+        "sourceCaptures": 679,
+        "geometryFeatures": 23,
+        "missingReaderDistricts": 5,
+        "courtDistrictWholeCountyMemberships": 19
+      }
+    },
+    {
       "state": "MO",
       "county": "St. Louis",
       "populationRank": 53,
@@ -1430,17 +1466,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 54,
-    "packetsPrepared": 55,
-    "candidateAndRetentionContests": 2888,
+    "countiesPrepared": 55,
+    "packetsPrepared": 56,
+    "candidateAndRetentionContests": 2957,
     "measureContests": 112,
-    "candidacyEntries": 6416,
-    "newContestEntriesAgainstCheckedInBaseline": 2362,
-    "distinctPreparedContestIds": 2959,
-    "distinctPreparedCandidateIds": 6329,
-    "distinctNewContestsAgainstCheckedInBaseline": 2342,
+    "candidacyEntries": 6534,
+    "newContestEntriesAgainstCheckedInBaseline": 2428,
+    "distinctPreparedContestIds": 3028,
+    "distinctPreparedCandidateIds": 6447,
+    "distinctNewContestsAgainstCheckedInBaseline": 2408,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 55
+    "distinctCountyHandoffs": 56
   },
   "remainingWork": [
     {

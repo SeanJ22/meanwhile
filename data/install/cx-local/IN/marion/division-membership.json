@@ -1,0 +1,406 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:decatur_township",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_TOWNSHIP_CANDIDATE_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/VIP/VIPCandidates/FeatureServer/37/query?where=electioncycle%3D%272026%27+AND+electiontype%3D%27General%27+AND+ElectionStatus%3D%27Active%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T05:51:02.562002+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":1,\"election_key\":\"Township Trustee-General-2026\",\"electiondate\":1793664000000,\"electiontype\":\"General\",\"electioncycle\":\"2026\",\"filingdeadline\":1784073600000,\"regdate\":1791158400000,\"ElectionStatus\":\"Active\",\"ElectionDistrictName\":null,\"seatlabel\":null,\"districtname\":\"Decatur\",\"name\":\"Elise Fecteau\",\"party\":\"Democratic\",\"incumbent\":\"No\",\"filingstatus\":null,\"votecount\":null,\"won\":null,\"phone\":null,\"email\":null,\"website\":null,\"officeaddress\":null,\"imageurl\":null,\"socialmedia\":null,\"pocname\":null,\"pocphone\":null,\"pocemail\":null,\"officehours\":null,\"globalid\":\"{453E8F30-0305-43A3-942E-C628A7A73C54}\",\"created_user\":\"ESIMMS\",\"created_date\":1788866365000,\"last_edited_user\":\"ESIMMS\",\"last_edited_date\":1788866365000,\"Shape__Area\":901819610.61036646,\"Shape__Length\":160822.47071601776}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:washington_township",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_TOWNSHIP_CANDIDATE_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/VIP/VIPCandidates/FeatureServer/37/query?where=electioncycle%3D%272026%27+AND+electiontype%3D%27General%27+AND+ElectionStatus%3D%27Active%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T05:51:02.562002+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":2,\"election_key\":\"Township Trustee-General-2026\",\"electiondate\":1793664000000,\"electiontype\":\"General\",\"electioncycle\":\"2026\",\"filingdeadline\":1784073600000,\"regdate\":1791158400000,\"ElectionStatus\":\"Active\",\"ElectionDistrictName\":null,\"seatlabel\":null,\"districtname\":\"Washington\",\"name\":\"Frank T. Short\",\"party\":\"Democratic\",\"incumbent\":\"Yes\",\"filingstatus\":null,\"votecount\":null,\"won\":null,\"phone\":null,\"email\":null,\"website\":null,\"officeaddress\":null,\"imageurl\":null,\"socialmedia\":null,\"pocname\":null,\"pocphone\":null,\"pocemail\":null,\"officehours\":null,\"globalid\":\"{C226EEC1-38F0-48A2-A398-3BB87F8A869A}\",\"created_user\":\"ESIMMS\",\"created_date\":1788866365000,\"last_edited_user\":\"ESIMMS\",\"last_edited_date\":1788866365000,\"Shape__Area\":1385506831.8323896,\"Shape__Length\":156969.90043646577}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:lawrence_township",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_TOWNSHIP_CANDIDATE_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/VIP/VIPCandidates/FeatureServer/37/query?where=electioncycle%3D%272026%27+AND+electiontype%3D%27General%27+AND+ElectionStatus%3D%27Active%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T05:51:02.562002+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":3,\"election_key\":\"Township Trustee-General-2026\",\"electiondate\":1793664000000,\"electiontype\":\"General\",\"electioncycle\":\"2026\",\"filingdeadline\":1784073600000,\"regdate\":1791158400000,\"ElectionStatus\":\"Active\",\"ElectionDistrictName\":null,\"seatlabel\":null,\"districtname\":\"Lawrence\",\"name\":\"Lisa Chavis\",\"party\":\"Democratic\",\"incumbent\":\"No\",\"filingstatus\":null,\"votecount\":null,\"won\":null,\"phone\":null,\"email\":null,\"website\":null,\"officeaddress\":null,\"imageurl\":null,\"socialmedia\":null,\"pocname\":null,\"pocphone\":null,\"pocemail\":null,\"officehours\":null,\"globalid\":\"{D5C6096E-4B59-46A0-889B-196FCA67EB6C}\",\"created_user\":\"ESIMMS\",\"created_date\":1788866365000,\"last_edited_user\":\"ESIMMS\",\"last_edited_date\":1788866365000,\"Shape__Area\":1353882782.1358154,\"Shape__Length\":155615.41476534825}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:pike_township",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_TOWNSHIP_CANDIDATE_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/VIP/VIPCandidates/FeatureServer/37/query?where=electioncycle%3D%272026%27+AND+electiontype%3D%27General%27+AND+ElectionStatus%3D%27Active%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T05:51:02.562002+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":4,\"election_key\":\"Township Trustee-General-2026\",\"electiondate\":1793664000000,\"electiontype\":\"General\",\"electioncycle\":\"2026\",\"filingdeadline\":1784073600000,\"regdate\":1791158400000,\"ElectionStatus\":\"Active\",\"ElectionDistrictName\":null,\"seatlabel\":null,\"districtname\":\"Pike\",\"name\":\"Annette M. Johnson\",\"party\":\"Democratic\",\"incumbent\":\"Yes\",\"filingstatus\":null,\"votecount\":null,\"won\":null,\"phone\":null,\"email\":null,\"website\":null,\"officeaddress\":null,\"imageurl\":null,\"socialmedia\":null,\"pocname\":null,\"pocphone\":null,\"pocemail\":null,\"officehours\":null,\"globalid\":\"{F2D79C58-A125-4444-8DF5-ECD9980063F3}\",\"created_user\":\"ESIMMS\",\"created_date\":1788866365000,\"last_edited_user\":\"ESIMMS\",\"last_edited_date\":1788866365000,\"Shape__Area\":1225544343.6922822,\"Shape__Length\":144852.31957992617}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:warren_township",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_TOWNSHIP_CANDIDATE_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/VIP/VIPCandidates/FeatureServer/37/query?where=electioncycle%3D%272026%27+AND+electiontype%3D%27General%27+AND+ElectionStatus%3D%27Active%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T05:51:02.562002+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":5,\"election_key\":\"Township Trustee-General-2026\",\"electiondate\":1793664000000,\"electiontype\":\"General\",\"electioncycle\":\"2026\",\"filingdeadline\":1784073600000,\"regdate\":1791158400000,\"ElectionStatus\":\"Active\",\"ElectionDistrictName\":null,\"seatlabel\":null,\"districtname\":\"Warren\",\"name\":\"James A. Taylor\",\"party\":\"Democratic\",\"incumbent\":\"No\",\"filingstatus\":null,\"votecount\":null,\"won\":null,\"phone\":null,\"email\":null,\"website\":null,\"officeaddress\":null,\"imageurl\":null,\"socialmedia\":null,\"pocname\":null,\"pocphone\":null,\"pocemail\":null,\"officehours\":null,\"globalid\":\"{865A15F3-F5FA-40AF-A82F-225DB6F52FEE}\",\"created_user\":\"ESIMMS\",\"created_date\":1788866365000,\"last_edited_user\":\"ESIMMS\",\"last_edited_date\":1788866365000,\"Shape__Area\":1348401701.1824181,\"Shape__Length\":147451.54729378462}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:center_township",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_TOWNSHIP_CANDIDATE_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/VIP/VIPCandidates/FeatureServer/37/query?where=electioncycle%3D%272026%27+AND+electiontype%3D%27General%27+AND+ElectionStatus%3D%27Active%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T05:51:02.562002+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":6,\"election_key\":\"Township Trustee-General-2026\",\"electiondate\":1793664000000,\"electiontype\":\"General\",\"electioncycle\":\"2026\",\"filingdeadline\":1784073600000,\"regdate\":1791158400000,\"ElectionStatus\":\"Active\",\"ElectionDistrictName\":null,\"seatlabel\":null,\"districtname\":\"Center\",\"name\":\"Ladonna Freeman\",\"party\":\"Democratic\",\"incumbent\":\"Yes\",\"filingstatus\":null,\"votecount\":null,\"won\":null,\"phone\":null,\"email\":null,\"website\":null,\"officeaddress\":null,\"imageurl\":null,\"socialmedia\":null,\"pocname\":null,\"pocphone\":null,\"pocemail\":null,\"officehours\":null,\"globalid\":\"{8C7D6EF3-86B4-455F-A0D6-4FFB1C9DE430}\",\"created_user\":\"ESIMMS\",\"created_date\":1788866365000,\"last_edited_user\":\"ESIMMS\",\"last_edited_date\":1788866365000,\"Shape__Area\":1191807791.5087717,\"Shape__Length\":138625.4819843623}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:wayne_township",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_TOWNSHIP_CANDIDATE_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/VIP/VIPCandidates/FeatureServer/37/query?where=electioncycle%3D%272026%27+AND+electiontype%3D%27General%27+AND+ElectionStatus%3D%27Active%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T05:51:02.562002+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":7,\"election_key\":\"Township Trustee-General-2026\",\"electiondate\":1793664000000,\"electiontype\":\"General\",\"electioncycle\":\"2026\",\"filingdeadline\":1784073600000,\"regdate\":1791158400000,\"ElectionStatus\":\"Active\",\"ElectionDistrictName\":null,\"seatlabel\":null,\"districtname\":\"Wayne\",\"name\":\"Jeb Bardon\",\"party\":\"Democratic\",\"incumbent\":\"Yes\",\"filingstatus\":null,\"votecount\":null,\"won\":null,\"phone\":null,\"email\":null,\"website\":null,\"officeaddress\":null,\"imageurl\":null,\"socialmedia\":null,\"pocname\":null,\"pocphone\":null,\"pocemail\":null,\"officehours\":null,\"globalid\":\"{D1D82C43-49B7-41C4-AC08-EC2AE088CB67}\",\"created_user\":\"ESIMMS\",\"created_date\":1788866365000,\"last_edited_user\":\"ESIMMS\",\"last_edited_date\":1788866365000,\"Shape__Area\":1370072739.5846386,\"Shape__Length\":148721.17488049215}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:franklin_township",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_TOWNSHIP_CANDIDATE_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/VIP/VIPCandidates/FeatureServer/37/query?where=electioncycle%3D%272026%27+AND+electiontype%3D%27General%27+AND+ElectionStatus%3D%27Active%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T05:51:02.562002+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":8,\"election_key\":\"Township Trustee-General-2026\",\"electiondate\":1793664000000,\"electiontype\":\"General\",\"electioncycle\":\"2026\",\"filingdeadline\":1784073600000,\"regdate\":1791158400000,\"ElectionStatus\":\"Active\",\"ElectionDistrictName\":null,\"seatlabel\":null,\"districtname\":\"Franklin\",\"name\":\"Temica S Key\",\"party\":\"Democratic\",\"incumbent\":\"No\",\"filingstatus\":null,\"votecount\":null,\"won\":null,\"phone\":null,\"email\":null,\"website\":null,\"officeaddress\":null,\"imageurl\":null,\"socialmedia\":null,\"pocname\":null,\"pocphone\":null,\"pocemail\":null,\"officehours\":null,\"globalid\":\"{A0EB18A4-CF7A-42AB-84F0-8AF138F4A496}\",\"created_user\":\"ESIMMS\",\"created_date\":1788866365000,\"last_edited_user\":\"ESIMMS\",\"last_edited_date\":1788866365000,\"Shape__Area\":1175297947.985399,\"Shape__Length\":137604.94375668059}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:perry_township",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_TOWNSHIP_CANDIDATE_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/VIP/VIPCandidates/FeatureServer/37/query?where=electioncycle%3D%272026%27+AND+electiontype%3D%27General%27+AND+ElectionStatus%3D%27Active%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T05:51:02.562002+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":9,\"election_key\":\"Township Trustee-General-2026\",\"electiondate\":1793664000000,\"electiontype\":\"General\",\"electioncycle\":\"2026\",\"filingdeadline\":1784073600000,\"regdate\":1791158400000,\"ElectionStatus\":\"Active\",\"ElectionDistrictName\":null,\"seatlabel\":null,\"districtname\":\"Perry\",\"name\":\"Ben Brown\",\"party\":\"Democratic\",\"incumbent\":\"No\",\"filingstatus\":null,\"votecount\":null,\"won\":null,\"phone\":null,\"email\":null,\"website\":null,\"officeaddress\":null,\"imageurl\":null,\"socialmedia\":null,\"pocname\":null,\"pocphone\":null,\"pocemail\":null,\"officehours\":null,\"globalid\":\"{883122C9-F1F0-4384-BF0E-A41D5CCD3DAC}\",\"created_user\":\"ESIMMS\",\"created_date\":1788866365000,\"last_edited_user\":\"ESIMMS\",\"last_edited_date\":1788866365000,\"Shape__Area\":1281475006.807039,\"Shape__Length\":168801.64425846111}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_WHOLE_SCHOOL_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/15/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.526893+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":332,\"SCHOOLDIST\":\"IPS\",\"SHAPE.STArea()\":2224124788.8115487,\"SHAPE.STLength()\":478558.54037139605}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:pike_township_metropolitan_school_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_WHOLE_SCHOOL_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/15/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.526893+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":333,\"SCHOOLDIST\":\"Pike\",\"SHAPE.STArea()\":1205939518.402283,\"SHAPE.STLength()\":159078.09362440003}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:wayne_township_metropolitan_school_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_WHOLE_SCHOOL_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/15/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.526893+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":334,\"SCHOOLDIST\":\"Wayne\",\"SHAPE.STArea()\":947426821.16815484,\"SHAPE.STLength()\":167112.07209381505}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:decatur_township_metropolitan_school_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_WHOLE_SCHOOL_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/15/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.526893+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":336,\"SCHOOLDIST\":\"Decatur\",\"SHAPE.STArea()\":899179634.84746921,\"SHAPE.STLength()\":157537.42723714447}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:perry_township_metropolitan_school_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_WHOLE_SCHOOL_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/15/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.526893+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":337,\"SCHOOLDIST\":\"Perry\",\"SHAPE.STArea()\":1184750554.3312068,\"SHAPE.STLength()\":202160.27650795435}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:beech_grove_city_schools",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_WHOLE_SCHOOL_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/15/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.526893+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":338,\"SCHOOLDIST\":\"Beech Grove\",\"SHAPE.STArea()\":121599595.00363976,\"SHAPE.STLength()\":66496.2956881594}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:warren_township_metropolitan_school_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_WHOLE_SCHOOL_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/15/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.526893+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":339,\"SCHOOLDIST\":\"Warren\",\"SHAPE.STArea()\":1085122563.2142563,\"SHAPE.STLength()\":197372.99612568758}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:washington_township_metropolitan_school_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_WHOLE_SCHOOL_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/15/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.526893+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":340,\"SCHOOLDIST\":\"Washington\",\"SHAPE.STArea()\":1076216045.028825,\"SHAPE.STLength()\":202866.73517647653}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:lawrence_township_metropolitan_school_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_WHOLE_SCHOOL_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/15/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.526893+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":341,\"SCHOOLDIST\":\"Lawrence\",\"SHAPE.STArea()\":1220621206.1399319,\"SHAPE.STLength()\":205634.32091320222}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:franklin_township_community_school_corporation",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "geometryCoverage": "FULL_OFFICIAL_WHOLE_SCHOOL_ELECTORATE_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/15/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.526893+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"OBJECTID\":342,\"SCHOOLDIST\":\"Franklin\",\"SHAPE.STArea()\":1136654905.8542922,\"SHAPE.STLength()\":147917.29494100122}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "FULL_OFFICIAL_IPS_VOTER_SUBDISTRICT_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/16/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.527413+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"SCHOOLDIST\":\"IPS\",\"BOARDDISTR\":5,\"BRDDISTRIC\":\"School Board District IPS 5\",\"SHAPE.STArea()\":430814208.92467183,\"SHAPE.STLength()\":152544.07785314112,\"OBJECTID\":347,\"GLOBALID\":\"{496482AF-E56A-4FD7-8838-A666F7652F7F}\",\"created_user\":null,\"created_date\":null,\"last_edited_user\":\"CCGIS\",\"last_edited_date\":1788552358000,\"districtkey\":\"SB-IPS-5\"}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "FULL_OFFICIAL_IPS_VOTER_SUBDISTRICT_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/16/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.527413+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"SCHOOLDIST\":\"IPS\",\"BOARDDISTR\":3,\"BRDDISTRIC\":\"School Board District IPS 3\",\"SHAPE.STArea()\":426280602.21018159,\"SHAPE.STLength()\":130486.46073938921,\"OBJECTID\":348,\"GLOBALID\":\"{69D847F3-0D64-4E34-A561-0B416F48B043}\",\"created_user\":null,\"created_date\":null,\"last_edited_user\":\"KKASTNER\",\"last_edited_date\":1789753984000,\"districtkey\":\"SB-IPS-3\"}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "FULL_OFFICIAL_IPS_VOTER_SUBDISTRICT_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/16/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.527413+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"SCHOOLDIST\":\"IPS\",\"BOARDDISTR\":4,\"BRDDISTRIC\":\"School Board District IPS 4\",\"SHAPE.STArea()\":545950539.08169878,\"SHAPE.STLength()\":192241.07006856819,\"OBJECTID\":352,\"GLOBALID\":\"{D45402B4-1384-4501-8D0D-2BF125ECC249}\",\"created_user\":null,\"created_date\":null,\"last_edited_user\":\"CCGIS\",\"last_edited_date\":1791929281000,\"districtkey\":\"SB-IPS-4\"}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "FULL_OFFICIAL_IPS_VOTER_SUBDISTRICT_FEATURE",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gis.indy.gov/server/rest/services/sde_Voting/sde_Voting/MapServer/16/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Indianapolis / Marion County GIS",
+      "collectedAt": "2026-11-03T06:00:53.527413+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "{\"SCHOOLDIST\":\"IPS\",\"BOARDDISTR\":2,\"BRDDISTRIC\":\"School Board District IPS 2\",\"SHAPE.STArea()\":447001082.13402492,\"SHAPE.STLength()\":237666.81626377697,\"OBJECTID\":354,\"GLOBALID\":\"{12A75B70-41DB-43DE-9DD3-218B9C208AFD}\",\"created_user\":null,\"created_date\":null,\"last_edited_user\":\"CCGIS\",\"last_edited_date\":1788552358000,\"districtkey\":\"SB-IPS-2\"}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:in/court_of_appeals:2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_WHOLE_COUNTY_MEMBERSHIPS_PROVIDED",
+    "geometryCoverage": "19_WHOLE_COUNTIES_OFFICIAL_COURT_MAP; USE_MEMBERSHIPS",
+    "memberOcdIds": [
+      "ocd-division/country:us/state:in/county:adams",
+      "ocd-division/country:us/state:in/county:blackford",
+      "ocd-division/country:us/state:in/county:carroll",
+      "ocd-division/country:us/state:in/county:cass",
+      "ocd-division/country:us/state:in/county:clinton",
+      "ocd-division/country:us/state:in/county:delaware",
+      "ocd-division/country:us/state:in/county:grant",
+      "ocd-division/country:us/state:in/county:hamilton",
+      "ocd-division/country:us/state:in/county:howard",
+      "ocd-division/country:us/state:in/county:huntington",
+      "ocd-division/country:us/state:in/county:jay",
+      "ocd-division/country:us/state:in/county:madison",
+      "ocd-division/country:us/state:in/county:marion",
+      "ocd-division/country:us/state:in/county:miami",
+      "ocd-division/country:us/state:in/county:tippecanoe",
+      "ocd-division/country:us/state:in/county:tipton",
+      "ocd-division/country:us/state:in/county:wabash",
+      "ocd-division/country:us/state:in/county:wells",
+      "ocd-division/country:us/state:in/county:white"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.in.gov/courts/appeals/districts",
+      "sourceOrg": "Indiana Judicial Branch",
+      "collectedAt": "2026-11-03T05:57:40.758356+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "Judges named from these districts stand for retention only in their districts."
+    }
+  }
+]

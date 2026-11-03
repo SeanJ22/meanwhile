@@ -1,0 +1,529 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "IN",
+  "county": "Marion",
+  "populationRank": 52,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IN",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "cx-local-in-marion-2026-marion-county-prosecutor",
+      "title": "MARION COUNTY PROSECUTOR",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-clerk-of-the-circuit-court",
+      "title": "CLERK OF THE CIRCUIT COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-county-auditor",
+      "title": "MARION COUNTY AUDITOR",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-county-recorder",
+      "title": "MARION COUNTY RECORDER",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-county-sheriff",
+      "title": "MARION COUNTY SHERIFF",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-county-assessor",
+      "title": "MARION COUNTY ASSESSOR",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-center-township-trustee",
+      "title": "CENTER TOWNSHIP TRUSTEE",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:center_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-center-township-judge-of-the-small-claims-court",
+      "title": "CENTER TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:center_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-center-township-constable-of-the-small-claims-court",
+      "title": "CENTER TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:center_township",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-indianapolis-public-school-board-at-large",
+      "title": "INDIANAPOLIS PUBLIC SCHOOL BOARD AT LARGE",
+      "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools",
+      "candidates": 4,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-indianapolis-public-school-board-district-5",
+      "title": "INDIANAPOLIS PUBLIC SCHOOL BOARD DISTRICT 5",
+      "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:5",
+      "candidates": 3,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "in-ied-2026-retention-mary-a-deboer",
+      "title": "Court of Appeals Judicial Retention - Fourth District",
+      "ocdId": "ocd-division/country:us/state:in",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "in-ied-2026-retention-paul-a-felix",
+      "title": "Court of Appeals Judicial Retention - Fifth District",
+      "ocdId": "ocd-division/country:us/state:in",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-2026-court-of-appeals-district-2-dana-j-kenworthy-retention",
+      "title": "INDIANA COURT OF APPEALS SECOND DISTRICT \u2014 DANA J. KENWORTHY",
+      "ocdId": "ocd-division/country:us/state:in/court_of_appeals:2",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "in-ied-2026-retention-justin-l-mcadam",
+      "title": "Retention of Judge of the Indiana Tax Court",
+      "ocdId": "ocd-division/country:us/state:in",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-a-richard-m-blaiklock",
+      "title": "MARION SUPERIOR COURT \u2014 A. RICHARD M. BLAIKLOCK",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-marshelle-broadwell",
+      "title": "MARION SUPERIOR COURT \u2014 MARSHELLE BROADWELL",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-david-j-certo",
+      "title": "MARION SUPERIOR COURT \u2014 DAVID J. CERTO",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-angela-davis",
+      "title": "MARION SUPERIOR COURT \u2014 ANGELA DAVIS",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-patrick-j-dietrick",
+      "title": "MARION SUPERIOR COURT \u2014 PATRICK J. DIETRICK",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-kurt-m-eisgruber",
+      "title": "MARION SUPERIOR COURT \u2014 KURT M. EISGRUBER",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-geoffrey-a-gaither",
+      "title": "MARION SUPERIOR COURT \u2014 GEOFFREY A. GAITHER",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-ryan-k-gardner",
+      "title": "MARION SUPERIOR COURT \u2014 RYAN K. GARDNER",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-melanie-l-kendrick",
+      "title": "MARION SUPERIOR COURT \u2014 MELANIE L. KENDRICK",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-christina-r-klineman",
+      "title": "MARION SUPERIOR COURT \u2014 CHRISTINA R. KLINEMAN",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-patricia-caress-mcmath",
+      "title": "MARION SUPERIOR COURT \u2014 PATRICIA CARESS MCMATH",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-tim-oakes",
+      "title": "MARION SUPERIOR COURT \u2014 TIM OAKES",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-marc-t-rothenberg",
+      "title": "MARION SUPERIOR COURT \u2014 MARC T. ROTHENBERG",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-marion-superior-court-philip-c-sheward",
+      "title": "MARION SUPERIOR COURT \u2014 PHILIP C. SHEWARD",
+      "ocdId": "ocd-division/country:us/state:in/county:marion",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-indianapolis-public-school-board-district-3",
+      "title": "INDIANAPOLIS PUBLIC SCHOOL BOARD DISTRICT 3",
+      "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:3",
+      "candidates": 4,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn004_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-indianapolis-public-school-board-district-2",
+      "title": "INDIANAPOLIS PUBLIC SCHOOL BOARD DISTRICT 2",
+      "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn018_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-indianapolis-public-school-board-district-4",
+      "title": "INDIANAPOLIS PUBLIC SCHOOL BOARD DISTRICT 4",
+      "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn045_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-beech-grove-city-schools-at-large",
+      "title": "BEECH GROVE CITY SCHOOLS AT LARGE",
+      "ocdId": "ocd-division/country:us/state:in/school_district:beech_grove_city_schools",
+      "candidates": 3,
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn106_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-decatur-township-trustee",
+      "title": "DECATUR TOWNSHIP TRUSTEE",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:decatur_township",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/de001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-decatur-township-judge-of-the-small-claims-court",
+      "title": "DECATUR TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:decatur_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/de001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-decatur-township-constable-of-the-small-claims-court",
+      "title": "DECATUR TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:decatur_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/de001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-msd-of-decatur-township-at-large",
+      "title": "MSD OF DECATUR TOWNSHIP AT LARGE",
+      "ocdId": "ocd-division/country:us/state:in/school_district:decatur_township_metropolitan_school_district",
+      "candidates": 8,
+      "sourceUrl": "https://maps.indy.gov/Ballots/de001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-franklin-township-trustee",
+      "title": "FRANKLIN TOWNSHIP TRUSTEE",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:franklin_township",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/fr001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-franklin-township-judge-of-the-small-claims-court",
+      "title": "FRANKLIN TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:franklin_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/fr001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-franklin-township-constable-of-the-small-claims-court",
+      "title": "FRANKLIN TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:franklin_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/fr001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-franklin-township-csc-at-large",
+      "title": "FRANKLIN TOWNSHIP CSC AT LARGE",
+      "ocdId": "ocd-division/country:us/state:in/school_district:franklin_township_community_school_corporation",
+      "candidates": 4,
+      "sourceUrl": "https://maps.indy.gov/Ballots/fr002_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-franklin-township-csc-northeast-district",
+      "title": "FRANKLIN TOWNSHIP CSC NORTHEAST DISTRICT",
+      "ocdId": "ocd-division/country:us/state:in/school_district:franklin_township_community_school_corporation",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/fr002_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-franklin-township-csc-southeast-district",
+      "title": "FRANKLIN TOWNSHIP CSC SOUTHEAST DISTRICT",
+      "ocdId": "ocd-division/country:us/state:in/school_district:franklin_township_community_school_corporation",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/fr002_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-lawrence-township-trustee",
+      "title": "LAWRENCE TOWNSHIP TRUSTEE",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:lawrence_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/la001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-lawrence-township-judge-of-the-small-claims-court",
+      "title": "LAWRENCE TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:lawrence_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/la001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-lawrence-township-constable-of-the-small-claims-court",
+      "title": "LAWRENCE TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:lawrence_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/la001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-msd-of-lawrence-township-at-large",
+      "title": "MSD OF LAWRENCE TOWNSHIP AT LARGE",
+      "ocdId": "ocd-division/country:us/state:in/school_district:lawrence_township_metropolitan_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/la001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-msd-of-lawrence-township-district-2",
+      "title": "MSD OF LAWRENCE TOWNSHIP DISTRICT 2",
+      "ocdId": "ocd-division/country:us/state:in/school_district:lawrence_township_metropolitan_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/la001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-perry-township-trustee",
+      "title": "PERRY TOWNSHIP TRUSTEE",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:perry_township",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/pe001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-perry-township-judge-of-the-small-claims-court",
+      "title": "PERRY TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:perry_township",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/pe001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-perry-township-constable-of-the-small-claims-court",
+      "title": "PERRY TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:perry_township",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/pe001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-perry-township-schools-at-large",
+      "title": "PERRY TOWNSHIP SCHOOLS AT LARGE",
+      "ocdId": "ocd-division/country:us/state:in/school_district:perry_township_metropolitan_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://maps.indy.gov/Ballots/pe001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-pike-township-trustee",
+      "title": "PIKE TOWNSHIP TRUSTEE",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:pike_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/pk001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-pike-township-judge-of-the-small-claims-court",
+      "title": "PIKE TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:pike_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/pk001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-pike-township-constable-of-the-small-claims-court",
+      "title": "PIKE TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:pike_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/pk001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-msd-of-pike-township-at-large",
+      "title": "MSD OF PIKE TOWNSHIP AT LARGE",
+      "ocdId": "ocd-division/country:us/state:in/school_district:pike_township_metropolitan_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://maps.indy.gov/Ballots/pk001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-warren-township-trustee",
+      "title": "WARREN TOWNSHIP TRUSTEE",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:warren_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/wr001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-warren-township-judge-of-the-small-claims-court",
+      "title": "WARREN TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:warren_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/wr001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-warren-township-constable-of-the-small-claims-court",
+      "title": "WARREN TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:warren_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/wr001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-msd-of-warren-township-at-large",
+      "title": "MSD OF WARREN TOWNSHIP AT LARGE",
+      "ocdId": "ocd-division/country:us/state:in/school_district:warren_township_metropolitan_school_district",
+      "candidates": 6,
+      "sourceUrl": "https://maps.indy.gov/Ballots/wr002a_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-washington-township-trustee",
+      "title": "WASHINGTON TOWNSHIP TRUSTEE",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:washington_township",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/ws001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-washington-township-judge-of-the-small-claims-court",
+      "title": "WASHINGTON TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:washington_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/ws001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-washington-township-constable-of-the-small-claims-court",
+      "title": "WASHINGTON TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:washington_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/ws001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-msd-of-washington-township-at-large",
+      "title": "MSD OF WASHINGTON TOWNSHIP AT LARGE",
+      "ocdId": "ocd-division/country:us/state:in/school_district:washington_township_metropolitan_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/ws001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-msd-of-washington-township-district-2",
+      "title": "MSD OF WASHINGTON TOWNSHIP DISTRICT 2",
+      "ocdId": "ocd-division/country:us/state:in/school_district:washington_township_metropolitan_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/ws001_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-wayne-township-trustee",
+      "title": "WAYNE TOWNSHIP TRUSTEE",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:wayne_township",
+      "candidates": 2,
+      "sourceUrl": "https://maps.indy.gov/Ballots/wy001a_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-wayne-township-judge-of-the-small-claims-court",
+      "title": "WAYNE TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:wayne_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/wy001a_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-wayne-township-constable-of-the-small-claims-court",
+      "title": "WAYNE TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+      "ocdId": "ocd-division/country:us/state:in/county:marion/place:wayne_township",
+      "candidates": 1,
+      "sourceUrl": "https://maps.indy.gov/Ballots/wy001a_non.pdf"
+    },
+    {
+      "id": "cx-local-in-marion-2026-msd-of-wayne-township-at-large",
+      "title": "MSD OF WAYNE TOWNSHIP AT LARGE",
+      "ocdId": "ocd-division/country:us/state:in/school_district:wayne_township_metropolitan_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://maps.indy.gov/Ballots/wy001a_non.pdf"
+    }
+  ],
+  "operation": "Merge only these reviewed fields into latest River IN state, retaining the3 exact held appellate identities. Register4 IPS voter subdistricts and the shared19-county Court of Appeals District2 electorate. Resolve the5 missing split sample links before claiming complete mapped split coverage. Preserve unrelated measures/analysis. No live publication performed.",
+  "resolvedHeldContests": [],
+  "coverage": {
+    "preparedContests": 69,
+    "preparedNamedChoices": 118,
+    "candidateFields": 51,
+    "candidateNames": 100,
+    "retentionQuestions": 18,
+    "retentionNames": 18,
+    "marionSuperiorRetentions": 14,
+    "sharedAppellateRetentions": 4,
+    "newContests": 66,
+    "newNames": 115,
+    "refreshedHeldContests": 3,
+    "refreshedHeldNames": 3,
+    "currentLinkedSamplePdfs": 653,
+    "samplePages": 1306,
+    "completeLinkedSampleCensus": true,
+    "allMappedSplitCoverage": false,
+    "missingBallotLinkFeatures": 5,
+    "sourceCaptures": 679,
+    "geometryFeatures": 23,
+    "missingReaderDistricts": 5,
+    "courtDistrictWholeCountyMemberships": 19
+  },
+  "summary": "69 verified fields/118 names:51local candidate fields100names,14MarionSuperiorretentions,4appellateretentions. All653official linked actual general ballot PDFs replayed. Missing Kenworthy record uses one shared county-independent contest ID and precise19county electorate, not statewide scope. School residence-seat electorates verified by exhaustive whole-style parity; IPS subdistricts remain precise.",
+  "nextOwner": "River: latest-state merge, exact district/member integration, five split-link followups, controlled publication and reader checks.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 679 captured sources and 206 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

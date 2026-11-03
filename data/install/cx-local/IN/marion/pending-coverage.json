@@ -1,0 +1,54 @@
+{
+  "items": [
+    {
+      "status": "MISSING_PUBLISHED_BALLOT_LINK",
+      "features": [
+        {
+          "OBJECTID": 15992,
+          "PRECINCT": "PE007",
+          "SPLIT": "A"
+        },
+        {
+          "OBJECTID": 16047,
+          "PRECINCT": "WY043",
+          "SPLIT": "A"
+        },
+        {
+          "OBJECTID": 16073,
+          "PRECINCT": "CN059",
+          "SPLIT": "B"
+        },
+        {
+          "OBJECTID": 16075,
+          "PRECINCT": "WS043",
+          "SPLIT": "C"
+        },
+        {
+          "OBJECTID": 16172,
+          "PRECINCT": "WY056",
+          "SPLIT": "A"
+        }
+      ],
+      "issue": "Five official GIS split features have no BallotURL. Directory listing is403 and standard split-specific PDF paths were404. Their exact ballot assignment remains pending; no nearby style or county fallback substituted."
+    },
+    {
+      "status": "RIVER_DISTRICT_MAPPING",
+      "ocdIds": [
+        "ocd-division/country:us/state:in/court_of_appeals:2",
+        "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:2",
+        "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:3",
+        "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:4",
+        "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:5"
+      ],
+      "issue": "Four precise IPS voter subdistricts plus Court of Appeals District2 require reader integration. Nineteen source-backed whole-county memberships are supplied for the court district."
+    },
+    {
+      "status": "INFORMATIONAL_GIS_DISCREPANCY_EXCLUDED",
+      "issue": "Frank Lemaire Town Council active GIS entry has no matching row in current complete SOS general roster and no field/name in all653 linked actual samples; not installed. Empty placeholder GIS offices are not voting contests."
+    },
+    {
+      "status": "MEASURES_OUTSIDE_CHANGED_IDS",
+      "issue": "Existing state measures remain untouched. Fresh local referendum text is ancillary to this candidate packet and is not submitted as a destructive measure refresh."
+    }
+  ]
+}

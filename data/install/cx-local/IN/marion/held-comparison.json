@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "in-ied-2026-retention-mary-a-deboer",
+    "title": "Court of Appeals Judicial Retention - Fourth District",
+    "ocdId": "ocd-division/country:us/state:in",
+    "priorCandidateIds": [
+      "in-ied-2026-retention-mary-a-deboer:judge"
+    ],
+    "preparedCandidateIds": [
+      "in-ied-2026-retention-mary-a-deboer:judge"
+    ],
+    "result": "Exact held identities and statewide electorate retained; actual653-style confirmation."
+  },
+  {
+    "contestId": "in-ied-2026-retention-paul-a-felix",
+    "title": "Court of Appeals Judicial Retention - Fifth District",
+    "ocdId": "ocd-division/country:us/state:in",
+    "priorCandidateIds": [
+      "in-ied-2026-retention-paul-a-felix:judge"
+    ],
+    "preparedCandidateIds": [
+      "in-ied-2026-retention-paul-a-felix:judge"
+    ],
+    "result": "Exact held identities and statewide electorate retained; actual653-style confirmation."
+  },
+  {
+    "contestId": "in-ied-2026-retention-justin-l-mcadam",
+    "title": "Retention of Judge of the Indiana Tax Court",
+    "ocdId": "ocd-division/country:us/state:in",
+    "priorCandidateIds": [
+      "in-ied-2026-retention-justin-l-mcadam:judge"
+    ],
+    "preparedCandidateIds": [
+      "in-ied-2026-retention-justin-l-mcadam:judge"
+    ],
+    "result": "Exact held identities and statewide electorate retained; actual653-style confirmation."
+  }
+]

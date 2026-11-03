@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-11-03T06:27:53.489258+00:00",
+  "result": "PASS",
+  "sourceCaptures": 679,
+  "allRawAndTextHashes": "PASS",
+  "allJsonProvenanceQuotes": 319,
+  "actualCurrentSamples": 653,
+  "nativePages": 1306,
+  "completeLinkedStyleNamePartyAndVoteLimitReplay": "PASS",
+  "replayHelperSha256": "0ee284d63c488d16872d75a34187b615742b6068de50e92e5f9bce546b432e27",
+  "localCandidateFields": 51,
+  "localCandidateNames": 100,
+  "retentionQuestions": 18,
+  "preparedFields": 69,
+  "preparedNames": 118,
+  "exactHeldCandidateCoresPreserved": 3,
+  "courtDistrict2WholeCountyMembers": 19,
+  "validGeometryFeatures": 23,
+  "wholeSchoolResidenceSeatParity": [
+    39,
+    39,
+    72,
+    74
+  ],
+  "sourceCoverageGaps": 5,
+  "pendingOnlyEvidenceExcludedFromInstallReceipt": true,
+  "productionWrites": false
+}

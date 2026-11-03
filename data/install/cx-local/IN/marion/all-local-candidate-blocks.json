@@ -1,0 +1,2199 @@
+[
+  {
+    "contestId": "cx-local-in-marion-2026-marion-county-prosecutor",
+    "nativeTitle": "MARION COUNTY PROSECUTOR",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "RYAN MEARS",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "PHILIP FOUST",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION COUNTY PROSECUTOR\nVote For ONE (1) Only\nRYAN MEARS\nDEMOCRATIC PARTY\nPHILIP FOUST\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 1,
+    "sourceClip": [
+      394.88,
+      684.0302124023438,
+      576.88,
+      812.0301513671875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-clerk-of-the-circuit-court",
+    "nativeTitle": "CLERK OF THE CIRCUIT COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "KATE SWEENEY BELL",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "ROBBIN STEWART",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "CLERK OF THE CIRCUIT COURT\nVote For ONE (1) Only\nKATE SWEENEY BELL\nDEMOCRATIC PARTY\nROBBIN STEWART\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 1,
+    "sourceClip": [
+      394.88,
+      813.0301513671875,
+      576.88,
+      941.0301513671875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-county-auditor",
+    "nativeTitle": "MARION COUNTY AUDITOR",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "MYLA A. ELDRIDGE",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION COUNTY AUDITOR\nVote For ONE (1) Only\nMYLA A. ELDRIDGE\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 1,
+    "sourceClip": [
+      394.88,
+      942.0301513671875,
+      576.88,
+      1033.130126953125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-county-recorder",
+    "nativeTitle": "MARION COUNTY RECORDER",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "FAITH JAMES KIMBROUGH",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION COUNTY RECORDER\nVote For ONE (1) Only\nFAITH JAMES KIMBROUGH\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 1,
+    "sourceClip": [
+      394.88,
+      1034.130126953125,
+      576.88,
+      1197.0
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-county-sheriff",
+    "nativeTitle": "MARION COUNTY SHERIFF",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "KELVIS T. WILLIAMS",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "TOM VAUGHN",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION COUNTY SHERIFF\nVote For ONE (1) Only\nKELVIS T. WILLIAMS\nDEMOCRATIC PARTY\nTOM VAUGHN\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      57.63523864746094,
+      214.0,
+      185.63023376464844
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-county-assessor",
+    "nativeTitle": "MARION COUNTY ASSESSOR",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "JOSEPH P. O'CONNOR",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION COUNTY ASSESSOR\nVote For ONE (1) Only\nJOSEPH P. O'CONNOR\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      186.63023376464844,
+      214.0,
+      277.730224609375
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-center-township-trustee",
+    "nativeTitle": "CENTER TOWNSHIP TRUSTEE",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:center_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "LADONNA FREEMAN",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 107,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "CENTER TOWNSHIP TRUSTEE\nVote For ONE (1) Only\nLADONNA FREEMAN\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      278.730224609375,
+      214.0,
+      364.8502197265625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-center-township-judge-of-the-small-claims-court",
+    "nativeTitle": "CENTER TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:center_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "BRENDA ANNETTE ROPER",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 107,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "CENTER TOWNSHIP JUDGE OF THE\nSMALL CLAIMS COURT\nVote For ONE (1) Only\nBRENDA ANNETTE ROPER\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      365.8502197265625,
+      214.0,
+      456.9501953125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-center-township-constable-of-the-small-claims-court",
+    "nativeTitle": "CENTER TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:center_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "KENNETH ALLEN",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "MELVIN (MAJOR) HALL, II",
+        "partyLabel": "INDEPENDENT"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 107,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "CENTER TOWNSHIP CONSTABLE OF\nTHE SMALL CLAIMS COURT\nVote For ONE (1) Only\nKENNETH ALLEN\nDEMOCRATIC PARTY\nMELVIN (MAJOR) HALL, II\nINDEPENDENT\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      457.9501953125,
+      214.0,
+      586.3701782226562
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-indianapolis-public-school-board-at-large",
+    "nativeTitle": "INDIANAPOLIS PUBLIC SCHOOL BOARD AT LARGE",
+    "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "ANGELIA LOIS MOORE",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "ALEXANDER S. NYIRENDAH",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "SACHA NICOLE SHARP",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "HEATHER HOUSTON",
+        "partyLabel": "INDEPENDENT"
+      }
+    ],
+    "candidateCount": 4,
+    "actualStyles": 223,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "INDIANAPOLIS PUBLIC SCHOOL\nBOARD AT LARGE\nVote For ONE (1) Only\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nANGELIA LOIS MOORE\nDEMOCRATIC PARTY\nALEXANDER S. NYIRENDAH\nDEMOCRATIC PARTY\nSACHA NICOLE SHARP\nDEMOCRATIC PARTY\nHEATHER HOUSTON\nINDEPENDENT\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      587.3701782226562,
+      214.0,
+      820.91015625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-indianapolis-public-school-board-district-5",
+    "nativeTitle": "INDIANAPOLIS PUBLIC SCHOOL BOARD DISTRICT 5",
+    "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:5",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "NICOLE CAREY",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "YURI SMITH, SR.",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "PEARL TAYLOR",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 3,
+    "actualStyles": 40,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "INDIANAPOLIS PUBLIC SCHOOL\nBOARD\nDISTRICT 5\nVote For ONE (1) Only\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nNICOLE CAREY\nDEMOCRATIC PARTY\nYURI SMITH, SR.\nDEMOCRATIC PARTY\nPEARL TAYLOR\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      821.91015625,
+      214.0,
+      1028.030029296875
+    ]
+  },
+  {
+    "contestId": "in-ied-2026-retention-mary-a-deboer",
+    "nativeTitle": "INDIANA COURT OF APPEALS FOURTH DISTRICT — MARY A. DEBOER",
+    "ocdId": "ocd-division/country:us/state:in",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "MARY A. DEBOER",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "INDIANA COURT OF APPEALS\nFOURTH DISTRICT\nSHALL JUDGE MARY A. DEBOER\nBE RETAINED IN OFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      1056.029541015625,
+      214.0,
+      1197.0
+    ]
+  },
+  {
+    "contestId": "in-ied-2026-retention-paul-a-felix",
+    "nativeTitle": "INDIANA COURT OF APPEALS FIFTH DISTRICT — PAUL A. FELIX",
+    "ocdId": "ocd-division/country:us/state:in",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "PAUL A. FELIX",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "INDIANA COURT OF APPEALS\nFIFTH DISTRICT\nSHALL JUDGE PAUL A. FELIX BE\nRETAINED IN OFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      213.44,
+      79.53208923339844,
+      395.44,
+      170.63035583496094
+    ]
+  },
+  {
+    "contestId": "cx-local-in-2026-court-of-appeals-district-2-dana-j-kenworthy-retention",
+    "nativeTitle": "INDIANA COURT OF APPEALS SECOND DISTRICT — DANA J. KENWORTHY",
+    "ocdId": "ocd-division/country:us/state:in/court_of_appeals:2",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "DANA J. KENWORTHY",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "INDIANA COURT OF APPEALS\nSECOND DISTRICT\nSHALL JUDGE DANA J.\nKENWORTHY BE RETAINED IN\nOFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      213.44,
+      171.63035583496094,
+      395.44,
+      262.72845458984375
+    ]
+  },
+  {
+    "contestId": "in-ied-2026-retention-justin-l-mcadam",
+    "nativeTitle": "JUDGE OF TAX COURT — JUSTIN L. MCADAM",
+    "ocdId": "ocd-division/country:us/state:in",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "JUSTIN L. MCADAM",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "JUDGE OF TAX COURT\nSHALL JUDGE JUSTIN L. MCADAM\nBE RETAINED IN OFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      213.44,
+      263.72845458984375,
+      395.44,
+      336.4669189453125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-a-richard-m-blaiklock",
+    "nativeTitle": "MARION SUPERIOR COURT — A. RICHARD M. BLAIKLOCK",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "A. RICHARD M. BLAIKLOCK",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE A. RICHARD M.\nBLAIKLOCK BE RETAINED IN\nOFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      213.44,
+      337.4669189453125,
+      395.44,
+      428.625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-marshelle-broadwell",
+    "nativeTitle": "MARION SUPERIOR COURT — MARSHELLE BROADWELL",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "MARSHELLE BROADWELL",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE MARSHELLE\nBROADWELL BE RETAINED IN\nOFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      213.44,
+      429.625,
+      395.44,
+      520.7230834960938
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-david-j-certo",
+    "nativeTitle": "MARION SUPERIOR COURT — DAVID J. CERTO",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "DAVID J. CERTO",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE DAVID J. CERTO BE\nRETAINED IN OFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      213.44,
+      521.7230834960938,
+      395.44,
+      594.4015502929688
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-angela-davis",
+    "nativeTitle": "MARION SUPERIOR COURT — ANGELA DAVIS",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "ANGELA DAVIS",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE ANGELA DAVIS BE\nRETAINED IN OFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      213.44,
+      595.4015502929688,
+      395.44,
+      668.1400146484375
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-patrick-j-dietrick",
+    "nativeTitle": "MARION SUPERIOR COURT — PATRICK J. DIETRICK",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "PATRICK J. DIETRICK",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE PATRICK J.\nDIETRICK BE RETAINED IN\nOFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      213.44,
+      669.1400146484375,
+      395.44,
+      760.238037109375
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-kurt-m-eisgruber",
+    "nativeTitle": "MARION SUPERIOR COURT — KURT M. EISGRUBER",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "KURT M. EISGRUBER",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE KURT M.\nEISGRUBER BE RETAINED IN\nOFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      213.44,
+      761.238037109375,
+      395.44,
+      852.396240234375
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-geoffrey-a-gaither",
+    "nativeTitle": "MARION SUPERIOR COURT — GEOFFREY A. GAITHER",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "GEOFFREY A. GAITHER",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE GEOFFREY A.\nGAITHER BE RETAINED IN\nOFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      213.44,
+      853.396240234375,
+      395.44,
+      944.494384765625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-ryan-k-gardner",
+    "nativeTitle": "MARION SUPERIOR COURT — RYAN K. GARDNER",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "RYAN K. GARDNER",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE RYAN K. GARDNER\nBE RETAINED IN OFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      213.44,
+      945.494384765625,
+      395.44,
+      1018.1728515625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-melanie-l-kendrick",
+    "nativeTitle": "MARION SUPERIOR COURT — MELANIE L. KENDRICK",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "MELANIE L. KENDRICK",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE MELANIE L.\nKENDRICK BE RETAINED IN\nOFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      213.44,
+      1019.1728515625,
+      395.44,
+      1197.0
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-christina-r-klineman",
+    "nativeTitle": "MARION SUPERIOR COURT — CHRISTINA R. KLINEMAN",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "CHRISTINA R. KLINEMAN",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE CHRISTINA R.\nKLINEMAN BE RETAINED IN\nOFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      394.88,
+      79.51475524902344,
+      576.88,
+      170.61289978027344
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-patricia-caress-mcmath",
+    "nativeTitle": "MARION SUPERIOR COURT — PATRICIA CARESS MCMATH",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "PATRICIA CARESS MCMATH",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE PATRICIA CARESS\nMCMATH BE RETAINED IN\nOFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      394.88,
+      171.61289978027344,
+      576.88,
+      262.7110595703125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-tim-oakes",
+    "nativeTitle": "MARION SUPERIOR COURT — TIM OAKES",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "TIM OAKES",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE TIM OAKES BE\nRETAINED IN OFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      394.88,
+      263.7110595703125,
+      576.88,
+      336.44952392578125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-marc-t-rothenberg",
+    "nativeTitle": "MARION SUPERIOR COURT — MARC T. ROTHENBERG",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "MARC T. ROTHENBERG",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE MARC T.\nROTHENBERG BE RETAINED IN\nOFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      394.88,
+      337.44952392578125,
+      576.88,
+      428.63018798828125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-marion-superior-court-philip-c-sheward",
+    "nativeTitle": "MARION SUPERIOR COURT — PHILIP C. SHEWARD",
+    "ocdId": "ocd-division/country:us/state:in/county:marion",
+    "type": "RETENTION",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "PHILIP C. SHEWARD",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 653,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.601750+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MARION SUPERIOR COURT\nSHALL JUDGE PHILIP C. SHEWARD\nBE RETAINED IN OFFICE?\nYES\nNO\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      394.88,
+      429.63018798828125,
+      576.88,
+      1197.0
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-indianapolis-public-school-board-district-3",
+    "nativeTitle": "INDIANAPOLIS PUBLIC SCHOOL BOARD DISTRICT 3",
+    "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:3",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "LOREN EUGENE HEGER",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "HOPE DUKE STAR",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "DAQAVISE D. WINSTON",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "DEREK REDELMAN",
+        "partyLabel": "INDEPENDENT"
+      }
+    ],
+    "candidateCount": 4,
+    "actualStyles": 57,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn004_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:20.603573+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "INDIANAPOLIS PUBLIC SCHOOL\nBOARD\nDISTRICT 3\nVote For ONE (1) Only\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nLOREN EUGENE HEGER\nDEMOCRATIC PARTY\nHOPE DUKE STAR\nDEMOCRATIC PARTY\nDAQAVISE D. WINSTON\nDEMOCRATIC PARTY\nDEREK REDELMAN\nINDEPENDENT\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      821.91015625,
+      214.0,
+      1064.9300537109375
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-indianapolis-public-school-board-district-2",
+    "nativeTitle": "INDIANAPOLIS PUBLIC SCHOOL BOARD DISTRICT 2",
+    "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:2",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "BRYAN DUARTE",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "HASAAN RASHID",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 48,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn018_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:21.691378+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "INDIANAPOLIS PUBLIC SCHOOL\nBOARD\nDISTRICT 2\nVote For ONE (1) Only\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nBRYAN DUARTE\nDEMOCRATIC PARTY\nHASAAN RASHID\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      821.91015625,
+      214.0,
+      991.1900634765625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-indianapolis-public-school-board-district-4",
+    "nativeTitle": "INDIANAPOLIS PUBLIC SCHOOL BOARD DISTRICT 4",
+    "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools/school_board_district:4",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "CHRIS BULTMAN",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "LINDSEY CORNETT",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 38,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn045_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:23.228594+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "INDIANAPOLIS PUBLIC SCHOOL\nBOARD\nDISTRICT 4\nVote For ONE (1) Only\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nCHRIS BULTMAN\nDEMOCRATIC PARTY\nLINDSEY CORNETT\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      821.91015625,
+      214.0,
+      991.1903076171875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-beech-grove-city-schools-at-large",
+    "nativeTitle": "BEECH GROVE CITY SCHOOLS AT LARGE",
+    "ocdId": "ocd-division/country:us/state:in/school_district:beech_grove_city_schools",
+    "type": "CANDIDACY",
+    "voteFor": 3,
+    "allPrintedCandidates": [
+      {
+        "name": "JANNIS KING",
+        "partyLabel": "INDEPENDENT"
+      },
+      {
+        "name": "BRIAN DOWNARD",
+        "partyLabel": null
+      },
+      {
+        "name": "MADISON WEST",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 3,
+    "actualStyles": 10,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/cn106_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:25.973402+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "BEECH GROVE CITY SCHOOLS AT\nLARGE\nVote For Not More Than Three (3)\nCandidates For This Office\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nJANNIS KING\nINDEPENDENT\nBRIAN DOWNARD\nMADISON WEST\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      674.4901733398438,
+      214.0,
+      880.6705322265625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-decatur-township-trustee",
+    "nativeTitle": "DECATUR TOWNSHIP TRUSTEE",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:decatur_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "ELISE FECTEAU",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "JASON HOLLIDAY",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 18,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/de001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:26.040873+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "DECATUR TOWNSHIP TRUSTEE\nVote For ONE (1) Only\nELISE FECTEAU\nDEMOCRATIC PARTY\nJASON HOLLIDAY\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      278.730224609375,
+      214.0,
+      401.690185546875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-decatur-township-judge-of-the-small-claims-court",
+    "nativeTitle": "DECATUR TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:decatur_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "JONATHAN P. STURGILL",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 18,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/de001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:26.040873+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "DECATUR TOWNSHIP JUDGE OF\nTHE SMALL CLAIMS COURT\nVote For ONE (1) Only\nJONATHAN P. STURGILL\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      402.690185546875,
+      214.0,
+      493.79022216796875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-decatur-township-constable-of-the-small-claims-court",
+    "nativeTitle": "DECATUR TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:decatur_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "LUKE W. SCHMITT",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 18,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/de001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:26.040873+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "DECATUR TOWNSHIP CONSTABLE\nOF THE SMALL CLAIMS COURT\nVote For ONE (1) Only\nLUKE W. SCHMITT\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      494.79022216796875,
+      214.0,
+      581.330078125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-msd-of-decatur-township-at-large",
+    "nativeTitle": "MSD OF DECATUR TOWNSHIP AT LARGE",
+    "ocdId": "ocd-division/country:us/state:in/school_district:decatur_township_metropolitan_school_district",
+    "type": "CANDIDACY",
+    "voteFor": 3,
+    "allPrintedCandidates": [
+      {
+        "name": "JUDITH COLLINS",
+        "partyLabel": "REPUBLICAN PARTY"
+      },
+      {
+        "name": "DALE HENSON",
+        "partyLabel": "REPUBLICAN PARTY"
+      },
+      {
+        "name": "CHASE LYDAY",
+        "partyLabel": "REPUBLICAN PARTY"
+      },
+      {
+        "name": "KRISTYN D. STODDARD",
+        "partyLabel": "INDEPENDENT"
+      },
+      {
+        "name": "RANDI BERRYMAN",
+        "partyLabel": null
+      },
+      {
+        "name": "TERESA A. BURNS",
+        "partyLabel": null
+      },
+      {
+        "name": "STEVE JACOBI",
+        "partyLabel": null
+      },
+      {
+        "name": "PATRICE JOHNSON",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 8,
+    "actualStyles": 18,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/de001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:26.040873+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MSD OF DECATUR TOWNSHIP AT\nLARGE\nVote For Not More Than Three (3)\nCandidates For This Office\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nJUDITH COLLINS\nREPUBLICAN PARTY\nDALE HENSON\nREPUBLICAN PARTY\nCHASE LYDAY\nREPUBLICAN PARTY\nKRISTYN D. STODDARD\nINDEPENDENT\nRANDI BERRYMAN\nTERESA A. BURNS\nSTEVE JACOBI\nPATRICE JOHNSON\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      582.330078125,
+      214.0,
+      972.7711181640625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-franklin-township-trustee",
+    "nativeTitle": "FRANKLIN TOWNSHIP TRUSTEE",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:franklin_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "TEMICA S KEY",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "DANNY MEADOR",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 41,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/fr001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:26.871842+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "FRANKLIN TOWNSHIP TRUSTEE\nVote For ONE (1) Only\nTEMICA S KEY\nDEMOCRATIC PARTY\nDANNY MEADOR\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      278.730224609375,
+      214.0,
+      401.690185546875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-franklin-township-judge-of-the-small-claims-court",
+    "nativeTitle": "FRANKLIN TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:franklin_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "JOHN A. KITLEY, JR.",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 41,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/fr001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:26.871842+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "FRANKLIN TOWNSHIP JUDGE OF\nTHE SMALL CLAIMS COURT\nVote For ONE (1) Only\nJOHN A. KITLEY, JR.\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      402.690185546875,
+      214.0,
+      493.79022216796875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-franklin-township-constable-of-the-small-claims-court",
+    "nativeTitle": "FRANKLIN TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:franklin_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "JEFF DUHAMELL",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 41,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/fr001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:26.871842+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "FRANKLIN TOWNSHIP CONSTABLE\nOF THE SMALL CLAIMS COURT\nVote For ONE (1) Only\nJEFF DUHAMELL\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      494.79022216796875,
+      214.0,
+      581.330078125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-franklin-township-csc-at-large",
+    "nativeTitle": "FRANKLIN TOWNSHIP CSC AT LARGE",
+    "ocdId": "ocd-division/country:us/state:in/school_district:franklin_township_community_school_corporation",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "ANTONIO DEWAYNE KEY, SR.",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "TIM MCVEY",
+        "partyLabel": "REPUBLICAN PARTY"
+      },
+      {
+        "name": "KOMAL (KOMAL KAUR) CHOHAN",
+        "partyLabel": "INDEPENDENT"
+      },
+      {
+        "name": "DAWN DOWNER",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 4,
+    "actualStyles": 39,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/fr002_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:26.904350+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "FRANKLIN TOWNSHIP CSC AT\nLARGE\nVote For ONE (1) Only\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nANTONIO DEWAYNE KEY, SR.\nDEMOCRATIC PARTY\nTIM MCVEY\nREPUBLICAN PARTY\nKOMAL (KOMAL KAUR) CHOHAN\nINDEPENDENT\nDAWN DOWNER\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      587.3701782226562,
+      214.0,
+      825.8902587890625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-franklin-township-csc-northeast-district",
+    "nativeTitle": "FRANKLIN TOWNSHIP CSC NORTHEAST DISTRICT",
+    "ocdId": "ocd-division/country:us/state:in/school_district:franklin_township_community_school_corporation",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "ZACHARY SMITH HOWARD",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 39,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/fr002_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:26.904350+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "FRANKLIN TOWNSHIP CSC\nNORTHEAST DISTRICT\nVote For ONE (1) Only\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nZACHARY SMITH HOWARD\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      826.8902587890625,
+      214.0,
+      954.8302001953125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-franklin-township-csc-southeast-district",
+    "nativeTitle": "FRANKLIN TOWNSHIP CSC SOUTHEAST DISTRICT",
+    "ocdId": "ocd-division/country:us/state:in/school_district:franklin_township_community_school_corporation",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "MATT MORGAN",
+        "partyLabel": "REPUBLICAN PARTY"
+      },
+      {
+        "name": "LARRY J. WALKER",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 39,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/fr002_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:26.904350+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "FRANKLIN TOWNSHIP CSC\nSOUTHEAST DISTRICT\nVote For ONE (1) Only\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nMATT MORGAN\nREPUBLICAN PARTY\nLARRY J. WALKER\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      955.8302001953125,
+      214.0,
+      1197.0
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-lawrence-township-trustee",
+    "nativeTitle": "LAWRENCE TOWNSHIP TRUSTEE",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:lawrence_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "LISA CHAVIS",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 90,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/la001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:28.781411+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "LAWRENCE TOWNSHIP TRUSTEE\nVote For ONE (1) Only\nLISA CHAVIS\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      278.730224609375,
+      214.0,
+      364.8502197265625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-lawrence-township-judge-of-the-small-claims-court",
+    "nativeTitle": "LAWRENCE TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:lawrence_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "KIMBERLY J. BACON",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 90,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/la001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:28.781411+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "LAWRENCE TOWNSHIP JUDGE OF\nTHE SMALL CLAIMS COURT\nVote For ONE (1) Only\nKIMBERLY J. BACON\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      365.8502197265625,
+      214.0,
+      456.9501953125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-lawrence-township-constable-of-the-small-claims-court",
+    "nativeTitle": "LAWRENCE TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:lawrence_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "TRACEY DEJUAN CANTRELL",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 90,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/la001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:28.781411+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "LAWRENCE TOWNSHIP CONSTABLE\nOF THE SMALL CLAIMS COURT\nVote For ONE (1) Only\nTRACEY DEJUAN CANTRELL\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      457.9501953125,
+      214.0,
+      549.5302124023438
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-msd-of-lawrence-township-at-large",
+    "nativeTitle": "MSD OF LAWRENCE TOWNSHIP AT LARGE",
+    "ocdId": "ocd-division/country:us/state:in/school_district:lawrence_township_metropolitan_school_district",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "MARIA BERTRAM CARTAGENA",
+        "partyLabel": null
+      },
+      {
+        "name": "JESSICA DUNN",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 74,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/la001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:28.781411+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MSD OF LAWRENCE TOWNSHIP AT\nLARGE\nVote For ONE (1) Only\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nMARIA BERTRAM CARTAGENA\nJESSICA DUNN\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      550.5302124023438,
+      214.0,
+      715.3687744140625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-msd-of-lawrence-township-district-2",
+    "nativeTitle": "MSD OF LAWRENCE TOWNSHIP DISTRICT 2",
+    "ocdId": "ocd-division/country:us/state:in/school_district:lawrence_township_metropolitan_school_district",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "LARRY BROWN",
+        "partyLabel": null
+      },
+      {
+        "name": "CRAIG J WILLEY",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 74,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/la001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:28.781411+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MSD OF LAWRENCE TOWNSHIP\nDISTRICT 2\nVote For ONE (1) Only\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nLARRY BROWN\nCRAIG J WILLEY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      716.3687744140625,
+      214.0,
+      880.66748046875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-perry-township-trustee",
+    "nativeTitle": "PERRY TOWNSHIP TRUSTEE",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:perry_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "BEN BROWN",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "PATTY HAGENMAIER",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 67,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/pe001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:32.745507+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "PERRY TOWNSHIP TRUSTEE\nVote For ONE (1) Only\nBEN BROWN\nDEMOCRATIC PARTY\nPATTY HAGENMAIER\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      278.730224609375,
+      214.0,
+      401.690185546875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-perry-township-judge-of-the-small-claims-court",
+    "nativeTitle": "PERRY TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:perry_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "JAMI R. SAYEED",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "CHERYL RIVERA",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 67,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/pe001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:32.745507+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "PERRY TOWNSHIP JUDGE OF THE\nSMALL CLAIMS COURT\nVote For ONE (1) Only\nJAMI R. SAYEED\nDEMOCRATIC PARTY\nCHERYL RIVERA\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      402.690185546875,
+      214.0,
+      530.6301879882812
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-perry-township-constable-of-the-small-claims-court",
+    "nativeTitle": "PERRY TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:perry_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "JERRY MELVIN",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "DAVID TAYLOR",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 67,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/pe001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:32.745507+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "PERRY TOWNSHIP CONSTABLE OF\nTHE SMALL CLAIMS COURT\nVote For ONE (1) Only\nJERRY MELVIN\nDEMOCRATIC PARTY\nDAVID TAYLOR\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      531.6301879882812,
+      214.0,
+      655.0701904296875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-perry-township-schools-at-large",
+    "nativeTitle": "PERRY TOWNSHIP SCHOOLS AT LARGE",
+    "ocdId": "ocd-division/country:us/state:in/school_district:perry_township_metropolitan_school_district",
+    "type": "CANDIDACY",
+    "voteFor": 3,
+    "allPrintedCandidates": [
+      {
+        "name": "BRIANNA BIBLE",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "CHRIS LEWIS",
+        "partyLabel": "REPUBLICAN PARTY"
+      },
+      {
+        "name": "LEE SHIVELY",
+        "partyLabel": "INDEPENDENT"
+      }
+    ],
+    "candidateCount": 3,
+    "actualStyles": 57,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/pe001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:32.745507+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "PERRY TOWNSHIP SCHOOLS AT\nLARGE\nVote For Not More Than Three (3)\nCandidates For This Office\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nBRIANNA BIBLE\nDEMOCRATIC PARTY\nCHRIS LEWIS\nREPUBLICAN PARTY\nLEE SHIVELY\nINDEPENDENT\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      656.0701904296875,
+      214.0,
+      862.190185546875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-pike-township-trustee",
+    "nativeTitle": "PIKE TOWNSHIP TRUSTEE",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:pike_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "ANNETTE M. JOHNSON",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 58,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/pk001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:35.602579+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "PIKE TOWNSHIP TRUSTEE\nVote For ONE (1) Only\nANNETTE M. JOHNSON\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      462.93017578125,
+      214.0,
+      549.1101684570312
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-pike-township-judge-of-the-small-claims-court",
+    "nativeTitle": "PIKE TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:pike_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "DOUG STEPHENS",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 58,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/pk001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:35.602579+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "PIKE TOWNSHIP JUDGE OF THE\nSMALL CLAIMS COURT\nVote For ONE (1) Only\nDOUG STEPHENS\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      550.1101684570312,
+      214.0,
+      641.2100830078125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-pike-township-constable-of-the-small-claims-court",
+    "nativeTitle": "PIKE TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:pike_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "PAUL WOODS",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 58,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/pk001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:35.602579+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "PIKE TOWNSHIP CONSTABLE OF\nTHE SMALL CLAIMS COURT\nVote For ONE (1) Only\nPAUL WOODS\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      642.2100830078125,
+      214.0,
+      733.730224609375
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-msd-of-pike-township-at-large",
+    "nativeTitle": "MSD OF PIKE TOWNSHIP AT LARGE",
+    "ocdId": "ocd-division/country:us/state:in/school_district:pike_township_metropolitan_school_district",
+    "type": "CANDIDACY",
+    "voteFor": 3,
+    "allPrintedCandidates": [
+      {
+        "name": "ALONZO ANDERSON",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "WAYNE L. MOORE",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "SHERIE LATOYA SCOTT",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "TERRY A. WEBSTER, SR.",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 4,
+    "actualStyles": 55,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/pk001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:35.602579+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MSD OF PIKE TOWNSHIP AT LARGE\nVote For Not More Than Three (3)\nCandidates For This Office\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nALONZO ANDERSON\nDEMOCRATIC PARTY\nWAYNE L. MOORE\nDEMOCRATIC PARTY\nSHERIE LATOYA SCOTT\nDEMOCRATIC PARTY\nTERRY A. WEBSTER, SR.\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      734.730224609375,
+      214.0,
+      972.7700805664062
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-warren-township-trustee",
+    "nativeTitle": "WARREN TOWNSHIP TRUSTEE",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:warren_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "JAMES A. TAYLOR",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 72,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/wr001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:39.578255+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "WARREN TOWNSHIP TRUSTEE\nVote For ONE (1) Only\nJAMES A. TAYLOR\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      278.730224609375,
+      214.0,
+      364.8502197265625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-warren-township-judge-of-the-small-claims-court",
+    "nativeTitle": "WARREN TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:warren_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "GARLAND E. GRAVES",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 72,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/wr001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:39.578255+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "WARREN TOWNSHIP JUDGE OF THE\nSMALL CLAIMS COURT\nVote For ONE (1) Only\nGARLAND E. GRAVES\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      365.8502197265625,
+      214.0,
+      456.9501953125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-warren-township-constable-of-the-small-claims-court",
+    "nativeTitle": "WARREN TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:warren_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "OSNEL L ANDRE, SR.",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 72,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/wr001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:39.578255+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "WARREN TOWNSHIP CONSTABLE\nOF THE SMALL CLAIMS COURT\nVote For ONE (1) Only\nOSNEL L ANDRE, SR.\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      457.9501953125,
+      214.0,
+      549.5302124023438
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-msd-of-warren-township-at-large",
+    "nativeTitle": "MSD OF WARREN TOWNSHIP AT LARGE",
+    "ocdId": "ocd-division/country:us/state:in/school_district:warren_township_metropolitan_school_district",
+    "type": "CANDIDACY",
+    "voteFor": 3,
+    "allPrintedCandidates": [
+      {
+        "name": "STEVE (COACH) TUTSIE",
+        "partyLabel": "INDEPENDENT"
+      },
+      {
+        "name": "TERRI AMOS",
+        "partyLabel": null
+      },
+      {
+        "name": "RACHEL M BURKE",
+        "partyLabel": null
+      },
+      {
+        "name": "JERRY CRITES",
+        "partyLabel": null
+      },
+      {
+        "name": "SAMANTHA DOUGLAS",
+        "partyLabel": null
+      },
+      {
+        "name": "KEVIN S. HUMPHREY, SR.",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 6,
+    "actualStyles": 45,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/wr002a_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:39.654894+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MSD OF WARREN TOWNSHIP AT\nLARGE\nVote For Not More Than Three (3)\nCandidates For This Office\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nSTEVE (COACH) TUTSIE\nINDEPENDENT\nTERRI AMOS\nRACHEL M BURKE\nJERRY CRITES\nSAMANTHA DOUGLAS\nKEVIN S. HUMPHREY, SR.\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      545.4901733398438,
+      214.0,
+      862.19140625
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-washington-township-trustee",
+    "nativeTitle": "WASHINGTON TOWNSHIP TRUSTEE",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:washington_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "FRANK T. SHORT",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "KAREN S. MOMPER",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 113,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/ws001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:43.563223+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "WASHINGTON TOWNSHIP TRUSTEE\nVote For ONE (1) Only\nFRANK T. SHORT\nDEMOCRATIC PARTY\nKAREN S. MOMPER\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      370.8302001953125,
+      214.0,
+      493.79022216796875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-washington-township-judge-of-the-small-claims-court",
+    "nativeTitle": "WASHINGTON TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:washington_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "STEVEN G POORE",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 113,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/ws001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:43.563223+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "WASHINGTON TOWNSHIP JUDGE OF\nTHE SMALL CLAIMS COURT\nVote For ONE (1) Only\nSTEVEN G POORE\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      494.79022216796875,
+      214.0,
+      580.97021484375
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-washington-township-constable-of-the-small-claims-court",
+    "nativeTitle": "WASHINGTON TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:washington_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "STEVE MILLER",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 113,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/ws001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:43.563223+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "WASHINGTON TOWNSHIP\nCONSTABLE OF THE SMALL CLAIMS\nCOURT\nVote For ONE (1) Only\nSTEVE MILLER\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      581.97021484375,
+      214.0,
+      678.5302124023438
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-msd-of-washington-township-at-large",
+    "nativeTitle": "MSD OF WASHINGTON TOWNSHIP AT LARGE",
+    "ocdId": "ocd-division/country:us/state:in/school_district:washington_township_metropolitan_school_district",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "LESLIE BOWLES",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 72,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/ws001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:43.563223+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MSD OF WASHINGTON TOWNSHIP\nAT LARGE\nVote For ONE (1) Only\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nLESLIE BOWLES\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      679.5302124023438,
+      214.0,
+      807.4686279296875
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-msd-of-washington-township-district-2",
+    "nativeTitle": "MSD OF WASHINGTON TOWNSHIP DISTRICT 2",
+    "ocdId": "ocd-division/country:us/state:in/school_district:washington_township_metropolitan_school_district",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "JOCELYN SISSON",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 72,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/ws001_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:43.563223+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MSD OF WASHINGTON TOWNSHIP\nDISTRICT 2\nVote For ONE (1) Only\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nJOCELYN SISSON\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      808.4686279296875,
+      214.0,
+      935.9270629882812
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-wayne-township-trustee",
+    "nativeTitle": "WAYNE TOWNSHIP TRUSTEE",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:wayne_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "JEB BARDON",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "KENT E. WELLS",
+        "partyLabel": "REPUBLICAN PARTY"
+      }
+    ],
+    "candidateCount": 2,
+    "actualStyles": 87,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/wy001a_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:48.583070+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "WAYNE TOWNSHIP TRUSTEE\nVote For ONE (1) Only\nJEB BARDON\nDEMOCRATIC PARTY\nKENT E. WELLS\nREPUBLICAN PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      462.93017578125,
+      214.0,
+      585.9501953125
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-wayne-township-judge-of-the-small-claims-court",
+    "nativeTitle": "WAYNE TOWNSHIP JUDGE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:wayne_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "GERALD B. COLEMAN",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 87,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/wy001a_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:48.583070+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "WAYNE TOWNSHIP JUDGE OF THE\nSMALL CLAIMS COURT\nVote For ONE (1) Only\nGERALD B. COLEMAN\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      586.9501953125,
+      214.0,
+      678.0501708984375
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-wayne-township-constable-of-the-small-claims-court",
+    "nativeTitle": "WAYNE TOWNSHIP CONSTABLE OF THE SMALL CLAIMS COURT",
+    "ocdId": "ocd-division/country:us/state:in/county:marion/place:wayne_township",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "allPrintedCandidates": [
+      {
+        "name": "KEVIN J. KELLY",
+        "partyLabel": "DEMOCRATIC PARTY"
+      }
+    ],
+    "candidateCount": 1,
+    "actualStyles": 87,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/wy001a_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:48.583070+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "WAYNE TOWNSHIP CONSTABLE OF\nTHE SMALL CLAIMS COURT\nVote For ONE (1) Only\nKEVIN J. KELLY\nDEMOCRATIC PARTY\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      679.0501708984375,
+      214.0,
+      765.5902099609375
+    ]
+  },
+  {
+    "contestId": "cx-local-in-marion-2026-msd-of-wayne-township-at-large",
+    "nativeTitle": "MSD OF WAYNE TOWNSHIP AT LARGE",
+    "ocdId": "ocd-division/country:us/state:in/school_district:wayne_township_metropolitan_school_district",
+    "type": "CANDIDACY",
+    "voteFor": 4,
+    "allPrintedCandidates": [
+      {
+        "name": "BRANDON BOWMAN",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "MIKEAL GORDON",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "RAIMEKA GRAHAM",
+        "partyLabel": "DEMOCRATIC PARTY"
+      },
+      {
+        "name": "BENJAMIN WAKEFIELD",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 4,
+    "actualStyles": 52,
+    "completeField": {
+      "sourceUrl": "https://maps.indy.gov/Ballots/wy001a_non.pdf",
+      "sourceOrg": "Marion County Election Board",
+      "collectedAt": "2026-11-03T05:50:48.583070+00:00",
+      "verifiedAt": "2026-11-03T06:26:58.688346+00:00",
+      "quote": "MSD OF WAYNE TOWNSHIP AT\nLARGE\nVote For Not More Than Four (4)\nCandidates For This Office\nA STRAIGHT PARTY VOTE WILL\nNOT COUNT AS A VOTE FOR ANY\nCANDIDATE FOR THIS OFFICE.\nBRANDON BOWMAN\nDEMOCRATIC PARTY\nMIKEAL GORDON\nDEMOCRATIC PARTY\nRAIMEKA GRAHAM\nDEMOCRATIC PARTY\nBENJAMIN WAKEFIELD\n"
+    },
+    "samplePage": 2,
+    "sourceClip": [
+      32.0,
+      766.5902099609375,
+      214.0,
+      1009.6102905273438
+    ]
+  }
+]

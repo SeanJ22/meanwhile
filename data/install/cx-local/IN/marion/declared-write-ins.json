@@ -1,0 +1,8 @@
+{
+  "status": "NO_LOCAL_WRITE_IN_ROWS_IN_CURRENT_SOS_LINKED_GENERAL_ROSTER",
+  "namedLocalWriteIns": [],
+  "sourceUrl": "https://www.in.gov/sos/elections/files/Candidate_List_Abbreviated_20260922_011251PM.xlsx",
+  "sourceFileDate": "September22,2026",
+  "excludedStatewideWriteInRows": 19,
+  "limit": "This describes the current official linked roster and actual printed local fields; it is not a separate county filing-status download. Generic Write-in slots are not named candidates."
+}

@@ -1,0 +1,48 @@
+[
+  {
+    "contestId": "nj-middlesex-2026:old-bridge-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:middlesex/place:old_bridge_township",
+    "registeredDivisionIndex": 322,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:middlesex/place:old_bridge_township",
+      "cousub",
+      "3402354705",
+      "Old Bridge township"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "170309",
+      "nj:city:township-of-old-bridge",
+      "TOWNSHIP OF OLD BRIDGE",
+      "TOWNSHIP",
+      322,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing named OldBridgeTownship or SayrevilleBorough government primary Census county-subdivision division. No new identifiers."
+  },
+  {
+    "contestId": "nj-middlesex-2026:sayreville-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:middlesex/place:sayreville_borough",
+    "registeredDivisionIndex": 326,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:middlesex/place:sayreville_borough",
+      "cousub",
+      "3402365790",
+      "Sayreville borough"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "186549",
+      "nj:city:borough-of-sayreville",
+      "BOROUGH OF SAYREVILLE",
+      "MUNICIPAL",
+      326,
+      "COUSUB_FIPS",
+      1138
+    ],
+    "basis": "Exact existing named OldBridgeTownship or SayrevilleBorough government primary Census county-subdivision division. No new identifiers."
+  }
+]

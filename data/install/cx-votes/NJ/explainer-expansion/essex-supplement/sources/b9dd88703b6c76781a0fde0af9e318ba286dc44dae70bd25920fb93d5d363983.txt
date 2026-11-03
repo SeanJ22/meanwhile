@@ -1,0 +1,1461 @@
+
+ 
+ 
+ 
+ (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P3V3PJ6'); 
+ 
+
+ 
+ 
+ 
+
+ NJ DOS - Division of Elections - County Election Officials 
+
+ 
+ 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+	var totalSets = 4;
+	var randNum = 0;
+	randNum = Math.floor(Math.random()*totalSets)+1;
+	mainImg = '<img src="assets/images/hero/state-flag-'+randNum+'.jpg" alt="NJ Division of Elections" title="NJ Division of Elections" class="img-fluid mx-auto d-block" />';
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+	 
+ 
+ 
+
+ Skip to main content 
+ 
+
+ 
+ 
+header.sonj li.sonj-translate >a{background: #ffffff;color:#000000!important;border-radius: .25rem;}
+header.sonj li.sonj-translate >a{color:#000000!important}
+p.disclaimer {color:#fff!important;}
+p.disclaimer >a{color:#fff!important;}
+ 
+
+
+ 
+ 
+		 
+			 Official Site of The State of New Jersey 
+		 
+		 
+		   Governor Mikie Sherrill    
+		   
+			   
+			  								 Translate  
+			  							 
+			  			 
+			  				 
+			  		 
+					 
+							 Translation Disclaimer  
+			  				  close 
+			  							 
+						 
+			 NJ.gov 
+			 Services 
+			 Agencies 
+			 FAQs Frequently Asked Questions 
+
+
+			 
+						 
+							 Get Updates  
+							 
+
+								 
+								 
+								  close 
+							 
+			 
+			 
+				 Search  
+				 
+
+					 
+						 Search:  
+							 
+							 
+								 
+							 
+						 
+					 
+					  close 
+				 
+			 
+		   
+		 
+		 
+	   
+	 
+
+	  
+	   
+		 
+			 
+			 Shirley U. Emehelu, Acting Secretary of State 
+			 New Jersey Voter Information Portal 
+			 Department of State, Division of Elections 
+		 
+	   
+	 
+	
+	  
+	 
+		 
+			 
+   NJ Voter Information Portal 
+   
+     
+   
+
+   
+     
+       DOS  
+      
+       DOE  
+		
+	 NJ Voter Information Portal  
+         
+          	 NJ Voter Information Portal 
+			 3 Ways To Vote 
+			 Vote-By-Mail 
+			 Request a Ballot! 
+			 Early Voting 
+			 Polling Location 
+			 Secure Drop Box Locations 
+			 Interactive Maps 
+			 Track My Ballot 
+			 Register to Vote! 
+			 Am I Registered? 
+			 Voter Education Video 
+			 Election Results 
+			 Safe Secure Elections 
+			 Frequently Asked Questions 
+			 County Election Officials 
+			 Military and Overseas Voting 
+			 Student Registration & Voting 
+			 Voter Rights and Accessibility 
+			 Additional Forms 
+			 Be A Poll Worker 
+			 NJ Votes Information Sign-Up 
+			 Printable Flyers & Publications 
+         
+       
+		
+	 Resources 
+         
+          	 County Information 
+			 County Election Officials 
+			 
+			 National Voter Registration Act 
+			 Voting Equipment Certification 
+			 Voting Equipment Inventory 
+			 Electronic Poll Book Certification 
+			 Election Results 
+			 Election Archive Information 
+			 Election Results Archive 
+			 Summary of Registered Voters and Ballots Cast 
+			 Statewide Voter Registration Statistics Archive 
+			 Covid-19 Election Resources 
+			 Statutes & Rules 
+			 Printable Flyers & Publications 
+         
+     			
+		
+	 Candidate Information 
+         
+			 Candidate Petitions 
+			 
+			 Candidate Petition Filing 
+			 Candidate Petition Challenges 
+			 Recall Election Process   
+			 New Jersey Election Law Enforcement Commission (ELEC)   
+			 Federal Election Commission 
+         
+       	
+		
+	 Election Information 
+         
+			 2026 Election Year Information 
+			 
+			 2026 Periodic Election Reporting 
+			 Chronological Election Timelines 
+			
+         
+     		
+				 Jersey Civic Engage 
+         
+			
+			 Jersey Civic Engage 
+			 #TrustedInfo2022    
+			 NJ Ballot Bowl 
+			 Vote for Valor 
+			 NJ Census 
+			 NJ Alliance for Civic Engagement 
+         
+       	
+		
+	  
+         
+          Notice of Public Meeting
+         
+       	
+		
+       
+   
+ 
+		 
+	 
+ 
+
+
+
+
+
+
+ 
+	  
+	   
+		 
+			 Voting Questions? Call  1-877-NJ-VOTER  (1-877-658-6837) 
+		 
+	   
+	 
+
+
+
+
+ 	
+ 
+	 
+	  
+	  
+	  
+
+ 	
+ 
+ 
+  
+  
+	 
+		 
+		 × 
+			 
+				 
+				
+				 Important Notice to Voters: 
+					 This is a friendly reminder on how to return your Mail-In ballot. How you return it is up to you. 
+						 Select one of the following three ways: 
+						 
+							 Mail:  It must be postmarked on or before 8:00 p.m. Election Day and be received by your county’s Board of Elections on or before 6 days after Election Day. To make sure your ballot is postmarked on time, put your ballot in the mail at least a few days before election day, or go up to the counter at a U.S. Post Office and have a clerk manually stamp the postmark on your ballot envelope. 
+							 Secure Ballot Drop Box:  Place it in one of your county’s secure ballot drop boxes by 8:00 p.m. on Election Day.  Secure Ballot Drop Box locations 
+							 Board of Elections Office:  Deliver it in person to your county’s Board of Elections Office by 8:00 p.m. on Election Day.  County Election Officials 
+				 
+
+
+		
+			
+
+		 
+	 
+  
+
+
+
+ 
+ 
+ 	
+	 	
+		 
+			 
+		 
+	 
+ 
+
+
+ 
+  
+ 	 
+  		 
+			   
+			       DOS    DOE  
+ 
+						 NJ Voter Information Portal   
+					 	 County Election Officials 
+
+ 
+			   
+		   
+  	 
+  
+ 
+
+ 
+  
+ 	 
+		 County Election Officials 
+		     
+	 
+ 
+ 	
+	
+	
+ 
+  
+ 	 
+		 
+ 
+
+
+ Page Last Updated: 10/06/26 
+
+
+ 
+	
+     
+       
+         
+          Atlantic County
+         
+       
+       
+         
+			 
+				 
+						 Superintendent of Elections/Commissioner of Registration 
+						Maureen Bugdon 
+						Address: 5920 Main Street, Mays Landing, NJ 08330 
+						Office Hours: 8:30am-4:00pm 
+						 609-645-5882  (FAX) 609-343-2240 
+						Website:  www.atlantic-county.org/superintendent-of-elections/ 
+				 
+						 County Clerk 
+						Joe Giralo 
+						Address: 5901 Main Street, Mays Landing, NJ 08330-1797 
+						Office Hours: 8:30am-4:00pm 
+						 609-625-4011  (FAX) 609-909-5107 
+						Website:  www.atlanticcountyclerk.org 
+				 
+						 Board of Elections 
+						Address: Historic Court House Complex, 5903 Main Street, Mays Landing, NJ 08330 
+						Office Hours: 8:30am-4:00pm 
+						 609-645-5867  (FAX) 609-645-5875 
+						Website:  www.atlantic-county.org/board-of-elections/ 
+		   
+			
+         
+       
+     
+    
+    
+    
+     
+       
+         
+        Bergen County
+       
+       
+       
+         
+		 
+			 
+					 Superintendent of Elections/Commissioner of Registration 
+				 Anthony Nicodemo  
+				Address: One Bergen County Plaza, Room 380, Hackensack, NJ 07601 
+				Office Hours: 8:30am-4:30pm 201-336-6109  (FAX) 201-336-6134 
+				Website:  https://bergencountynj.gov/election-officials/about-the-superintendent-of-elections/ 
+				 
+			 
+					 County Clerk 
+					John S. Hogan 
+				Address: One Bergen County Plaza, Room 130, Hackensack, NJ 07601 
+				Office Hours: 8:30am-4:30pm 
+				 201-336-7020  (FAX) 201-336-7005 
+				Website:  https://www.bergencountyclerk.gov/ 
+				 
+			 
+					 Board of Elections 
+				Address: One Bergen County Plaza, Room 310, Hackensack, NJ 07601 
+				Office Hours: 9:00am-4:30pm 201-336-6225  (FAX) 201-336-6234 
+				Website:  https://bergencountynj.gov/election-officials/bergen-county-board-of-elections/ 
+				 
+		   	
+         
+       
+     
+    
+    
+     
+       
+         
+          Burlington County
+		 
+       
+       
+         
+			 
+				 
+						 Superintendent of Elections 
+					Dawn Marie Addiego 
+					Address: 301 Harper Drive, Moorestown, NJ 08057 
+					Office Hours: 8:00am-4:00pm 609-265-5111  (FAX) 609-265-5990 
+					Website:  www.co.burlington.nj.us/301/Superintendent-of-Elections 
+					 
+				 
+						 County Clerk 
+					Joanne Schwartz  
+					Address: 50 Rancocas Road, Third Floor Mount Holly, NJ 08060  		
+					Office Hours: 8:00am-4:00pm 
+					 609-265-5229  (FAX) 609-265-0696 
+					Website:  www.co.burlington.nj.us/192/County-Clerk 
+					 Mail-in Ballot Requests : 301 Harper Drive, Moorestown, NJ 08057   Office Hours: 8:30 AM – 4:00 PM Phone: 609-265-5229 
+					 
+				 
+						 Board of Elections 
+					Address: 301 Harper Drive, Moorestown, NJ 08057 
+					Mailing Address: P.O. Box 6000, Mount Holly, NJ  08060 
+					Office Hours: 8:00am-4:00pm 609-265-5557  (FAX) 609-265-3131 
+					Website:  www.co.burlington.nj.us/297/Election-Board 
+					 
+		   
+         
+       
+     
+    
+      
+       
+         
+          Camden County
+          
+       
+       
+         
+		   
+			 
+				 Commissioner of Registration 
+				Address: Camden County Elections and Archive Center, 100  University Court, Blackwood,  NJ  08012 
+				Office Hours: 8:30am-4:30pm 
+				 856-401-8683   (FAX) 856-401-8689  
+				Website:  www.camdencounty.com/service/voting-and-elections/ 
+				 
+			 
+					 County Clerk 
+				 Pamela R. Lampitt 
+				Address: Camden County Elections and Archive Center, 100 University Court, 1st Floor, Blackwood, NJ 08012 
+			Mailing Address:  P.O. Box 218, Blackwood, NJ 08012-0218 
+				Office Hours: 8:30am-4:00pm 
+				 856-225-7219   (FAX) 856-374-6398 
+				Website:  http://www.camdencounty.com/service/county-clerk/ 
+				 
+			 
+				 Board of Elections 
+				Address: Camden County Elections and Archive Center, 100  University Court, Blackwood,  NJ  08012 
+				Office Hours: 8:30am-4:30pm 
+				 856-401-8683   (FAX) 856-401-8689  
+				Website:  www.camdencounty.com/service/voting-and-elections/ 
+				 
+		       
+         
+       
+        
+      
+       
+         
+          Cape May County
+          
+       
+       
+         
+		   
+			 
+					 Commissioner of Registration 
+				Address: 10 West Mechanic Street, P.O. Box 5000, Cape May Courthouse, NJ 08210-5000 
+				Office Hours: 8:30am-4:30pm 609-465-1050   (FAX) 609-465-1639 
+				Website:  www.capemaycountyvotes.com 
+				 
+			 
+					 County Clerk 
+				Rita M. Rothberg 
+				Address: 7 N. Main Street, P.O. Box 5000, Cape May Courthouse, NJ 08210-5000  
+				Office Hours: 8:30am-4:30pm 609-465-1013    (FAX) 609-465-8625 
+				Website:  capemaycountynj.gov/189/County-Clerk 
+				 
+			 
+					 Board of Elections 
+				Address: 10 West Mechanic Street, P.O. Box 5000, Cape May Courthouse, NJ 08210-5000 
+				Office Hours: 8:30am-4:30pm 609-465-1050   (FAX) 609-465-1639 
+				Website:  https://www.capemaycountyvotes.com/https-www-capemaycountyvotes-com-wp-content-uploads-2021-07-2021-all-elected-officials-internet-sept-2021-pdf/board-of-elections/ 
+				 
+		   		       
+         
+       
+      
+    
+            
+      
+       
+         
+          Cumberland County
+          
+       
+       
+         
+		   
+			 
+					 Commissioner of Registration 
+				 Robin Wood 
+			Address: 555 Shiloh Pike, Bridgeton, NJ 08302 
+			Office Hours: 8:30am-4:30pm 856-453-5801   (FAX) 856-451-3172 
+			Website:  cumberlandcountyvotes.com/ 
+				 
+			 
+					 County Clerk 
+				 Celeste M. Riley 
+					Address: 60 W. Broad Street, Bridgeton, NJ 08302-2665  
+			  Office Hours: 8:30am-4:00pm 856-453-4860   (FAX) 856-455-1410 
+					Website:  ccclerknj.com/ 
+				 
+			 
+					 Board of Elections   
+				Address: 555 Shiloh Pike, Bridgeton, NJ 08302  
+			Office Hours: 8:30am-4:00pm 856-453-5801   (FAX) 856-451-3172 
+			Website:  cumberlandcountyvotes.com/contact/board-of-elections/ 
+				 
+		   	
+         
+       
+       
+    
+          
+      
+       
+         
+          Essex County
+          
+       
+       
+         
+		   
+			 
+					 Superintendent of Elections/Commissioner of Registration 
+				 Patricia Spango 
+				 Address: Superintendent of Elections, 495 Dr. Martin Luther King, Jr. Boulevard, Suite 103, Newark, NJ 07102 
+			 Office Hours: 8:30am-4:00pm 973-621-5061   (FAX) 973-621-6464 
+			 Website:  
+				 
+			 
+					 County Clerk 
+				 Christopher J. Durkin 
+				Address: Hall of Records, 495 Dr. Martin Luther King Jr. Boulevard, Suite 130, Newark, NJ 07102 
+				(For regular mail delivery use P.O. Box 690, Newark, NJ 07101-0690) 
+			Office Hours: 8:00am-4:00pm 973-621-4922   (FAX) 973-621-4919 
+			Website:  www.essexclerk.com 
+				 
+			 
+					 Board of Elections 
+						Nicole Amos 
+				Address: 495 Dr. Martin Luther King, Jr. Blvd., Dr. Martin Luther King Justice Building, Room 145, Newark, NJ 07102 
+			Office Hours: 8:30am – 4:00pm 973-621-5070   (FAX) 973-621-2540  
+			Website:  www.essexboardofelections.com 
+				 
+		   	
+         
+       
+         
+    
+    
+     
+       
+         
+          Gloucester County
+          
+       
+       
+         
+		   
+			 
+					 Superintendent of Elections/Commissioner of Registration 
+				 Stephanie Salvatore 
+				 Address: P.O. Box 352, Woodbury, NJ 08096 
+				(For deliveries other than USPS use: 550 Grove Road, W. Deptford, NJ 08066) 
+			 Office Hours: 8:30am-4:30pm 856-384-4500   (FAX) 856-251-1647 
+			 Website:	 https://gloucestercountynj.gov/184/Superintendent-of-Elections 
+				 
+			 
+					 County Clerk 
+				 James N. Hogan  
+				 Address: Court House, 1st Floor, P.O. Box 129, 1 North Broad Street, Woodbury, NJ 08096-7129  
+			 Office Hours: 8:30am-4:30pm 856-384-4530   (FAX) 856-853-3327 
+			 Website:	 https://gloucestercountynj.gov/400/Election-Division 
+				 
+			 
+					 Board of Elections 
+				 Address: PO Box 352, Woodbury, NJ 08096 
+			 (For deliveries other than USPS use: 550 Grove Road, Paulsboro, NJ 08066) 
+			 Office Hours: 8:30am-4:30pm 
+				  856-384-4500   (FAX) 856-251-1647 
+			 Website:	 https://gloucestercountynj.gov/774/Board-of-Elections 
+				 
+		   
+         
+       
+     
+    
+    
+     
+       
+         
+         Hudson County
+          
+       
+       
+         
+		   
+			 
+					 Superintendent of Elections/Commissioner of Registration 
+				 Maryanne Kelleher 
+				 Address: Hudson County Plaza, 257 Cornelison Avenue, 4th Floor, Jersey City, NJ 07302 
+			 Office Hours: 8:30am-4:30pm 201-369-7740   (FAX) 201-369-7743 
+			 Website:  www.hcnj.us/county-elections/superintendent-of-elections/ 
+				 
+			 
+					 County Clerk 
+				E. Junior Maldonado 
+				 Address: Hudson County Plaza, 257 Cornelison Avenue, 4th Floor, Jersey City, NJ 07302 
+			 Office Hours: 8:30am-4:30pm 201-369-3470   (FAX) 201-369-3478 
+			 Website:  www.hudsoncountyclerk.org 
+				 
+			 
+					 Board of Elections 
+				 Address: Hudson County Plaza, 257 Cornelison Avenue, 4th Floor, Jersey City, NJ 07302 
+			 Office Hours: 8:30am-4:30pm 201-369-3435   (FAX) 201-369-3436 
+			 Website:  www.hcnj.us/county-elections/board-of-elections/ 
+				 
+		   
+         
+       
+         
+
+     
+       
+         
+         Hunterdon County
+          
+       
+       
+         
+		   
+			 
+					 Commissioner of Registration 
+				 Joyce Santos 
+				 Address: 112 Broad Street,   Flemington, NJ 08822  
+			 Office Hours: 8:30am-4:30pm 908-788-1190   (FAX) 908-806-4686 
+				 
+			 
+					 County Clerk 
+				 Mary H. Melfi  
+				 Address: Hall of Records, 71 Main Street, P.O. Box 2900, Flemington, NJ 08822-2900  
+			 Office Hours: 8:30am-4:30pm 908-788-1214    (FAX) 908-782-4068 
+			 Website:	 www.co.hunterdon.nj.us/ countyclerk.htm 
+				 
+			 
+					 Board of Elections 
+				 Address: 112 Broad Street, Flemington, NJ 08822  
+			 Office Hours: 8:30am-4:30pm 908-788-1190   (FAX) 908-806-4686 
+			 Website:	 https://nj-hunterdoncounty.civicplus.com/240/Board-of-Elections 
+				 
+		   
+         
+       
+          
+    
+    
+     
+       
+         
+         Mercer County
+          
+       
+       
+         
+		   
+			 
+					 Superintendent of Elections/Commissioner of Registration 
+				 Walker M. Worthy 
+				 Address: 640 S. Broad Street, PO Box 8068, Trenton, NJ 08650 
+			 Office Hours: 8:00am-4:00pm 609-989-6750   (FAX) 609-989-6888 
+			 Website:	 www.mercercounty.org/ departments/superintendent-of-elections 
+				 
+			 
+					 County Clerk 
+				 Paula Sollami-Covello 
+				 Address: 209 South Broad Street, PO Box 8068, Trenton, NJ 08650 
+			 Office Hours: 8:30am-4:30pm 609-989-6494   (FAX) 609-394-8785 
+			 Website:	 www.mercercounty.org/ government/county-clerk 
+				 
+			 
+					 Board of Elections 
+				 Address: 930 Spruce St., Lawrence, NJ  08648 
+			 Office Hours: 8:30am-4:30pm 
+				  609-989-6522   (FAX) 609-278-2713 
+			 Website:	 www.mercercounty.org/ boards-commissions/board-of-elections 
+				 
+		   
+         
+       
+         
+
+     
+       
+         
+         Middlesex County
+          
+       
+       
+         
+		   
+			 
+					 Commissioner of Registration 
+				 Scott Snyder 
+				 Address: 26 Kennedy Boulevard, Suite B, East Brunswick, NJ 08816 
+			 Office Hours: 8:30am-4:15pm, Tues: 8:00am-6:30pm 732-745-3471   (FAX) 732-296-6560 
+			 Website:	 https://www.middlesexcountynj.gov/government/departments/department-of-community-services/board-of-elections 
+				 
+			 
+					 County Clerk 
+				 Nancy J. Pinkin 
+						Address: 26 Kennedy Boulevard, Suite B, East Brunswick, NJ 08816 
+				 Mailing Address: P.O. Box 1110, New Brunswick, NJ 08903-9925 
+			 Office Hours: 8:30am-4:10pm 732-745-4202   (FAX) 732-745-2170 
+			 Website:	 https://www.middlesexcountynj.gov/government/departments/department-of-community-services/office-of-county-clerk/election-services 
+				 
+			 
+					 Board of Elections 
+				 Address: 26 Kennedy Boulevard, Suite B, East Brunswick, NJ 08816 
+			 Office Hours: 8:30am-4:15pm, Tues: 8:00am-6:30pm 732-745-3471   (FAX) 732-296-6560 
+			 Website:	 https://www.middlesexcountynj.gov/government/departments/department-of-community-services/board-of-elections 
+				 
+		   
+         
+       
+          
+    
+     
+       
+         
+         Monmouth County
+          
+       
+       
+         
+		   
+			 
+					 Superintendent of Elections/Commissioner of Registration 
+				 Christopher Siciliano 
+				 Address: 300 Halls Mill Road, Freehold, NJ 07728  
+			 Office Hours: 8:30am-4:30pm 732-431-7780   (FAX) 732-431-7870 
+			  
+				 
+			 
+					 County Clerk 
+				 Christine Giordano Hanlon 
+				 Address: 300 Halls Mill Road; Freehold, NJ  07728 
+			 Office Hours: 8:30am-4:30pm 732-431-7790   (FAX) 732-409-4887 and 732-409-7566 
+			 Website:	 www.monmouthcountyvotes.com/ 
+				 
+			 
+					 Board of Elections 
+				 Address: 300 Halls Mill Road, Freehold, NJ 07728  
+			 Office Hours: 8:30am-4:30pm 732-431-7802 ext.7150   (FAX) 732-303-7648 
+			 Website:	 co.monmouth.nj.us/page.aspx?ID=897 
+				 
+		   
+         
+       
+          
+    
+    
+     
+       
+         
+         Morris County
+          
+       
+       
+         
+		   
+			 
+					 Commissioner of Registration 
+
+				 Address: Administration & Records Building, 10 Court Street, 2nd Floor, P.O. Box 900, Morristown, NJ  07963-0900 
+			 Office Hours: 8:30am-4:30pm 
+				  973-285-6715    (FAX) 973-285-5208  
+			 Website:	 elections.morriscountynj.gov 
+				 
+			 
+					 County Clerk 
+				 Ann F. Grossi 
+				 Address: Administration & Records Building, 10 Court Street, P.O. Box 315, Morristown, NJ  07963-0315 
+			 Office Hours: 8:00am-4:30pm 973-285-6066   (FAX) 973-285-5233 
+			 Website:	 www.morriscountyclerk.org 
+				 
+			 
+					 Board of Elections 
+				 Address: Administration & Records Building, 10 Court Street, 2nd Floor, P.O. Box 900, Morristown, NJ  07963-0900 
+			 Office Hours: 8:00am-4:30pm 
+				  973-285-6715    (FAX) 973-285-5208  
+			 Website:	 elections.morriscountynj.gov 
+				 
+		   
+         
+       
+         
+
+     
+       
+         
+         Ocean County
+          
+       
+       
+         
+		   
+			 
+					 Commissioner of Registration 
+				 Wyatt Earp 
+				 Address: 129 Hooper Avenue, PO Box 2006, Toms River, NJ 08754-2006 
+			 Office Hours: 8:00am-4:30pm 732-929-2167   (FAX) 732-506-5110 
+			 Website:  www.co.ocean.nj.us/electionboard 
+				 
+			 
+					 County Clerk 
+				John Catalano, Acting County Clerk 
+				 Address: Court House, P.O. Box 2191, 118 Washington Street, Toms River, NJ 08754-2191  
+			 Office Hours: 8:00am-4:30pm 732-929-2018    (FAX) 732-349-4336 
+			 Website:  www.oceancountyclerk.com 
+				 
+			 
+					 Board of Elections 
+				 Address: 129 Hooper Avenue, P.O. Box 2006, Toms River, NJ 08754-2006 
+			 Office Hours: 8:00am-4:30pm 732-929-2167   (FAX) 732-506-5110 
+			 Website:  www.co.ocean.nj.us/electionboard 
+				 
+		   
+         
+       
+          
+    
+     
+       
+         
+         Passaic County
+          
+       
+       
+         
+		   
+			 
+					 Superintendent of Elections/Commissioner of Registration 
+				 Shona Mack-Pollock 
+				 Address: 501 River Street, Suite 1, Paterson, NJ  07524 
+			 Office Hours: 8:30am-4:30pm 973-881-4515   (FAX) 973-881-1634 
+				Summer Office Hours: 8:00am-3:30pm 
+			 Website:	 https://www.passaiccountynj.org/residents/election-and-voting-information/superintendent-of-elections 
+				 
+			 
+					 County Clerk 
+				Danielle Ireland-Imhof 
+				 Address: 401 Grand Street, Room 130, Paterson, NJ 07505  
+			 Office Hours: 8:30am-4:30pm 973-881-4127   (FAX) 973-742-5744 
+			 Website:	 https://www.passaiccountynj.org/residents/election-and-voting-information/county-clerk-elections-division 
+				 
+			 
+					 Board of Elections 
+				 Address: 401 Grand Street, Room 123, Paterson, NJ 07503 
+			 Office Hours: 8:30am-4:30pm 973-881-4527   (FAX) 973-523-9121 
+			 Website:	 https://www.passaiccountynj.org/residents/election-and-voting-information/board-of-elections 
+				 
+		   
+         
+       
+          
+    
+    
+     
+       
+         
+         Salem County
+          
+       
+       
+         
+		   
+			 
+				      Commissioner of Registration 
+					Linda Dubois, Chairman of Board of Elections 
+					Address:  Fifth Street Complex, 110 Fifth St, Suite 1000, Salem, NJ 08079 
+				Office Hours:  8:30am-4:30pm 856-935-7510 ext. 8331   (FAX) 856-935-6725 
+				 
+				 
+			 
+					 County Clerk 
+					 Dale A. Cross 
+					 Address: Fifth Street Complex, 110 Fifth Street, Suite 200, Salem, NJ  08079 
+					 Office Hours: 8:30am-4:30pm 856-935-7510 Ext. 8605   (FAX) 856-935-8882  
+					 Website:  salemcountyclerk.org 
+				 
+			 
+					 Board of Elections 
+					Linda Dubois, Chairman 
+					 Address: Fifth Street Complex, 110 Fifth St, Suite 1000, Salem, NJ 08079 
+					 Office Hours: 8:30am-4:30pm 856-935-7510 ext. 8329 & 8330   (FAX) 856-935-6725  
+					 Website:  elections.salemcountynj.gov 
+				 
+		   
+         
+       
+         
+
+     
+       
+         
+         Somerset County
+          
+       
+       
+         
+		   
+			 
+					 Commissioner of Registration 
+				 Anthony J. De Cicco 
+				 Address: 20 Grove Street, P.O. Box 3000, Somerville, NJ  08876-9977 
+			 Office Hours: 8:30am-4:30pm 908-231-7084   (FAX) 908-231-9465  
+			 Website:  www.co.somerset.nj.us/elections/ 
+				 
+			 
+					 County Clerk 
+				Steve Peter  
+				 Address: 20 Grove Street, P.O. Box 3000, Somerville, NJ 08876-1262   
+			 Office Hours: 8:15am-4:00pm 908-231-7013    (FAX) 908-575-3930  
+			 Website:  www.co.somerset.nj.us/ government/elected-officials/county-clerk 
+				 
+			 
+					 Board of Elections 
+				 Address: Administration Building, 20 Grove Street, P.O. Box 3000, Somerville, NJ 08876-1262 
+			 Office Hours: 8:30am-4:00pm 908-231-7084   (FAX) 908-231-9465 
+			 Website:  www.co.somerset.nj.us/elections/ 
+				 
+		   
+         
+       
+          
+    
+     
+       
+         
+         Sussex County
+          
+       
+       
+         
+		   
+			 
+					 Commissioner of Registration 
+				 Gerard Scanlan 
+				 Address: 83 Spring Street, Suite 305, Newton, NJ 07860-2080 
+			 Office Hours: 8:00am-4:00pm 973-579-0950 (FAX) 973-579-0955  
+			 Website:  https://www.sussex.nj.us/301/Board-of-Elections 
+				 
+			 
+					 County Clerk 
+				 Jeff Parrott  
+				 Address: 83 Spring Street, Suite 304, Newton, NJ 07860-2080 
+			 Office Hours: Weekdays: 8:00am-4:00pm, every 1st Monday 8:00am-6:00pm 973-579-0900    (FAX) 973-383-7493 
+			 Website:  www.sussexcountyclerk.org 
+				 
+			 
+					 Board of Elections 
+				 Address: 83 Spring Street, Suite 305, Newton, NJ 07860-2080 
+			 Office Hours: 8:00am-4:00pm 973-579-0950   (FAX) 973-579-0955 
+			 Website:  https://www.sussex.nj.us/301/Board-of-Elections 
+				 
+		   
+         
+       
+          
+    
+    
+     
+       
+         
+         Union County
+          
+       
+       
+         
+		   
+			 
+					 Commissioner of Registration 
+				 James Foerst, Esq 
+				 Address: 271 North Broad Street, Elizabeth, NJ 07208 
+			 Office Hours: 8:00am-4:00pm 908-527-4123   (FAX) 908-527-4127 
+			 Website:  ucnj.org/board-of-elections/ 
+				 
+			 
+					 County Clerk 
+				 Joanne Rajoppi  
+				 Address: 2 Broad Street, Room 113, Elizabeth, NJ 07201-2299  
+			 Office Hours: 8:30am-4:30pm 908-527-4996/4997   (FAX) 908-558-2589 
+			 Website:  ucnj.org/county-clerk/ 
+				 
+			 
+					 Board of Elections 
+				 Address: 271 North Broad Street, Elizabeth, NJ 07208 
+			 Office Hours: 8:00am-4:00pm 908-527-4123   (FAX) 908-527-4127 
+			 Website:  ucnj.org/board-of-elections/ 
+				 
+		   
+         
+       
+         
+
+     
+       
+         
+         Warren County
+          
+       
+       
+         
+		   
+			 
+					 Commissioner of Registration   
+					Robert Stead 
+				 Address: Cummins Building, 202 Mansfield Street, Belvidere, NJ  07823 
+			 Office Hours: Office Hours: 8:00am-4:30pm 908-475-6313   (FAX) 908-475-6221 
+			 Website:  https://www.warrencountyvotes.com/ 
+				 
+			 
+					 County Clerk 
+				 Holly Mackey 
+				 Address: Court House, 413 Second Street, Belvidere, NJ 07823-1500  
+			 Office Hours: 8:00am-4:30pm 908-475-6211   (FAX) 908-475-6208 
+			 Website:  https://www.warrencountyvotes.com/elections/county-clerk 
+				 
+			 
+					 Board of Elections 
+				 Address: Cummins Building, 202 Mansfield Street, Belvidere, NJ  07823 
+			 Office Hours: 8:00am-4:30pm 908-475-6313   (FAX) 908-475-6221 
+			 Website:  https://www.warrencountyvotes.com/ 
+				 
+		      
+         
+       
+          
+   
+
+
+
+ 
+ 
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+	
+	
+ 
+ 
+
+	
+
+
+
+
+
+
+
+
+
+
+ 
+		   
+		 
+
+		 
+	 
+			 
+ 
+	 Voter Information Portal 	
+	 3 Ways To Vote 
+	 Vote-By-Mail 
+	 Early Voting 
+	 Polling Location 
+	 Secure Drop Box Locations 
+	 Track My Ballot 
+	 Register to Vote! 
+	 Am I Registered? 
+	 Voter Education Videos 
+	 Election Results 
+	 Safe Secure Elections 
+	 Frequently Asked Questions 
+	 County Election Officials 	
+	 Military and Overseas Voting 
+	 Student Registration & Voting 
+	 Voter Rights and Accessibility 
+	 Additional Forms 
+	 Be A Poll Worker 
+	 NJ Votes Information Sign-Up 
+	 Printable Flyers & Publications 
+ 
+
+
+   
+    
+
+  	
+			 
+
+ 
+
+	 
+	 Download the Mobile App 
+	 Download the NJ Elections Mobile App on  Apple  or  Google Play  
+
+       
+  
+
+
+
+
+
+
+	 
+		 	
+    
+	 	
+ 
+ 
+ 
+
+ 
+
+ 
+		  
+			 
+				 
+					 Department of State 
+
+					 
+							 
+								 Office of the Secretary 
+									 
+									 About the Secretary 
+									 Invite the Secretary 
+									 
+									 Jersey Civic Engage 	
+									 
+									 NJ Ballot Bowl 
+									 Vote for Valor 
+									 
+									 
+									 
+								 
+							 
+
+							 
+								 Department of State Home 
+									 
+									 Directory 
+									 DOS Legal Notices 
+									 Press Releases 	
+									 Grant Information 	
+									 Employment Opportunities 	
+									 NJ Flag Status 	
+									 Commemorative Dates 
+									 Pay-to-Play Ordinances 
+									 Certified Civil Celebrants 
+									 Will Registry 	
+									 Language Access Plan 	
+									 Statutes & Rules 	
+									 Statewide Legal Notices 	
+									 
+								 
+							 
+
+							 
+								 Business & Economic Development 
+									 
+									 NJ Business Action Center 
+									 Business Support 
+									 Small Business 
+									 Mid-Large Business 	
+									 Exports 
+									 Cannabis Training Academy 	
+									 Planning Advocates 
+									 NJ Division of Travel & Tourism 
+									 Non-Profit Portal 
+									 
+								 
+							 
+
+							 
+								 Civic Engagement 
+									 
+									 NJ Division of Elections 
+									 NJ Voter Information Portal 
+									 Jersey Civic Engage 
+									 NJ Faith Action Center 
+									 Volunteer and National Service 
+									 AmeriCorps 
+									 Senior Corps 
+									 NJ Center for Hispanic Policy, Research and Development 
+									
+									 
+								 
+							 
+
+							 
+								 Arts & Culture 
+									 
+									 NJ State Museum 
+									 NJ Council on the Arts 
+									 NJ State Archives 
+									 NJ Historical Commission  
+									 NJ Cultural Trust 
+									 Patriots Theater at the War Memorial 
+									 NJ Martin Luther King, Jr. Commemorative Commission 
+									 NJ Asian American Pacific Islander Commission 	
+									 NJ Commission on American Indian Affairs 
+									 NJ-India Commission 
+									 NJ-Israel Commission 
+									 NJ Puerto Rico Commission 
+									 NJ Ireland Trade Commission 		
+									 NJ Hellenic American Heritage Commission 
+									 Cultural Heritage Commissions 
+									 
+								 
+							 
+	
+							 
+								 Information 
+									 
+									 Information and Resources Guide 
+									
+									 
+								 
+							 
+						
+						
+					 
+				 
+				 
+					 Statewide 
+					 
+						 Governor Mikie Sherrill 
+						 Shirley U. Emehelu, Acting Secretary of State  
+						 NJ Home 
+						 Services A to Z 
+						 Departments/Agencies 
+						 FAQs 
+						 Contact Us 
+						 Privacy Notice 
+						 Legal Statement & Disclaimers 
+						 Accessibility Statement 
+					 
+					 
+				 
+			 
+		 
+	 
+	
+	
+	
+
+
+ 
+ 
+
+		 
+		  
+			 
+				 
+					 
+					  
+				 
+				 
+					 
+					 
+				<!-- Hide from old browsers
+				today=new Date();
+				y0=today.getFullYear();
+				// end hiding --->
+				 
+				Copyright © NJ Department of State, 2001- 
+  			<!--- Hide from old browsers
+   			document.write(y0);
+  			// end hiding --->
+				   
+				 NJ Division of Elections 
+				Mailing Address 
+				NJ Division of Elections, P.O. Box 304, Trenton, NJ 08625-0304 
+				 
+				 Office Address 
+				225 West State Street, 1st Floor, Trenton, NJ 08608 
+				Tel: 609-292-3760, 609-789-0124   Fax: 609-777-1280  
+					Email:   nj.elections@sos.nj.gov 
+				 
+				 Voting Information & Assistance 
+				1-877-NJ-VOTER (1-877-658-6837) 
+				 
+				 TTY/TDD  609-292-0034 
+				This site is maintained by New Jersey Department of State
+					
+				 	
+					
+				 
+			 
+		 
+			
+			
+ 
+         
+            ttd_dom_ready( function() {
+                if (typeof TTDUniversalPixelApi === 'function') {
+                    var universalPixelApi = new TTDUniversalPixelApi();
+                    universalPixelApi.init("egol4o0", ["l2ipv5a"], "https://insight.adsrvr.org/track/up");
+                }
+            });
+         
+			
+	 
+
+ 
+ 
+
+ 
+
+
+ 
+
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 
+   
+   
+ 
+
+ 
+   
+ 
+
+ 	
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+ 
+
+ 
+
+ 
+	$(document).ready(function() {
+		$('figure.highlight pre code').each(function(i, block) {
+			hljs.highlightBlock(block);
+		});
+	});
+ 
+	
+		 Back to top 
+	
+ 
+ $(window).scroll(function () {
+		if ($(this).scrollTop() > 50) {
+			$('#back-to-top').fadeIn();
+		} else {
+			$('#back-to-top').fadeOut();
+		}
+	});
+	// scroll body to 0px on click
+	$('#back-to-top').click(function () {
+		$('#back-to-top').tooltip('hide');
+		$('body,html').animate({
+			scrollTop: 0
+		}, 800);
+		return false;
+	});
+ 	
+	
+ 
+ 
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '7240295202744682');
+fbq('track', 'PageView');
+ 
+ 
+ 
+	
+
+ 	
+ 	
+ 
+
+
+ 

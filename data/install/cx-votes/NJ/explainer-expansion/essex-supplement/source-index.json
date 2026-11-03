@@ -1,0 +1,50 @@
+{
+  "packetPath": "ballot-input/nj.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+      "finalUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+      "rawPath": "sources/3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3.source",
+      "rawHash": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3",
+      "textPath": "sources/58948cab8ae4eef3a414eb2972cabbe1427d87b80cb59f5da763c071cf61a0f7.txt",
+      "textSha256": "58948cab8ae4eef3a414eb2972cabbe1427d87b80cb59f5da763c071cf61a0f7",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-essex-2026:fairfield-open-space",
+        "nj-essex-2026:west-essex-bond-1",
+        "nj-essex-2026:west-essex-bond-2"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.nj.gov/state/elections/vote-county-election-officials.shtml",
+      "finalUrl": "https://www.nj.gov/state/elections/vote-county-election-officials.shtml",
+      "rawPath": "sources/37205d5a858944c35925dfb0bd1d77380510a1987c0df7d9a51904d63db6895b.html",
+      "rawHash": "37205d5a858944c35925dfb0bd1d77380510a1987c0df7d9a51904d63db6895b",
+      "textPath": "sources/b9dd88703b6c76781a0fde0af9e318ba286dc44dae70bd25920fb93d5d363983.txt",
+      "textSha256": "b9dd88703b6c76781a0fde0af9e318ba286dc44dae70bd25920fb93d5d363983",
+      "sourceFormat": "ORIGINAL_HTML_BYTES_AUTHORITY_LINKS",
+      "contestIds": [
+        "nj-essex-2026:fairfield-open-space",
+        "nj-essex-2026:west-essex-bond-1",
+        "nj-essex-2026:west-essex-bond-2"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.essexclerk.com/Services/30",
+      "finalUrl": "https://www.essexclerk.com/Services/30",
+      "rawPath": "sources/9cb349db5f655439855af54164d04f380e798c01b63a775706c7833cc196d153.html",
+      "rawHash": "9cb349db5f655439855af54164d04f380e798c01b63a775706c7833cc196d153",
+      "textPath": "sources/aff4f2e69ca6dc25e837452e19c385d30b422377c7b5d43aa65ad26bfd34bd40.txt",
+      "textSha256": "aff4f2e69ca6dc25e837452e19c385d30b422377c7b5d43aa65ad26bfd34bd40",
+      "sourceFormat": "ORIGINAL_HTML_BYTES_AUTHORITY_LINKS",
+      "contestIds": [
+        "nj-essex-2026:fairfield-open-space",
+        "nj-essex-2026:west-essex-bond-1",
+        "nj-essex-2026:west-essex-bond-2"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

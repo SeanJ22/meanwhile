@@ -1,0 +1,172 @@
+{
+  "ballots": {
+    "NJ:nj-2026-11-03": {
+      "election": {
+        "id": "nj-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NJ"
+      },
+      "contests": [
+        {
+          "id": "nj-essex-2026:fairfield-open-space",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
+          "divisionVintage": "2023",
+          "title": "Fairfield Township — open-space funding increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+            "sourceOrg": "Essex County Clerk — complete current2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:21:07.851848+00:00",
+            "verifiedAt": "2026-11-03T09:27:26.864373+00:00",
+            "quote": "Shall the Mayor and Council of the Township of Fairfield, within 90 days of the passing of this municipal question, adopt an ordinance increasing the funding of the Open Space trust Fund which shall have the following provisions: A. The Open Space Trust Fund shall be increased through the collection of local property taxes in the amount of two (2) cents per hundred dollars of assessed value and the funds shall be designated solely for the purchase and development of property or easements within the Township of Fairfield for active and passive recreation, for conservation purposes, and for maintenance and replacement of active and passive recreation. No other provision of the Open Space Trust Fund will be altered by this amendment."
+          }
+        },
+        {
+          "id": "nj-essex-2026:west-essex-bond-1",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
+          "divisionVintage": "2023",
+          "title": "West Essex Regional School District — Bond Proposal Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+            "sourceOrg": "Essex County Clerk — complete current2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:21:07.851848+00:00",
+            "verifiedAt": "2026-11-03T09:27:26.864373+00:00",
+            "quote": "The Board of Education of the West Essex Regional School District in the County of Essex, New Jersey (the \"Board\") is authorized to (a) undertake various improvements, renovations, and upgrades at West Essex High School, including but not limited to the construction of a two-story addition and a new security vestibule, renovations to the Media Center, partial window replacement, structural upgrades, and various HVAC upgrades, including acquisition and installation of fixtures, equipment, and any site work; (b) undertake various improvements, renovations, and upgrades at West Essex Middle School, including but not limited to a new security vestibule, the removal of an existing concrete trellis, various renovations to the cafeteria courtyard, the installation of a turf field, upgrades to the athletic field, athletic lighting upgrades, and drainage improvements, various renovations to the auditorium, and various HVAC upgrades, including acquisition and installation of fixtures, equipment, and any site work; (c) appropriate $41,926,384 for such improvements; and (d) issue bonds in an amount not to exceed $41,926,384. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $24,312,507 (consisting of $12,477,217 for West Essex High School and $11,835,290 for West Essex Middle School). The projects include $17,623,877 (consisting of $17,623,877 for West Essex High School and $0 for West Essex Middle School) for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 1?"
+          }
+        },
+        {
+          "id": "nj-essex-2026:west-essex-bond-2",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
+          "divisionVintage": "2023",
+          "title": "West Essex Regional School District — Bond Proposal Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+            "sourceOrg": "Essex County Clerk — complete current2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:21:07.851848+00:00",
+            "verifiedAt": "2026-11-03T09:27:26.864373+00:00",
+            "quote": "(Bond Proposal Question No. 2 will only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election.) The Board of Education of the West Essex Regional School District in the County of Essex, New Jersey (the :Board\") is authorized to (a) undertake various improvements, renovations, and upgrades at West Essex High School, including but not limited to HVAC and mechanical upgrades, upgrades to the athletic field, upgrades to the existing football field bleachers and press box, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work; (b) undertake various improvements, renovations, and upgrades at West Essex Middle School, including but not limited to renovations to various office spaces, and upgrades to the athletic field, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work; (c) appropriate $7,493,250 for such improvements; and (d) issue bonds in an amount not to exceed $7,493,250. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $2,993,250 (consisting of $1,716,000 for West Essex High School and $1,277,250 for West Essex Middle School). The projects include $4,500,000 (consisting of $4,500,000 for West Essex High School and $0 for West Essex Middle School) for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 2?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "nj-essex-2026:fairfield-open-space#question",
+          "contestId": "nj-essex-2026:fairfield-open-space",
+          "questionText": "Shall the Mayor and Council of the Township of Fairfield, within 90 days of the passing of this municipal question, adopt an ordinance increasing the funding of the Open Space trust Fund which shall have the following provisions: A. The Open Space Trust Fund shall be increased through the collection of local property taxes in the amount of two (2) cents per hundred dollars of assessed value and the funds shall be designated solely for the purchase and development of property or easements within the Township of Fairfield for active and passive recreation, for conservation purposes, and for maintenance and replacement of active and passive recreation. No other provision of the Open Space Trust Fund will be altered by this amendment.",
+          "officialStatement": "The proposed increase in funding of the Open Space Trust Fund will be used to purchase property or easements within the Township of Fairfield for active and passive recreation, for conservation purposes, to develop the property for active and passive recreation, and for the maintenance and replacement of active and passive recreation. The additional annual tax levy for purposes of this fund would amount to $106.28 on the average property in the Township being assessed at $531,420.00.",
+          "provenance": {
+            "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+            "sourceOrg": "Essex County Clerk — complete current2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:21:07.851848+00:00",
+            "verifiedAt": "2026-11-03T09:27:26.864373+00:00",
+            "quote": "Shall the Mayor and Council of the Township of Fairfield, within 90 days of the passing of this municipal question, adopt an ordinance increasing the funding of the Open Space trust Fund which shall have the following provisions: A. The Open Space Trust Fund shall be increased through the collection of local property taxes in the amount of two (2) cents per hundred dollars of assessed value and the funds shall be designated solely for the purchase and development of property or easements within the Township of Fairfield for active and passive recreation, for conservation purposes, and for maintenance and replacement of active and passive recreation. No other provision of the Open Space Trust Fund will be altered by this amendment."
+          }
+        },
+        {
+          "id": "nj-essex-2026:west-essex-bond-1#question",
+          "contestId": "nj-essex-2026:west-essex-bond-1",
+          "questionText": "The Board of Education of the West Essex Regional School District in the County of Essex, New Jersey (the \"Board\") is authorized to (a) undertake various improvements, renovations, and upgrades at West Essex High School, including but not limited to the construction of a two-story addition and a new security vestibule, renovations to the Media Center, partial window replacement, structural upgrades, and various HVAC upgrades, including acquisition and installation of fixtures, equipment, and any site work; (b) undertake various improvements, renovations, and upgrades at West Essex Middle School, including but not limited to a new security vestibule, the removal of an existing concrete trellis, various renovations to the cafeteria courtyard, the installation of a turf field, upgrades to the athletic field, athletic lighting upgrades, and drainage improvements, various renovations to the auditorium, and various HVAC upgrades, including acquisition and installation of fixtures, equipment, and any site work; (c) appropriate $41,926,384 for such improvements; and (d) issue bonds in an amount not to exceed $41,926,384. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $24,312,507 (consisting of $12,477,217 for West Essex High School and $11,835,290 for West Essex Middle School). The projects include $17,623,877 (consisting of $17,623,877 for West Essex High School and $0 for West Essex Middle School) for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 1?",
+          "officialStatement": "At this election, the voters of the school district are being asked to consider Bond Proposal Questions No. 1 and No. 2. As set forth above, Bond Proposal Question No. 2 can only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election. If Bond Proposal Questions No. 1 and No. 2 are approved by the voters at this election, the Board of Education will be authorized to (a) undertake various improvements, renovations, and upgrades at West Essex High School, including but not limited to the construction of a two-story addition and a new security vestibule, renovations to the Media Center, partial window replacement, structural upgrades, various HVAC and mechanical upgrades, upgrades to the athletic field, upgrades to the existing football field bleachers and press box, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work; and (b) undertake various improvements, renovations, and upgrades at West Essex Middle School, including but not limited to a new security vestibule, the removal of an existing concrete trellis, various renovations to the cafeteria courtyard, the installation of a turf field, upgrades to the athletic field, athletic lighting upgrades, and drainage improvements, various renovations to the auditorium, various HVAC upgrades, and upgrades to the athletic field, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work. The total cost for the projects will be $49,419,634, and the Board of Education will be authorized to issue bonds in an amount not to exceed $49,419,634. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $27,305,757 (consisting of $14,193,217 for West Essex High School and $13,112,540 for West Essex Middle School). The projects include $22,123,877 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election.",
+          "provenance": {
+            "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+            "sourceOrg": "Essex County Clerk — complete current2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:21:07.851848+00:00",
+            "verifiedAt": "2026-11-03T09:27:26.864373+00:00",
+            "quote": "The Board of Education of the West Essex Regional School District in the County of Essex, New Jersey (the \"Board\") is authorized to (a) undertake various improvements, renovations, and upgrades at West Essex High School, including but not limited to the construction of a two-story addition and a new security vestibule, renovations to the Media Center, partial window replacement, structural upgrades, and various HVAC upgrades, including acquisition and installation of fixtures, equipment, and any site work; (b) undertake various improvements, renovations, and upgrades at West Essex Middle School, including but not limited to a new security vestibule, the removal of an existing concrete trellis, various renovations to the cafeteria courtyard, the installation of a turf field, upgrades to the athletic field, athletic lighting upgrades, and drainage improvements, various renovations to the auditorium, and various HVAC upgrades, including acquisition and installation of fixtures, equipment, and any site work; (c) appropriate $41,926,384 for such improvements; and (d) issue bonds in an amount not to exceed $41,926,384. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $24,312,507 (consisting of $12,477,217 for West Essex High School and $11,835,290 for West Essex Middle School). The projects include $17,623,877 (consisting of $17,623,877 for West Essex High School and $0 for West Essex Middle School) for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 1?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "nj-essex-2026:west-essex-bond-2#question",
+          "contestId": "nj-essex-2026:west-essex-bond-2",
+          "questionText": "(Bond Proposal Question No. 2 will only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election.) The Board of Education of the West Essex Regional School District in the County of Essex, New Jersey (the :Board\") is authorized to (a) undertake various improvements, renovations, and upgrades at West Essex High School, including but not limited to HVAC and mechanical upgrades, upgrades to the athletic field, upgrades to the existing football field bleachers and press box, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work; (b) undertake various improvements, renovations, and upgrades at West Essex Middle School, including but not limited to renovations to various office spaces, and upgrades to the athletic field, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work; (c) appropriate $7,493,250 for such improvements; and (d) issue bonds in an amount not to exceed $7,493,250. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $2,993,250 (consisting of $1,716,000 for West Essex High School and $1,277,250 for West Essex Middle School). The projects include $4,500,000 (consisting of $4,500,000 for West Essex High School and $0 for West Essex Middle School) for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 2?",
+          "officialStatement": "At this election, the voters of the school district are being asked to consider Bond Proposal Questions No. 1 and No. 2. As set forth above, Bond Proposal Question No. 2 can only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election. If Bond Proposal Questions No. 1 and No. 2 are approved by the voters at this election, the Board of Education will be authorized to (a) undertake various improvements, renovations, and upgrades at West Essex High School, including but not limited to the construction of a two-story addition and a new security vestibule, renovations to the Media Center, partial window replacement, structural upgrades, various HVAC and mechanical upgrades, upgrades to the athletic field, upgrades to the existing football field bleachers and press box, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work; and (b) undertake various improvements, renovations, and upgrades at West Essex Middle School, including but not limited to a new security vestibule, the removal of an existing concrete trellis, various renovations to the cafeteria courtyard, the installation of a turf field, upgrades to the athletic field, athletic lighting upgrades, and drainage improvements, various renovations to the auditorium, various HVAC upgrades, and upgrades to the athletic field, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work. The total cost for the projects will be $49,419,634, and the Board of Education will be authorized to issue bonds in an amount not to exceed $49,419,634. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $27,305,757 (consisting of $14,193,217 for West Essex High School and $13,112,540 for West Essex Middle School). The projects include $22,123,877 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election.",
+          "provenance": {
+            "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+            "sourceOrg": "Essex County Clerk — complete current2026 General Election sample ballot master",
+            "collectedAt": "2026-11-03T09:21:07.851848+00:00",
+            "verifiedAt": "2026-11-03T09:27:26.864373+00:00",
+            "quote": "(Bond Proposal Question No. 2 will only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election.) The Board of Education of the West Essex Regional School District in the County of Essex, New Jersey (the :Board\") is authorized to (a) undertake various improvements, renovations, and upgrades at West Essex High School, including but not limited to HVAC and mechanical upgrades, upgrades to the athletic field, upgrades to the existing football field bleachers and press box, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work; (b) undertake various improvements, renovations, and upgrades at West Essex Middle School, including but not limited to renovations to various office spaces, and upgrades to the athletic field, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work; (c) appropriate $7,493,250 for such improvements; and (d) issue bonds in an amount not to exceed $7,493,250. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $2,993,250 (consisting of $1,716,000 for West Essex High School and $1,277,250 for West Essex Middle School). The projects include $4,500,000 (consisting of $4,500,000 for West Essex High School and $0 for West Essex Middle School) for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 2?"
+          },
+          "officialNumber": "2"
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nj-essex-2026:fairfield-open-space",
+          "whatItDoes": "Calls for Fairfield’s Mayor and Council to adopt an ordinance within 90 days of voter approval increasing the Open Space Trust Fund’s property-tax funding by 2 cents per $100 of assessed value. The additional money would be used only to purchase and develop property or easements in Fairfield for active and passive recreation or conservation, and for recreation maintenance and replacement work; other trust-fund provisions would remain unchanged. The ballot estimates an additional $106.28 in annual tax for a property assessed at the township average of $531,420.",
+          "yesMeans": "Vote in favor of the proposed open-space funding increase and ordinance with these uses and the 90-day adoption deadline.",
+          "noMeans": "Vote against this proposed open-space funding increase.",
+          "parts": [],
+          "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+          "sourceHash": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:27:26.864373+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-essex-2026:west-essex-bond-1",
+          "whatItDoes": "Authorizes the West Essex Regional school board to spend $41,926,384 and issue up to that amount in bonds for improvements at its high school and middle school. The high-school work includes a two-story addition, a new security entrance, Media Center renovations, some window replacements, structural work and heating, ventilation and air-conditioning upgrades. Middle-school work includes a new security entrance, removal of a concrete trellis, cafeteria-courtyard renovations, a turf field, athletic-field and lighting upgrades, drainage work, auditorium renovations and heating, ventilation and air-conditioning upgrades, along with equipment and site work. The ballot lists $24,312,507 of eligible project costs for state aid and $17,623,877 of costs beyond state facility standards or otherwise ineligible for support. State aid would be calculated at 40% of annual debt payments associated with the eligible costs. The board could transfer money among projects approved at this election. Question 2 asks separately for another $7,493,250 and can take effect only if Question 1 also passes.",
+          "yesMeans": "Approve the $41,926,384 project authorization and up to $41,926,384 in bonds for Question 1.",
+          "noMeans": "Reject Question 1’s project and borrowing authorization; Question 2 could not take effect even if voters approve it.",
+          "parts": [],
+          "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+          "sourceHash": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:27:26.864373+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-essex-2026:west-essex-bond-2",
+          "whatItDoes": "Authorizes an additional $7,493,250 in West Essex Regional school improvements and up to that amount in bonds, but only if voters also approve Question 1 at this election. High-school work includes heating, ventilation, air-conditioning and mechanical upgrades, athletic-field work, improvements to the football-field bleachers and press box, and replacement of some interior and exterior doors and hardware. Middle-school work includes office renovations, athletic-field upgrades, and replacement of some interior and exterior doors and hardware, along with equipment and site work. The ballot lists $2,993,250 of eligible project costs for state aid and $4,500,000 of costs beyond state facility standards or otherwise ineligible for support. State aid would be calculated at 40% of annual debt payments associated with the eligible costs. The board could transfer money among projects approved at this election. If both questions pass, their combined project cost and maximum bond authorization would be $49,419,634.",
+          "yesMeans": "Approve Question 2’s additional projects and up to $7,493,250 in bonds, effective only if Question 1 also passes.",
+          "noMeans": "Reject the additional projects and borrowing in Question 2; this would not itself reject Question 1.",
+          "parts": [],
+          "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+          "sourceHash": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:27:26.864373+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:27:26.864373+00:00",
+    "reviewedBy": "CX-VOTES completeEssexcounty current measureinventory and3neutral questionexplanations",
+    "sources": [
+      {
+        "requestedUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+        "finalUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+        "httpStatus": 200,
+        "rawHash": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3",
+        "retrievedAt": "2026-11-03T09:21:07.851848+00:00",
+        "publisher": "Essex County Clerk, New Jersey — official2026 General Election complete sample ballot master",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete native29page countywide current Nov3,2026 samplemaster. Three unique questions (WestEssex two bond questions repeated across four municipalities, Fairfieldone), full printed questions/explanatory statements/choices bounded by coordinates and visuallychecked. Official NJ.gov county-election-officials directory expressly links essexclerk.com."
+      }
+    ]
+  }
+}

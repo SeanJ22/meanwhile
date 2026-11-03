@@ -1,0 +1,18 @@
+{
+  "state": "NJ",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "513d9b2f623de84c5df3a0b339507b83ddb0255d5024e0b4a47109ea7f113ccc",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Complete current29page county master covers all22Essexmunicipalities. Full pages inspected for substantive question headings; WestEssex2schoolquestions repeat onpages9,10,22,25 and Fairfieldmunicipal question onlypage10. No statewideNJ denominator assertion.",
+    "NativeoriginalPDF retained; complete English question and full official explanatory statement isolated by page coordinates and visually checked, including printedYes/No choices. Only whitespace and end-of-line hyphenation normalized.",
+    "WestEssexQ1amount41,926,384; eligible24,312,507; otherwiseineligible17,623,877; stateaid40%of annualdebtservice oneligiblecosts. Q2amount7,493,250; eligible2,993,250; otherwiseineligible4,500,000; sameaidbasis; combined49,419,634 applies ifbothpass.",
+    "Q2requiresQ1at sameelection. Q1containsnoQ2approvalcondition. Project lists and boardtransferauthority retained; no futureindividualtaxestimate invented.",
+    "Fairfieldadditional2centsper100assessed,90dayordinanceadoption,purposessolelylisted,otherprovisionsunchanged,official106.28annualexampleat531,420assessment preserved. No unspecified sunset or formalbinding/advisoryclassification inferred.",
+    "Actual stateNJ.gov countyofficialsHTML expressly links exactClerkdomain; nativecurrentClerkpage directlylinks complete2026master.",
+    "ExactheldNJkey/election and actualexistingregistered EssexFairfieldcousub3401322385 and WestEssexregional secondarydistrict3417460 retained; CumberlandFairfield excluded.",
+    "Existing contract,quote,hash,division checks and ordinary checkAuthority/admission/reader attachment pass. Full-current-ballot preservation/publication replay root-owned."
+  ]
+}

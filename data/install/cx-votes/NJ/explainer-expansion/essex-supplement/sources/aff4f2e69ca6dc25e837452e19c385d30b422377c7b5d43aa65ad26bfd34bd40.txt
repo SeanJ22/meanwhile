@@ -1,0 +1,1057 @@
+
+ 
+ 
+
+     
+     
+     
+
+     The Essex County Clerk's Office - Sample Ballots 
+
+     
+     
+     
+     
+     
+     
+     
+     
+
+     
+     
+     
+     
+     
+
+     
+     
+     
+     
+     
+     
+     
+
+     
+
+     
+     
+     
+     
+
+     
+     
+
+     
+
+     
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+            display: none !important;
+        }
+     
+     
+
+     
+ 
+ 
+ 
+ 
+
+     
+     
+    
+
+     
+     
+     
+     
+ 
+ 
+ 
+ 
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+     
+
+    
+ 
+
+     
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-1555513-46', 'auto');
+        ga('send', 'pageview');
+     
+ 
+ 
+
+     
+     
+
+    
+
+       
+
+    
+     
+         
+             
+                 
+                    
+
+ 
+
+         
+             [{"Title":"General Election Results Click Here. Polls are open from 6:00 am to 8 pm. ","SiteLink":"https://results.enr.clarityelections.com/NJ/Essex/127486/","SiteTarget":"_blank","CSSClass":"ticker-attention"}] 
+             window.__siteTickerUrl = "/Home/GetTickerData"; 
+             
+                 
+                     
+                         
+                         
+                     
+                 
+             
+             
+             
+                 
+                     
+                         
+                             
+                                 
+                             
+                         
+                         (973) 621.4920 
+                     
+                 
+                 
+                     
+                         
+                             
+                                 
+                             
+                         
+                         Translate Website 
+                     
+                 
+                 
+                     
+                         
+                             
+                         
+                     
+                     
+                         
+                             
+                         
+                     
+                 
+             
+             
+         
+         
+         
+         
+         
+             
+                 
+                     
+                         
+                             Toggle navigation 
+                             
+                             
+                             
+                         
+                         
+                             Essex Clerk 
+                             Essex Clerk County's Office 
+                         
+                     
+                     
+                         
+                             
+                                 Essex County Clerk's Office 
+                                 
+                                     
+                                 
+                             
+                         
+                         
+                             Scroll down 
+                         
+                         
+                         
+                             
+                                 Search 
+                                 
+                                     
+                                     
+                                         Search 
+                                     
+                                 
+                             
+                             Home 
+
+                             
+                                 Services 
+                                 
+
+                                     
+                                         Ceremonies 
+                                         
+                                             
+                                                 Oaths of Office 
+                                             
+                                             
+                                                 Weddings 
+                                             
+                                         
+                                     
+                                    
+                                     
+                                         Identification Services 
+                                         
+                                             
+                                                 Essex County Resident ID 
+                                             
+                                             
+                                                 Gold Star ID Card 
+                                             
+                                             
+                                                 Senior Citizen Courtesy Identification Card 
+                                             
+                                             
+                                                 Youth Resident ID 
+                                             
+                                         
+                                     
+                                     
+                                         Passport Services 
+                                         
+                                             
+                                                 Expedited Service 
+                                             
+                                             
+                                                 New Passport 
+                                             
+                                             
+                                                 Renew Passport 
+                                             
+                                         
+                                     
+                                     
+                                         Records Services 
+                                         
+                                             
+                                                 Business Trade Names 
+                                             
+                                             
+                                                 Inheritance Tax Waivers 
+                                             
+                                             
+                                                 Liens & Judgments 
+                                             
+                                             
+                                                 Religious Corporations 
+                                             
+                                             
+                                                 Trade Name Search 
+                                             
+                                         
+                                     
+                                     
+                                         Registration Services 
+                                         
+                                             
+                                                 Notarized Document Certification 
+                                             
+                                             
+                                                 Notary Public License 
+                                             
+                                             
+                                                 Physicians License 
+                                             
+                                             
+                                                 Veterans Peddler License 
+                                             
+                                         
+                                     
+                                 
+                             
+
+                            
+                             
+                                 Election Information 
+                                 
+
+                                     
+                                         2026 General Election Early Voting Locations 
+                                     
+                                     
+                                         2026 Voter Guide 
+                                     
+                                     
+                                         Instructional Videos 
+                                     
+                                     
+                                         Election Results 
+                                     
+                                     
+                                         2026 GENERAL ELECTION SAMPLE BALLOTS 
+                                     
+                                     
+                                         Vote by Mail 
+                                     
+                                     
+                                         Voter Registration 
+                                     
+                                     
+                                         Voter Registration Lists 
+                                     
+                                    
+                                     
+                                         Second Ballot Request 
+                                     
+                                     
+                                         UPDATE!! Drop Box Locations 
+
+                                     
+                                    
+                                     
+                                         OPT OUT Form 
+                                     
+                                     
+                                         Request for Voter Registration Removal 
+                                     
+                                    
+                                 
+                             
+                             
+                             Forms 
+                             About The Clerk 
+                             Calendar 
+                             Media 
+                             Contact 
+                             
+                                 
+                                     Search     
+                                 
+                             
+                            
+                         
+                         
+                     
+                 
+             
+         
+         
+ 
+                 
+             
+             
+                
+    
+
+ 
+     
+     
+         
+             
+                 
+
+                     
+                         
+                              The Essex County  Clerk's Office 
+                         
+                     
+
+                 
+             
+         
+     
+ 
+
+             
+         
+     
+     
+         
+
+             
+                 
+                     
+
+                        
+
+                        
+
+
+ 
+
+     
+         Sample Ballots 
+     
+
+
+ 
+
+     
+
+
+ 
+
+     Sample Ballots for 2025 General Election 
+
+ 
+	 Belleville 
+	 Bloomfield 
+	 Caldwell 
+	 Cedar Grove 
+	 East Orange 
+	 Essex Fells 
+	 Fairfield 
+	 Glen Ridge 
+	 Irvington 
+	 Livingston 
+	 Maplewood 
+	 Millburn 
+	 Montclair 
+	 Newark 
+	 North Caldwell 
+	 Nutley 
+	 Orange 
+	 Roseland 
+	 South Orange 
+	 Verona 
+	 West Caldwell 
+	 West Orange 
+ 
+
+
+         
+            
+ 
+
+    
+
+     
+
+     News 
+
+    
+
+     
+         
+             
+                 
+                     
+                          Featured Article 
+                         
+                             
+                                 
+                                 
+                                 
+                                    Posted on:  {{item.NewsArticle_ReleaseDateTime | formatDateEvent}} - {{item.NewsArticle_ReleaseDateTime | formatTimeEvent}}
+                                 
+                             
+                         
+                         
+                         
+                         
+                             
+                         
+                     
+                 
+                 
+                     Load More 
+                 
+             
+         
+         
+
+             
+                 
+                     
+                         
+                         
+                             
+                         
+                         
+                         
+                         
+                             
+                         
+                     
+                 
+                 
+                     Load More 
+                 
+             
+
+         
+         
+
+             
+                 
+                     
+                         
+                         
+                             
+                                 
+                                 
+                                 Posted on: {{item.NewsArticle_ReleaseDateTime | formatDateEvent}} 
+                             
+                         
+                         
+                         
+                         
+                             
+                         
+                     
+                 
+                 
+                     Load More 
+                 
+             
+
+         
+     
+
+
+
+ 
+
+         
+
+
+ 
+
+ 
+
+
+     
+         
+            
+
+ 
+     Events 
+     
+         
+             
+                 
+                     {{item.Event_DateTime | formatDateEvent}}   - {{item.Event_EndDateTime | formatDateEvent}} 
+                    {{item.Event_Title}}
+                 
+             
+            
+         
+     
+ 
+         
+     
+
+
+     
+         
+
+         Forms 
+
+         
+             
+
+                 
+                     
+                         
+                         
+                             
+                                 Eng 
+                                 Esp 
+                                 Web 
+                             
+                         
+                     
+                 
+             
+         
+
+     
+
+
+
+    
+ 
+         
+
+
+
+
+
+                        
+
+                        
+                        
+                        
+                        
+                        
+                     
+                 
+             
+         
+         
+             
+                 
+                     
+
+                         
+
+     
+         
+            Site Map
+             
+         
+         Site Map 
+     
+
+     
+         
+
+             
+                 
+                     
+                     
+                         
+                             
+                         
+                     
+                 
+             
+
+         
+     
+
+     
+         Follow Us 
+         
+               Visit us on Facebook! 
+               Visit us on Instagram! 
+         
+     
+ 
+
+                         
+
+     
+         Contact Us 
+
+         
+             
+
+                 
+
+                 
+                     
+                 
+                 
+                     
+                 
+                 
+                     
+                 
+                 
+                     
+                 
+                 
+                     
+                         Note:  All Fields Required
+                     
+                 
+                 
+                     
+                         
+                     
+                 
+                 
+                     Submit 
+                 
+
+             
+         
+     
+
+ 
+
+                         
+                             
+     Our Offices 
+     
+         
+             
+         
+         
+             Dr. Martin Luther King Justice Building 
+             
+                 
+                    495 Martin Luther King Jr. Boulevard. 
+                    Newark,
+                    NJ 07102
+                 
+             
+             
+                 Tel:  (973) 621.4920 
+                 Email:  info@clerk.essexcountynj.org 
+             
+         
+     
+ 
+
+ 
+     
+         
+             Translate Website 
+         
+     
+ 
+
+                            
+                         
+
+                         
+                             
+                                 
+                                    © 2026 Clerk's Office  / 
+                                    
+                                 
+                             
+                               
+                         
+                     
+                 
+             
+         
+     
+     
+        (function () {
+            var addThis = document.createElement('script');
+            addThis.src = 'https://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-56ba0aed1c9bf82f';
+            addThis.async = true;
+            addThis.onerror = function () { };
+            document.body.appendChild(addThis);
+        }());
+     
+
+    
+
+    
+    
+    
+
+     
+     
+         
+             
+                 × 
+                 Resources 
+             
+             
+                 
+                     
+                         
+                             {{item.CategoryLabel}} 
+                             
+                                 {{link.Label}} 
+                             
+                         
+                     
+                 
+             
+         
+     
+ 
+    
+
+
+
+ 
+
+     
+
+         
+
+             
+
+                 × 
+
+                 Translate Website 
+
+             
+
+             
+
+
+
+
+                 
+
+                    Tap a language to translate this page. Translation is provided by Google and may not be exact.
+
+                 
+
+
+
+                 
+
+                     Popular 
+
+                         Spanish 
+                         Portuguese 
+                         Chinese (Simplified) 
+                         Chinese (Traditional) 
+                         Korean 
+                         French 
+
+
+
+                     More languages 
+
+                         Italian 
+                         Polish 
+                         Arabic 
+                         Hindi 
+                         Russian 
+                         German 
+                         Vietnamese 
+                         Haitian Creole 
+                         Filipino 
+                         Urdu 
+                         Bengali 
+
+                 
+
+
+
+
+             
+
+         
+
+     
+
+ 
+
+
+
+     
+     
+         
+             
+                 × 
+                 
+                 
+             
+             
+
+                 Date/Time:   
+                 Location:   
+                 
+                 
+                 
+                
+                 
+                     Print 
+                 
+
+             
+         
+     
+ 
+
+ 
+     
+         
+             
+                 × 
+                 
+             
+             
+
+                 
+                 
+                 Date/Time:   
+                 Location:   
+                 
+                 
+                
+                 
+                     Print 
+                 
+
+             
+         
+     
+ 
+
+
+    
+
+ 
+     
+         
+             
+                 × 
+                 Search this site 
+             
+             
+                 Find forms, services, election information, and more. 
+                 
+                     Search 
+                     
+                         
+                         
+                             
+                                 
+                                Search
+                             
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+     
+
+    
+
+    
+     
+ 
+ 
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+     
+ 
+ 
+
+     
+ 
+
+
+     
+        function googleTranslateApplyCookie() {
+            var match = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+            if (!match) {
+                return;
+            }
+
+            var parts = decodeURIComponent(match[1]).split('/').filter(function (segment) {
+                return segment.length > 0;
+            });
+
+            if (parts.length < 2) {
+                return;
+            }
+
+            var lang = parts[parts.length - 1];
+            if (!lang || lang === 'en') {
+                return;
+            }
+
+            var select = document.querySelector('.goog-te-combo');
+            if (!select || !select.options || !select.options.length) {
+                return;
+            }
+
+            var i;
+            for (i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === lang) {
+                    select.value = lang;
+                    if (document.createEvent) {
+                        var evt = document.createEvent('HTMLEvents');
+                        evt.initEvent('change', true, true);
+                        select.dispatchEvent(evt);
+                    } else if (window.jQuery) {
+                        window.jQuery(select).trigger('change');
+                    }
+                    break;
+                }
+            }
+        }
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'es,pt,zh-CN,zh-TW,ko,fr,it,pl,ar,hi,ru,de,vi,ht,tl,ur,bn',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+
+            window.setTimeout(googleTranslateApplyCookie, 100);
+            window.setTimeout(googleTranslateApplyCookie, 500);
+            window.setTimeout(googleTranslateApplyCookie, 1500);
+
+            if (window.jQuery) {
+                jQuery(document).trigger('googleTranslateReady');
+            }
+        }
+     
+
+     
+
+    
+     
+        $(document).ready(function () {
+            $('.dyn-page-content img').each(function () {
+                $(this).addClass('img-responsive');
+            });
+        });
+     
+
+
+    
+
+    
+    
+     
+        $(document).ready(function () {
+            $('.labelholder').labelholder();
+            $.getScript('/_Assets/js/social.js');
+        });
+     
+
+
+     
+     
+        (function () {
+            var adally = document.createElement('script');
+            adally.src = 'https://d2twz9av6or5hk.cloudfront.net/1.6/adally.js';
+            adally.onerror = function () { };
+            document.body.appendChild(adally);
+        }());
+     
+
+ 

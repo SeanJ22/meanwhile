@@ -1,0 +1,71 @@
+[
+  {
+    "contestId": "nj-essex-2026:fairfield-open-space",
+    "ocdId": "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
+    "registeredDivisionIndex": 214,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
+      "cousub",
+      "3401322385",
+      "Fairfield township"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "170284",
+      "nj:city:township-of-fairfield-170284",
+      "TOWNSHIP OF FAIRFIELD",
+      "TOWNSHIP",
+      214,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing WestEssexRegionalsecondaryschooldistrict GEOID3417460 for schoolbond questions, or EssexCounty FairfieldTownship cousub3401322385 for municipal question. Existing school geography not replaced by four separate municipal questions; CumberlandFairfield excluded."
+  },
+  {
+    "contestId": "nj-essex-2026:west-essex-bond-1",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
+    "registeredDivisionIndex": 1812,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
+      "scsd",
+      "3417460",
+      "West Essex Regional School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "109272",
+      "nj:school:west-essex-reg-sch-dist",
+      "WEST ESSEX REG SCH DIST",
+      "SCHOOL DISTRICT",
+      1812,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing WestEssexRegionalsecondaryschooldistrict GEOID3417460 for schoolbond questions, or EssexCounty FairfieldTownship cousub3401322385 for municipal question. Existing school geography not replaced by four separate municipal questions; CumberlandFairfield excluded."
+  },
+  {
+    "contestId": "nj-essex-2026:west-essex-bond-2",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
+    "registeredDivisionIndex": 1812,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
+      "scsd",
+      "3417460",
+      "West Essex Regional School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "109272",
+      "nj:school:west-essex-reg-sch-dist",
+      "WEST ESSEX REG SCH DIST",
+      "SCHOOL DISTRICT",
+      1812,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing WestEssexRegionalsecondaryschooldistrict GEOID3417460 for schoolbond questions, or EssexCounty FairfieldTownship cousub3401322385 for municipal question. Existing school geography not replaced by four separate municipal questions; CumberlandFairfield excluded."
+  }
+]

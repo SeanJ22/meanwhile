@@ -1,0 +1,234 @@
+{
+  "scope": "Complete current EssexCountyClerk29page official general-election sample ballot master, all22municipalities. Not allNewJersey or separate off-cycle elections.",
+  "officialSourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
+  "nativePdfSha256": "3f634fd6574f4241787f8b4196780b05f21ffdfe3cedf4a50223deb0db629bb3",
+  "nativePdfBytes": 1228658,
+  "pageCount": 29,
+  "distinctMunicipalities": 22,
+  "uniqueQuestions": 3,
+  "questionOccurrencePages": [
+    9,
+    10,
+    22,
+    25
+  ],
+  "method": "All29 native text pages scanned for publicquestion, bondproposal, interpretive/explanatory statement, shall/do-you and equivalent headings; complete question blocks on4pages visuallyread and deduplicated by actual schooldistrict/town scope. Distinct22municipalities also compared to countyClerk published sampleindex municipal list.",
+  "pages": [
+    {
+      "page": 1,
+      "printedMunicipalityStyle": "Township of Belleville",
+      "municipality": "Township of Belleville",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 2,
+      "printedMunicipalityStyle": "Township of Belleville Ward 2",
+      "municipality": "Township of Belleville",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 3,
+      "printedMunicipalityStyle": "Township of Bloomfield Ward 1",
+      "municipality": "Township of Bloomfield",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 4,
+      "printedMunicipalityStyle": "Township of Bloomfield Ward 2",
+      "municipality": "Township of Bloomfield",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 5,
+      "printedMunicipalityStyle": "Township of Bloomfield Ward 3",
+      "municipality": "Township of Bloomfield",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 6,
+      "printedMunicipalityStyle": "Borough of Caldwell",
+      "municipality": "Borough of Caldwell",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 7,
+      "printedMunicipalityStyle": "Township of Cedar Grove",
+      "municipality": "Township of Cedar Grove",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 8,
+      "printedMunicipalityStyle": "City of East Orange",
+      "municipality": "City of East Orange",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 9,
+      "printedMunicipalityStyle": "Borough of Essex Fells",
+      "municipality": "Borough of Essex Fells",
+      "currentElectionHeaderPresent": true,
+      "questionIds": [
+        "nj-essex-2026:west-essex-bond-1",
+        "nj-essex-2026:west-essex-bond-2"
+      ]
+    },
+    {
+      "page": 10,
+      "printedMunicipalityStyle": "Township of Fairfield",
+      "municipality": "Township of Fairfield",
+      "currentElectionHeaderPresent": true,
+      "questionIds": [
+        "nj-essex-2026:fairfield-open-space",
+        "nj-essex-2026:west-essex-bond-1",
+        "nj-essex-2026:west-essex-bond-2"
+      ]
+    },
+    {
+      "page": 11,
+      "printedMunicipalityStyle": "Borough of Glen Ridge",
+      "municipality": "Borough of Glen Ridge",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 12,
+      "printedMunicipalityStyle": "Township of Irvington",
+      "municipality": "Township of Irvington",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 13,
+      "printedMunicipalityStyle": "Township of Livingston",
+      "municipality": "Township of Livingston",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 14,
+      "printedMunicipalityStyle": "Township of Maplewood",
+      "municipality": "Township of Maplewood",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 15,
+      "printedMunicipalityStyle": "Township of Millburn",
+      "municipality": "Township of Millburn",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 16,
+      "printedMunicipalityStyle": "Township of Montclair CD10",
+      "municipality": "Township of Montclair",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 17,
+      "printedMunicipalityStyle": "Township of Montclair CD11",
+      "municipality": "Township of Montclair",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 18,
+      "printedMunicipalityStyle": "City of Newark CD8",
+      "municipality": "City of Newark",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 19,
+      "printedMunicipalityStyle": "City of Newark CD10 Comm 1",
+      "municipality": "City of Newark",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 20,
+      "printedMunicipalityStyle": "City of Newark CD10 Comm 2",
+      "municipality": "City of Newark",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 21,
+      "printedMunicipalityStyle": "City of Newark CD10 Comm 3",
+      "municipality": "City of Newark",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 22,
+      "printedMunicipalityStyle": "Borough of North Caldwell",
+      "municipality": "Borough of North Caldwell",
+      "currentElectionHeaderPresent": true,
+      "questionIds": [
+        "nj-essex-2026:west-essex-bond-1",
+        "nj-essex-2026:west-essex-bond-2"
+      ]
+    },
+    {
+      "page": 23,
+      "printedMunicipalityStyle": "Township of Nutley",
+      "municipality": "Township of Nutley",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 24,
+      "printedMunicipalityStyle": "City of Orange Township",
+      "municipality": "City of Orange Township",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 25,
+      "printedMunicipalityStyle": "Borough of Roseland",
+      "municipality": "Borough of Roseland",
+      "currentElectionHeaderPresent": true,
+      "questionIds": [
+        "nj-essex-2026:west-essex-bond-1",
+        "nj-essex-2026:west-essex-bond-2"
+      ]
+    },
+    {
+      "page": 26,
+      "printedMunicipalityStyle": "South Orange Village",
+      "municipality": "South Orange Village",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 27,
+      "printedMunicipalityStyle": "Township of Verona",
+      "municipality": "Township of Verona",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 28,
+      "printedMunicipalityStyle": "Township of West Caldwell",
+      "municipality": "Township of West Caldwell",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    },
+    {
+      "page": 29,
+      "printedMunicipalityStyle": "Township of West Orange",
+      "municipality": "Township of West Orange",
+      "currentElectionHeaderPresent": true,
+      "questionIds": []
+    }
+  ]
+}

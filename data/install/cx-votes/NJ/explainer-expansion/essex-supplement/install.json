@@ -1,0 +1,55 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 3,
+    "newPlainLanguageExplanations": 3,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": "OTHER_NJ_COUNTIES_LOCAL_INVENTORIES_OPEN",
+    "officialInventoryScope": "Current EssexCountyClerk29page sample master covers all22municipalities; no state-or-othercounty completeness claim."
+  },
+  "subjects": [
+    {
+      "id": "nj-essex-2026:fairfield-open-space",
+      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-essex-2026:west-essex-bond-1",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    },
+    {
+      "id": "nj-essex-2026:west-essex-bond-2",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
+      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Complete nativeofficial29pagecounty2026sampleballot PDF; full English questions and complete printed explanatory statements isolated by page/column coordinates, visually checked. Native NJ.gov authority page and ClerkPDFlink page retained.",
+  "reviewedScratchPacketSha256": "513d9b2f623de84c5df3a0b339507b83ddb0255d5024e0b4a47109ea7f113ccc",
+  "canonicalInputSha256": "fa6b4f8f2e58c379a49dd95fbf2091703900e1e379ce618533b6b4230f68474b",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "town": "Woodbridge",
+  "sourceUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10434/639262765668370000",
+  "retrievalUrl": "https://r.jina.ai/https://www.middlesexcountynj.gov/home/showpublisheddocument/10434/639262765668370000",
+  "httpStatus": 429,
+  "retrievedAt": "2026-11-03T09:29:25.240815+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "abc1e508e5909e470826788120f6f8e80e69a18c200da042684ab74b8b5d69ff",
+  "bytes": 242,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-middlesex/woodbridge.source-text.txt",
+  "method": "Complete deterministic publicreader direct-engine PDF text extraction; noReaderLM/modelcall; hash is capturedsource text, no originalPDFhashclaim.",
+  "backoff": "Batch halts additional queued requests after429/5xx. No immediate retry."
+}

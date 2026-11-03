@@ -1,0 +1,333 @@
+{
+  "packetPath": "ballot-input/nj.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10414/639262764133570000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10414/639262764133570000",
+      "rawPath": "sources/9d8c18781445d98b5d07d447504f6e493d6c5643bed44035d6ce2eca853fe057.txt",
+      "rawHash": "9d8c18781445d98b5d07d447504f6e493d6c5643bed44035d6ce2eca853fe057",
+      "textPath": "sources/9d8c18781445d98b5d07d447504f6e493d6c5643bed44035d6ce2eca853fe057.txt",
+      "textSha256": "9d8c18781445d98b5d07d447504f6e493d6c5643bed44035d6ce2eca853fe057",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "town": "Old Bridge",
+        "sourceUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10414/639262764133570000",
+        "retrievalUrl": "https://r.jina.ai/https://www.middlesexcountynj.gov/home/showpublisheddocument/10414/639262764133570000",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:29:22.191783+00:00",
+        "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+        "sha256": "9d8c18781445d98b5d07d447504f6e493d6c5643bed44035d6ce2eca853fe057",
+        "bytes": 34424,
+        "file": "sources/9d8c18781445d98b5d07d447504f6e493d6c5643bed44035d6ce2eca853fe057.txt",
+        "method": "Complete deterministic publicreader direct-engine PDF text extraction; noReaderLM/modelcall; hash is capturedsource text, no originalPDFhashclaim."
+      },
+      "contestIds": [
+        "nj-middlesex-2026:old-bridge-question"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10422/639262764150770000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10422/639262764150770000",
+      "rawPath": "sources/77883e66e3997eeac7e7b704b128b304b1d19fe15446d30b55818e083648fb4e.txt",
+      "rawHash": "77883e66e3997eeac7e7b704b128b304b1d19fe15446d30b55818e083648fb4e",
+      "textPath": "sources/77883e66e3997eeac7e7b704b128b304b1d19fe15446d30b55818e083648fb4e.txt",
+      "textSha256": "77883e66e3997eeac7e7b704b128b304b1d19fe15446d30b55818e083648fb4e",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "town": "Sayreville",
+        "sourceUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10422/639262764150770000",
+        "retrievalUrl": "https://r.jina.ai/https://www.middlesexcountynj.gov/home/showpublisheddocument/10422/639262764150770000",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:29:23.946805+00:00",
+        "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+        "sha256": "77883e66e3997eeac7e7b704b128b304b1d19fe15446d30b55818e083648fb4e",
+        "bytes": 14119,
+        "file": "sources/77883e66e3997eeac7e7b704b128b304b1d19fe15446d30b55818e083648fb4e.txt",
+        "method": "Complete deterministic publicreader direct-engine PDF text extraction; noReaderLM/modelcall; hash is capturedsource text, no originalPDFhashclaim."
+      },
+      "contestIds": [
+        "nj-middlesex-2026:sayreville-question"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/government/departments/department-of-community-services/board-of-elections/vote/sample-ballot",
+      "finalUrl": "https://www.middlesexcountynj.gov/government/departments/department-of-community-services/board-of-elections/vote/sample-ballot",
+      "rawPath": "sources/9ff0030f2f08a3da31884b2190acf7f7d1ad036695e3e564a3cfe6e159d6f0df.txt",
+      "rawHash": "9ff0030f2f08a3da31884b2190acf7f7d1ad036695e3e564a3cfe6e159d6f0df",
+      "textPath": "sources/9ff0030f2f08a3da31884b2190acf7f7d1ad036695e3e564a3cfe6e159d6f0df.txt",
+      "textSha256": "9ff0030f2f08a3da31884b2190acf7f7d1ad036695e3e564a3cfe6e159d6f0df",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "sourceUrl": "https://www.middlesexcountynj.gov/government/departments/department-of-community-services/board-of-elections/vote/sample-ballot",
+        "retrievalUrl": "https://r.jina.ai/https://www.middlesexcountynj.gov/government/departments/department-of-community-services/board-of-elections/vote/sample-ballot",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:28:10.729131+00:00",
+        "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+        "sha256": "9ff0030f2f08a3da31884b2190acf7f7d1ad036695e3e564a3cfe6e159d6f0df",
+        "bytes": 40668,
+        "file": "sources/9ff0030f2f08a3da31884b2190acf7f7d1ad036695e3e564a3cfe6e159d6f0df.txt",
+        "method": "Deterministic public reader direct engine, defaultMarkdown format preserving links; noReaderLM/modelcall, not nativeHTMLbytes."
+      },
+      "contestIds": [
+        "nj-middlesex-2026:old-bridge-question",
+        "nj-middlesex-2026:sayreville-question"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10386/639262764073330000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10386/639262764073330000",
+      "rawPath": "sources/aa4c0bc0f4afe2e058faf9ed56bd598af29ed77c3e64cbbc4e1308e71a720dfe.txt",
+      "rawHash": "aa4c0bc0f4afe2e058faf9ed56bd598af29ed77c3e64cbbc4e1308e71a720dfe",
+      "textPath": "sources/aa4c0bc0f4afe2e058faf9ed56bd598af29ed77c3e64cbbc4e1308e71a720dfe.txt",
+      "textSha256": "aa4c0bc0f4afe2e058faf9ed56bd598af29ed77c3e64cbbc4e1308e71a720dfe",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10388/639262764077630000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10388/639262764077630000",
+      "rawPath": "sources/ef2845d40e327180d749125706e57409e8a0d8a9a8dd707f430646a2bd6d167a.txt",
+      "rawHash": "ef2845d40e327180d749125706e57409e8a0d8a9a8dd707f430646a2bd6d167a",
+      "textPath": "sources/ef2845d40e327180d749125706e57409e8a0d8a9a8dd707f430646a2bd6d167a.txt",
+      "textSha256": "ef2845d40e327180d749125706e57409e8a0d8a9a8dd707f430646a2bd6d167a",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10390/639262764081970000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10390/639262764081970000",
+      "rawPath": "sources/9ebcef2e5a4653a7c6745f41a21b57ca4243b563cbe3396be63fd86280515b83.txt",
+      "rawHash": "9ebcef2e5a4653a7c6745f41a21b57ca4243b563cbe3396be63fd86280515b83",
+      "textPath": "sources/9ebcef2e5a4653a7c6745f41a21b57ca4243b563cbe3396be63fd86280515b83.txt",
+      "textSha256": "9ebcef2e5a4653a7c6745f41a21b57ca4243b563cbe3396be63fd86280515b83",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10392/639262764086070000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10392/639262764086070000",
+      "rawPath": "sources/c199d3d7c4be0a1cc6658c14bc6603f0351288f0685a23a96bb50a545db84012.txt",
+      "rawHash": "c199d3d7c4be0a1cc6658c14bc6603f0351288f0685a23a96bb50a545db84012",
+      "textPath": "sources/c199d3d7c4be0a1cc6658c14bc6603f0351288f0685a23a96bb50a545db84012.txt",
+      "textSha256": "c199d3d7c4be0a1cc6658c14bc6603f0351288f0685a23a96bb50a545db84012",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10394/639262764090400000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10394/639262764090400000",
+      "rawPath": "sources/3c84571b1a8ef7f8d83088b65d0ba077dc2f84243a4c83de04f6bd998174145e.txt",
+      "rawHash": "3c84571b1a8ef7f8d83088b65d0ba077dc2f84243a4c83de04f6bd998174145e",
+      "textPath": "sources/3c84571b1a8ef7f8d83088b65d0ba077dc2f84243a4c83de04f6bd998174145e.txt",
+      "textSha256": "3c84571b1a8ef7f8d83088b65d0ba077dc2f84243a4c83de04f6bd998174145e",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10396/639262764094500000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10396/639262764094500000",
+      "rawPath": "sources/9623c3e67dac8400d3da372adaaaf3e88874a17337331e17a28445b6de16b81c.txt",
+      "rawHash": "9623c3e67dac8400d3da372adaaaf3e88874a17337331e17a28445b6de16b81c",
+      "textPath": "sources/9623c3e67dac8400d3da372adaaaf3e88874a17337331e17a28445b6de16b81c.txt",
+      "textSha256": "9623c3e67dac8400d3da372adaaaf3e88874a17337331e17a28445b6de16b81c",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10398/639262764098830000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10398/639262764098830000",
+      "rawPath": "sources/909bd8e3ea6b9dceca981cf30f48ceb7fb3ac5fc524917377c5088ea5dc208a8.txt",
+      "rawHash": "909bd8e3ea6b9dceca981cf30f48ceb7fb3ac5fc524917377c5088ea5dc208a8",
+      "textPath": "sources/909bd8e3ea6b9dceca981cf30f48ceb7fb3ac5fc524917377c5088ea5dc208a8.txt",
+      "textSha256": "909bd8e3ea6b9dceca981cf30f48ceb7fb3ac5fc524917377c5088ea5dc208a8",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10400/639262764102600000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10400/639262764102600000",
+      "rawPath": "sources/ffeeb00851281c136b2c2e462d6785f85dc91bf6930d3cb7126aeeaabf5f6682.txt",
+      "rawHash": "ffeeb00851281c136b2c2e462d6785f85dc91bf6930d3cb7126aeeaabf5f6682",
+      "textPath": "sources/ffeeb00851281c136b2c2e462d6785f85dc91bf6930d3cb7126aeeaabf5f6682.txt",
+      "textSha256": "ffeeb00851281c136b2c2e462d6785f85dc91bf6930d3cb7126aeeaabf5f6682",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10402/639262764107600000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10402/639262764107600000",
+      "rawPath": "sources/cfa5a2d597a1316ac9b92d30cbf9f9788f736ac734af1537a14bcd431c272a36.txt",
+      "rawHash": "cfa5a2d597a1316ac9b92d30cbf9f9788f736ac734af1537a14bcd431c272a36",
+      "textPath": "sources/cfa5a2d597a1316ac9b92d30cbf9f9788f736ac734af1537a14bcd431c272a36.txt",
+      "textSha256": "cfa5a2d597a1316ac9b92d30cbf9f9788f736ac734af1537a14bcd431c272a36",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10404/639262764111030000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10404/639262764111030000",
+      "rawPath": "sources/ea96e4a5251bf722b8d3de38e41b561f5abfdcac1e332700e499b2f4d91f99aa.txt",
+      "rawHash": "ea96e4a5251bf722b8d3de38e41b561f5abfdcac1e332700e499b2f4d91f99aa",
+      "textPath": "sources/ea96e4a5251bf722b8d3de38e41b561f5abfdcac1e332700e499b2f4d91f99aa.txt",
+      "textSha256": "ea96e4a5251bf722b8d3de38e41b561f5abfdcac1e332700e499b2f4d91f99aa",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10406/639262764114800000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10406/639262764114800000",
+      "rawPath": "sources/3742694e8d7b6cac1fb0426c56f1b9a6742578f5b0d0cd400e998a8c44558f7a.txt",
+      "rawHash": "3742694e8d7b6cac1fb0426c56f1b9a6742578f5b0d0cd400e998a8c44558f7a",
+      "textPath": "sources/3742694e8d7b6cac1fb0426c56f1b9a6742578f5b0d0cd400e998a8c44558f7a.txt",
+      "textSha256": "3742694e8d7b6cac1fb0426c56f1b9a6742578f5b0d0cd400e998a8c44558f7a",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10408/639262764120300000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10408/639262764120300000",
+      "rawPath": "sources/44e182f0af2e6de383a7eb58722644979069799ff504300d88ffbbdb7268fc8b.txt",
+      "rawHash": "44e182f0af2e6de383a7eb58722644979069799ff504300d88ffbbdb7268fc8b",
+      "textPath": "sources/44e182f0af2e6de383a7eb58722644979069799ff504300d88ffbbdb7268fc8b.txt",
+      "textSha256": "44e182f0af2e6de383a7eb58722644979069799ff504300d88ffbbdb7268fc8b",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10410/639262764124470000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10410/639262764124470000",
+      "rawPath": "sources/c07c76f8f9abdeff57e30bd033423e5be58f32962203cc10e39a9bab0a229699.txt",
+      "rawHash": "c07c76f8f9abdeff57e30bd033423e5be58f32962203cc10e39a9bab0a229699",
+      "textPath": "sources/c07c76f8f9abdeff57e30bd033423e5be58f32962203cc10e39a9bab0a229699.txt",
+      "textSha256": "c07c76f8f9abdeff57e30bd033423e5be58f32962203cc10e39a9bab0a229699",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10412/639262764128930000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10412/639262764128930000",
+      "rawPath": "sources/8194a222b5f56de681627bd75cdd3a8e6e0f8adfc11ae1ad663fd32621025a3b.txt",
+      "rawHash": "8194a222b5f56de681627bd75cdd3a8e6e0f8adfc11ae1ad663fd32621025a3b",
+      "textPath": "sources/8194a222b5f56de681627bd75cdd3a8e6e0f8adfc11ae1ad663fd32621025a3b.txt",
+      "textSha256": "8194a222b5f56de681627bd75cdd3a8e6e0f8adfc11ae1ad663fd32621025a3b",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10416/639262764137770000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10416/639262764137770000",
+      "rawPath": "sources/660e425aa2751ed7a9cccfd594c18dc021abd6e87796459647459b5ab906e6b4.txt",
+      "rawHash": "660e425aa2751ed7a9cccfd594c18dc021abd6e87796459647459b5ab906e6b4",
+      "textPath": "sources/660e425aa2751ed7a9cccfd594c18dc021abd6e87796459647459b5ab906e6b4.txt",
+      "textSha256": "660e425aa2751ed7a9cccfd594c18dc021abd6e87796459647459b5ab906e6b4",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10418/639262764141530000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10418/639262764141530000",
+      "rawPath": "sources/38dd10982903c98d49b54530bfaf0b5176aa4d905d3b0a638cfcb856b708e023.txt",
+      "rawHash": "38dd10982903c98d49b54530bfaf0b5176aa4d905d3b0a638cfcb856b708e023",
+      "textPath": "sources/38dd10982903c98d49b54530bfaf0b5176aa4d905d3b0a638cfcb856b708e023.txt",
+      "textSha256": "38dd10982903c98d49b54530bfaf0b5176aa4d905d3b0a638cfcb856b708e023",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10420/639262764145330000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10420/639262764145330000",
+      "rawPath": "sources/a36b50c697daab2be322579c585b1474fa2b45b4f280e37bc9853368f3135fb7.txt",
+      "rawHash": "a36b50c697daab2be322579c585b1474fa2b45b4f280e37bc9853368f3135fb7",
+      "textPath": "sources/a36b50c697daab2be322579c585b1474fa2b45b4f280e37bc9853368f3135fb7.txt",
+      "textSha256": "a36b50c697daab2be322579c585b1474fa2b45b4f280e37bc9853368f3135fb7",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10424/639262764154930000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10424/639262764154930000",
+      "rawPath": "sources/9220185fd8820582db4a1a012c8fcc51443a591afaa6ed2887e84e747dff20f4.txt",
+      "rawHash": "9220185fd8820582db4a1a012c8fcc51443a591afaa6ed2887e84e747dff20f4",
+      "textPath": "sources/9220185fd8820582db4a1a012c8fcc51443a591afaa6ed2887e84e747dff20f4.txt",
+      "textSha256": "9220185fd8820582db4a1a012c8fcc51443a591afaa6ed2887e84e747dff20f4",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10426/639262765654600000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10426/639262765654600000",
+      "rawPath": "sources/7a2dd3d60ff9318edd9537ec706296d5879d8eef01389ba07b3c0365fa4bf2e0.txt",
+      "rawHash": "7a2dd3d60ff9318edd9537ec706296d5879d8eef01389ba07b3c0365fa4bf2e0",
+      "textPath": "sources/7a2dd3d60ff9318edd9537ec706296d5879d8eef01389ba07b3c0365fa4bf2e0.txt",
+      "textSha256": "7a2dd3d60ff9318edd9537ec706296d5879d8eef01389ba07b3c0365fa4bf2e0",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10428/639262765657570000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10428/639262765657570000",
+      "rawPath": "sources/75cca8ebe9aa0c56de9f9b4c7472b7a2453ae1c7e1609ed51b387d7b0bf84e55.txt",
+      "rawHash": "75cca8ebe9aa0c56de9f9b4c7472b7a2453ae1c7e1609ed51b387d7b0bf84e55",
+      "textPath": "sources/75cca8ebe9aa0c56de9f9b4c7472b7a2453ae1c7e1609ed51b387d7b0bf84e55.txt",
+      "textSha256": "75cca8ebe9aa0c56de9f9b4c7472b7a2453ae1c7e1609ed51b387d7b0bf84e55",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10430/639262765660570000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10430/639262765660570000",
+      "rawPath": "sources/4713356ef2722f72044874ce445edebf3c348706571158f2bc6904cdd5cba21a.txt",
+      "rawHash": "4713356ef2722f72044874ce445edebf3c348706571158f2bc6904cdd5cba21a",
+      "textPath": "sources/4713356ef2722f72044874ce445edebf3c348706571158f2bc6904cdd5cba21a.txt",
+      "textSha256": "4713356ef2722f72044874ce445edebf3c348706571158f2bc6904cdd5cba21a",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10432/639262765664600000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10432/639262765664600000",
+      "rawPath": "sources/3de0b8ebabd5b7d3f22e297cc5c5c7b2ee52dcb12f1f6b32054eeb2d15517193.txt",
+      "rawHash": "3de0b8ebabd5b7d3f22e297cc5c5c7b2ee52dcb12f1f6b32054eeb2d15517193",
+      "textPath": "sources/3de0b8ebabd5b7d3f22e297cc5c5c7b2ee52dcb12f1f6b32054eeb2d15517193.txt",
+      "textSha256": "3de0b8ebabd5b7d3f22e297cc5c5c7b2ee52dcb12f1f6b32054eeb2d15517193",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    },
+    {
+      "requestedUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10434/639262765668370000",
+      "finalUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10434/639262765668370000",
+      "rawPath": "sources/9586d47cc2dc442f99e049f84875715a4fafeb96f77ec8c4b134f7dd67d620d2.txt",
+      "rawHash": "9586d47cc2dc442f99e049f84875715a4fafeb96f77ec8c4b134f7dd67d620d2",
+      "textPath": "sources/9586d47cc2dc442f99e049f84875715a4fafeb96f77ec8c4b134f7dd67d620d2.txt",
+      "textSha256": "9586d47cc2dc442f99e049f84875715a4fafeb96f77ec8c4b134f7dd67d620d2",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "COMPLETE_COUNTY_SAMPLE_DIRECTORY_INVENTORY",
+      "contestIds": []
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

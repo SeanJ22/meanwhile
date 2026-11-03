@@ -1,0 +1,14 @@
+{
+  "scope": "MiddlesexCounty2new measures/explainers. Complete current25municipaldirectory captured as source text; other NJcounties remainopen except separatelyauditedBergen/Essex.",
+  "officialCountyIndexUrl": "https://www.middlesexcountynj.gov/government/departments/department-of-community-services/board-of-elections/vote/sample-ballot",
+  "officialCountyIndexSourcePath": "sources/9ff0030f2f08a3da31884b2190acf7f7d1ad036695e3e564a3cfe6e159d6f0df.txt",
+  "officialCountyIndexCaptureMetadataPath": "sources/ada4ade9082238c7b55b60bca8b33145657e322ad63bb86c6be280538724150a.json",
+  "stateGovernmentAuthorityUrl": "https://www.nj.gov/state/elections/vote-county-election-officials.shtml",
+  "stateGovernmentNativeHtmlPath": "sources/37205d5a858944c35925dfb0bd1d77380510a1987c0df7d9a51904d63db6895b.html",
+  "stateGovernmentExactPublishedBoardOfElectionsHref": "https://www.middlesexcountynj.gov/government/departments/department-of-community-services/board-of-elections",
+  "stateGovernmentLinksPath": "sources/7d9a894355b134387d1c6b7bb98a64d0c9216560bbf36b8c1684d2215141477f.json",
+  "inventoryPath": "official-inventory.json",
+  "sourceAuthorityBasis": "Directgovernment.govdocumentURLs, expressly linked by currentofficialcountyindex; nativeNJ.govstategovernmentdirectory identifies samecountyBoardOfElectionshost. Publicreaderconversionrepresentationlabeledtruthfully.",
+  "nativeHtmlOrPdfHashesNotClaimedForReaderText": true,
+  "electionDate": "November3,2026"
+}

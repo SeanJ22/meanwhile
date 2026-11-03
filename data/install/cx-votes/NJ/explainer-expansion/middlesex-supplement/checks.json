@@ -1,0 +1,52 @@
+{
+  "state": "NJ",
+  "heldBallotIdentityMatches": true,
+  "contests": 2,
+  "questions": 2,
+  "measureRecords": 2,
+  "usableReaderRecords": 2,
+  "packetSha256": "7076ebc3f6e90e32373af0cb3e3de732f4540bab1b83f5c41cdf3535b201c20e",
+  "retrievalSucceeded": true,
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderRetainsNewExplanations": true,
+  "details": [
+    {
+      "contestId": "nj-middlesex-2026:old-bridge-question",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    },
+    {
+      "contestId": "nj-middlesex-2026:sayreville-question",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    }
+  ],
+  "failures": [],
+  "independentSemanticReview": "NOT_RUN",
+  "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+  "reviewedScratchPacketSha256": "7076ebc3f6e90e32373af0cb3e3de732f4540bab1b83f5c41cdf3535b201c20e",
+  "canonicalInputSha256": "5b01c2fcb74892b42efd170bcf4a442506b8c9f9aff1d7e6965e319063907e34"
+}

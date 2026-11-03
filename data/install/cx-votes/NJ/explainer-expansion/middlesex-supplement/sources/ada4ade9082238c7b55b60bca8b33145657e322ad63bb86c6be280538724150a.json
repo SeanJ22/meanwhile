@@ -1,0 +1,11 @@
+{
+  "sourceUrl": "https://www.middlesexcountynj.gov/government/departments/department-of-community-services/board-of-elections/vote/sample-ballot",
+  "retrievalUrl": "https://r.jina.ai/https://www.middlesexcountynj.gov/government/departments/department-of-community-services/board-of-elections/vote/sample-ballot",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T09:28:10.729131+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "9ff0030f2f08a3da31884b2190acf7f7d1ad036695e3e564a3cfe6e159d6f0df",
+  "bytes": 40668,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-middlesex-index-markdown.txt",
+  "method": "Deterministic public reader direct engine, defaultMarkdown format preserving links; noReaderLM/modelcall, not nativeHTMLbytes."
+}

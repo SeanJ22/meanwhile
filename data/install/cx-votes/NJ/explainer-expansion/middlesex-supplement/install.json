@@ -1,0 +1,50 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 2,
+    "newPlainLanguageExplanations": 2,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": "OTHER_NJ_COUNTIES_LOCAL_INVENTORIES_OPEN",
+    "officialInventoryScope": "Complete currentMiddlesex25municipalsampledirectory capturedastext; no originalPDFvisual/pagecount claim, no off-cycle or statewideNJ completeness claim."
+  },
+  "subjects": [
+    {
+      "id": "nj-middlesex-2026:old-bridge-question",
+      "ocdId": "ocd-division/country:us/state:nj/county:middlesex/place:old_bridge_township",
+      "sourceUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10414/639262764133570000"
+    },
+    {
+      "id": "nj-middlesex-2026:sayreville-question",
+      "ocdId": "ocd-division/country:us/state:nj/county:middlesex/place:sayreville_borough",
+      "sourceUrl": "https://www.middlesexcountynj.gov/home/showpublisheddocument/10422/639262764150770000"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Full deterministicdirect-engine publicreader PDFconversiontext captured from exactofficialcounty.gov URLs. SOURCE_TEXT SHA retained separately; measureRecord HELD_TEXT hashes exactquestion+newline+statement. Native403PDFhistory explicit; no originalPDFhash or nativevisualattestation claim.",
+  "reviewedScratchPacketSha256": "7076ebc3f6e90e32373af0cb3e3de732f4540bab1b83f5c41cdf3535b201c20e",
+  "canonicalInputSha256": "5b01c2fcb74892b42efd170bcf4a442506b8c9f9aff1d7e6965e319063907e34",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

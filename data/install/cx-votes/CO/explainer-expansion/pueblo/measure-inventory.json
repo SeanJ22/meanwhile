@@ -1,0 +1,90 @@
+[
+  {
+    "contestId": "co-pueblo-2026-ballot-2a",
+    "officialTitle": "City of Pueblo Ballot Question 2A",
+    "officialNumber": "2A",
+    "sourceBlock": 1,
+    "ocdId": "ocd-division/country:us/state:co/place:pueblo",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:pueblo",
+      "place",
+      "0862000",
+      "Pueblo city"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-pueblo-2026-ballot-2b",
+    "officialTitle": "City of Pueblo Ballot Question 2B",
+    "officialNumber": "2B",
+    "sourceBlock": 2,
+    "ocdId": "ocd-division/country:us/state:co/place:pueblo",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:pueblo",
+      "place",
+      "0862000",
+      "Pueblo city"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-pueblo-city-county-library-district-2026-ballot-6a",
+    "officialTitle": "Pueblo City-County Library District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "sourceBlock": 3,
+    "ocdId": "ocd-division/country:us/state:co/special_district:pueblo_city_county_library_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:pueblo_city_county_library_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#51012",
+      "Pueblo City-County Library District",
+      "library"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-pueblo-west-metropolitan-district-2026-ballot-6b",
+    "officialTitle": "Pueblo West Metropolitan District Ballot Issue 6B",
+    "officialNumber": "6B",
+    "sourceBlock": 4,
+    "ocdId": "ocd-division/country:us/state:co/special_district:pueblo_west_metropolitan_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:pueblo_west_metropolitan_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#51015",
+      "Pueblo West Metropolitan District",
+      "facilities"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-pueblo-west-metropolitan-district-2026-ballot-6c",
+    "officialTitle": "Pueblo West Metropolitan District Ballot Issue 6C",
+    "officialNumber": "6C",
+    "sourceBlock": 5,
+    "ocdId": "ocd-division/country:us/state:co/special_district:pueblo_west_metropolitan_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:pueblo_west_metropolitan_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#51015",
+      "Pueblo West Metropolitan District",
+      "facilities"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-rye-fire-protection-district-2026-ballot-7b",
+    "officialTitle": "Rye Fire Protection District Ballot Issue 7B",
+    "officialNumber": "7B",
+    "sourceBlock": 8,
+    "ocdId": "ocd-division/country:us/state:co/special_district:rye_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:rye_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64171",
+      "Rye Fire Protection District",
+      "fire"
+    ],
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

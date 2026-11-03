@@ -1,0 +1,307 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-pueblo-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:pueblo",
+          "divisionVintage": "2026",
+          "title": "City of Pueblo Ballot Question 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE CITY OF PUEBLO'S TAXES BE INCREASED BY $5,878,267.00 ANNUALLY (FIRST FULL FISCAL YEAR INCREASE) AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BEGINNING JANUARY 1, 2027, BY ADOPTING ORDINANCE NO. 11243 IMPOSING AN ADDITIONAL ONE-QUARTER PERCENT (0.25%) SALES AND USE TAX AND ESTABLISHING A SPECIAL FUND TO BE KNOWN AS THE \"DEPARTMENT OF FIRE AND TECHNOLOGY RELATED TO PUBLIC SAFETY SALES AND USE TAX FUND\" FOR THE DEPOSIT OF SUCH REVENUES TO BE SPENT SOLELY FOR DEPARTMENT OF FIRE AND TECHNOLOGY RELATED TO PUBLIC SAFETY PURPOSES WITHIN THE CITY OF PUEBLO, AND SHALL ALL REVENUES DERIVED FROM SUCH TAX BE COLLECTED, RETAINED AND SPENT, NOTWITHSTANDING ANY LIMITATIONS PROVIDED BY LAW, AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY PURSUANT TO ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Pueblo County Clerk and Recorder",
+            "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+            "collectedAt": "2026-11-03T06:17:42.807721+00:00",
+            "verifiedAt": "2026-11-03T06:19:48.961229+00:00"
+          }
+        },
+        {
+          "id": "co-pueblo-2026-ballot-2b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:pueblo",
+          "divisionVintage": "2026",
+          "title": "City of Pueblo Ballot Question 2B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE CITY OF PUEBLO'S TAXES BE INCREASED BY UP TO $3,769,615.00 ANNUALLY (FIRST FULL FISCAL YEAR INCREASE) AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FOR FIVE YEARS FROM JANUARY 1, 2027 THROUGH DECEMBER 31, 2031, BY ADOPTING ORDINANCE NO. 11244 IMPOSING AN ADDITIONAL ONE-SIXTH OF ONE PERCENT (0.167%) SALES TAX AND ESTABLISHING A SPECIAL FUND FOR THE DEPOSIT OF SUCH REVENUES TO BE SPENT ONLY FOR THE OPERATIONS AND CAPITAL IMPROVEMENT OF THE PUEBLO ZOO; AND SHALL ALL REVENUES DERIVED FROM SUCH TAX BE COLLECTED, RETAINED AND SPENT, NOTWITHSTANDING ANY LIMITATIONS PROVIDED BY LAW, AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY PURSUANT TO ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Pueblo County Clerk and Recorder",
+            "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+            "collectedAt": "2026-11-03T06:17:42.807721+00:00",
+            "verifiedAt": "2026-11-03T06:19:48.961229+00:00"
+          }
+        },
+        {
+          "id": "co-pueblo-city-county-library-district-2026-ballot-6a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:pueblo_city_county_library_district",
+          "divisionVintage": "2026",
+          "title": "Pueblo City-County Library District Ballot Issue 6A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE PUEBLO CITY-COUNTY LIBRARY DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT FOR ALL FUTURE PROPERTY TAX YEARS, WITHOUT INCREASING TAXES, AS SUCH PROPERTY TAX LIMIT IS CREATED BY HOUSE BILL 24B-1001 AND SET FORTH IN SECTION 29-1-1702, C.R.S., TO ALLOW THE DISTRICT TO REALIZE THE FULL BENEFIT OF ITS CURRENT VOTER AUTHORIZED PROPERTY TAX RATE AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+            "sourceOrg": "Pueblo County Clerk and Recorder",
+            "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+            "collectedAt": "2026-11-03T06:17:42.807721+00:00",
+            "verifiedAt": "2026-11-03T06:19:48.961229+00:00"
+          }
+        },
+        {
+          "id": "co-pueblo-west-metropolitan-district-2026-ballot-6b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:pueblo_west_metropolitan_district",
+          "divisionVintage": "2026",
+          "title": "Pueblo West Metropolitan District Ballot Issue 6B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE PUEBLO WEST METROPOLITAN DISTRICT TAXES BE INCREASED $5 MILLION DOLLARS ANNUALLY, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THERAFTER, BY THE EXTENSION OF AND PERMANENT APPROVAL OF AN EXISTING ONE PERCENT (1%) SALES TAX, CURRENTLY SET TO EXPIRE ON DECEMBER 31, 2030, WITH NO INCREASE IN THE TAX RATE, AND WITH THE PROCEEDS OF SUCH TAX, INCLUDING ANY INVESTMENT INCOME THEREFROM, TO BE USED SOLELY FOR FIRE PROTECTION PURPOSES, INCLUDING: FUNDING FIREFIGHTERS AND STAFF AT EXISTING 1. AND/OR FUTURE FIRE STATIONS; ACQUIRING, REPLACING, AND MAINTAINING FIRE 2. APPARATUS, EQUIPMENT, AND OTHER CAPITAL NEEDS TO PROTECT FIREFIGHTERS AND RESPOND TO EMERGENCY CALLS; AND CONSTRUCTING, OPERATING, MAINTAINING, AND 3. IMPROVING FIRE DEPARTMENT FACILITIES AND INFRASTRUCTURE; AND SHALL ALL REVENUES FROM SUCH TAX BE COLLECTED, RETAINED, AND SPENT AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS ON REVENUE AND SPENDING UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION (TABOR) AND ANY OTHER APPLICABLE LAW?",
+            "sourceOrg": "Pueblo County Clerk and Recorder",
+            "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+            "collectedAt": "2026-11-03T06:17:42.807721+00:00",
+            "verifiedAt": "2026-11-03T06:19:48.961229+00:00"
+          }
+        },
+        {
+          "id": "co-pueblo-west-metropolitan-district-2026-ballot-6c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:pueblo_west_metropolitan_district",
+          "divisionVintage": "2026",
+          "title": "Pueblo West Metropolitan District Ballot Issue 6C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE PUEBLO WEST METROPOLITAN DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT FOR FISCAL YEAR 2026 AND ALL FUTURE PROPERTY TAX YEARS, AND WITHOUT INCREASING ANY TAX RATE OR IMPOSING ANY NEW TAX, UNLESS SEPARATELY APPROVED BY THE VOTERS, BE PERMITTED TO COLLECT, RETAIN AND SPEND ALL REVENUE IT RECEIVES IN FISCAL YEAR 2026 AND IN ALL PROPERTY TAX YEARS THEREAFTER, AS A VOTER APPROVED REVENUE CHANGE AND PROPERTY TAX REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, AND BE PERMITTED TO EXCEED THE 5.5% PROPERTY TAX REVENUE GROWTH LIMITATION CONTAINED IN SECTION 29-1-301, COLORADO REVISED STATUTES, THE 5.25% PROPERTY TAX LIMIT CONTAINED IN SECTION 29-1-1702, COLORADO REVISED STATUTES, AND ANY OTHER REVENUE LIMITATION CONTAINED IN THE LAWS OF THE STATE, UTILIZING ALL OF THE EXCESS REVENUE OVER SAID LIMITS FOR THE SOLE PURPOSE OF FUNDING THE PUEBLO WEST METROPOLITAN DISTRICT PARKS AND RECREATION DEPARTMENT?",
+            "sourceOrg": "Pueblo County Clerk and Recorder",
+            "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+            "collectedAt": "2026-11-03T06:17:42.807721+00:00",
+            "verifiedAt": "2026-11-03T06:19:48.961229+00:00"
+          }
+        },
+        {
+          "id": "co-rye-fire-protection-district-2026-ballot-7b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:rye_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Rye Fire Protection District Ballot Issue 7B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL RYE FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $1,098,568.97 IN THE FIRST FULL FISCAL YEAR, AND BY SUCH AMOUNTS AS MAY BE GENERATED ANNUALLY THEREAFTER, FOR A PERIOD OF TEN (10) YEARS, BY AN INCREASE OF 11.652 MILLS IN THE DISTRICT'S PROPERTY TAX MILL LEVY, WITH THE REVENUE FROM SUCH INCREASE USED FOR GENERAL DISTRICT PURPOSES, INCLUDING: INCREASING AND MAINTAINING EMERGENCY · RESPONSE STAFFING; MAINTAINING FIRE PROTECTION, EMERGENCY · MEDICAL, AMBULANCE, RESCUE, AND WILDLAND FIRE SERVICES; PURCHASING, REPLACING, AND MAINTAINING FIRE · APPARATUS, AMBULANCES, EMERGENCY EQUIPMENT, AND FIREFIGHTER PROTECTIVE EQUIPMENT; REPAIRING, MAINTAINING, AND IMPROVING · DISTRICT FIRE STATIONS AND FACILITIES; FUNDING CAPITAL IMPROVEMENTS AND PLANNED · APPARATUS AND EQUIPMENT REPLACEMENT; AND MAINTAINING FINANCIAL RESERVES FOR DISTRICT · OPERATING AND CAPITAL NEEDS; PROVIDED THAT THE AUTHORITY TO LEVY THE ADDITIONAL 11.652 MILLS SHALL CONTINUE FOR TEN (10) TAX YEARS, BEGINNING WITH THE 2026 PROPERTY TAX YEAR FOR COLLECTION IN 2027 AND ENDING WITH THE 2035 PROPERTY TAX YEAR FOR COLLECTION IN 2036, AFTER WHICH THE AUTHORITY TO LEVY THE ADDITIONAL 11.652 MILLS SHALL EXPIRE UNLESS OTHERWISE AUTHORIZED BY THE REGISTERED ELECTORS OF THE DISTRICT; AND SHALL THE DISTRICT BE AUTHORIZED DURING SUCH TEN-YEAR PERIOD TO COLLECT, RETAIN, AND SPEND ALL REVENUES GENERATED BY SUCH TAX INCREASE, TOGETHER WITH ANY INVESTMENT EARNINGS THEREON, AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, NOTWITHSTANDING ANY REVENUE OR SPENDING LIMITATION CONTAINED IN STATE LAW?",
+            "sourceOrg": "Pueblo County Clerk and Recorder",
+            "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+            "collectedAt": "2026-11-03T06:17:42.807721+00:00",
+            "verifiedAt": "2026-11-03T06:19:48.961229+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-pueblo-2026-ballot-2a#question",
+          "contestId": "co-pueblo-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "SHALL THE CITY OF PUEBLO'S TAXES BE INCREASED BY $5,878,267.00 ANNUALLY (FIRST FULL FISCAL YEAR INCREASE) AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BEGINNING JANUARY 1, 2027, BY ADOPTING ORDINANCE NO. 11243 IMPOSING AN ADDITIONAL ONE-QUARTER PERCENT (0.25%) SALES AND USE TAX AND ESTABLISHING A SPECIAL FUND TO BE KNOWN AS THE \"DEPARTMENT OF FIRE AND TECHNOLOGY RELATED TO PUBLIC SAFETY SALES AND USE TAX FUND\" FOR THE DEPOSIT OF SUCH REVENUES TO BE SPENT SOLELY FOR DEPARTMENT OF FIRE AND TECHNOLOGY RELATED TO PUBLIC SAFETY PURPOSES WITHIN THE CITY OF PUEBLO, AND SHALL ALL REVENUES DERIVED FROM SUCH TAX BE COLLECTED, RETAINED AND SPENT, NOTWITHSTANDING ANY LIMITATIONS PROVIDED BY LAW, AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY PURSUANT TO ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE CITY OF PUEBLO'S TAXES BE INCREASED BY $5,878,267.00 ANNUALLY (FIRST FULL FISCAL YEAR INCREASE) AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BEGINNING JANUARY 1, 2027, BY ADOPTING ORDINANCE NO. 11243 IMPOSING AN ADDITIONAL ONE-QUARTER PERCENT (0.25%) SALES AND USE TAX AND ESTABLISHING A SPECIAL FUND TO BE KNOWN AS THE \"DEPARTMENT OF FIRE AND TECHNOLOGY RELATED TO PUBLIC SAFETY SALES AND USE TAX FUND\" FOR THE DEPOSIT OF SUCH REVENUES TO BE SPENT SOLELY FOR DEPARTMENT OF FIRE AND TECHNOLOGY RELATED TO PUBLIC SAFETY PURPOSES WITHIN THE CITY OF PUEBLO, AND SHALL ALL REVENUES DERIVED FROM SUCH TAX BE COLLECTED, RETAINED AND SPENT, NOTWITHSTANDING ANY LIMITATIONS PROVIDED BY LAW, AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY PURSUANT TO ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Pueblo County Clerk and Recorder",
+            "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+            "collectedAt": "2026-11-03T06:17:42.807721+00:00",
+            "verifiedAt": "2026-11-03T06:19:48.961229+00:00"
+          }
+        },
+        {
+          "id": "co-pueblo-2026-ballot-2b#question",
+          "contestId": "co-pueblo-2026-ballot-2b",
+          "officialNumber": "2B",
+          "questionText": "SHALL THE CITY OF PUEBLO'S TAXES BE INCREASED BY UP TO $3,769,615.00 ANNUALLY (FIRST FULL FISCAL YEAR INCREASE) AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FOR FIVE YEARS FROM JANUARY 1, 2027 THROUGH DECEMBER 31, 2031, BY ADOPTING ORDINANCE NO. 11244 IMPOSING AN ADDITIONAL ONE-SIXTH OF ONE PERCENT (0.167%) SALES TAX AND ESTABLISHING A SPECIAL FUND FOR THE DEPOSIT OF SUCH REVENUES TO BE SPENT ONLY FOR THE OPERATIONS AND CAPITAL IMPROVEMENT OF THE PUEBLO ZOO; AND SHALL ALL REVENUES DERIVED FROM SUCH TAX BE COLLECTED, RETAINED AND SPENT, NOTWITHSTANDING ANY LIMITATIONS PROVIDED BY LAW, AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY PURSUANT TO ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE CITY OF PUEBLO'S TAXES BE INCREASED BY UP TO $3,769,615.00 ANNUALLY (FIRST FULL FISCAL YEAR INCREASE) AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FOR FIVE YEARS FROM JANUARY 1, 2027 THROUGH DECEMBER 31, 2031, BY ADOPTING ORDINANCE NO. 11244 IMPOSING AN ADDITIONAL ONE-SIXTH OF ONE PERCENT (0.167%) SALES TAX AND ESTABLISHING A SPECIAL FUND FOR THE DEPOSIT OF SUCH REVENUES TO BE SPENT ONLY FOR THE OPERATIONS AND CAPITAL IMPROVEMENT OF THE PUEBLO ZOO; AND SHALL ALL REVENUES DERIVED FROM SUCH TAX BE COLLECTED, RETAINED AND SPENT, NOTWITHSTANDING ANY LIMITATIONS PROVIDED BY LAW, AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY PURSUANT TO ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Pueblo County Clerk and Recorder",
+            "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+            "collectedAt": "2026-11-03T06:17:42.807721+00:00",
+            "verifiedAt": "2026-11-03T06:19:48.961229+00:00"
+          }
+        },
+        {
+          "id": "co-pueblo-city-county-library-district-2026-ballot-6a#question",
+          "contestId": "co-pueblo-city-county-library-district-2026-ballot-6a",
+          "officialNumber": "6A",
+          "questionText": "SHALL THE PUEBLO CITY-COUNTY LIBRARY DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT FOR ALL FUTURE PROPERTY TAX YEARS, WITHOUT INCREASING TAXES, AS SUCH PROPERTY TAX LIMIT IS CREATED BY HOUSE BILL 24B-1001 AND SET FORTH IN SECTION 29-1-1702, C.R.S., TO ALLOW THE DISTRICT TO REALIZE THE FULL BENEFIT OF ITS CURRENT VOTER AUTHORIZED PROPERTY TAX RATE AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE PUEBLO CITY-COUNTY LIBRARY DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT FOR ALL FUTURE PROPERTY TAX YEARS, WITHOUT INCREASING TAXES, AS SUCH PROPERTY TAX LIMIT IS CREATED BY HOUSE BILL 24B-1001 AND SET FORTH IN SECTION 29-1-1702, C.R.S., TO ALLOW THE DISTRICT TO REALIZE THE FULL BENEFIT OF ITS CURRENT VOTER AUTHORIZED PROPERTY TAX RATE AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+            "sourceOrg": "Pueblo County Clerk and Recorder",
+            "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+            "collectedAt": "2026-11-03T06:17:42.807721+00:00",
+            "verifiedAt": "2026-11-03T06:19:48.961229+00:00"
+          }
+        },
+        {
+          "id": "co-pueblo-west-metropolitan-district-2026-ballot-6b#question",
+          "contestId": "co-pueblo-west-metropolitan-district-2026-ballot-6b",
+          "officialNumber": "6B",
+          "questionText": "SHALL THE PUEBLO WEST METROPOLITAN DISTRICT TAXES BE INCREASED $5 MILLION DOLLARS ANNUALLY, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THERAFTER, BY THE EXTENSION OF AND PERMANENT APPROVAL OF AN EXISTING ONE PERCENT (1%) SALES TAX, CURRENTLY SET TO EXPIRE ON DECEMBER 31, 2030, WITH NO INCREASE IN THE TAX RATE, AND WITH THE PROCEEDS OF SUCH TAX, INCLUDING ANY INVESTMENT INCOME THEREFROM, TO BE USED SOLELY FOR FIRE PROTECTION PURPOSES, INCLUDING: FUNDING FIREFIGHTERS AND STAFF AT EXISTING 1. AND/OR FUTURE FIRE STATIONS; ACQUIRING, REPLACING, AND MAINTAINING FIRE 2. APPARATUS, EQUIPMENT, AND OTHER CAPITAL NEEDS TO PROTECT FIREFIGHTERS AND RESPOND TO EMERGENCY CALLS; AND CONSTRUCTING, OPERATING, MAINTAINING, AND 3. IMPROVING FIRE DEPARTMENT FACILITIES AND INFRASTRUCTURE; AND SHALL ALL REVENUES FROM SUCH TAX BE COLLECTED, RETAINED, AND SPENT AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS ON REVENUE AND SPENDING UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION (TABOR) AND ANY OTHER APPLICABLE LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE PUEBLO WEST METROPOLITAN DISTRICT TAXES BE INCREASED $5 MILLION DOLLARS ANNUALLY, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THERAFTER, BY THE EXTENSION OF AND PERMANENT APPROVAL OF AN EXISTING ONE PERCENT (1%) SALES TAX, CURRENTLY SET TO EXPIRE ON DECEMBER 31, 2030, WITH NO INCREASE IN THE TAX RATE, AND WITH THE PROCEEDS OF SUCH TAX, INCLUDING ANY INVESTMENT INCOME THEREFROM, TO BE USED SOLELY FOR FIRE PROTECTION PURPOSES, INCLUDING: FUNDING FIREFIGHTERS AND STAFF AT EXISTING 1. AND/OR FUTURE FIRE STATIONS; ACQUIRING, REPLACING, AND MAINTAINING FIRE 2. APPARATUS, EQUIPMENT, AND OTHER CAPITAL NEEDS TO PROTECT FIREFIGHTERS AND RESPOND TO EMERGENCY CALLS; AND CONSTRUCTING, OPERATING, MAINTAINING, AND 3. IMPROVING FIRE DEPARTMENT FACILITIES AND INFRASTRUCTURE; AND SHALL ALL REVENUES FROM SUCH TAX BE COLLECTED, RETAINED, AND SPENT AS A VOTER-APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS ON REVENUE AND SPENDING UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION (TABOR) AND ANY OTHER APPLICABLE LAW?",
+            "sourceOrg": "Pueblo County Clerk and Recorder",
+            "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+            "collectedAt": "2026-11-03T06:17:42.807721+00:00",
+            "verifiedAt": "2026-11-03T06:19:48.961229+00:00"
+          }
+        },
+        {
+          "id": "co-pueblo-west-metropolitan-district-2026-ballot-6c#question",
+          "contestId": "co-pueblo-west-metropolitan-district-2026-ballot-6c",
+          "officialNumber": "6C",
+          "questionText": "SHALL THE PUEBLO WEST METROPOLITAN DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT FOR FISCAL YEAR 2026 AND ALL FUTURE PROPERTY TAX YEARS, AND WITHOUT INCREASING ANY TAX RATE OR IMPOSING ANY NEW TAX, UNLESS SEPARATELY APPROVED BY THE VOTERS, BE PERMITTED TO COLLECT, RETAIN AND SPEND ALL REVENUE IT RECEIVES IN FISCAL YEAR 2026 AND IN ALL PROPERTY TAX YEARS THEREAFTER, AS A VOTER APPROVED REVENUE CHANGE AND PROPERTY TAX REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, AND BE PERMITTED TO EXCEED THE 5.5% PROPERTY TAX REVENUE GROWTH LIMITATION CONTAINED IN SECTION 29-1-301, COLORADO REVISED STATUTES, THE 5.25% PROPERTY TAX LIMIT CONTAINED IN SECTION 29-1-1702, COLORADO REVISED STATUTES, AND ANY OTHER REVENUE LIMITATION CONTAINED IN THE LAWS OF THE STATE, UTILIZING ALL OF THE EXCESS REVENUE OVER SAID LIMITS FOR THE SOLE PURPOSE OF FUNDING THE PUEBLO WEST METROPOLITAN DISTRICT PARKS AND RECREATION DEPARTMENT?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE PUEBLO WEST METROPOLITAN DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT FOR FISCAL YEAR 2026 AND ALL FUTURE PROPERTY TAX YEARS, AND WITHOUT INCREASING ANY TAX RATE OR IMPOSING ANY NEW TAX, UNLESS SEPARATELY APPROVED BY THE VOTERS, BE PERMITTED TO COLLECT, RETAIN AND SPEND ALL REVENUE IT RECEIVES IN FISCAL YEAR 2026 AND IN ALL PROPERTY TAX YEARS THEREAFTER, AS A VOTER APPROVED REVENUE CHANGE AND PROPERTY TAX REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, AND BE PERMITTED TO EXCEED THE 5.5% PROPERTY TAX REVENUE GROWTH LIMITATION CONTAINED IN SECTION 29-1-301, COLORADO REVISED STATUTES, THE 5.25% PROPERTY TAX LIMIT CONTAINED IN SECTION 29-1-1702, COLORADO REVISED STATUTES, AND ANY OTHER REVENUE LIMITATION CONTAINED IN THE LAWS OF THE STATE, UTILIZING ALL OF THE EXCESS REVENUE OVER SAID LIMITS FOR THE SOLE PURPOSE OF FUNDING THE PUEBLO WEST METROPOLITAN DISTRICT PARKS AND RECREATION DEPARTMENT?",
+            "sourceOrg": "Pueblo County Clerk and Recorder",
+            "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+            "collectedAt": "2026-11-03T06:17:42.807721+00:00",
+            "verifiedAt": "2026-11-03T06:19:48.961229+00:00"
+          }
+        },
+        {
+          "id": "co-rye-fire-protection-district-2026-ballot-7b#question",
+          "contestId": "co-rye-fire-protection-district-2026-ballot-7b",
+          "officialNumber": "7B",
+          "questionText": "SHALL RYE FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $1,098,568.97 IN THE FIRST FULL FISCAL YEAR, AND BY SUCH AMOUNTS AS MAY BE GENERATED ANNUALLY THEREAFTER, FOR A PERIOD OF TEN (10) YEARS, BY AN INCREASE OF 11.652 MILLS IN THE DISTRICT'S PROPERTY TAX MILL LEVY, WITH THE REVENUE FROM SUCH INCREASE USED FOR GENERAL DISTRICT PURPOSES, INCLUDING: INCREASING AND MAINTAINING EMERGENCY · RESPONSE STAFFING; MAINTAINING FIRE PROTECTION, EMERGENCY · MEDICAL, AMBULANCE, RESCUE, AND WILDLAND FIRE SERVICES; PURCHASING, REPLACING, AND MAINTAINING FIRE · APPARATUS, AMBULANCES, EMERGENCY EQUIPMENT, AND FIREFIGHTER PROTECTIVE EQUIPMENT; REPAIRING, MAINTAINING, AND IMPROVING · DISTRICT FIRE STATIONS AND FACILITIES; FUNDING CAPITAL IMPROVEMENTS AND PLANNED · APPARATUS AND EQUIPMENT REPLACEMENT; AND MAINTAINING FINANCIAL RESERVES FOR DISTRICT · OPERATING AND CAPITAL NEEDS; PROVIDED THAT THE AUTHORITY TO LEVY THE ADDITIONAL 11.652 MILLS SHALL CONTINUE FOR TEN (10) TAX YEARS, BEGINNING WITH THE 2026 PROPERTY TAX YEAR FOR COLLECTION IN 2027 AND ENDING WITH THE 2035 PROPERTY TAX YEAR FOR COLLECTION IN 2036, AFTER WHICH THE AUTHORITY TO LEVY THE ADDITIONAL 11.652 MILLS SHALL EXPIRE UNLESS OTHERWISE AUTHORIZED BY THE REGISTERED ELECTORS OF THE DISTRICT; AND SHALL THE DISTRICT BE AUTHORIZED DURING SUCH TEN-YEAR PERIOD TO COLLECT, RETAIN, AND SPEND ALL REVENUES GENERATED BY SUCH TAX INCREASE, TOGETHER WITH ANY INVESTMENT EARNINGS THEREON, AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, NOTWITHSTANDING ANY REVENUE OR SPENDING LIMITATION CONTAINED IN STATE LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL RYE FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $1,098,568.97 IN THE FIRST FULL FISCAL YEAR, AND BY SUCH AMOUNTS AS MAY BE GENERATED ANNUALLY THEREAFTER, FOR A PERIOD OF TEN (10) YEARS, BY AN INCREASE OF 11.652 MILLS IN THE DISTRICT'S PROPERTY TAX MILL LEVY, WITH THE REVENUE FROM SUCH INCREASE USED FOR GENERAL DISTRICT PURPOSES, INCLUDING: INCREASING AND MAINTAINING EMERGENCY · RESPONSE STAFFING; MAINTAINING FIRE PROTECTION, EMERGENCY · MEDICAL, AMBULANCE, RESCUE, AND WILDLAND FIRE SERVICES; PURCHASING, REPLACING, AND MAINTAINING FIRE · APPARATUS, AMBULANCES, EMERGENCY EQUIPMENT, AND FIREFIGHTER PROTECTIVE EQUIPMENT; REPAIRING, MAINTAINING, AND IMPROVING · DISTRICT FIRE STATIONS AND FACILITIES; FUNDING CAPITAL IMPROVEMENTS AND PLANNED · APPARATUS AND EQUIPMENT REPLACEMENT; AND MAINTAINING FINANCIAL RESERVES FOR DISTRICT · OPERATING AND CAPITAL NEEDS; PROVIDED THAT THE AUTHORITY TO LEVY THE ADDITIONAL 11.652 MILLS SHALL CONTINUE FOR TEN (10) TAX YEARS, BEGINNING WITH THE 2026 PROPERTY TAX YEAR FOR COLLECTION IN 2027 AND ENDING WITH THE 2035 PROPERTY TAX YEAR FOR COLLECTION IN 2036, AFTER WHICH THE AUTHORITY TO LEVY THE ADDITIONAL 11.652 MILLS SHALL EXPIRE UNLESS OTHERWISE AUTHORIZED BY THE REGISTERED ELECTORS OF THE DISTRICT; AND SHALL THE DISTRICT BE AUTHORIZED DURING SUCH TEN-YEAR PERIOD TO COLLECT, RETAIN, AND SPEND ALL REVENUES GENERATED BY SUCH TAX INCREASE, TOGETHER WITH ANY INVESTMENT EARNINGS THEREON, AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, NOTWITHSTANDING ANY REVENUE OR SPENDING LIMITATION CONTAINED IN STATE LAW?",
+            "sourceOrg": "Pueblo County Clerk and Recorder",
+            "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+            "collectedAt": "2026-11-03T06:17:42.807721+00:00",
+            "verifiedAt": "2026-11-03T06:19:48.961229+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-pueblo-2026-ballot-2a",
+          "whatItDoes": "Increase Pueblo’s sales and use tax rate by 0.25 percentage points beginning January 1, 2027. The question authorizes $5,878,267 in the first full fiscal year and whatever the tax produces afterward. Money would go into a special fund used only for the fire department and technology related to public safety in the city. The city could keep and spend this revenue outside the constitutional and other legal revenue limits identified in the question.",
+          "yesMeans": "Approve the additional public-safety sales and use tax, dedicated fund and revenue-limit exception.",
+          "noMeans": "Do not approve this additional tax or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+          "sourceHash": "2ec1ca2ab1dc27a315fd221bccdf367e5124499c398bd043ae883fa3c34db7b8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:19:48.961229+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-pueblo-2026-ballot-2b",
+          "whatItDoes": "Add a 0.167% city sales tax for five years, January 1, 2027 through December 31, 2031, to pay only for operating and improving the Pueblo Zoo. The question authorizes up to $3,769,615 in the first full fiscal year and whatever the tax produces afterward during its term. Revenue would go into a special fund and could be kept and spent outside the constitutional and other legal revenue limits identified in the question.",
+          "yesMeans": "Approve the five-year zoo sales tax, dedicated fund and revenue-limit exception.",
+          "noMeans": "Do not approve this additional zoo tax or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+          "sourceHash": "2ec1ca2ab1dc27a315fd221bccdf367e5124499c398bd043ae883fa3c34db7b8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:19:48.961229+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-pueblo-city-county-library-district-2026-ballot-6a",
+          "whatItDoes": "Waive the library district’s 5.25% statutory property-tax revenue growth limit for every future property-tax year so it can receive the full revenue produced by its already approved property-tax rate. The district could collect, keep and spend all revenue above legal revenue limits. The measure does not ask voters to increase the property-tax rate.",
+          "yesMeans": "Approve the continuing property-tax growth-limit waiver and authority to retain and spend district revenue above legal limits.",
+          "noMeans": "Do not approve this proposed waiver of the district’s property-tax and other revenue limits.",
+          "parts": [],
+          "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+          "sourceHash": "2ec1ca2ab1dc27a315fd221bccdf367e5124499c398bd043ae883fa3c34db7b8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:19:48.961229+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-pueblo-west-metropolitan-district-2026-ballot-6b",
+          "whatItDoes": "Permanently extend Pueblo West Metropolitan District’s existing 1% sales tax, which is now scheduled to expire December 31, 2030, at the same rate. The question authorizes $5 million in annual tax revenue and any additional amount the tax produces later. Money and investment income would be used only for fire protection: firefighters and staff, equipment and other capital needs, and constructing, operating and maintaining fire facilities. The district could keep and spend the revenue outside the stated constitutional and other legal limits.",
+          "yesMeans": "Make the existing 1% fire-protection sales tax permanent and approve the revenue-limit exception.",
+          "noMeans": "Do not extend the tax beyond its current December 31, 2030 expiration or approve this proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+          "sourceHash": "2ec1ca2ab1dc27a315fd221bccdf367e5124499c398bd043ae883fa3c34db7b8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:19:48.961229+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-pueblo-west-metropolitan-district-2026-ballot-6c",
+          "whatItDoes": "Allow Pueblo West Metropolitan District to keep and spend revenue above the constitutional revenue limit, the statutory 5.5% property-tax revenue growth limit, the 5.25% property-tax limit and other state revenue limits beginning in fiscal year 2026 and continuing afterward. All money above those limits would be used only for its Parks and Recreation Department. This measure would not raise a tax rate or impose a new tax; those would need separate voter approval.",
+          "yesMeans": "Approve the continuing revenue-limit waivers, with excess revenue restricted to parks and recreation.",
+          "noMeans": "Do not approve these proposed waivers of the district’s revenue limits.",
+          "parts": [],
+          "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+          "sourceHash": "2ec1ca2ab1dc27a315fd221bccdf367e5124499c398bd043ae883fa3c34db7b8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:19:48.961229+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-rye-fire-protection-district-2026-ballot-7b",
+          "whatItDoes": "Add 11.652 mills to Rye Fire Protection District’s property-tax rate for ten tax years: 2026 through 2035, collected in 2027 through 2036. The question authorizes $1,098,568.97 in the first full fiscal year and whatever the tax produces later during its term. Money would support general district purposes, including emergency staffing and services, equipment, facilities, capital improvements and operating and capital reserves. During those ten years the district could keep and spend the additional tax revenue and investment earnings outside the stated constitutional and state-law limits. The additional levy expires after the stated term unless voters authorize it again.",
+          "yesMeans": "Approve the ten-year additional property tax and its revenue-limit exception for emergency services and other district purposes.",
+          "noMeans": "Do not approve this additional property-tax levy or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+          "sourceHash": "2ec1ca2ab1dc27a315fd221bccdf367e5124499c398bd043ae883fa3c34db7b8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:19:48.961229+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:19:48.961229+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+        "finalUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+        "publisher": "Pueblo County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:17:42.807721+00:00",
+        "httpStatus": 200,
+        "rawHash": "2ec1ca2ab1dc27a315fd221bccdf367e5124499c398bd043ae883fa3c34db7b8",
+        "reviewedEvidence": "Complete official 2026 county sample ballot labeled Everything on the current county index. Eight local questions: six new exact registered-division attachments, previously prepared FRPR 7A, and a proposed Edison inclusion area kept pending exact geography. No candidate records or advocacy summaries used."
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "county": "Pueblo",
+  "electionDate": "2026-11-03",
+  "officialCompositeLocalMeasureCount": 8,
+  "newPreparedAttachedCount": 6,
+  "newPendingExactTerritoryCount": 1,
+  "alreadyPreparedElsewhereCount": 1,
+  "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf",
+  "sourceSha256": "2ec1ca2ab1dc27a315fd221bccdf367e5124499c398bd043ae883fa3c34db7b8",
+  "limits": "County composite denominator only. Edison inclusion is a proposed territory, not the existing district. Does not establish statewide local completeness."
+}

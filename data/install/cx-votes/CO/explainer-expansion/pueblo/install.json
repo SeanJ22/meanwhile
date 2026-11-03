@@ -1,0 +1,43 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-pueblo-2026-ballot-2a",
+      "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf"
+    },
+    {
+      "id": "co-pueblo-2026-ballot-2b",
+      "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf"
+    },
+    {
+      "id": "co-pueblo-city-county-library-district-2026-ballot-6a",
+      "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf"
+    },
+    {
+      "id": "co-pueblo-west-metropolitan-district-2026-ballot-6b",
+      "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf"
+    },
+    {
+      "id": "co-pueblo-west-metropolitan-district-2026-ballot-6c",
+      "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf"
+    },
+    {
+      "id": "co-rye-fire-protection-district-2026-ballot-7b",
+      "sourceUrl": "https://pueblocounty.gov/sites/default/files/2026-10/EVERYTHING%20v1r_0.pdf"
+    }
+  ],
+  "operation": "Merge only these six new measure-only contests, official questions and explainers. Preserve unrelated ballot data. Edison proposed inclusion stays pending until exact geography is attached. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "state": "CO",
+  "county": "pueblo",
+  "preparedAttachedMeasures": 6,
+  "pendingExactTerritory": 1,
+  "officialLocalSourceDenominator": 8,
+  "currentMeasureRecordContract": "PASS",
+  "originalAndStoredSourceHashes": "PASS",
+  "literalFieldQuotesChecked": 21,
+  "exactExistingRegisteredAttachments": 6,
+  "actualCurrentBallotReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/place:pueblo",
+      "completeExplainers": 2
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:pueblo_city_county_library_district",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:pueblo_west_metropolitan_district",
+      "completeExplainers": 2
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:rye_fire_protection_district",
+      "completeExplainers": 1
+    }
+  ],
+  "unrelatedCountyAndStateDoNotReceiveLocalQuestions": "PASS",
+  "credentialScan": {
+    "scannedFiles": 17,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source/contract/current ballot selector checks only. Root independent semantic review and River data install/live checks remain."
+}

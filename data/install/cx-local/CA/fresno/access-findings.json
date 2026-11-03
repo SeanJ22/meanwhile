@@ -1,0 +1,228 @@
+{
+  "status": "ACTUAL_CURRENT_SAMPLE_ACQUISITION_PENDING;OFFICIAL_INVENTORY_AVAILABLE",
+  "routes": [
+    {
+      "label": "candidate-guide",
+      "url": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/2026-5-11_candidate-guide-for-november-3-2026-election.pdf",
+      "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/2026-5-27_candidate-guide-for-november-3-2026-election.pdf",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:44:30.455933+00:00",
+      "sha256": "23baacf8832111a57438925a72e53d8c07ae7ac42d5c3f8c6c33f2be53a99536",
+      "sourceFile": "sources/23baacf8832111a57438925a72e53d8c07ae7ac42d5c3f8c6c33f2be53a99536.source"
+    },
+    {
+      "label": "city-fresno",
+      "url": "https://www.fresno.gov/cityclerk/election-information/",
+      "finalUrl": "https://www.fresno.gov/cityclerk/election-information/",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:50:05.923794+00:00",
+      "sha256": "623d018569e120e3d652676082582ccd58ddf1914b1c5fd08f365a2882aac2e6",
+      "sourceFile": "sources/623d018569e120e3d652676082582ccd58ddf1914b1c5fd08f365a2882aac2e6.source"
+    },
+    {
+      "label": "county-allcandidates",
+      "url": "https://www2.fresnocountyca.gov/2850/post/2026Nov/officesupforelectioncandidatelist.pdf",
+      "finalUrl": "https://www2.fresnocountyca.gov/2850/post/2026Nov/officesupforelectioncandidatelist.pdf",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:41:01.258912+00:00",
+      "sha256": "a8108efb417adad37b7e028a773fae1978df443f0ca72a8003d60ed7914339c9",
+      "sourceFile": "sources/a8108efb417adad37b7e028a773fae1978df443f0ca72a8003d60ed7914339c9.source",
+      "observedContent": "HTML_REQUEST_REJECTED_NOT_PDF"
+    },
+    {
+      "label": "county-election",
+      "url": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+      "finalUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:40:34.962799+00:00",
+      "sha256": "5008c4bb6e73b5d0fc213f1273caeff3713483094df6ba17d2871e8b51a5f778",
+      "sourceFile": "sources/5008c4bb6e73b5d0fc213f1273caeff3713483094df6ba17d2871e8b51a5f778.source"
+    },
+    {
+      "label": "county-home",
+      "url": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections",
+      "finalUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:40:34.614079+00:00",
+      "sha256": "fc8f8ef56791b61d64ac35bf88b03b216620c5ee32ee8e0759345b2e010b3723",
+      "sourceFile": "sources/fc8f8ef56791b61d64ac35bf88b03b216620c5ee32ee8e0759345b2e010b3723.source"
+    },
+    {
+      "label": "county-offballot",
+      "url": "https://www2.fresnocountyca.gov/2850/post/2026Nov/Contests%20not%20on%20Ballot.pdf",
+      "finalUrl": "https://www2.fresnocountyca.gov/2850/post/2026Nov/Contests%20not%20on%20Ballot.pdf",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:41:01.401884+00:00",
+      "sha256": "acdea4019a7da65dd5ab307ba5deb25b60c616334d9f075b52f2ccd9469fd86e",
+      "sourceFile": "sources/acdea4019a7da65dd5ab307ba5deb25b60c616334d9f075b52f2ccd9469fd86e.source",
+      "observedContent": "HTML_REQUEST_REJECTED_NOT_PDF"
+    },
+    {
+      "label": "county-qualified-http",
+      "url": "http://www2.fresnocountyca.gov/2850/post/2026Nov/Contests%20on%20Ballot%20with%20Qualified%20Candidates.pdf",
+      "finalUrl": "https://www2.fresnocountyca.gov/2850/post/2026Nov/Contests%20on%20Ballot%20with%20Qualified%20Candidates.pdf",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:44:27.967192+00:00",
+      "sha256": "0d4c3c19dd3b4e642df7413c5c3c7296500526b0c2a0d54a5bc559cd6b013bc4",
+      "sourceFile": "sources/0d4c3c19dd3b4e642df7413c5c3c7296500526b0c2a0d54a5bc559cd6b013bc4.source",
+      "observedContent": "HTML_REQUEST_REJECTED_NOT_PDF"
+    },
+    {
+      "label": "county-qualified",
+      "url": "https://www2.fresnocountyca.gov/2850/post/2026Nov/Contests%20on%20Ballot%20with%20Qualified%20Candidates.pdf",
+      "finalUrl": "https://www2.fresnocountyca.gov/2850/post/2026Nov/Contests%20on%20Ballot%20with%20Qualified%20Candidates.pdf",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:41:00.988757+00:00",
+      "sha256": "637f51888430a0a1059d41879851027f0afa61c2f1c4ceac411ac5dfbf1ed1ca",
+      "sourceFile": "sources/637f51888430a0a1059d41879851027f0afa61c2f1c4ceac411ac5dfbf1ed1ca.source",
+      "observedContent": "HTML_REQUEST_REJECTED_NOT_PDF"
+    },
+    {
+      "label": "county-writein-index",
+      "url": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election#section-5",
+      "finalUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election#section-5",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:44:27.719404+00:00",
+      "sha256": "697775be35f9124e55fe6a59fa1e685f8d732b07460502b2a9731b67eb9b3b53",
+      "sourceFile": "sources/697775be35f9124e55fe6a59fa1e685f8d732b07460502b2a9731b67eb9b3b53.source"
+    },
+    {
+      "label": "county-zero",
+      "url": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:41:02.640488+00:00",
+      "sha256": "9535cb68fd7c1948f13665204ae8f3b8916997648d41c278800acf3d8a22b860",
+      "sourceFile": "sources/9535cb68fd7c1948f13665204ae8f3b8916997648d41c278800acf3d8a22b860.source"
+    },
+    {
+      "label": "court5-home",
+      "url": "https://appellate.courts.ca.gov/district-courts/5dca",
+      "finalUrl": "https://appellate.courts.ca.gov/district-courts/5dca",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:41:35.415319+00:00",
+      "sha256": "c51fdb513cef2c98f58a6c5de884886a69b19b75dc501e85265018cd308b3544",
+      "sourceFile": "sources/c51fdb513cef2c98f58a6c5de884886a69b19b75dc501e85265018cd308b3544.source"
+    },
+    {
+      "label": "omni-config",
+      "url": "https://sites.omniballot.us/06019/app/site-config.json?cb=1609952651666",
+      "finalUrl": "https://sites.omniballot.us/06019/app/site-config.json?cb=1609952651666",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:41:36.095991+00:00",
+      "sha256": "2483dc93d52a5eaab9856b5ef4b93f47469080ec6fff8f20d11a75dc83dc4ad9",
+      "sourceFile": "sources/2483dc93d52a5eaab9856b5ef4b93f47469080ec6fff8f20d11a75dc83dc4ad9.source"
+    },
+    {
+      "label": "omni-current-type0",
+      "url": "https://api.omniballot.us/v8/public/account/06019/currentelections?voter_type=0&voter_party=NON",
+      "finalUrl": "https://api.omniballot.us/v8/public/account/06019/currentelections?voter_type=0&voter_party=NON",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:43:14.588062+00:00",
+      "sha256": "76d371842bdd223ca7ca9c216048e64ec1f975297a3c533d4ad17ef378f8a943",
+      "sourceFile": "sources/76d371842bdd223ca7ca9c216048e64ec1f975297a3c533d4ad17ef378f8a943.source"
+    },
+    {
+      "label": "omni-js",
+      "url": "https://sites.omniballot.us/src/v10_3_7/combined-es5.js?cb=1609952651666",
+      "finalUrl": "https://sites.omniballot.us/src/v10_3_7/combined-es5.js?cb=1609952651666",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:41:23.431720+00:00",
+      "sha256": "69afb2f9ba5c25a165e23178986d04a070515428b8ec7b4d94f3db329e2b7467",
+      "sourceFile": "sources/69afb2f9ba5c25a165e23178986d04a070515428b8ec7b4d94f3db329e2b7467.source"
+    },
+    {
+      "label": "omni-past-type0",
+      "url": "https://api.omniballot.us/v8/public/account/06019/pastelections?voter_type=0&voter_party=NON",
+      "finalUrl": "https://api.omniballot.us/v8/public/account/06019/pastelections?voter_type=0&voter_party=NON",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:43:15.614421+00:00",
+      "sha256": "33d70c9fdd00fb9a8489ca69429c77241cac260ed7277b51744f99cf4e1f9634",
+      "sourceFile": "sources/33d70c9fdd00fb9a8489ca69429c77241cac260ed7277b51744f99cf4e1f9634.source"
+    },
+    {
+      "label": "omni-public-current",
+      "url": "https://api.omniballot.us/v8/public/account/06019/currentelections",
+      "finalUrl": "https://api.omniballot.us/v8/public/account/06019/currentelections",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:42:40.502415+00:00",
+      "sha256": "c0ec59af5c0336127a39f0bb5c1eae66d3f27e0d09e761f27ad7b0d98a235a11",
+      "sourceFile": "sources/c0ec59af5c0336127a39f0bb5c1eae66d3f27e0d09e761f27ad7b0d98a235a11.source"
+    },
+    {
+      "label": "omni-public-elections",
+      "url": "https://api.omniballot.us/v8/account/06019/currentelections",
+      "finalUrl": "https://api.omniballot.us/v8/account/06019/currentelections",
+      "status": 401,
+      "checkedAt": "2026-11-03T05:42:25.455101+00:00",
+      "sha256": "3e7db788e384631f8a9f299d1797e6f8af6d16d643a1c91f9e83ae15212de45c",
+      "sourceFile": "sources/3e7db788e384631f8a9f299d1797e6f8af6d16d643a1c91f9e83ae15212de45c.source"
+    },
+    {
+      "label": "omni-published-elections",
+      "url": "https://published.omniballot.us/06019/elections.json",
+      "finalUrl": "https://published.omniballot.us/06019/elections.json",
+      "status": 403,
+      "checkedAt": "2026-11-03T05:42:25.345898+00:00",
+      "sha256": "a824bc7739e226e1b40ea0f8c4e4f4c6f796fc3b4abfa6e9abe3bd119a30d938",
+      "sourceFile": "sources/a824bc7739e226e1b40ea0f8c4e4f4c6f796fc3b4abfa6e9abe3bd119a30d938.source"
+    },
+    {
+      "label": "omni-published-lookups",
+      "url": "https://published.omniballot.us/06019/lookups.json",
+      "finalUrl": "https://published.omniballot.us/06019/lookups.json",
+      "status": 403,
+      "checkedAt": "2026-11-03T05:42:25.543534+00:00",
+      "sha256": "a824bc7739e226e1b40ea0f8c4e4f4c6f796fc3b4abfa6e9abe3bd119a30d938",
+      "sourceFile": "sources/a824bc7739e226e1b40ea0f8c4e4f4c6f796fc3b4abfa6e9abe3bd119a30d938.source"
+    },
+    {
+      "label": "omni-upcoming-type0",
+      "url": "https://api.omniballot.us/v8/public/account/06019/upcomingelections?voter_type=0&voter_party=NON",
+      "finalUrl": "https://api.omniballot.us/v8/public/account/06019/upcomingelections?voter_type=0&voter_party=NON",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:43:14.693533+00:00",
+      "sha256": "276f7723d25ceb722993496e3b4b12de703ae86d4f7b4f8d43f2a4cac509e9d8",
+      "sourceFile": "sources/276f7723d25ceb722993496e3b4b12de703ae86d4f7b4f8d43f2a4cac509e9d8.source"
+    },
+    {
+      "label": "pacific-union-cde",
+      "url": "https://www.cde.ca.gov/SchoolDirectory/details?cdscode=10623560000000",
+      "finalUrl": "https://sd.cde.ca.gov/SchoolDirectory/details?cdscode=10623560000000",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:48:55.094085+00:00",
+      "sha256": "dce4b6621382d15854f9ad0effa421c7923d3526ad1b1760d818f4646ffd1a28",
+      "sourceFile": "sources/dce4b6621382d15854f9ad0effa421c7923d3526ad1b1760d818f4646ffd1a28.source"
+    },
+    {
+      "label": "press-printing",
+      "url": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press-release/10.31.26-fresno-county-elections-department-identifies-limited-printing-error.pdf",
+      "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press-release/10.31.26-fresno-county-elections-department-identifies-limited-printing-error.pdf",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:41:21.561964+00:00",
+      "sha256": "2c85d0cfdf05d902532dca13a5600979dbd51fc66dbec664e84f18b0c5876939",
+      "sourceFile": "sources/2c85d0cfdf05d902532dca13a5600979dbd51fc66dbec664e84f18b0c5876939.source"
+    },
+    {
+      "label": "voter-guide",
+      "url": "https://www.fresnocountyca.gov/Resources/Voter-Guide",
+      "finalUrl": "https://sites.omniballot.us/06019/app/home",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:41:03.426373+00:00",
+      "sha256": "bc77ba0b2ac280a8cdeacbc5f604f4ae6ddb33f12c6f54c2fe59beef65bcd182",
+      "sourceFile": "sources/bc77ba0b2ac280a8cdeacbc5f604f4ae6ddb33f12c6f54c2fe59beef65bcd182.source"
+    },
+    {
+      "label": "washington-nces",
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=0601415&Search=1&details=1",
+      "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=0601415&Search=1&details=1",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:48:54.561660+00:00",
+      "sha256": "14d4d24d0c92e651b02880897b8d23a01715f134b99d94727c83d068fd4d0db6",
+      "sourceFile": "sources/14d4d24d0c92e651b02880897b8d23a01715f134b99d94727c83d068fd4d0db6.source"
+    }
+  ],
+  "noVoterIdentitySubmitted": true,
+  "currentOmniElectionResults": "empty",
+  "latestPublicPastElectionYear": 2025
+}

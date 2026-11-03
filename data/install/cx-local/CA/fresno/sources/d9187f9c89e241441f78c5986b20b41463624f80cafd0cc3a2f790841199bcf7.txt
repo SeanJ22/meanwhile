@@ -1,0 +1,3 @@
+The Zero Report shows all contests and candidates that appear on the November 3, 2026, Consolidated Statewide General Election ballots across Fresno County.
+
+The screen on the ballot-marking devices lists the correct contest title, Fresno Unified School District, when used by a voter residing within the jurisdiction. However, when ballots are printed from the ballot-marking devices, the contest title is incorrectly listed as Fowler Unified School District Trustee Areas 1, 3, or 4 rather than Fresno Unified School District Trustee Areas 1, 3, or 4.

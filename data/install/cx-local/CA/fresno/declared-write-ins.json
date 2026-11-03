@@ -1,0 +1,23 @@
+{
+  "electionId": "ca-2026-11-03-general",
+  "county": "Fresno",
+  "status": "NAMED_CERTIFICATION_INVENTORY_NOT_ACQUIRED",
+  "candidates": [],
+  "heldWriteInOnlyFields": [
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-huron-member-city-council-short-term",
+      "electionId": "ca-2026-11-03-general",
+      "ocdId": "ocd-division/country:us/state:ca/place:huron",
+      "title": "City of Huron — Member, City Council (Short Term)",
+      "provenance": {
+        "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+        "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+        "collectedAt": "2026-11-03T05:41:02.640488+00:00",
+        "verifiedAt": "2026-11-03T05:41:02.640488+00:00",
+        "quote": "Huron City Council ST (Vote for 1)\nWrite-in \n0\nN/A"
+      },
+      "reason": "Current official inventory prints only a generic Write-in row, no named candidate. Named qualified write-in certification has not been acquired; preserve separately pending correct reader write-in representation. No ordinary placeholder candidacy."
+    }
+  ],
+  "genericBlankPolicy": "No unnamed Write-in row is a person; Huron short-term field remains held until named qualification and reader representation are source verified."
+}

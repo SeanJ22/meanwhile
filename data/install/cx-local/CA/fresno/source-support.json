@@ -1,0 +1,203 @@
+[
+  {
+    "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+    "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+    "sourceCheckedAt": "2026-11-03T05:41:02.640488+00:00",
+    "sha256": "9535cb68fd7c1948f13665204ae8f3b8916997648d41c278800acf3d8a22b860",
+    "sourceFile": "sources/9535cb68fd7c1948f13665204ae8f3b8916997648d41c278800acf3d8a22b860.source",
+    "role": "OFFICIAL_COMPLETE_CURRENT_BALLOT_INVENTORY;NOT_SAMPLE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separate hashes for full native extraction and selected exact table-cell excerpts.",
+    "evidence": "Native county October22,2026 zero report, linked on current official November election page. Registrar October31notice expressly confirms this report shows all contests and candidates on November3county ballots.82localfields:75complete named ordinary fields/195names,6held FifthDistrictretentions,1generic-write-in-only Huronshorttermfield held separately. All82headings/vote limits/complete row blocks compared to native text and visually checked using14native PDF crop sheets. This inventory is never labeled a sample or actual voting results.",
+    "excerptFile": "sources/3da4f9dbbdab036655b7e8cc8547fda97bc31c76e93634210f75d3e28d9eff39.txt",
+    "excerptSha256": "3da4f9dbbdab036655b7e8cc8547fda97bc31c76e93634210f75d3e28d9eff39",
+    "fullTextFile": "sources/4b3b5532af0f337b04fd14768c002836c9ca3d36d56e0ad169957bfc654a98e7.native.txt",
+    "fullTextSha256": "4b3b5532af0f337b04fd14768c002836c9ca3d36d56e0ad169957bfc654a98e7",
+    "quoteExtraction": "Original native exact office heading plus complete candidate table rows, in native row order. Selection excludes turnout and zero summary rows. Fourteen render sheets show the corresponding exact native headings/table cells, never a recreated ballot.",
+    "visualReview": {
+      "status": "ALL82_LOCAL_INVENTORY_BLOCKS_VISUALLY_VERIFIED;NOT_SAMPLE",
+      "pages": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/b7b7305811c48e68a718f8a0532f3b97be356519310b779b7bb62ea8ee1a879d.png",
+        "sha256": "b7b7305811c48e68a718f8a0532f3b97be356519310b779b7bb62ea8ee1a879d"
+      },
+      {
+        "file": "sources/0f77f43f1b6025d3fe91164c699f6270f4b0088181c8d8c0997bde8302824b01.png",
+        "sha256": "0f77f43f1b6025d3fe91164c699f6270f4b0088181c8d8c0997bde8302824b01"
+      },
+      {
+        "file": "sources/88c05410343cee53442cf3f1500005fec60760095cd1818abae753b5c3f16993.png",
+        "sha256": "88c05410343cee53442cf3f1500005fec60760095cd1818abae753b5c3f16993"
+      },
+      {
+        "file": "sources/1dfc9590bf1997a4777c3ace3141b60781b9a252b947bbf29c9b0ae4edaaac5e.png",
+        "sha256": "1dfc9590bf1997a4777c3ace3141b60781b9a252b947bbf29c9b0ae4edaaac5e"
+      },
+      {
+        "file": "sources/29f26c25c35e7f2bb0549ac42727371e36f6ac8bad6048f3a65155871efa61ec.png",
+        "sha256": "29f26c25c35e7f2bb0549ac42727371e36f6ac8bad6048f3a65155871efa61ec"
+      },
+      {
+        "file": "sources/f47afc951d652579c91b856833bdcc4df3384754fad439d65ec1a9a424904cb1.png",
+        "sha256": "f47afc951d652579c91b856833bdcc4df3384754fad439d65ec1a9a424904cb1"
+      },
+      {
+        "file": "sources/f04c76d32db8257e6c95139efe5b4b46a54bfff20de5f5b34c2a010431efa23c.png",
+        "sha256": "f04c76d32db8257e6c95139efe5b4b46a54bfff20de5f5b34c2a010431efa23c"
+      },
+      {
+        "file": "sources/18919099b757643c40f1088775d2abce62f366e443f545e20bde6792c4d49395.png",
+        "sha256": "18919099b757643c40f1088775d2abce62f366e443f545e20bde6792c4d49395"
+      },
+      {
+        "file": "sources/a900a0893c22b5237d537f223cf8d285113f8f113d2c987de184e4d048abdd7e.png",
+        "sha256": "a900a0893c22b5237d537f223cf8d285113f8f113d2c987de184e4d048abdd7e"
+      },
+      {
+        "file": "sources/a7f0dcf147c69a40837f540c6b3c189660bf61f31dfcabb5acc5ea08953caca4.png",
+        "sha256": "a7f0dcf147c69a40837f540c6b3c189660bf61f31dfcabb5acc5ea08953caca4"
+      },
+      {
+        "file": "sources/c3650ac18bef1f6ed84a4368e6ac5e76608e9556860e38fe5a1af7ea29ae86c5.png",
+        "sha256": "c3650ac18bef1f6ed84a4368e6ac5e76608e9556860e38fe5a1af7ea29ae86c5"
+      },
+      {
+        "file": "sources/0720321efe30173037ba70dfe6cd79295dc433e41fdd4c95c12868f011241ed9.png",
+        "sha256": "0720321efe30173037ba70dfe6cd79295dc433e41fdd4c95c12868f011241ed9"
+      },
+      {
+        "file": "sources/e930b89be29160c844dfff7798ace471116cfa04ace595c0481d3f304547034f.png",
+        "sha256": "e930b89be29160c844dfff7798ace471116cfa04ace595c0481d3f304547034f"
+      },
+      {
+        "file": "sources/e921685602b514af4006bbc3ddf37c9a089f54011265c5607a7ce8991e23386b.png",
+        "sha256": "e921685602b514af4006bbc3ddf37c9a089f54011265c5607a7ce8991e23386b"
+      }
+    ]
+  },
+  {
+    "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press-release/10.31.26-fresno-county-elections-department-identifies-limited-printing-error.pdf",
+    "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press-release/10.31.26-fresno-county-elections-department-identifies-limited-printing-error.pdf",
+    "sourceCheckedAt": "2026-11-03T05:41:21.561964+00:00",
+    "sha256": "2c85d0cfdf05d902532dca13a5600979dbd51fc66dbec664e84f18b0c5876939",
+    "sourceFile": "sources/2c85d0cfdf05d902532dca13a5600979dbd51fc66dbec664e84f18b0c5876939.source",
+    "role": "OFFICIAL_INVENTORY_AUTHORITY_AND_CURRENT_DISTRICT_CORRECTION",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separate hashes for full native extraction and selected exact table-cell excerpts.",
+    "evidence": "Registrar October31notice explicitly establishes zero report as complete November field/name inventory and clarifies that FresnoUnified trusteeareas1/3/4 remain FresnoUnified despite certain ballot-marking-device print-label errors. Candidate facts use correct FresnoUnified scope.",
+    "excerptFile": "sources/d9187f9c89e241441f78c5986b20b41463624f80cafd0cc3a2f790841199bcf7.txt",
+    "excerptSha256": "d9187f9c89e241441f78c5986b20b41463624f80cafd0cc3a2f790841199bcf7",
+    "fullTextFile": "sources/a420bd547431921459d6cafa1086487037c795ae2beeb3499fbee4c0f586e83f.native.txt",
+    "fullTextSha256": "a420bd547431921459d6cafa1086487037c795ae2beeb3499fbee4c0f586e83f"
+  },
+  {
+    "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/2026-5-11_candidate-guide-for-november-3-2026-election.pdf",
+    "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/2026-5-27_candidate-guide-for-november-3-2026-election.pdf",
+    "sourceCheckedAt": "2026-11-03T05:44:30.455933+00:00",
+    "sha256": "23baacf8832111a57438925a72e53d8c07ae7ac42d5c3f8c6c33f2be53a99536",
+    "sourceFile": "sources/23baacf8832111a57438925a72e53d8c07ae7ac42d5c3f8c6c33f2be53a99536.source",
+    "role": "OFFICIAL_ELECTORATE_NOMENCLATURE_ONLY;NOT_QUALIFICATION",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separate hashes for full native extraction and selected exact table-cell excerpts.",
+    "evidence": "Current linked official November candidate guide, May27revision. Pages114–127 identify countywide versus district/trustee/division/zone/at-large methods and legal office/body names. This prefiling guide supplies scope nomenclature only. All installed qualification/name/vote-limit facts come from current Octoberzero report and October31authority notice.",
+    "excerptFile": "sources/febfcba98689b1a2756af83199a0f4e979ead96f22b33f5fa28e0c1841f6825f.txt",
+    "excerptSha256": "febfcba98689b1a2756af83199a0f4e979ead96f22b33f5fa28e0c1841f6825f",
+    "fullTextFile": "sources/b9747bd3113943f0e2904a75dd82b4cb46e0d3684f18f4b616cddca0c1efbea6.native.txt",
+    "fullTextSha256": "b9747bd3113943f0e2904a75dd82b4cb46e0d3684f18f4b616cddca0c1efbea6"
+  },
+  {
+    "sourceUrl": "https://appellate.courts.ca.gov/district-courts/5dca",
+    "finalUrl": "https://appellate.courts.ca.gov/district-courts/5dca",
+    "sourceCheckedAt": "2026-11-03T05:41:35.415319+00:00",
+    "sha256": "c51fdb513cef2c98f58a6c5de884886a69b19b75dc501e85265018cd308b3544",
+    "sourceFile": "sources/c51fdb513cef2c98f58a6c5de884886a69b19b75dc501e85265018cd308b3544.source",
+    "role": "EXACT_REGIONAL_ELECTORATE_AUTHORITY",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified source bytes; separate hashes for full native extraction and selected exact table-cell excerpts.",
+    "evidence": "Official court source explicitly lists nine entire counties comprising FifthAppellateDistrict. Six held regional office/person IDs reused; one region-wide electorate serves all9through source-backed whole-county memberships.",
+    "excerptFile": "sources/113edba2eabc8197f3d0ea84e00a4c24ecf1a4c910b4707667b1074c3ef2b927.txt",
+    "excerptSha256": "113edba2eabc8197f3d0ea84e00a4c24ecf1a4c910b4707667b1074c3ef2b927"
+  },
+  {
+    "sourceUrl": "https://www.cde.ca.gov/SchoolDirectory/details?cdscode=10623560000000",
+    "finalUrl": "https://sd.cde.ca.gov/SchoolDirectory/details?cdscode=10623560000000",
+    "sourceCheckedAt": "2026-11-03T05:48:55.094085+00:00",
+    "sha256": "dce4b6621382d15854f9ad0effa421c7923d3526ad1b1760d818f4646ffd1a28",
+    "sourceFile": "sources/dce4b6621382d15854f9ad0effa421c7923d3526ad1b1760d818f4646ffd1a28.source",
+    "role": "EXACT_AMBIGUOUS_SCHOOL_ID_AUTHORITY",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified source bytes; separate hashes for full native extraction and selected exact table-cell excerpts.",
+    "evidence": "Official CDE district record places PacificUnionElementary in Fresno and identifies NCES0629400. Avoids the different same-name school district0629430. No address/contact fields quoted.",
+    "excerptFile": "sources/76431e4ba243f408d8a549dc0e8d194165e312d6a2b7926740d1302c90fb51de.txt",
+    "excerptSha256": "76431e4ba243f408d8a549dc0e8d194165e312d6a2b7926740d1302c90fb51de"
+  },
+  {
+    "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=0601415&Search=1&details=1",
+    "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=0601415&Search=1&details=1",
+    "sourceCheckedAt": "2026-11-03T05:48:54.561660+00:00",
+    "sha256": "14d4d24d0c92e651b02880897b8d23a01715f134b99d94727c83d068fd4d0db6",
+    "sourceFile": "sources/14d4d24d0c92e651b02880897b8d23a01715f134b99d94727c83d068fd4d0db6.source",
+    "role": "EXACT_AMBIGUOUS_SCHOOL_ID_AUTHORITY",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified source bytes; separate hashes for full native extraction and selected exact table-cell excerpts.",
+    "evidence": "Official NCES record identifies Fresno WashingtonUnified as0601415; avoids the separate same-name0641580 district. No address/contact fields quoted.",
+    "excerptFile": "sources/0812f852c6fa61b6dd20b77081f057a4cfa6f8120258e6b0628d79241d3daaa7.txt",
+    "excerptSha256": "0812f852c6fa61b6dd20b77081f057a4cfa6f8120258e6b0628d79241d3daaa7"
+  },
+  {
+    "sourceUrl": "https://www.fresno.gov/cityclerk/election-information/",
+    "finalUrl": "https://www.fresno.gov/cityclerk/election-information/",
+    "sourceCheckedAt": "2026-11-03T05:50:05.923794+00:00",
+    "sha256": "623d018569e120e3d652676082582ccd58ddf1914b1c5fd08f365a2882aac2e6",
+    "sourceFile": "sources/623d018569e120e3d652676082582ccd58ddf1914b1c5fd08f365a2882aac2e6.source",
+    "role": "DISTRICT_NOMENCLATURE_ONLY",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified source bytes; separate hashes for full native extraction and selected exact table-cell excerpts.",
+    "evidence": "Official city election page establishes council District1/3/5/7 nomenclature and Novemberrunoff cycle. No June candidate/contest is imported; actual Novemberoffices1/3/7 and names come only from current county zero report."
+  },
+  {
+    "sourceUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+    "finalUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+    "sourceCheckedAt": "2026-11-03T05:40:34.962799+00:00",
+    "sha256": "5008c4bb6e73b5d0fc213f1273caeff3713483094df6ba17d2871e8b51a5f778",
+    "sourceFile": "sources/5008c4bb6e73b5d0fc213f1273caeff3713483094df6ba17d2871e8b51a5f778.source",
+    "role": "CURRENT_OFFICIAL_SOURCE_LINKING_PAGE",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified source bytes; separate hashes for full native extraction and selected exact table-cell excerpts.",
+    "evidence": "Current official November3election page links zero report, October31correction, qualified/offballot lists and candidate guide. www2candidate-list responses are HTML RequestRejected despite HTTP200, not PDF evidence."
+  }
+]

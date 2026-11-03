@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:50:37.644892+00:00",
+  "preparedAt": "2026-11-03T05:57:00.140329+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1166,6 +1166,27 @@
       "refreshedContests": 3,
       "sourceInputSha256": "2f28d23a03f863fe6a370c7adcf4c8ecdb264e5d7d6574605cd45b5662e8b2d6",
       "coverage": "See per-county manifest for exact source and reader scope."
+    },
+    {
+      "state": "CA",
+      "county": "Fresno",
+      "populationRank": 48,
+      "manifest": "CA/fresno/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 81,
+      "measureContests": 0,
+      "candidacies": 201,
+      "newContests": 75,
+      "refreshedContests": 6,
+      "sourceInputSha256": "f3c8eb8fad059a8d25de48bc1b611f74fecb00e79cf022f55b5fde2ccaf75360",
+      "coverage": [
+        "Official-inventory supplement only:75complete named local candidate fields/195people plus6held FifthDistrictretentions are corroborated by the current official October22county zero report. Registrar October31notice expressly states the report shows every contest/candidate appearing on November3county ballots. All82local blocks were natively parsed and visually checked. Zero-report totals are placeholders, never actual election results. Actual current sample files acquired:0; all81installable fields retain explicit sample-acquisition gaps.",
+        "One additional HuronCityCouncil short-term field contains only a generic Write-in row, no named candidate. It is held separately, with no ordinary placeholder person. Named local certified-write-in inventory and cancellation/offballot lists remain unacquired; the www2qualified/offballot links return HTML RequestRejected under HTTP200. No field is invented from Juneprimary candidate data.",
+        "Six original FifthDistrict retention office/person IDs and core fields are preserved. All current California lane inputs were checked for shared exact school/special/regional identities;75ordinary fields and195candidacies are new. The exact nine whole counties listed by the official FifthDistrict court are supplied as districtMemberships. No whole county/city/school is substituted for a subdistrict.",
+        "Canonical school identities are disambiguated with current government records: PacificUnionElementaryFresno NCES0629400; WashingtonUnifiedFresno NCES0601415. Each numbered trustee/council/supervisor/director/division/zone electorate retains its exact source scope, with missing reader geometry explicit. MercedCountyBoardEducationDistrict5 and StateCenterCollege trusteearea1 remain exact cross-county offices, not countywide Fresno races.",
+        "Registrar October31notice confirms FresnoUnified trusteeareas1/3/4 are FresnoUnified despite Fowler mislabels on some ballot-marking-device prints. Current inventory and exact FresnoUnified electorates are used. Existing statewide, legislative and measure records/explanations remain unchanged.",
+        "Official county VoterGuide redirects to an OmniBallot workflow configured for first name,last name,dateofbirth; no voter identity was submitted. Public election metadata found no current/upcoming entry and past entries only through2025. Public government mirror searches did not yield a current2026sample. These are source-access findings, not proof the government publishes no samples."
+      ]
     }
   ],
   "sourceReviewCounties": [
@@ -1191,17 +1212,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 45,
-    "packetsPrepared": 46,
-    "candidateAndRetentionContests": 2549,
+    "countiesPrepared": 46,
+    "packetsPrepared": 47,
+    "candidateAndRetentionContests": 2630,
     "measureContests": 111,
-    "candidacyEntries": 5717,
-    "newContestEntriesAgainstCheckedInBaseline": 2058,
-    "distinctPreparedContestIds": 2639,
-    "distinctPreparedCandidateIds": 5656,
-    "distinctNewContestsAgainstCheckedInBaseline": 2047,
+    "candidacyEntries": 5918,
+    "newContestEntriesAgainstCheckedInBaseline": 2133,
+    "distinctPreparedContestIds": 2720,
+    "distinctPreparedCandidateIds": 5857,
+    "distinctNewContestsAgainstCheckedInBaseline": 2122,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 46
+    "distinctCountyHandoffs": 47
   },
   "remainingWork": [
     {

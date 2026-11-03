@@ -1,0 +1,1966 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CA",
+  "county": "Fresno",
+  "countyFips": "06019",
+  "populationRank": 48,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "operation": "Partial state merge through existing candidate APIs. Complete current official-inventory basics only, explicit sample gaps; exact electorates, held identities and all unrelated statewide/legislative/measure rows preserved. No production writes.",
+  "subjects": [
+    {
+      "id": "ca-sos-2026-general-retention-arlan-l-harrell",
+      "title": "Associate Justice, Court of Appeal, Fifth District \u2014 ARLAN L. HARRELL",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-thomas-desantos",
+      "title": "Associate Justice, Court of Appeal, Fifth District \u2014 THOMAS DESANTOS",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-sonny-s-sandhu",
+      "title": "Associate Justice, Court of Appeal, Fifth District \u2014 SONNY S. SANDHU",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-mark-w-snauffer",
+      "title": "Associate Justice, Court of Appeal, Fifth District \u2014 MARK W. SNAUFFER",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-amy-k-guerra",
+      "title": "Associate Justice, Court of Appeal, Fifth District \u2014 AMY K. GUERRA",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-kathleen-a-meehan",
+      "title": "Associate Justice, Court of Appeal, Fifth District \u2014 KATHLEEN A. MEEHAN",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-fresno-county-superior-court-judge-office-no-6",
+      "title": "Fresno County \u2014 Superior Court Judge, Office No. 6",
+      "ocdId": "ocd-division/country:us/state:ca/county:fresno",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-fresno-county-superior-court-judge-office-no-7",
+      "title": "Fresno County \u2014 Superior Court Judge, Office No. 7",
+      "ocdId": "ocd-division/country:us/state:ca/county:fresno",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-fresno-county-superintendent-of-schools",
+      "title": "Fresno County \u2014 Superintendent of Schools",
+      "ocdId": "ocd-division/country:us/state:ca/county:fresno",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-merced-county-board-of-education-member-district-5",
+      "title": "Merced County Board of Education \u2014 Member, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/county:merced/school_board_district:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-state-center-community-college-district-governing-board-member-trustee-area-1",
+      "title": "State Center Community College District \u2014 Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:state_center_community_college_district/trustee_area:1",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-state-center-community-college-district-governing-board-member-trustee-area-5",
+      "title": "State Center Community College District \u2014 Governing Board Member, Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:state_center_community_college_district/trustee_area:5",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-1",
+      "title": "Central Unified School District \u2014 Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:central_unified_school_district/trustee_area:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-4",
+      "title": "Central Unified School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:central_unified_school_district/trustee_area:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-7",
+      "title": "Central Unified School District \u2014 Governing Board Member, Trustee Area 7",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:central_unified_school_district/trustee_area:7",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-3-short-term",
+      "title": "Central Unified School District \u2014 Governing Board Member, Trustee Area 3 (Short Term)",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:central_unified_school_district/trustee_area:3",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-firebaugh-las-deltas-unified-school-district-governing-board-member-trustee-area-1",
+      "title": "Firebaugh-Las Deltas Unified School District \u2014 Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:firebaugh_las_deltas_unified_school_district/trustee_area:1",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-firebaugh-las-deltas-unified-school-district-governing-board-member-trustee-area-4",
+      "title": "Firebaugh-Las Deltas Unified School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:firebaugh_las_deltas_unified_school_district/trustee_area:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-1",
+      "title": "Fresno Unified School District \u2014 Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fresno_unified_school_district/trustee_area:1",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-3",
+      "title": "Fresno Unified School District \u2014 Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fresno_unified_school_district/trustee_area:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-4",
+      "title": "Fresno Unified School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fresno_unified_school_district/trustee_area:4",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-kerman-unified-school-district-governing-board-member-trustee-area-4",
+      "title": "Kerman Unified School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kerman_unified_school_district/trustee_area:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-kerman-unified-school-district-governing-board-member-trustee-area-5",
+      "title": "Kerman Unified School District \u2014 Governing Board Member, Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kerman_unified_school_district/trustee_area:5",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-kings-canyon-joint-unified-school-district-governing-board-member-trustee-area-1",
+      "title": "Kings Canyon Joint Unified School District \u2014 Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kings_canyon_joint_unified_school_district/trustee_area:1",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-kings-canyon-joint-unified-school-district-governing-board-member-trustee-area-4",
+      "title": "Kings Canyon Joint Unified School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kings_canyon_joint_unified_school_district/trustee_area:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-mendota-unified-school-district-governing-board-member",
+      "title": "Mendota Unified School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:mendota_unified_school_district",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-parlier-unified-school-district-governing-board-member-trustee-area-1",
+      "title": "Parlier Unified School District \u2014 Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:parlier_unified_school_district/trustee_area:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-parlier-unified-school-district-governing-board-member-trustee-area-2",
+      "title": "Parlier Unified School District \u2014 Governing Board Member, Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:parlier_unified_school_district/trustee_area:2",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-sanger-unified-school-district-governing-board-member-trustee-area-2",
+      "title": "Sanger Unified School District \u2014 Governing Board Member, Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:sanger_unified_school_district/trustee_area:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-3",
+      "title": "Selma Unified School District \u2014 Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:selma_unified_school_district/trustee_area:3",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-4",
+      "title": "Selma Unified School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:selma_unified_school_district/trustee_area:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-5",
+      "title": "Selma Unified School District \u2014 Governing Board Member, Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:selma_unified_school_district/trustee_area:5",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-washington-unified-school-district-governing-board-member-trustee-area-7",
+      "title": "Washington Unified School District \u2014 Governing Board Member, Trustee Area 7",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:washington_unified_school_district_0601415/trustee_area:7",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-pacific-union-elementary-school-district-governing-board-member",
+      "title": "Pacific Union Elementary School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:pacific_union_elementary_school_district_0629400",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-raisin-city-elementary-school-district-governing-board-member",
+      "title": "Raisin City Elementary School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:raisin_city_elementary_school_district",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-washington-colony-elementary-school-district-governing-board-member-trustee-area-1",
+      "title": "Washington Colony Elementary School District \u2014 Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:washington_colony_elementary_school_district/trustee_area:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-washington-colony-elementary-school-district-governing-board-member-trustee-area-3",
+      "title": "Washington Colony Elementary School District \u2014 Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:washington_colony_elementary_school_district/trustee_area:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-west-park-elementary-school-district-governing-board-member",
+      "title": "West Park Elementary School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:west_park_elementary_school_district",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-fresno-county-supervisor-district-1",
+      "title": "Fresno County \u2014 Supervisor, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/county:fresno/supervisor_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-1",
+      "title": "City of Clovis \u2014 Member, City Council, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:clovis/council_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-4",
+      "title": "City of Clovis \u2014 Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:clovis/council_district:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-5",
+      "title": "City of Clovis \u2014 Member, City Council, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:clovis/council_district:5",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-1",
+      "title": "City of Coalinga \u2014 Member, City Council, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:coalinga/council_district:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-2-short-term",
+      "title": "City of Coalinga \u2014 Member, City Council, District 2 (Short Term)",
+      "ocdId": "ocd-division/country:us/state:ca/place:coalinga/council_district:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-3",
+      "title": "City of Coalinga \u2014 Member, City Council, District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:coalinga/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-5",
+      "title": "City of Coalinga \u2014 Member, City Council, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:coalinga/council_district:5",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-firebaugh-member-city-council",
+      "title": "City of Firebaugh \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:firebaugh",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-fowler-member-city-council",
+      "title": "City of Fowler \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:fowler",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-1",
+      "title": "City of Fresno \u2014 Member, City Council, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:fresno/council_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-3",
+      "title": "City of Fresno \u2014 Member, City Council, District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:fresno/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-7",
+      "title": "City of Fresno \u2014 Member, City Council, District 7",
+      "ocdId": "ocd-division/country:us/state:ca/place:fresno/council_district:7",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-huron-member-city-council",
+      "title": "City of Huron \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:huron",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-kerman-mayor",
+      "title": "City of Kerman \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:kerman",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-kerman-member-city-council-district-1",
+      "title": "City of Kerman \u2014 Member, City Council, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:kerman/council_district:1",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-kerman-member-city-council-district-3",
+      "title": "City of Kerman \u2014 Member, City Council, District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:kerman/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-kingsburg-member-city-council-district-5",
+      "title": "City of Kingsburg \u2014 Member, City Council, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:kingsburg/council_district:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-mendota-member-city-council",
+      "title": "City of Mendota \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:mendota",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-orange-cove-mayor",
+      "title": "City of Orange Cove \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:orange_cove",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-orange-cove-member-city-council",
+      "title": "City of Orange Cove \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:orange_cove",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-parlier-mayor",
+      "title": "City of Parlier \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:parlier",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-parlier-member-city-council-district-2",
+      "title": "City of Parlier \u2014 Member, City Council, District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:parlier/council_district:2",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-parlier-member-city-council-district-4",
+      "title": "City of Parlier \u2014 Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:parlier/council_district:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-2",
+      "title": "City of Reedley \u2014 Member, City Council, District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:reedley/council_district:2",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-4",
+      "title": "City of Reedley \u2014 Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:reedley/council_district:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-5-short-term",
+      "title": "City of Reedley \u2014 Member, City Council, District 5 (Short Term)",
+      "ocdId": "ocd-division/country:us/state:ca/place:reedley/council_district:5",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-sanger-mayor",
+      "title": "City of Sanger \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:sanger",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-sanger-member-city-council-district-2",
+      "title": "City of Sanger \u2014 Member, City Council, District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:sanger/council_district:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-sanger-member-city-council-district-4",
+      "title": "City of Sanger \u2014 Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:sanger/council_district:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-selma-mayor",
+      "title": "City of Selma \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:selma",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-selma-member-city-council-district-2",
+      "title": "City of Selma \u2014 Member, City Council, District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:selma/council_district:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-selma-member-city-council-district-3",
+      "title": "City of Selma \u2014 Member, City Council, District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:selma/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-biola-community-services-district-director",
+      "title": "Biola Community Services District \u2014 Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:biola_community_services_district",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-coalinga-huron-recreation-and-park-district-director-district-1-short-term",
+      "title": "Coalinga-Huron Recreation and Park District \u2014 Director, District 1 (Short Term)",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:coalinga_huron_recreation_and_park_district/director_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-coalinga-huron-recreation-and-park-district-director-district-3-short-term",
+      "title": "Coalinga-Huron Recreation and Park District \u2014 Director, District 3 (Short Term)",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:coalinga_huron_recreation_and_park_district/director_district:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-del-rey-community-services-district-director",
+      "title": "Del Rey Community Services District \u2014 Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:del_rey_community_services_district",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-laguna-irrigation-district-director-division-3",
+      "title": "Laguna Irrigation District \u2014 Director, Division 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:laguna_irrigation_district/division:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-malaga-county-water-district-director",
+      "title": "Malaga County Water District \u2014 Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:malaga_county_water_district",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-orange-cove-police-protection-district-director",
+      "title": "Orange Cove Police Protection District \u2014 Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:orange_cove_police_protection_district",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-pinedale-county-water-district-director",
+      "title": "Pinedale County Water District \u2014 Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:pinedale_county_water_district",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-riverdale-public-utility-district-director",
+      "title": "Riverdale Public Utility District \u2014 Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:riverdale_public_utility_district",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    },
+    {
+      "id": "ca-cx-local-2026-fresno-selma-health-care-district-director-zone-5",
+      "title": "Selma Health Care District \u2014 Director, Zone 5",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:selma_health_care_district/zone:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+      "evidenceClass": "CURRENT_OFFICIAL_BALLOT_INVENTORY;NOT_SAMPLE"
+    }
+  ],
+  "coverageStatus": "ALL82_LOCAL_OFFICIAL_INVENTORY_FIELDS_REVIEWED;81_INSTALLABLE_1_WRITE_IN_ONLY_HELD;81_ACTUAL_SAMPLE_FIELDS_PENDING",
+  "counts": {
+    "contests": 81,
+    "candidacies": 201,
+    "ordinaryCandidateFields": 75,
+    "ordinaryCandidates": 195,
+    "retentionFields": 6,
+    "newContests": 75,
+    "newCandidates": 195,
+    "reusedContests": 6,
+    "reusedCandidates": 6,
+    "officialInventoryLocalFields": 82,
+    "heldWriteInOnlyFields": 1,
+    "actualGovernmentSampleFiles": 0,
+    "officialListOnlyFields": 81,
+    "pendingGovernmentSampleFields": 81,
+    "wholeCountyMemberships": 9,
+    "measures": 0
+  },
+  "newContestIds": [
+    "ca-cx-local-2026-fresno-fresno-county-superior-court-judge-office-no-6",
+    "ca-cx-local-2026-fresno-fresno-county-superior-court-judge-office-no-7",
+    "ca-cx-local-2026-fresno-fresno-county-superintendent-of-schools",
+    "ca-cx-local-2026-fresno-merced-county-board-of-education-member-district-5",
+    "ca-cx-local-2026-fresno-state-center-community-college-district-governing-board-member-trustee-area-1",
+    "ca-cx-local-2026-fresno-state-center-community-college-district-governing-board-member-trustee-area-5",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-1",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-4",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-7",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-3-short-term",
+    "ca-cx-local-2026-fresno-firebaugh-las-deltas-unified-school-district-governing-board-member-trustee-area-1",
+    "ca-cx-local-2026-fresno-firebaugh-las-deltas-unified-school-district-governing-board-member-trustee-area-4",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-1",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-3",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-4",
+    "ca-cx-local-2026-fresno-kerman-unified-school-district-governing-board-member-trustee-area-4",
+    "ca-cx-local-2026-fresno-kerman-unified-school-district-governing-board-member-trustee-area-5",
+    "ca-cx-local-2026-fresno-kings-canyon-joint-unified-school-district-governing-board-member-trustee-area-1",
+    "ca-cx-local-2026-fresno-kings-canyon-joint-unified-school-district-governing-board-member-trustee-area-4",
+    "ca-cx-local-2026-fresno-mendota-unified-school-district-governing-board-member",
+    "ca-cx-local-2026-fresno-parlier-unified-school-district-governing-board-member-trustee-area-1",
+    "ca-cx-local-2026-fresno-parlier-unified-school-district-governing-board-member-trustee-area-2",
+    "ca-cx-local-2026-fresno-sanger-unified-school-district-governing-board-member-trustee-area-2",
+    "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-3",
+    "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-4",
+    "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-5",
+    "ca-cx-local-2026-fresno-washington-unified-school-district-governing-board-member-trustee-area-7",
+    "ca-cx-local-2026-fresno-pacific-union-elementary-school-district-governing-board-member",
+    "ca-cx-local-2026-fresno-raisin-city-elementary-school-district-governing-board-member",
+    "ca-cx-local-2026-fresno-washington-colony-elementary-school-district-governing-board-member-trustee-area-1",
+    "ca-cx-local-2026-fresno-washington-colony-elementary-school-district-governing-board-member-trustee-area-3",
+    "ca-cx-local-2026-fresno-west-park-elementary-school-district-governing-board-member",
+    "ca-cx-local-2026-fresno-fresno-county-supervisor-district-1",
+    "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-1",
+    "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-4",
+    "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-5",
+    "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-1",
+    "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-2-short-term",
+    "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-3",
+    "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-5",
+    "ca-cx-local-2026-fresno-city-of-firebaugh-member-city-council",
+    "ca-cx-local-2026-fresno-city-of-fowler-member-city-council",
+    "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-1",
+    "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-3",
+    "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-7",
+    "ca-cx-local-2026-fresno-city-of-huron-member-city-council",
+    "ca-cx-local-2026-fresno-city-of-kerman-mayor",
+    "ca-cx-local-2026-fresno-city-of-kerman-member-city-council-district-1",
+    "ca-cx-local-2026-fresno-city-of-kerman-member-city-council-district-3",
+    "ca-cx-local-2026-fresno-city-of-kingsburg-member-city-council-district-5",
+    "ca-cx-local-2026-fresno-city-of-mendota-member-city-council",
+    "ca-cx-local-2026-fresno-city-of-orange-cove-mayor",
+    "ca-cx-local-2026-fresno-city-of-orange-cove-member-city-council",
+    "ca-cx-local-2026-fresno-city-of-parlier-mayor",
+    "ca-cx-local-2026-fresno-city-of-parlier-member-city-council-district-2",
+    "ca-cx-local-2026-fresno-city-of-parlier-member-city-council-district-4",
+    "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-2",
+    "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-4",
+    "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-5-short-term",
+    "ca-cx-local-2026-fresno-city-of-sanger-mayor",
+    "ca-cx-local-2026-fresno-city-of-sanger-member-city-council-district-2",
+    "ca-cx-local-2026-fresno-city-of-sanger-member-city-council-district-4",
+    "ca-cx-local-2026-fresno-city-of-selma-mayor",
+    "ca-cx-local-2026-fresno-city-of-selma-member-city-council-district-2",
+    "ca-cx-local-2026-fresno-city-of-selma-member-city-council-district-3",
+    "ca-cx-local-2026-fresno-biola-community-services-district-director",
+    "ca-cx-local-2026-fresno-coalinga-huron-recreation-and-park-district-director-district-1-short-term",
+    "ca-cx-local-2026-fresno-coalinga-huron-recreation-and-park-district-director-district-3-short-term",
+    "ca-cx-local-2026-fresno-del-rey-community-services-district-director",
+    "ca-cx-local-2026-fresno-laguna-irrigation-district-director-division-3",
+    "ca-cx-local-2026-fresno-malaga-county-water-district-director",
+    "ca-cx-local-2026-fresno-orange-cove-police-protection-district-director",
+    "ca-cx-local-2026-fresno-pinedale-county-water-district-director",
+    "ca-cx-local-2026-fresno-riverdale-public-utility-district-director",
+    "ca-cx-local-2026-fresno-selma-health-care-district-director-zone-5"
+  ],
+  "newCandidacyIds": [
+    "ca-cx-local-2026-fresno-fresno-county-superior-court-judge-office-no-6:ashley-s-paulson",
+    "ca-cx-local-2026-fresno-fresno-county-superior-court-judge-office-no-6:steven-r-ueltzen",
+    "ca-cx-local-2026-fresno-fresno-county-superior-court-judge-office-no-7:jeff-hammerschmidt",
+    "ca-cx-local-2026-fresno-fresno-county-superior-court-judge-office-no-7:jose-l-salazar",
+    "ca-cx-local-2026-fresno-fresno-county-superintendent-of-schools:michele-cantwell-copher",
+    "ca-cx-local-2026-fresno-fresno-county-superintendent-of-schools:eimear-o-brien",
+    "ca-cx-local-2026-fresno-merced-county-board-of-education-member-district-5:jesse-d-perez",
+    "ca-cx-local-2026-fresno-merced-county-board-of-education-member-district-5:geneva-marie-brett",
+    "ca-cx-local-2026-fresno-state-center-community-college-district-governing-board-member-trustee-area-1:omair-javaid",
+    "ca-cx-local-2026-fresno-state-center-community-college-district-governing-board-member-trustee-area-1:nichol-s-salinas",
+    "ca-cx-local-2026-fresno-state-center-community-college-district-governing-board-member-trustee-area-1:destiny-rodriguez",
+    "ca-cx-local-2026-fresno-state-center-community-college-district-governing-board-member-trustee-area-5:miguel-castaneda-sanchez",
+    "ca-cx-local-2026-fresno-state-center-community-college-district-governing-board-member-trustee-area-5:marcos-osorio",
+    "ca-cx-local-2026-fresno-state-center-community-college-district-governing-board-member-trustee-area-5:terance-frazier",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-1:john-nale",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-1:joshua-sellers",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-4:jomar-rushdan",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-4:carmen-flores",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-7:diljot-singh-rai",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-7:richard-martinez-jr",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-3-short-term:harman-singh",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-3-short-term:lavera-smith",
+    "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-3-short-term:erica-gonzalez-piedra",
+    "ca-cx-local-2026-fresno-firebaugh-las-deltas-unified-school-district-governing-board-member-trustee-area-1:rayan-octavio-gonzalez",
+    "ca-cx-local-2026-fresno-firebaugh-las-deltas-unified-school-district-governing-board-member-trustee-area-1:eliseo-v-gamino",
+    "ca-cx-local-2026-fresno-firebaugh-las-deltas-unified-school-district-governing-board-member-trustee-area-1:javier-marquez",
+    "ca-cx-local-2026-fresno-firebaugh-las-deltas-unified-school-district-governing-board-member-trustee-area-4:antonio-tony-gonzales",
+    "ca-cx-local-2026-fresno-firebaugh-las-deltas-unified-school-district-governing-board-member-trustee-area-4:rene-munoz",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-1:miguel-arias",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-1:michelle-escobar-longoria",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-1:rizpah-bellard",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-1:deshunna-monay-ricks",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-1:daren-miller",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-3:valerie-f-davis",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-3:riley-talford",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-4:karen-steed",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-4:genoveva-veva-islas",
+    "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-4:mirna-garcia",
+    "ca-cx-local-2026-fresno-kerman-unified-school-district-governing-board-member-trustee-area-4:louie-y-vallejo",
+    "ca-cx-local-2026-fresno-kerman-unified-school-district-governing-board-member-trustee-area-4:kindra-a-melgoza",
+    "ca-cx-local-2026-fresno-kerman-unified-school-district-governing-board-member-trustee-area-5:davinder-k-sidhu",
+    "ca-cx-local-2026-fresno-kerman-unified-school-district-governing-board-member-trustee-area-5:efrain-guizar",
+    "ca-cx-local-2026-fresno-kerman-unified-school-district-governing-board-member-trustee-area-5:maria-medina",
+    "ca-cx-local-2026-fresno-kings-canyon-joint-unified-school-district-governing-board-member-trustee-area-1:lori-wolter",
+    "ca-cx-local-2026-fresno-kings-canyon-joint-unified-school-district-governing-board-member-trustee-area-1:heather-rodriguez",
+    "ca-cx-local-2026-fresno-kings-canyon-joint-unified-school-district-governing-board-member-trustee-area-1:efrain-tovar-jr",
+    "ca-cx-local-2026-fresno-kings-canyon-joint-unified-school-district-governing-board-member-trustee-area-4:juan-reynoso-sandoval",
+    "ca-cx-local-2026-fresno-kings-canyon-joint-unified-school-district-governing-board-member-trustee-area-4:robin-j-tyler",
+    "ca-cx-local-2026-fresno-mendota-unified-school-district-governing-board-member:sherry-rocio-charles",
+    "ca-cx-local-2026-fresno-mendota-unified-school-district-governing-board-member:celeste-cabrera-garcia",
+    "ca-cx-local-2026-fresno-mendota-unified-school-district-governing-board-member:jose-zavala",
+    "ca-cx-local-2026-fresno-mendota-unified-school-district-governing-board-member:kevin-gilbert-arias-romero",
+    "ca-cx-local-2026-fresno-mendota-unified-school-district-governing-board-member:sergio-valdez",
+    "ca-cx-local-2026-fresno-parlier-unified-school-district-governing-board-member-trustee-area-1:librado-nathaniel-cid",
+    "ca-cx-local-2026-fresno-parlier-unified-school-district-governing-board-member-trustee-area-1:joseph-vasquez-jr",
+    "ca-cx-local-2026-fresno-parlier-unified-school-district-governing-board-member-trustee-area-2:oscar-laurel-izazaga",
+    "ca-cx-local-2026-fresno-parlier-unified-school-district-governing-board-member-trustee-area-2:eric-molina",
+    "ca-cx-local-2026-fresno-parlier-unified-school-district-governing-board-member-trustee-area-2:enrique-maldonado",
+    "ca-cx-local-2026-fresno-sanger-unified-school-district-governing-board-member-trustee-area-2:david-pat-biddy-jr",
+    "ca-cx-local-2026-fresno-sanger-unified-school-district-governing-board-member-trustee-area-2:peter-filippi",
+    "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-3:regina-pallares",
+    "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-3:mariana-guerrero-meza",
+    "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-3:joel-fedor",
+    "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-4:estella-kessler",
+    "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-4:sandra-sandy-mendoza-aguilera",
+    "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-5:kent-hitch",
+    "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-5:ronald-sa",
+    "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-5:mark-morales-medina",
+    "ca-cx-local-2026-fresno-washington-unified-school-district-governing-board-member-trustee-area-7:steven-barra",
+    "ca-cx-local-2026-fresno-washington-unified-school-district-governing-board-member-trustee-area-7:mark-vivenzi",
+    "ca-cx-local-2026-fresno-pacific-union-elementary-school-district-governing-board-member:paul-jaurigue",
+    "ca-cx-local-2026-fresno-pacific-union-elementary-school-district-governing-board-member:jennifer-schmall",
+    "ca-cx-local-2026-fresno-pacific-union-elementary-school-district-governing-board-member:susan-markarian",
+    "ca-cx-local-2026-fresno-pacific-union-elementary-school-district-governing-board-member:rachelle-mendez",
+    "ca-cx-local-2026-fresno-raisin-city-elementary-school-district-governing-board-member:maria-g-hernandez-de-gonzalez",
+    "ca-cx-local-2026-fresno-raisin-city-elementary-school-district-governing-board-member:anthony-a-monreal",
+    "ca-cx-local-2026-fresno-raisin-city-elementary-school-district-governing-board-member:tina-medina",
+    "ca-cx-local-2026-fresno-washington-colony-elementary-school-district-governing-board-member-trustee-area-1:sue-ruiz",
+    "ca-cx-local-2026-fresno-washington-colony-elementary-school-district-governing-board-member-trustee-area-1:stephanie-morris",
+    "ca-cx-local-2026-fresno-washington-colony-elementary-school-district-governing-board-member-trustee-area-3:james-dack",
+    "ca-cx-local-2026-fresno-washington-colony-elementary-school-district-governing-board-member-trustee-area-3:hector-sicairos",
+    "ca-cx-local-2026-fresno-west-park-elementary-school-district-governing-board-member:sylvia-m-higgins",
+    "ca-cx-local-2026-fresno-west-park-elementary-school-district-governing-board-member:yaritza-astudillo",
+    "ca-cx-local-2026-fresno-west-park-elementary-school-district-governing-board-member:araceli-lopez",
+    "ca-cx-local-2026-fresno-west-park-elementary-school-district-governing-board-member:kimberly-vivenzi",
+    "ca-cx-local-2026-fresno-fresno-county-supervisor-district-1:mike-karbassi",
+    "ca-cx-local-2026-fresno-fresno-county-supervisor-district-1:maria-pacheco",
+    "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-1:maeketah-sayasane",
+    "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-1:mason-l-magsig",
+    "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-4:brian-wilson",
+    "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-4:matt-basgall",
+    "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-5:des-haus",
+    "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-5:sarah-almond",
+    "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-5:drew-bessinger",
+    "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-1:roger-schindler",
+    "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-2-short-term:jeremy-lowder",
+    "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-3:nathan-vosburg",
+    "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-5:abel-arroyo",
+    "ca-cx-local-2026-fresno-city-of-firebaugh-member-city-council:felipe-perez",
+    "ca-cx-local-2026-fresno-city-of-firebaugh-member-city-council:silvia-renteria",
+    "ca-cx-local-2026-fresno-city-of-firebaugh-member-city-council:james-big-jim-fraser",
+    "ca-cx-local-2026-fresno-city-of-fowler-member-city-council:eric-hadden",
+    "ca-cx-local-2026-fresno-city-of-fowler-member-city-council:gurjant-s-khosa",
+    "ca-cx-local-2026-fresno-city-of-fowler-member-city-council:patric-jones",
+    "ca-cx-local-2026-fresno-city-of-fowler-member-city-council:amarjeet-gill",
+    "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-1:naindeep-singh",
+    "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-1:rob-fuentes",
+    "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-3:joaquin-arambula",
+    "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-3:keshia-thomas",
+    "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-7:ariana-martinez-lott",
+    "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-7:nav-gurm",
+    "ca-cx-local-2026-fresno-city-of-huron-member-city-council:roberto-c-pimentel",
+    "ca-cx-local-2026-fresno-city-of-huron-member-city-council:joel-mora",
+    "ca-cx-local-2026-fresno-city-of-huron-member-city-council:mike-a-morales",
+    "ca-cx-local-2026-fresno-city-of-huron-member-city-council:david-mercado",
+    "ca-cx-local-2026-fresno-city-of-kerman-mayor:gary-k-yep",
+    "ca-cx-local-2026-fresno-city-of-kerman-mayor:yazmine-enriquez",
+    "ca-cx-local-2026-fresno-city-of-kerman-member-city-council-district-1:charles-charlie-jones",
+    "ca-cx-local-2026-fresno-city-of-kerman-member-city-council-district-1:mayra-galvez",
+    "ca-cx-local-2026-fresno-city-of-kerman-member-city-council-district-1:michael-mudgett",
+    "ca-cx-local-2026-fresno-city-of-kerman-member-city-council-district-3:maria-berber-orozco",
+    "ca-cx-local-2026-fresno-city-of-kingsburg-member-city-council-district-5:vince-palomar",
+    "ca-cx-local-2026-fresno-city-of-kingsburg-member-city-council-district-5:charlie-soto",
+    "ca-cx-local-2026-fresno-city-of-mendota-member-city-council:libertad-liberty-lopez",
+    "ca-cx-local-2026-fresno-city-of-mendota-member-city-council:oscar-h-rosales",
+    "ca-cx-local-2026-fresno-city-of-mendota-member-city-council:joseph-r-riofrio",
+    "ca-cx-local-2026-fresno-city-of-mendota-member-city-council:victor-m-martinez",
+    "ca-cx-local-2026-fresno-city-of-orange-cove-mayor:gilbert-garcia",
+    "ca-cx-local-2026-fresno-city-of-orange-cove-member-city-council:jaime-casillas",
+    "ca-cx-local-2026-fresno-city-of-orange-cove-member-city-council:isaiah-lopez",
+    "ca-cx-local-2026-fresno-city-of-orange-cove-member-city-council:alex-garcia",
+    "ca-cx-local-2026-fresno-city-of-orange-cove-member-city-council:derek-greenwood",
+    "ca-cx-local-2026-fresno-city-of-parlier-mayor:lionel-lopez-jr",
+    "ca-cx-local-2026-fresno-city-of-parlier-mayor:fernando-ba-uelos",
+    "ca-cx-local-2026-fresno-city-of-parlier-mayor:alma-m-beltr-n",
+    "ca-cx-local-2026-fresno-city-of-parlier-member-city-council-district-2:trinidad-trino-pimentel",
+    "ca-cx-local-2026-fresno-city-of-parlier-member-city-council-district-2:marcie-villalpando",
+    "ca-cx-local-2026-fresno-city-of-parlier-member-city-council-district-2:yesenia-yesi-flores",
+    "ca-cx-local-2026-fresno-city-of-parlier-member-city-council-district-4:andrew-lopez",
+    "ca-cx-local-2026-fresno-city-of-parlier-member-city-council-district-4:diego-garza",
+    "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-2:lee-ky",
+    "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-2:luis-plaza-muniz",
+    "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-2:eddie-jimenez",
+    "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-2:joe-garza",
+    "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-2:sara-m-montemayor",
+    "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-4:june-bracamontes",
+    "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-4:scott-friesen",
+    "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-5-short-term:dustin-brook-dobbins",
+    "ca-cx-local-2026-fresno-city-of-sanger-mayor:gavino-barrera",
+    "ca-cx-local-2026-fresno-city-of-sanger-mayor:victor-ruiz",
+    "ca-cx-local-2026-fresno-city-of-sanger-mayor:frank-gonzalez",
+    "ca-cx-local-2026-fresno-city-of-sanger-member-city-council-district-2:hilda-monique-reyna",
+    "ca-cx-local-2026-fresno-city-of-sanger-member-city-council-district-2:dolores-melendez",
+    "ca-cx-local-2026-fresno-city-of-sanger-member-city-council-district-4:juan-alvarez-tovar",
+    "ca-cx-local-2026-fresno-city-of-sanger-member-city-council-district-4:michael-montelongo",
+    "ca-cx-local-2026-fresno-city-of-selma-mayor:naripjeet-narip-josan",
+    "ca-cx-local-2026-fresno-city-of-selma-mayor:rosemary-alanis",
+    "ca-cx-local-2026-fresno-city-of-selma-mayor:theresa-h-guzman-salas",
+    "ca-cx-local-2026-fresno-city-of-selma-mayor:scott-robertson",
+    "ca-cx-local-2026-fresno-city-of-selma-member-city-council-district-2:bryan-ramirez",
+    "ca-cx-local-2026-fresno-city-of-selma-member-city-council-district-2:john-trujillo",
+    "ca-cx-local-2026-fresno-city-of-selma-member-city-council-district-3:sarah-guerra",
+    "ca-cx-local-2026-fresno-city-of-selma-member-city-council-district-3:louis-franco",
+    "ca-cx-local-2026-fresno-biola-community-services-district-director:korene-witt",
+    "ca-cx-local-2026-fresno-biola-community-services-district-director:maria-ponce",
+    "ca-cx-local-2026-fresno-biola-community-services-district-director:rosa-maria-rosales-venegas",
+    "ca-cx-local-2026-fresno-biola-community-services-district-director:francisco-torres-jr",
+    "ca-cx-local-2026-fresno-coalinga-huron-recreation-and-park-district-director-district-1-short-term:jennifer-johnson",
+    "ca-cx-local-2026-fresno-coalinga-huron-recreation-and-park-district-director-district-1-short-term:charles-yeadon",
+    "ca-cx-local-2026-fresno-coalinga-huron-recreation-and-park-district-director-district-3-short-term:maria-irujo-zavala",
+    "ca-cx-local-2026-fresno-coalinga-huron-recreation-and-park-district-director-district-3-short-term:veronica-acosta",
+    "ca-cx-local-2026-fresno-del-rey-community-services-district-director:jennifer-lopez",
+    "ca-cx-local-2026-fresno-del-rey-community-services-district-director:joaquin-nunez-escutia",
+    "ca-cx-local-2026-fresno-del-rey-community-services-district-director:daniel-ramirez",
+    "ca-cx-local-2026-fresno-del-rey-community-services-district-director:zacarias-flores",
+    "ca-cx-local-2026-fresno-laguna-irrigation-district-director-division-3:reid-potter",
+    "ca-cx-local-2026-fresno-laguna-irrigation-district-director-division-3:tony-thomas",
+    "ca-cx-local-2026-fresno-malaga-county-water-district-director:salvador-cerrillo",
+    "ca-cx-local-2026-fresno-malaga-county-water-district-director:frank-j-cerrillo-jr",
+    "ca-cx-local-2026-fresno-malaga-county-water-district-director:felipe-leal",
+    "ca-cx-local-2026-fresno-malaga-county-water-district-director:carlos-tovar",
+    "ca-cx-local-2026-fresno-orange-cove-police-protection-district-director:isaiah-lopez",
+    "ca-cx-local-2026-fresno-orange-cove-police-protection-district-director:andrew-w-valencia",
+    "ca-cx-local-2026-fresno-orange-cove-police-protection-district-director:mario-villarreal",
+    "ca-cx-local-2026-fresno-pinedale-county-water-district-director:bradly-j-peranick",
+    "ca-cx-local-2026-fresno-pinedale-county-water-district-director:christine-p-silva",
+    "ca-cx-local-2026-fresno-pinedale-county-water-district-director:david-rodriguez",
+    "ca-cx-local-2026-fresno-pinedale-county-water-district-director:ron-vega",
+    "ca-cx-local-2026-fresno-riverdale-public-utility-district-director:anthony-da-costa",
+    "ca-cx-local-2026-fresno-riverdale-public-utility-district-director:ranzy-rowdy-brooks-robinson-jr",
+    "ca-cx-local-2026-fresno-riverdale-public-utility-district-director:tracy-l-morgan",
+    "ca-cx-local-2026-fresno-riverdale-public-utility-district-director:tristan-r-mauger",
+    "ca-cx-local-2026-fresno-riverdale-public-utility-district-director:william-miller-jr",
+    "ca-cx-local-2026-fresno-selma-health-care-district-director-zone-5:rosemary-alanis",
+    "ca-cx-local-2026-fresno-selma-health-care-district-director-zone-5:bruce-rodrigues"
+  ],
+  "reusedContestIds": [
+    "ca-sos-2026-general-retention-arlan-l-harrell",
+    "ca-sos-2026-general-retention-thomas-desantos",
+    "ca-sos-2026-general-retention-sonny-s-sandhu",
+    "ca-sos-2026-general-retention-mark-w-snauffer",
+    "ca-sos-2026-general-retention-amy-k-guerra",
+    "ca-sos-2026-general-retention-kathleen-a-meehan"
+  ],
+  "reusedCandidacyIds": [
+    "ca-sos-2026-general-retention-arlan-l-harrell-candidate",
+    "ca-sos-2026-general-retention-thomas-desantos-candidate",
+    "ca-sos-2026-general-retention-sonny-s-sandhu-candidate",
+    "ca-sos-2026-general-retention-mark-w-snauffer-candidate",
+    "ca-sos-2026-general-retention-amy-k-guerra-candidate",
+    "ca-sos-2026-general-retention-kathleen-a-meehan-candidate"
+  ],
+  "identityInputsCompared": [
+    "data/ballot/2026-general/ca.json",
+    "data/install/cx-local/CA/alameda/ballot-input/ca.json",
+    "data/install/cx-local/CA/los-angeles/ballot-input/ca.json",
+    "data/install/cx-local/CA/orange/ballot-input/ca.json",
+    "data/install/cx-local/CA/riverside/ballot-input/ca.json",
+    "data/install/cx-local/CA/sacramento/ballot-input/ca.json",
+    "data/install/cx-local/CA/san-bernardino/ballot-input/ca.json",
+    "data/install/cx-local/CA/san-diego/ballot-input/ca.json",
+    "data/install/cx-local/CA/santa-clara/ballot-input/ca.json"
+  ],
+  "coverage": [
+    "Official-inventory supplement only:75complete named local candidate fields/195people plus6held FifthDistrictretentions are corroborated by the current official October22county zero report. Registrar October31notice expressly states the report shows every contest/candidate appearing on November3county ballots. All82local blocks were natively parsed and visually checked. Zero-report totals are placeholders, never actual election results. Actual current sample files acquired:0; all81installable fields retain explicit sample-acquisition gaps.",
+    "One additional HuronCityCouncil short-term field contains only a generic Write-in row, no named candidate. It is held separately, with no ordinary placeholder person. Named local certified-write-in inventory and cancellation/offballot lists remain unacquired; the www2qualified/offballot links return HTML RequestRejected under HTTP200. No field is invented from Juneprimary candidate data.",
+    "Six original FifthDistrict retention office/person IDs and core fields are preserved. All current California lane inputs were checked for shared exact school/special/regional identities;75ordinary fields and195candidacies are new. The exact nine whole counties listed by the official FifthDistrict court are supplied as districtMemberships. No whole county/city/school is substituted for a subdistrict.",
+    "Canonical school identities are disambiguated with current government records: PacificUnionElementaryFresno NCES0629400; WashingtonUnifiedFresno NCES0601415. Each numbered trustee/council/supervisor/director/division/zone electorate retains its exact source scope, with missing reader geometry explicit. MercedCountyBoardEducationDistrict5 and StateCenterCollege trusteearea1 remain exact cross-county offices, not countywide Fresno races.",
+    "Registrar October31notice confirms FresnoUnified trusteeareas1/3/4 are FresnoUnified despite Fowler mislabels on some ballot-marking-device prints. Current inventory and exact FresnoUnified electorates are used. Existing statewide, legislative and measure records/explanations remain unchanged.",
+    "Official county VoterGuide redirects to an OmniBallot workflow configured for first name,last name,dateofbirth; no voter identity was submitted. Public election metadata found no current/upcoming entry and past entries only through2025. Public government mirror searches did not yield a current2026sample. These are source-access findings, not proof the government publishes no samples."
+  ],
+  "missingReaderGeographyIds": [
+    "ocd-division/country:us/state:ca/county:fresno/supervisor_district:1",
+    "ocd-division/country:us/state:ca/county:merced/school_board_district:5",
+    "ocd-division/country:us/state:ca/court_of_appeals:5",
+    "ocd-division/country:us/state:ca/place:clovis/council_district:1",
+    "ocd-division/country:us/state:ca/place:clovis/council_district:4",
+    "ocd-division/country:us/state:ca/place:clovis/council_district:5",
+    "ocd-division/country:us/state:ca/place:coalinga/council_district:1",
+    "ocd-division/country:us/state:ca/place:coalinga/council_district:2",
+    "ocd-division/country:us/state:ca/place:coalinga/council_district:3",
+    "ocd-division/country:us/state:ca/place:coalinga/council_district:5",
+    "ocd-division/country:us/state:ca/place:fresno/council_district:1",
+    "ocd-division/country:us/state:ca/place:fresno/council_district:3",
+    "ocd-division/country:us/state:ca/place:fresno/council_district:7",
+    "ocd-division/country:us/state:ca/place:kerman/council_district:1",
+    "ocd-division/country:us/state:ca/place:kerman/council_district:3",
+    "ocd-division/country:us/state:ca/place:kingsburg/council_district:5",
+    "ocd-division/country:us/state:ca/place:parlier/council_district:2",
+    "ocd-division/country:us/state:ca/place:parlier/council_district:4",
+    "ocd-division/country:us/state:ca/place:reedley/council_district:2",
+    "ocd-division/country:us/state:ca/place:reedley/council_district:4",
+    "ocd-division/country:us/state:ca/place:reedley/council_district:5",
+    "ocd-division/country:us/state:ca/place:sanger/council_district:2",
+    "ocd-division/country:us/state:ca/place:sanger/council_district:4",
+    "ocd-division/country:us/state:ca/place:selma/council_district:2",
+    "ocd-division/country:us/state:ca/place:selma/council_district:3",
+    "ocd-division/country:us/state:ca/school_district:central_unified_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:central_unified_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:central_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:central_unified_school_district/trustee_area:7",
+    "ocd-division/country:us/state:ca/school_district:firebaugh_las_deltas_unified_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:firebaugh_las_deltas_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:fresno_unified_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:fresno_unified_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:fresno_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:kerman_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:kerman_unified_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:kings_canyon_joint_unified_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:kings_canyon_joint_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:parlier_unified_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:parlier_unified_school_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:sanger_unified_school_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:selma_unified_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:selma_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:selma_unified_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:state_center_community_college_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:state_center_community_college_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:washington_colony_elementary_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:washington_colony_elementary_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:washington_unified_school_district_0601415/trustee_area:7",
+    "ocd-division/country:us/state:ca/special_district:biola_community_services_district",
+    "ocd-division/country:us/state:ca/special_district:coalinga_huron_recreation_and_park_district/director_district:1",
+    "ocd-division/country:us/state:ca/special_district:coalinga_huron_recreation_and_park_district/director_district:3",
+    "ocd-division/country:us/state:ca/special_district:del_rey_community_services_district",
+    "ocd-division/country:us/state:ca/special_district:laguna_irrigation_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:orange_cove_police_protection_district",
+    "ocd-division/country:us/state:ca/special_district:pinedale_county_water_district",
+    "ocd-division/country:us/state:ca/special_district:riverdale_public_utility_district",
+    "ocd-division/country:us/state:ca/special_district:selma_health_care_district/zone:5"
+  ],
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:fresno/supervisor_district:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:merced/school_board_district:5",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "status": "EXACT9WHOLE_COUNTY_MEMBERSHIPS_PROVIDED;REGISTRY_KEY_UNMATCHED",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:clovis/council_district:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:clovis/council_district:4",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:clovis/council_district:5",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:coalinga/council_district:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:coalinga/council_district:2",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:coalinga/council_district:3",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:coalinga/council_district:5",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:fresno/council_district:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:fresno/council_district:3",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:fresno/council_district:7",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:kerman/council_district:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:kerman/council_district:3",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:kingsburg/council_district:5",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:parlier/council_district:2",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:parlier/council_district:4",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:reedley/council_district:2",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:reedley/council_district:4",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:reedley/council_district:5",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:sanger/council_district:2",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:sanger/council_district:4",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:selma/council_district:2",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:selma/council_district:3",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:central_unified_school_district/trustee_area:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:central_unified_school_district/trustee_area:3",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:central_unified_school_district/trustee_area:4",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:central_unified_school_district/trustee_area:7",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:firebaugh_las_deltas_unified_school_district/trustee_area:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:firebaugh_las_deltas_unified_school_district/trustee_area:4",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fresno_unified_school_district/trustee_area:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fresno_unified_school_district/trustee_area:3",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fresno_unified_school_district/trustee_area:4",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kerman_unified_school_district/trustee_area:4",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kerman_unified_school_district/trustee_area:5",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kings_canyon_joint_unified_school_district/trustee_area:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kings_canyon_joint_unified_school_district/trustee_area:4",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:parlier_unified_school_district/trustee_area:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:parlier_unified_school_district/trustee_area:2",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:sanger_unified_school_district/trustee_area:2",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:selma_unified_school_district/trustee_area:3",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:selma_unified_school_district/trustee_area:4",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:selma_unified_school_district/trustee_area:5",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:state_center_community_college_district/trustee_area:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:state_center_community_college_district/trustee_area:5",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:washington_colony_elementary_school_district/trustee_area:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:washington_colony_elementary_school_district/trustee_area:3",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:washington_unified_school_district_0601415/trustee_area:7",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:biola_community_services_district",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:coalinga_huron_recreation_and_park_district/director_district:1",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:coalinga_huron_recreation_and_park_district/director_district:3",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:del_rey_community_services_district",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:laguna_irrigation_district/division:3",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:orange_cove_police_protection_district",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:pinedale_county_water_district",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:riverdale_public_utility_district",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:selma_health_care_district/zone:5",
+      "status": "UNMATCHED_EXACT_ELECTORATE",
+      "owner": "River/registry",
+      "next": "Install verified membership where supplied; otherwise resolve exact official district/area/zone reader membership/boundary without wider county/city/school substitution."
+    }
+  ],
+  "sampleSourceGaps": [
+    {
+      "contestId": "ca-sos-2026-general-retention-arlan-l-harrell",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-sos-2026-general-retention-thomas-desantos",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-sos-2026-general-retention-sonny-s-sandhu",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-sos-2026-general-retention-mark-w-snauffer",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-sos-2026-general-retention-amy-k-guerra",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-sos-2026-general-retention-kathleen-a-meehan",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-fresno-county-superior-court-judge-office-no-6",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-fresno-county-superior-court-judge-office-no-7",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-fresno-county-superintendent-of-schools",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-merced-county-board-of-education-member-district-5",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-state-center-community-college-district-governing-board-member-trustee-area-1",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-state-center-community-college-district-governing-board-member-trustee-area-5",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-1",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-4",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-7",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-central-unified-school-district-governing-board-member-trustee-area-3-short-term",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-firebaugh-las-deltas-unified-school-district-governing-board-member-trustee-area-1",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-firebaugh-las-deltas-unified-school-district-governing-board-member-trustee-area-4",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-1",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-3",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-fresno-unified-school-district-governing-board-member-trustee-area-4",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-kerman-unified-school-district-governing-board-member-trustee-area-4",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-kerman-unified-school-district-governing-board-member-trustee-area-5",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-kings-canyon-joint-unified-school-district-governing-board-member-trustee-area-1",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-kings-canyon-joint-unified-school-district-governing-board-member-trustee-area-4",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-mendota-unified-school-district-governing-board-member",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-parlier-unified-school-district-governing-board-member-trustee-area-1",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-parlier-unified-school-district-governing-board-member-trustee-area-2",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-sanger-unified-school-district-governing-board-member-trustee-area-2",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-3",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-4",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-selma-unified-school-district-governing-board-member-trustee-area-5",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-washington-unified-school-district-governing-board-member-trustee-area-7",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-pacific-union-elementary-school-district-governing-board-member",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-raisin-city-elementary-school-district-governing-board-member",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-washington-colony-elementary-school-district-governing-board-member-trustee-area-1",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-washington-colony-elementary-school-district-governing-board-member-trustee-area-3",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-west-park-elementary-school-district-governing-board-member",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-fresno-county-supervisor-district-1",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-1",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-4",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-clovis-member-city-council-district-5",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-1",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-2-short-term",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-3",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-coalinga-member-city-council-district-5",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-firebaugh-member-city-council",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-fowler-member-city-council",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-1",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-3",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-fresno-member-city-council-district-7",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-huron-member-city-council",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-kerman-mayor",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-kerman-member-city-council-district-1",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-kerman-member-city-council-district-3",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-kingsburg-member-city-council-district-5",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-mendota-member-city-council",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-orange-cove-mayor",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-orange-cove-member-city-council",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-parlier-mayor",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-parlier-member-city-council-district-2",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-parlier-member-city-council-district-4",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-2",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-4",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-reedley-member-city-council-district-5-short-term",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-sanger-mayor",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-sanger-member-city-council-district-2",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-sanger-member-city-council-district-4",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-selma-mayor",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-selma-member-city-council-district-2",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-city-of-selma-member-city-council-district-3",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-biola-community-services-district-director",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-coalinga-huron-recreation-and-park-district-director-district-1-short-term",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-coalinga-huron-recreation-and-park-district-director-district-3-short-term",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-del-rey-community-services-district-director",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-laguna-irrigation-district-director-division-3",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-malaga-county-water-district-director",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-orange-cove-police-protection-district-director",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-pinedale-county-water-district-director",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-riverdale-public-utility-district-director",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    },
+    {
+      "contestId": "ca-cx-local-2026-fresno-selma-health-care-district-director-zone-5",
+      "reason": "Current official complete county ballot-inventory facts verified; actual current sample remains unacquired."
+    }
+  ],
+  "heldContests": [
+    {
+      "id": "ca-cx-local-2026-fresno-city-of-huron-member-city-council-short-term",
+      "electionId": "ca-2026-11-03-general",
+      "ocdId": "ocd-division/country:us/state:ca/place:huron",
+      "title": "City of Huron \u2014 Member, City Council (Short Term)",
+      "provenance": {
+        "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf",
+        "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+        "collectedAt": "2026-11-03T05:41:02.640488+00:00",
+        "verifiedAt": "2026-11-03T05:41:02.640488+00:00",
+        "quote": "Huron City Council ST (Vote for 1)\nWrite-in \n0\nN/A"
+      },
+      "reason": "Current official inventory prints only a generic Write-in row, no named candidate. Named qualified write-in certification has not been acquired; preserve separately pending correct reader write-in representation. No ordinary placeholder candidacy."
+    }
+  ],
+  "scopeCorrections": [
+    {
+      "office": "Fresno Unified trusteeareas1/3/4",
+      "basis": "October31registrar notice; some ballot-marking-device printed labels incorrectly say Fowler. Actual electorate is FresnoUnified.",
+      "provenance": {
+        "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press-release/10.31.26-fresno-county-elections-department-identifies-limited-printing-error.pdf",
+        "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+        "collectedAt": "2026-11-03T05:41:21.561964+00:00",
+        "verifiedAt": "2026-11-03T05:41:21.561964+00:00",
+        "quote": "The screen on the ballot-marking devices lists the correct contest title, Fresno Unified School District, when used by a voter residing within the jurisdiction. However, when ballots are printed from the ballot-marking devices, the contest title is incorrectly listed as Fowler Unified School District Trustee Areas 1, 3, or 4 rather than Fresno Unified School District Trustee Areas 1, 3, or 4."
+      }
+    }
+  ],
+  "wholeCountyMembershipsProvided": [
+    {
+      "id": "ca-cx-local-2026-fifth-appellate-membership-fresno",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:fresno",
+      "districtOcdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "provenance": {
+        "sourceUrl": "https://appellate.courts.ca.gov/district-courts/5dca",
+        "sourceOrg": "California Court of Appeal, Fifth Appellate District",
+        "collectedAt": "2026-11-03T05:41:35.415319+00:00",
+        "verifiedAt": "2026-11-03T05:41:35.415319+00:00",
+        "quote": "The Court of Appeal, Fifth Appellate District\u2019s jurisdiction encompasses nine counties located in central California: Fresno, Kern, Kings, Madera, Mariposa, Merced, Stanislaus, Tulare and Tuolumne."
+      }
+    },
+    {
+      "id": "ca-cx-local-2026-fifth-appellate-membership-kern",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:kern",
+      "districtOcdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "provenance": {
+        "sourceUrl": "https://appellate.courts.ca.gov/district-courts/5dca",
+        "sourceOrg": "California Court of Appeal, Fifth Appellate District",
+        "collectedAt": "2026-11-03T05:41:35.415319+00:00",
+        "verifiedAt": "2026-11-03T05:41:35.415319+00:00",
+        "quote": "The Court of Appeal, Fifth Appellate District\u2019s jurisdiction encompasses nine counties located in central California: Fresno, Kern, Kings, Madera, Mariposa, Merced, Stanislaus, Tulare and Tuolumne."
+      }
+    },
+    {
+      "id": "ca-cx-local-2026-fifth-appellate-membership-kings",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:kings",
+      "districtOcdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "provenance": {
+        "sourceUrl": "https://appellate.courts.ca.gov/district-courts/5dca",
+        "sourceOrg": "California Court of Appeal, Fifth Appellate District",
+        "collectedAt": "2026-11-03T05:41:35.415319+00:00",
+        "verifiedAt": "2026-11-03T05:41:35.415319+00:00",
+        "quote": "The Court of Appeal, Fifth Appellate District\u2019s jurisdiction encompasses nine counties located in central California: Fresno, Kern, Kings, Madera, Mariposa, Merced, Stanislaus, Tulare and Tuolumne."
+      }
+    },
+    {
+      "id": "ca-cx-local-2026-fifth-appellate-membership-madera",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:madera",
+      "districtOcdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "provenance": {
+        "sourceUrl": "https://appellate.courts.ca.gov/district-courts/5dca",
+        "sourceOrg": "California Court of Appeal, Fifth Appellate District",
+        "collectedAt": "2026-11-03T05:41:35.415319+00:00",
+        "verifiedAt": "2026-11-03T05:41:35.415319+00:00",
+        "quote": "The Court of Appeal, Fifth Appellate District\u2019s jurisdiction encompasses nine counties located in central California: Fresno, Kern, Kings, Madera, Mariposa, Merced, Stanislaus, Tulare and Tuolumne."
+      }
+    },
+    {
+      "id": "ca-cx-local-2026-fifth-appellate-membership-mariposa",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:mariposa",
+      "districtOcdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "provenance": {
+        "sourceUrl": "https://appellate.courts.ca.gov/district-courts/5dca",
+        "sourceOrg": "California Court of Appeal, Fifth Appellate District",
+        "collectedAt": "2026-11-03T05:41:35.415319+00:00",
+        "verifiedAt": "2026-11-03T05:41:35.415319+00:00",
+        "quote": "The Court of Appeal, Fifth Appellate District\u2019s jurisdiction encompasses nine counties located in central California: Fresno, Kern, Kings, Madera, Mariposa, Merced, Stanislaus, Tulare and Tuolumne."
+      }
+    },
+    {
+      "id": "ca-cx-local-2026-fifth-appellate-membership-merced",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:merced",
+      "districtOcdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "provenance": {
+        "sourceUrl": "https://appellate.courts.ca.gov/district-courts/5dca",
+        "sourceOrg": "California Court of Appeal, Fifth Appellate District",
+        "collectedAt": "2026-11-03T05:41:35.415319+00:00",
+        "verifiedAt": "2026-11-03T05:41:35.415319+00:00",
+        "quote": "The Court of Appeal, Fifth Appellate District\u2019s jurisdiction encompasses nine counties located in central California: Fresno, Kern, Kings, Madera, Mariposa, Merced, Stanislaus, Tulare and Tuolumne."
+      }
+    },
+    {
+      "id": "ca-cx-local-2026-fifth-appellate-membership-stanislaus",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:stanislaus",
+      "districtOcdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "provenance": {
+        "sourceUrl": "https://appellate.courts.ca.gov/district-courts/5dca",
+        "sourceOrg": "California Court of Appeal, Fifth Appellate District",
+        "collectedAt": "2026-11-03T05:41:35.415319+00:00",
+        "verifiedAt": "2026-11-03T05:41:35.415319+00:00",
+        "quote": "The Court of Appeal, Fifth Appellate District\u2019s jurisdiction encompasses nine counties located in central California: Fresno, Kern, Kings, Madera, Mariposa, Merced, Stanislaus, Tulare and Tuolumne."
+      }
+    },
+    {
+      "id": "ca-cx-local-2026-fifth-appellate-membership-tulare",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:tulare",
+      "districtOcdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "provenance": {
+        "sourceUrl": "https://appellate.courts.ca.gov/district-courts/5dca",
+        "sourceOrg": "California Court of Appeal, Fifth Appellate District",
+        "collectedAt": "2026-11-03T05:41:35.415319+00:00",
+        "verifiedAt": "2026-11-03T05:41:35.415319+00:00",
+        "quote": "The Court of Appeal, Fifth Appellate District\u2019s jurisdiction encompasses nine counties located in central California: Fresno, Kern, Kings, Madera, Mariposa, Merced, Stanislaus, Tulare and Tuolumne."
+      }
+    },
+    {
+      "id": "ca-cx-local-2026-fifth-appellate-membership-tuolumne",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:tuolumne",
+      "districtOcdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "provenance": {
+        "sourceUrl": "https://appellate.courts.ca.gov/district-courts/5dca",
+        "sourceOrg": "California Court of Appeal, Fifth Appellate District",
+        "collectedAt": "2026-11-03T05:41:35.415319+00:00",
+        "verifiedAt": "2026-11-03T05:41:35.415319+00:00",
+        "quote": "The Court of Appeal, Fifth Appellate District\u2019s jurisdiction encompasses nine counties located in central California: Fresno, Kern, Kings, Madera, Mariposa, Merced, Stanislaus, Tulare and Tuolumne."
+      }
+    }
+  ],
+  "validation": {
+    "sourceBytesAndExactQuotes": "PASS_8_PRIMARY_CAPTURES_457_EXACT_QUOTES_24_ACCESS_HASHES_82_NATIVE_BLOCKS_195_ORDINARY_NAMES_6_HELD_RETENTIONS_9_MEMBERSHIPS",
+    "nativeOfficeBlocks": "ALL82_CURRENT_LOCAL_INVENTORY_BLOCKS_PARSED_AND_VISUALLY_VERIFIED;NOT_SAMPLES",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "productionWrites": "NONE",
+    "sourceHashesAndQuotes": "PASS: 8 captured sources and 292 exact saved-source quotes"
+  },
+  "remainingWork": [
+    {
+      "owner": "CX-LOCAL acquisition",
+      "next": "Acquire actual2026samples for all81fields; qualified/offballot/certifiedwritein lists; resolve Huronshortterm named-writein status separately."
+    },
+    {
+      "owner": "Parent/River",
+      "next": "Run focused shared checks, install verified facts, resolve exact reader geography and verify delivery."
+    }
+  ],
+  "nextOwner": "Parent focused validation; River installation/reader geography. No publication performed."
+}

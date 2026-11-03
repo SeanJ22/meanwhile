@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "sources": 8,
+  "exactQuotes": 457,
+  "pdfNameWhitespaceNormalizations": 2,
+  "accessCaptureHashes": 24,
+  "localInventoryFields": 82,
+  "contests": 81,
+  "candidacies": 201,
+  "ordinaryCandidates": 195,
+  "heldWriteInOnlyFields": 1,
+  "reusedRetentionContestCoreFieldsPreserved": 6,
+  "reusedRetentionCandidateCoreFieldsPreserved": 6,
+  "wholeCountyMemberships": 9,
+  "actualSampleFiles": 0,
+  "officialInventorySupplementFields": 81,
+  "missingReaderRegistryKeys": 58,
+  "sharedOfflineCheck": "PENDING_PARENT",
+  "productionWrites": "NONE"
+}

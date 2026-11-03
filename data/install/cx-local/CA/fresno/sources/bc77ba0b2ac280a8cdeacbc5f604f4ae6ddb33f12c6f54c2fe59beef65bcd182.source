@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="cache-control" content="max-age=300" />
+  <title></title>
+  <base href="/06019/app">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://sites.omniballot.us/src/v10_3_7/styles.bundle.css?cb=1609952651666" rel="stylesheet"/>
+
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  </script>
+
+</head>
+<body>
+  <!-- Default Site Template -->
+  <app-root></app-root>
+
+  <script type="text/javascript">
+    var siteConfig = 'https://sites.omniballot.us/06019/app/site-config.json?cb=1609952651666';
+    var apiVersion = 'v8';
+    var _cb = new Date().getTime();
+  </script>
+
+  <script src="https://sites.omniballot.us/src/v10_3_7/combined-es2015.js?cb=1609952651666" type="module"></script>
+  <script src="https://sites.omniballot.us/src/v10_3_7/combined-es5.js?cb=1609952651666" nomodule defer></script>
+
+</body>
+</html>

@@ -1,0 +1,536 @@
+[November2026candidate guide: scope/type nomenclature only. Never candidate qualification evidence.]
+
+PAGE 114
+                                    Seat)
+
+
+
+                                 3
+
+                                 6
+
+                                 7
+                       County  Superior Court Judge              8                      Wide
+                                 9
+
+                                12
+
+                                14
+
+
+
+                                 1
+County Supervisor          District
+                                 4
+
+County Assessor-        County
+Recorder               Wide
+County Auditor-                       CountyController/Treasurer-Tax                      WideCollector
+County Clerk/Registrar    County
+of Voters               Wide
+County Superintendent    County
+of Schools              Wide
+
+
+
+                                 1
+Fresno County Board of                                District
+Education                                   Kin                                 4
+
+Merced County Board of                                District     5Education
+
+PAGE 115
+                                    Seat)
+
+
+
+                                 1
+
+State Center Community  Trustee     4
+
+                                 5
+
+                                 1    Mo
+West Hills Community    Trustee
+                                 2
+
+
+
+                                 3
+
+Caruthers Unified         Trustee     4
+
+                                 5
+
+                                 1
+
+                                 2
+Central Unified           Trustee
+                                 4
+
+                                 7
+
+                                 1
+
+Clovis Unified            Trustee     3
+
+                                 6
+
+                            C1   Mo
+Coalinga-Huron Unified   Trustee
+                            H2
+
+PAGE 116
+Dinuba Unified           Trustee     3
+
+Dos Palos-Oro Loma                         Trustee     2Unified
+
+                                 1
+Firebaugh-Las Deltas                         TrusteeUnified
+                                 4
+
+                                 1
+
+Fowler Unified            Trustee     2
+
+                                 3
+
+                                 1
+
+                                 3
+Fresno Unified           Trustee
+                                 4
+
+                                 7
+
+                                 1
+
+                                 2
+Golden Plains Unified     Trustee
+                                 3
+
+                                 4
+
+                                 1
+
+Kerman Unified           Trustee     4
+
+                                 5
+
+PAGE 117
+                                    Seat)
+
+
+                                 1
+
+                                 2
+Kings Canyon Joint                         TrusteeUnified
+                                 3
+
+                                 4
+
+
+
+Laton Joint Unified       At Large
+
+
+
+
+
+Mendota Unified          At Large
+
+
+
+
+                                 1
+
+Parlier Unified            Trustee     2
+
+                                 3
+
+                                 1
+
+                                 2
+Riverdale Joint Unified    Trustee
+                                 3
+
+                                 5
+
+PAGE 118
+                                    Seat)
+
+
+                                 2
+
+Sanger Unified           Trustee     6
+
+                                 7
+
+                                 3
+
+Selma Unified            Trustee     4
+
+                                 5
+
+
+
+
+Sierra Unified            At Large
+
+
+
+
+                                 5
+
+Washington Unified       Trustee     6
+
+                                 7
+
+
+
+                                 2
+
+Kingsburg Joint Union     Trustee     3
+
+                                 5
+
+PAGE 119
+                                    Seat)
+
+
+
+
+
+Alvina Elementary        At Large
+
+
+
+
+Big Creek Elementary    At Large
+
+
+
+
+
+Burrel Union                         At LargeElementary
+
+
+
+                                 2
+Clay Joint Elementary     Trustee
+                                 3
+
+                                 1
+
+Kingsburg Elementary                         Trustee     3Charter
+
+                                 5
+
+
+
+Orange Center                         At LargeElementary
+
+
+
+
+Pacific Union                         At LargeElementary
+
+PAGE 120
+                                    Seat)
+
+
+
+
+Pine Ridge Elementary   At Large
+
+
+
+
+Raisin City Elementary    At Large
+
+
+                                 1
+
+Washington Colony                         Trustee     3Elementary
+
+                                 5
+
+
+
+West Park Elementary    At Large
+
+
+
+
+Westside Elementary     At Large
+
+
+
+
+                                 1
+
+Clovis Councilmember      District     4
+
+                                 5
+
+                                 1
+
+Coalinga                                District     3Councilmember
+
+                                 5
+
+PAGE 121
+Firebaugh                         At LargeCouncilmember
+
+Firebaugh City Clerk      At Large
+
+Firebaugh City Treasurer At Large
+
+
+Fowler Councilmember   At Large
+
+
+Huron Mayor             At Large
+
+
+
+Huron Councilmember    At Large
+
+
+
+Kerman Mayor           At Large
+
+Kerman Councilmember    District     1
+
+Kerman Councilmember    District     3
+Kingsburg                                District     1Councilmember
+Kingsburg                                District     4Councilmember
+Kingsburg                                District     5Councilmember
+
+
+Mendota                         At LargeCouncilmember
+
+PAGE 122
+                                    Seat)
+
+Orange Cove Mayor      At Large
+
+Orange Cove                         At LargeCouncilmember
+
+
+Parlier Mayor            At Large
+
+Parlier Councilmember     District     2
+
+Parlier Councilmember     District     4
+
+Reedley Councilmember   District     2
+
+Reedley Councilmember   District     4
+
+Sanger Mayor            At Large
+
+Sanger Councilmember    District     2
+
+Sanger Councilmember    District     4
+
+
+San Joaquin                         At LargeCouncilmember
+
+
+Selma Mayor            At Large
+
+Selma Councilmember     District     2
+
+Selma Councilmember     District     3
+
+PAGE 123
+                                                          )
+
+
+
+                                 1
+Alta Irrigation              Division
+                                 2
+
+
+
+Bald Mountain Fire                         At LargeProtection
+
+
+
+
+Big Creek Community                         At LargeService
+
+
+
+
+Biola Community                         At LargeService
+
+
+
+
+Bluffs Community                         At LargeService
+
+
+
+
+Calwa Recreation and                         At LargePark
+
+
+
+
+Caruthers Community                         At LargeService District
+
+PAGE 124
+                                    Seat)
+
+
+
+Clovis Veterans                         At LargeMemorial
+
+
+
+                                 2
+Coalinga-Huron                                DistrictRecreation & Park
+                                 4
+
+                                 3
+
+Coalinga Healthcare                      Zone      4District
+
+                                 5
+
+                                 1
+
+Consolidated Irrigation                           Division     4District
+
+                                 5
+
+
+
+Del Rey Community                         At LargeService District
+
+
+
+
+Easton Community                         At LargeService District
+
+
+
+
+Fig Garden Fire                         At LargeProtection District
+
+PAGE 125
+                                    Seat)
+
+
+Fig Garden Police                         At LargeProtection District
+
+
+
+
+Freewater County Water  At Large
+
+
+
+                                 1
+
+Fresno Irrigation District   Division     3
+
+                                 4
+
+Hills Valley Irrigation      At Large
+
+
+
+Kingsburg Healthcare                         At LargeDistrict
+
+
+
+                                 1
+
+Kings River                           Division     3Conservation
+
+                                 5
+
+                                 1
+Laguna Irrigation          Division
+                                 3
+
+PAGE 126
+                                    Seat)
+
+
+
+Lanare Community                         At LargeService
+
+
+
+
+Laton Community                         At LargeService
+
+
+
+
+
+Malaga County Water    At Large
+
+
+
+                                 1
+
+North Central Fire           District     3
+
+                                 5
+
+
+Orange Cove Fire                         At LargeProtection
+
+
+Orange Cove Police                         At LargeProtection
+
+
+
+
+Pinedale County Water   At Large
+
+
+
+Pinedale Public Utility     At Large
+
+PAGE 127
+                                    Seat)
+
+                                 2
+Riverdale Irrigation        Division
+                                 3
+
+
+
+Riverdale Memorial       At Large
+
+
+
+
+Riverdale Public Utility    At Large
+
+
+                                 1
+
+Selma Health Care       Zone      3
+
+                                 5
+
+
+Sierra Cedars                         At LargeCommunity Service
+
+
+                                 2
+Sierra Kings Health Care   Zone
+                                 4
+
+Tranquillity Irrigation      At Large
+
+
+Tranquillity Public Utility   At Large

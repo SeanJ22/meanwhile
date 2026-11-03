@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US">
+<!--<![endif]-->
+<head>
+	<!-- Published by OpenCities, 1.38.0.1 -->
+
+    
+        
+    
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>November 3, 2026 Consolidated Statewide General Election - County of Fresno</title>
+	<meta name="generator" content="OpenCities - https://granicus.com/product/opencities" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Using mobile-web-app-capable for now to enable full-screen experience on supported platforms -->
+    <!-- Note: This tag works mainly on Android Chrome. It does NOT enable full-screen mode on iOS Safari. -->
+    <!-- For iOS, the correct tag is: <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <!-- TODO: Monitor for updated meta tag standards from Apple or other browser vendors -->
+    <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="description" content=" Announcement New Vote Center available at DRY CREEK ELEMENTARY SCHOOL VC 18 – Dry Creek Elementary School, 1273 N Armstrong Ave., Clovis CA, 93619 November 3 2026 Maps and Location Lists ..." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election" />
+    <meta property="og:title" content="November 3, 2026 Consolidated Statewide General Election" />
+    <meta property="og:description" content=" Announcement New Vote Center available at DRY CREEK ELEMENTARY SCHOOL VC 18 – Dry Creek Elementary School, 1273 N Armstrong Ave., Clovis CA, 93619 November 3 2026 Maps and Location Lists ..." />
+    <meta property="og:image" content="https://www.fresnocountyca.gov/files/ocwebsite/County/HeroImage/media-image-2.jpg?w=1200" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="November 3, 2026 Consolidated Statewide General Election" />
+    <meta property="twitter:description" content=" Announcement New Vote Center available at DRY CREEK ELEMENTARY SCHOOL VC 18 – Dry Creek Elementary School, 1273 N Armstrong Ave., Clovis CA, 93619 November 3 2026 Maps and Location Lists ..." />
+    <meta property="twitter:image" content="https://www.fresnocountyca.gov/files/ocwebsite/County/HeroImage/media-image-2.jpg?w=1080" />
+    <meta name="google-site-verification" content="YXfEtiAk9TIAl4QY_yXfhVKSoy77TRUTkc4m1DpCB9s" />
+    <link rel="canonical" href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election" />
+
+    
+    <link rel="apple-touch-icon" sizes="120x120" href="/files/ocfavicon/County/apple-touch-icon.png?V=638566383485546285">
+<link rel="icon" type="image/png" sizes="32x32" href="/files/ocfavicon/County/favicon-32x32.png?V=638566383485546285">
+<link rel="icon" type="image/png" sizes="16x16" href="/files/ocfavicon/County/favicon-16x16.png?V=638566383485546285">
+<link rel="manifest" href="/files/ocfavicon/County/site.webmanifest?V=638566383485546285">
+<link rel="shortcut icon" href="/files/ocfavicon/County/favicon.ico?V=638566383485546285">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-config" content="/files/ocfavicon/County/browserconfig.xml?V=638566383485546285">
+    <script>
+        (function () {
+            if (window.__UNLOAD_LAZY_PATCH__) return;
+            window.__UNLOAD_LAZY_PATCH__ = true;
+
+            var supportsPageHide = ("onpagehide" in window);
+            var mappedType = supportsPageHide ? "pagehide" : "beforeunload";
+            var nativeAdd = window.addEventListener;
+            var nativeRemove = window.removeEventListener;
+            var unloadMap = null;
+            var patched = false;
+
+            function ensurePatched() {
+                if (patched) return;
+                unloadMap = new WeakMap();
+
+                window.addEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = function (evt) {
+                            if (supportsPageHide && evt.persisted) return;
+                            listener.call(this, evt);
+                        };
+                        unloadMap.set(listener, wrapped);
+                        return nativeAdd.call(this, mappedType, wrapped, options);
+                    }
+                    return nativeAdd.call(this, type, listener, options);
+                };
+
+                window.removeEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = unloadMap.get(listener);
+                        if (wrapped) {
+                            nativeRemove.call(this, mappedType, wrapped, options);
+                            unloadMap.delete(listener);
+                        }
+                        return;
+                    }
+                    return nativeRemove.call(this, type, listener, options);
+                };
+
+                var orig = null;
+                Object.defineProperty(window, "onunload", {
+                    configurable: true, enumerable: true,
+                    get: function () { return orig; },
+                    set: function (h) {
+                        orig = h;
+                        if (typeof h === "function") window.addEventListener("unload", h);
+                    }
+                });
+                patched = true;
+            }
+
+            window.addEventListener = function (type, listener, options) {
+                if (type === "unload") {
+                    ensurePatched();
+                    return window.addEventListener(type, listener, options);
+                }
+                return nativeAdd.call(this, type, listener, options);
+            };
+
+            window.removeEventListener = function (type, listener, options) {
+                if (type === "unload" && !patched) {
+                    return;
+                }
+                return nativeRemove.call(this, type, listener, options);
+            };
+
+            function patchTelerik() {
+                ensurePatched();
+                var ns = window.RadAjaxNamespace;
+                if (!ns || !ns.EventManager || !ns.EventManager.Add || ns.EventManager.__UnloadPatched) return;
+                var origAdd = ns.EventManager.Add;
+                ns.EventManager.Add = function (el, evtName, handler, clientId) {
+                    if (el === window && evtName === "unload") {
+                        return window.addEventListener("unload", handler);
+                    }
+                    return origAdd.call(this, el, evtName, handler, clientId);
+                };
+                ns.EventManager.__UnloadPatched = true;
+            }
+
+            if (window.RadAjaxNamespace)
+                patchTelerik();
+            else (window.requestIdleCallback || function (cb)
+            {
+                setTimeout(cb, 120);
+            })(patchTelerik);
+        })();
+    </script>
+    <!-- Preconnecting to Google Fonts servers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Defer Roboto font loading to avoid render-blocking -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const robotoLink = document.createElement('link');
+            robotoLink.rel = 'stylesheet';
+            robotoLink.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap';
+            document.head.appendChild(robotoLink);
+        });
+    </script>
+
+    <style>
+        .gm-style, .gm-style * {
+            font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
+        }
+    </style>
+
+    <script>
+        document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, "js");
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cabin:ital,wght@0,400..700;1,400..700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0&family=Cedarville+Cursive&family=Homemade+Apple&family=Mrs+Saint+Delafield&family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
+    
+        
+            <script type="text/javascript">
+                window.__oc_flags_ImprovedBreakpointEventHandling = true;
+            </script>
+            
+        
+    
+    
+    
+        <script type="text/javascript">
+            var __metaQueryBreakpoints = {
+                'sc-size-4': '(max-width: 480px)',
+                'sc-size-3': '(min-width: 480px) and (max-width: 768px)',
+                'sc-size-2': '(min-width: 768px) and (max-width: 992px)',
+                'sc-size-1': '(min-width: 992px)'
+            }
+
+            var __ocSizePoints = [
+                { min: 0, name: 'sc-size-4' },
+                { min: 480, name: 'sc-size-3' },
+                { min: 768, name: 'sc-size-2' },
+                { min: 992, name: 'sc-size-1' }
+            ];
+
+        </script>
+    
+
+    <!-- Framework Section -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/files/templates/00000000-0000-0000-0000-000000000000/e4927c73-3d98-4ec2-aa6f-8f732e2038a7/v/1491/jquery-3.7.1.min.js?seamlessts=639275090937902101" ><\/script>')</script>
+
+    <!--Google Maps API Loader – Improved Version to avoid Warning
+    This script loads the Google Maps JavaScript API using a dynamic and async method.
+    It replaces the old static <script> tag to avoid performance warnings from Google.
+
+    Dynamically creates the <script> tag with loading = async for better performance
+    Builds the API URL with required libraries(places, geometry, marker, geocoding)
+    Uses a Promise and callback(google.maps.__ib__) to confirm when the script is ready
+
+    It Avoids Google’s warning about direct script loading
+    Improves page load speed by loading the API asynchronously-->
+
+    
+        <script>
+            (function (root) {
+                root.OpenCities = root.OpenCities || {};
+                if (!root.OpenCities.GoogleMapsLoader) {
+                    root.OpenCities.GoogleMapsLoader = {
+                        _cbs: [],
+                        _ready: false,
+                        onReady: function (cb) {
+                            if (this._ready) { try { cb(); } catch (e) { console.error(e); } }
+                            else if (typeof cb === 'function') this._cbs.push(cb);
+                        },
+                        _fire: function () {
+                            if (this._ready) return;
+                            this._ready = true;
+                            var q = this._cbs.splice(0);
+                            for (var i = 0; i < q.length; i++) {
+                                try { q[i](); } catch (e) { console.error(e); }
+                            }
+                        }
+                    };
+                }
+            })(window);
+
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+                    m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+                    u = () => h || (h = new Promise(async (resolve, reject) => {
+                        a = m.createElement("script");
+                        e.set("libraries", [...r] + "");
+                        for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                        e.set("callback", c + ".maps." + q);
+                        a.src = "https://maps." + c + "apis.com/maps/api/js?" + e.toString();
+                        a.loading = "async";
+                        a.async = true;
+                        a.defer = true;
+                        d[q] = resolve;
+                        a.onerror = () => reject(Error(p + " could not load."));
+                        a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                        m.head.append(a);
+                    }));
+                if (d[l]) {
+                    console.warn(p + " only loads once. Ignoring duplicate load.");
+                } else {
+                    d[l] = (f, ...n) => (r.add(f), u().then(() => d[l](f, ...n)));
+                }
+            })({
+                key: "AIzaSyBzBL-CZrEUJ7gvc3WTI9FiF0Cf7_DIoFk",
+                v: "3.65"
+            });
+
+            (async () => {
+                try {
+                    if (!google?.maps?.importLibrary) return;
+
+                    if (!window.OpenCities.__mapsLibsPromise) {
+                        window.OpenCities.__mapsLibsPromise = Promise.all([
+                            google.maps.importLibrary('maps'),
+                            google.maps.importLibrary('places'),
+                            google.maps.importLibrary('geocoding'),
+                            google.maps.importLibrary('marker'),
+                            google.maps.importLibrary('geometry')
+                        ]);
+                    }
+                    await window.OpenCities.__mapsLibsPromise;
+
+                    if (window.OpenCities?.GoogleMapsLoader) {
+                        window.OpenCities.GoogleMapsLoader._fire();
+                    }
+                } catch (err) {
+                    console.error('Google Maps failed to initialise', err);
+                }
+            })();
+        </script>
+    
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/e4927c73-3d98-4ec2-aa6f-8f732e2038a7/v/1491/modernizr.custom.710f3bf.js?seamlessts=639275090937902101" defer></script>
+    
+    <!--// End Framework Section -->
+    <!-- OpenCities Section -->
+    <script>
+        var OpenCities = OpenCities || {};
+        OpenCities.Paths = {
+            SiteTemplate: '/files/templates/00000000-0000-0000-0000-000000000000/e4927c73-3d98-4ec2-aa6f-8f732e2038a7/v/1491/',
+            ThemePath: '/files/templates/00000000-0000-0000-0000-000000000000/e4927c73-3d98-4ec2-aa6f-8f732e2038a7/v/1491/'
+        };
+    </script>
+    <script src='/ocapi/df5b3d98-a746-4d33-a9f9-5ebeffdee842/en-US/websitesettings.js'></script>
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/e4927c73-3d98-4ec2-aa6f-8f732e2038a7/v/1491/oc_head.js?applied=20261014122330"></script>
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/e4927c73-3d98-4ec2-aa6f-8f732e2038a7/v/1491/oc_grid.css~oc_style.css~oc_wizard_style.css~oc_main.css~oc_forms.css~oc_wizard.css~oc_wizard_menu.css~oc_main_s1.css~oc_wizard_s1.css~oc_wizard_menu_s1.css~oc_grid_s1.css~OcScriptCombine_Minify0?uniqueid=20261014122330" rel="stylesheet" type="text/css">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/e4927c73-3d98-4ec2-aa6f-8f732e2038a7/v/1491/client_style.css~client.css~client_menu.css~client_s1.css~client_menu_s1.css~client_forms.css~OcScriptCombine_Minify0?uniqueid=20261014122330" rel="stylesheet" type="text/css">
+    <script>
+(function (BackgroundSettings, $, undefined) {
+    BackgroundSettings.initialise = function () {
+        this.Application = {"CSSSelector":".background-container","EnableFade":true,"MediaType":"image"};
+    };
+} (OpenCities.BackgroundSettings = OpenCities.BackgroundSettings || {}, jQuery));
+OpenCities.BackgroundSettings.initialise();
+</script>
+    
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/e4927c73-3d98-4ec2-aa6f-8f732e2038a7/v/1491/oc_print.css~client_print.css~OcScriptCombine_Minify0?uniqueid=20261014122330" rel="stylesheet" type="text/css" media="print">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<script src="/files/oc-templates/00000000-0000-0000-0000-000000000000/e4927c73-3d98-4ec2-aa6f-8f732e2038a7/v/1491/external_plugins.js~oc_form_helper.js~oc_main.js~plugins.js~oc_main_init.js~OcScriptCombine_Minify0?uniqueid=20261014122330" defer="true"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+<script async src="https://code.highcharts.com/modules/exporting.js"></script>
+<script async src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script async src="https://code.highcharts.com/modules/series-label.js"></script>
+
+<script defer src="https://analytics.silktide.com/ead430d9b0267d1fee1dcbd026a67474.js"></script>
+<script>
+  (function (s,i,l,k,y) {
+    s[i] = s[i] || y;
+    s[l] = s[l] || [];
+    s[k] = function(e, p) { p = p || {}; p.event = e; s[l].push(p); };
+    s[k]('page_load');
+  })(window, 'stConfig', 'stEvents', 'silktide', {});
+</script>
+    
+
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="DYTCK-JM9C8-ED4EP-C3GGK-Z575H",function(){function e(){if(!r){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.appendChild(e),r=!0}}function t(e){r=!0;var n,t,a,i,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",i=(a.frameElement||a).style,i.width=0,i.height=0,i.border=0,i.display="none",o.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void 0;",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=14,window.BOOMR.url=n+"DYTCK-JM9C8-ED4EP-C3GGK-Z575H";var i=document.currentScript||document.getElementsByTagName("script")[0],o=i.parentNode,r=!1,d=document.createElement("link");if(d.relList&&"function"==typeof d.relList.supports&&d.relList.supports("preload")&&"as"in d)window.BOOMR.snippetMethod="p",d.href=window.BOOMR.url,d.rel="preload",d.as="script",d.addEventListener("load",e),d.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!r)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.appendChild(d);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="ljqlodicccwiw2xjopiq-f-2d0c43076-clientnsv4-s.akamaihd.net",i="false"=="true"?2:1,o={"ak.v":"41","ak.cp":"1700611","ak.ai":parseInt("1075935",10),"ak.ol":"0","ak.cr":174,"ak.ipv":4,"ak.proto":"h2","ak.rid":"1278dd92","ak.r":30628,"ak.a2":n,"ak.m":"","ak.n":"essl","ak.cport":63754,"ak.gh":"2.16.172.134","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"","ak.t":"1793684433","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==wOVpbO+3hNDu0dcLhtWYBTVFx283bbF9CaSmJhDOb/J9XFqLlRybsQmh6jn7uRKj1hrInuJMZ3OpJy3FQwyjZMnpAUjWwUIxuZjwy6V+RG3YD8wgWcviOLFyoDUIKm/sRA05kVa1zBzRdOy5lDlERTfUVcRgU+/LDxKysOjeBoxMD5CD9lSyaxjqwEXaYD0nxtbh48QdT7RQetvB7KmUc+72BH6s9kvfe5A7UggPYkF4fTTbnBHyU2DLOPSyeiL0l2Ec+4uqdwQULb4JnSa+hCYpHITD87eFEiohMcTz+Wpj+u8l6cW6E8JwXbXqG0did0SmzMRdor6HoXXT+KKhQZj1zSk+IvxXypOTNFJsbR4sgsVTQyR5YL4G6Sruc71KetxG+t6p7zzfqhQD3h8Xte+ZuQV+8EMxCPmYvB4IWiw=","ak.pv":"360","ak.dpoabenc":"","ak.tf":i};if(""!==t)o["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))o["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(o)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:o,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body class="body layout-modern  site-search-always-visble  content-type-oc-general content-template-oc-full-width-without-image group-template-oc-full-width-with-default-header page-name-november-3-2026-consolidated-statewide-general-election page-sequence-2 page-depth-6 page-section-4 website-type-primary device-desktop " id="body-top">
+    <div id="skip-to-content-container">
+        <a href="#main-content" class="visuallyhidden focusable" id="skip-to-content-link">Skip to main content</a>
+    </div>
+    <script>
+        // OCNOW-11988 (Cursor): Proactively focus skip link when returning from browser chrome.
+        // Must run inline (not deferred oc_main.js) so focus is intercepted before NVDA speaks footer.
+        (function () {
+            var awaitingReentry = false;
+            var inertSupported = 'inert' in HTMLElement.prototype;
+
+            function isExplicitlyOutsideDocument(node) {
+                return node != null && !document.documentElement.contains(node);
+            }
+
+            function getSkipContainer() {
+                return document.getElementById('skip-to-content-container');
+            }
+
+            function getSkipLink() {
+                return document.getElementById('skip-to-content-link');
+            }
+
+            function applyGuard() {
+                awaitingReentry = true;
+                if (!inertSupported) {
+                    return;
+                }
+                var skipContainer = getSkipContainer();
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    if (children[i] !== skipContainer) {
+                        children[i].setAttribute('inert', '');
+                    }
+                }
+            }
+
+            function clearGuard() {
+                awaitingReentry = false;
+                if (!inertSupported) {
+                    return;
+                }
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    children[i].removeAttribute('inert');
+                }
+            }
+
+            function isSkipLinkElement(target) {
+                if (!target) {
+                    return false;
+                }
+                var skipContainer = getSkipContainer();
+                return target.id === 'skip-to-content-link' ||
+                    (skipContainer && skipContainer.contains(target));
+            }
+
+            function focusSkipLink() {
+                var skipLink = getSkipLink();
+                if (!skipLink) {
+                    return;
+                }
+                if (window.scrollY > 0) {
+                    window.scrollTo(0, 0);
+                }
+                skipLink.focus({ preventScroll: true });
+            }
+
+            function scheduleGuardIfDocumentLostFocus() {
+                window.setTimeout(function () {
+                    if (!document.hasFocus()) {
+                        applyGuard();
+                    }
+                }, 0);
+            }
+
+            document.addEventListener('focusout', function (e) {
+                if (isExplicitlyOutsideDocument(e.relatedTarget)) {
+                    applyGuard();
+                }
+            }, true);
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Tab') {
+                    scheduleGuardIfDocumentLostFocus();
+                } else if (e.key === 'F6' || (e.key === 'l' && e.ctrlKey)) {
+                    scheduleGuardIfDocumentLostFocus();
+                }
+            }, true);
+
+            window.addEventListener('focus', function () {
+                if (!awaitingReentry) {
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+            }, true);
+
+            document.addEventListener('focusin', function (e) {
+                var reentryFromChrome = awaitingReentry || isExplicitlyOutsideDocument(e.relatedTarget);
+                if (!reentryFromChrome) {
+                    return;
+                }
+                if (isSkipLinkElement(e.target)) {
+                    clearGuard();
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+                clearGuard();
+            }, true);
+        })();
+    </script>
+    <form name="mainForm" method="post" action="/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election" id="mainForm">
+<div>
+<input type="hidden" name="ctl04_seamless_script_manager_TSM" id="ctl04_seamless_script_manager_TSM" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__SEAMLESSVIEWSTATE" id="__SEAMLESSVIEWSTATE" value="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" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['mainForm'];
+if (!theForm) {
+    theForm = document.mainForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZEwxevNHYVPiVa1Imd_CfwV7Ab8FE1aS0qMo2VVt5LKJo2QwSrlAqlF7-BPzzVxibA2&amp;t=639190581332169432" type="text/javascript"></script>
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-GB%3add3ac3d5-1e29-4112-8fed-529caffa8f24%3aea597d4b%3ab25378d2" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=EYVjNsQ7oYmzBqCI0dkEyYe0LYmPcVFL4WPcQCXhKfQwUqkAT7lLra0za-OLMuUUcCyPINdTVMHIWti96-8R_oN-trjXUUZnJRzckxTjid4ecctwwEJyNI-05jZYvXHBRiEKL0MUQMEyEJ2FXanyE1uBk88RxZ1wVK6AUn9D4v8rW-LNx2OOtB8vE3hC8P0jk4XZt7GAPiCeYQolxUlwFZA8cuOfgd4u08OASxFdh8mChz3A0YHhuwRrXGVlulfs9SJVkAvulhjdHYIIp1SRohDxt9acTwxUQrOlxuxC847b00zOOWg9SlpwD_iBuQQ1rOK9WH9O_wN9c2TXm4GeXaQHHT4yQ9IlzZXw6th8ch3f-k_n1yYeeurDMbwChXW1Vh_7rpu00kgmegsg9w2J3ququXIPfy2Gq8IscVTmtwouupfmUzAOicU_yESgQ-dG0" type="text/javascript"></script>
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bOpenCities.CustomControls%3aen-GB%3a7197b077-b068-4a69-9481-a6cf2e7718f9%3a8e1d32bf" type="text/javascript"></script>
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl04$seamless_script_manager', 'mainForm', [], [], [], 90, '');
+//]]>
+</script>
+
+<script type="text/javascript">
+    try{
+        function SeamlessEndRequestHandler(sender, args) {
+            try {
+                var dataItems = args.get_dataItems();
+                if(dataItems.ctl04_seamless_script_manager)
+                    document.getElementById('__SEAMLESSVIEWSTATE').value = dataItems.ctl04_seamless_script_manager;
+            }
+            catch (e) { }
+        }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(SeamlessEndRequestHandler);
+    }
+    catch (e) { }
+</script>
+
+    <div class="unsupported-browser-warning js-element"></div>
+    
+    <div hidden>
+        <span id="new-window-0">opens in new tab or window </span>
+    </div>
+    <div class="overlay-container"></div>
+    
+    <div class="background-container">
+        <div class="page-container">
+            <!-- OC Layout Element GROUP TEMPLATE -->
+            <!--groupTemplateStart--><header><div class="print-header-outer-container print-element">
+<img src="/files/templates/00000000-0000-0000-0000-000000000000/e4927c73-3d98-4ec2-aa6f-8f732e2038a7/v/1490/print-header.png" alt="County of Fresno - Logo" />
+</div>
+            <div class="toolbar-outer-container">
+  <div class="toolbar-inner-container clearfix">
+    <div class="toolbar-item toolbar-quicklinks toolbar-display-dropdown">
+	<button type="button" aria-controls="toolbar-quicklinks-drop-down" aria-expanded="false" class="toolbar-button toolbar-button-quicklinks js-element"><span>Quick Links</span><i aria-hidden="true"></i></button>	
+	<div id="toolbar-quicklinks-drop-down" class="toolbar-drop-down toolbar-quicklinks-drop-down clearfix">
+		<ul>
+		  <li><a href="https://fresnocounty.sharepoint.com/sites/countywide" class="oc-icon-b oc-i--none link-type-external" target="_blank"><span>Employee Services</span></a></li><li><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Public-Information-Office" class="oc-icon-b oc-i--none link-type-internal"><span>Newsroom</span></a></li><li><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/Careers" class="oc-icon-b oc-i--none link-type-external" target="_blank"><span>Employment</span></a></li><li><a href="https://www.fresnocountyca.gov/Site-Features/Site-Issue-Feedback-Form" class="oc-icon-b oc-i--none link-type-internal"><span>Feedback</span></a></li>
+		</ul>
+	</div>
+</div><div class="toolbar-item toolbar-language notranslate toolbar-display-dropdown"><div class="no-js-element">
+		  <ul>
+		    <li id="toolbar-language-option-en-us-noscript"><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-es-noscript"><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="es">Español<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-hmn-noscript"><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=hmn" class="lang-item lang-hmn" data-translate-to="hmn" lang="hmn">Hmoob<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-pa-noscript"><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=pa" class="lang-item lang-pa" data-translate-to="pa" lang="pa">ਪੰਜਾਬੀ<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-tl-noscript"><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=tl" class="lang-item lang-tl" data-translate-to="tl" lang="tl">Tagalog<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-zh-cn-noscript"><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=zh-CN" class="lang-item lang-zh-cn" data-translate-to="zh-cn" lang="zh-CN">中文<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-km-noscript"><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=km" class="lang-item lang-km" data-translate-to="km" lang="km">ភាសាខ្មែរ<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-lo-noscript"><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=lo" class="lang-item lang-lo" data-translate-to="lo" lang="lo">ພາສາລາວ<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-vi-noscript"><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=vi" class="lang-item lang-vi" data-translate-to="vi" lang="vi">Tiếng Việt<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ko-noscript"><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=ko" class="lang-item lang-ko" data-translate-to="ko" lang="ko">한국어<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+          </ul>
+		</div>
+	<button type="button" role="combobox" aria-controls="toolbar-language-drop-down" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="none" aria-labelledby="toolbar-language-label" class="toolbar-button toolbar-button-language js-element">  
+        <span class="toolbar-language-globe-icon" aria-hidden="true"></span>
+        <span id="toolbar-language-label" class="current-language">
+            Select a language to translate to
+		</span>
+		<i aria-hidden="true"></i>
+	</button>
+	<div id="toolbar-language-drop-down" role="listbox" aria-label="Available languages" class="toolbar-drop-down toolbar-language-drop-down js-element clearfix">
+		<ul role="group">
+		    <li role="presentation"><a id="toolbar-language-option-en-us" role="option" aria-selected="true" href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-es" role="option" aria-selected="false" href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="es">Español<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-hmn" role="option" aria-selected="false" href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=hmn" class="lang-item lang-hmn" data-translate-to="hmn" lang="hmn">Hmoob<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-pa" role="option" aria-selected="false" href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=pa" class="lang-item lang-pa" data-translate-to="pa" lang="pa">ਪੰਜਾਬੀ<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-tl" role="option" aria-selected="false" href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=tl" class="lang-item lang-tl" data-translate-to="tl" lang="tl">Tagalog<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-zh-cn" role="option" aria-selected="false" href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=zh-CN" class="lang-item lang-zh-cn" data-translate-to="zh-cn" lang="zh-CN">中文<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-km" role="option" aria-selected="false" href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=km" class="lang-item lang-km" data-translate-to="km" lang="km">ភាសាខ្មែរ<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-lo" role="option" aria-selected="false" href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=lo" class="lang-item lang-lo" data-translate-to="lo" lang="lo">ພາສາລາວ<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-vi" role="option" aria-selected="false" href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=vi" class="lang-item lang-vi" data-translate-to="vi" lang="vi">Tiếng Việt<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ko" role="option" aria-selected="false" href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election?oc_lang=ko" class="lang-item lang-ko" data-translate-to="ko" lang="ko">한국어<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+        </ul>
+	</div></div>
+  </div>
+</div>
+            <div class="header-outer-container">
+    <div class="header-container header-layout-3  clearfix">
+			<div class="header-site-logo">
+				<a href="https://www.fresnocountyca.gov/Home" lang="en-US" aria-label="County of Fresno - Home - Logo">
+				</a>
+			</div>
+      
+		    <div class="mobile-search-btn js-element">
+		        <button><i aria-hidden="true"></i><span class="mobile-search-btn-text"><span class="visuallyhidden">Open </span>Search</span></button>
+		    </div>
+		    <div class="header-website-settings">
+                <button id="btn-mob-nav" type="button" aria-expanded="false" aria-controls="nav">
+                    <i aria-hidden="true"></i><span class="side-menu-btn-text">Menu</span>
+                </button>
+        	</div>
+          <div class="navigation-outer-container">
+	<div id="nav" role="navigation" class="navigation-container  navigation-container-option-7" data-menu-type="horizontal" aria-label="primary">
+        <div class="grid">
+            <div class="col-xs-12">              
+                <ul class="sf-menu mega-menu" id="sc-main-menu"><li class="nav-section-quarters-1   first-item nav-item-seq-1">
+<a href="https://www.fresnocountyca.gov/Services" class="nav-level-1 nav-has-children"  target="">
+	<i class="item-icon" aria-hidden="true"></i><span class="item-text">Services</span>
+</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-1" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-1" class="second-level-container ch-20">
+
+          
+            <li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Assistance-Programs" class=""  target="_self">Assistance Programs</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Vote-By-Mail-Ballot-Status" class=""  target="_blank">Vote-By-Mail Ballot Status</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Adult-Social-Services" class=""  target="_self">Adult Social Services</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/apply-for-building-permits" class=""  target="_self">Apply for a Permit (Permit Portal)</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Child-Welfare-Services" class=""  target="_self">Child Welfare Services</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Code-Enforcement" class=""  target="_self">Code Enforcement</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/County-Jail-Inmate-Information" class=""  target="_blank">County Jail Inmate Information</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/e-File-Business-Property-Statements" class=""  target="_self">e-File Business Property Statements</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/GIS-Mapping-Applications" class=""  target="_blank">GIS Mapping Applications</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Library-Catalog-Search" class=""  target="_blank">Library Catalog Search</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Library-Research-Database" class=""  target="_blank">Library Research Database</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Fresno-County-Connect-Redirect" class=""  target="_self">Fresno County Connect App</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Pay-Traffic-Fines" class=""  target="_blank">Pay Traffic Fines</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Property-Tax-Information-and-Payments" class=""  target="_self">Property Tax Information and Payments</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Property-Owners-Protection-Alert" class=""  target="_self">Property Owner's Protection Alert</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Public-Records-Request" class=""  target="_self">Public Records Request</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Recorded-Documents-Search" class=""  target="_self">Recorded Documents Search</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Request-County-Building-Inspection" class=""  target="_blank">Request County Building Inspection</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/Veterans-Service-Office" class=""  target="_self">Veterans Service Office</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Services/View-Health-Inspections" class=""  target="_blank">View Health Inspections</a></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-2">
+<a href="https://www.fresnocountyca.gov/Resources" class="nav-level-1 nav-has-children"  target="">Resources</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-2" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-2" class="second-level-container ch-25">
+
+          
+            <li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/American-Rescue-Plan" class=""  target="_self">American Rescue Plan</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Americans-With-Disabilities-Act" class=""  target="_self">Americans With Disabilities Act</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Board-of-Supervisors-Meeting-Agendas" class=""  target="_blank">Board of Supervisors Meeting Agendas</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/CARES-Act-Funding" class=""  target="_self">CARES Act Funding</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Cooling-Centers" class=""  target="_blank">Cooling Centers</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/County-Bid-Process" class=""  target="_self">County Bid Process</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/County-Ordinance-Code" class=""  target="_self">County Ordinance Code</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Fentanyl-Danger-in-Fresno-County" class=""  target="_blank">Fentanyl Danger in Fresno County</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Flood-Protection" class=""  target="_self">Flood Protection</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Fresno-County-Emergency" class="nav-has-children"  target="">Fresno County Emergency</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-10" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-10" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Fresno-County-Emergency/Become-a-Red-Cross-Volunteer"  target="_blank">Become a Red Cross Volunteer</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Fresno-County-Emergency/Returning-Home-After-a-Fire-Guidance"  target="">Returning Home After a Fire</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Fresno-County-Jobs" class=""  target="_self">Fresno County Jobs</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Fresno-County-Office-Holiday-Closures" class=""  target="">Fresno County Office Holiday Closures</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Fresno-County-Resource-List" class=""  target="">Fresno County Resource List</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/HOMELESS-RESPONSE" class=""  target="_self">Homeless Response</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Juror-Information" class=""  target="_blank">Juror Information</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Measure-A-Short-Term-Lodging-Transient-Occupancy-Tax" class=""  target="">Measure A: Short-Term Lodging Transient Occupancy Tax</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Property-Management" class=""  target="">Property Management</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Recycling-and-Solid-Waste-Information" class=""  target="_self">Recycling and Solid Waste Information</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Redistricting" class=""  target="">Redistricting</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/SB272-Enterprise-System-Catalog" class=""  target="">SB272 Enterprise System Catalog</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Traffic-Safety" class=""  target="">Traffic Safety</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Voter-Guide" class=""  target="_blank">Voter Guide</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Partner-Cal-Fire" class=""  target="_blank">Partner: Cal Fire</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Partner-Fresno-County-Office-of-Education" class=""  target="_blank">Partner: Fresno County Office of Education</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Resources/Partner-Superior-Court-of-Fresno" class=""  target="_self">Partner: Superior Court of Fresno</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3 nav-active-path  nav-item-seq-3">
+<a href="https://www.fresnocountyca.gov/Departments" class="nav-level-1 nav-has-children"  target="">Departments</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-3" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-3" class="second-level-container ch-24">
+
+          
+            <li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Agricultural-Commissioner" class="nav-has-children"  target="">Agricultural Commissioner</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Agricultural-Commissioner/About-Us"  target="">About Us</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Agricultural-Commissioner/CE-Event-Calendar"  target="">CE & Event Calendar</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Agricultural-Commissioner/Pest-Disease-Prevention"  target="">Pest & Disease Prevention</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Agricultural-Commissioner/Pesticide-Safety"  target="">Pesticide Safety</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Agricultural-Commissioner/Commodity-Standardization-Programs"  target="">Commodity Standardization Programs</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Agricultural-Commissioner/Weights-Measures"  target="">Weights & Measures</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Agricultural-Commissioner/Submit-a-Complaint"  target="">Submit a Complaint</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Agricultural-Commissioner/Presentar-una-Queja"  target="">Presentar una Queja</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Agricultural-Commissioner/Annual-Crop-Livestock-Report"  target="">Annual Crop & Livestock Report</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Agricultural-Commissioner/Recursos-Para-Trabajadores-Y-Comunidades-en-Español"  target="">Recursos Para Trabajadores Y Comunidades en Español</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Agricultural-Commissioner/Department-FAQs"  target="">Department FAQs</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor" class="nav-has-children"  target="">Assessor</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Value"  target="">Assessed Value Lookup</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Parcel-Maps"  target="">Parcel Maps</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Exemptions"  target="">Property Tax Exemptions</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Value-Transfer"  target="">Transferring Tax Base to Another Property</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Appeals"  target="">Assessed Value Appeals</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Forms"  target="">Assessor Forms</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Real-Property"  target="">Real Property Assessments</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Construction-Exclusions"  target="">New Construction Reassessment Exclusions</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Ownership-Exclusions"  target="">Change in Ownership Reassessment Exclusions</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Business-Property"  target="">Business Personal Property</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Assessment-Roll"  target="">Assessment Roll</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Mapping"  target="">Mapping Division</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Mailing"  target="">Mailing Address Changes</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Williamson-Act"  target="">California Land Conservation Act</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Mills-Act"  target="">Mills Act</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Press"  target="">Assessor Press Releases</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/FAQs"  target="">Frequently Asked Questions</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Map-Recordation"  target="">Tract and Parcel Map Recordation</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Assessor/Contact"  target="">How to Reach the Assessor</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Auditor-Controller-Treasurer-Tax-Collector" class="nav-has-children"  target="">Auditor-Controller/Treasurer-Tax Collector</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Auditor-Controller-Treasurer-Tax-Collector/About-Us"  target="">About Us</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Auditor-Controller-Treasurer-Tax-Collector/Property-Tax-Payments"  target="_self">Property Tax Payments</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Auditor-Controller-Treasurer-Tax-Collector/Revenue-Collections-Unit"  target="_blank">Revenue Collections Unit</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Auditor-Controller-Treasurer-Tax-Collector/Unclaimed-Property-Lookup"  target="_self">Unclaimed Property Lookup</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Auditor-Controller-Treasurer-Tax-Collector/Business-Licenses"  target="_self">Business Licenses</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Auditor-Controller-Treasurer-Tax-Collector/Property-Tax-Information"  target="">Property Tax Information</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Auditor-Controller-Treasurer-Tax-Collector/Fraud-Hotline"  target="">Fraud Hotline</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Auditor-Controller-Treasurer-Tax-Collector/Auditor-ControllerTreasurer-Tax-Collectors-Publications"  target="">Publications</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Auditor-Controller-Treasurer-Tax-Collector/Contact-Information"  target="">Contact Information</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Auditor-Controller-Treasurer-Tax-Collector/County-Oversight-Board"  target="">County Oversight Board</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Behavioral-Health" class="nav-has-children"  target="">Behavioral Health</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Behavioral-Health/Behavioral-Health-is"  target="">Behavioral Health is</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Behavioral-Health/Care-and-Services"  target="">Care and Services</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Behavioral-Health/Providers"  target="">Providers</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Behavioral-Health/For-Professionals"  target="">For Professionals</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Behavioral-Health/Need-to-Make-a-Payment"  target="_self">Need to Make a Payment?</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors" class="nav-has-children"  target="">Board of Supervisors</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Supervisor-Brian-Pacheco"  target="">Brian Pacheco</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Supervisor-Garry-Bredefeld"  target="">Garry Bredefeld</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Supervisor-Luis-Chavez"  target="">Luis Chavez</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Supervisor-Ernest-Buddy-Mendes"  target="">Ernest Buddy Mendes</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Supervisor-Nathan-Magsig"  target="">Nathan Magsig</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Board-Briefing-Reports"  target="">Board Briefing Reports</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Budget"  target="_self">Budget</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/County-Administrative-Policies"  target="">County Administrative Policies</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/County-Charter"  target="_blank">County Charter</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Find-Your-District"  target="_blank">Find Your District</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Meeting-Information"  target="">Meeting Information</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Office-Location"  target="_blank">Office Location</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Ordinance-Code"  target="">Ordinance Code</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Request-for-Issuance-of-Recognition"  target="">REQUEST FOR ISSUANCE OF RECOGNITION</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Board-of-Supervisors/Request-for-Adjournment-in-Memory"  target="">REQUEST FOR ADJOURNMENT IN MEMORY</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Child-Support-Services" class="nav-has-children"  target="">Child Support Services</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Child-Support-Services/CalWORKS-Cases"  target="">CalWORKS Cases</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Child-Support-Services/Contact-the-DCSS"  target="">Contact the DCSS</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Child-Support-Services/DCSS-Forms"  target="">DCSS Forms</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Child-Support-Services/How-to-Change-Court-Orders"  target="">How to Change Your Child Support Order</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Child-Support-Services/License-Passport-Information"  target="">License & Passport Information</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Child-Support-Services/Services-We-Provide"  target="">Services We Provide</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Child-Support-Services/Frequently-Asked-Questions"  target="">Frequently Asked Questions</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Child-Support-Services/Support-Process"  target="">Support Process</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Clerk-of-the-Board-of-Supervisors" class="nav-has-children"  target="">Clerk of the Board of Supervisors</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-7" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-7" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Clerk-of-the-Board-of-Supervisors/About-the-Clerk-of-the-Board"  target="">About the Clerk of the Board</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Clerk-of-the-Board-of-Supervisors/Assessment-Appeals"  target="">Assessment Appeals</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Clerk-of-the-Board-of-Supervisors/Boards-Commissions-and-Committees"  target="">Boards, Commissions and Committees</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Clerk-of-the-Board-of-Supervisors/Claims-for-Damages"  target="">Claims for Damages</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Clerk-of-the-Board-of-Supervisors/Form-700s-COI-Codes"  target="">Form 700s & Conflict of Interest Codes</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Clerk-of-the-Board-of-Supervisors/Land-Use-Appeals"  target="">Land Use Appeals</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Clerk-of-the-Board-of-Supervisors/Parcel-Tract-Maps-for-Recordation"  target="">Maps for Recordation</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office" class="nav-has-children"  target="">County Administrative Office</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-8" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-8" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/American-Rescue-Plan-ARPA"  target="">American Rescue Plan (ARPA)</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Americans-With-Disabilities-Act"  target="">Americans With Disabilities Act (ADA)</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Budget-Files"  target="">Budget Files</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Staff-Directory"  target="">Staff Directory</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/CARES-Act-Funding-and-The-Coronavirus-Relief-Fund"  target="">CARES Act Funding and The Coronavirus Relief Fund</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Code-Enforcement"  target="">Code Enforcement</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Economic-Development"  target="_blank">Economic Development</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Federal-Legislative-Platform"  target="">Federal Legislative Platform</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Public-Information-Office"  target="">Fresno County Public Information Office</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Homeless-Response"  target="">Homeless Response</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/State-Legislative-Platform"  target="">State Legislative Platform</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Video-Messages"  target="">Video Messages</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Vision-Mission-Guiding-Principles"  target="">Vision, Mission, Guiding Principles</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Fresno-County-Emergency-Information"  target="_self">Fresno County Emergency Information</a></li></ul></li><li class="second-level-item nav-active-path "><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters" class="nav-has-children"  target="">County Clerk/Registrar of Voters</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-9" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-9" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/County-Clerk"  target="">County Clerk - Clerk Services</a></li><li  class="third-level-item nav-active-path "><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections"  target="">Elections</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Voter-Data-Maps-V2"  target="">Voter Data & Maps</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/County-Counsel" class=""  target="">County Counsel</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/District-Attorney" class="nav-has-children"  target="_blank">District Attorney</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-11" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-11" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/District-Attorney/About-Us"  target="_self">About Us</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/District-Attorney/Contact-Us"  target="_self">Contact Us</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/District-Attorney/BOI"  target="_self">Bureau of Investigations (BOI)</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/District-Attorney/Fentanyl-Awareness"  target="">Fentanyl Awareness</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/District-Attorney/Victim-Resources"  target="_self">Victim Resources</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/District-Attorney/Career-Opportunities"  target="_self">Career Opportunities</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/District-Attorney/FAQs"  target="_self">Frequently Asked Questions (FAQs)</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/District-Attorney/News-Releases"  target="_self">News Releases</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/District-Attorney/Community-Events"  target="_self">Community Events</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Fresno-County-Employees-Retirement-Association" class=""  target="_blank">Fresno County Employees' Retirement Association</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/General-Services-Department" class="nav-has-children"  target="">General Services</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-13" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-13" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/General-Services-Department/Facility-Services"  target="">Facility Services</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/General-Services-Department/Fleet-Services"  target="">Fleet Services</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/General-Services-Department/Purchasing-Services"  target="">Purchasing Services</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/General-Services-Department/Security-Parking-Services"  target="">Security & Parking Services</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources" class="nav-has-children"  target="">Human Resources</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-14" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-14" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/Employee-Benefits"  target="">Employee Benefits</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/Employment-Services"  target="">Employment Services</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/Frequently-Asked-Questions"  target="">Frequently Asked Questions</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/Intern-Hub"  target="">Intern Hub</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/Job-Openings"  target="_self">Careers</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/Labor-Relations"  target="">Labor Relations</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/Office-Location"  target="">Office Location</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/References"  target="">References</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/Risk-Management"  target="">Risk Management</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/General-Liability"  target="">General Liability</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/Salary-Resolution"  target="">Salary Resolution</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Human-Resources/Careers"  target="">Join our team!</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Information-Technology-Services-Department" class="nav-has-children"  target="">Information Technology Services Department</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-15" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-15" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Information-Technology-Services-Department/Fresno-County-Broadband"  target="">Fresno County Broadband</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Information-Technology-Services-Department/GIS-Geographic-Information-Systems"  target="">GIS – Geographic Information Systems</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Information-Technology-Services-Department/SB272-Enterprise-System-Catalog"  target="_blank">SB272 – Enterprise System Catalog</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Information-Technology-Services-Department/Work-for-Us"  target="">Work for Us</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Information-Technology-Services-Department/Goals-and-Accomplishments"  target="">Goals and Accomplishments</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Information-Technology-Services-Department/Staff"  target="">Executive Team</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Fresno-County-Library" class=""  target="_self">Fresno County Library</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Probation" class="nav-has-children"  target="">Probation Department</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-17" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-17" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Probation/About-Probation"  target="">About Probation</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Probation/Adult-and-Realignment-Services"  target="">Adult and Realignment Services</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Probation/Juvenile-Services"  target="">Juvenile Services</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Probation/Juvenile-Justice-Campus"  target="">Juvenile Justice Campus</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Probation/Crime-Victim-Services"  target="">Crime Victim Services</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Probation/Community-and-Councils-Partnerships"  target="">Community and Councils Partnerships</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Probation/Probation-Human-Resources"  target="">Probation Human Resources</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Probation/Email-Probation"  target="">Email Probation</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Probation/Contact-Probation"  target="">Contact Probation</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Probation/Employment-Opportunities"  target="_self">Employment Opportunities</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Defender" class="nav-has-children"  target="">Law Offices of the Public Defender</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-18" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-18" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Defender/Post-Conviction-Assistance"  target="">Post-Conviction Assistance</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Defender/Specialty-Courts"  target="">Specialty Courts</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Defender/Juvenile-Justice"  target="">Juvenile Justice</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Defender/Proposition-57"  target="">Proposition 57</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Defender/Helpful-Links"  target="">Helpful Links</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Defender/FAQs"  target="">Frequently Asked Questions</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Defender/Contacting-the-Public-Defender-Office"  target="">Contacting the Public Defender Office</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Defender/Employment-Opportunities"  target="">Employment Opportunities</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health" class="nav-has-children"  target="">Public Health</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-19" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-19" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Public-Health-Nursing"  target="">Public Health Nursing</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Childrens-Medical-Services"  target="">Children's Medical Services</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Environmental-Health"  target="">Environmental Health</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Community-Health"  target="">Community Health</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Epidemiology-Surveillance-Data-Management"  target="">Epidemiology, Surveillance & Data Management</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Health-Policy-and-Wellness"  target="">Health Policy and Wellness</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Emergency-Services"  target="">Emergency Services</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/News-and-Media"  target="">News and Media</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/About-Us"  target="">About Us</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Health-Messages-for-Medical-Providers"  target="">Health Messages for Medical Providers</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Birth-and-Death-Certificates"  target="_blank">Birth and Death Certificates</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Fresno-County-Mobile-Health-MH-Program"  target="">Fresno County Mobile Health (MH) Program</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Kratom"  target="">Kratom</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Notice-of-Privacy-Practices"  target="_self">Notice of Privacy Practices</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Health/Institutional-Review-Board-IRB-Research-Study-and-Submission-Information"  target="">Institutional Review Board Research Study and Submission Information</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning" class="nav-has-children"  target="">Public Works and Planning</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-20" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-20" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/administration"  target="">Administration</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/maps-and-gis-information"  target="_self">Maps and GIS Information</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/citizens-portal"  target="">Apply for a Building Permit</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/Construction-Bidding-Opportunities"  target="">Construction Bidding Opportunities</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/divisions-of-public-works-and-planning"  target="">Divisions of Public Works and Planning</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/flood-protection-and-planning"  target="">Flood Protection and Planning</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/general-plan-maps"  target="_self">General Plan</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/household-haz"  target="_self">Household Hazardous Waste</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/landfill-operations"  target="_self">Landfill Operations</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/parks"  target="_self">Parks</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/planning-and-land-use"  target="_self">Planning and Land Use</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/planning-forms"  target="_self">Forms</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/PWP_SuperShort5"  target="">Customer Satisfaction Survey for Public Works</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/recycling-and-solid-waste-disposal"  target="_self">Recycling and Solid Waste Disposal</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/Request-For-Proposals"  target="">Request For Proposals</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/surveyor-s-office"  target="">Surveyor's Office</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/traffic-control"  target="">Traffic Control</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Public-Works-and-Planning/Title-VI-Implementation-Plan"  target="">Title VI Implementation Plan</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Purchasing" class=""  target="_self">Purchasing</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Recorder" class="nav-has-children"  target="">Recorder</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-22" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-22" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Recorder/Birth-Certificate"  target="">Birth Certificate</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Recorder/Death-Certificate"  target="">Death Certificate</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Recorder/Order-Online"  target="">Order Online</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Recorder/Marriage-Certificate"  target="">Marriage Certificate</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Recorder/Recorded-Documents"  target="">Recorded Documents</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Recorder/Property-Owners-Protection-Alert"  target="">Property Owner's Protection Alert</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Recorder/Military-Discharge"  target="">Military Discharge</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Recorder/Fee-Schedule"  target="">Fee Schedule</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Recorder/Forms-Common-Questions"  target="">Forms & Common Questions</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Recorder/Recorder-Contacts"  target="">Recorder Contacts</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Recorder/News-Updates"  target="">News & Updates</a></li></ul></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Fresno-County-Sheriff" class=""  target="_self">Fresno County Sheriff</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Social-Services" class="nav-has-children"  target="">Social Services</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-24" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-24" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Social-Services/Adult-Services"  target="">Adult Services</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Social-Services/Assistance-Programs"  target="">Assistance Programs</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Social-Services/Veterans-Service-Office"  target="">Veterans Service Office</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Social-Services/DSS-Administration"  target="">DSS Administration</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Social-Services/DSS-Community-Events-Calendar"  target="">DSS Community Events Calendar</a></li><li  class="third-level-item  "><a href="https://www.fresnocountyca.gov/Departments/Social-Services/DSS-Finance"  target="">DSS Finance</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-4   nav-item-seq-4">
+<a href="https://www.fresnocountyca.gov/I-Want-To" class="nav-level-1 nav-has-children"  target="">I Want To...</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-4" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-4" class="second-level-container ch-20">
+
+          
+            <li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Apply-for-Assistance" class=""  target="_blank">Apply for Assistance</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Apply-for-a-Position-with-the-County" class=""  target="_blank">Apply for a Position with the County</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Apply-for-Housing-Assistance" class=""  target="_self">Apply for Housing Assistance</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Become-a-Resource-Family" class=""  target="_self">Become a Resource Family</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Contact-In-Home-Support-Services" class=""  target="_self">Contact In-Home Support Services</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/File-for-Divorce" class=""  target="_blank">File for Divorce</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Find-Urgent-Care-or-Telehealth" class=""  target="_self">Find Urgent Care or Telehealth</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Find-Food-in-Fresno-County" class=""  target="_blank">Find Food in Fresno County</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Get-a-Marriage-License" class=""  target="_self">Get a Marriage License</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Get-a-Passport" class=""  target="_self">Get a Passport</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/License-My-Dog" class=""  target="_blank">License My Dog</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Look-Up-My-Parcel" class=""  target="_self">Look Up My Parcel</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Order-a-Birth-Certificate" class=""  target="_self">Order a Birth Certificate</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Pay-DPH-Environment-Health-Invoice-Online" class=""  target="_blank">Pay DPH Environment Health Invoice Online</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Pay-Property-Tax-Bill-Online" class=""  target="_blank">Pay Property Tax Bill Online</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Report-Abuse" class=""  target="_self">Report Abuse</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Report-an-Animal-Bite-Rabies-Control" class=""  target="_blank">Report an Animal Bite (Rabies Control)</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Submit-My-IHSS-Timesheet" class=""  target="_self">Submit My IHSS Timesheet</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Visit-Fresno-County" class=""  target="_blank">Visit Fresno County</a></li><li class="second-level-item  "><a href="https://www.fresnocountyca.gov/I-Want-To/Visit-a-County-Park" class=""  target="_self">Visit a County Park</a></li></ul></li>
+          
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+			
+			<div class="header-search-control-container" id="header-search">
+				<div class="search-inner-container">
+					<div class="sc-search-panel" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;ctl08_btnSearch&#39;)">
+	<label for="ctl08_txtSearch" id="ctl08_lblSearch" class="sc-search-label">Search</label><input name="ctl08$txtSearch" type="text" id="ctl08_txtSearch" class="sc-search-text" placeholder="How can we help you?" /><input type="submit" name="ctl08$btnSearch" value="Search" id="ctl08_btnSearch" class="sc-search-button" />
+</div>
+					<div role="status" id="predictiveResults"></div>
+				</div>
+			</div>
+    </div>
+</div>
+
+            </header>
+            <div class="content-outer-container">
+                <div id="main" role="main" class="main-outer-container clearfix">
+                        
+                        <div class="content-main-container">
+                            <div class="grid">
+					            <div class="col-xs-12">
+						            <nav id="breadcrumbs-container" aria-label="You Are Here :">
+							            <span role="list">
+<span role="listitem">
+	<a href="https://www.fresnocountyca.gov/Home"  lang="en-US">Home</a>
+	<span class="nav-separator" aria-hidden="true" role="presentation">/</span>
+</span>
+          <span role="listitem"><a href="https://www.fresnocountyca.gov/Departments" >Departments</a><span class='nav-separator' aria-hidden="true" role="presentation">/</span></span><span role="listitem">
+	<a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters" >
+		County Clerk/Registrar of Voters
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span role="listitem">
+	<a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections" >
+		Elections
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span role="listitem">
+	<a href="https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information" >
+		ELECTION INFORMATION
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span class="current-page" role="listitem" aria-current="page" >November 3, 2026 Consolidated Statewide General Election</span>
+          
+          
+          </span>
+						            </nav>
+					            </div>
+                      
+					            <div class="col-xs-12">
+						            <div class="main-inner-container">
+							            <div id="main-content" class="main-container clearfix">
+							              
+                            <!-- OC Layout Element Conent Template -->
+							              <!--normalTemplateStart--><div class="grid">
+    <div class="col-xs-12">
+        <h1 class='oc-page-title '>November 3, 2026 Consolidated Statewide General Election</h1>
+        
+        <div><link href="//use.fontawesome.com/releases/v5.7.2/css/solid.css" rel="stylesheet" integrity="sha384-r/k8YTFqmlOaqRkZuSiE9trsrDXkh07mRaoGBMoDcmA58OHILZPsk29i2BsFng1B" crossorigin="anonymous">
+<link href="//use.fontawesome.com/releases/v5.7.2/css/fontawesome.css" rel="stylesheet" integrity="sha384-4aon80D8rXCGx9ayDt85LbyUHeMWd3UiBaWliBlJ53yzm9hqN21A+o1pqoyK04h+" crossorigin="anonymous"></div>
+<p style="text-align: center;">&nbsp;</p>
+<div>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
+<div><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/vote_workshop_english.pdf" class="document ext-pdf"><i aria-hidden="true"></i><style>
+a.document.ext-pdf::before { width: 0 !important; position: relative !important; }
+a span.file-info {display: none !important }
+</style><span class="file-info">(PDF,&nbsp;694KB)</span></a></div>
+</div>
+<p>&nbsp;</p>
+<h4 style="text-align: center;">Announcement</h4>
+<h4 style="text-align: center;">New Vote Center available at DRY CREEK ELEMENTARY SCHOOL</h4>
+<h4 style="text-align: center;">VC 18 &ndash; Dry Creek Elementary School, 1273 N Armstrong Ave., Clovis CA, 93619</h4>
+<hr />
+<p>&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div data-layout="1" data-title-level="2" class="featured-links featured-links-option-1">
+<h2 class="featured-links-title">November 3 2026 Maps and Location Lists</h2>
+<div class="featured-links-body clearfix">
+<ul class="clearfix">
+<li><a class="featured-link" href="https://cofgisonline.maps.arcgis.com/apps/webappviewer/index.html?id=efe2a0df2a614b299ece3d9b9f350953" target="_blank">Vote Center/Drop Box Lookup</a></li>
+</ul>
+</div>
+</div>
+<div data-layout="3" data-title-level="2" class="featured-links featured-links-option-3">
+<div class="featured-links-body clearfix">
+<ul class="clearfix">
+<li><a class="featured-link document ext-pdf" href="/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/nov-3-2026-vote-centers-map.pdf" target="_blank"><i aria-hidden="true"></i>Vote Center Map<span class="file-info">(PDF,&nbsp;15MB)</span></a></li>
+<li><a class="featured-link document ext-pdf" href="/files/sharedassets/county/v/4/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/november-3-2026-dropbox-map.pdf" target="_blank"><i aria-hidden="true"></i>Drop Box Map<span class="file-info">(PDF,&nbsp;8MB)</span></a></li>
+<li><a class="featured-link document ext-pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/fp-bdb-bi-eng.pdf" target="_blank"><i aria-hidden="true"></i>Bilingual Ballot Drop Box List<span class="file-info">(PDF,&nbsp;308KB)</span></a></li>
+<li><a class="featured-link document ext-pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/fp-vcenters-eng.pdf" target="_blank"><i aria-hidden="true"></i>English Vote Center List<span class="file-info">(PDF,&nbsp;337KB)</span></a></li>
+<li><a class="featured-link document ext-pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/fp-vcenters-spa.pdf" target="_blank"><i aria-hidden="true"></i>Spanish Vote Center List<span class="file-info">(PDF,&nbsp;335KB)</span></a></li>
+</ul>
+</div>
+</div>
+<hr style="text-align: left;" />
+<div data-layout="4" data-title-level="2" class="featured-links featured-links-option-4">
+<div class="featured-links-body clearfix">
+<ul class="clearfix"></ul>
+</div>
+</div>
+<div data-type="1" data-title-level="2" class="oc-wysiwyg-container">
+<div class="oc-wysiwyg-container-panel">
+<h2>Important Dates</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<ul>
+<li>June 26, 2026: Completion of Boundary Changes for all Districts<br />
+<br /></li>
+<li>June 30, 2026: Candidate Filing Training<br />
+<br /></li>
+<li>July 1, 2026: Delivery of Notice from Districts to Election Official<br />
+<br /></li>
+<li>July 13, 2026 &ndash; August 7, 2026: Candidate Filing Period<br />
+<br /></li>
+<li>August 8, 2026 &ndash; August 12, 2026: Extension, Candidate Filing Period if Qualifying Incumbent Does Not File<br />
+<br /></li>
+<li>August 13, 2026: Randomized Alphabet Drawing<br />
+<br /></li>
+<li>September 4, 2026 &ndash; September 19, 2026: Military &amp; Overseas Voter, Vote-by-Mail Ballot Distribution<br />
+<br /></li>
+<li>September 7, 2026 &ndash; October 20, 2026: Statement of Write-in Candidacy Period<br />
+<br /></li>
+<li>September 24, 2026 &ndash; October 5, 2026: County Voter Information Guides in Mail<br />
+<br /></li>
+<li>October 5, 2026 &ndash; October 27, 2026: Mail Ballots in Mail<br />
+<br /></li>
+<li>October 5, 2026: First Day of Early Voting - County Clerk&rsquo;s Office, 2221 Kern St., Fresno, CA 93721<br />
+<br /></li>
+<li>October 19, 2026: Close of Registration for This Election<br />
+<br /></li>
+<li>October 20, 2026 &ndash; November 3, 2026: Conditional Voter Registration Period<br />
+<br /></li>
+<li>October 24, 2026 &ndash; November 3, 2026: Eleven-Day Vote Centers open through Election Day; 9:00 a.m. &ndash; 5:00 p.m.</li>
+</ul>
+<ul>
+<li>October 27, 2026 - Last Day to Request VBM Ballot by Mail<br />
+<br /></li>
+<li>October 31, 2026 &ndash; November 3, 2026: All Voter Centers open through Election Day; 9:00 a.m. &ndash; 5:00 p.m.<br />
+<br /></li>
+<li>November 3, 2026: Election Day, 7:00 a.m. &ndash; 8:00 p.m.<br />
+<br /></li>
+<li>November 10, 2026: Last Day to Receive Vote-by-Mail Ballot Postmarked no later than November 3, 2026</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Important Information</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p><a title="Governor's Proclamation 2026-06-08.pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/governors-proclamation-2026-06-08.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Governor&rsquo;s Proclamation<span class="file-info">(PDF,&nbsp;967KB)</span></a></p>
+<p><a title="ElectionSummaryReportRPT(Zero Report).pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/electionsummaryreportrptzero-report.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Consolidated Statewide General Election Zero Report<span class="file-info">(PDF,&nbsp;390KB)</span></a> &nbsp;</p>
+<p><a href="/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/filed-notice-to-count-ballots.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Notice to Count Ballots at Central Location<span class="file-info">(PDF,&nbsp;406KB)</span></a> |&nbsp;<a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/notice-to-count-ballots-at-central-location-11-3-2026-spanish.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Espa&ntilde;ol<span class="file-info">(PDF,&nbsp;52KB)</span></a></p>
+<p><a title="Notice of Election Activities 11-03-26_ENG.pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/notice-of-election-activities.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Notice of Election Activities.pdf<span class="file-info">(PDF,&nbsp;256KB)</span></a>&nbsp;|&nbsp;<a title="Notice of Election Activities 11-03-26_SPA.pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/notice-of-election-activities-11-03-26_spa.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Espa&ntilde;ol.pdf<span class="file-info">(PDF,&nbsp;254KB)</span></a></p>
+<p><a title="Notice of Election Activities 1% Manual Tally 11-03-26_ENG.pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/notice-of-election-activities-1-manual-tally-11-03-26_eng.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Notice of 1% Manual Tally Activities.pdf<span class="file-info">(PDF,&nbsp;281KB)</span></a> |&nbsp;<a title="Notice of Election Activities 1% Manual Tally 11-03-26_SPA.pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/notice-of-election-activities-1-manual-tally-11-03-26_spa.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Espa&ntilde;ol.pdf<span class="file-info">(PDF,&nbsp;280KB)</span></a></p>
+<p><a href="/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Fresno County Measure Letter Designations, November 2026 - AMENDED<span class="file-info">(PDF,&nbsp;253KB)</span></a></p>
+<p><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/final-fresno-county-random-alphabet-sheet-for-11-3-2026-election.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Fresno County Random Alphabet<span class="file-info">(PDF,&nbsp;61KB)</span></a></p>
+<p><a title="Voting-Precinct-to-Registration-Precinct-Cross-Reference-Report.pdf" href="/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/ewmr008_votabsregpctxref.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Voting Precinct to Registration Precinct Cross Reference Report<span class="file-info">(PDF,&nbsp;133KB)</span></a></p>
+<p><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/2026-11-03-fact-sheet.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Fact Sheet<span class="file-info">(PDF,&nbsp;464KB)</span></a> |&nbsp;<a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/2026-11-03-fact-sheet-spa.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Espa&ntilde;ol<span class="file-info">(PDF,&nbsp;514KB)</span></a></p>
+<p><a href="https://www2.fresnocountyca.gov/2850/post/2026Nov\20261103BallotTransferLog.pdf" target="_blank">USPS Ballot Transfer log - Bilingual</a></p>
+<p><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/2026-consolidated-statewide-general-election-bilingual-signature-verification-statement.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Bilingual Signature Verification Statement &ndash; November 3, 2026.<span class="file-info">(PDF,&nbsp;332KB)</span></a></p>
+<p><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/2026-conslidated-statewide-general-electionl-bilingual-unsigned-ballot-statement.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Bilingual Unsigned Ballot Statement &ndash; November 3, 2026.<span class="file-info">(PDF,&nbsp;178KB)</span></a></p>
+<p><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/2026-consolidated-statewide-primary-election-bilingual-challenged-verification-statement_1.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Bilingual Challenged Verification Statement &ndash; November 3, 2026<span class="file-info">(PDF,&nbsp;189KB)</span></a></p>
+<p><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/workshop-en.png" target="_blank" class="document ext-png"><i aria-hidden="true"></i>October Accessibility Workshop flyer<span class="file-info">(PNG,&nbsp;764KB)</span></a> |&nbsp;<a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/workshope-sp.png" target="_blank" class="document ext-png"><i aria-hidden="true"></i>Espa&ntilde;ol<span class="file-info">(PNG,&nbsp;651KB)</span></a></p>
+<p><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/representative-application_both.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Application to Provide Vote-By-Mail Ballot to Representative<span class="file-info">(PDF,&nbsp;190KB)</span></a></p>
+<p><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/replacement-application_both.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>California Replacement Ballot Application<span class="file-info">(PDF,&nbsp;112KB)</span></a></p>
+<p>&nbsp;</p>
+<p>Press Release</p>
+<p>October 31, 2026 <a title="10.31.26 Fresno County Elections Department Identifies Limited Printing Error.pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press-release/10.31.26-fresno-county-elections-department-identifies-limited-printing-error.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Fresno County Elections Department Identified Limited Printing Error<span class="file-info">(PDF,&nbsp;255KB)</span></a></p>
+<p>October 19, 2026 <a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/10.19.26-alleged-noncitizen-voters-charges-press-release.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Alleged Non-Citizen Voters Charges Press Release<span class="file-info">(PDF,&nbsp;199KB)</span></a></p>
+<p>August 13, 2026&nbsp;<a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press-release/fresno-county-random-alpha-drawing-notice-08-13-26.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Fresno County Random Alpha Draw<span class="file-info">(PDF,&nbsp;261KB)</span></a> |&nbsp;<a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press-release/fresno-county-random-alpha-drawing-notice-08-13-26_spa.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Espa&ntilde;ol<span class="file-info">(PDF,&nbsp;262KB)</span></a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Candidate Filing Information</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p><a title="Candidate Filing Class Flyer June 30th 2026.pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/candidate-filing-class-flyer-june-30th-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Candidate Filing Class Flyer<span class="file-info">(PDF,&nbsp;189KB)</span></a></p>
+<p><a href="https:////www2.fresnocountyca.gov/2850/post/2026Nov\Candidate%20Guide%20for%20November%203%202026%20Election.pdf" target="_blank">Candidate Guide and Calendar with Offices up for Election</a></p>
+<p><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-information/fillable-2026-candidate-application.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Candidate Application<span class="file-info">(PDF,&nbsp;993KB)</span></a></p>
+<p><a title="Fillable Candidate Letter of Authorization_Bilingual.pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_02_june-primary/fillable-candidate-letter-of-authorization_bilingual.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Letter of Authorization<span class="file-info">(PDF,&nbsp;255KB)</span></a></p>
+<p><a title="Fillable Candidate Statement November 2026.pdf" href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/important-dates/fillable-candidate-statement-november-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Fillable 2026 Candidate Statement of Qualifications<span class="file-info">(PDF,&nbsp;301KB)</span></a></p>
+<p><strong><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/campaign-information/form_700_2025.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Form 700<span class="file-info">(PDF,&nbsp;2MB)</span></a> Statement of Economic Interests: Candidate Statement with 11/03/2026 Election Date</strong></p>
+<p><strong style="font-size: 0.9375em;"><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/campaign-information/501-ada.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Form 501<span class="file-info">(PDF,&nbsp;346KB)</span></a> Candidate Intention Statement</strong></p>
+<p><strong style="font-size: 0.9375em;"><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/campaign-information/470.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Form 470<span class="file-info">(PDF,&nbsp;213KB)</span></a> Officeholder and Candidate Campaign Statement &ndash; Short Form</strong></p>
+<p><strong style="font-size: 0.9375em;"><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/campaign-information/410-ada.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Form 410<span class="file-info">(PDF,&nbsp;537KB)</span></a> Statement of Organization</strong></p>
+<p><a href="https://www2.fresnocountyca.gov/2850/post/2026Nov/officesupforelectioncandidatelist.pdf" target="_blank">Offices Up for Election / Candidate List</a></p>
+<p><a href="//www2.fresnocountyca.gov/2850/post/2026Nov\Offices%20Up%20For%20Extension.pdf" target="_blank">Offices Up For Extension</a></p>
+<p><a href="//www2.fresnocountyca.gov/2850/post/2026Nov\Contests%20on%20Ballot%20with%20Qualified%20Candidates.pdf" target="_blank">Contests on Ballot with Qualified Candidates</a></p>
+<p><a href="//www2.fresnocountyca.gov/2850/post/2026Nov\Contests%20not%20on%20Ballot.pdf" target="_blank">Contests not on Ballot</a></p>
+<p><a href="https://www2.fresnocountyca.gov/2850/post/2026Nov/candidatelist.pdf" target="_blank">Candidate Contact Information</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Measures</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<ul>
+<li><a title="March 2024 Election Declaration by Authors of Arguments or Rebuttals Form" href="/files/sharedassets/county/v/4/county-clerk-registrar-of-voters/1_election-pages/2024_03-march-primary/exhbit-c-declaration-by-authors-of-arguments-or-rebuttal-form.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Exhibit C Declaration by Authors of Arguments or Rebuttal Form<span class="file-info">(PDF,&nbsp;281KB)</span></a></li>
+<li><a title="March 2024 Election Authorization for Another Person or Persons to Sign Rebuttal Argument Form" href="/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2024_03-march-primary/authorization-for-another-persons-to-sign-rebuttal-argument-form.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Authorization for Another Person or Persons to Sign Rebuttal Argument Form<span class="file-info">(PDF,&nbsp;151KB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2024_03-march-primary/2024-fillable-fresno-county-supporters-oppoents-on-ballot-form_test.pdf" target="_blank" title="2024 March Form" class="document ext-pdf"><i aria-hidden="true"></i>List of Supporters/Opponents Submission Form<span class="file-info">(PDF,&nbsp;137KB)</span></a></li>
+</ul>
+<h6><strong>Measure A</strong></h6>
+<h6><strong>Fresno County Transient Occupancy Tax Measure&nbsp;</strong></h6>
+<ul>
+<li>Argument Deadline &ndash; July 23, 2026</li>
+<li><span style="font-size: 0.9375em;">Majority (50% + 1) Required to Pass&nbsp;</span></li>
+<li><span style="font-size: 0.9375em;"><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/tot_resolution.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Resolution<span class="file-info">(PDF,&nbsp;8MB)</span></a></span></li>
+<li><span style="font-size: 0.9375em;"><a href="/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/proof-of-publication.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Proof of Publication<span class="file-info">(PDF,&nbsp;1MB)</span></a></span></li>
+<li><span style="font-size: 0.9375em;"><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/filed-argument-in-favor.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument in Favor<span class="file-info">(PDF,&nbsp;2MB)</span></a></span></li>
+<li><span style="font-size: 0.9375em;"><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/filed-argument-against.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument Against<span class="file-info">(PDF,&nbsp;2MB)</span></a></span></li>
+<li><span style="font-size: 0.9375em;"><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/rebuttal-to-the-argument-in-favor_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Rebuttal to the Argument in Favor<span class="file-info">(PDF,&nbsp;2MB)</span></a></span></li>
+<li><span style="font-size: 0.9375em;"><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/rebuttal-to-the-argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Rebuttal to the Argument Against<span class="file-info">(PDF,&nbsp;2MB)</span></a></span></li>
+<li><span style="font-size: 0.9375em;"><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/impartial-analysis.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Impartial Analysis<span class="file-info">(PDF,&nbsp;634KB)</span></a></span></li>
+<li><span style="font-size: 0.9375em;"><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fiscal-impact-statement.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Fiscal Impact Statement<span class="file-info">(PDF,&nbsp;501KB)</span></a></span></li>
+</ul>
+<h6><span style="font-size: 0.9375em;"><strong>Measure O</strong></span></h6>
+<h6><span style="font-size: 0.9375em;"><strong>City of Orange Cove Special Parcel Tax Measure&nbsp;</strong></span></h6>
+<ul>
+<li><span style="font-weight: normal;">Argument Deadline &ndash; August 10, 2026</span></li>
+<li>Two-Thirds (2/3) Majority to Pass</li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/oc-tax-resolution-2026-28_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Resolution<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/proof-city-of-orange-cove-special-parcel-tax-measure.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Proof of Publication<span class="file-info">(PDF,&nbsp;213KB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/orange-cove-tax/argument-in-favor_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument In Favor<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/orange-cove-tax/argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument Against<span class="file-info">(PDF,&nbsp;785KB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/orange-cove-tax/rebuttal-to-argument-in-favor_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Rebuttal to the Argument in Favor<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/orange-cove-tax/rebuttal-to-the-argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Rebuttal to the Argument Against<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/orange-cove-tax/impartial-analysis_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Impartial Analysis<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+</ul>
+<h6><strong>Measure J</strong></h6>
+<h6><strong>City of Coalinga <strong><strong>Transactions and Use Tax Measure</strong></strong></strong></h6>
+<ul>
+<li>Argument Deadline &ndash; August 19, 2026</li>
+<li>Majority (50%+1) Required to Pass</li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/resolution-no.-4337_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Resolution<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/exhibit-a_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Exhibit A<span class="file-info">(PDF,&nbsp;913KB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/proof-fo-publication.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Proof of Publication<span class="file-info">(PDF,&nbsp;482KB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/filed-argument-in-favor_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument In Favor<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument Against<span class="file-info">(PDF,&nbsp;985KB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/rebuttal-argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Rebuttal to the Argument Against<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/filed-impartial-analysis_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Impartial Analysis<span class="file-info">(PDF,&nbsp;624KB)</span></a></li>
+</ul>
+<h6><strong>Measure H</strong></h6>
+<h6><strong>Sierra Kings Health Care District Hospital Lease Measure&nbsp;</strong></h6>
+<ul>
+<li>Argument Deadline &ndash; August 24, 2026</li>
+<li>Majority (50% + 1) Required to Pass</li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/resolution_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Resolution<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/proof-of-publication.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Proof of Publication<span class="file-info">(PDF,&nbsp;199KB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/filed-argument-in-favor-_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument In Favor<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sierra-kings/measure-h-impartial-analysis_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Impartial Analysis<span class="file-info">(PDF,&nbsp;730KB)</span></a></li>
+</ul>
+<h6><strong>Measure F</strong></h6>
+<h6><strong>City of Firebaugh Parcel Tax Measure</strong></h6>
+<ul>
+<li>Argument Deadline &ndash; August 24, 2026</li>
+<li>Two-Thirds (2/3) Majority to Pass</li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/filed-resolution_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Resolution<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/exhibit-a-ordinance_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Exhibit A<span class="file-info">(PDF,&nbsp;844KB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/filed-affidavit-of-publication.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Proof of Publication<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/argument-in-favor_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument In Favor<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument Against<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/filed-rebuttal-to-the-argument-in-favor_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Rebuttal to the Argument in Favor<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/filed-rebuttal-argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Rebuttal to the Argument Against<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/filed-impartial-analysis_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Impartial Analysis<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+</ul>
+<h6><strong>Measure T</strong></h6>
+<h6><strong>City of Fowler Transactions &amp; Use Tax Measure</strong></h6>
+<ul>
+<li>Argument Deadline &ndash; August 24, 2026</li>
+<li>Majority (50%+1) Required to Pass</li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/resolution_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Resolution<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/exhibit-a_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Exhibit A<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/filed-affidavit-of-publication_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Proof of Publication<span class="file-info">(PDF,&nbsp;930KB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument Against<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/impartial-analysis-city-of-fowler_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Impartial Analysis<span class="file-info">(PDF,&nbsp;609KB)</span></a></li>
+</ul>
+<h6><strong>Measure B</strong></h6>
+<h6><strong>City of Sanger Transient Occupancy Tax Measure</strong></h6>
+<ul>
+<li>Argument Deadline &ndash; August 24, 2026</li>
+<li>Majority (50% + 1) Required to Pass</li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/resolution_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Resolution<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/exhibit-a-ordinance_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Exhibit A<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/proof-of-publication_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Proof of Publication<span class="file-info">(PDF,&nbsp;463KB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument Against<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/impartial-analysis_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Impartial Analysis<span class="file-info">(PDF,&nbsp;820KB)</span></a></li>
+</ul>
+<h6><strong>Measure D</strong></h6>
+<h6><strong>City of Fresno Transactions &amp; Use Tax Measure</strong></h6>
+<ul>
+<li>Argument Deadline &ndash; August 24, 2026</li>
+<li>Majority (50%+1) Required to Pass</li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-use-tax/resolution_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Resolution<span class="file-info">(PDF,&nbsp;6MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-use-tax/ordinance_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Ordinance<span class="file-info">(PDF,&nbsp;10MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-use-tax/filed-affidavit-of-pub-city-of-fresno_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Proof Publication<span class="file-info">(PDF,&nbsp;1014KB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-use-tax/filed-argument-in-favor_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument In Favor<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-use-tax/argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument Against<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-use-tax/filed-rebuttal-to-the-argument-in-favor_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Rebuttal to the Argument in Favor<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-use-tax/filed-rebuttal-to-the-argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Rebuttal to the Argument Against<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-use-tax/impartial-analysis-city-of-fresno_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Impartial Analysis<span class="file-info">(PDF,&nbsp;669KB)</span></a></li>
+</ul>
+<h6><strong>Measure S</strong></h6>
+<h6><strong>Fresno County Transportation Improvement Act Measure</strong></h6>
+<ul>
+<li>Argument Deadline &ndash; August 27, 2026</li>
+<li>Majority (50% + 1) Required to Pass</li>
+<li><a href="/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-resolution-fresno-county-transportation-imporvement-act_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Resolution<span class="file-info">(PDF,&nbsp;4MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/bai-6-august-11-2026.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>CEC Section 9111 Report<span class="file-info">(PDF,&nbsp;38MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/publication_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Proof of Publication<span class="file-info">(PDF,&nbsp;630KB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-argument-in-favor_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument in Favor<span class="file-info">(PDF,&nbsp;4MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Argument Against<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/rebuttal-to-the-argument-in-favor_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Rebuttal to the Argument in Favor<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/rebuttal-to-the-argument-against_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Rebuttal to the Argument Against<span class="file-info">(PDF,&nbsp;4MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-impartial-analysis-county-counsel_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Impartial Analysis<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+<li><a href="/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-fiscal-impact-statement_redacted.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Fiscal Impact Statement<span class="file-info">(PDF,&nbsp;801KB)</span></a></li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+
+
+      
+        
+            
+        
+    </div>
+    
+    
+</div><!--normalTemplateEnd-->
+                            
+                            
+                            
+							            </div>
+						            </div>
+					            </div>
+                        
+                            </div>
+                        </div>
+                        <div class="back-to-top-container text-center">
+                            <a href="#body-top" id="back-to-top"><i aria-hidden="true"></i><span class="js-visuallyhidden">Back to top</span></a>
+                        </div>
+                </div>
+            </div><!--groupTemplateEnd-->
+            <footer>
+                
+                    <div class="footer-outer-container footer-first-row">
+                        <div class="footer-container clearfix">
+                            <div class="grid grid-pad">
+                                <div class="col-xs-12 col-s-6 col-m-6 col-lg-2 footer-seal" >
+	
+	<p><img alt="Fresno County Logo Seal" src="/files/content/county/v/4/site-features/site-footer/footer-widgets/county-seal/fresno-county-seal.png?w=141&amp;h=141" /></p>
+
+
+	<ul class="footer-links with-icons ">   </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-6 col-lg-4 contact-us-footer-widget" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Contact Us</h3>
+			
+	<p>County of Fresno</p>
+<p><a href="tel:559-600-5956" target="blank">559-600-5956</a> | <a href="tel:800-742-1011" target="blank">800-742-1011</a><br />
+<a href="https://www.fresnocountyca.gov/Site-Features/Contact-Us">Department Contact Info</a><br />
+<a href="https://www.fresnocountyca.gov/Resources/Americans-With-Disabilities-Act">ADA Information</a></p>
+
+
+	<ul class="footer-links with-icons ">   </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-6 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Share &amp; Connect</h3>
+			
+	
+	<ul class="footer-links with-icons social-media-links">  <li class="footer-link-facebook">
+	<a href="https://www.facebook.com/FresnoCountyCA" target="_blank"  >
+<i aria-hidden="true"></i>Like us on Facebook
+</a>
+</li>
+          <li class="footer-link-instagram">
+	<a href="https://www.instagram.com/fresnocounty_ca/" target="_blank"  >
+<i aria-hidden="true"></i>Instagram
+</a>
+</li>
+          <li class="footer-link-linkedin">
+	<a href="https://protect-us.mimecast.com/s/w_gEC0R9KPFBX8yLIwXguS?domain=linkedin.com" target="_blank"  >
+<i aria-hidden="true"></i>LinkedIn
+</a>
+</li>
+          <li class="footer-link-nextdoor">
+	<a href="https://nextdoor.com/agency-detail/ca/fresno/county-of-fresno/" target="_blank"  >
+<i aria-hidden="true"></i>NextDoor
+</a>
+</li>
+          <li class="footer-link-twitter">
+	<a href="https://x.com/FresnoCountyCA" target="_blank"  >
+<i aria-hidden="true"></i>Follow us on X
+</a>
+</li>
+          <li class="footer-link-youtube">
+	<a href="https://www.youtube.com/@FresnoCountyCA" target="_blank"  >
+<i aria-hidden="true"></i>County YouTube
+</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-6 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Quick Links</h3>
+			
+	
+	<ul class="footer-links without-icons ">  <li>
+<a href="https://www.fresnocountyca.gov/Resources/Fresno-County-Resource-List" target="_self"  >County Resource List</a>
+</li>
+          <li>
+<a href="https://fresnocounty.sharepoint.com/sites/countywide" target="_blank"  >Employee Services</a>
+</li>
+          <li>
+<a href="https://fresnocountyretirement.org/" target="_self"  >FCERA</a>
+</li>
+          <li>
+<a href="https://www.fresnocountyca.gov/Departments/County-Administrative-Office/Public-Information-Office" target="_self"  >Newsroom / Media</a>
+</li>
+           </ul>
+	
+</div>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="footer-outer-container footer-second-row">
+                    <div class="footer-container clearfix">
+                        <div class="grid grid-pad footer-secondary-links">
+                            <div class="col-xs-12 col-m-7">
+                                
+                                    <div><a href="https://www.fresnocountyca.gov/Site-Features/Disclaimer" target="_self"  >Disclaimer</a>&nbsp;| <a href="https://www.fresnocountyca.gov/Site-Features/Privacy-and-Security-Policy" target="_self"  >Privacy and Security Policy</a>&nbsp;| <a href="https://www.fresnocountyca.gov/Sitemap" target="_self"  >Sitemap</a></div>
+                                
+                            </div>
+                            <div class="col-xs-12 col-m-5 powered-by">
+                                <div class="right">
+                                    &copy; 2026 County of Fresno&nbsp;|&nbsp;<span class="powered-by">Powered by <a href="https://granicus.com/solution/govaccess/opencities/" target="_blank">Granicus</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/files/oc-resources/b9015858-988c-48a4-9473-7c193df083e4/JsTextSnippets.js?ocsvclang=en-US" type="text/javascript"></script><script></script>
+    
+    <!--
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script async src="https://code.highcharts.com/modules/exporting.js"></script>
+<script async src="https://code.highcharts.com/modules/export-data.js"></script>
+<script async src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script async src="https://code.highcharts.com/modules/series-label.js"></script>
+-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+
+<script type="module">
+	import a11yLegend from "https://esm.sh/chartjs-plugin-a11y-legend@0.0.2";
+
+	// Expose globally for non-module scripts
+	window.a11yLegend = a11yLegend;
+
+	// Register with Chart.js
+	if (window.Chart) {
+		Chart.register(a11yLegend);
+	}
+</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-676Q6BX1Y3"></script>
+<script>
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-676Q6BX1Y3');
+  gtag('config', 'UA-81568205-1');
+
+</script>
+    
+    
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl04_seamless_script_manager_TSM');//]]>
+</script>
+</form>
+</body>
+</html>

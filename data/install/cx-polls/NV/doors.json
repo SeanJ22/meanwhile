@@ -1,0 +1,56 @@
+[
+  {
+    "id": "nv-washoe-vote-centers-2026",
+    "publisher": "Washoe County Registrar of Voters",
+    "url": "https://www.washoecounty.gov/voters/voting/vote-in-person.php",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "NV",
+      "ocdId": "ocd-division/country:us/state:nv/county:washoe",
+      "name": "Washoe County",
+      "countyFips": "32031"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.washoecounty.gov/voters/voting/vote-in-person.php",
+    "extraction": {
+      "format": "html",
+      "kind": "VOTE_CENTER",
+      "constants": {
+        "election": "2026 General Election",
+        "date": "November 3, 2026",
+        "hours": "7 A.M. to 7 P.M."
+      },
+      "records": {
+        "within": {
+          "pattern": "<h3[^>]*>2026 General Election Day Vote Centers</h3>([\\s\\S]*?)</section>",
+          "group": 1
+        },
+        "pattern": "<li>(?!(?:(?!</li>)[\\s\\S])*Mail Ballot Drop-Off Box Only)([\\s\\S]*?)</li>",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "<span class=\"vote-center-name\">([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<span class=\"vote-center-address\">([\\s\\S]*?)</span>",
+            "group": 1
+          }
+        }
+      }
+    },
+    "model": "VOTE_CENTER",
+    "supersedes": [
+      "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+    ],
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-03T03:43:37.553658+00:00",
+      "detail": "Fresh official source captured and replayed through the existing voting reader. Scope remains the named county; Election Day dates and closed locations follow the published source."
+    }
+  }
+]

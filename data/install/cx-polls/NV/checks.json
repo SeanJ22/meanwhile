@@ -1,0 +1,30 @@
+{
+  "sourceReader": "PASS",
+  "sourceToAnswer": "PASS",
+  "productionWrites": false,
+  "existingReaderUsed": true,
+  "residentialAddressesAndCoordinatesExcluded": true,
+  "residentialSamples": [
+    {
+      "label": "Washoe residential sample",
+      "countyFips": "32031",
+      "sourceCensusMatch": true,
+      "electionDaySites": 41
+    }
+  ],
+  "dropOnlyLocationExcluded": "Summerset Assisted Living",
+  "earlyOnlyRowsExcluded": true,
+  "publishedScheduleDates": true,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 1,
+  "savedCaptureHashAndLength": "PASS",
+  "sanitizedSavedSourceReplay": "PASS",
+  "doorChecks": [
+    {
+      "doorId": "nv-washoe-vote-centers-2026",
+      "sites": 41,
+      "boundaries": 0,
+      "currentElectionSites": 41
+    }
+  ]
+}

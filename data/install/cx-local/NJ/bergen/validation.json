@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-11-03T06:35:37.832Z",
+  "state": "NJ",
+  "sources": 82,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 686,
+  "newContests": 181,
+  "refreshedContests": 0,
+  "candidacies": 502,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 109,
+  "unrelatedCandidateCoreFieldsPreserved": 304,
+  "unrelatedCandidateAliasEnrichments": 304,
+  "unmatchedReaderDivisionCount": 2,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:nj/county:bergen/place:englewood_city/ward:2",
+    "ocd-division/country:us/state:nj/county:bergen/place:englewood_city/ward:4"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:nj/county:bergen/place:englewood_city/ward:2",
+    "ocd-division/country:us/state:nj/county:bergen/place:englewood_city/ward:4"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

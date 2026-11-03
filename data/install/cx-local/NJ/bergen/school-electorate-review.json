@@ -1,0 +1,985 @@
+[
+  {
+    "contestId": "nj-cx-local-2026-bergen-allendale-regional-board-of-education-full-term",
+    "municipality": "Allendale",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:allendale_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-allendale-local-board-of-education-full-term",
+    "municipality": "Allendale",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:allendale_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-alpine-local-board-of-education-full-term",
+    "municipality": "Alpine",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:alpine_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Alpine-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-bergenfield-local-board-of-education-full-term",
+    "municipality": "Bergenfield",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:bergenfield_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Bergenfield-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-bogota-local-board-of-education-full-term",
+    "municipality": "Bogota",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:bogota_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Bogota-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-carlstadt-regional-board-of-education-full-term",
+    "municipality": "Carlstadt",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:carlstadt_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Carlstadt-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-carlstadt-local-board-of-education-full-term",
+    "municipality": "Carlstadt",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:carlstadt_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Carlstadt-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-carlstadt-local-board-of-education-unexpired-2-year",
+    "municipality": "Carlstadt",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:carlstadt_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Carlstadt-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-carlstadt-local-board-of-education-unexpired-1-year",
+    "municipality": "Carlstadt",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:carlstadt_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Carlstadt-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-closter-regional-board-of-education-full-term",
+    "municipality": "Closter",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:closter_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Closter-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-closter-local-board-of-education-full-term",
+    "municipality": "Closter",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:closter_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Closter-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-cresskill-local-board-of-education-full-term",
+    "municipality": "Cresskill",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:cresskill_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Cresskill-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-demarest-regional-board-of-education-full-term",
+    "municipality": "Demarest",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:demarest_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Demarest-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-demarest-local-board-of-education-full-term",
+    "municipality": "Demarest",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:demarest_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Demarest-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-demarest-local-board-of-education-unexpired-2-year",
+    "municipality": "Demarest",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:demarest_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Demarest-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-dumont-local-board-of-education-full-term",
+    "municipality": "Dumont",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:dumont_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-east-rutherford-regional-board-of-education-full-term",
+    "municipality": "East Rutherford",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:east_rutherford_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/East-Rutherford-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-east-rutherford-local-board-of-education-full-term",
+    "municipality": "East Rutherford",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:east_rutherford_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/East-Rutherford-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-edgewater-local-board-of-education-full-term",
+    "municipality": "Edgewater",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:edgewater_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Edgewater-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-elmwood-park-local-board-of-education-full-term",
+    "municipality": "Elmwood Park",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:elmwood_park_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/ElmwoodPark-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-elmwood-park-local-board-of-education-unexpired-1-year",
+    "municipality": "Elmwood Park",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:elmwood_park_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/ElmwoodPark-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-emerson-local-board-of-education-full-term",
+    "municipality": "Emerson",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:emerson_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Emerson-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-englewood-cliffs-local-board-of-education-full-term",
+    "municipality": "Englewood Cliffs",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:englewood_cliffs_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-Cliffs-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-englewood-local-board-of-education-full-term",
+    "municipality": "Englewood",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:englewood_city_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W1-26GEN.pdf",
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W2-26GEN.pdf",
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W3-26GEN.pdf",
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W4-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-fair-lawn-local-board-of-education-full-term",
+    "municipality": "Fair Lawn",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:fair_lawn_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fair-Lawn-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-fair-lawn-local-board-of-education-unexpired-1-year",
+    "municipality": "Fair Lawn",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:fair_lawn_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fair-Lawn-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-fort-lee-local-board-of-education-full-term",
+    "municipality": "Fort Lee",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:fort_lee_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fort-Lee-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-franklin-lakes-local-board-of-education-full-term",
+    "municipality": "Franklin Lakes",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:franklin_lakes_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-glen-rock-local-board-of-education-full-term",
+    "municipality": "Glen Rock",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:glen_rock_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Glen-Rock-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-hackensack-local-board-of-education-full-term",
+    "municipality": "Hackensack",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:hackensack_city_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hackensack-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-harrington-park-regional-board-of-education-full-term",
+    "municipality": "Harrington Park",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:harrington_park_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Harrington-Park-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-harrington-park-local-board-of-education-full-term",
+    "municipality": "Harrington Park",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:harrington_park_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Harrington-Park-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-hasbrouck-heights-local-board-of-education-full-term",
+    "municipality": "Hasbrouck Heights",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:hasbrouck_heights_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hasbrouck-Heights-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-haworth-local-board-of-education-full-term",
+    "municipality": "Haworth",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:haworth_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Haworth-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-hillsdale-regional-board-of-education-full-term",
+    "municipality": "Hillsdale",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:hillsdale_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hillsdale-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-hillsdale-local-board-of-education-full-term",
+    "municipality": "Hillsdale",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:hillsdale_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hillsdale-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-ho-ho-kus-local-board-of-education-full-term",
+    "municipality": "Ho-Ho-Kus",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:ho_ho_kus_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ho-Ho-Kus-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-leonia-local-board-of-education-full-term",
+    "municipality": "Leonia",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:leonia_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Leonia-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-little-ferry-local-board-of-education-full-term",
+    "municipality": "Little Ferry",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:little_ferry_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Little-Ferry-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-lyndhurst-local-board-of-education-full-term",
+    "municipality": "Lyndhurst",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:lyndhurst_township_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Lyndhurst-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-mahwah-local-board-of-education-full-term",
+    "municipality": "Mahwah",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:mahwah_township_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Mahwah-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-maywood-local-board-of-education-full-term",
+    "municipality": "Maywood",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:maywood_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Maywood-5th-CD-26GEN.pdf",
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Maywood-9th-CD-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-midland-park-local-board-of-education-full-term",
+    "municipality": "Midland Park",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:midland_park_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Midland-Park-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-montvale-regional-board-of-education-full-term",
+    "municipality": "Montvale",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:montvale_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Montvale-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-montvale-local-board-of-education-full-term",
+    "municipality": "Montvale",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:montvale_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Montvale-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-moonachie-local-board-of-education-full-term",
+    "municipality": "Moonachie",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:moonachie_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Moonachie-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-new-milford-local-board-of-education-full-term",
+    "municipality": "New Milford",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:new_milford_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-north-arlington-local-board-of-education-full-term",
+    "municipality": "North Arlington",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:north_arlington_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/North-Arlington-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-northvale-regional-board-of-education-unexpired-2-year",
+    "municipality": "Northvale",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:northvale_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Northvale-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-northvale-local-board-of-education-full-term",
+    "municipality": "Northvale",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:northvale_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Northvale-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-norwood-local-board-of-education-full-term",
+    "municipality": "Norwood",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:norwood_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Norwood-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-norwood-local-board-of-education-unexpired-1-year",
+    "municipality": "Norwood",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:norwood_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Norwood-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-oakland-regional-board-of-education-full-term",
+    "municipality": "Oakland",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:oakland_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oakland-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-oakland-local-board-of-education-full-term",
+    "municipality": "Oakland",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:oakland_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oakland-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-old-tappan-local-board-of-education-full-term",
+    "municipality": "Old Tappan",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:old_tappan_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Old-Tappan-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-oradell-regional-board-of-education-full-term",
+    "municipality": "Oradell",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:oradell_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-oradell-regional-board-of-education-unexpired-1-year",
+    "municipality": "Oradell",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:oradell_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-oradell-local-board-of-education-full-term",
+    "municipality": "Oradell",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:oradell_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-palisades-park-local-board-of-education-full-term",
+    "municipality": "Palisades Park",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:palisades_park_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Palisades-Park-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-park-ridge-local-board-of-education-full-term",
+    "municipality": "Park Ridge",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:park_ridge_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-park-ridge-local-board-of-education-unexpired-1-year",
+    "municipality": "Park Ridge",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:park_ridge_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-paramus-local-board-of-education-full-term",
+    "municipality": "Paramus",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:paramus_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Paramus-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-ramsey-local-board-of-education-full-term",
+    "municipality": "Ramsey",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:ramsey_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ramsey-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-ridgefield-local-board-of-education-full-term",
+    "municipality": "Ridgefield",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:ridgefield_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgefield-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-ridgefield-park-local-board-of-education-full-term",
+    "municipality": "Ridgefield Park",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:ridgefield_park_township_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgefield-Park-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-ridgewood-local-board-of-education-full-term",
+    "municipality": "Ridgewood",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:ridgewood_village_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgewood-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-river-edge-regional-board-of-education-full-term",
+    "municipality": "River Edge",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:river_edge_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Edge-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-river-edge-local-board-of-education-full-term",
+    "municipality": "River Edge",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:river_edge_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Edge-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-river-edge-local-board-of-education-unexpired-2-year",
+    "municipality": "River Edge",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:river_edge_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Edge-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-river-vale-local-board-of-education-full-term",
+    "municipality": "River Vale",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:river_vale_township_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Vale-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-rochelle-park-local-board-of-education-full-term",
+    "municipality": "Rochelle Park",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:rochelle_park_township_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rochelle-Park-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-rutherford-local-board-of-education-full-term",
+    "municipality": "Rutherford",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:rutherford_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rutherford-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-saddle-brook-local-board-of-education-full-term",
+    "municipality": "Saddle Brook",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:saddle_brook_township_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Saddle-Brook-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-saddle-river-local-board-of-education-full-term",
+    "municipality": "Saddle River",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:saddle_river_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Saddle-River-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-south-hackensack-local-board-of-education-full-term",
+    "municipality": "South Hackensack",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:south_hackensack_township_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/South-Hackensack-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-teaneck-local-board-of-education-full-term",
+    "municipality": "Teaneck",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:teaneck_township_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Teaneck-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-tenafly-local-board-of-education-full-term",
+    "municipality": "Tenafly",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:tenafly_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-washington-regional-board-of-education-full-term",
+    "municipality": "Washington",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:washington_township",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Washington-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-upper-saddle-river-regional-board-of-education-full-term",
+    "municipality": "Upper Saddle River",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:upper_saddle_river_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Upper-Saddle-River-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-upper-saddle-river-local-board-of-education-full-term",
+    "municipality": "Upper Saddle River",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:upper_saddle_river_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Upper-Saddle-River-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-waldwick-local-board-of-education-full-term",
+    "municipality": "Waldwick",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:waldwick_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Waldwick-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-wallington-local-board-of-education-full-term",
+    "municipality": "Wallington",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:wallington_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wallington-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-westwood-regional-board-of-education-full-term",
+    "municipality": "Westwood",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:westwood_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Westwood-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-wood-ridge-local-board-of-education-full-term",
+    "municipality": "Wood-Ridge",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:wood_ridge_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wood-Ridge-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-woodcliff-lake-regional-board-of-education-full-term",
+    "municipality": "Woodcliff Lake",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:woodcliff_lake_borough",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Woodcliff-Lake-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-woodcliff-lake-local-board-of-education-full-term",
+    "municipality": "Woodcliff Lake",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:woodcliff_lake_borough_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Woodcliff-Lake-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-wyckoff-regional-board-of-education-full-term",
+    "municipality": "Wyckoff",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:wyckoff_township",
+    "electingScope": "CONSTITUENT_MUNICIPALITY_ONLY",
+    "wholeRegionalElectorate": false,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf"
+    ],
+    "note": "Regional-board representatives are separate constituent-municipality elections; their candidates are not shown on other members’ samples. No regional at-large membership is added."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-wyckoff-local-board-of-education-full-term",
+    "municipality": "Wyckoff",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:wyckoff_township_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  },
+  {
+    "contestId": "nj-cx-local-2026-bergen-wyckoff-local-board-of-education-unexpired-2-year",
+    "municipality": "Wyckoff",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:wyckoff_township_school_district",
+    "electingScope": "EXACT_LOCAL_SCHOOL_DISTRICT",
+    "wholeRegionalElectorate": null,
+    "sourceUrls": [
+      "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf"
+    ],
+    "note": "Canonical school-district ID reused; no new polygon or county fallback."
+  }
+]

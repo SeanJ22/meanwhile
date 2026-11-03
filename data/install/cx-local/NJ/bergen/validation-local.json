@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-11-03T06:32:17.871804+00:00",
+  "checks": 3367,
+  "status": "PASS",
+  "publishedSamples": 74,
+  "municipalities": 70,
+  "completeLocalOfficeOccurrences": 480,
+  "uniqueNamedFields": 180,
+  "namedCandidates": 502,
+  "heldNoNamedFields": 2,
+  "newQuestionFields": 1,
+  "existingPreparedQuestionsUnchanged": 6,
+  "exactNamePartyAndVotingLimitRosterConcordances": 480,
+  "sourceCaptures": 82,
+  "rawAndExtractionHashes": "PASS",
+  "productionWrites": false,
+  "publication": false
+}

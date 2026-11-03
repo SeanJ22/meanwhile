@@ -3,19 +3,19 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:32:27.890507+00:00",
+  "preparedAt": "2026-11-03T06:35:40.767887+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
   "nextCounty": {
-    "rank": 55,
-    "stateName": "New Jersey",
-    "county": "Bergen County",
-    "fips": "34003",
-    "population": 977026,
+    "rank": 56,
+    "stateName": "Texas",
+    "county": "Fort Bend County",
+    "fips": "48157",
+    "population": 975191,
     "populationYear": 2025,
-    "state": "NJ"
+    "state": "TX"
   },
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
@@ -1393,6 +1393,29 @@
       ]
     },
     {
+      "state": "NJ",
+      "county": "Bergen",
+      "populationRank": 55,
+      "manifest": "NJ/bergen/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 180,
+      "measureContests": 1,
+      "candidacies": 502,
+      "newContests": 181,
+      "refreshedContests": 0,
+      "sourceInputSha256": "4c78f50c15782533a40c1356943a846cce4d5b33a6345af5dc53c0dca13a4dc1",
+      "coverage": {
+        "sampleInventory": "All74 published current official samples covering all70 municipalities, each one physical page, native200. Published variants: Englewood Wards1\u20134 and Maywood5th/9th congressional forms. Complete published inventory coverage; unpublished precinct-style variants not claimed.",
+        "candidateFields": "Every480 actual local office occurrence mapped to180 unique complete named fields plus2 held no-named fields. Identical county, Englewood BOE and Maywood local blocks deduplicated with exact candidate/party/slogan/vote-limit equality.",
+        "schools": "62 exact existing local school district IDs including held fields;18 regional constituent contests use exact electing municipality IDs rather than the full regional district. Distinct full/unexpired terms remain separate.",
+        "municipal": "89 complete actual named municipal fields. Englewood Council Ward2/4 are precise source-labelled ward IDs with current-linked image-only boundary descriptions/map; registry joins remain pending.",
+        "judicial": "Only actual printed elected Surrogate included; no appointed or non-November judge contests invented.",
+        "questions": "Six CX-VOTES prepared Bergen questions/explainers preserved unchanged outside incoming IDs; exact new Park Ridge open-space continuation question and official statement included.",
+        "writeInsAndStatuses": "Generic Personal Choice/NO NOMINATION MADE/NO PETITION FILED spaces excluded from people. Final named-write-in certification and cancelled-office inventory not established, so no zero-write-in or countywide absence claim.",
+        "extraction": "Exact nativePDF raw hashes plus separate geometric reading-order/native-text hashes. Every surname-font span assigned once and every local named set independently agrees with the official-linked expressly unofficial roster. Representative visual checks only; no blanket74-page visual claim."
+      }
+    },
+    {
       "state": "MD",
       "county": "Prince George's County",
       "populationRank": 57,
@@ -1502,17 +1525,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 57,
-    "packetsPrepared": 58,
-    "candidateAndRetentionContests": 3012,
-    "measureContests": 112,
-    "candidacyEntries": 6627,
-    "newContestEntriesAgainstCheckedInBaseline": 2482,
-    "distinctPreparedContestIds": 3083,
-    "distinctPreparedCandidateIds": 6540,
-    "distinctNewContestsAgainstCheckedInBaseline": 2462,
+    "countiesPrepared": 58,
+    "packetsPrepared": 59,
+    "candidateAndRetentionContests": 3192,
+    "measureContests": 113,
+    "candidacyEntries": 7129,
+    "newContestEntriesAgainstCheckedInBaseline": 2663,
+    "distinctPreparedContestIds": 3264,
+    "distinctPreparedCandidateIds": 7042,
+    "distinctNewContestsAgainstCheckedInBaseline": 2643,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 58
+    "distinctCountyHandoffs": 59
   },
   "remainingWork": [
     {

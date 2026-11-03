@@ -1,0 +1,50 @@
+[
+  {
+    "id": "nj-bergen-2026:dumont-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:dumont_borough",
+    "title": "Dumont seasonal overnight parking advisory question",
+    "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf",
+    "disposition": "UNCHANGED_CX_VOTES_PREPARED_MEASURE_AND_EXPLAINER",
+    "review": "Current official municipal sample contains the corresponding question. The prepared question/explanation identity and all existing facts are preserved outside incoming IDs; no gratuitous refresh."
+  },
+  {
+    "id": "nj-bergen-2026:franklin-lakes-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:franklin_lakes_borough",
+    "title": "Franklin Lakes deer management advisory question",
+    "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf",
+    "disposition": "UNCHANGED_CX_VOTES_PREPARED_MEASURE_AND_EXPLAINER",
+    "review": "Current official municipal sample contains the corresponding question. The prepared question/explanation identity and all existing facts are preserved outside incoming IDs; no gratuitous refresh."
+  },
+  {
+    "id": "nj-bergen-2026:new-milford-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:new_milford_borough",
+    "title": "New Milford Question 1 — open space trust fund",
+    "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf",
+    "disposition": "UNCHANGED_CX_VOTES_PREPARED_MEASURE_AND_EXPLAINER",
+    "review": "Current official municipal sample contains the corresponding question. The prepared question/explanation identity and all existing facts are preserved outside incoming IDs; no gratuitous refresh."
+  },
+  {
+    "id": "nj-bergen-2026:oradell-question",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:oradell_borough_school_district",
+    "title": "Oradell school security officer tax levy",
+    "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf",
+    "disposition": "UNCHANGED_CX_VOTES_PREPARED_MEASURE_AND_EXPLAINER",
+    "review": "Current official municipal sample contains the corresponding question. The prepared question/explanation identity and all existing facts are preserved outside incoming IDs; no gratuitous refresh."
+  },
+  {
+    "id": "nj-bergen-2026:tenafly-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:tenafly_borough",
+    "title": "Tenafly open space trust fund continuation",
+    "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf",
+    "disposition": "UNCHANGED_CX_VOTES_PREPARED_MEASURE_AND_EXPLAINER",
+    "review": "Current official municipal sample contains the corresponding question. The prepared question/explanation identity and all existing facts are preserved outside incoming IDs; no gratuitous refresh."
+  },
+  {
+    "id": "nj-bergen-2026:wyckoff-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:wyckoff_township",
+    "title": "Wyckoff municipal open space trust fund",
+    "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf",
+    "disposition": "UNCHANGED_CX_VOTES_PREPARED_MEASURE_AND_EXPLAINER",
+    "review": "Current official municipal sample contains the corresponding question. The prepared question/explanation identity and all existing facts are preserved outside incoming IDs; no gratuitous refresh."
+  }
+]

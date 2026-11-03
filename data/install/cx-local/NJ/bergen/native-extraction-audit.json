@@ -1,0 +1,449 @@
+{
+  "documents": [
+    {
+      "label": "sample-allendale-26gen",
+      "fields": 10,
+      "parsedFields": 10,
+      "namedRows": 24
+    },
+    {
+      "label": "sample-alpine-26gen",
+      "fields": 10,
+      "parsedFields": 10,
+      "namedRows": 28
+    },
+    {
+      "label": "sample-bergenfield-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 21
+    },
+    {
+      "label": "sample-bogota-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 23
+    },
+    {
+      "label": "sample-carlstadt-26gen",
+      "fields": 11,
+      "parsedFields": 11,
+      "namedRows": 29
+    },
+    {
+      "label": "sample-cliffside-park-26gen",
+      "fields": 7,
+      "parsedFields": 7,
+      "namedRows": 19
+    },
+    {
+      "label": "sample-closter-26gen",
+      "fields": 10,
+      "parsedFields": 10,
+      "namedRows": 26
+    },
+    {
+      "label": "sample-cresskill-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 22
+    },
+    {
+      "label": "sample-demarest-26gen",
+      "fields": 12,
+      "parsedFields": 12,
+      "namedRows": 30
+    },
+    {
+      "label": "sample-dumont-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 23
+    },
+    {
+      "label": "sample-east-rutherford-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 22
+    },
+    {
+      "label": "sample-edgewater-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 25
+    },
+    {
+      "label": "sample-elmwoodpark-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 26
+    },
+    {
+      "label": "sample-emerson-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 25
+    },
+    {
+      "label": "sample-englewood-cliffs-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 26
+    },
+    {
+      "label": "sample-englewood-w1-26gen",
+      "fields": 7,
+      "parsedFields": 7,
+      "namedRows": 23
+    },
+    {
+      "label": "sample-englewood-w2-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 24
+    },
+    {
+      "label": "sample-englewood-w3-26gen",
+      "fields": 7,
+      "parsedFields": 7,
+      "namedRows": 23
+    },
+    {
+      "label": "sample-englewood-w4-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 24
+    },
+    {
+      "label": "sample-fair-lawn-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 29
+    },
+    {
+      "label": "sample-fairview-26gen",
+      "fields": 7,
+      "parsedFields": 7,
+      "namedRows": 19
+    },
+    {
+      "label": "sample-fort-lee-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 27
+    },
+    {
+      "label": "sample-franklin-lakes-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 24
+    },
+    {
+      "label": "sample-garfield-26gen",
+      "fields": 6,
+      "parsedFields": 6,
+      "namedRows": 17
+    },
+    {
+      "label": "sample-glen-rock-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 23
+    },
+    {
+      "label": "sample-hackensack-26gen",
+      "fields": 7,
+      "parsedFields": 7,
+      "namedRows": 20
+    },
+    {
+      "label": "sample-harrington-park-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 22
+    },
+    {
+      "label": "sample-hasbrouck-heights-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 24
+    },
+    {
+      "label": "sample-haworth-26gen",
+      "fields": 10,
+      "parsedFields": 10,
+      "namedRows": 23
+    },
+    {
+      "label": "sample-hillsdale-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 26
+    },
+    {
+      "label": "sample-ho-ho-kus-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 21
+    },
+    {
+      "label": "sample-leonia-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 22
+    },
+    {
+      "label": "sample-little-ferry-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 22
+    },
+    {
+      "label": "sample-lodi-26gen",
+      "fields": 6,
+      "parsedFields": 6,
+      "namedRows": 17
+    },
+    {
+      "label": "sample-lyndhurst-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 30
+    },
+    {
+      "label": "sample-mahwah-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 28
+    },
+    {
+      "label": "sample-maywood-5th-cd-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 26
+    },
+    {
+      "label": "sample-maywood-9th-cd-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 26
+    },
+    {
+      "label": "sample-midland-park-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 21
+    },
+    {
+      "label": "sample-montvale-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 23
+    },
+    {
+      "label": "sample-moonachie-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 25
+    },
+    {
+      "label": "sample-new-milford-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 27
+    },
+    {
+      "label": "sample-north-arlington-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 27
+    },
+    {
+      "label": "sample-northvale-26gen",
+      "fields": 10,
+      "parsedFields": 10,
+      "namedRows": 25
+    },
+    {
+      "label": "sample-norwood-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 26
+    },
+    {
+      "label": "sample-oakland-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 25
+    },
+    {
+      "label": "sample-old-tappan-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 21
+    },
+    {
+      "label": "sample-oradell-26gen",
+      "fields": 10,
+      "parsedFields": 10,
+      "namedRows": 26
+    },
+    {
+      "label": "sample-palisades-park-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 28
+    },
+    {
+      "label": "sample-park-ridge-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 25
+    },
+    {
+      "label": "sample-paramus-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 27
+    },
+    {
+      "label": "sample-ramsey-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 26
+    },
+    {
+      "label": "sample-ridgefield-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 24
+    },
+    {
+      "label": "sample-ridgefield-park-26gen",
+      "fields": 7,
+      "parsedFields": 7,
+      "namedRows": 20
+    },
+    {
+      "label": "sample-ridgewood-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 23
+    },
+    {
+      "label": "sample-river-edge-26gen",
+      "fields": 10,
+      "parsedFields": 10,
+      "namedRows": 23
+    },
+    {
+      "label": "sample-river-vale-26gen",
+      "fields": 10,
+      "parsedFields": 10,
+      "namedRows": 24
+    },
+    {
+      "label": "sample-rochelle-park-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 26
+    },
+    {
+      "label": "sample-rockleigh-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 21
+    },
+    {
+      "label": "sample-rutherford-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 22
+    },
+    {
+      "label": "sample-saddle-brook-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 27
+    },
+    {
+      "label": "sample-saddle-river-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 20
+    },
+    {
+      "label": "sample-south-hackensack-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 21
+    },
+    {
+      "label": "sample-teaneck-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 31
+    },
+    {
+      "label": "sample-tenafly-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 23
+    },
+    {
+      "label": "sample-teterboro-26gen",
+      "fields": 7,
+      "parsedFields": 7,
+      "namedRows": 22
+    },
+    {
+      "label": "sample-washington-26gen",
+      "fields": 7,
+      "parsedFields": 7,
+      "namedRows": 19
+    },
+    {
+      "label": "sample-upper-saddle-river-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 25
+    },
+    {
+      "label": "sample-waldwick-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 25
+    },
+    {
+      "label": "sample-wallington-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 26
+    },
+    {
+      "label": "sample-westwood-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 22
+    },
+    {
+      "label": "sample-wood-ridge-26gen",
+      "fields": 8,
+      "parsedFields": 8,
+      "namedRows": 20
+    },
+    {
+      "label": "sample-woodcliff-lake-26gen",
+      "fields": 9,
+      "parsedFields": 9,
+      "namedRows": 24
+    },
+    {
+      "label": "sample-wyckoff-26gen",
+      "fields": 11,
+      "parsedFields": 11,
+      "namedRows": 28
+    }
+  ],
+  "unassigned": []
+}

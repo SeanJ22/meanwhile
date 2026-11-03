@@ -1,0 +1,1347 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NJ",
+  "county": "Bergen",
+  "countyFips": "34003",
+  "populationRank": 55,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Data-only partial state merge. Every actual local named block in the complete current published county/municipal sample inventory; two empty-named school fields held. Six existing CX-VOTES measures/explainers preserved unchanged; one new exact municipal question. No production writes, installation, publication or git operations.",
+  "counts": {
+    "publishedSamples": 74,
+    "municipalities": 70,
+    "samplePhysicalPages": 74,
+    "printedLocalCandidateFieldOccurrences": 480,
+    "uniqueNamedCandidateFields": 180,
+    "countyFields": 4,
+    "regionalConstituentFields": 18,
+    "localSchoolNamedFields": 69,
+    "municipalNamedFields": 89,
+    "namedCandidates": 502,
+    "heldNoNamedFields": 2,
+    "newMeasureFields": 1,
+    "unchangedPreparedMeasureConfirmations": 6,
+    "newContests": 181,
+    "refreshedContests": 0,
+    "preciseUnmatchedWardIds": 2,
+    "namedWriteInsEstablished": 0,
+    "unassignedNativeCandidateSurnameSpans": 0
+  },
+  "subjects": [
+    {
+      "id": "nj-cx-local-2026-bergen-allendale-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Allendale constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:allendale_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-county-executive",
+      "title": "County Executive",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-allendale-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Allendale \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:allendale_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-county-clerk",
+      "title": "County Clerk",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-surrogate",
+      "title": "Surrogate",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-county-commissioners",
+      "title": "Members of the Board of County Commissioners",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-allendale-mayor",
+      "title": "Allendale \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:allendale_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-allendale-members-of-the-council",
+      "title": "Allendale \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:allendale_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-alpine-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Alpine \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:alpine_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Alpine-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-alpine-mayor",
+      "title": "Alpine \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:alpine_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Alpine-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-alpine-members-of-the-council",
+      "title": "Alpine \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:alpine_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Alpine-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-alpine-member-of-the-council-unexpired-2-year-term",
+      "title": "Alpine \u2014 Member of the Council (Unexpired 2 Year Term)",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:alpine_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Alpine-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-bergenfield-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Bergenfield \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:bergenfield_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Bergenfield-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-bergenfield-members-of-the-council",
+      "title": "Bergenfield \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:bergenfield_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Bergenfield-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-bogota-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Bogota \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:bogota_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Bogota-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-bogota-members-of-the-council",
+      "title": "Bogota \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:bogota_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Bogota-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-carlstadt-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Carlstadt constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:carlstadt_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Carlstadt-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-carlstadt-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Carlstadt \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:carlstadt_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Carlstadt-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-carlstadt-local-board-of-education-unexpired-2-year",
+      "title": "Local Board of Education \u2014 Carlstadt \u2014 Unexpired 2-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:carlstadt_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Carlstadt-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-carlstadt-members-of-the-council",
+      "title": "Carlstadt \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:carlstadt_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Carlstadt-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-carlstadt-local-board-of-education-unexpired-1-year",
+      "title": "Local Board of Education \u2014 Carlstadt \u2014 Unexpired 1-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:carlstadt_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Carlstadt-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-cliffside-park-members-of-the-council",
+      "title": "Cliffside Park \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:cliffside_park_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Cliffside-Park-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-closter-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Closter constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:closter_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Closter-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-closter-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Closter \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:closter_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Closter-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-closter-mayor",
+      "title": "Closter \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:closter_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Closter-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-closter-members-of-the-council",
+      "title": "Closter \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:closter_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Closter-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-cresskill-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Cresskill \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:cresskill_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Cresskill-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-cresskill-members-of-the-council",
+      "title": "Cresskill \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:cresskill_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Cresskill-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-demarest-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Demarest constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:demarest_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Demarest-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-demarest-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Demarest \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:demarest_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Demarest-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-demarest-local-board-of-education-unexpired-2-year",
+      "title": "Local Board of Education \u2014 Demarest \u2014 Unexpired 2-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:demarest_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Demarest-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-demarest-mayor",
+      "title": "Demarest \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:demarest_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Demarest-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-demarest-members-of-the-council",
+      "title": "Demarest \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:demarest_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Demarest-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-demarest-member-of-the-council-unexpired-1-year-term",
+      "title": "Demarest \u2014 Member of the Council (Unexpired 1 Year Term)",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:demarest_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Demarest-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-dumont-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Dumont \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:dumont_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-dumont-members-of-the-council",
+      "title": "Dumont \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:dumont_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-east-rutherford-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 East Rutherford constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:east_rutherford_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/East-Rutherford-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-east-rutherford-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 East Rutherford \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:east_rutherford_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/East-Rutherford-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-east-rutherford-members-of-the-council",
+      "title": "East Rutherford \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:east_rutherford_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/East-Rutherford-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-edgewater-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Edgewater \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:edgewater_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Edgewater-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-edgewater-members-of-the-council",
+      "title": "Edgewater \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:edgewater_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Edgewater-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-elmwood-park-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Elmwood Park \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:elmwood_park_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/ElmwoodPark-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-elmwood-park-local-board-of-education-unexpired-1-year",
+      "title": "Local Board of Education \u2014 Elmwood Park \u2014 Unexpired 1-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:elmwood_park_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/ElmwoodPark-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-elmwood-park-members-of-the-council",
+      "title": "Elmwood Park \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:elmwood_park_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/ElmwoodPark-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-emerson-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Emerson \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:emerson_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Emerson-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-emerson-mayor",
+      "title": "Emerson \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:emerson_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Emerson-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-emerson-members-of-the-council",
+      "title": "Emerson \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:emerson_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Emerson-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-englewood-cliffs-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Englewood Cliffs \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:englewood_cliffs_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-Cliffs-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-englewood-cliffs-members-of-the-council",
+      "title": "Englewood Cliffs \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:englewood_cliffs_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-Cliffs-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-englewood-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Englewood \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:englewood_city_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W1-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-englewood-council-ward-2",
+      "title": "Englewood \u2014 Member of the Council, Ward 2",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:englewood_city/ward:2",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W2-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-englewood-council-ward-4",
+      "title": "Englewood \u2014 Member of the Council, Ward 4",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:englewood_city/ward:4",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W4-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-fair-lawn-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Fair Lawn \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:fair_lawn_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fair-Lawn-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-fair-lawn-local-board-of-education-unexpired-1-year",
+      "title": "Local Board of Education \u2014 Fair Lawn \u2014 Unexpired 1-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:fair_lawn_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fair-Lawn-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-fairview-members-of-the-council",
+      "title": "Fairview \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:fairview_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fairview-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-fort-lee-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Fort Lee \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:fort_lee_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fort-Lee-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-fort-lee-members-of-the-council",
+      "title": "Fort Lee \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:fort_lee_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fort-Lee-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-franklin-lakes-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Franklin Lakes \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:franklin_lakes_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-franklin-lakes-mayor",
+      "title": "Franklin Lakes \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:franklin_lakes_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-franklin-lakes-members-of-the-council",
+      "title": "Franklin Lakes \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:franklin_lakes_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-glen-rock-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Glen Rock \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:glen_rock_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Glen-Rock-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-glen-rock-members-of-the-council",
+      "title": "Glen Rock \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:glen_rock_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Glen-Rock-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-hackensack-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Hackensack \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:hackensack_city_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hackensack-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-harrington-park-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Harrington Park constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:harrington_park_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Harrington-Park-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-harrington-park-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Harrington Park \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:harrington_park_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Harrington-Park-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-harrington-park-members-of-the-council",
+      "title": "Harrington Park \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:harrington_park_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Harrington-Park-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-hasbrouck-heights-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Hasbrouck Heights \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:hasbrouck_heights_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hasbrouck-Heights-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-hasbrouck-heights-members-of-the-council",
+      "title": "Hasbrouck Heights \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:hasbrouck_heights_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hasbrouck-Heights-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-haworth-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Haworth \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:haworth_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Haworth-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-haworth-mayor",
+      "title": "Haworth \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:haworth_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Haworth-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-haworth-members-of-the-council",
+      "title": "Haworth \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:haworth_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Haworth-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-haworth-member-of-the-council-unexpired-1-year-term",
+      "title": "Haworth \u2014 Member of the Council (Unexpired 1 Year Term)",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:haworth_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Haworth-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-hillsdale-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Hillsdale constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:hillsdale_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hillsdale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-hillsdale-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Hillsdale \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:hillsdale_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hillsdale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-hillsdale-members-of-the-council",
+      "title": "Hillsdale \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:hillsdale_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hillsdale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-ho-ho-kus-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Ho-Ho-Kus \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:ho_ho_kus_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ho-Ho-Kus-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-ho-ho-kus-members-of-the-council",
+      "title": "Ho-Ho-Kus \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:ho_ho_kus_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ho-Ho-Kus-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-leonia-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Leonia \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:leonia_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Leonia-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-leonia-members-of-the-council",
+      "title": "Leonia \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:leonia_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Leonia-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-little-ferry-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Little Ferry \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:little_ferry_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Little-Ferry-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-little-ferry-members-of-the-council",
+      "title": "Little Ferry \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:little_ferry_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Little-Ferry-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-lyndhurst-commissioner-unexpired-3-year-term",
+      "title": "Lyndhurst \u2014 Commissioner (Unexpired 3 Year Term)",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:lyndhurst_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Lyndhurst-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-lyndhurst-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Lyndhurst \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:lyndhurst_township_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Lyndhurst-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-mahwah-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Mahwah \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:mahwah_township_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Mahwah-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-mahwah-members-of-the-council",
+      "title": "Mahwah \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:mahwah_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Mahwah-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-maywood-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Maywood \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:maywood_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Maywood-5th-CD-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-maywood-members-of-the-council",
+      "title": "Maywood \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:maywood_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Maywood-5th-CD-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-maywood-member-of-the-council-unexpired-2-year-term",
+      "title": "Maywood \u2014 Member of the Council (Unexpired 2 Year Term)",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:maywood_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Maywood-5th-CD-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-midland-park-members-of-the-council",
+      "title": "Midland Park \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:midland_park_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Midland-Park-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-montvale-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Montvale constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:montvale_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Montvale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-montvale-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Montvale \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:montvale_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Montvale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-montvale-members-of-the-council",
+      "title": "Montvale \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:montvale_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Montvale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-moonachie-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Moonachie \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:moonachie_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Moonachie-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-moonachie-mayor",
+      "title": "Moonachie \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:moonachie_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Moonachie-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-moonachie-members-of-the-council",
+      "title": "Moonachie \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:moonachie_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Moonachie-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-new-milford-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 New Milford \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:new_milford_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-new-milford-mayor",
+      "title": "New Milford \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:new_milford_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-new-milford-members-of-the-council",
+      "title": "New Milford \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:new_milford_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-north-arlington-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 North Arlington \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:north_arlington_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/North-Arlington-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-north-arlington-mayor",
+      "title": "North Arlington \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:north_arlington_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/North-Arlington-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-north-arlington-members-of-the-council",
+      "title": "North Arlington \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:north_arlington_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/North-Arlington-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-northvale-regional-board-of-education-unexpired-2-year",
+      "title": "Regional Board of Education \u2014 Northvale constituency \u2014 Unexpired 2-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:northvale_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Northvale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-northvale-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Northvale \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:northvale_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Northvale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-northvale-mayor",
+      "title": "Northvale \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:northvale_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Northvale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-northvale-members-of-the-council",
+      "title": "Northvale \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:northvale_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Northvale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-norwood-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Norwood \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:norwood_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Norwood-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-norwood-local-board-of-education-unexpired-1-year",
+      "title": "Local Board of Education \u2014 Norwood \u2014 Unexpired 1-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:norwood_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Norwood-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-norwood-members-of-the-council",
+      "title": "Norwood \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:norwood_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Norwood-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-oakland-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Oakland constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:oakland_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oakland-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-oakland-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Oakland \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:oakland_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oakland-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-oakland-members-of-the-council",
+      "title": "Oakland \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:oakland_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oakland-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-old-tappan-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Old Tappan \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:old_tappan_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Old-Tappan-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-old-tappan-members-of-the-council",
+      "title": "Old Tappan \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:old_tappan_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Old-Tappan-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-oradell-members-of-the-council",
+      "title": "Oradell \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:oradell_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-oradell-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Oradell constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:oradell_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-oradell-regional-board-of-education-unexpired-1-year",
+      "title": "Regional Board of Education \u2014 Oradell constituency \u2014 Unexpired 1-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:oradell_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-oradell-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Oradell \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:oradell_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-palisades-park-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Palisades Park \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:palisades_park_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Palisades-Park-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-palisades-park-mayor",
+      "title": "Palisades Park \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:palisades_park_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Palisades-Park-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-palisades-park-members-of-the-council",
+      "title": "Palisades Park \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:palisades_park_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Palisades-Park-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-park-ridge-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Park Ridge \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:park_ridge_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-park-ridge-members-of-the-council",
+      "title": "Park Ridge \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:park_ridge_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-paramus-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Paramus \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:paramus_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Paramus-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-paramus-mayor",
+      "title": "Paramus \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:paramus_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Paramus-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-paramus-members-of-the-council",
+      "title": "Paramus \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:paramus_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Paramus-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-ramsey-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Ramsey \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:ramsey_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ramsey-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-ramsey-mayor",
+      "title": "Ramsey \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:ramsey_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ramsey-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-ramsey-members-of-the-council",
+      "title": "Ramsey \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:ramsey_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ramsey-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-ridgefield-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Ridgefield \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:ridgefield_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgefield-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-ridgefield-members-of-the-council",
+      "title": "Ridgefield \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:ridgefield_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgefield-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-ridgefield-park-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Ridgefield Park \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:ridgefield_park_township_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgefield-Park-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-ridgewood-members-of-the-village-council",
+      "title": "Ridgewood \u2014 Members of the Village Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:ridgewood_village",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgewood-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-ridgewood-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Ridgewood \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:ridgewood_village_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgewood-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-river-edge-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 River Edge constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:river_edge_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Edge-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-river-edge-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 River Edge \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:river_edge_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Edge-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-river-edge-local-board-of-education-unexpired-2-year",
+      "title": "Local Board of Education \u2014 River Edge \u2014 Unexpired 2-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:river_edge_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Edge-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-river-edge-members-of-the-council",
+      "title": "River Edge \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:river_edge_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Edge-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-river-vale-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 River Vale \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:river_vale_township_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Vale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-river-vale-mayor",
+      "title": "River Vale \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:river_vale_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Vale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-river-vale-members-of-the-council",
+      "title": "River Vale \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:river_vale_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Vale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-river-vale-member-of-the-council-unexpired-2-year-term",
+      "title": "River Vale \u2014 Member of the Council (Unexpired 2 Year Term)",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:river_vale_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Vale-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-rochelle-park-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Rochelle Park \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:rochelle_park_township_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rochelle-Park-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-rochelle-park-members-of-the-township-committee",
+      "title": "Rochelle Park \u2014 Members of the Township Committee",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:rochelle_park_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rochelle-Park-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-rockleigh-mayor",
+      "title": "Rockleigh \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:rockleigh_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rockleigh-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-rockleigh-members-of-the-council",
+      "title": "Rockleigh \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:rockleigh_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rockleigh-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-rutherford-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Rutherford \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:rutherford_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rutherford-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-rutherford-members-of-the-council",
+      "title": "Rutherford \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:rutherford_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rutherford-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-saddle-brook-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Saddle Brook \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:saddle_brook_township_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Saddle-Brook-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-saddle-brook-mayor",
+      "title": "Saddle Brook \u2014 Mayor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:saddle_brook_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Saddle-Brook-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-saddle-brook-members-of-the-council",
+      "title": "Saddle Brook \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:saddle_brook_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Saddle-Brook-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-saddle-river-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Saddle River \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:saddle_river_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Saddle-River-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-saddle-river-members-of-the-council",
+      "title": "Saddle River \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:saddle_river_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Saddle-River-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-south-hackensack-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 South Hackensack \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:south_hackensack_township_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/South-Hackensack-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-south-hackensack-members-of-the-township-committee",
+      "title": "South Hackensack \u2014 Members of the Township Committee",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:south_hackensack_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/South-Hackensack-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-teaneck-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Teaneck \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:teaneck_township_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Teaneck-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-teaneck-members-of-the-township-council",
+      "title": "Teaneck \u2014 Members of the Township Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:teaneck_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Teaneck-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-tenafly-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Tenafly \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:tenafly_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-tenafly-members-of-the-council",
+      "title": "Tenafly \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:tenafly_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-teterboro-members-of-the-council",
+      "title": "Teterboro \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:teterboro_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Teterboro-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-washington-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Washington constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:washington_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Washington-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-upper-saddle-river-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Upper Saddle River constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:upper_saddle_river_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Upper-Saddle-River-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-upper-saddle-river-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Upper Saddle River \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:upper_saddle_river_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Upper-Saddle-River-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-upper-saddle-river-members-of-the-council",
+      "title": "Upper Saddle River \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:upper_saddle_river_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Upper-Saddle-River-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-waldwick-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Waldwick \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:waldwick_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Waldwick-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-waldwick-members-of-the-council",
+      "title": "Waldwick \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:waldwick_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Waldwick-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-wallington-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Wallington \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:wallington_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wallington-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-wallington-members-of-the-council",
+      "title": "Wallington \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:wallington_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wallington-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-wallington-member-of-the-council-unexpired-2-year-term",
+      "title": "Wallington \u2014 Member of the Council (Unexpired 2 Year Term)",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:wallington_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wallington-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-westwood-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Westwood constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:westwood_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Westwood-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-westwood-members-of-the-council",
+      "title": "Westwood \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:westwood_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Westwood-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-wood-ridge-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Wood-Ridge \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:wood_ridge_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wood-Ridge-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-wood-ridge-members-of-the-council",
+      "title": "Wood-Ridge \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:wood_ridge_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wood-Ridge-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-woodcliff-lake-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Woodcliff Lake constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:woodcliff_lake_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Woodcliff-Lake-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-woodcliff-lake-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Woodcliff Lake \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:woodcliff_lake_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Woodcliff-Lake-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-woodcliff-lake-members-of-the-council",
+      "title": "Woodcliff Lake \u2014 Members of the Council",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:woodcliff_lake_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Woodcliff-Lake-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-wyckoff-regional-board-of-education-full-term",
+      "title": "Regional Board of Education \u2014 Wyckoff constituency \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:wyckoff_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-wyckoff-local-board-of-education-full-term",
+      "title": "Local Board of Education \u2014 Wyckoff \u2014 Full 3-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:wyckoff_township_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-wyckoff-local-board-of-education-unexpired-2-year",
+      "title": "Local Board of Education \u2014 Wyckoff \u2014 Unexpired 2-year term",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:wyckoff_township_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-wyckoff-members-of-the-township-committee",
+      "title": "Wyckoff \u2014 Members of the Township Committee",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:wyckoff_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-wyckoff-member-of-the-township-committee-unexpired-1-year-term",
+      "title": "Wyckoff \u2014 Member of the Township Committee (Unexpired 1 Year Term)",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:wyckoff_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf"
+    },
+    {
+      "id": "nj-cx-local-2026-bergen-park-ridge-open-space-trust-fund",
+      "title": "PARK RIDGE OPEN SPACE TRUST FUND",
+      "type": "MEASURE",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:park_ridge_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf"
+    }
+  ],
+  "coverage": {
+    "sampleInventory": "All74 published current official samples covering all70 municipalities, each one physical page, native200. Published variants: Englewood Wards1\u20134 and Maywood5th/9th congressional forms. Complete published inventory coverage; unpublished precinct-style variants not claimed.",
+    "candidateFields": "Every480 actual local office occurrence mapped to180 unique complete named fields plus2 held no-named fields. Identical county, Englewood BOE and Maywood local blocks deduplicated with exact candidate/party/slogan/vote-limit equality.",
+    "schools": "62 exact existing local school district IDs including held fields;18 regional constituent contests use exact electing municipality IDs rather than the full regional district. Distinct full/unexpired terms remain separate.",
+    "municipal": "89 complete actual named municipal fields. Englewood Council Ward2/4 are precise source-labelled ward IDs with current-linked image-only boundary descriptions/map; registry joins remain pending.",
+    "judicial": "Only actual printed elected Surrogate included; no appointed or non-November judge contests invented.",
+    "questions": "Six CX-VOTES prepared Bergen questions/explainers preserved unchanged outside incoming IDs; exact new Park Ridge open-space continuation question and official statement included.",
+    "writeInsAndStatuses": "Generic Personal Choice/NO NOMINATION MADE/NO PETITION FILED spaces excluded from people. Final named-write-in certification and cancelled-office inventory not established, so no zero-write-in or countywide absence claim.",
+    "extraction": "Exact nativePDF raw hashes plus separate geometric reading-order/native-text hashes. Every surname-font span assigned once and every local named set independently agrees with the official-linked expressly unofficial roster. Representative visual checks only; no blanket74-page visual claim."
+  },
+  "preservation": {
+    "heldNJ": "All109 held contests and304 candidate core rows remain unchanged outside incoming IDs.",
+    "preparedQuestions": "All six pinned latest CX-VOTES prepared Bergen questions/explainers unchanged outside incomingIDs.",
+    "identityReuse": "No equivalent prior Bergen candidacy contests found; existing exact geographic IDs reused. See held-and-origin-comparison.json."
+  },
+  "validation": {
+    "sourceHashesAndQuotes": "PASS: 82 captured sources and 686 exact saved-source quotes",
+    "focusedChecks": "PASS:3367 checks including all480 complete source fields, exact names/parties/voting limits, all74 style inventories and62 local school district identities",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sharedCheckedAt": "2026-11-03T06:32:01.103Z",
+    "focusedCheckedAt": "2026-11-03T06:32:17.871804+00:00",
+    "unrelatedHeldContestsPreserved": 109,
+    "unrelatedHeldCandidateCoreFieldsPreserved": 304,
+    "latestCxVotesCommit": "67013882434e2d2974a133b097933256a653e8d2",
+    "productionWrites": "NONE",
+    "publication": false
+  },
+  "readerDependencies": "reader-dependencies.json: exact Englewood Ward2 and Ward4 joins pending. Never widen to all Englewood.",
+  "artifacts": [
+    "ballot-input/nj.json",
+    "source-support.json",
+    "all-local-candidate-blocks.json",
+    "published-sample-inventory.json",
+    "school-electorate-review.json",
+    "reader-dependencies.json",
+    "preserved-measure-confirmations.json",
+    "new-measure-review.json",
+    "roster-concordance.json",
+    "held-and-origin-comparison.json",
+    "validation-local.json",
+    "validation.json",
+    "review.md",
+    "native-extraction-audit.json"
+  ]
+}

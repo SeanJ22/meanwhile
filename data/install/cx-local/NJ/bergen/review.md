@@ -1,0 +1,13 @@
+Bergen County, New Jersey — November 3, 2026
+
+All 74 current official county-published municipal sample PDFs acquired natively with HTTP200, covering all70 municipalities. Every480 local office occurrence is retained as180 distinct complete named fields with502 choices, plus two no-named school fields held. County Executive, Clerk, Surrogate and the two-seat County Commissioners field are identical across all74 forms. Federal fields stay outside this packet.
+
+All actual local candidates preserve exact printed capitalization, punctuation, party column and petition/school designation. Blank Personal Choice, NO NOMINATION MADE and NO PETITION FILED are not people. Midland Park full-term BOE and Park Ridge one-year unexpired BOE remain source-backed held fields because their complete blocks contain no named candidate. A final declared-write-in list has not been acquired.
+
+Local school fields use exact existing school-district IDs. Regional school seats are separate constituent-municipality elections, so those18 fields use the exact electing municipality rather than widening to the regional district. Englewood ward2/ward4 council fields retain exact ward IDs; the city’s current-linked image-only ward descriptions/map are saved, with reader polygon/registry joins pending. Englewood BOE is identical citywide across allfour ward forms; Maywood local fields agree across both congressional forms. Full-term and unexpired fields remain distinct.
+
+Six Bergen question/explainer identities already prepared by the pinned latest CX-VOTES NJ packet remain unchanged outside incoming IDs. One new unnumbered Park Ridge Open Space Trust Fund question is included with full official English question/interpretive statement and exact borough electorate. Its source uses different tax-unit wording between question and statement; both are preserved exactly.
+
+Native PDF bytes, full native text and geometric table reading-order extraction have separate hashes. Each native candidate surname-font span is assigned once to an office using ruled grid coordinates. Independent exact named sets match the county-linked XLSX roster for all480 local fields; that sheet explicitly says unofficial and does not replace sample evidence. Allendale, Fair Lawn, Teaneck and Park Ridge representative renders were inspected; no claim of visually checking all74 pages.
+
+This packet covers the complete currently published sample inventory, not unpublished individual precinct variants, a final write-in certification, or a cancelled-office census. Helpers remain in scratch. No production, git, installation or publication operations performed.

@@ -1,0 +1,22 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:englewood_city/ward:2",
+    "status": "PRECISE_WARD_ID_NOT_IN_REGISTRY",
+    "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W2-26GEN.pdf",
+    "ward": "2",
+    "municipalityOcdId": "ocd-division/country:us/state:nj/county:bergen/place:englewood_city",
+    "boundarySourceUrl": "https://www.cityofenglewood.org/DocumentCenter/View/491/Descriptions-of-New-Ward-Boundaries-2022-PDF",
+    "mapSourceUrl": "https://www.cityofenglewood.org/DocumentCenter/View/489/2022-Election-Map-PDF",
+    "readerDependency": "Join the exact published ward boundary; image-only official 2022 boundary descriptions and map retained from current city Elections page. No machine-readable polygon has been established. Never widen this contest to all Englewood or Bergen County."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:englewood_city/ward:4",
+    "status": "PRECISE_WARD_ID_NOT_IN_REGISTRY",
+    "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W4-26GEN.pdf",
+    "ward": "4",
+    "municipalityOcdId": "ocd-division/country:us/state:nj/county:bergen/place:englewood_city",
+    "boundarySourceUrl": "https://www.cityofenglewood.org/DocumentCenter/View/491/Descriptions-of-New-Ward-Boundaries-2022-PDF",
+    "mapSourceUrl": "https://www.cityofenglewood.org/DocumentCenter/View/489/2022-Election-Map-PDF",
+    "readerDependency": "Join the exact published ward boundary; image-only official 2022 boundary descriptions and map retained from current city Elections page. No machine-readable polygon has been established. Never widen this contest to all Englewood or Bergen County."
+  }
+]

@@ -1,0 +1,6542 @@
+UNOFFICIAL AND SUBJECT TO CHANGE
+[
+  {
+    "key": [
+      "COUNTY",
+      "countyexecutive",
+      "FULL"
+    ],
+    "name": "TODD H. HENNESSEY",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Countywide",
+    "sourceRow": 4,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "COUNTY",
+      "countyexecutive",
+      "FULL"
+    ],
+    "name": "JAMES J. TEDESCO III",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Countywide",
+    "sourceRow": 5,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "COUNTY",
+      "countyclerk",
+      "FULL"
+    ],
+    "name": "TIMOTHY C. WALSH",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Countywide",
+    "sourceRow": 7,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "COUNTY",
+      "countyclerk",
+      "FULL"
+    ],
+    "name": "JOHN S. HOGAN",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Countywide",
+    "sourceRow": 8,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "COUNTY",
+      "surrogate",
+      "FULL"
+    ],
+    "name": "JOSEPH STEPHEN CONTE",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Countywide",
+    "sourceRow": 10,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "COUNTY",
+      "surrogate",
+      "FULL"
+    ],
+    "name": "LINDA H. SCHWAGER",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Countywide",
+    "sourceRow": 11,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "COUNTY",
+      "countycommission",
+      "FULL"
+    ],
+    "name": "JOHN DINICE",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Countywide",
+    "sourceRow": 13,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "COUNTY",
+      "countycommission",
+      "FULL"
+    ],
+    "name": "MARIA SOLEDAD LAMAN",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Countywide",
+    "sourceRow": 14,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "COUNTY",
+      "countycommission",
+      "FULL"
+    ],
+    "name": "JOAN M. VOSS",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Countywide",
+    "sourceRow": 15,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "COUNTY",
+      "countycommission",
+      "FULL"
+    ],
+    "name": "RAFAEL MARTE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Countywide",
+    "sourceRow": 16,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "allendale",
+      "mayor",
+      "FULL"
+    ],
+    "name": "AMY E. WILCZYNSKI",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 4,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "allendale",
+      "council",
+      "FULL"
+    ],
+    "name": "DONALD J. McKENNA",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 5,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "allendale",
+      "council",
+      "FULL"
+    ],
+    "name": "DAVID W. RAHAL",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 6,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "alpine",
+      "mayor",
+      "FULL"
+    ],
+    "name": "FAISEL HUSSEIN",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 7,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "alpine",
+      "council",
+      "FULL"
+    ],
+    "name": "DAVID W. KUPFERSCHMID",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 8,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "alpine",
+      "council",
+      "FULL"
+    ],
+    "name": "JACQUES P. MINOYAN",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 9,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "alpine",
+      "council",
+      "UNEXPIRED:2"
+    ],
+    "name": "JUDITH FISHER",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 10,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "bogota",
+      "council",
+      "FULL"
+    ],
+    "name": "LOUIS J. ALVAREZ",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 13,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "carlstadt",
+      "council",
+      "FULL"
+    ],
+    "name": "JOSEPH T. EMERSON",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 15,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "carlstadt",
+      "council",
+      "FULL"
+    ],
+    "name": "JAMES A. LENOY",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 16,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "closter",
+      "mayor",
+      "FULL"
+    ],
+    "name": "JOHN C. GLIDDEN Jr.",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 19,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "closter",
+      "council",
+      "FULL"
+    ],
+    "name": "CHRISTOPHER CHO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 20,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "closter",
+      "council",
+      "FULL"
+    ],
+    "name": "MONICA JETHANI",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 21,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "cresskill",
+      "council",
+      "FULL"
+    ],
+    "name": "HECTOR OLMO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 22,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "mayor",
+      "FULL"
+    ],
+    "name": "RAYMOND J. CYWINSKI",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 24,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "council",
+      "FULL"
+    ],
+    "name": "STEPHEN R. TILLACK",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 25,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "council",
+      "FULL"
+    ],
+    "name": "THEODORE F. MARTENS",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 26,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "council",
+      "UNEXPIRED:1"
+    ],
+    "name": "ANITA G. GATTO",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 27,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "dumont",
+      "council",
+      "FULL"
+    ],
+    "name": "KENNETH ARMELLINO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 28,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "dumont",
+      "council",
+      "FULL"
+    ],
+    "name": "LOUIS SCIARRINO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 29,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "edgewater",
+      "council",
+      "FULL"
+    ],
+    "name": "KRASSIMIR TASSEV",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 32,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "edgewater",
+      "council",
+      "FULL"
+    ],
+    "name": "FRANK A. KHOURY",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 33,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "elmwoodpark",
+      "council",
+      "FULL"
+    ],
+    "name": "LORRAINE PELLEGRINE",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 34,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "elmwoodpark",
+      "council",
+      "FULL"
+    ],
+    "name": "PAMELA TROISI",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 35,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "emerson",
+      "mayor",
+      "FULL"
+    ],
+    "name": "DANIELLE DiPAOLA",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 36,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "emerson",
+      "council",
+      "FULL"
+    ],
+    "name": "MICHAEL TIMMERMAN",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 37,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "emerson",
+      "council",
+      "FULL"
+    ],
+    "name": "ASHLEY RICE",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 38,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewoodcliffs",
+      "council",
+      "FULL"
+    ],
+    "name": "ZHI LIANG",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 41,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewoodcliffs",
+      "council",
+      "FULL"
+    ],
+    "name": "RIVKA BIEGACZ",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 42,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fortlee",
+      "council",
+      "FULL"
+    ],
+    "name": "GIOVANNA SURACE",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 46,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fortlee",
+      "council",
+      "FULL"
+    ],
+    "name": "ROSANA CONDINA",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 47,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "franklinlakes",
+      "mayor",
+      "FULL"
+    ],
+    "name": "CHARLES J.X. KAHWATY",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 48,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "franklinlakes",
+      "council",
+      "FULL"
+    ],
+    "name": "GAIL A. KELLY",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 49,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "franklinlakes",
+      "council",
+      "FULL"
+    ],
+    "name": "ARI DONIO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 50,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hasbrouckheights",
+      "council",
+      "FULL"
+    ],
+    "name": "MICHAEL SICKELS",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 57,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hasbrouckheights",
+      "council",
+      "FULL"
+    ],
+    "name": "CHARLOTTE SODORA",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 58,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hillsdale",
+      "council",
+      "FULL"
+    ],
+    "name": "CLEMENTE E. OSSO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 63,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hillsdale",
+      "council",
+      "FULL"
+    ],
+    "name": "DANIELLE D. GANTER",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 64,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hohokus",
+      "council",
+      "FULL"
+    ],
+    "name": "STEVEN D. SHELL",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 65,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hohokus",
+      "council",
+      "FULL"
+    ],
+    "name": "EDMUND M. IANNELLI",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 66,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "maywood",
+      "council",
+      "FULL"
+    ],
+    "name": "KEITH SORIANO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 74,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "maywood",
+      "council",
+      "FULL"
+    ],
+    "name": "MICHAEL A. TREPICCHIO Jr.",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 75,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "maywood",
+      "council",
+      "UNEXPIRED:2"
+    ],
+    "name": "ANTHONY P. KLYMENKO Jr.",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 76,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "midlandpark",
+      "council",
+      "FULL"
+    ],
+    "name": "LORRAINE DeLUCA",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 77,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "midlandpark",
+      "council",
+      "FULL"
+    ],
+    "name": "KENSLER \"RANDY\" MAYO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 78,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "montvale",
+      "council",
+      "FULL"
+    ],
+    "name": "DOUGLAS M. ARENDACS",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 79,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "montvale",
+      "council",
+      "FULL"
+    ],
+    "name": "THERESA A. CUDEQUEST",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 80,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "newmilford",
+      "mayor",
+      "FULL"
+    ],
+    "name": "LAURE D. SCHROEDER",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 84,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "newmilford",
+      "council",
+      "FULL"
+    ],
+    "name": "JOSEPH G. LoPORTO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 85,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "newmilford",
+      "council",
+      "FULL"
+    ],
+    "name": "MALCOLM SILLARS",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 86,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northarlington",
+      "mayor",
+      "FULL"
+    ],
+    "name": "DANIEL H. PRONTI",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 87,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northarlington",
+      "council",
+      "FULL"
+    ],
+    "name": "MARIJO L. KARCIC Jr.",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 88,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northarlington",
+      "council",
+      "FULL"
+    ],
+    "name": "DONNA A. BOCCHINO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 89,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northvale",
+      "mayor",
+      "FULL"
+    ],
+    "name": "JOSEPH E. McGUIRE",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 90,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northvale",
+      "council",
+      "FULL"
+    ],
+    "name": "HOVANNES BAKALIAN",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 91,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northvale",
+      "council",
+      "FULL"
+    ],
+    "name": "LAURA N. FERNANDEZ",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 92,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "norwood",
+      "council",
+      "FULL"
+    ],
+    "name": "BONG J. KIM",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 93,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "norwood",
+      "council",
+      "FULL"
+    ],
+    "name": "JEFFREY KRAPELS",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 94,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oakland",
+      "council",
+      "FULL"
+    ],
+    "name": "RUSSELL TALAMINI",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 95,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oakland",
+      "council",
+      "FULL"
+    ],
+    "name": "RYAN SCHWERTFEGER",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 96,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oldtappan",
+      "council",
+      "FULL"
+    ],
+    "name": "RONALD E. BINAGHI Jr.",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 97,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oldtappan",
+      "council",
+      "FULL"
+    ],
+    "name": "DONNA M. COSTELLO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 98,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oradell",
+      "council",
+      "FULL"
+    ],
+    "name": "JONATHAN KERN",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 99,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oradell",
+      "council",
+      "FULL"
+    ],
+    "name": "JAMES \"TED\" GULLO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 100,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "palisadespark",
+      "mayor",
+      "FULL"
+    ],
+    "name": "STEPHANIE S. JANG",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 101,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "palisadespark",
+      "council",
+      "FULL"
+    ],
+    "name": "CARMELO J. VELARDO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 102,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "paramus",
+      "mayor",
+      "FULL"
+    ],
+    "name": "CHRISTOPHER DiPIAZZA",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 104,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "paramus",
+      "council",
+      "FULL"
+    ],
+    "name": "ALFREDO NADERA",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 105,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "paramus",
+      "council",
+      "FULL"
+    ],
+    "name": "ERIC CRESPO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 106,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "parkridge",
+      "council",
+      "FULL"
+    ],
+    "name": "MARC A. WEINBERG",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 107,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "parkridge",
+      "council",
+      "FULL"
+    ],
+    "name": "SEBASTIAN E. HENNESSY",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 108,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ramsey",
+      "mayor",
+      "FULL"
+    ],
+    "name": "DEIRDRE A. DILLON",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 109,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ramsey",
+      "council",
+      "FULL"
+    ],
+    "name": "JUDITH A. CUSICK",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 110,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ramsey",
+      "council",
+      "FULL"
+    ],
+    "name": "JACOB W. ENGLISHMAN",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 111,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgefield",
+      "council",
+      "FULL"
+    ],
+    "name": "GINO S. RAMUNDO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 112,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgefield",
+      "council",
+      "FULL"
+    ],
+    "name": "SARAH H. KIM",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 113,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rivervale",
+      "mayor",
+      "FULL"
+    ],
+    "name": "MARK BROMBERG",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 118,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rivervale",
+      "council",
+      "FULL"
+    ],
+    "name": "JAMES TOLOMEO",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 119,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rivervale",
+      "council",
+      "UNEXPIRED:2"
+    ],
+    "name": "JOSEPH ZICCARELLI",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 121,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rochellepark",
+      "committee",
+      "FULL"
+    ],
+    "name": "JENNIFER L. APPICE",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 122,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rochellepark",
+      "committee",
+      "FULL"
+    ],
+    "name": "JOHN P. APPICE",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 123,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rockleigh",
+      "mayor",
+      "FULL"
+    ],
+    "name": "JAMES G. PONTONE",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 124,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rockleigh",
+      "council",
+      "FULL"
+    ],
+    "name": "ROSANNE URCIUOLI ANTINE",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 125,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rockleigh",
+      "council",
+      "FULL"
+    ],
+    "name": "FRANK CUMISKEY",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 126,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddlebrook",
+      "mayor",
+      "FULL"
+    ],
+    "name": "OMAR RODRIGUEZ",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 129,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddlebrook",
+      "council",
+      "FULL"
+    ],
+    "name": "ANDREW DZIEDZIC",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 130,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddlebrook",
+      "council",
+      "FULL"
+    ],
+    "name": "GERARD \"JERRY\" TAYLOR",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 131,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddleriver",
+      "council",
+      "FULL"
+    ],
+    "name": "RAVI SACHDEV",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 132,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddleriver",
+      "council",
+      "FULL"
+    ],
+    "name": "JONATHAN KURPIS",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 133,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "uppersaddleriver",
+      "council",
+      "FULL"
+    ],
+    "name": "DONNA A. FRIEDLANDER",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 140,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "uppersaddleriver",
+      "council",
+      "FULL"
+    ],
+    "name": "ROGER C. MASI",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 141,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "waldwick",
+      "council",
+      "FULL"
+    ],
+    "name": "JOSEPH V. MARTINELLO Jr.",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 142,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "waldwick",
+      "council",
+      "FULL"
+    ],
+    "name": "JASON CHRZANOWSKI",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 143,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wallington",
+      "council",
+      "FULL"
+    ],
+    "name": "DENNIS GRAHAM",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 144,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wallington",
+      "council",
+      "FULL"
+    ],
+    "name": "SYLWIA HEJZNER",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 145,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wallington",
+      "council",
+      "UNEXPIRED:2"
+    ],
+    "name": "JOHN P. KOSUDA",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 146,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "westwood",
+      "council",
+      "FULL"
+    ],
+    "name": "LAUREN J. LETIZIA",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 148,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "westwood",
+      "council",
+      "FULL"
+    ],
+    "name": "BETH F. STAPLES",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 149,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "woodclifflake",
+      "council",
+      "FULL"
+    ],
+    "name": "JULIE B. BRODSKY",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 150,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "woodclifflake",
+      "council",
+      "FULL"
+    ],
+    "name": "JOSHUA S. STERN",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 151,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wyckoff",
+      "committee",
+      "FULL"
+    ],
+    "name": "PETER J. MELCHIONNE",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 154,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wyckoff",
+      "committee",
+      "FULL"
+    ],
+    "name": "ROGER J. LANE",
+    "party": "Republican",
+    "voteFor": 2,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 155,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wyckoff",
+      "committee",
+      "UNEXPIRED:1"
+    ],
+    "name": "JAMES A. SCHAPPERT",
+    "party": "Republican",
+    "voteFor": 1,
+    "sourceSheet": "Local Rep.",
+    "sourceRow": 156,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "alpine",
+      "mayor",
+      "FULL"
+    ],
+    "name": "PAUL H. TOMASKO",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 7,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "alpine",
+      "council",
+      "FULL"
+    ],
+    "name": "PHILIP E. SIMOTAS",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 8,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "alpine",
+      "council",
+      "FULL"
+    ],
+    "name": "MICHAEL A. CACOURIS",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 9,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "alpine",
+      "council",
+      "UNEXPIRED:2"
+    ],
+    "name": "KEREN BARBI",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 10,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "bergenfield",
+      "council",
+      "FULL"
+    ],
+    "name": "MARC PASCUAL",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 11,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "bergenfield",
+      "council",
+      "FULL"
+    ],
+    "name": "DOMINGO ALMONTE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 12,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "bogota",
+      "council",
+      "FULL"
+    ],
+    "name": "LISA KOHLES",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 13,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "bogota",
+      "council",
+      "FULL"
+    ],
+    "name": "DIANA VERGARA",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 14,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "carlstadt",
+      "council",
+      "FULL"
+    ],
+    "name": "DENNIS C. RITCHIE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 15,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "carlstadt",
+      "council",
+      "FULL"
+    ],
+    "name": "WALTER M. BEESE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 16,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "cliffsidepark",
+      "council",
+      "FULL"
+    ],
+    "name": "DANA MARTINOTTI",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 17,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "cliffsidepark",
+      "council",
+      "FULL"
+    ],
+    "name": "EURICE E. ROJAS",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 18,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "closter",
+      "mayor",
+      "FULL"
+    ],
+    "name": "DOLORES A. WITKO",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 19,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "closter",
+      "council",
+      "FULL"
+    ],
+    "name": "LINDA ALBELLI",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 20,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "closter",
+      "council",
+      "FULL"
+    ],
+    "name": "STEVEN J. SPOTO",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 21,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "cresskill",
+      "council",
+      "FULL"
+    ],
+    "name": "ARTHUR J. McLAUGHLIN",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 22,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "mayor",
+      "FULL"
+    ],
+    "name": "BRIAN K. BERNSTEIN",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 24,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "council",
+      "FULL"
+    ],
+    "name": "ADAM J. COLLINS",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 25,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "council",
+      "FULL"
+    ],
+    "name": "JONATHAN REISS",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 26,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "council",
+      "UNEXPIRED:1"
+    ],
+    "name": "DAVID JIANG",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 27,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "dumont",
+      "council",
+      "FULL"
+    ],
+    "name": "MARYANN E. RUSSINI",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 28,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "dumont",
+      "council",
+      "FULL"
+    ],
+    "name": "DIANA ENGLESE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 29,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "eastrutherford",
+      "council",
+      "FULL"
+    ],
+    "name": "ANTONIO P-K SEGALINI",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 30,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "eastrutherford",
+      "council",
+      "FULL"
+    ],
+    "name": "JESSE LEE DeROSA",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 31,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "edgewater",
+      "council",
+      "FULL"
+    ],
+    "name": "JOSE LUIS VIDAL",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 32,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "edgewater",
+      "council",
+      "FULL"
+    ],
+    "name": "RINALDY A. GUTIERREZ",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 33,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "elmwoodpark",
+      "council",
+      "FULL"
+    ],
+    "name": "SANDRA BALISTRIERI",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 34,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "elmwoodpark",
+      "council",
+      "FULL"
+    ],
+    "name": "KAREN PENA",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 35,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "emerson",
+      "mayor",
+      "FULL"
+    ],
+    "name": "JOSEPH SOLIMANDO III",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 36,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "emerson",
+      "council",
+      "FULL"
+    ],
+    "name": "JULIA GUTTILLA",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 37,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "emerson",
+      "council",
+      "FULL"
+    ],
+    "name": "VENESSA MANZANO",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 38,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewoodward2",
+      "council",
+      "FULL"
+    ],
+    "name": "LISA WISOTSKY",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 39,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewoodward4",
+      "council",
+      "FULL"
+    ],
+    "name": "KEVIN A. WILSON",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 40,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewoodcliffs",
+      "council",
+      "FULL"
+    ],
+    "name": "MELANIE SIMON",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 41,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewoodcliffs",
+      "council",
+      "FULL"
+    ],
+    "name": "PATRICIA DRIMONES",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 42,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairview",
+      "council",
+      "FULL"
+    ],
+    "name": "STEPHEN BURKE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 44,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairview",
+      "council",
+      "FULL"
+    ],
+    "name": "JOHN BUSSANICH",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 45,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fortlee",
+      "council",
+      "FULL"
+    ],
+    "name": "PAUL YOON",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 46,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fortlee",
+      "council",
+      "FULL"
+    ],
+    "name": "BRYAN DRUMGOOLE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 47,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "glenrock",
+      "council",
+      "FULL"
+    ],
+    "name": "ROBERT KATZMAN",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 52,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "glenrock",
+      "council",
+      "FULL"
+    ],
+    "name": "EDWARD MORLEY",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 53,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hasbrouckheights",
+      "council",
+      "FULL"
+    ],
+    "name": "DAVID D'ALESSANDRO",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 57,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "haworth",
+      "mayor",
+      "FULL"
+    ],
+    "name": "HEATHER J. WASSER",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 59,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "haworth",
+      "council",
+      "FULL"
+    ],
+    "name": "PETER R. LAUB",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 60,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "haworth",
+      "council",
+      "FULL"
+    ],
+    "name": "CHARLES J. CROWLEY",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 61,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "haworth",
+      "council",
+      "UNEXPIRED:1"
+    ],
+    "name": "JANE CABOURG",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 62,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hillsdale",
+      "council",
+      "FULL"
+    ],
+    "name": "DENA M. TOMS",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 63,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hillsdale",
+      "council",
+      "FULL"
+    ],
+    "name": "GABRIELLA A. IANNI",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 64,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "leonia",
+      "council",
+      "FULL"
+    ],
+    "name": "JORDAN D. ZEIGLER",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 67,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "leonia",
+      "council",
+      "FULL"
+    ],
+    "name": "DIANE M. SCARANGELLA",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 68,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "littleferry",
+      "council",
+      "FULL"
+    ],
+    "name": "MARGARET A. STEINHILBER",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 69,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "littleferry",
+      "council",
+      "FULL"
+    ],
+    "name": "JENIFER A. LANGE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 70,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "maywood",
+      "council",
+      "FULL"
+    ],
+    "name": "CLAIRE A. PADOVANO",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 74,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "maywood",
+      "council",
+      "FULL"
+    ],
+    "name": "CURTIS R. McAULIFFE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 75,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "maywood",
+      "council",
+      "UNEXPIRED:2"
+    ],
+    "name": "KYLA SMITH",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 76,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "midlandpark",
+      "council",
+      "FULL"
+    ],
+    "name": "DEBORAH A. SPELL",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 77,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "midlandpark",
+      "council",
+      "FULL"
+    ],
+    "name": "MYRNA KAYAL",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 78,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "moonachie",
+      "mayor",
+      "FULL"
+    ],
+    "name": "DENNIS VACCARO",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 81,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "moonachie",
+      "council",
+      "FULL"
+    ],
+    "name": "ANTONIO CIRILLO",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 82,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "moonachie",
+      "council",
+      "FULL"
+    ],
+    "name": "MANUEL MARTINEZ Jr.",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 83,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "newmilford",
+      "mayor",
+      "FULL"
+    ],
+    "name": "MICHAEL J. PUTRINO",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 84,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "newmilford",
+      "council",
+      "FULL"
+    ],
+    "name": "IRA S. GROTSKY",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 85,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "newmilford",
+      "council",
+      "FULL"
+    ],
+    "name": "MATTHEW S. SEYMOUR",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 86,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northarlington",
+      "mayor",
+      "FULL"
+    ],
+    "name": "JOHN N. BALWIERCZAK",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 87,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northarlington",
+      "council",
+      "FULL"
+    ],
+    "name": "DENNIS E. PAPILE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 88,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northarlington",
+      "council",
+      "FULL"
+    ],
+    "name": "CENGIZ N. SEVER",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 89,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northvale",
+      "mayor",
+      "FULL"
+    ],
+    "name": "KENNETH K. CHO",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 90,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northvale",
+      "council",
+      "FULL"
+    ],
+    "name": "JEAN MARIE CERBASI",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 91,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northvale",
+      "council",
+      "FULL"
+    ],
+    "name": "DAVID E. SILLERY",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 92,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "norwood",
+      "council",
+      "FULL"
+    ],
+    "name": "ANNIE HAUSMANN",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 93,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "norwood",
+      "council",
+      "FULL"
+    ],
+    "name": "JOHN ROONEY",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 94,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oradell",
+      "council",
+      "FULL"
+    ],
+    "name": "JEFFREY R. STEWART",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 99,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oradell",
+      "council",
+      "FULL"
+    ],
+    "name": "SUSAN M. CROCE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 100,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "palisadespark",
+      "mayor",
+      "FULL"
+    ],
+    "name": "CHONG PAUL KIM",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 101,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "palisadespark",
+      "council",
+      "FULL"
+    ],
+    "name": "JUSTIN S. KANG",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 102,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "palisadespark",
+      "council",
+      "FULL"
+    ],
+    "name": "LUCY Y. YANG",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 103,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "paramus",
+      "council",
+      "FULL"
+    ],
+    "name": "MELISSA CAMINITI",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 105,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "paramus",
+      "council",
+      "FULL"
+    ],
+    "name": "PETER CAMINITI Sr.",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 106,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "parkridge",
+      "council",
+      "FULL"
+    ],
+    "name": "ROBERT C. METZDORF",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 107,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "parkridge",
+      "council",
+      "FULL"
+    ],
+    "name": "MICHAEL G. MINTZ",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 108,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ramsey",
+      "mayor",
+      "FULL"
+    ],
+    "name": "ANGELO R. LaMANNA Jr.",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 109,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ramsey",
+      "council",
+      "FULL"
+    ],
+    "name": "JENNIFER CRANDALL",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 110,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ramsey",
+      "council",
+      "FULL"
+    ],
+    "name": "ROBERT BARRY",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 111,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgefield",
+      "council",
+      "FULL"
+    ],
+    "name": "FRANK PELLINO",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 112,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgefield",
+      "council",
+      "FULL"
+    ],
+    "name": "JAMES V. KONTOLIOS",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 113,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "riveredge",
+      "council",
+      "FULL"
+    ],
+    "name": "MATEE INDIRA KINSELLA",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 116,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "riveredge",
+      "council",
+      "FULL"
+    ],
+    "name": "DAVID GLASS",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 117,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rivervale",
+      "council",
+      "FULL"
+    ],
+    "name": "DENISE E. SIEG",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 119,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rochellepark",
+      "committee",
+      "FULL"
+    ],
+    "name": "TERESA E. JUDGE CRAVELLO",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 122,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rochellepark",
+      "committee",
+      "FULL"
+    ],
+    "name": "ANDREW MATTSON",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 123,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rutherford",
+      "council",
+      "FULL"
+    ],
+    "name": "STEPHANIE L. McGOWAN",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 127,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rutherford",
+      "council",
+      "FULL"
+    ],
+    "name": "SUSAN E. QUATRONE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 128,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddlebrook",
+      "mayor",
+      "FULL"
+    ],
+    "name": "ROBERT D. WHITE",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 129,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddlebrook",
+      "council",
+      "FULL"
+    ],
+    "name": "SARAH SANCHEZ",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 130,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddlebrook",
+      "council",
+      "FULL"
+    ],
+    "name": "GARRETT S. LUNA",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 131,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "southhackensack",
+      "committee",
+      "FULL"
+    ],
+    "name": "JAMES A. ANZEVINO",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 134,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "southhackensack",
+      "committee",
+      "FULL"
+    ],
+    "name": "LUIS E. PERDOMO",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 135,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "tenafly",
+      "council",
+      "FULL"
+    ],
+    "name": "AAKASH K. SHAH",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 137,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "tenafly",
+      "council",
+      "FULL"
+    ],
+    "name": "JAMIE CORSAIR",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 138,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "waldwick",
+      "council",
+      "FULL"
+    ],
+    "name": "GILBERT M. HARTMANN",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 142,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "waldwick",
+      "council",
+      "FULL"
+    ],
+    "name": "ERIC B. RUBINSTEIN",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 143,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wallington",
+      "council",
+      "FULL"
+    ],
+    "name": "ALBERT ZACCONE",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 144,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wallington",
+      "council",
+      "FULL"
+    ],
+    "name": "WALTER WARGACKI Jr.",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 145,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wallington",
+      "council",
+      "UNEXPIRED:2"
+    ],
+    "name": "ROMAN KRUK",
+    "party": "Democratic",
+    "voteFor": 1,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 146,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "westwood",
+      "council",
+      "FULL"
+    ],
+    "name": "ERIN M. COLLINS",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 148,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "westwood",
+      "council",
+      "FULL"
+    ],
+    "name": "KRISTIAN S. RASMUSSEN",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 149,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "woodclifflake",
+      "council",
+      "FULL"
+    ],
+    "name": "ALEISIA GIBSON WRIGHT",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 150,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "woodclifflake",
+      "council",
+      "FULL"
+    ],
+    "name": "ERIC BITTMAN",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 151,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "woodridge",
+      "council",
+      "FULL"
+    ],
+    "name": "DOMINICK G. AZZOLINI",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 152,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "woodridge",
+      "council",
+      "FULL"
+    ],
+    "name": "PHILIP D. ROMERO",
+    "party": "Democratic",
+    "voteFor": 2,
+    "sourceSheet": "Local Dem.",
+    "sourceRow": 153,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "allendale",
+      "mayor",
+      "FULL"
+    ],
+    "name": "PHILIP CICCHETTI",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 4,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "harringtonpark",
+      "council",
+      "FULL"
+    ],
+    "name": "ALLAN S. NAPOLITANO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 5,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "harringtonpark",
+      "council",
+      "FULL"
+    ],
+    "name": "ANDREW R. FARRELL",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 6,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "moonachie",
+      "mayor",
+      "FULL"
+    ],
+    "name": "BRADFORD J. HABERLIN",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 7,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "moonachie",
+      "council",
+      "FULL"
+    ],
+    "name": "GIOVANNI A. BRATTOLI",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 8,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "moonachie",
+      "council",
+      "FULL"
+    ],
+    "name": "MATTHEW PATUNAS",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 9,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oakland",
+      "council",
+      "FULL"
+    ],
+    "name": "JAMES M. FOLKERTS",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 10,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oakland",
+      "council",
+      "FULL"
+    ],
+    "name": "FRANK E. FURBACHER Jr.",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 11,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rochellepark",
+      "committee",
+      "FULL"
+    ],
+    "name": "JOSEPH J. SCARPA",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 12,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rochellepark",
+      "committee",
+      "FULL"
+    ],
+    "name": "GAIL ARTOLA",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 13,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rockleigh",
+      "council",
+      "FULL"
+    ],
+    "name": "DIMITRIOS VENETSANOS",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 14,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "municipality",
+      "office",
+      "FULL"
+    ],
+    "name": "FIRST MIDDLE LAST",
+    "party": null,
+    "voteFor": null,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 19,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "commissioner",
+      "UNEXPIRED:3"
+    ],
+    "name": "KAREN F. CARRINO",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 20,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "commissioner",
+      "UNEXPIRED:3"
+    ],
+    "name": "JOHN J.  MONTILLO Jr.",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 21,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "commissioner",
+      "UNEXPIRED:3"
+    ],
+    "name": "MICHAEL DeFRINO",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 22,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "mahwah",
+      "council",
+      "FULL"
+    ],
+    "name": "JENNIFER DIAMOND",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 23,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "mahwah",
+      "council",
+      "FULL"
+    ],
+    "name": "ROBERT M. FERGUSON III",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 24,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "mahwah",
+      "council",
+      "FULL"
+    ],
+    "name": "CHRISTOPHER M. HOWARD",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 25,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "mahwah",
+      "council",
+      "FULL"
+    ],
+    "name": "MEGAN E. JANKOWSKI",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 26,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "mahwah",
+      "council",
+      "FULL"
+    ],
+    "name": "ANTHONY J. MILLER",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 27,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "mahwah",
+      "council",
+      "FULL"
+    ],
+    "name": "PHILIP S. COLELLA",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 28,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "mahwah",
+      "council",
+      "FULL"
+    ],
+    "name": "JOHN STEPHEN MORIN Jr.",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 29,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "mahwah",
+      "council",
+      "FULL"
+    ],
+    "name": "JANET A. ARIEMMA",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 30,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgewood",
+      "council",
+      "FULL"
+    ],
+    "name": "HYUNJU KWAK",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 31,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgewood",
+      "council",
+      "FULL"
+    ],
+    "name": "DENISE PIERCE LIMA",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 32,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgewood",
+      "council",
+      "FULL"
+    ],
+    "name": "EVAN WEITZ",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 33,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgewood",
+      "council",
+      "FULL"
+    ],
+    "name": "SIOBHAN WINOGRAD",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 34,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "council",
+      "FULL"
+    ],
+    "name": "AVI BERLINER",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 35,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "council",
+      "FULL"
+    ],
+    "name": "SHARON L. KOLB",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 36,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "council",
+      "FULL"
+    ],
+    "name": "AMRIT RAMJATTAN",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 37,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "council",
+      "FULL"
+    ],
+    "name": "HILLARY GOLDBERG",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 38,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "council",
+      "FULL"
+    ],
+    "name": "DENISE BELCHER",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 39,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "council",
+      "FULL"
+    ],
+    "name": "GEORGE FERNANDEZ Jr.",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 40,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "council",
+      "FULL"
+    ],
+    "name": "DUANE M. HARLEY",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 41,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "council",
+      "FULL"
+    ],
+    "name": "CRYSTAL Y. PRESSLEY",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 42,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "council",
+      "FULL"
+    ],
+    "name": "HOWARD ROSE",
+    "party": null,
+    "voteFor": 4,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 43,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teterboro",
+      "council",
+      "FULL"
+    ],
+    "name": "JUAN J. RAMIREZ",
+    "party": null,
+    "voteFor": 5,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 44,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teterboro",
+      "council",
+      "FULL"
+    ],
+    "name": "JOHN P. WATT",
+    "party": null,
+    "voteFor": 5,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 45,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teterboro",
+      "council",
+      "FULL"
+    ],
+    "name": "JOHN B. WATT",
+    "party": null,
+    "voteFor": 5,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 46,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teterboro",
+      "council",
+      "FULL"
+    ],
+    "name": "GREGORY J. STEIN",
+    "party": null,
+    "voteFor": 5,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 47,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teterboro",
+      "council",
+      "FULL"
+    ],
+    "name": "CHRISTIE EMDEN",
+    "party": null,
+    "voteFor": 5,
+    "sourceSheet": "Indep. & NP",
+    "sourceRow": 48,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "carlstadt",
+      "regional",
+      "FULL"
+    ],
+    "name": "THOMAS J. COX Jr.",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 4,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "carlstadt",
+      "regional",
+      "FULL"
+    ],
+    "name": "ERIC JUSINO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 5,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "eastrutherford",
+      "regional",
+      "FULL"
+    ],
+    "name": "KRISTA GENTLE",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 6,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "allendale",
+      "regional",
+      "FULL"
+    ],
+    "name": "ANDREW M. PRINCE",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 7,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "allendale",
+      "regional",
+      "FULL"
+    ],
+    "name": "JENNIFER C. MARIO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 8,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "uppersaddleriver",
+      "regional",
+      "FULL"
+    ],
+    "name": "RACHEL MILSTON",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 9,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "closter",
+      "regional",
+      "FULL"
+    ],
+    "name": "JOSEPH ARGENZIANO",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 10,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "regional",
+      "FULL"
+    ],
+    "name": "ELIZABETH F. MILLER",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 11,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "regional",
+      "FULL"
+    ],
+    "name": "ANDREW SHYONG",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 12,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "harringtonpark",
+      "regional",
+      "FULL"
+    ],
+    "name": "JESSICA SPILLANE",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 13,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northvale",
+      "regional",
+      "UNEXPIRED:2"
+    ],
+    "name": "CHRISTOPHER M. SAXTON",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 14,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hillsdale",
+      "regional",
+      "FULL"
+    ],
+    "name": "ROBERT STEPHEN OOSTING",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 15,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hillsdale",
+      "regional",
+      "FULL"
+    ],
+    "name": "BETH KORNBLATT",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 16,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hillsdale",
+      "regional",
+      "FULL"
+    ],
+    "name": "PATRICK FARLEY",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 17,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "montvale",
+      "regional",
+      "FULL"
+    ],
+    "name": "MICHAEL WEAVER",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 18,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "woodclifflake",
+      "regional",
+      "FULL"
+    ],
+    "name": "STEPHANIE MONG-PING HUANG",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 19,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oakland",
+      "regional",
+      "FULL"
+    ],
+    "name": "MELISSA KIEL",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 20,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oakland",
+      "regional",
+      "FULL"
+    ],
+    "name": "AUDREY LYNN SOUDERS",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 21,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wyckoff",
+      "regional",
+      "FULL"
+    ],
+    "name": "DOREEN M. MARIANI",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 22,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wyckoff",
+      "regional",
+      "FULL"
+    ],
+    "name": "BRIAN DeLAITE",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 23,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oradell",
+      "regional",
+      "FULL"
+    ],
+    "name": "ROBERT J. GRAHAM Jr.",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 24,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oradell",
+      "regional",
+      "UNEXPIRED:1"
+    ],
+    "name": "ALAN FEIGENSON",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 25,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "riveredge",
+      "regional",
+      "FULL"
+    ],
+    "name": "SUZANNE GOLDEN",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 26,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "riveredge",
+      "regional",
+      "FULL"
+    ],
+    "name": "RYAN GIBBONS",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 27,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "washington",
+      "regional",
+      "FULL"
+    ],
+    "name": "LONI AZZOLINA",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 28,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "washington",
+      "regional",
+      "FULL"
+    ],
+    "name": "HEATHER M. PERIN",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 29,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "westwood",
+      "regional",
+      "FULL"
+    ],
+    "name": "NICOLE MARTIN",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Regional BOE",
+    "sourceRow": 30,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "allendale",
+      "local",
+      "FULL"
+    ],
+    "name": "TODD R. FLIEGEL",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 4,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "alpine",
+      "local",
+      "FULL"
+    ],
+    "name": "VANESSA BARRERA",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 5,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "alpine",
+      "local",
+      "FULL"
+    ],
+    "name": "MARIA DiBIASE",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 6,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "alpine",
+      "local",
+      "FULL"
+    ],
+    "name": "ANTHONY FASANO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 7,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "bergenfield",
+      "local",
+      "FULL"
+    ],
+    "name": "MARTHA S. PAPAPETROU",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 8,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "bergenfield",
+      "local",
+      "FULL"
+    ],
+    "name": "FANNY L. CRUZ BETESH",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 9,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "bogota",
+      "local",
+      "FULL"
+    ],
+    "name": "BISI J. RUCKETT",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 10,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "bogota",
+      "local",
+      "FULL"
+    ],
+    "name": "JOSE CHAVEZ",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 11,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "bogota",
+      "local",
+      "FULL"
+    ],
+    "name": "TASNEEM SALAM",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 12,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "carlstadt",
+      "local",
+      "FULL"
+    ],
+    "name": "ASHLEY M. BALAC",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 13,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "carlstadt",
+      "local",
+      "FULL"
+    ],
+    "name": "LESLIE A. MOLNAR",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 14,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "carlstadt",
+      "local",
+      "FULL"
+    ],
+    "name": "FRANK M. STALLONE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 15,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "carlstadt",
+      "local",
+      "UNEXPIRED:2"
+    ],
+    "name": "MARC CHERICHELLA",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 16,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "carlstadt",
+      "local",
+      "UNEXPIRED:1"
+    ],
+    "name": "SHARON O'BRIEN-ROMER",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 17,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "carlstadt",
+      "local",
+      "UNEXPIRED:1"
+    ],
+    "name": "STEVEN C. LAHULLIER",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 18,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "closter",
+      "local",
+      "FULL"
+    ],
+    "name": "AVISHAG RAVID",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 20,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "closter",
+      "local",
+      "FULL"
+    ],
+    "name": "EDMUND CHOI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 21,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "cresskill",
+      "local",
+      "FULL"
+    ],
+    "name": "AMY M. CUSICK",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 23,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "cresskill",
+      "local",
+      "FULL"
+    ],
+    "name": "SARAH E. BARRS",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 24,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "cresskill",
+      "local",
+      "FULL"
+    ],
+    "name": "HEIDDY MARTIN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 25,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "local",
+      "FULL"
+    ],
+    "name": "ERICA J. CANTATORE",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 26,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "local",
+      "FULL"
+    ],
+    "name": "DIANE G. HOLZBERG",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 27,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "demarest",
+      "local",
+      "UNEXPIRED:2"
+    ],
+    "name": "BARI BARON",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 28,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "dumont",
+      "local",
+      "FULL"
+    ],
+    "name": "THERESA L. RIVA",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 29,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "dumont",
+      "local",
+      "FULL"
+    ],
+    "name": "STEPHANIE PETRIELLO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 30,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "eastrutherford",
+      "local",
+      "FULL"
+    ],
+    "name": "MARIA CARUSO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 32,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "eastrutherford",
+      "local",
+      "FULL"
+    ],
+    "name": "BOBBIE-JO BRELSFORD",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 33,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "edgewater",
+      "local",
+      "FULL"
+    ],
+    "name": "PATRICK BUSSANICH",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 34,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "edgewater",
+      "local",
+      "FULL"
+    ],
+    "name": "CRISTINA STEFANI-RACKOW",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 35,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "edgewater",
+      "local",
+      "FULL"
+    ],
+    "name": "HAGOP \"JACQUES\" KALFAYAN",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 36,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "edgewater",
+      "local",
+      "FULL"
+    ],
+    "name": "JASON YARD",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 37,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "elmwoodpark",
+      "local",
+      "FULL"
+    ],
+    "name": "DOUGLAS A. DeMATTEO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 38,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "elmwoodpark",
+      "local",
+      "FULL"
+    ],
+    "name": "DORIN ASPRAS",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 39,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "elmwoodpark",
+      "local",
+      "FULL"
+    ],
+    "name": "ELIZABETH MIERZEJEWSKI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 40,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "elmwoodpark",
+      "local",
+      "FULL"
+    ],
+    "name": "SABRINA M. Lo PRESTI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 41,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "elmwoodpark",
+      "local",
+      "UNEXPIRED:1"
+    ],
+    "name": "AZIZE CORNEJO",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 42,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "emerson",
+      "local",
+      "FULL"
+    ],
+    "name": "WILLIAM \"WILL\" GRAULICH V",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 43,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "emerson",
+      "local",
+      "FULL"
+    ],
+    "name": "AMANDA PATRICIA RICCARDI",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 44,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewood",
+      "local",
+      "FULL"
+    ],
+    "name": "ISAAC J. STRULOWITZ",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 45,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewood",
+      "local",
+      "FULL"
+    ],
+    "name": "REBECCA P. TENZER",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 46,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewood",
+      "local",
+      "FULL"
+    ],
+    "name": "MIRIAM STIEFEL",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 47,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewood",
+      "local",
+      "FULL"
+    ],
+    "name": "VERNEDRA C. WILLIAMS",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 48,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewood",
+      "local",
+      "FULL"
+    ],
+    "name": "IGNACIO ACOSTA-THOMPSON",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 49,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewood",
+      "local",
+      "FULL"
+    ],
+    "name": "WILLIAM FEINSTEIN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 50,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewoodcliffs",
+      "local",
+      "FULL"
+    ],
+    "name": "ORIETTA OSSO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 51,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewoodcliffs",
+      "local",
+      "FULL"
+    ],
+    "name": "ANTHONY HONG",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 52,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewoodcliffs",
+      "local",
+      "FULL"
+    ],
+    "name": "GULEZAHRA MAMDANI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 53,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewoodcliffs",
+      "local",
+      "FULL"
+    ],
+    "name": "MARGARITA LOLIS",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 54,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "englewoodcliffs",
+      "local",
+      "FULL"
+    ],
+    "name": "JENNIFER A. DRIMONES",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 55,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairlawn",
+      "local",
+      "FULL"
+    ],
+    "name": "JULIE  MAHAN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 56,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairlawn",
+      "local",
+      "FULL"
+    ],
+    "name": "JULIE  KOSSOY",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 57,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairlawn",
+      "local",
+      "FULL"
+    ],
+    "name": "JEANNE L. BROWNE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 58,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairlawn",
+      "local",
+      "FULL"
+    ],
+    "name": "YAEL Y. SURIEL",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 59,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairlawn",
+      "local",
+      "FULL"
+    ],
+    "name": "MARCY T. REIZ",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 60,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairlawn",
+      "local",
+      "FULL"
+    ],
+    "name": "VERONICA BRENNER",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 61,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairlawn",
+      "local",
+      "FULL"
+    ],
+    "name": "ANGELA KERR",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 62,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairlawn",
+      "local",
+      "FULL"
+    ],
+    "name": "YAN J. RUSANOV",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 63,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairlawn",
+      "local",
+      "FULL"
+    ],
+    "name": "DIANNA M. SOPALA",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 64,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairlawn",
+      "local",
+      "UNEXPIRED:1"
+    ],
+    "name": "ELIZABETH GREENFIELD ESTERSOHN",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 65,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairlawn",
+      "local",
+      "UNEXPIRED:1"
+    ],
+    "name": "MATTHEW J. CORREIA",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 66,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fairlawn",
+      "local",
+      "UNEXPIRED:1"
+    ],
+    "name": "DMYTRO ARSHYNOV",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 67,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fortlee",
+      "local",
+      "FULL"
+    ],
+    "name": "AMY KO-TANG",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 69,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fortlee",
+      "local",
+      "FULL"
+    ],
+    "name": "CHRISTIAN NOWELL",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 70,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fortlee",
+      "local",
+      "FULL"
+    ],
+    "name": "CANDACE ROMBA",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 71,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fortlee",
+      "local",
+      "FULL"
+    ],
+    "name": "PAULA COLBATH",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 72,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fortlee",
+      "local",
+      "FULL"
+    ],
+    "name": "MICHAEL RUBINO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 73,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "fortlee",
+      "local",
+      "FULL"
+    ],
+    "name": "TANYA BYERS-KANG",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 74,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "franklinlakes",
+      "local",
+      "FULL"
+    ],
+    "name": "DAYANEIRIS BURTON",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 75,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "franklinlakes",
+      "local",
+      "FULL"
+    ],
+    "name": "SE WHAN KIM",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 76,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "franklinlakes",
+      "local",
+      "FULL"
+    ],
+    "name": "CAROLINA SEVERINO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 77,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "franklinlakes",
+      "local",
+      "FULL"
+    ],
+    "name": "RYAN RICHMAN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 78,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "glenrock",
+      "local",
+      "FULL"
+    ],
+    "name": "EDMUND C. HAYWARD",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 80,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "glenrock",
+      "local",
+      "FULL"
+    ],
+    "name": "ELIZABETH CALVEZ",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 81,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "glenrock",
+      "local",
+      "FULL"
+    ],
+    "name": "DAMALI ROBINSON",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 82,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "glenrock",
+      "local",
+      "FULL"
+    ],
+    "name": "GAUTAM S. SURYA",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 83,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hackensack",
+      "local",
+      "FULL"
+    ],
+    "name": "KENNETH MARTIN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 84,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hackensack",
+      "local",
+      "FULL"
+    ],
+    "name": "VICTORIA \"VICKY\" FARHI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 85,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hackensack",
+      "local",
+      "FULL"
+    ],
+    "name": "MABEL BONILLA",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 86,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "harringtonpark",
+      "local",
+      "FULL"
+    ],
+    "name": "STEPHEN S. HAHM",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 87,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "harringtonpark",
+      "local",
+      "FULL"
+    ],
+    "name": "JENNIFER HELFMAN",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 88,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hasbrouckheights",
+      "local",
+      "FULL"
+    ],
+    "name": "CORINNE PONTE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 89,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hasbrouckheights",
+      "local",
+      "FULL"
+    ],
+    "name": "JILLIAN FERDINAND",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 90,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hasbrouckheights",
+      "local",
+      "FULL"
+    ],
+    "name": "LISA KROMMENHOEK",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 91,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hasbrouckheights",
+      "local",
+      "FULL"
+    ],
+    "name": "ANGELO JOSEPH CAPRIO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 92,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "haworth",
+      "local",
+      "FULL"
+    ],
+    "name": "DREW S. KRASNY",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 93,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "haworth",
+      "local",
+      "FULL"
+    ],
+    "name": "COURTNEY RUSSELL",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 94,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hillsdale",
+      "local",
+      "FULL"
+    ],
+    "name": "MICHAEL KENDUCK",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 95,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hillsdale",
+      "local",
+      "FULL"
+    ],
+    "name": "KATHLEEN PUERTA",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 96,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hohokus",
+      "local",
+      "FULL"
+    ],
+    "name": "MARGARET LILJEGREN",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 97,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "hohokus",
+      "local",
+      "FULL"
+    ],
+    "name": "ANTHONY KAROLESKI",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 98,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "leonia",
+      "local",
+      "FULL"
+    ],
+    "name": "DANIEL C. LEE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 99,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "leonia",
+      "local",
+      "FULL"
+    ],
+    "name": "KELLY O'NEILL",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 100,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "leonia",
+      "local",
+      "FULL"
+    ],
+    "name": "SEEMASHAHEEN KHAN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 101,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "littleferry",
+      "local",
+      "FULL"
+    ],
+    "name": "VICTORIA BRADLEY",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 102,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "littleferry",
+      "local",
+      "FULL"
+    ],
+    "name": "PURNA PATEL",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 103,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "littleferry",
+      "local",
+      "FULL"
+    ],
+    "name": "BRIAN BONELLI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 104,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "local",
+      "FULL"
+    ],
+    "name": "CHRIS AURIEMMA",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 106,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "local",
+      "FULL"
+    ],
+    "name": "CRAIG AURIEMMA",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 107,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "local",
+      "FULL"
+    ],
+    "name": "CHRIS CARMECI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 108,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "local",
+      "FULL"
+    ],
+    "name": "LAURA JEAN CHECKI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 109,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "local",
+      "FULL"
+    ],
+    "name": "ANNA PASSAMANO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 110,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "local",
+      "FULL"
+    ],
+    "name": "KATHERINE SCAGLIONE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 111,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "local",
+      "FULL"
+    ],
+    "name": "ANTHONY SCERBO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 112,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "local",
+      "FULL"
+    ],
+    "name": "DOMENICK ABBATE Jr.",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 113,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "local",
+      "FULL"
+    ],
+    "name": "JASMINE GONZALEZ",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 114,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "lyndhurst",
+      "local",
+      "FULL"
+    ],
+    "name": "SILVANA CZERWINSKI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 115,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "mahwah",
+      "local",
+      "FULL"
+    ],
+    "name": "BRETT COPLIN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 116,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "mahwah",
+      "local",
+      "FULL"
+    ],
+    "name": "JANINE TING JANSEN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 117,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "mahwah",
+      "local",
+      "FULL"
+    ],
+    "name": "ASAD R. KHAN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 118,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "maywood",
+      "local",
+      "FULL"
+    ],
+    "name": "MARK MITCHELL",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 119,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "maywood",
+      "local",
+      "FULL"
+    ],
+    "name": "GINA MARIE KIELY",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 120,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "maywood",
+      "local",
+      "FULL"
+    ],
+    "name": "LYNN O'CONNELL-SORIANO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 121,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "montvale",
+      "local",
+      "FULL"
+    ],
+    "name": "RACHEL S. BASKIN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 125,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "montvale",
+      "local",
+      "FULL"
+    ],
+    "name": "DOMINIC L. DiSALVO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 126,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "montvale",
+      "local",
+      "FULL"
+    ],
+    "name": "JOHN F. CARVELLI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 127,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "moonachie",
+      "local",
+      "FULL"
+    ],
+    "name": "DAVID VACCARO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 128,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "moonachie",
+      "local",
+      "FULL"
+    ],
+    "name": "MATTHEW A. VACCARO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 129,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "newmilford",
+      "local",
+      "FULL"
+    ],
+    "name": "DAVID SPEKTOR",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 130,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "newmilford",
+      "local",
+      "FULL"
+    ],
+    "name": "KENDRA K. MOORE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 131,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "newmilford",
+      "local",
+      "FULL"
+    ],
+    "name": "NICOLE DUNNE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 132,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "newmilford",
+      "local",
+      "FULL"
+    ],
+    "name": "RAYMOND D. COTTIERS Sr.",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 133,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northarlington",
+      "local",
+      "FULL"
+    ],
+    "name": "EDWARD SMITH",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 134,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northarlington",
+      "local",
+      "FULL"
+    ],
+    "name": "ROBERT DORSETT",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 135,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northarlington",
+      "local",
+      "FULL"
+    ],
+    "name": "ALEXANDRA L. LEITAO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 136,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northarlington",
+      "local",
+      "FULL"
+    ],
+    "name": "NICOLE DeCAPUA RINCK",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 137,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "northvale",
+      "local",
+      "FULL"
+    ],
+    "name": "EUNHWA KIM",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 138,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "norwood",
+      "local",
+      "FULL"
+    ],
+    "name": "ANTONIO B. MEO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 140,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "norwood",
+      "local",
+      "FULL"
+    ],
+    "name": "JENNIFER R. EISBERG",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 141,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "norwood",
+      "local",
+      "FULL"
+    ],
+    "name": "MICHAEL J. SPRAGUE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 142,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "norwood",
+      "local",
+      "FULL"
+    ],
+    "name": "RITA L. BODINE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 143,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "norwood",
+      "local",
+      "UNEXPIRED:1"
+    ],
+    "name": "JAMIE S. KARCZEWSKI",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 144,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oakland",
+      "local",
+      "FULL"
+    ],
+    "name": "JOHN A. SCERBO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 145,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oakland",
+      "local",
+      "FULL"
+    ],
+    "name": "TERESA KILDAY",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 146,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oldtappan",
+      "local",
+      "FULL"
+    ],
+    "name": "JESUS SUAREZ",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 147,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oldtappan",
+      "local",
+      "FULL"
+    ],
+    "name": "BRIANA BREGSTEIN",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 148,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oradell",
+      "local",
+      "FULL"
+    ],
+    "name": "RITA J. WALKER",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 149,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oradell",
+      "local",
+      "FULL"
+    ],
+    "name": "CHRISTOPHER W. NUTLAND",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 150,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "oradell",
+      "local",
+      "FULL"
+    ],
+    "name": "JAMES Del GRECO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 151,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "palisadespark",
+      "local",
+      "FULL"
+    ],
+    "name": "JASON KIM",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 152,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "palisadespark",
+      "local",
+      "FULL"
+    ],
+    "name": "HEA \"HELEN\" JEON",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 153,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "palisadespark",
+      "local",
+      "FULL"
+    ],
+    "name": "STEPHEN KIM",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 154,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "palisadespark",
+      "local",
+      "FULL"
+    ],
+    "name": "SOOKYUNG PARK",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 155,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "palisadespark",
+      "local",
+      "FULL"
+    ],
+    "name": "GRACE S. SONG",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 156,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "palisadespark",
+      "local",
+      "FULL"
+    ],
+    "name": "JAY GIARDINA",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 157,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "paramus",
+      "local",
+      "FULL"
+    ],
+    "name": "LAURA SICLARI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 158,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "paramus",
+      "local",
+      "FULL"
+    ],
+    "name": "LAUREN LaBARBIERA",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 159,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "paramus",
+      "local",
+      "FULL"
+    ],
+    "name": "ANTHONY FEORENZO III",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 160,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "paramus",
+      "local",
+      "FULL"
+    ],
+    "name": "JOANNE BERGMANN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 161,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "paramus",
+      "local",
+      "FULL"
+    ],
+    "name": "ALEXANDER AKSANOV",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 162,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "parkridge",
+      "local",
+      "FULL"
+    ],
+    "name": "SHANAI JENSEN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 163,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "parkridge",
+      "local",
+      "FULL"
+    ],
+    "name": "RACHELLE BROWNE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 164,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "parkridge",
+      "local",
+      "FULL"
+    ],
+    "name": "JOSEPHINE V. HUNT",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 165,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "parkridge",
+      "local",
+      "FULL"
+    ],
+    "name": "AMARA E. WAGNER",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 166,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ramsey",
+      "local",
+      "FULL"
+    ],
+    "name": "LAURA E. GENOVESE-BEHRMANN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 168,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ramsey",
+      "local",
+      "FULL"
+    ],
+    "name": "MICHAEL A. AUGELLO Jr.",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 169,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ramsey",
+      "local",
+      "FULL"
+    ],
+    "name": "STEPHEN T. McKNIGHT",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 170,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgefield",
+      "local",
+      "FULL"
+    ],
+    "name": "LORI HOFFMAN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 171,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgefield",
+      "local",
+      "FULL"
+    ],
+    "name": "ANDREW GRIPPA",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 172,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgefield",
+      "local",
+      "FULL"
+    ],
+    "name": "SCOTT J. RUSSO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 173,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgefieldpark",
+      "local",
+      "FULL"
+    ],
+    "name": "JOHN MALOOL",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 174,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgefieldpark",
+      "local",
+      "FULL"
+    ],
+    "name": "BERLINDA RODRIGUEZ",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 175,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgefieldpark",
+      "local",
+      "FULL"
+    ],
+    "name": "JENNIFER SCHMITT",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 176,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgewood",
+      "local",
+      "FULL"
+    ],
+    "name": "ANABELLE ANDON",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 177,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "ridgewood",
+      "local",
+      "FULL"
+    ],
+    "name": "MARY E. MICALE",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 178,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "riveredge",
+      "local",
+      "FULL"
+    ],
+    "name": "ELIZABETH BROWN",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 179,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "riveredge",
+      "local",
+      "UNEXPIRED:2"
+    ],
+    "name": "PATRICIA J. BRYAN",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 181,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rivervale",
+      "local",
+      "FULL"
+    ],
+    "name": "PATRICE PINTARELLI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 182,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rivervale",
+      "local",
+      "FULL"
+    ],
+    "name": "THOMAS GALLIONE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 183,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rivervale",
+      "local",
+      "FULL"
+    ],
+    "name": "JAMIE ASSOR",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 184,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rochellepark",
+      "local",
+      "FULL"
+    ],
+    "name": "JOSEPH DeFALCO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 185,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rochellepark",
+      "local",
+      "FULL"
+    ],
+    "name": "JOSEPH MAROLDA",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 186,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rochellepark",
+      "local",
+      "FULL"
+    ],
+    "name": "SCOTT G. KRAL",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 187,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rutherford",
+      "local",
+      "FULL"
+    ],
+    "name": "JAMES A. BOGOSIAN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 189,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rutherford",
+      "local",
+      "FULL"
+    ],
+    "name": "TRACY W. LEIGH",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 190,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "rutherford",
+      "local",
+      "FULL"
+    ],
+    "name": "DENNIS W. HEALEY",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 191,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddlebrook",
+      "local",
+      "FULL"
+    ],
+    "name": "MICHAEL ERRICHIELLO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 192,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddlebrook",
+      "local",
+      "FULL"
+    ],
+    "name": "MOHAMED FAYEZ",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 193,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddlebrook",
+      "local",
+      "FULL"
+    ],
+    "name": "MICHELE ROLOFF",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 194,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddlebrook",
+      "local",
+      "FULL"
+    ],
+    "name": "SYLVIA ZOTTARELLI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 195,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "saddleriver",
+      "local",
+      "FULL"
+    ],
+    "name": "CAROLINE L. AUBREY-SMITH",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 196,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "southhackensack",
+      "local",
+      "FULL"
+    ],
+    "name": "SHELDON SMITH",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 197,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "southhackensack",
+      "local",
+      "FULL"
+    ],
+    "name": "JENNIFER L. ZANCA",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 198,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "local",
+      "FULL"
+    ],
+    "name": "MARCELO VENEGAS-PIZARRO",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 199,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "local",
+      "FULL"
+    ],
+    "name": "ERIC RHEA",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 200,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "local",
+      "FULL"
+    ],
+    "name": "LIZA FERNANDEZ",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 201,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "local",
+      "FULL"
+    ],
+    "name": "GERALD B. KIRSHENBAUM",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 202,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "teaneck",
+      "local",
+      "FULL"
+    ],
+    "name": "DAVID GRUBER",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 203,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "tenafly",
+      "local",
+      "FULL"
+    ],
+    "name": "DAVID STEVEN MILLER",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 204,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "tenafly",
+      "local",
+      "FULL"
+    ],
+    "name": "ANGELA LEONE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 205,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "tenafly",
+      "local",
+      "FULL"
+    ],
+    "name": "DANIEL KIM SHIN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 206,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "tenafly",
+      "local",
+      "FULL"
+    ],
+    "name": "KEVIN SHIN",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 207,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "uppersaddleriver",
+      "local",
+      "FULL"
+    ],
+    "name": "JOY A. McELYEA",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 209,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "uppersaddleriver",
+      "local",
+      "FULL"
+    ],
+    "name": "HANI BATLA",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 210,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "uppersaddleriver",
+      "local",
+      "FULL"
+    ],
+    "name": "KYLE KOTCH",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 211,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "uppersaddleriver",
+      "local",
+      "FULL"
+    ],
+    "name": "JEFFERY F. DE VAUL",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 212,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "uppersaddleriver",
+      "local",
+      "FULL"
+    ],
+    "name": "ANSON K. TANG",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 213,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "waldwick",
+      "local",
+      "FULL"
+    ],
+    "name": "SHANNA DAWN ANDERSON",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 214,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "waldwick",
+      "local",
+      "FULL"
+    ],
+    "name": "AMY G. WEINER",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 215,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "waldwick",
+      "local",
+      "FULL"
+    ],
+    "name": "LAURA A. LITCHULT",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 216,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "waldwick",
+      "local",
+      "FULL"
+    ],
+    "name": "ANDREW FREY",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 217,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wallington",
+      "local",
+      "FULL"
+    ],
+    "name": "THEADORA CALABRESE",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 218,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wallington",
+      "local",
+      "FULL"
+    ],
+    "name": "JOSEPH C. BRUNACKI IV",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 219,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wallington",
+      "local",
+      "FULL"
+    ],
+    "name": "BOBBY RISTOVSKI",
+    "party": null,
+    "voteFor": 3,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 220,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "woodclifflake",
+      "local",
+      "FULL"
+    ],
+    "name": "KRISTAN SAKS",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 223,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "woodclifflake",
+      "local",
+      "FULL"
+    ],
+    "name": "JENNIFER STROGER",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 224,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "woodridge",
+      "local",
+      "FULL"
+    ],
+    "name": "MICHELE MILANO",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 225,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wyckoff",
+      "local",
+      "FULL"
+    ],
+    "name": "ILYSSA CALLANDRILLO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 226,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wyckoff",
+      "local",
+      "FULL"
+    ],
+    "name": "ASHLEY MUNGIELLO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 227,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wyckoff",
+      "local",
+      "FULL"
+    ],
+    "name": "FRANK BARBAGALLO",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 228,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wyckoff",
+      "local",
+      "FULL"
+    ],
+    "name": "VIVEK BHUSHAN",
+    "party": null,
+    "voteFor": 2,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 229,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wyckoff",
+      "local",
+      "UNEXPIRED:2"
+    ],
+    "name": "SAMANTHA ANZANO",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 230,
+    "anyStrikethrough": false
+  },
+  {
+    "key": [
+      "wyckoff",
+      "local",
+      "UNEXPIRED:2"
+    ],
+    "name": "BRIAN BENEDIK",
+    "party": null,
+    "voteFor": 1,
+    "sourceSheet": "Local BOE",
+    "sourceRow": 231,
+    "anyStrikethrough": false
+  }
+]

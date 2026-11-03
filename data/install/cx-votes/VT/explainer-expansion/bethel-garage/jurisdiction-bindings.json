@@ -1,0 +1,23 @@
+[
+  {
+    "contestId": "vt-local-2026-bethel-highway-garage-bonds",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:windsor/place:bethel_town",
+      "cousub",
+      "5002705800",
+      "Bethel town"
+    ],
+    "officialNamedElectorate": "Bethel town",
+    "sourceUrl": "https://townofbethelvt.com/vertical/sites/%7B46C5C479-45BC-4485-9BD0-06530D0ACFB2%7D/uploads/Selectboard_Packet_9_28_2026.pdf",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/county:windsor/place:bethel_town"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:windsor",
+      "ocd-division/country:us/state:vt/place:bethel",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ],
+    "basis": "Official adopted town warning/ballot and current town website; existing exact held county subdivision retained."
+  }
+]

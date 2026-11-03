@@ -1,0 +1,49 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "VT",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:VT",
+  "inputDirectory": "ballot-input",
+  "sharedSourceDirectory": "../independent-source-bank",
+  "sourceSupport": "source-support.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "sourceCaptures": "source-captures.json",
+  "coverage": {
+    "newExplainedMeasures": 1,
+    "allLocalComplete": false
+  },
+  "originalSourceArchive": {
+    "pages": 68,
+    "originalBytes": 33368370,
+    "derivedOperativePages": [
+      23,
+      24,
+      27,
+      28
+    ],
+    "derivedPdfBytes": 1807068,
+    "fullOriginalOnlyInScratch": true,
+    "readerPayloadContainsSourceArchive": false
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "VT",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

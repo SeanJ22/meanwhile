@@ -1,0 +1,147 @@
+{
+  "ballots": {
+    "VT:vt-2026-11-03-general": {
+      "election": {
+        "id": "vt-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "VT"
+      },
+      "contests": [
+        {
+          "id": "vt-local-2026-bethel-highway-garage-bonds",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:windsor/place:bethel_town",
+          "divisionVintage": "2026",
+          "title": "Bethel town — Article1: Highway garage bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact existing BethelTown county subdivision; smaller BethelCDP and WindsorCounty are not substituted.",
+          "measureTextUrl": "https://townofbethelvt.com/vertical/sites/%7B46C5C479-45BC-4485-9BD0-06530D0ACFB2%7D/uploads/Selectboard_Packet_9_28_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://townofbethelvt.com/vertical/sites/%7B46C5C479-45BC-4485-9BD0-06530D0ACFB2%7D/uploads/Selectboard_Packet_9_28_2026.pdf",
+            "sourceOrg": "Town of Bethel; adopted current warning and ballot form",
+            "collectedAt": "2026-11-03T10:48:23.741284+00:00",
+            "verifiedAt": "2026-11-03T11:04:38.553218+00:00",
+            "quote": "Shall general obligation bonds or notes of the Town of Bethel in an amount not to exceed Three Million Five Hundred Thousand Dollars ($3,500,000), subject to reduction by grants-in-aid or other sources, be issued to construct a new Town highway garage (approx.8,800 square feet) at 443 Sand Hill Road?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "vt-local-2026-bethel-highway-garage-bonds:question",
+          "contestId": "vt-local-2026-bethel-highway-garage-bonds",
+          "questionText": "Shall general obligation bonds or notes of the Town of Bethel in an amount not to exceed Three Million Five Hundred Thousand Dollars ($3,500,000), subject to reduction by grants-in-aid or other sources, be issued to construct a new Town highway garage (approx.8,800 square feet) at 443 Sand Hill Road?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://townofbethelvt.com/vertical/sites/%7B46C5C479-45BC-4485-9BD0-06530D0ACFB2%7D/uploads/Selectboard_Packet_9_28_2026.pdf",
+            "sourceOrg": "Town of Bethel; adopted current warning and ballot form",
+            "collectedAt": "2026-11-03T10:48:23.741284+00:00",
+            "verifiedAt": "2026-11-03T11:04:38.553218+00:00",
+            "quote": "Shall general obligation bonds or notes of the Town of Bethel in an amount not to exceed Three Million Five Hundred Thousand Dollars ($3,500,000), subject to reduction by grants-in-aid or other sources, be issued to construct a new Town highway garage (approx.8,800 square feet) at 443 Sand Hill Road?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "vt-local-2026-bethel-highway-garage-bonds",
+          "whatItDoes": "Authorize up to $3.5 million in general obligation bonds or notes to build a new town highway garage of about 8,800 square feet at 443 Sand Hill Road. Grants and other available funding would reduce the amount borrowed. The town’s current financing explanation describes a 30-year note at about 4.23% interest and says capital funds and savings may lower the borrowing; these financing estimates are separate from the ballot’s borrowing limit.",
+          "yesMeans": "Authorize the described borrowing of up to $3.5 million for the new town highway garage.",
+          "noMeans": "Reject this proposed garage borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://townofbethelvt.com/",
+          "sourceHash": "6aace0d6680cfda05d7d41ed56dcab4ef7971f22d75a64019b896ad52dd1c245",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T11:04:38.553218+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:VT",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T11:04:38.553218+00:00",
+    "reviewedBy": "CX-VOTES actual adopted ballot form, approved minutes and current official financing source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://townofbethelvt.com/vertical/sites/%7B46C5C479-45BC-4485-9BD0-06530D0ACFB2%7D/uploads/Selectboard_Packet_9_28_2026.pdf",
+        "finalUrl": "https://townofbethelvt.com/vertical/sites/%7B46C5C479-45BC-4485-9BD0-06530D0ACFB2%7D/uploads/Selectboard_Packet_9_28_2026.pdf",
+        "httpStatus": 200,
+        "rawHash": "e3fe09e81fd68aa5d03e8d8350c606c2ee12bc60199aeb0fcaa4deb8ec671f11",
+        "rawFormat": "DERIVED_PDF_OPERATIVE_DOCUMENT_PAGES",
+        "hashScope": "rawHash/storedHash bind this derived4-pagePDF, not the original full native HTTP bytes. originalNativeSha256 binds full native33,368,370bytePDF retained only in scratch. Original page23→derived1,24→2,27→3,28→4. All four operative pages visually reviewed; derivative text is separately hashed.",
+        "captureMetadata": {
+          "originalNativeSha256": "90c157840a5bb3d6fd092301826b7bdf0747f0e5c2320a2e921f357ddaffb055",
+          "originalNativeBytes": 33368370,
+          "originalHttpStatus": 200,
+          "originalPages": [
+            23,
+            24,
+            27,
+            28
+          ]
+        },
+        "retrievedAt": "2026-11-03T10:48:23.741284+00:00",
+        "publisher": "Town of Bethel; Town Clerk and approved Selectboard minutes",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current public municipal source acquired successfully. For the meeting packet, rawHash binds a labeled four-page derivedPDF with complete operative resolution/warning/ballot pages23,24,27,28; original native hash and actualHTTP200 are declared separately. Full33MB original stays in scratch, not branch. Other source hashes bind their native bytes. Current homepage confirms November3garagebondvote. ApprovedSept28minutes pass the necessity resolution and warning; the adopted resolution specifies attached warning and ballot form adopted. Page28 question/date/response directions visually verified. Draft footer retained and adoption chain explicit, not concealed. Saved state.gov clerk directory identifies the town clerk on townofbethelvt.com and matches official office/phone. No paid/model/provider calls."
+      },
+      {
+        "requestedUrl": "https://townofbethelvt.com/",
+        "finalUrl": "https://townofbethelvt.com/",
+        "httpStatus": 200,
+        "rawHash": "9b024a359269e2b357204962d312552df9328440483374d3e5d5f56bfe857d3f",
+        "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+        "hashScope": "exact original HTTP response bytes",
+        "captureMetadata": {
+          "originalNativeSha256": "ada9696008b281b72c6810640a94c78b487b061cdc7c39cca850c7a44b449363",
+          "originalNativeBytes": 52993,
+          "originalHttpStatus": 200,
+          "originalPages": null
+        },
+        "retrievedAt": "2026-11-03T10:38:37.121713+00:00",
+        "publisher": "Town of Bethel; Town Clerk and approved Selectboard minutes",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current public municipal source acquired successfully. For the meeting packet, rawHash binds a labeled four-page derivedPDF with complete operative resolution/warning/ballot pages23,24,27,28; original native hash and actualHTTP200 are declared separately. Full33MB original stays in scratch, not branch. Other source hashes bind their native bytes. Current homepage confirms November3garagebondvote. ApprovedSept28minutes pass the necessity resolution and warning; the adopted resolution specifies attached warning and ballot form adopted. Page28 question/date/response directions visually verified. Draft footer retained and adoption chain explicit, not concealed. Saved state.gov clerk directory identifies the town clerk on townofbethelvt.com and matches official office/phone. No paid/model/provider calls."
+      },
+      {
+        "requestedUrl": "https://townofbethelvt.com/vertical/sites/%7B46C5C479-45BC-4485-9BD0-06530D0ACFB2%7D/uploads/SBMinutes9-28-2026_Approved_docx.docx",
+        "finalUrl": "https://townofbethelvt.com/vertical/sites/%7B46C5C479-45BC-4485-9BD0-06530D0ACFB2%7D/uploads/SBMinutes9-28-2026_Approved_docx.docx",
+        "httpStatus": 200,
+        "rawHash": "0942ba08ba132be22561bb6481289172406b844b9e502536a12c2e1bdc5eb513",
+        "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+        "hashScope": "exact original HTTP response bytes",
+        "captureMetadata": {
+          "originalNativeSha256": "4156d9a3d5e5cf49b27325279660420b90cf30ad78db1c658327b68b22e365b5",
+          "originalNativeBytes": 30175,
+          "originalHttpStatus": 200,
+          "originalPages": null
+        },
+        "retrievedAt": "2026-11-03T10:53:42.938320+00:00",
+        "publisher": "Town of Bethel; Town Clerk and approved Selectboard minutes",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current public municipal source acquired successfully. For the meeting packet, rawHash binds a labeled four-page derivedPDF with complete operative resolution/warning/ballot pages23,24,27,28; original native hash and actualHTTP200 are declared separately. Full33MB original stays in scratch, not branch. Other source hashes bind their native bytes. Current homepage confirms November3garagebondvote. ApprovedSept28minutes pass the necessity resolution and warning; the adopted resolution specifies attached warning and ballot form adopted. Page28 question/date/response directions visually verified. Draft footer retained and adoption chain explicit, not concealed. Saved state.gov clerk directory identifies the town clerk on townofbethelvt.com and matches official office/phone. No paid/model/provider calls."
+      },
+      {
+        "requestedUrl": "https://www.bethelvt.govoffice3.com/",
+        "finalUrl": "https://townofbethelvt.com/",
+        "httpStatus": 200,
+        "rawHash": "9b024a359269e2b357204962d312552df9328440483374d3e5d5f56bfe857d3f",
+        "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+        "hashScope": "exact original HTTP response bytes",
+        "captureMetadata": {
+          "originalNativeSha256": "ad7f8d03ffbfb1cb57faf3b4b5506db975e2893ea73adf30997858cdee4e2957",
+          "originalNativeBytes": 52993,
+          "originalHttpStatus": 200,
+          "originalPages": null
+        },
+        "retrievedAt": "2026-11-03T10:54:47.552937+00:00",
+        "publisher": "Town of Bethel; Town Clerk and approved Selectboard minutes",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current public municipal source acquired successfully. For the meeting packet, rawHash binds a labeled four-page derivedPDF with complete operative resolution/warning/ballot pages23,24,27,28; original native hash and actualHTTP200 are declared separately. Full33MB original stays in scratch, not branch. Other source hashes bind their native bytes. Current homepage confirms November3garagebondvote. ApprovedSept28minutes pass the necessity resolution and warning; the adopted resolution specifies attached warning and ballot form adopted. Page28 question/date/response directions visually verified. Draft footer retained and adoption chain explicit, not concealed. Saved state.gov clerk directory identifies the town clerk on townofbethelvt.com and matches official office/phone. No paid/model/provider calls."
+      }
+    ]
+  }
+}

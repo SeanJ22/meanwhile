@@ -1,0 +1,13 @@
+{
+  "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/voters/guide_vermonts_town_clerks_treasurers_county.pdf",
+  "sourceFile": "../independent-source-bank/sources/d395d40e406e9a1ba21db75e8584c400418e30b7c70513a62a1e1fe5f6dde6c0.pdf",
+  "sourceSha256": "d395d40e406e9a1ba21db75e8584c400418e30b7c70513a62a1e1fe5f6dde6c0",
+  "stateListedWebsiteDirectoryFile": "../independent-source-bank/sources/c5bef287589b44b2ef77eb6e53a0e3d4851aa3c7a56151e9967591f184fb4880.source",
+  "observedOldPublisherRedirect": {
+    "requestedUrl": "https://www.bethelvt.govoffice3.com/",
+    "finalUrl": "https://townofbethelvt.com/",
+    "httpStatus": 200,
+    "captureMetadataFile": "source-captures.json"
+  },
+  "evidence": "Saved native state.gov townCSV listshttp://www.bethelvt.govoffice3.com; fresh native HTTPSread redirects200to townofbethelvt.com. Official stateSOScurrent clerkdirectory identifies BethelClerk PamelaBrown, pbrown@townofbethelvt.com,134SMainStreet,8022349722; current official municipal website matches these. No HTML-only isOfficialSource helper PASS claimed for PDF directory evidence."
+}

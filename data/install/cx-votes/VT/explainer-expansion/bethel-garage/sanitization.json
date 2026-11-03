@@ -1,0 +1,30 @@
+{
+  "sanitizerVersion": "fx-cred-v1-2026-08-28",
+  "captures": [
+    {
+      "requestedUrl": "https://townofbethelvt.com/",
+      "originalNativeSha256": "ada9696008b281b72c6810640a94c78b487b061cdc7c39cca850c7a44b449363",
+      "storedSha256": "6aace0d6680cfda05d7d41ed56dcab4ef7971f22d75a64019b896ad52dd1c245",
+      "sourceFile": "sources/6aace0d6680cfda05d7d41ed56dcab4ef7971f22d75a64019b896ad52dd1c245.sanitized.html",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "replacedSubstrings": 1,
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "sourceContentEffect": "Only detected browser-key credential substrings replaced by existing sanitizer. Election/financing prose and official authority links unchanged. Original native bytes retained only in scratch; sanitized representation clearly labeled."
+    },
+    {
+      "requestedUrl": "https://www.bethelvt.govoffice3.com/",
+      "originalNativeSha256": "ad7f8d03ffbfb1cb57faf3b4b5506db975e2893ea73adf30997858cdee4e2957",
+      "storedSha256": "c759b1da08bf097e89fee231c5ab833170dafef397ad983ba6be11a506b2dcf1",
+      "sourceFile": "sources/c759b1da08bf097e89fee231c5ab833170dafef397ad983ba6be11a506b2dcf1.sanitized.html",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "replacedSubstrings": 1,
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "sourceContentEffect": "Only detected browser-key credential substrings replaced by existing sanitizer. Election/financing prose and official authority links unchanged. Original native bytes retained only in scratch; sanitized representation clearly labeled."
+    }
+  ],
+  "credentialValuesDisclosed": 0
+}

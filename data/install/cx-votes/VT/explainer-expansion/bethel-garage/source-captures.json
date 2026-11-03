@@ -1,0 +1,105 @@
+[
+  {
+    "requestedUrl": "https://townofbethelvt.com/vertical/sites/%7B46C5C479-45BC-4485-9BD0-06530D0ACFB2%7D/uploads/Selectboard_Packet_9_28_2026.pdf",
+    "finalUrl": "https://townofbethelvt.com/vertical/sites/%7B46C5C479-45BC-4485-9BD0-06530D0ACFB2%7D/uploads/Selectboard_Packet_9_28_2026.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:48:23.741284+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "e3fe09e81fd68aa5d03e8d8350c606c2ee12bc60199aeb0fcaa4deb8ec671f11",
+    "storedHash": "e3fe09e81fd68aa5d03e8d8350c606c2ee12bc60199aeb0fcaa4deb8ec671f11",
+    "rawFormat": "DERIVED_PDF_OPERATIVE_DOCUMENT_PAGES",
+    "sourceFile": "sources/e3fe09e81fd68aa5d03e8d8350c606c2ee12bc60199aeb0fcaa4deb8ec671f11.derived.pdf",
+    "encoding": "identity",
+    "originalNativeSha256": "90c157840a5bb3d6fd092301826b7bdf0747f0e5c2320a2e921f357ddaffb055",
+    "originalNativeBytes": 33368370,
+    "storedBytes": 1807068,
+    "sourceTextFile": "sources/d9ebf345a37e39a28eb5bcfa206e3043f06dde07a9ec108bc6b9b1b856c0c4d1.extracted.txt",
+    "extractedTextSha256": "d9ebf345a37e39a28eb5bcfa206e3043f06dde07a9ec108bc6b9b1b856c0c4d1",
+    "sourceTextFormat": "COMPLETE_OPERATIVE_PAGES_OCR_PLUS_SEPARATE_VISUALLY_VERIFIED_PAGE28_QUESTION_TRANSCRIPT",
+    "hashScope": "rawHash/storedHash bind this derived4-pagePDF, not the original full native HTTP bytes. originalNativeSha256 binds full native33,368,370bytePDF retained only in scratch. Original page23→derived1,24→2,27→3,28→4. All four operative pages visually reviewed; derivative text is separately hashed.",
+    "originalPages": [
+      23,
+      24,
+      27,
+      28
+    ],
+    "pageMapping": [
+      {
+        "originalPage": 23,
+        "derivedPage": 1
+      },
+      {
+        "originalPage": 24,
+        "derivedPage": 2
+      },
+      {
+        "originalPage": 27,
+        "derivedPage": 3
+      },
+      {
+        "originalPage": 28,
+        "derivedPage": 4
+      }
+    ],
+    "derivation": "PyMuPDFinsert_pdf copies original pages23,24,27,28 into a separately labeled derived PDF; no changes to page content.",
+    "originalFullDocumentArchivedInBranch": false
+  },
+  {
+    "requestedUrl": "https://townofbethelvt.com/",
+    "finalUrl": "https://townofbethelvt.com/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:38:37.121713+00:00",
+    "contentType": "text/html",
+    "rawHash": "6aace0d6680cfda05d7d41ed56dcab4ef7971f22d75a64019b896ad52dd1c245",
+    "storedHash": "6aace0d6680cfda05d7d41ed56dcab4ef7971f22d75a64019b896ad52dd1c245",
+    "rawFormat": "SANITIZED_SOURCE_TEXT",
+    "sourceFile": "sources/6aace0d6680cfda05d7d41ed56dcab4ef7971f22d75a64019b896ad52dd1c245.sanitized.html",
+    "encoding": "identity",
+    "originalNativeSha256": "ada9696008b281b72c6810640a94c78b487b061cdc7c39cca850c7a44b449363",
+    "originalNativeBytes": 52993,
+    "storedBytes": 52984,
+    "sourceTextFile": "sources/9b024a359269e2b357204962d312552df9328440483374d3e5d5f56bfe857d3f.extracted.txt",
+    "extractedTextSha256": "9b024a359269e2b357204962d312552df9328440483374d3e5d5f56bfe857d3f",
+    "sourceTextFormat": "HTML_TEXT",
+    "hashScope": "rawHash/storedHash bind the credential-sanitized official HTML representation; originalNativeSha256 separately binds actual native HTTP bytes retained only in scratch. Official question, financing explanation and authority links unchanged.",
+    "sanitizerVersion": "fx-cred-v1-2026-08-28"
+  },
+  {
+    "requestedUrl": "https://townofbethelvt.com/vertical/sites/%7B46C5C479-45BC-4485-9BD0-06530D0ACFB2%7D/uploads/SBMinutes9-28-2026_Approved_docx.docx",
+    "finalUrl": "https://townofbethelvt.com/vertical/sites/%7B46C5C479-45BC-4485-9BD0-06530D0ACFB2%7D/uploads/SBMinutes9-28-2026_Approved_docx.docx",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:53:42.938320+00:00",
+    "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "rawHash": "4156d9a3d5e5cf49b27325279660420b90cf30ad78db1c658327b68b22e365b5",
+    "storedHash": "4156d9a3d5e5cf49b27325279660420b90cf30ad78db1c658327b68b22e365b5",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/4156d9a3d5e5cf49b27325279660420b90cf30ad78db1c658327b68b22e365b5.docx",
+    "encoding": "identity",
+    "originalNativeSha256": "4156d9a3d5e5cf49b27325279660420b90cf30ad78db1c658327b68b22e365b5",
+    "originalNativeBytes": 30175,
+    "storedBytes": 30175,
+    "sourceTextFile": "sources/0942ba08ba132be22561bb6481289172406b844b9e502536a12c2e1bdc5eb513.extracted.txt",
+    "extractedTextSha256": "0942ba08ba132be22561bb6481289172406b844b9e502536a12c2e1bdc5eb513",
+    "sourceTextFormat": "WORDPROCESSINGML_PARAGRAPH_TEXT"
+  },
+  {
+    "requestedUrl": "https://www.bethelvt.govoffice3.com/",
+    "finalUrl": "https://townofbethelvt.com/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:54:47.552937+00:00",
+    "contentType": "text/html",
+    "rawHash": "c759b1da08bf097e89fee231c5ab833170dafef397ad983ba6be11a506b2dcf1",
+    "storedHash": "c759b1da08bf097e89fee231c5ab833170dafef397ad983ba6be11a506b2dcf1",
+    "rawFormat": "SANITIZED_SOURCE_TEXT",
+    "sourceFile": "sources/c759b1da08bf097e89fee231c5ab833170dafef397ad983ba6be11a506b2dcf1.sanitized.html",
+    "encoding": "identity",
+    "originalNativeSha256": "ad7f8d03ffbfb1cb57faf3b4b5506db975e2893ea73adf30997858cdee4e2957",
+    "originalNativeBytes": 52993,
+    "storedBytes": 52984,
+    "sourceTextFile": "sources/9b024a359269e2b357204962d312552df9328440483374d3e5d5f56bfe857d3f.extracted.txt",
+    "extractedTextSha256": "9b024a359269e2b357204962d312552df9328440483374d3e5d5f56bfe857d3f",
+    "sourceTextFormat": "WORDPROCESSINGML_PARAGRAPH_TEXT",
+    "hashScope": "rawHash/storedHash bind the credential-sanitized official HTML representation; originalNativeSha256 separately binds actual native HTTP bytes retained only in scratch. Official question, financing explanation and authority links unchanged.",
+    "sanitizerVersion": "fx-cred-v1-2026-08-28"
+  }
+]

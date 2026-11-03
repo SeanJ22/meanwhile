@@ -1,0 +1,660 @@
+[
+  {
+    "title": "Supervisor, Town of Hempstead",
+    "page": 3,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Joe Scianablo",
+        "sourceName": "Joe Scianablo",
+        "sourceParty": "DEM",
+        "page": 3
+      },
+      {
+        "name": "John R. Ferretti",
+        "sourceName": "John R. Ferretti",
+        "sourceParty": "REP,CON",
+        "page": 3
+      },
+      {
+        "name": "Martin Oliner",
+        "sourceName": "Martin Oliner",
+        "sourceParty": "CITIZENS NOT DEVELOPERS",
+        "page": 3
+      }
+    ]
+  },
+  {
+    "title": "Town Clerk, Town of Hempstead",
+    "page": 3,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Joylette E. Williams",
+        "sourceName": "Joylette E. Williams",
+        "sourceParty": "DEM",
+        "page": 3
+      },
+      {
+        "name": "Kate Murray",
+        "sourceName": "Kate Murray",
+        "sourceParty": "REP,CON",
+        "page": 3
+      }
+    ]
+  },
+  {
+    "title": "Supervisor, Town of North Hempstead",
+    "page": 4,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Sean Michael McCarthy",
+        "sourceName": "Sean Michael McCarthy",
+        "sourceParty": "DEM",
+        "page": 4
+      },
+      {
+        "name": "Jennifer S. DeSena",
+        "sourceName": "Jennifer S. DeSena",
+        "sourceParty": "REP,CON",
+        "page": 4
+      }
+    ]
+  },
+  {
+    "title": "Supervisor, Town of Oyster Bay",
+    "page": 4,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "James T. Hoyle",
+        "sourceName": "James T. Hoyle",
+        "sourceParty": "DEM",
+        "page": 4
+      },
+      {
+        "name": "Joseph S. Saladino",
+        "sourceName": "Joseph S. Saladino",
+        "sourceParty": "REP,CON",
+        "page": 4
+      }
+    ]
+  },
+  {
+    "title": "Town Clerk, Town of Oyster Bay",
+    "page": 4,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Shreya Gupta",
+        "sourceName": "Shreya Gupta",
+        "sourceParty": "DEM",
+        "page": 4
+      },
+      {
+        "name": "Richard L. LaMarca",
+        "sourceName": "Richard L. LaMarca",
+        "sourceParty": "REP,CON",
+        "page": 4
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 1st District",
+    "page": 4,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Scott M. Davis",
+        "sourceName": "Scott M. Davis",
+        "sourceParty": "DEM",
+        "page": 4
+      },
+      {
+        "name": "Edward J. Lino",
+        "sourceName": "Edward J. Lino",
+        "sourceParty": "REP,CON",
+        "page": 4
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 2nd District",
+    "page": 4,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Viviana L. Russell",
+        "sourceName": "Viviana L. Russell",
+        "sourceParty": "DEM",
+        "page": 4
+      },
+      {
+        "name": "Lamont E. Johnson",
+        "sourceName": "Lamont E. Johnson",
+        "sourceParty": "REP,CON",
+        "page": 4
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 3rd District",
+    "page": 4,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Carri\u00e9 Solages",
+        "sourceName": "Carri\u00e9 Solages",
+        "sourceParty": "DEM,WFP",
+        "page": 4
+      },
+      {
+        "name": "Kadeem M. Brown",
+        "sourceName": "Kadeem M. Brown",
+        "sourceParty": "REP,CON",
+        "page": 4
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 4th District",
+    "page": 4,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Michael J. Pentola",
+        "sourceName": "Michael J. Pentola",
+        "sourceParty": "DEM",
+        "page": 4
+      },
+      {
+        "name": "Patrick Mullaney",
+        "sourceName": "Patrick Mullaney",
+        "sourceParty": "REP,CON",
+        "page": 4
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 5th District",
+    "page": 4,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Olena Nicks",
+        "sourceName": "Olena Nicks",
+        "sourceParty": "DEM",
+        "page": 4
+      },
+      {
+        "name": "Moshe E. Hill",
+        "sourceName": "Moshe E. Hill",
+        "sourceParty": "REP,CON",
+        "page": 4
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 6th District",
+    "page": 4,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Debra S. Mul\u00e9",
+        "sourceName": "Debra S. Mul\u00e9",
+        "sourceParty": "DEM",
+        "page": 4
+      },
+      {
+        "name": "Benjamin Jackson",
+        "sourceName": "Benjamin Jackson",
+        "sourceParty": "REP,CON",
+        "page": 4
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 7th District",
+    "page": 5,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Douglas J. Segan",
+        "sourceName": "Douglas J. Segan",
+        "sourceParty": "DEM",
+        "page": 5
+      },
+      {
+        "name": "Howard J. Kopel",
+        "sourceName": "Howard J. Kopel",
+        "sourceParty": "REP,CON",
+        "page": 5
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 8th District",
+    "page": 5,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Joy Jankunas",
+        "sourceName": "Joy Jankunas",
+        "sourceParty": "DEM",
+        "page": 5
+      },
+      {
+        "name": "John J. Giuffre",
+        "sourceName": "John J. Giuffre",
+        "sourceParty": "REP,CON",
+        "page": 5
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 9th District",
+    "page": 5,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Juleigh Chin",
+        "sourceName": "Juleigh Chin",
+        "sourceParty": "DEM",
+        "page": 5
+      },
+      {
+        "name": "Scott P. Strauss",
+        "sourceName": "Scott P. Strauss",
+        "sourceParty": "REP,CON",
+        "page": 5
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 10th District",
+    "page": 5,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Skylar A. Epstein",
+        "sourceName": "Skylar A. Epstein",
+        "sourceParty": "DEM",
+        "page": 5
+      },
+      {
+        "name": "Mazi Melesa Pilip",
+        "sourceName": "Mazi Melesa Pilip",
+        "sourceParty": "REP,CON",
+        "page": 5
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 11th District",
+    "page": 5,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Delia M. DeRiggi Whitton",
+        "sourceName": "Delia M. DeRiggi Whitton",
+        "sourceParty": "DEM",
+        "page": 5
+      },
+      {
+        "name": "John Canning",
+        "sourceName": "John Canning",
+        "sourceParty": "REP,CON",
+        "page": 5
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 12th District",
+    "page": 5,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Michael Vanunu",
+        "sourceName": "Michael Vanunu",
+        "sourceParty": "DEM",
+        "page": 5
+      },
+      {
+        "name": "Michael J. Giangregorio",
+        "sourceName": "Michael J. Giangregorio",
+        "sourceParty": "REP,CON",
+        "page": 5
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 13th District",
+    "page": 5,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Christina M. Lemyre",
+        "sourceName": "Christina M. Lemyre",
+        "sourceParty": "DEM",
+        "page": 5
+      },
+      {
+        "name": "Thomas McKevitt",
+        "sourceName": "Thomas McKevitt",
+        "sourceParty": "REP,CON",
+        "page": 5
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 14th District",
+    "page": 5,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Cynthia Nu\u00f1ez",
+        "sourceName": "Cynthia Nu\u00f1ez",
+        "sourceParty": "DEM",
+        "page": 5
+      },
+      {
+        "name": "Anthony B. Capone",
+        "sourceName": "Anthony B. Capone",
+        "sourceParty": "REP,CON",
+        "page": 5
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 15th District",
+    "page": 5,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "David Louis Boldt Smith",
+        "sourceName": "David Louis Boldt Smith",
+        "sourceParty": "DEM",
+        "page": 5
+      },
+      {
+        "name": "Kayla Lianne Knight",
+        "sourceName": "Kayla Lianne Knight",
+        "sourceParty": "REP,CON",
+        "page": 5
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 16th District",
+    "page": 6,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Jared Behr",
+        "sourceName": "Jared Behr",
+        "sourceParty": "DEM",
+        "page": 6
+      },
+      {
+        "name": "Olivia G. Pfeifer",
+        "sourceName": "Olivia G. Pfeifer",
+        "sourceParty": "REP,CON",
+        "page": 6
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 17th District",
+    "page": 6,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Ryan J. Johnson",
+        "sourceName": "Ryan J. Johnson",
+        "sourceParty": "DEM",
+        "page": 6
+      },
+      {
+        "name": "Rose Marie Walker",
+        "sourceName": "Rose Marie Walker",
+        "sourceParty": "REP,CON",
+        "page": 6
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 18th District",
+    "page": 6,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Graham Musynske",
+        "sourceName": "Graham Musynske",
+        "sourceParty": "DEM",
+        "page": 6
+      },
+      {
+        "name": "Samantha A. Goetz",
+        "sourceName": "Samantha A. Goetz",
+        "sourceParty": "REP,CON",
+        "page": 6
+      }
+    ]
+  },
+  {
+    "title": "County Legislator, 19th District",
+    "page": 6,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "Christine Barlow",
+        "sourceName": "Christine Barlow",
+        "sourceParty": "DEM",
+        "page": 6
+      },
+      {
+        "name": "James D. Kennedy",
+        "sourceName": "James D. Kennedy",
+        "sourceParty": "REP,CON",
+        "page": 6
+      }
+    ]
+  },
+  {
+    "title": "Justice of the Supreme Court, 10th Judicial District",
+    "page": 6,
+    "voteFor": 8,
+    "voteInstruction": "Vote for Eight (8)",
+    "candidates": [
+      {
+        "name": "Richard Ambro",
+        "sourceName": "Richard Ambro",
+        "sourceParty": "DEM, REP",
+        "page": 6
+      },
+      {
+        "name": "Anthony R. Portesy",
+        "sourceName": "Anthony R. Portesy",
+        "sourceParty": "CON",
+        "page": 6
+      },
+      {
+        "name": "Leonard D. Steinman",
+        "sourceName": "Leonard  D. Steinman",
+        "sourceParty": "DEM, REP, CON",
+        "page": 6
+      },
+      {
+        "name": "Mary E. Porter",
+        "sourceName": "Mary E. Porter",
+        "sourceParty": "DEM",
+        "page": 6
+      },
+      {
+        "name": "Kelly A. Reape",
+        "sourceName": "Kelly A. Reape",
+        "sourceParty": "REP, CON",
+        "page": 6
+      },
+      {
+        "name": "Joy M. Watson",
+        "sourceName": "Joy M. Watson",
+        "sourceParty": "DEM, REP, CON",
+        "page": 6
+      },
+      {
+        "name": "Stephen L. Ukeiley",
+        "sourceName": "Stephen L. Ukeiley",
+        "sourceParty": "DEM",
+        "page": 6
+      },
+      {
+        "name": "Karen M. Wilutis",
+        "sourceName": "Karen M. Wilutis",
+        "sourceParty": "REP, CON",
+        "page": 6
+      },
+      {
+        "name": "Eric Sachs",
+        "sourceName": "Eric Sachs",
+        "sourceParty": "DEM",
+        "page": 6
+      },
+      {
+        "name": "John Iliou",
+        "sourceName": "John Iliou",
+        "sourceParty": "REP, CON",
+        "page": 6
+      },
+      {
+        "name": "William D. Wexler",
+        "sourceName": "William D. Wexler",
+        "sourceParty": "DEM",
+        "page": 6
+      },
+      {
+        "name": "James A. McDonaugh",
+        "sourceName": "James A. McDonaugh",
+        "sourceParty": "REP, CON",
+        "page": 6
+      },
+      {
+        "name": "John Kelly",
+        "sourceName": "John Kelly",
+        "sourceParty": "DEM",
+        "page": 6
+      },
+      {
+        "name": "Mary Kate Mullen",
+        "sourceName": "Mary Kate Mullen",
+        "sourceParty": "REP, CON",
+        "page": 6
+      }
+    ]
+  },
+  {
+    "title": "Family Court Judge",
+    "page": 7,
+    "voteFor": 2,
+    "voteInstruction": "Vote for Two (2)",
+    "candidates": [
+      {
+        "name": "Ellen R. Greenberg",
+        "sourceName": "Ellen R. Greenberg",
+        "sourceParty": "DEM, REP, CON",
+        "page": 7
+      },
+      {
+        "name": "Ayesha Keri Brantley",
+        "sourceName": "Ayesha Keri Brantley",
+        "sourceParty": "DEM, REP, CON",
+        "page": 7
+      }
+    ]
+  },
+  {
+    "title": "District Court Judge - 2nd District",
+    "page": 7,
+    "voteFor": 3,
+    "voteInstruction": "Vote for Three (3)",
+    "candidates": [
+      {
+        "name": "Tricia M. Ferrell",
+        "sourceName": "Tricia M. Ferrell",
+        "sourceParty": "DEM, REP, CON",
+        "page": 7
+      },
+      {
+        "name": "Michael W. Alpert",
+        "sourceName": "Michael W. Alpert",
+        "sourceParty": "DEM, REP, CON",
+        "page": 7
+      },
+      {
+        "name": "Lauren Doddato Goldman",
+        "sourceName": "Lauren Doddato Goldman",
+        "sourceParty": "DEM, REP, CON",
+        "page": 7
+      }
+    ]
+  },
+  {
+    "title": "District Court Judge - 3rd District",
+    "page": 7,
+    "voteFor": 2,
+    "voteInstruction": "Vote for Two (2)",
+    "candidates": [
+      {
+        "name": "Lisa M. Petrocelli",
+        "sourceName": "Lisa M. Petrocelli",
+        "sourceParty": "DEM, REP, CON",
+        "page": 7
+      },
+      {
+        "name": "William P. Bodkin",
+        "sourceName": "William P. Bodkin",
+        "sourceParty": "DEM, REP, CON",
+        "page": 7
+      }
+    ]
+  },
+  {
+    "title": "District Court Judge - 4th District",
+    "page": 7,
+    "voteFor": 1,
+    "voteInstruction": "Vote for One (1)",
+    "candidates": [
+      {
+        "name": "David W. Wright",
+        "sourceName": "David W. Wright",
+        "sourceParty": "DEM, REP, CON",
+        "page": 7
+      }
+    ]
+  }
+]

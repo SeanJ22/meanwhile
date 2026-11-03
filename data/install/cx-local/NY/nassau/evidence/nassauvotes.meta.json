@@ -1,0 +1,9 @@
+{
+  "url": "https://nassauvotes.org/",
+  "finalUrl": "https://www.nassaucountyny.gov/566/Board-of-Elections",
+  "status": 200,
+  "fetchedAt": "2026-11-03T04:50:11.409056+00:00",
+  "sha256": "4297b78b712a74b41e67ced04c590bca3888fc8c4bcc59998438b793ecab61b9",
+  "bytes": 76532,
+  "contentType": "text/html; charset=utf-8"
+}

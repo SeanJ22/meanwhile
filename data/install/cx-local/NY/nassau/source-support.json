@@ -1,0 +1,57 @@
+[
+  {
+    "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+    "finalUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+    "sourceCheckedAt": "2026-11-03T04:46:10.296889+00:00",
+    "sha256": "cd2f225802c0d8e439b1c4b385c5833e315bab3546be93137be58f8a2052c0de",
+    "sourceFile": "sources/cd2f225802c0d8e439b1c4b385c5833e315bab3546be93137be58f8a2052c0de.source",
+    "excerptFile": "sources/d551afc3e7b8f41288254b085d36eda4fdc1257c0083596854138e94e9f43d1d.txt",
+    "excerptSha256": "d551afc3e7b8f41288254b085d36eda4fdc1257c0083596854138e94e9f43d1d",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Original native response bytes, with separately hashed exact text extraction.",
+    "evidence": "Current official BOE homepage directly links this seven-page General Election2026 Candidate List as of September18. Public DocumentCenter BOE folder lists this as the latest candidate-list publication, modified September21. Entire29 local office fields/71 named candidates and all party lines/vote limits extracted from native PDF by row/column coordinates. The document explicitly says subject to change. This is official candidate-list coverage, not a recovered Nassau actual sample ballot; final layout/later replacements remain an explicit source gap for28 additional local fields."
+  },
+  {
+    "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+    "finalUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+    "sourceCheckedAt": "2026-11-03T04:48:33.450378+00:00",
+    "sha256": "10d95f5d2d6b282f98f13e9e771c78e3fb48bfdba4ac38d0c477d383a7712f8e",
+    "sourceFile": "sources/10d95f5d2d6b282f98f13e9e771c78e3fb48bfdba4ac38d0c477d383a7712f8e.source",
+    "excerptFile": "sources/c0d5bd2bce04d10846f04cadbd4da3a0fbe5e7f0a963608aa1e2e7a6811cdd5b.txt",
+    "excerptSha256": "c0d5bd2bce04d10846f04cadbd4da3a0fbe5e7f0a963608aa1e2e7a6811cdd5b",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Original native response bytes, with separately hashed exact text extraction.",
+    "evidence": "Current native state general-election certification explicitly identifies Supreme Court District10, Nassau & Suffolk counties, vote8. It corroborates the14 shared canonical candidacy IDs and full fusion party sets; both exact held whole-county membership IDs are re-supported by the source-exact page133 header."
+  },
+  {
+    "sourceUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure",
+    "finalUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure",
+    "sourceCheckedAt": "2026-11-03T04:48:33.464394+00:00",
+    "sha256": "26cc3f701e1a551ed2d55f1bad2ffcfcff6a575f45c5b00c11af8f91e873bebd",
+    "sourceFile": "sources/26cc3f701e1a551ed2d55f1bad2ffcfcff6a575f45c5b00c11af8f91e873bebd.source",
+    "excerptFile": "sources/ab09df1bc2dbe27a13fb88d65f2ba43b1ca11840aae2aa7d83bac8fde18eaa28.txt",
+    "excerptSha256": "ab09df1bc2dbe27a13fb88d65f2ba43b1ca11840aae2aa7d83bac8fde18eaa28",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Original native response bytes, with separately hashed exact text extraction.",
+    "evidence": "Official court rule212.2 defines Nassau DistrictCourt2 as Hempstead town AND LongBeach city,3 as NorthHempstead town,4 as OysterBay town AND GlenCove city. These complete unions are represented with precise county-scoped court district IDs and five official whole-member links. No District2/4 election is narrowed to a town alone."
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+    "finalUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+    "sourceCheckedAt": "2026-11-03T04:37:05.040209+00:00",
+    "sha256": "75b339c4412813b3177e44e6e43789f9e42abbc76131fbbbb2a28ed0046b7e9f",
+    "sourceFile": "sources/75b339c4412813b3177e44e6e43789f9e42abbc76131fbbbb2a28ed0046b7e9f.source",
+    "excerptFile": "sources/75b339c4412813b3177e44e6e43789f9e42abbc76131fbbbb2a28ed0046b7e9f.txt",
+    "excerptSha256": "75b339c4412813b3177e44e6e43789f9e42abbc76131fbbbb2a28ed0046b7e9f",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured official source text; not original PDF/HTML bytes",
+    "evidence": "Suffolk current actual General Election2026 sample booklet independently corroborates the complete14-candidate shared Supreme10 field. Nassau-only local fields are not inferred from Suffolk samples. Complete official 80-page General Election2026 Sample Ballot Booklet, published Oct5, 39 styles/78 numbered ballot pages plus cover and contents. Complete local nominee blocks verified for17 offices,46 unique named choices. Blank write-ins excluded and fusion party lines deduplicated. Source text preserves exact PDF row order; several judicial grid headers precede the joint candidate grid. Quoted full pages retain that source layout, never recast all grid names as one race. Native county/apps2/www downloads returned403/1010; hash covers captured text, not PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full source extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "readerHttpStatus": 200
+    }
+  }
+]

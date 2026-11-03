@@ -1,0 +1,2134 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base href="https://www.northhempsteadny.gov/" />
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+
+
+	 
+	<!-- Metadata Area Starts -->
+	<title>Town of North Hempstead, NY</title>
+	<meta property="og:title" content="Town of North Hempstead, NY" />
+	<meta property="og:image" content="//cms2.revize.com/revize/townofnorthhempstead/_assets_/images/logo.png" />
+	<meta name="robots" content="index, follow">
+
+
+	
+
+
+<link href="/revize/plugins/setup/css/revize.css" rel="stylesheet" type="text/css" />
+
+
+
+<script type="text/javascript">
+
+
+
+</script>
+
+
+
+
+
+
+	
+	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+	<link rel="stylesheet" href="https://www.northhempsteadny.gov/_assets_/fonts/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://www.northhempsteadny.gov/_assets_/plugins/fullpage/jquery.fullpage.css">
+	<link rel="stylesheet" href="https://www.northhempsteadny.gov/_assets_/plugins/ytplayer/jquery.mb.YTPlayer.min.css">
+	<link rel="stylesheet" href="https://www.northhempsteadny.gov/_assets_/css/layout.css?v=RWRh65KAogBPxev41">
+	<link rel="shortcut icon" href="https://www.northhempsteadny.gov/_assets_/images/favicon.ico">
+	<link rel="apple-touch-icon" href="https://www.northhempsteadny.gov/_assets_/images/touch-icon-iphone.png">
+	<link rel="apple-touch-icon" href="https://www.northhempsteadny.gov/_assets_/images/touch-icon.png">
+	<style>#events-tabs .tab:nth-of-type(4) {background: #DDFBFF;color: #000000;}</style>
+
+
+
+	<link href="/revize/plugins/revize_calendar/core/main.css" rel="stylesheet" />
+<link href="/revize/plugins/revize_calendar/daygrid/main.min.css" rel="stylesheet" />
+<link href="/revize/plugins/revize_calendar/timegrid/main.min.css" rel="stylesheet" />
+<link href="/revize/plugins/revize_calendar/list/main.min.css" rel="stylesheet" />
+<link href="https://www.northhempsteadny.gov/_assets_/plugins/revizeCalendar/css/mini.css" rel="stylesheet" />
+<link href="/revize/plugins/revize_calendar/core/nav-panels.css" rel="stylesheet" /><script>
+	var defaultCalendarColor = "#3788d8";
+	var ImportCals = ["2","9","11","15","22",];
+	var calendarProps = {'1' : { 'color' : '#0f4780' , 'name' : 'Meetings' },
+'2' : { 'color' : '#474043' , 'name' : 'Parks' },
+'3' : { 'color' : '#cee468' , 'name' : 'Community Events' },
+'8' : { 'color' : '#800020' , 'name' : 'Solid Waste Manangement Events' },
+'9' : { 'color' : '#4a0b8a' , 'name' : 'Project Independence' },
+'11' : { 'color' : '#f70d0d' , 'name' : 'Historic Landmarks Preservation Commission' },
+'12' : { 'color' : '' , 'name' : 'calendar-list-options' },
+'14' : { 'color' : '#d12781' , 'name' : 'Michael J Tully Park Schedule' },
+'15' : { 'color' : '#87ebaa' , 'name' : 'Yes We Can Community Center' },
+'16' : { 'color' : '#0f8718' , 'name' : 'Receiver of Taxes' },
+'17' : { 'color' : '#b65dde' , 'name' : 'BTDC Meetings' },
+'18' : { 'color' : '#e88321' , 'name' : 'Town Clerk' },
+'21' : { 'color' : '#8e9aa6' , 'name' : 'Board of Zoning & Appeals' },
+'22' : { 'color' : '#3787d8' , 'name' : 'Waterfront Advisory Commission' },
+};
+	var RZCalendarTimezone = "";
+</script>
+
+
+
+</head>
+
+<body id="homepage" class="user-logged-in">
+
+
+
+
+
+
+<script type="text/javascript">
+if (typeof(RZ) == 'undefined') RZ = {};
+if (!RZ.link) RZ.link = new Object();
+RZ.pagetype = 'template'
+RZ.baseurlprefix = ''
+RZ.baseurlpath = ''
+RZ.protocolRelativeRevizeBaseUrl='//cms2.revize.com'
+
+RZ.pagetemplatename = 'index'
+RZ.pagetemplateid = '17'
+RZ.pagemodule = ""
+RZ.pagemoduleid = ''
+RZ.pagerecordid = '';
+
+RZ.pageid = "index";
+RZ.pageparentid = '';
+RZ.pagesectionid = '0';
+RZ.pagesectionname = 'Home Page';
+RZ.pagesectionlevel = '0';
+RZ.pagesectionfolder = '';
+RZ.pagesectionfilter = 'sectionid=0';
+RZ.pagelinkfilter = 'linklevel=0 and linksectionid=0';
+RZ.pagelinklevel = '0';
+RZ.pagelinkid = '-1';
+RZ.pageidfield = '';
+
+RZ.isnewrecord = false;
+RZ.editmodule = "";
+RZ.editrecordid = '';
+RZ.editrecordversion = '';
+RZ.editversion = '';
+RZ.editaction = '';
+
+RZ.page_roles = ''
+RZ.page_users = 'c7271614bf6bfb2a17b9a293d0de1f3732bf482e810539c8c5b99fdfeebdbba8'
+RZ.page_key = "index[]"
+RZ.parent_key = ''
+RZ.inherit_key = 'index[]'
+RZ.workflowname = ''
+RZ.permissions_options = 'warningsOFF'
+RZ.permissions_module = 'webspace_page_permissions'
+RZ.webspace = "townofnorthhempstead"
+RZ.webspacedesc = "";
+
+RZ.featurespattern = '(EZ)';
+null
+
+RZ.webspacelinksurl = ''
+RZ.webspacelinksurl = './webspace/links.html'
+RZ.workflowlist = ''
+RZ.revizeserverurl = 'https://cms2.revize.com/revize/townofnorthhempstead';
+
+if (!RZ.nextseq) RZ.nextseq = {linknames:{},modules:{}};
+
+RZ.webspace_config = new Object();
+RZ.webspace_config.admin_email = "noreply@northhempstgeadny.gov";
+RZ.webspace_config.calendar_options = "max_events=6";
+RZ.webspace_config.form_captcha = "yes";
+RZ.webspace_config.form_server = "revizeserver";
+RZ.webspace_config.form_technology = "jsp";
+RZ.webspace_config.formwizard_ftp_password = "";
+RZ.webspace_config.formwizard_ftp_port = "";
+RZ.webspace_config.formwizard_ftp_server = "";
+RZ.webspace_config.formwizard_ftp_user = "";
+RZ.webspace_config.formwizard_setup = "yes";
+RZ.webspace_config.formwizard_smtp_password = "xxx";
+RZ.webspace_config.formwizard_smtp_server = "xxx";
+RZ.webspace_config.formwizard_smtp_user = "xxx";
+RZ.webspace_config.google_analytics = "";
+RZ.webspace_config.home_pageid = "0";
+RZ.webspace_config.home_sectionid = "0";
+RZ.webspace_config.home_template = "home,index,sitemap";
+RZ.webspace_config.icon_email = "<img src=https://www.northhempsteadny.gov/\"/revize/images/email_icon_yellow.gif\" width=\"16\" border=\"0\" height=\"17\" title=\"Request email notification when page changes\" alt=\"Request email notification when page changes\" style=\"\" />";
+RZ.webspace_config.image_maxheight = "3000";
+RZ.webspace_config.image_maxwidth = "3000";
+RZ.webspace_config.image_setup = "yes";
+RZ.webspace_config.livesite_url = "";
+RZ.webspace_config.menu_links_module = "links";
+RZ.webspace_config.menu_newsection = "";
+RZ.webspace_config.menu_nexturl = "webspace_menu-editform.jsp";
+RZ.webspace_config.menu_sections_module = "sections";
+RZ.webspace_config.menu_system = "custom";
+RZ.webspace_config.menu_version = "1.00";
+RZ.webspace_config.new_menu_manager_enabled = "yes";
+RZ.webspace_config.notify_options = "hide_text=no";
+RZ.webspace_config.notify_return_url = "e-notify/index.php";
+RZ.webspace_config.rte_setup = "yes";
+RZ.webspace_config.to_email = "webpageupdate_subscribers@revize.com";
+RZ.webspace_config.use_folders = "1";
+
+RZ.isauthenticationactive = true
+RZ.warning = ""
+RZ.adminwinmsg = null
+
+RZ.channels = 'revize,production';
+RZ.jsversion = 1.2</script>
+<script type="text/javascript" src="/revize/util/snippet_helper.js"></script>
+
+
+<a href="#quick-links" id="skip" tabindex="0" class="rz-btn">Skip to main content</a>
+
+
+
+
+
+
+
+ 
+
+<a href="#main" id="skip" tabindex="0" class="btn">Skip to main content</a> 
+
+
+
+<div class="site-header"><!-- always use this class for main header -->
+	<a href="#main" id="skip" tabindex="0" class="button">Skip to main content</a>
+	
+
+			<div id="alert" class="has-edit-buttons">
+			
+				<div class="rz-btns-container">
+					<script language="JavaScript" type="text/JavaScript">
+											RZ.module = 'global';
+											RZ.nexturl = 'editforms/banner-editform.jsp';
+											RZ.img = '<span class="rzBtn">Edit Alert</span>';
+											RZ.set = 'pageid=banner-header';
+											RZ.options = '';
+											if (typeof RZaction != 'undefined') RZaction('editform');
+					</script>
+				</div>	
+				
+				
+
+					<div class="container">	
+						<div id="alert-in">
+							<!-- <div style="text-align:center; padding:14px 20px; font-family:Montserrat, sans-serif; font-size:18px;"> <strong>Notice:</strong> Wellness Wednesday event at Manorhaven Beach Park is cancelled for tomorrow <strong>7/29/2026</strong></div> --> 
+								<a href="" style="display:none!important" aria-hidden="true"" target="_blank" class="alert-link"> link </a> 
+								    <a href="" style="display:none!important" aria-hidden="true"" target="_blank" class="alert-btn">
+											Button Text
+									</a>
+								<a id="alert-close" href="#"><img src="https://www.northhempsteadny.gov/_assets_/images/alert-close.png" alt="alert close"></a>
+						</div>
+					</div>
+
+				
+
+
+
+			</div>
+
+
+	<div class="container">
+		<div class="site__header-in">
+			<div class="logo-wrap">
+				<a href="https://www.northhempsteadny.gov/./" id="logo"><img src="https://www.northhempsteadny.gov/_assets_/images/logo.png" alt="navigation logo"></a>
+				<div id="toggles" class="d-lg-none">
+					<div id="search-toggle" class="fa fa-search"></div>
+					<div id="nav-toggle" class="fa fa-bars"></div>
+				</div><!--/#toggles-->
+			</div><!-- /.logo-wrap -->
+			<nav id="header-nav" class="has-edit-buttons">
+				
+				 						<div class="rz-btns-container">
+							  
+							<script language="JavaScript" type="text/JavaScript">
+								RZ.module = 'revize_topnav';
+								RZ.nexturl = "/revize/plugins/menus/webspace_menu-editlist.jsp?pageid=header&"
+										+ "linksfilter=linkplacement=leftnav and linkparentid=0&"
+										+ "numberoflevels=3&"
+										+ "linkoptions=url,template,file&"
+										+ "linknewsection=*all*";
+								RZ.img = '<span class="rzBtn rzBtn-sm">Edit Main Navigation</span>';
+								RZ.caption = '';
+								RZ.set="links.linkplacement=leftnav";
+								RZ.options = '';
+								if (typeof RZaction != 'undefined') RZaction('editlist');
+							</script>
+						</div>	
+									 
+
+
+
+
+
+
+
+ 
+<ul id="nav" class="v2_05-23-2012">
+	<li class="menuLI level0 menuDisplay li-2054"><a class="menuA level0 menuDisplay" href="https://www.northhempsteadny.gov/index.php" target="_self">Home</a></li>
+	<li class="menuLI level0 menuDisplay li-2769"><a class="menuA level0 menuDisplay" href="https://northhempsteadny.live" target="_new"><span style="color: #B22234; font-weight: 600;">America 250</span></a></li>
+	<li class="menuLI level0 menuDisplay li-37 children"><a class="menuA level0 menuDisplay" href="https://www.northhempsteadny.gov/government/index.php" target="_self">Government</a>
+		<ul class="menuUL level1 menuHidden ul-38">
+			<li class="menuLI level1 menuHidden li-38 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/government/supervisor/index.php" target="_self">Supervisor</a>
+				<ul class="menuUL level2 menuHidden ul-39">
+					<li class="menuLI level2 menuHidden li-39"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/supervisor/state_of_the_town_addresses.php" target="_self">State of the Town Addresses</a></li>
+					<li class="menuLI level2 menuHidden li-2416"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/supervisor/senior_scam_prevention_seminars.php" target="_self">Senior Scam Prevention Seminars</a></li>
+					<li class="menuLI level2 menuHidden li-2417"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/supervisor/preventing_drug_abuse.php" target="_self">Preventing Drug Abuse</a></li>
+					<li class="menuLI level2 menuHidden li-2764"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/supervisor/save_our_suburbs.php" target="_self">Save Our Suburbs</a></li>
+					<li class="menuLI level2 menuHidden li-2831"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/supervisor/toys4tots.php" target="_self">Toys For Tots</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-40 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/government/councilmembers/index.php" target="_self">Councilmembers</a>
+				<ul class="menuUL level2 menuHidden ul-41">
+					<li class="menuLI level2 menuHidden li-41"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/councilmembers/district_1.php" target="_self">District 1 - Robert Troiano, Jr.</a></li>
+					<li class="menuLI level2 menuHidden li-42"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/councilmembers/district_2.php" target="_self">District 2 - Edward Scott</a></li>
+					<li class="menuLI level2 menuHidden li-43"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/councilmembers/district_3.php" target="_self">District 3 - Dennis Walsh</a></li>
+					<li class="menuLI level2 menuHidden li-44"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/councilmembers/district_4.php" target="_self">District 4 - Christine Liu</a></li>
+					<li class="menuLI level2 menuHidden li-45"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/councilmembers/district_5.php" target="_self">District 5 - Yaron Levy</a></li>
+					<li class="menuLI level2 menuHidden li-46"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/councilmembers/district_6.php" target="_self">District 6 - Mariann Dalimonte</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-47 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/government/boards_commissions/index.php" target="_self">Boards & Commissions</a>
+				<ul class="menuUL level2 menuHidden ul-48">
+					<li class="menuLI level2 menuHidden li-48"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/boards_commissions/town_board/index.php" target="_self">Town Board</a></li>
+					<li class="menuLI level2 menuHidden li-2148"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/boards_commissions/board_of_zoning___appeals/index2.php" target="_self">Board of Zoning & Appeals</a></li>
+					<li class="menuLI level2 menuHidden li-49"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/boards_commissions/board_of_ethics.php" target="_self">Board of Ethics</a></li>
+					<li class="menuLI level2 menuHidden li-51"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/boards_commissions/disability_advisory_committee.php" target="_self">Disability Advisory Committee</a></li>
+					<li class="menuLI level2 menuHidden li-243"><a class="menuA level2 menuHidden" href="http://hempsteadharbor.org" target="_new">Hempstead Harbor Protection Committee</a></li>
+					<li class="menuLI level2 menuHidden li-252"><a class="menuA level2 menuHidden" href="https://manhassetbayprotectioncommittee.org/index.html" target="_new">Manhasset Bay Protection Committee</a></li>
+					<li class="menuLI level2 menuHidden li-145"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/boards_commissions/north_hempstead_arts_advisory_committee.php" target="_self">North Hempstead Arts Advisory Committee</a></li>
+					<li class="menuLI level2 menuHidden li-55"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/boards_commissions/veterans_advisory_committee.php" target="_self">Veterans Advisory Committee</a></li>
+					<li class="menuLI level2 menuHidden li-1924"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/planning_environmental_protection/landmarks/index.php" target="_self">Historic Landmarks Preservation Commission</a></li>
+					<li class="menuLI level2 menuHidden li-2038"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/boards_commissions/waterfront_advisory_commission.php" target="_self">Waterfront Advisory Commission</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-60 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/government/receiver_of_taxes/index.php" target="_self">Receiver of Taxes</a>
+				<ul class="menuUL level2 menuHidden ul-61">
+					<li class="menuLI level2 menuHidden li-61"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/receiver_of_taxes/about_receiver_of_taxes.php" target="_self">About the Receiver of Taxes</a></li>
+					<li class="menuLI level2 menuHidden li-1844"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/receiver_of_taxes/paymytaxes.php" target="_self">Pay My Taxes</a></li>
+					<li class="menuLI level2 menuHidden li-2527"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/calendar.php?calendar=16" target="_new">Tax Calendar</a></li>
+					<li class="menuLI level2 menuHidden li-2528"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/receiver_of_taxes/helpful_links.php" target="_self">Helpful Links</a></li>
+					<li class="menuLI level2 menuHidden li-2526"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/receiver_of_taxes/exemptions_star.php" target="_self">Exemptions & STAR</a></li>
+					<li class="menuLI level2 menuHidden li-2608"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/receiver_of_taxes/tax_exemption_seminar.php" target="_self">Tax Exemption Seminar</a></li>
+					<li class="menuLI level2 menuHidden li-2533"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/receiver_of_taxes/changing_your_information.php" target="_self">Changing Your Information & Mortgage Satisfaction</a></li>
+					<li class="menuLI level2 menuHidden li-2534"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/receiver_of_taxes/grievances_assessment.php" target="_self">Grievances & Assessment</a></li>
+					<li class="menuLI level2 menuHidden li-2535"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/receiver_of_taxes/closing_information.php" target="_self">Closing Information</a></li>
+					<li class="menuLI level2 menuHidden li-2245"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/receiver_of_taxes/sign_up_for_tax_newsletters.php" target="_self">Tax Office Notifications</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-63 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/government/town_clerk/index.php" target="_self">Town Clerk</a>
+				<ul class="menuUL level2 menuHidden ul-64">
+					<li class="menuLI level2 menuHidden li-64"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/town_clerk/about_town_clerk.php" target="_self">About Town Clerk</a></li>
+					<li class="menuLI level2 menuHidden li-2367"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/town_clerk/clerk_services_portal/index.php" target="_self">Clerk Services Portal</a></li>
+					<li class="menuLI level2 menuHidden li-66"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/town_clerk/clerk_alert.php" target="_self">Clerks Clipper</a></li>
+					<li class="menuLI level2 menuHidden li-1883"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/town_clerk/w_roll_of_honor.php" target="_self">Women's Roll of Honor</a></li>
+					<li class="menuLI level2 menuHidden li-2710"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/town_clerk/clerk_s_office_extended_hours.php" target="_self">Clerk's Office Extended Hours</a></li>
+					<li class="menuLI level2 menuHidden li-2712"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/town_clerk/wedding_recommitment_ceremony.php" target="_self">Wedding & Recommitment Ceremony</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-67"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/government/town_budgets.php" target="_self">Town Budgets</a></li>
+			<li class="menuLI level1 menuHidden li-68 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/government/town_policies_and_procedures/index.php" target="_self">Town Policies and Procedures</a>
+				<ul class="menuUL level2 menuHidden ul-69">
+					<li class="menuLI level2 menuHidden li-69"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/town_policies_and_procedures/preservation_of_trees/index.php" target="_self">Preservation of Trees</a></li>
+					<li class="menuLI level2 menuHidden li-70"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/town_policies_and_procedures/privacy_statement.php" target="_self">Privacy Statement</a></li>
+					<li class="menuLI level2 menuHidden li-2762"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/town_policies_and_procedures/terms_of_use.php" target="_self">Terms of Use</a></li>
+					<li class="menuLI level2 menuHidden li-2763"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/town_policies_and_procedures/accessibility.php" target="_self">Accessibility</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-71"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/government/special_district_notices.php" target="_self">Special District Notices</a></li>
+			<li class="menuLI level1 menuHidden li-72"><a class="menuA level1 menuHidden" href="http://ecode360.com/NO0081" target="_new">Town Code</a></li>
+			<li class="menuLI level1 menuHidden li-73"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/government/proposed_local_laws.php" target="_self">Proposed Local Laws</a></li>
+			<li class="menuLI level1 menuHidden li-105 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/government/transparancy_portal/index.php" target="_self">Transparency Portal</a>
+				<ul class="menuUL level2 menuHidden ul-106">
+					<li class="menuLI level2 menuHidden li-106"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/transparancy_portal/townstat_reports.php" target="_self">TownStat Reports</a></li>
+					<li class="menuLI level2 menuHidden li-107"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/transparancy_portal/opengov.php" target="_self">OpenGov</a></li>
+					<li class="menuLI level2 menuHidden li-2362"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/transparancy_portal/approved_newspapers.php" target="_self">Approved Newspapers</a></li>
+					<li class="menuLI level2 menuHidden li-2364"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/transparancy_portal/town_depositories.php" target="_self">Town Depositories</a></li>
+					<li class="menuLI level2 menuHidden li-2468"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/transparancy_portal/title_vi_civil_rights_fta.php" target="_self">Title VI Civil Rights</a></li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="menuLI level0 menuDisplay li-78 children"><a class="menuA level0 menuDisplay" href="https://www.northhempsteadny.gov/departments/index.php" target="_self">Departments</a>
+		<ul class="menuUL level1 menuHidden ul-1896">
+			<li class="menuLI level1 menuHidden li-1896 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/animal_shelter/index.php" target="_self">Animal Shelter</a>
+				<ul class="menuUL level2 menuHidden ul-96">
+					<li class="menuLI level2 menuHidden li-96"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/animal_shelter/animal_shelter.php" target="_self">Animal Shelter FAQ</a></li>
+					<li class="menuLI level2 menuHidden li-2411"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/animal_shelter/what_we_do.php" target="_self">What We Do</a></li>
+					<li class="menuLI level2 menuHidden li-2412"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/animal_shelter/adopting_animals.php" target="_self">Adopting Animals</a></li>
+					<li class="menuLI level2 menuHidden li-2413"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/animal_shelter/feral_cats.php" target="_self">Feral Cats</a></li>
+					<li class="menuLI level2 menuHidden li-1940"><a class="menuA level2 menuHidden" href="https://www.theshelterconnection.com/" target="_new">The Shelter Connection</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-79 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/buildings/index.php" target="_self">Buildings</a>
+				<ul class="menuUL level2 menuHidden ul-80">
+					<li class="menuLI level2 menuHidden li-80"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/buildings/commissioners_memos.php" target="_self">Commissioner's Memos</a></li>
+					<li class="menuLI level2 menuHidden li-1200"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/buildings/zoning_maps.php" target="_self">Zoning Maps</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-84 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/index.php" target="_self">Community & Senior Services</a>
+				<ul class="menuUL level2 menuHidden ul-2438">
+					<li class="menuLI level2 menuHidden li-2438"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/project_independence_info.php" target="_self">Project Independence Info</a></li>
+					<li class="menuLI level2 menuHidden li-1825"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/project_independence_publications.php" target="_self">Project Independence Publications</a></li>
+					<li class="menuLI level2 menuHidden li-1866"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/benefits.php" target="_self">Benefits & Veterans Services</a></li>
+					<li class="menuLI level2 menuHidden li-1864"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/hssp.php" target="_self">Health, Social, & Support Programs</a></li>
+					<li class="menuLI level2 menuHidden li-1862"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/radio_show.php" target="_self">Radio Show</a></li>
+					<li class="menuLI level2 menuHidden li-102"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/resources_for_seniors.php" target="_self">Senior Organizations & Assistance</a></li>
+					<li class="menuLI level2 menuHidden li-1865"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/transportation_services.php" target="_self">PI Transportation Services</a></li>
+					<li class="menuLI level2 menuHidden li-2246"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/sign_up_for_pi_newsletter.php" target="_self">Sign up for PI Newsletter</a></li>
+					<li class="menuLI level2 menuHidden li-2424"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/housing___rental_assistance.php" target="_self">Housing & Rental Assistance</a></li>
+					<li class="menuLI level2 menuHidden li-2425"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/food_programs___nutrition.php" target="_self">Food Programs & Nutrition</a></li>
+					<li class="menuLI level2 menuHidden li-2426"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/transportation_options.php" target="_self">Transportation Options</a></li>
+					<li class="menuLI level2 menuHidden li-2430"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/community_services/home_repair,_improvement,_accessibility___exemptions.php" target="_self">Home Repair, Improvement, Accessibility & Exemptions</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-2168 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/comptroller/index.php" target="_self">Comptroller</a>
+				<ul class="menuUL level2 menuHidden ul-2170">
+					<li class="menuLI level2 menuHidden li-2170"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/comptroller/report_archive.php" target="_self">Financial Reports</a></li>
+					<li class="menuLI level2 menuHidden li-2540"><a class="menuA level2 menuHidden" href="https://northhempsteadny.gov/government/town_budgets.php" target="_new">Town Budgets</a></li>
+					<li class="menuLI level2 menuHidden li-2446"><a class="menuA level2 menuHidden" href="https://northhempsteadny.opengov.com/transparency" target="_new">Financial Transparency</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-1835 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/highway/index.php" target="_self">Highways</a>
+				<ul class="menuUL level2 menuHidden ul-1805">
+					<li class="menuLI level2 menuHidden li-1805"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/highway/highways/index.php" target="_self">Highways FAQ</a></li>
+					<li class="menuLI level2 menuHidden li-1836"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/highway/road_repaving_project.php" target="_self">Road Repaving Project</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-85"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/information_technology.php" target="_self">Information Technology</a></li>
+			<li class="menuLI level1 menuHidden li-86 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/index.php" target="_self">Parks & Recreation</a>
+				<ul class="menuUL level2 menuHidden ul-87">
+					<li class="menuLI level2 menuHidden li-87"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/parks_directory/index.php" target="_self">Parks Directory</a></li>
+					<li class="menuLI level2 menuHidden li-2500"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/events.php" target="_self">Events</a></li>
+					<li class="menuLI level2 menuHidden li-2575"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/calendar.php?calendar=2" target="_new">Parks Calendar</a></li>
+					<li class="menuLI level2 menuHidden li-1840"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/activities.php" target="_self">Activities & Classes</a></li>
+					<li class="menuLI level2 menuHidden li-92"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/info.php" target="_self">Information & Postings</a></li>
+					<li class="menuLI level2 menuHidden li-2576"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/memberships.php" target="_self">Memberships</a></li>
+					<li class="menuLI level2 menuHidden li-2787"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/swim_teams.php" target="_self">Swim Teams</a></li>
+					<li class="menuLI level2 menuHidden li-2571"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/park_rules.php" target="_self">Aquatic Center & Water Slide Rules</a></li>
+					<li class="menuLI level2 menuHidden li-2328"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/reduced_fee_program_.php" target="_self">Reduced Fee Program</a></li>
+					<li class="menuLI level2 menuHidden li-2330"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/care_program.php" target="_self">C.A.R.E. Program</a></li>
+					<li class="menuLI level2 menuHidden li-2282"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/lifeguards_wanted.php" target="_self">Lifeguards Wanted</a></li>
+					<li class="menuLI level2 menuHidden li-2341"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/wellness_wednesday.php" target="_self">Summer of Wellness</a></li>
+					<li class="menuLI level2 menuHidden li-90"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/parks_recreation/_yes_we_can__community_center/index.php" target="_self">"Yes We Can" Community Center</a></li>
+					<li class="menuLI level2 menuHidden li-88"><a class="menuA level2 menuHidden" href="http://www.harborlinks.com/" target="_new">Harbor Links Golf</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-93 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/planning_environmental_protection/index.php" target="_self">Planning & Environmental Protection</a>
+				<ul class="menuUL level2 menuHidden ul-94">
+					<li class="menuLI level2 menuHidden li-94"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/planning_environmental_protection/sustainability_programs/index.php" target="_self">Sustainability Programs</a></li>
+					<li class="menuLI level2 menuHidden li-1797"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/planning_environmental_protection/notices_and_documents.php" target="_self">Notices and Documents</a></li>
+					<li class="menuLI level2 menuHidden li-1806"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/planning_environmental_protection/landmarks/index.php" target="_self">Landmarks</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-81 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/public_information/index.php" target="_self">Public Information</a>
+				<ul class="menuUL level2 menuHidden ul-82">
+					<li class="menuLI level2 menuHidden li-82"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/public_information/town_publications.php" target="_self">Town Publications</a></li>
+					<li class="menuLI level2 menuHidden li-2593"><a class="menuA level2 menuHidden" href="https://www.youtube.com/@townofnorthhempstead" target="_new">Youtube Channel</a></li>
+					<li class="menuLI level2 menuHidden li-2594"><a class="menuA level2 menuHidden" href="https://www.facebook.com/townofnorthhempstead" target="_new">Facebook Page</a></li>
+					<li class="menuLI level2 menuHidden li-1107"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/newslist.php" target="_self">News & Press Releases</a></li>
+					<li class="menuLI level2 menuHidden li-2595"><a class="menuA level2 menuHidden" href="https://twitter.com/northhempstead" target="_new">Twitter/X</a></li>
+					<li class="menuLI level2 menuHidden li-2596"><a class="menuA level2 menuHidden" href="https://www.mynhtv.com/" target="_new">North Hempstead TV</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-1834 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/public_safet/index.php" target="_self">Public Safety</a>
+				<ul class="menuUL level2 menuHidden ul-98">
+					<li class="menuLI level2 menuHidden li-98"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/public_safet/code_enforcement.php" target="_self">Code Enforcement</a></li>
+					<li class="menuLI level2 menuHidden li-1069"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/public_safet/division_of_harbor_marine.php" target="_self">Division of Harbor & Marine</a></li>
+					<li class="menuLI level2 menuHidden li-1161"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/public_safet/emergency_management.php" target="_self">Emergency Management</a></li>
+					<li class="menuLI level2 menuHidden li-97"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/public_safet/parking_district/index.php" target="_self">Parking District</a></li>
+					<li class="menuLI level2 menuHidden li-119"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/public_safet/parking_permit_applications.php" target="_self">Parking Permit Applications</a></li>
+					<li class="menuLI level2 menuHidden li-1071"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/public_safet/parking_enforcement.php" target="_self">Parking Enforcement</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-99 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/public_works/index.php" target="_self">Public Works</a>
+				<ul class="menuUL level2 menuHidden ul-1921">
+					<li class="menuLI level2 menuHidden li-1921"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/public_works/pwbidrfparchive.php" target="_self">Public Works Bids & RFPs Archive</a></li>
+					<li class="menuLI level2 menuHidden li-2198"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/public_works/capital_plans.php" target="_self">Capital Plans</a></li>
+					<li class="menuLI level2 menuHidden li-2572"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/purchasing/bids___rfps/index.php" target="_new">Bids & RFPs</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-1891 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/purchasing/index.php" target="_self">Purchasing</a>
+				<ul class="menuUL level2 menuHidden ul-176">
+					<li class="menuLI level2 menuHidden li-176"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/purchasing/bids___rfps/index.php" target="_self">Bids & RFPs</a></li>
+					<li class="menuLI level2 menuHidden li-1871"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/purchasing/bid_rfp_archive.php" target="_self">Bids & RFP Archive</a></li>
+					<li class="menuLI level2 menuHidden li-2536"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/Documents/Government/Town Policies And Procedures/Town_of_North_Hempstead_Procurement_and_Payment_Policy.pdf" target="_new">Procurement Policy</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-103 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/solid_waste_management/index.php" target="_self">Solid Waste Management</a>
+				<ul class="menuUL level2 menuHidden ul-2460">
+					<li class="menuLI level2 menuHidden li-2460"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/calendar.php?calendar=8" target="_new">Solid Waste Calendar</a></li>
+					<li class="menuLI level2 menuHidden li-2140"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/solid_waste_management/special_programs.php" target="_self">Special Programs</a></li>
+					<li class="menuLI level2 menuHidden li-2326"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/solid_waste_management/upcoming_events.php" target="_self">Upcoming Events</a></li>
+					<li class="menuLI level2 menuHidden li-2144"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/solid_waste_management/garbage_districts___collection_schedules.php" target="_self">Garbage District Information</a></li>
+					<li class="menuLI level2 menuHidden li-2456"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/government/town_clerk/clerk_services_portal/solid_waste_collection_and_disposal.php" target="_new">Solid Waste Licensing</a></li>
+					<li class="menuLI level2 menuHidden li-2451"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/solid_waste_management/recycling.php" target="_self">Recycling Information</a></li>
+					<li class="menuLI level2 menuHidden li-2457"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/solid_waste_management/sunday_resident_drop_off.php" target="_self">Sunday Resident Drop Off</a></li>
+					<li class="menuLI level2 menuHidden li-2458"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/solid_waste_management/residential_vs_commercial_waste.php" target="_self">Residential vs Commercial Waste</a></li>
+					<li class="menuLI level2 menuHidden li-2459"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/solid_waste_management/proper_disposal___take-back_programs.php" target="_self">Proper Disposal & Take-Back Programs</a></li>
+					<li class="menuLI level2 menuHidden li-2741"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/solid_waste_management/carter_mailers___collection_schedules.php" target="_self">Carter Mailers & Collection Schedules</a></li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="menuLI level0 menuDisplay li-120 children"><a class="menuA level0 menuDisplay" href="https://www.northhempsteadny.gov/community/index.php" target="_self">Community</a>
+		<ul class="menuUL level1 menuHidden ul-121">
+			<li class="menuLI level1 menuHidden li-121"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/community/arts_cultural_venues_map.php" target="_self">Arts & Cultural Venues Map</a></li>
+			<li class="menuLI level1 menuHidden li-122 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/community/about_the_town/index.php" target="_self">About the Town</a>
+				<ul class="menuUL level2 menuHidden ul-123">
+					<li class="menuLI level2 menuHidden li-123"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/community/about_the_town/history/index.php" target="_self">History</a></li>
+					<li class="menuLI level2 menuHidden li-1857"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/planning_environmental_protection/landmarks/index.php" target="_self">Landmarks</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-2002"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/community/civic_assoc.php" target="_self">Civic Associations</a></li>
+			<li class="menuLI level1 menuHidden li-124 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/community/community_development_agency/index.php" target="_self">Community Development Agency</a>
+				<ul class="menuUL level2 menuHidden ul-128">
+					<li class="menuLI level2 menuHidden li-128"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/community/community_development_agency/contractors_corner.php" target="_self">Contractors Corner</a></li>
+					<li class="menuLI level2 menuHidden li-129"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/community/community_development_agency/cda_meetings_schedule.php" target="_self">CDA Meetings, Agenda, and Minutes</a></li>
+					<li class="menuLI level2 menuHidden li-132"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/community/community_development_agency/public_authorities_reform_act_compliance.php" target="_self">Public Authorities Reform Act Compliance</a></li>
+					<li class="menuLI level2 menuHidden li-133"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/community/community_development_agency/request_for_proposals_and_qualifications.php" target="_self">Request for Proposals and Qualifications</a></li>
+					<li class="menuLI level2 menuHidden li-134"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/community/community_development_agency/special_projects.php" target="_self">Special Projects</a></li>
+					<li class="menuLI level2 menuHidden li-135"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/community/community_development_agency/public_notices.php" target="_self">Public Notices</a></li>
+					<li class="menuLI level2 menuHidden li-1995"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/community/community_development_agency/cdadocs.php" target="_self">CDA Docments and Publications</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-136 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/community/new_cassel_community_visioning/index.php" target="_self">New Cassel Community Visioning</a>
+				<ul class="menuUL level2 menuHidden ul-137">
+					<li class="menuLI level2 menuHidden li-137"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/community/new_cassel_community_visioning/planning_documents.php" target="_self">Planning Documents</a></li>
+					<li class="menuLI level2 menuHidden li-138"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/community/new_cassel_community_visioning/vision_documents.php" target="_self">Vision Documents</a></li>
+					<li class="menuLI level2 menuHidden li-139"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/community/new_cassel_community_visioning/maps.php" target="_self">Maps</a></li>
+					<li class="menuLI level2 menuHidden li-1196"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/community/new_cassel_community_visioning/brownfields_project_2021.php" target="_self">Brownfields Project 2021</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-141"><a class="menuA level1 menuHidden" href="http://goldcoastfilmfestival.org/" target="_new">Gold Coast Art Center</a></li>
+			<li class="menuLI level1 menuHidden li-142"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/community/incorporated_villages.php" target="_self">Incorporated Villages</a></li>
+			<li class="menuLI level1 menuHidden li-143"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/community/libraries.php" target="_self">Libraries</a></li>
+			<li class="menuLI level1 menuHidden li-144"><a class="menuA level1 menuHidden" href="http://northhempsteadhousingauthority.com/" target="_new">North Hempstead Housing Authority</a></li>
+			<li class="menuLI level1 menuHidden li-146"><a class="menuA level1 menuHidden" href="http://www.mynhtv.com/" target="_new">North Hempstead TV</a></li>
+			<li class="menuLI level1 menuHidden li-147"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/community/fire_departments.php" target="_self">Fire Departments</a></li>
+			<li class="menuLI level1 menuHidden li-148"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/community/police_departments.php" target="_self">Police Departments</a></li>
+			<li class="menuLI level1 menuHidden li-149"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/community/schools.php" target="_self">Schools</a></li>
+			<li class="menuLI level1 menuHidden li-3"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/community/hometown-heroes.php" target="_self">Hometown Heroes</a></li>
+			<li class="menuLI level1 menuHidden li-1976"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/community/airplane_noise.php" target="_self">Airplane Noise</a></li>
+		</ul>
+	</li>
+	<li class="menuLI level0 menuDisplay li-153 children"><a class="menuA level0 menuDisplay" href="https://www.northhempsteadny.gov/business/index.php" target="_self">Business</a>
+		<ul class="menuUL level1 menuHidden ul-155">
+			<li class="menuLI level1 menuHidden li-155 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/business/business_tourism_development/index.php" target="_self">Business & Tourism Development</a>
+				<ul class="menuUL level2 menuHidden ul-2015">
+					<li class="menuLI level2 menuHidden li-2015"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/business/business_tourism_development/programs.php" target="_self">Programs</a></li>
+					<li class="menuLI level2 menuHidden li-158"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/business/business_tourism_development/services.php" target="_self">Public Authorities Reform Act Compliance</a></li>
+					<li class="menuLI level2 menuHidden li-159"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/business/business_tourism_development/accommodations_and_attractions.php" target="_self">Cultural Plan</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-162"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/business/chamber_of_commerce.php" target="_self">Chambers of Commerce</a></li>
+			<li class="menuLI level1 menuHidden li-163"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/business/filming_in_north_hempstead.php" target="_self">Filming in North Hempstead</a></li>
+		</ul>
+	</li>
+	<li class="menuLI level0 menuDisplay li-2366 children"><a class="menuA level0 menuDisplay" href="https://www.northhempsteadny.gov/services/index.php" target="_self">Services</a>
+		<ul class="menuUL level1 menuHidden ul-2381">
+			<li class="menuLI level1 menuHidden li-2381"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/government/town_clerk/clerk_services_portal/index.php" target="_new">Clerk Services Portal</a></li>
+			<li class="menuLI level1 menuHidden li-2403"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/how_do_i/apply_for/permits_licenses.php" target="_new">Permits & Licenses</a></li>
+			<li class="menuLI level1 menuHidden li-2409"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/how_do_i/apply_for/foil_requests.php" target="_new">Foil Requests</a></li>
+			<li class="menuLI level1 menuHidden li-2423"><a class="menuA level1 menuHidden" href="https://northhempsteadny.gov/departments/community_services/index.php" target="_new">Community & Senior Services</a></li>
+			<li class="menuLI level1 menuHidden li-2444"><a class="menuA level1 menuHidden" href="https://northhempsteadny.gov/opengovlink" target="_new">Online Dog License</a></li>
+		</ul>
+	</li>
+	<li class="menuLI level0 menuDisplay li-2357 children"><a class="menuA level0 menuDisplay" href="https://www.northhempsteadny.gov/shortcuts/index.php" target="_self">Shortcuts</a>
+		<ul class="menuUL level1 menuHidden ul-2529">
+			<li class="menuLI level1 menuHidden li-2529"><a class="menuA level1 menuHidden" href="https://northhempsteadny.portal.civicclerk.com/?category_id=26" target="_new">Town Board Meetings & Live Stream</a></li>
+			<li class="menuLI level1 menuHidden li-2530"><a class="menuA level1 menuHidden" href="https://northhempsteadny.portal.civicclerk.com/?category_id=27" target="_new">BZA Meetings & Live Stream</a></li>
+			<li class="menuLI level1 menuHidden li-2532"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/departments/purchasing/bids___rfps/index.php" target="_new">Bids & RFPs</a></li>
+			<li class="menuLI level1 menuHidden li-2573"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/newslist.php" target="_new">Town News</a></li>
+			<li class="menuLI level1 menuHidden li-2621"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/shortcuts/sott_live.php" target="_self">State of the Town Address Live Stream</a></li>
+		</ul>
+	</li>
+	<li class="menuLI level0 menuDisplay li-164 children"><a class="menuA level0 menuDisplay" href="https://www.northhempsteadny.gov/how_do_i/index.php" target="_self">How Do I?</a>
+		<ul class="menuUL level1 menuHidden ul-165">
+			<li class="menuLI level1 menuHidden li-165"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/how_do_i/sign_up_for_alerts.php" target="_self">Sign up for Alerts</a></li>
+			<li class="menuLI level1 menuHidden li-166 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/how_do_i/apply_for/index.php" target="_self">Apply For</a>
+				<ul class="menuUL level2 menuHidden ul-167">
+					<li class="menuLI level2 menuHidden li-167"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/how_do_i/apply_for/employment_.php" target="_self">Employment</a></li>
+					<li class="menuLI level2 menuHidden li-168"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/how_do_i/apply_for/permits_licenses.php" target="_self">Permits & Licenses</a></li>
+					<li class="menuLI level2 menuHidden li-169"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/how_do_i/apply_for/foil_requests.php" target="_self">Foil Requests</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-172 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/how_do_i/view/index.php" target="_self">View</a>
+				<ul class="menuUL level2 menuHidden ul-2185">
+					<li class="menuLI level2 menuHidden li-2185"><a class="menuA level2 menuHidden" href="https://northhempsteadny.portal.civicclerk.com/?category_id=26" target="_new">Town Board Agendas, Meetings & Livestreams</a></li>
+					<li class="menuLI level2 menuHidden li-2186"><a class="menuA level2 menuHidden" href="https://northhempsteadny.portal.civicclerk.com/?category_id=27" target="_new">BZA Agendas, Meetings & Livestreams</a></li>
+					<li class="menuLI level2 menuHidden li-2591"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/departments/purchasing/bids___rfps/index.php" target="_new">Bids & RFPs</a></li>
+					<li class="menuLI level2 menuHidden li-175"><a class="menuA level2 menuHidden" href="https://northhempsteadny.gov/departments/solid_waste_management/index.php" target="_new">Sanitation & Recycling Information</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-177 children"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/how_do_i/pay_for/index.php" target="_self">Pay for</a>
+				<ul class="menuUL level2 menuHidden ul-178">
+					<li class="menuLI level2 menuHidden li-178"><a class="menuA level2 menuHidden" href="https://northhempsteadny.gov/government/receiver_of_taxes/paymytaxes.php" target="_new">Taxes</a></li>
+					<li class="menuLI level2 menuHidden li-179"><a class="menuA level2 menuHidden" href="https://www.northhempsteadny.gov/how_do_i/apply_for/permits_licenses.php" target="_self">Permits & Licenses</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-2011"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/how_do_i/contact311.php" target="_self">Contact 3-1-1</a></li>
+			<li class="menuLI level1 menuHidden li-2232"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/how_do_i/sign_up_for_town_newsletters.php" target="_self">Sign up for the Town's Newsletter</a></li>
+			<li class="menuLI level1 menuHidden li-2352"><a class="menuA level1 menuHidden" href="https://www.northhempsteadny.gov/newslist.php" target="_self">View Current News</a></li>
+		</ul>
+	</li>
+</ul>
+
+<style>@media only screen and (min-width: 992px) {.site-header:not([mega]) #nav li.level1 {position:revert;}.site-header:not([mega]) #nav ul ul.level2 {height:auto}}.site-header:not([mega]) #nav>li {padding: 0 9px;}.site-header #nav a, .site-header #nav span {font-size: 16px;}@media only screen and (max-width: 1100px) {.site-header:not([mega]) #nav>li {padding: 0 2px;}.site-header #nav>li>a, .site-header #nav>li>span {font-size: 12px;}}#publications-section{background:radial-gradient(68.73% 68.57% at 61.97% 22.79%, rgba(85, 179, 189, 0.36) 0%, rgba(24, 147, 157, 0.36) 0.01%, rgba(85, 178, 188, 0.00) 100%), rgba(211, 211, 211, 0.85) 0px -1.425px / 100% 219.072% no-repeat;}</style>
+
+
+
+
+ 
+			</nav><!--/#header-nav -->	
+		</div><!--/.header__bottom-in -->
+	</div><!--/.container-->
+</div><!-- .site-header -->
+
+
+
+
+
+
+<ul id="scrollMenu" class="has-edit-buttons">
+
+	<div class="rz-btns-container">
+		<script language="JavaScript" type="text/JavaScript">
+			RZ.module = 'global';
+			RZ.nexturl = 'editforms/menu-editform.jsp';
+			RZ.img = '<span class="rzBtn">Edit Menu Items</span>';
+			RZ.set = 'pageid=menu-items';
+			RZ.options = '';
+			if (typeof RZaction != 'undefined') RZaction('editform');
+		</script>
+	</div>	
+
+
+	<li data-menuanchor="section1-anchor" class="active">
+		<a href="#section1-anchor" class="scrollMenu-item scrollMenu-item-search">
+			<span class="scrollMenu-item-icon-box">
+				<img src="https://www.northhempsteadny.gov/_assets_/images/scrollMenu-icon-1.png" alt="icon" class="scrollMenu-icon">
+			</span><!--/.scrollMenu-item-icon-box-->
+			<span class="scrollMenu-item-title">
+				Search
+			</span>
+		</a>
+	</li>
+	<li data-menuanchor="section2-anchor">
+		<a href="#section2-anchor" class="scrollMenu-item scrollMenu-item-services">
+			<span class="scrollMenu-item-icon-box">
+				<img src="https://www.northhempsteadny.gov/_assets_/images/scrollMenu-icon-2.png" alt="icon" class="scrollMenu-icon">
+			</span><!--/.scrollMenu-item-icon-box-->
+			<span class="scrollMenu-item-title">
+				Quick Links
+			</span>
+		</a>
+	</li>
+	<li data-menuanchor="section3-anchor">
+		<a href="#section3-anchor" class="scrollMenu-item scrollMenu-item-newsevents">
+			<span class="scrollMenu-item-icon-box">
+				<img src="https://www.northhempsteadny.gov/_assets_/images/scrollMenu-icon-3.png" alt="icon" class="scrollMenu-icon">
+			</span><!--/.scrollMenu-item-icon-box-->
+			<span class="scrollMenu-item-title">
+				News
+			</span>
+		</a>
+	</li>
+	<li data-menuanchor="section4-anchor">
+		<a href="#section4-anchor" class="scrollMenu-item scrollMenu-item-newsevents">
+			<span class="scrollMenu-item-icon-box">
+				<img src="https://www.northhempsteadny.gov/_assets_/images/scrollMenu-icon-6.png" alt="icon" class="scrollMenu-icon">
+			</span><!--/.scrollMenu-item-icon-box-->
+			<span class="scrollMenu-item-title">
+				Events
+			</span>
+		</a>
+	</li>
+	<li data-menuanchor="section5-anchor">
+		<a href="#section5-anchor" class="scrollMenu-item scrollMenu-item-search">
+			<span class="scrollMenu-item-icon-box">
+				<img src="https://www.northhempsteadny.gov/_assets_/images/scrollMenu-icon-3.png" alt="icon" class="scrollMenu-icon">
+			</span><!--/.scrollMenu-item-icon-box-->
+			<span class="scrollMenu-item-title">
+				Publications
+			</span>
+		</a>
+	</li>
+	<li data-menuanchor="section6-anchor">
+		<a href="#section6-anchor" class="scrollMenu-item scrollMenu-item-supervisor">
+			<span class="scrollMenu-item-icon-box">
+				<img src="https://www.northhempsteadny.gov/_assets_/images/scrollMenu-icon-4.png" alt="icon" class="scrollMenu-icon">
+			</span><!--/.scrollMenu-item-icon-box-->
+			<span class="scrollMenu-item-title">
+				Town Supervisor
+			</span>
+		</a>
+	</li>
+	<li data-menuanchor="section7-anchor">
+		<a href="#section7-anchor" class="scrollMenu-item scrollMenu-item-officials">
+			<span class="scrollMenu-item-icon-box">
+				<img src="https://www.northhempsteadny.gov/_assets_/images/scrollMenu-icon-5.png" alt="icon" class="scrollMenu-icon">
+			</span><!--/.scrollMenu-item-icon-box-->
+			<span class="scrollMenu-item-title">
+				Elected Officials
+			</span>
+		</a>
+	</li>
+</ul>
+
+<script language="JavaScript" type="text/JavaScript">
+if (typeof RZlistbegin != 'undefined') RZlistbegin(1)
+</script>
+<script language="JavaScript" type="text/JavaScript">
+if (typeof RZlinktemplate != 'undefined') RZlinktemplate('slider','','')
+if (typeof RZ.nextseq != 'undefined') RZ.nextseq.modules['slider_1']={field:'seq_no',seq:'1.00'};
+</script>
+
+
+
+
+
+
+<section id="slider-section">
+	<div id="slider" class="tiny-slider-wrap" >
+			
+		<!--  -->
+			
+		
+		yes
+
+	
+	 <div id="sliderVideo" class="player" data-property="{videoURL:'https://www.youtube.com/watch?v=pe3AmS1iAMw', containment:'#slider', autoPlay:true, mute:true, startAt:0, opacity:1, useOnMobile:true, showControls:false, loop:true}"></div> 
+	
+    
+	</div><!--/#slider--> 	
+</section>
+
+<main id="main">
+
+<section id="search-section" class="section has-edit-buttons" data-anchor="section1-anchor">
+		<div class="center-center">
+			<div class="rz-btns-container">
+				<script language="JavaScript" type="text/JavaScript">
+					RZ.module = 'slider';
+					
+					RZ.nexturl = 'editforms/slider_images-editlist.jsp?width=1700&height=700&pageid=index';
+					RZ.img = '<span class="rzBtn noPush">Edit Slider</span>';
+					RZ.set = '';
+					RZ.options = '';
+					if (typeof RZaction != 'undefined') RZaction('editform');
+				</script>
+				<script language="JavaScript" type="text/JavaScript">
+					RZ.module = 'global';
+					RZ.nexturl = 'editforms/text_subtext_slider-editform.jsp?width=4000&height=5000';
+					RZ.img = '<span class="rzBtn">Edit Slider Text</span>';
+					RZ.set = 'pageid=slider-header';
+					RZ.options = '';
+					if (typeof RZaction != 'undefined') RZaction('editform');
+				</script>
+				<script language="JavaScript" type="text/JavaScript">
+					RZ.module = 'global';
+					RZ.nexturl = 'editforms/slider_link-editform.jsp';
+					RZ.img = '<span class="rzBtn rzBtn-sm">Edit Slider Video</span>';
+					RZ.set = 'pageid=sliderlink-index';
+					RZ.options = '';
+					if (typeof RZaction != 'undefined') RZaction('editform');
+				</script>
+			</div>				
+		</div>
+		<div id="video-controls">
+			<button id="video-pause"><img src="https://www.northhempsteadny.gov/_assets_/images/pause-icon.png" alt="push"></button>
+			<button id="video-play"  style="display: none;"><img src="https://www.northhempsteadny.gov/_assets_/images/play-icon.png" alt="play"></button>
+		</div>
+		<div class="container">
+			<div id="search-section-in">
+				
+				<div id="slider-controls">
+					<div id="slider-arrows">
+						<button><i class="fa fa-caret-left" aria-hidden="true"></i></button>
+						<button><i class="fa fa-caret-right" aria-hidden="true"></i></button>
+					</div>
+				</div>
+		
+				<div id="slider-data">
+					<div id="slider-caption" class="">
+						<span id="slider-caption-top">
+							<span style = "font-size: 25px; color: #FFFFFF;">WELCOME TO</span>
+						</span>
+						<span id="slider-caption-mid"></span>
+						<span style = "font-size: 60px; color: #FFFFFF; font-weight: bold;">THE TOWN OF NORTH HEMPSTEAD</span>
+						<span id="slider-caption-bottom">
+							&#160; Jennifer DeSena, Supervisor
+						</span>
+					</div>
+					<div id="search">
+						<form class="search-form" method="GET" action="https://www.northhempsteadny.gov/search.php" role="search" aria-label="sitewide">
+							<input name="q" class="form-control search-input" placeholder="What are you looking for?" type="search" id="search-input">
+							<button><img src="https://www.northhempsteadny.gov/_assets_/images/search-icon.png" alt="search icon"></button>
+						</form>
+					</div><!-- /#search -->
+				</div>
+			</div><!-- /#search-section-in -->
+		</div><!-- /.containedr -->
+</section><!-- /#search-section -->
+
+
+
+
+
+
+
+
+ 
+
+<section id="services-section" class="section" data-anchor="section2-anchor">
+		<div class="container">
+
+            <div class="section-header">
+				<div class="has-edit-buttons">
+					<div class="right-top">
+						<div class="rz-btns-container">
+                            <script language="JavaScript" type="text/JavaScript">
+                                RZ.module = 'global';
+                                RZ.nexturl = 'editforms/newsheader-subheader-editform2.jsp?pageid=supervisors-header';
+                                RZ.img = '<span class="rzBtn">Edit Title</span>';
+                                RZ.set = 'pageid=qlinks-header';
+                                RZ.options = '';
+                                if (typeof RZaction != 'undefined') RZaction('editform');
+                            </script>
+						</div>			
+					</div>
+					<h2 class="section-title">
+						<span><img src="https://www.northhempsteadny.gov/_assets_/images/quicklinks-icon.png" class="section-title-icon" alt="quicklinks icon"/>
+                            Quick Links
+                            </span>
+                            
+					</h2>
+				</div>
+			</div>
+
+			<div id="services-list" class="has-edit-buttons">
+				<div class="center-top">
+					<div class="rz-btns-container">
+						
+                        <script language="JavaScript" type="text/JavaScript">
+                            RZ.module = 'quick_links';
+                            RZ.nexturl = "editforms/quick_links3-editlist.jsp?width=310&height=418&pageid=index-quick-links";
+                            RZ.img = '<span class="rzBtn">Edit Quick Links</span>';
+                            RZ.caption = '';
+                            RZ.set = '';
+                            RZ.options = '';
+                            if (typeof RZaction != 'undefined') RZaction('editlist');
+                        </script>
+					</div>				
+				</div>
+				<div class="tiny-carousel">
+
+                
+                        
+                            
+                                
+                                
+                                <div class="tiny-item">                                    
+                                    <div class="service-col">
+                                    
+                                        <a href="https://northhempsteadny.portal.civicclerk.com/?category_id=26" target="_blank" class="service-box" style="background:url('Images/How%20Do%20I/View/istockphoto-1307907239-612x612.jpg?t=202503171242210') center no-repeat;background-size:cover">
+                                            <strong class="service-title">Town Board Agendas, Meetings & Livestreams</strong>
+                                        </a><!--/.service-box-->                               
+                                    	
+
+					
+					
+                    
+                        
+                            
+                                
+                                
+                                        <a href="https://www.northhempsteadny.gov/government/receiver_of_taxes/paymytaxes.php" target="_blank" class="service-box" style="background:url('site%20setup/service-bg-3.jpg?t=202503171242260') center no-repeat;background-size:cover">
+                                            <strong class="service-title">Pay My Taxes</strong>
+                                        </a><!--/.service-box-->                               
+                                     
+                                    </div><!--/.service-box--> 
+                                </div><!--/.tiny-item-->
+                                  	
+
+					
+					
+                    
+                        
+                            
+                                
+                                
+                                <div class="tiny-item">                                    
+                                    <div class="service-col">
+                                    
+                                        <a href="https://northhempsteadny.gov/opengovlink" target="_blank" class="service-box" style="background:url('site%20setup/service-bg-4.jpg?t=202503171242260') center no-repeat;background-size:cover">
+                                            <strong class="service-title">Apply for a Permit / License</strong>
+                                        </a><!--/.service-box-->                               
+                                    	
+
+					
+					
+                    
+                        
+                            
+                                
+                                
+                                        <a href="https://northhempstead-cwiprod.motorolasolutions.com/cwi/select" target="_blank" class="service-box" style="background:url('_assets_/images/service-bg-1.jpg') center no-repeat;background-size:cover">
+                                            <strong class="service-title">311 Online</strong>
+                                        </a><!--/.service-box-->                               
+                                     
+                                    </div><!--/.service-box--> 
+                                </div><!--/.tiny-item-->
+                                  	
+
+					
+					
+                    
+                        
+                            
+                                
+                                
+                                <div class="tiny-item">                                    
+                                    <div class="service-col">
+                                    
+                                        <a href="https://northhempsteadny.gov/opengovlink" target="_blank" class="service-box" style="background:url('Images/QuickLinks/image_2025-08-14_163950802.png?t=202508141641020') center no-repeat;background-size:cover">
+                                            <strong class="service-title">Online Dog License</strong>
+                                        </a><!--/.service-box-->                               
+                                    	
+
+					
+					
+                    
+                        
+                            
+                                
+                                
+                                        <a href="https://www.northhempsteadny.gov/how_do_i/apply_for/foil_requests.php" target="_blank" class="service-box" style="background:url('_assets_/images/service-bg-1.jpg') center no-repeat;background-size:cover">
+                                            <strong class="service-title">FOIL Requests</strong>
+                                        </a><!--/.service-box-->                               
+                                     
+                                    </div><!--/.service-box--> 
+                                </div><!--/.tiny-item-->
+                                  	
+
+					
+					
+                    
+                        
+                            
+                                
+                                
+                                <div class="tiny-item">                                    
+                                    <div class="service-col">
+                                    
+                                        <a href="https://www.northhempsteadny.gov/departments/community_services/index.php" target="_blank" class="service-box" style="background:url('Images/Departments/Senior%20Services/Health%20Mental%20Health/download%20(1).png?t=202503171242190') center no-repeat;background-size:cover">
+                                            <strong class="service-title">Access Senior Services</strong>
+                                        </a><!--/.service-box-->                               
+                                    	
+
+					
+					
+                    
+                        
+                            
+                                
+                                
+                                        <a href="https://www.northhempsteadny.gov/government/transparancy_portal/index.php" target="_blank" class="service-box" style="background:url('_assets_/images/service-bg-1.jpg') center no-repeat;background-size:cover">
+                                            <strong class="service-title">Transparency Portal</strong>
+                                        </a><!--/.service-box-->                               
+                                     
+                                    </div><!--/.service-box--> 
+                                </div><!--/.tiny-item-->
+                                  	
+
+					
+					
+                    
+                        
+                            
+                                
+                                
+                                <div class="tiny-item">                                    
+                                    <div class="service-col">
+                                    
+                                        <a href="https://northhempstead.rja.revize.com/forms/10467" target="_blank" class="service-box" style="background:url('_assets_/images/service-bg-1.jpg') center no-repeat;background-size:cover">
+                                            <strong class="service-title">311 Contact Form</strong>
+                                        </a><!--/.service-box-->                               
+                                    	
+
+					
+					
+                    
+                        
+                            
+                                
+                                
+                                        <a href="https://www.northhempsteadny.gov/departments/parks_recreation/index.php" target="_self" class="service-box" style="background:url('Images/Departments/Parks%20and%20Recreation/Parks%20Directory%20and%20Map/Michael%20J%20Tully%20Park/tully1.jpg?t=202504041506430') center no-repeat;background-size:cover">
+                                            <strong class="service-title">Parks & Recreation</strong>
+                                        </a><!--/.service-box-->                               
+                                     
+                                    </div><!--/.service-box--> 
+                                </div><!--/.tiny-item-->
+                                  	
+
+					
+					
+                    
+                        
+                            
+                                
+                                
+                                <div class="tiny-item">                                    
+                                    <div class="service-col">
+                                    
+                                        <a href="https://www.northhempsteadny.gov/departments/purchasing/bids___rfps/index.php" target="_blank" class="service-box" style="background:url('_assets_/images/service-bg-1.jpg') center no-repeat;background-size:cover">
+                                            <strong class="service-title">Bids & RFPs</strong>
+                                        </a><!--/.service-box-->                               
+                                     
+                                    </div><!--/.service-box--> 
+                                </div><!--/.tiny-item-->
+                                  	
+
+					
+					
+                    
+                        
+                    
+
+				</div><!--/.tiny-carousel-->
+			</div><!--/.quicklinks-wrapper -->
+		</div><!--/.container -->
+	</section><!--/#services-section.section -->  
+	
+<section id="news" class="section" data-anchor="section3-anchor">
+    <div class="container">
+        <div class="section-inner">
+            <div class="section-header">
+                <div class="has-edit-buttons">
+                    <div class="right-top">
+                        <div class="rz-btns-container">
+                            <script language="JavaScript" type="text/JavaScript">
+                                RZ.module = 'global';
+                                RZ.nexturl = 'editforms/newsheader-subheader-editform.jsp?pageid=supervisors-header';
+                                RZ.img = '<span class="rzBtn">Edit Title</span>';
+                                RZ.set = 'pageid=news-header';
+                                RZ.options = '';
+                                if (typeof RZaction != 'undefined') RZaction('editform');
+                            </script>
+                        </div>          
+                    </div>
+                    <h2 class="section-title">
+                        <span><img src="https://www.northhempsteadny.gov/_assets_/images/news-icon.png" class="section-title-icon" alt="news icon"/>
+                            Current
+                            </span>
+                            News
+                    </h2>
+                </div>
+                <a href="https://www.northhempsteadny.gov/./newslist.php" class="button section-link">
+                    See All News
+                    </a>
+            </div>
+            <div id="news-in">
+            <div id="news-list" class="has-edit-buttons">
+                    <div class="center-top">
+                        <div class="rz-btns-container">
+                            <script language="JavaScript" type="text/JavaScript">
+                                RZ.module = 'news';
+                                RZ.nexturl = "editforms/news-editlist.jsp?width=209&height=209&pageid=main";
+                                RZ.img = '<span class="rzBtn">Edit News Articles</span>';
+                                RZ.caption = '';
+                                RZ.set = '';
+                                RZ.options = '';
+                                if (typeof RZaction != 'undefined') RZaction('editlist');
+                            </script>
+                        </div>          
+                    </div>
+
+                   
+
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+
+
+                            <a href="https://www.northhempsteadny.gov/news_detail_T7_R210.php" class="news clearfix" >
+                                <div class="news-image" style="background:url('Images/R_004710%20copy.jpg?t=202610281106160') center no-repeat;background-size:cover"></div>
+                                <div class="news-info">
+                                    <span class="news-date">October 28, 2026</span>
+                                    <h3 class="news-title">Town of North Hempstead Rededicates Street in Honor of Fallen Nassau County Police Officer</h3>
+                                </div>
+                            </a><!--/.news-->
+
+
+                            
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+
+
+                            <a href="https://www.northhempsteadny.gov/news_detail_T7_R208.php" class="news clearfix" >
+                                <div class="news-image" style="background:url('Images/Liberty%20for%20web.png?t=202610221639040') center no-repeat;background-size:cover"></div>
+                                <div class="news-info">
+                                    <span class="news-date">October 22, 2026</span>
+                                    <h3 class="news-title">DeSena, Ferretti, Saladino, Slam Liberty Utilities and Public Service Commission Over Rate Hike</h3>
+                                </div>
+                            </a><!--/.news-->
+
+
+                            
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+
+
+                            <a href="https://www.northhempsteadny.gov/news_detail_T7_R207.php" class="news clearfix" >
+                                <div class="news-image" style="background:url('Images/Taxes%20Due.jpg?t=202610161015010') center no-repeat;background-size:cover"></div>
+                                <div class="news-info">
+                                    <span class="news-date">October 16, 2026</span>
+                                    <h3 class="news-title">First Half of the 2026-2027 School Tax Due November 10th</h3>
+                                </div>
+                            </a><!--/.news-->
+
+
+                            
+                        
+                    
+
+                </div><!--/#news-list-->
+
+
+                <div id="featured-list" class="has-edit-buttons">
+                    <div class="center-top">
+                        <!-- <div class="rz-btns-container">
+                            <span class="rzBtn"> Edit Featured Articles</span>
+                        </div>           -->
+                    </div>
+                    <div class="tiny-carousel">
+
+
+
+                          
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+
+                                            <div class="tiny-item">
+                                                <a href="https://www.northhempsteadny.gov/news_detail_T7_R209.php" class="featured" style="background:url('Images/pumpcompost.png?t=202610281104490') center no-repeat;background-size:cover">
+                                                    <span class="featured-date">
+                                                      October 28, 2026
+                                                    </span>
+                                                    <div class="featured-info">
+                                                        <div class="featured-title">Town to Host the North Hempstead Pumpkin Drop-Off</div>
+                                                    </div><!--/.featured-info-->
+                                                </a><!--/.featured-->
+                                            </div><!--/.tiny-item-->
+                                
+                            
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+
+                                            <div class="tiny-item">
+                                                <a href="https://www.northhempsteadny.gov/news_detail_T7_R185.php" class="featured" style="background:url('Images/Firework%20for%20Website.png?t=202607201001080') center no-repeat;background-size:cover">
+                                                    <span class="featured-date">
+                                                      July 20, 2026
+                                                    </span>
+                                                    <div class="featured-info">
+                                                        <div class="featured-title">North Hempstead&#8217;s &#8220;Red, White & Blue Take Two&#8221; Concert and Fireworks Set for Sunday, August 2</div>
+                                                    </div><!--/.featured-info-->
+                                                </a><!--/.featured-->
+                                            </div><!--/.tiny-item-->
+                                
+                            
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+
+                                            <div class="tiny-item">
+                                                <a href="https://www.northhempsteadny.gov/news_detail_T7_R139.php" class="featured" style="background:url('Images/WROH%20for%20website.png?t=202606031529540') center no-repeat;background-size:cover">
+                                                    <span class="featured-date">
+                                                      March 23, 2026
+                                                    </span>
+                                                    <div class="featured-info">
+                                                        <div class="featured-title">Women&#8217;s Roll of Honor Nominating Period Extended to May 15</div>
+                                                    </div><!--/.featured-info-->
+                                                </a><!--/.featured-->
+                                            </div><!--/.tiny-item-->
+                                
+                            
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+
+                                            <div class="tiny-item">
+                                                <a href="https://www.northhempsteadny.gov/news_detail_T7_R125.php" class="featured" style="background:url('Images/TONH%20MoodyRating%201080x1350%20-%20Copy.jpg?t=202602201048450') center no-repeat;background-size:cover">
+                                                    <span class="featured-date">
+                                                      February 19, 2026
+                                                    </span>
+                                                    <div class="featured-info">
+                                                        <div class="featured-title">North Hempstead Assigned &#8220;Aaa&#8221; Rating from Moody&#8217;s Investors Service</div>
+                                                    </div><!--/.featured-info-->
+                                                </a><!--/.featured-->
+                                            </div><!--/.tiny-item-->
+                                
+                            
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+
+                                            <div class="tiny-item">
+                                                <a href="https://www.northhempsteadny.gov/news_detail_T7_R121.php" class="featured" style="background:url('Images/News/January%202026/DeSena%20Snow%20Prep%202%20-%20Copy%20-%20Copy.jpg?t=202601231903510') center no-repeat;background-size:cover">
+                                                    <span class="featured-date">
+                                                      January 23, 2026
+                                                    </span>
+                                                    <div class="featured-info">
+                                                        <div class="featured-title">Supervisor DeSena Declares State of Emergency for Town of North Hempstead</div>
+                                                    </div><!--/.featured-info-->
+                                                </a><!--/.featured-->
+                                            </div><!--/.tiny-item-->
+                                
+                            
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+
+                                            <div class="tiny-item">
+                                                <a href="https://www.northhempsteadny.gov/news_detail_T7_R117.php" class="featured" style="background:url('Images/Inauguration%202026%20-%20Copy.jpg?t=202601080907520') center no-repeat;background-size:cover">
+                                                    <span class="featured-date">
+                                                      January 7, 2026
+                                                    </span>
+                                                    <div class="featured-info">
+                                                        <div class="featured-title">North Hempstead Officials Sworn In at 2026 Inauguration Ceremony</div>
+                                                    </div><!--/.featured-info-->
+                                                </a><!--/.featured-->
+                                            </div><!--/.tiny-item-->
+                                
+                            
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+
+                                            <div class="tiny-item">
+                                                <a href="https://www.northhempsteadny.gov/news_detail_T7_R110.php" class="featured" style="background:url('Images/TNH_4422%20copy.jpg?t=202510290850170') center no-repeat;background-size:cover">
+                                                    <span class="featured-date">
+                                                      October 29, 2025
+                                                    </span>
+                                                    <div class="featured-info">
+                                                        <div class="featured-title">North Hempstead to Commence $19.6 Million&nbsp; Town Dock Makeover</div>
+                                                    </div><!--/.featured-info-->
+                                                </a><!--/.featured-->
+                                            </div><!--/.tiny-item-->
+                                
+                            
+                        
+                    
+
+
+                    </div><!--/.tiny-carousel-->
+                </div><!--/#featured-list-->
+                
+            </div><!--/#news-in-->
+        </div><!--/.section-inner-->
+    </div><!--/.container-->
+</section><!--/#news-->
+ 
+
+<section id="events" class="section" data-anchor="section4-anchor">
+    <div class="container">
+        <div class="section-inner">
+            <div class="section-header">
+                <div class="has-edit-buttons">
+                    <div class="right-top">
+                            <div class="rz-btns-container">
+                                <script language="JavaScript" type="text/JavaScript">
+                                    RZ.module = 'global';
+                                    RZ.nexturl = 'editforms/newsheader-subheader-editform2.jsp?pageid=supervisors-header';
+                                    RZ.img = '<span class="rzBtn">Edit Title</span>';
+                                    RZ.set = 'pageid=events-header';
+                                    RZ.options = '';
+                                    if (typeof RZaction != 'undefined') RZaction('editform');
+                                </script>
+                            </div>			
+                        </div>
+                    <h2 class="section-title">
+                        <span><img src="https://www.northhempsteadny.gov/_assets_/images/events-icon.png" class="section-title-icon" alt="events icon"/> 
+                            upcoming
+                        </span>
+                        events
+                    </h2>
+                </div>
+                <a href="https://www.northhempsteadny.gov/./calendar.php" class="button section-link">View Full Calendar</a>
+            </div>
+            <div id="events-in">
+                <div id="events-tabs" class="has-edit-buttons">
+                    <div class="rz-btns-container">
+                        <script language="JavaScript" type="text/JavaScript">
+                            RZ.module = 'global';
+                            RZ.nexturl = 'editforms/tab_text-editform.jsp';
+                            RZ.img = '<span class="rzBtn">Edit Tabs</span>';
+                            RZ.set = 'pageid=eventstab';
+                            RZ.options = '';
+                            if (typeof RZaction != 'undefined') RZaction('editform');
+                        </script>
+                    </div>			
+                    <a href="javascript:;" data-toggle="tab" class="tab active">Meetings</a>
+					<a href="javascript:;" data-toggle="tab" class="tab">Community Events</a>
+					<a href="javascript:;" data-toggle="tab" class="tab">Tax</a>
+                    <a href="javascript:;" data-toggle="tab" class="tab">Solid Waste Management</a>
+                </div>
+                <div id="events-list">
+                    <div id="mini-events" data-template-file="template.html">
+                </div>
+            </div>
+        </div><!--/.section-inner-->
+    </div><!--/.container-->
+</section><!--/#events--> 
+
+<section id="publications-section" class="section" data-anchor="section5-anchor">
+    <div id="publications-in">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="has-edit-buttons">
+                        <div class="center-top">
+                            <div class="rz-btns-container">
+                                <script language="JavaScript" type="text/JavaScript">
+                                    RZ.module = 'global';
+                                    RZ.nexturl = 'editforms/longtext-editform.jsp?pageid=publications-index';
+                                    RZ.img = '<span class="rzBtn">Edit Publications</span>';
+                                    RZ.set = 'pageid=publications-index';
+                                    RZ.options = '';
+                                    if (typeof RZaction != 'undefined') RZaction('editlist');
+                                </script>
+                            </div>			
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> 
+
+<section id="supervisor-section" class="section" data-anchor="section6-anchor">
+    <div class="container">
+        <div id="supervisor-in">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div id="supervisor-info">
+                        <div class="section-header">
+                            <div class="has-edit-buttons">
+                                <div class="right-top">
+                                    <div class="rz-btns-container">
+                                        <script language="JavaScript" type="text/JavaScript">
+											RZ.module = 'global';
+											RZ.nexturl = 'editforms/newsheader-subheader-editform2.jsp?pageid=supervisors-header';
+											RZ.img = '<span class="rzBtn">Edit Title</span>';
+											RZ.set = 'pageid=supervisors-header';
+											RZ.options = '';
+											if (typeof RZaction != 'undefined') RZaction('editform');
+										</script>
+                                    </div>			
+                                </div>
+                                <h2 class="section-title">
+                                    <span><img src="https://www.northhempsteadny.gov/_assets_/images/supervisor-icon.png" class="section-title-icon" alt="supervison icon"/> 
+                                        TOWN
+                                        </span>
+                                        Supervisor
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="supervisor-text has-edit-buttons">
+                            <div class="rz-btns-container">
+                                <script language="JavaScript" type="text/JavaScript">
+                                    RZ.module = 'global';
+                                    RZ.nexturl = 'editforms/about-texterea-editform.jsp?pageid=about-desc';
+                                    RZ.img = '<span class="rzBtn">Edit Content</span>';
+                                    RZ.set = 'pageid=about-desc';
+                                    RZ.options = '';
+                                    if (typeof RZaction != 'undefined') RZaction('editform');
+                                </script>
+                            </div>	
+                            "Welcome to the Town of North Hempstead website. Here, you can find contact information for your Town Council representative on the Town Board, watch live streaming and archived recordings of Town Board meetings, review the Town Budget, discover upcoming programs, and more.<br /><br />We are committed to providing the best possible services for residents and small business owners while minimizing the associated tax burden." 
+                        </div>
+                        <div id="supervisor-btns" class="has-edit-buttons">
+                            <div class="rz-btns-container">
+                                <script language="JavaScript" type="text/JavaScript">
+                                    RZ.module = 'global';
+                                    RZ.nexturl = 'editforms/link_editlist.jsp?pageid=about-links-index';
+                                    RZ.img = '<span class="rzBtn">Edit Buttons</span>';
+                                    RZ.set = 'pageid=about-links-index';
+                                    RZ.options = '';
+                                    if (typeof RZaction != 'undefined') RZaction('editlist');
+                                </script>
+                            </div>	
+
+
+                            
+                                
+                                    
+                                    
+        
+                                        
+                                        <a href="https://www.northhempsteadny.gov/government/supervisor/state_of_the_town_addresses.php" target="_blank" class="button section-link"> State of the Town Address</a>
+                                        
+                                
+                                
+                                
+                                    
+                                    
+        
+                                        
+                                        <a href="https://www.northhempsteadny.gov/government/supervisor/index.php" target="_blank" class="button section-link"> About Supervisor Jennifer DeSena</a>
+                                        
+                                
+                                
+                                
+                                    
+                                    
+        
+                                        
+                                        <a href="mailto:DesenaJ@northhempsteadny.gov" target="_blank" class="button section-link"> Contact the Supervisor</a>
+                                        
+                                
+                                
+                                
+                            
+        
+                                    </div>
+
+
+
+                    </div><!--/#supervisor-info -->
+                </div><!--/.col-lg-7 -->
+                <div class="col-lg-5">
+                    	
+                    <div id="supervisor-placholder" class="has-edit-buttons" style="background:url('Images/Government/Supervisor/jdesena2024.jpg?t=202503171242210') center no-repeat;background-size:cover">
+                        <div class="center-center">
+                            <div class="rz-btns-container">
+                                <script language="JavaScript" type="text/JavaScript">
+                                    RZ.module = 'global';
+                                    RZ.nexturl = 'editforms/background-editform.jsp?width=4000&height=5000';
+                                    RZ.img = '<span class="rzBtn">Edit Background Image</span>';
+                                    RZ.set = 'pageid=events-background-image';
+                                    RZ.options = '';
+                                    if (typeof RZaction != 'undefined') RZaction('editform');
+                                </script>
+                            </div>	
+                        </div>
+                    </div>
+                </div><!--/.col-lg-5 -->
+            </div><!--/.row -->
+        </div><!--/#supervisor-in -->
+
+    </div><!--/.container -->
+</section><!--/#services-section.section --> 
+	
+<section id="officials-section" class="section" data-anchor="section7-anchor">
+    <div id="officials-in">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5">
+                    <div id="officials-left" class="has-edit-buttons">
+                        <div class="center-top">
+                            <div class="rz-btns-container">
+                                <script language="JavaScript" type="text/JavaScript">
+                                    RZ.module = 'quick_links';
+                                    RZ.nexturl = 'editforms/quick_links_off-editlist.jsp?subtext=yes&width=50&height=50&pageid=officials-index';
+                                    RZ.img = '<span class="rzBtn">Edit Officials</span>';
+                                    RZ.set = '';
+                                    RZ.options = '';
+                                    if (typeof RZaction != 'undefined') RZaction('editlist');
+                                </script>
+                            </div>			
+                        </div>
+                        <div id="persons-list">
+                            <div class="tiny-carousel">
+
+                            
+                                
+									
+   										
+
+									<div class="tiny-item">
+										<div class="person">
+
+											
+
+											<div class="person-image" style="background:url('Images/Site%20Photos/Town%20Board_2%20155x150%20copy%202026%20-%20Copy.jpg?t=202601151138480') center no-repeat;background-size:cover"></div>
+											<div class="person-info">
+												<div>
+													<span class="person-name">The Town Board</span>
+													<span class="person-position"><br>Robert Troiano Jr, Edward Scott, Dennis Walsh, Jennifer DeSena, Christine Liu, Yaron Levy, Mariann Dalimonte, <br>Town Clerk Ragini Srivastava, Receiver of Taxes Mary Jo Collins</span>
+												</div>
+												<a href="https://www.northhempsteadny.gov/government/councilmembers/index.php" target= "_blank" class="person-link">Learn More...</a>
+											</div><!--/.person-info-->
+
+										</div><!--/.person-->	
+									</div><!--/.tiny-item-->
+									
+									
+   								  
+							
+                                
+                                
+                            </div><!--/.tiny-carousel-->
+                        </div><!--/#persons-list-->
+                        <div id="persons-controls">
+                            <div id="persons-arrows">
+                                <button><i class="fa fa-angle-left" aria-hidden="true"></i></button>
+                                <button><i class="fa fa-angle-right" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div><!--/#government-left-->
+                </div><!--/.col-lg-5-->
+                <div class="col-lg-7">
+                    <div id="officials-right">
+                        <div class="section-header">
+                            <div class="has-edit-buttons">
+                                <div class="right-top">
+                                    <div class="rz-btns-container">
+                                        <script language="JavaScript" type="text/JavaScript">
+											RZ.module = 'global';
+											RZ.nexturl = 'editforms/newsheader-subheader-editform2.jsp?pageid=supervisors-header';
+											RZ.img = '<span class="rzBtn">Edit Title</span>';
+											RZ.set = 'pageid=officials-header';
+											RZ.options = '';
+											if (typeof RZaction != 'undefined') RZaction('editform');
+										</script>
+                                    </div>			
+                                </div>
+                                <h2 class="section-title">
+                                    <span><img src="https://www.northhempsteadny.gov/_assets_/images/officials-icon.png" class="section-title-icon" alt="officials icon"/>
+                                        elected
+                                        </span>
+                                        officials
+                                </h2>
+                            </div>
+                        </div>
+                        <div id="officials-links" class="has-edit-buttons">
+                            <div class="center-top">
+                                <div class="rz-btns-container">
+                                    <script language="JavaScript" type="text/JavaScript">
+                                        RZ.module = 'quick_links';
+                                        RZ.nexturl = 'editforms/quick_links_off2-editlist.jsp?width=50&height=50&pageid=index';
+                                        RZ.img = '<span class="rzBtn">Edit Links</span>';
+                                        RZ.set = '';
+                                        RZ.options = '';
+                                        if (typeof RZaction != 'undefined') RZaction('editlist');
+                                    </script>
+                                </div>			
+                            </div>
+                            <div class="tiny-carousel">
+
+                                
+                                    
+                                    
+                                        
+            
+            
+                                        <div class="tiny-item">
+                                            <div class="qlink-column">
+            
+            
+                                        
+            
+            
+                                                <a href="https://www.northhempsteadny.gov/government/councilmembers/district_1.php" class="qlink-box" target="_self">
+                                                <div class="qlink-icon">
+                                                    <img src="https://www.northhempsteadny.gov/Images/Government/Councilmembers/District%201/troiano_web50px%20-%20Copy%20(2).jpg?t=202503171242280" alt="troiano_web50px - Copy (2)">
+                                                </div>
+                                                <strong class="qlink-title">
+                                                    District 1<br><span style="display: inline-block; padding-top: 5px; font-size: 16px">Robert Troiano, Jr.</span>
+                                                </strong>
+                                                </a><!--/.qlink-box -->
+            
+                                        
+                                    
+                                    
+                                    
+                                        
+            
+            
+                                                <a href="https://www.northhempsteadny.gov/government/councilmembers/district_4.php" class="qlink-box" target="_self">
+                                                <div class="qlink-icon">
+                                                    <img src="https://www.northhempsteadny.gov/Images/Government/Councilmembers/District%204/Christine%20Liu_crop%201x1_.jpg?t=202503171242190" alt="Christine Liu_crop 1x1_">
+                                                </div>
+                                                <strong class="qlink-title">
+                                                    <span>District 4</span><br><span style="display: inline-block; padding-top: 5px;">Christine Liu</span>
+                                                </strong>
+                                                </a><!--/.qlink-box -->
+            
+                                        
+                                            </div><!--/.qlink-column -->
+                                        </div><!--/.tiny-item -->
+                                        
+                                    
+                                    
+                                    
+                                        
+            
+            
+                                        <div class="tiny-item">
+                                            <div class="qlink-column">
+            
+            
+                                        
+            
+            
+                                                <a href="https://www.northhempsteadny.gov/government/councilmembers/district_2.php" class="qlink-box" target="_self">
+                                                <div class="qlink-icon">
+                                                    <img src="https://www.northhempsteadny.gov/Images/Government/Councilmembers/District%202/Ed%20Scott_2x2_.jpg?t=202503171242200" alt="Ed Scott_2x2_">
+                                                </div>
+                                                <strong class="qlink-title">
+                                                    District 2<br><span style="display: inline-block; padding-top: 5px;">Edward Scott</span><br>
+                                                </strong>
+                                                </a><!--/.qlink-box -->
+            
+                                        
+                                    
+                                    
+                                    
+                                        
+            
+            
+                                                <a href="https://www.northhempsteadny.gov/government/councilmembers/district_5.php" class="qlink-box" target="_self">
+                                                <div class="qlink-icon">
+                                                    <img src="https://www.northhempsteadny.gov/Images/Government/Councilmembers/District%205/YaronLevy.jpg?t=202601060551590" alt="YaronLevy">
+                                                </div>
+                                                <strong class="qlink-title">
+                                                    District 5<br><span style="display: inline-block; padding-top: 5px;">Yaron Levy</span>
+                                                </strong>
+                                                </a><!--/.qlink-box -->
+            
+                                        
+                                            </div><!--/.qlink-column -->
+                                        </div><!--/.tiny-item -->
+                                        
+                                    
+                                    
+                                    
+                                        
+            
+            
+                                        <div class="tiny-item">
+                                            <div class="qlink-column">
+            
+            
+                                        
+            
+            
+                                                <a href="https://www.northhempsteadny.gov/government/councilmembers/district_3.php" class="qlink-box" target="_self">
+                                                <div class="qlink-icon">
+                                                    <img src="https://www.northhempsteadny.gov/Images/Government/Councilmembers/District%203/Dennis%20Walsh_1x1%20crop_%20-%20Copy%20(2).jpg?t=202503171242190" alt="Dennis Walsh_1x1 crop_ - Copy (2)">
+                                                </div>
+                                                <strong class="qlink-title">
+                                                    District 3<br><span style="display: inline-block; padding-top: 5px;">Dennis Walsh</span>
+                                                </strong>
+                                                </a><!--/.qlink-box -->
+            
+                                        
+                                    
+                                    
+                                    
+                                        
+            
+            
+                                                <a href="https://www.northhempsteadny.gov/government/councilmembers/district_6.php" class="qlink-box" target="_self">
+                                                <div class="qlink-icon">
+                                                    <img src="https://www.northhempsteadny.gov/Images/Government/Councilmembers/District%206/MD_2x2_.jpg?t=202503171242220" alt="MD_2x2_">
+                                                </div>
+                                                <strong class="qlink-title">
+                                                    District 6<br><span style="display: inline-block; padding-top: 5px;">Mariann Dalimonte</span>
+                                                </strong>
+                                                </a><!--/.qlink-box -->
+            
+                                        
+                                            </div><!--/.qlink-column -->
+                                        </div><!--/.tiny-item -->
+                                        
+                                    
+                                    
+                                    
+                                        
+            
+            
+                                        <div class="tiny-item">
+                                            <div class="qlink-column">
+            
+            
+                                        
+            
+            
+                                                <a href="https://www.northhempsteadny.gov/government/town_clerk/about_town_clerk.php" class="qlink-box" target="_self">
+                                                <div class="qlink-icon">
+                                                    <img src="https://www.northhempsteadny.gov/Images/Government/Town%20Clerk/Clerk_2x2_%20copy.jpg?t=202503171242190" alt="Clerk_2x2_ copy">
+                                                </div>
+                                                <strong class="qlink-title">
+                                                    Town Clerk<br><span style="display: inline-block; padding-top: 5px;">Ragini Srivastava</span>
+                                                </strong>
+                                                </a><!--/.qlink-box -->
+            
+                                        
+                                    
+                                    
+                                    
+                                        
+            
+            
+                                                <a href="https://www.northhempsteadny.gov/government/receiver_of_taxes/about_receiver_of_taxes.php" class="qlink-box" target="_self">
+                                                <div class="qlink-icon">
+                                                    <img src="https://www.northhempsteadny.gov/Images/Government/Receiver%20Of%20Taxes/About%20Receiver%20Of%20Taxes/MJC%20official%202x2_%20copy%202.jpg?t=202601150927240" alt="MJC official 2x2_ copy 2">
+                                                </div>
+                                                <strong class="qlink-title">
+                                                    <span style="font-size: 14px;">Receiver of Taxes</span><br><span style="display: inline-block; padding-top: 5px;">Mary Jo Collins</span>
+                                                </strong>
+                                                </a><!--/.qlink-box -->
+            
+                                        
+                                            </div><!--/.qlink-column -->
+                                        </div><!--/.tiny-item -->
+                                        
+                                    
+                                    
+                                    
+                                    
+                                
+                                
+                            </div><!--/.tiny-carousel -->
+                        </div><!--/#officials-links -->
+                    </div>
+                </div><!--/.col-lg-7-->
+            </div>
+        </div>
+    </div><!--/.officials-in -->
+</section><!--/#officials-section.section -->
+	
+
+
+
+
+
+
+ 
+
+ 
+
+<section id="footer-section" class="section fp-auto-height">
+
+<div id="signup-section">
+	<img src="https://www.northhempsteadny.gov/_assets_/images/signup-rope-shape.png" class="top-rope" alt="rope shape"/>
+	<div class="container">
+		<div id="signup-in">
+			<div class="has-edit-buttons">
+				<div class="left-top">
+					<div class="rz-btns-container">
+						
+						<script language="JavaScript" type="text/JavaScript">
+                                            RZ.module = 'global';
+                                            RZ.nexturl = 'editforms/text-editform.jsp';
+                                            RZ.img = '<span class="rzBtn">Edit title</span>';
+                                            RZ.set = 'pageid=title';
+                                            RZ.options = '';
+                                            if (typeof RZaction != 'undefined') RZaction('editform');
+                                        </script>
+					</div>			
+				</div>
+				<div class="section-title">
+				stay up to date
+				</div>
+			</div>
+			<div class="has-edit-buttons">
+				<div class="rz-btns-container">
+					
+					<script language="JavaScript" type="text/JavaScript">
+                                            RZ.module = 'global';
+                                            RZ.nexturl = 'editforms/text-editform.jsp';
+                                            RZ.img = '<span class="rzBtn">Edit Button</span>';
+                                            RZ.set = 'pageid=button';
+                                            RZ.options = '';
+                                            if (typeof RZaction != 'undefined') RZaction('editform');
+                                        </script>
+				</div>		
+				<a href="https://www.northhempsteadny.gov/./e-notify/index.php" class="button section-link">
+				
+			sign up for notifications
+
+				</a>
+			</div>
+		</div><!--/#signup-in -->
+	</div><!--/.container-->
+	<img src="https://www.northhempsteadny.gov/_assets_/images/signup-rope-shape.png" class="bottom-rope" alt="rope shape"/>
+</div><!--/#signup-section --> 
+
+    <footer id="site-footer" >
+        <div id="footer-top">
+            <div class="container">
+                <div class="footer__top-in">
+                    <div class="footer-col has-edit-buttons" id="footer-top-left">
+                        <div class="right-top">
+                             
+                                <div class="rz-btns-container">
+                                    
+                                    <script language="JavaScript" type="text/JavaScript">
+                                            RZ.module = 'global';
+                                            RZ.nexturl = 'editforms/text-editform.jsp?width=1700&height=1420';
+                                            RZ.img = '<span class="rzBtn">Edit Header</span>';
+                                            RZ.set = 'pageid=footer-header';
+                                            RZ.options = '';
+                                            if (typeof RZaction != 'undefined') RZaction('editform');
+                                        </script>
+                                    
+                                    <script language="JavaScript" type="text/JavaScript">
+                                            RZ.module = 'contact_footer';
+                                            RZ.nexturl = 'editforms/text-editform-footer.jsp?';
+                                            RZ.img = '<span class="rzBtn">Edit Content</span>';
+                                            RZ.set = 'pageid=footer-contacts';
+                                            RZ.options = '';
+                                            if (typeof RZaction != 'undefined') RZaction('editform');
+                                        </script>
+                                </div>
+                                 		
+                        </div>
+                        <h3 class="footer-header">
+                            contact us
+                        </h3>
+                    
+                        <a href="https://www.northhempsteadny.gov/./" class="footer-link">
+                            <img src="https://www.northhempsteadny.gov/_assets_/images/f-icon-1.png" class="footer-link-icon" alt="clock icon"/>
+                             9:00 a.m. to 5:00 p.m. 
+                             </a>
+                            
+                            <a href="tel:5168696311" class="footer-link">
+                            <img src="https://www.northhempsteadny.gov/_assets_/images/f-icon-2.png" class="footer-link-icon" alt="phone icon"/>
+                             (516) 869-6311
+                             </a>
+        
+                            <a href="https://maps.app.goo.gl/dByZqUbJtEYB7KNw7" target="_blank" class="footer-link">
+                            <img src="https://www.northhempsteadny.gov/_assets_/images/f-icon-3.png" class="footer-link-icon" alt="location icon"/> 
+                            220 Plandome Road, Manhasset NY 11030</br><a href="https://www.northhempsteadny.gov/government/town_policies_and_procedures/privacy_statement.php">Privacy Statement </a></br><a href="https://www.northhempsteadny.gov/government/town_policies_and_procedures/terms_of_use.php">Terms of Use </a></br><a href="https://www.northhempsteadny.gov/government/town_policies_and_procedures/accessibility.php">Accessibility </a>
+                            </a>
+        
+
+
+                        <div id="footer-social" class="has-edit-buttons yes-has-edit-buttons">
+                                                            <div class="center-top">
+                                    <div class="rz-btns-container">
+                                        
+                                        <script language="JavaScript" type="text/JavaScript">
+                                            RZ.module = 'global';
+                                            RZ.nexturl = 'editforms/socials-editform.jsp?';
+                                            RZ.img = '<span class="rzBtn rzBtn-sm">Edit Social Links</span>';
+                                            RZ.set = 'pageid=socials';
+                                            RZ.options = '';
+                                            if (typeof RZaction != 'undefined') RZaction('editform');
+                                        </script>
+                                    </div>	                                 
+                                </div>
+                                
+                                
+                                <a href="https://www.facebook.com/townofnorthhempstead" target="_blank" class="social-media-link">
+                                <span class="sr-only">Facebook</span>
+                                <img src="https://www.northhempsteadny.gov/_assets_/images/social-1.png"  alt="social icon">
+                                </a>
+                                
+        
+        
+                                
+                                <a href="https://twitter.com/northhempstead" target="_blank" class="social-media-link">
+                                <span class="sr-only">Twitter</span>
+                                <img src="https://www.northhempsteadny.gov/_assets_/images/social-2.png"  alt="social icon">
+                                </a>
+                                
+        
+        
+                                
+        
+        
+                                
+                                <a href="https://www.youtube.com/user/townofnorthhempstead" target="_blank" class="social-media-link">
+                                <span class="sr-only">Youtube</span>
+                                <img src="https://www.northhempsteadny.gov/_assets_/images/social-4.png"  alt="social icon">
+                                </a>
+                                
+        
+        
+                                
+                  
+                  
+                        </div>
+                    </div>
+                    <div class="footer-col" id="footer-top-right">
+                        <img src="https://www.northhempsteadny.gov/_assets_/images/footer-logo.png" id="footer-logo" alt="footer logo"/>
+                        
+                    </div>
+                </div><!--/.footer__top-in-->
+            </div><!--/.container-->
+        </div><!--/#footer-top-->
+        <div id="footer-bottom">
+            <div class="container">
+                <div id="revize">
+                    Powered by <a href="https://www.revize.com" target="_blank" id="revize-link">revize.,</a> the Government Website Experts <a href="https://cms2.revize.com/revize/security/index.jsp?webspace=townofnorthhempstead&filename=/index.php" id="revize-login">Login</a>
+                </div><!--/#revize-->
+            </div><!--/.container-->
+        </div><!--/#footer-bottom-->
+    </footer>
+</section>
+	
+</main>
+
+
+
+
+
+
+
+
+  
+
+
+<div id="site-plugins">
+
+	<section id="modal-section">
+		<button type="button" class="share-btn floating-share-btn" data-toggle="modal" data-target="#shareModal" >
+		<img src="https://www.northhempsteadny.gov/_assets_/images/share-icon.png" class="share-icon" alt="twitter"/>
+		<span>Share <span class="sr-only">this page</span></span>
+	</button>
+
+	<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModal">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title" id="myModalLabel">Share this page</h2>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="copylink">
+						<p>Copy and paste this code into your website.</p>
+						<pre class="py-3 px-4">&lt;a href="http://www.northhempsteadny.gov/">Your Link Name&lt;/a&gt;</pre>
+					</div><!-- /.copylink -->
+					<div class="share-btns">
+						<p>Share this page on your favorite Social network</p>
+						<div class="row">
+							<div class="col-sm-4">
+								<a href="https://www.facebook.com/sharer/sharer.php?u=http://www.northhempsteadny.gov/" class="btn-facebook" onclick="return !window.open(this.href, 'facebook ', 'width=500,height=500')"
+								target="_blank">
+									<i class="fa fa-facebook"></i> Facebook
+								</a>
+							</div>
+							<div class="col-sm-4">
+								<a href="https://www.twitter.com/intent/tweet?url=http://www.northhempsteadny.gov/" class="btn-twitter" onclick="return !window.open(this.href, 'twitter ', 'width=500,height=500')"
+								target="_blank">
+									<img src="https://www.northhempsteadny.gov/_assets_/images/twitter-x.png" alt="twitter"/> Twitter
+								</a>
+							</div>
+							<div class="col-sm-4">
+								<a href="https://www.reddit.com/submit?url=http://www.northhempsteadny.gov/" class="btn-reddit" onclick="return !window.open(this.href, 'redit ', 'width=500,height=500')"
+								target="_blank">
+									<i class="fa fa-reddit"></i> Reddit
+								</a>
+							</div>
+						</div><!-- /.row -->
+					</div><!-- /.share-btns -->
+					<button type="button" class="btn btn-success btn-lg" data-dismiss="modal">Close</button>
+				</div><!-- /.modal-body -->
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</section><!-- /#modal-section -->
+
+	<!-- ADA -->
+	<div id="ada-widget">
+		<script>
+			(function(d){
+			var s = d.createElement("script");
+			s.setAttribute("data-position", 5);
+			s.setAttribute("data-color", '#000');
+			s.setAttribute("data-account", "sudb1U5E4V");
+			s.setAttribute("src", "https://cdn.userway.org/widget.js"); 
+			(d.body || d.head).appendChild(s);})(document)
+		</script>
+		<noscript>
+		Please ensure Javascript is enabled for purposes of 
+		<a href="https://userway.org">website accessibility</a>
+		</noscript>
+	</div>	
+
+
+	<div id="google-translate" class="d-none">
+		<script>
+			function googleTranslateElementInit() {
+				new google.translate.TranslateElement({pagelanguage: 'en',
+					layout: google.translate.TranslateElement.InlineLayout.SIMPLE},
+					'google-translate');
+			}
+		</script>
+	</div><!--/#google-translate-->
+
+	<ul id="translation-links">
+		<li><button type="button" id="translate-button" aria-label="translate website" aria-haspopup="true" aria-expanded="false"><img src="https://www.northhempsteadny.gov/_assets_/images/translate-icon.png" class="translate-icon" alt="translate icon"/></button>
+			<ul class="clearfix" aria-labelledby="translate-button">
+				<li><a href="#" class="English" data-lang="English" translate="no"><strong>English</strong></a></li>
+				<li><a href="#" class="Afrikaans" data-lang="Afrikaans">Afrikaans</a></li>
+				<li><a href="#" class="Albanian" data-lang="Albanian">Albanian</a></li>
+				<li><a href="#" class="Arabic" data-lang="Arabic">Arabic</a></li>
+				<li><a href="#" class="Armenian" data-lang="Armenian">Armenian</a></li>
+				<li><a href="#" class="Azerbaijani" data-lang="Azerbaijani">Azerbaijani</a></li>
+				<li><a href="#" class="Basque" data-lang="Basque">Basque</a></li>
+				<li><a href="#" class="Belarusian" data-lang="Belarusian">Belarusian</a></li>
+				<li><a href="#" class="Bengali" data-lang="Bengali">Bengali</a></li>
+				<li><a href="#" class="Bosnian" data-lang="Bosnian">Bosnian</a></li>
+				<li><a href="#" class="Bulgarian" data-lang="Bulgarian">Bulgarian</a></li>
+				<li><a href="#" class="Catalan" data-lang="Catalan">Catalan</a></li>
+				<li><a href="#" class="Cebuano" data-lang="Cebuano">Cebuano</a></li>
+				<li><a href="#" class="Chinese" data-lang="Chinese (Simplified)">Chinese (Simplified)</a></li>
+				<li><a href="#" class="Chinese" data-lang="Chinese (Traditional)">Chinese (Traditional)</a></li>
+				<li><a href="#" class="Croatian" data-lang="Croatian">Croatian</a></li>
+				<li><a href="#" class="Czech" data-lang="Czech">Czech</a></li>
+				<li><a href="#" class="Danish" data-lang="Danish">Danish</a></li>
+				<li><a href="#" class="Dutch" data-lang="Dutch">Dutch</a></li>
+				<li><a href="#" class="Esperanto" data-lang="Esperanto">Esperanto</a></li>
+				<li><a href="#" class="Estonian" data-lang="Estonian">Estonian</a></li>
+				<li><a href="#" class="Filipino" data-lang="Filipino">Filipino</a></li>
+				<li><a href="#" class="Finnish" data-lang="Finnish">Finnish</a></li>
+				<li><a href="#" class="French" data-lang="French">French</a></li>
+				<li><a href="#" class="Galician" data-lang="Galician">Galician</a></li>
+				<li><a href="#" class="Georgian" data-lang="Georgian">Georgian</a></li>
+				<li><a href="#" class="German" data-lang="German">German</a></li>
+				<li><a href="#" class="Greek" data-lang="Greek">Greek</a></li>
+				<li><a href="#" class="Gujarati" data-lang="Gujarati">Gujarati</a></li>
+				<li><a href="#" class="Haitian Creole" data-lang="Haitian Creole">Haitian Creole</a></li>
+				<li><a href="#" class="Hausa" data-lang="Hausa">Hausa</a></li>
+				<li><a href="#" class="Hebrew" data-lang="Hebrew">Hebrew</a></li>
+				<li><a href="#" class="Hindi" data-lang="">Hindi</a></li>
+				<li><a href="#" class="Hmong" data-lang="Hmong">Hmong</a></li>
+				<li><a href="#" class="Hungarian" data-lang="Hungarian">Hungarian</a></li>
+				<li><a href="#" class="Icelandic" data-lang="Icelandic">Icelandic</a></li>
+				<li><a href="#" class="Igbo" data-lang="Igbo">Igbo</a></li>
+				<li><a href="#" class="Indonesian" data-lang="Indonesian">Indonesian</a></li>
+				<li><a href="#" class="Irish" data-lang="Irish">Irish</a></li>
+				<li><a href="#" class="Italian" data-lang="Italian">Italian</a></li>
+				<li><a href="#" class="Japanese" data-lang="Japanese">Japanese</a></li>
+				<li><a href="#" class="Javanese" data-lang="Javanese">Javanese</a></li>
+				<li><a href="#" class="Kannada" data-lang="Kannada">Kannada</a></li>
+				<li><a href="#" class="Khmer" data-lang="Khmer">Khmer</a></li>
+				<li><a href="#" class="Korean" data-lang="Korean">Korean</a></li>
+				<li><a href="#" class="Lao" data-lang="Lao">Lao</a></li>
+				<li><a href="#" class="Latin" data-lang="Latin">Latin</a></li>
+				<li><a href="#" class="Latvian" data-lang="Latvian">Latvian</a></li>
+				<li><a href="#" class="Lithuanian" data-lang="Lithuanian">Lithuanian</a></li>
+				<li><a href="#" class="Macedonian" data-lang="Macedonian">Macedonian</a></li>
+				<li><a href="#" class="Malay" data-lang="Malay">Malay</a></li>
+				<li><a href="#" class="Maltese" data-lang="Maltese">Maltese</a></li>
+				<li><a href="#" class="Maori" data-lang="Maori">Maori</a></li>
+				<li><a href="#" class="Marathi" data-lang="Marathi">Marathi</a></li>
+				<li><a href="#" class="Mongolian" data-lang="Mongolian">Mongolian</a></li>
+				<li><a href="#" class="Nepali" data-lang="Nepali">Nepali</a></li>
+				<li><a href="#" class="Norwegian" data-lang="Norwegian">Norwegian</a></li>
+				<li><a href="#" class="Persian" data-lang="Persian">Persian</a></li>
+				<li><a href="#" class="Polish" data-lang="Polish">Polish</a></li>
+				<li><a href="#" class="Portuguese" data-lang="Portuguese">Portuguese</a></li>
+				<li><a href="#" class="Punjabi" data-lang="Punjabi">Punjabi</a></li>
+				<li><a href="#" class="Romanian" data-lang="Romanian">Romanian</a></li>
+				<li><a href="#" class="Russian" data-lang="Russian">Russian</a></li>
+				<li><a href="#" class="Serbian" data-lang="Serbian">Serbian</a></li>
+				<li><a href="#" class="Slovak" data-lang="Slovak">Slovak</a></li>
+				<li><a href="#" class="Slovenian" data-lang="Slovenian">Slovenian</a></li>
+				<li><a href="#" class="Somali" data-lang="Somali">Somali</a></li>
+				<li><a href="#" class="Spanish" data-lang="Spanish">Spanish</a></li>
+				<li><a href="#" class="Swahili" data-lang="Swahili">Swahili</a></li>
+				<li><a href="#" class="Swedish" data-lang="Swedish">Swedish</a></li>
+				<li><a href="#" class="Tamil" data-lang="Tamil">Tamil</a></li>
+				<li><a href="#" class="Telugu" data-lang="Telugu">Telugu</a></li>
+				<li><a href="#" class="Thai" data-lang="Thai">Thai</a></li>
+				<li><a href="#" class="Turkish" data-lang="Turkish">Turkish</a></li>
+				<li><a href="#" class="Ukrainian" data-lang="Ukrainian">Ukrainian</a></li>
+				<li><a href="#" class="Urdu" data-lang="Urdu">Urdu</a></li>
+				<li><a href="#" class="Vietnamese" data-lang="Vietnamese">Vietnamese</a></li>
+				<li><a href="#" class="Welsh" data-lang="Welsh">Welsh</a></li>
+				<li><a href="#" class="Yiddish" data-lang="Yiddish">Yiddish</a></li>
+				<li><a href="#" class="Yoruba" data-lang="Yoruba">Yoruba</a></li>
+				<li><a href="#" class="Zulu" data-lang="Zulu">Zulu</a></li>
+			</ul>
+		</li>
+	</ul><!--/#translation-links-->
+
+</div>
+
+<script src="/revize/plugins/revize_calendar/index.v2.js"></script>
+
+<script src="https://www.northhempsteadny.gov/_assets_/plugins/tiny-slider/dist/min/tiny-slider.js"></script>
+<script src="https://www.northhempsteadny.gov/_assets_/plugins/ytplayer/jquery.mb.YTPlayer.min.js"></script>
+<script src="https://www.northhempsteadny.gov/_assets_/plugins/fullpage/jquery.fullpage.js"></script>
+<script src="https://www.northhempsteadny.gov/_assets_/js/scripts.js?v=RWRh65KAogBPxev41"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+

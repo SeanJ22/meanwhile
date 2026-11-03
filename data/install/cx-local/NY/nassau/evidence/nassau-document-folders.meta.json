@@ -1,0 +1,14 @@
+{
+  "url": "https://www.nassaucountyny.gov/admin/DocumentCenter/Home/_AjaxLoadingReact?type=0",
+  "finalUrl": "https://www.nassaucountyny.gov/admin/DocumentCenter/Home/_AjaxLoadingReact?type=0",
+  "status": 200,
+  "fetchedAt": "2026-11-03T04:50:43.677597+00:00",
+  "sha256": "69680d75e4cae8171c3e1e5f320ce64df1b490754e50dc0ecd1d6fd6313b1e5e",
+  "bytes": 7230,
+  "payload": {
+    "value": "1",
+    "expandTree": false,
+    "loadSource": 7,
+    "selectedFolder": 1
+  }
+}

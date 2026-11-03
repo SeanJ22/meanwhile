@@ -1,0 +1,15 @@
+[
+  {
+    "requestedUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/35481/Nassau-County-Sample-Ballots",
+    "finalUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/35481/Nassau-County-Sample-Ballots",
+    "retrievedAt": "2026-11-03T04:52:00.559629+00:00",
+    "httpStatus": 200,
+    "rawHash": "f04bd6807a18af01ab42c4bd4dd997a1af1ee722f69da90c767f9788fb8c67ef",
+    "sourceFile": "evidence/nassau-sample-35481.pdf",
+    "recordType": "REJECTED_WRONG_ELECTION_YEAR",
+    "observedElectionDate": "2021-11-02",
+    "observedSourcePages": 110,
+    "exactDateText": "November 2, 2021",
+    "rejectionReason": "This official county archive sample is for the2021 election. It is retained as rejected evidence and is never used for2026 contests/candidates or completeness claims."
+  }
+]

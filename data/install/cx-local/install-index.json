@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:25:11.056898+00:00",
+  "preparedAt": "2026-11-03T05:25:14.828483+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -685,6 +685,27 @@
       "refreshedContests": 3,
       "sourceInputSha256": "06cf563c1af7576c61ab526ba0ff481cdb8f88b11f485d9e19b93c2db620f093",
       "coverage": "ALL4LOCAL_JUDICIAL_FIELDS_IN_CURRENT_BOE_BRONX_INVENTORY_VERIFIED_ON_SELECTED_CURRENT_SPECIMENS;FULL_STYLE_PARITY_OPEN"
+    },
+    {
+      "state": "NY",
+      "county": "Nassau",
+      "populationRank": 30,
+      "manifest": "NY/nassau/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 29,
+      "measureContests": 0,
+      "candidacies": 71,
+      "newContests": 28,
+      "refreshedContests": 1,
+      "sourceInputSha256": "e540f096ecee02dcb22119f406934f8778b376f23ef065604d08f4f262054d6e",
+      "coverage": [
+        "Official candidate-list coverage: the current county BOE homepage links the September18,2026 seven-page candidate PDF, publicly listed as modified September21. Every29 local office field/71 candidate names, full fusion parties and vote limits are prepared. All28 newly added office fields rely on that list; actual Nassau November3 sample ballots and later ballot replacements remain an explicit source gap. This packet does not claim Nassau sample-ballot completeness.",
+        "Shared Supreme10: the existing contest and14 candidacy IDs are reused. Nassau native list, current state certification and Suffolk current actual sample agree on the full14 names/fusion line sets and vote8. Both Nassau and Suffolk county whole-membership IDs are preserved and refreshed from the source-exact state certification header.",
+        "Nassau DistrictCourt2 consists of Hempstead town AND LongBeach city;3 NorthHempstead town;4 OysterBay town AND GlenCove city, under official court rule212.2. Allfive constituent whole divisions are linked to exact county-scoped court district IDs. Court2/4 are not narrowed to only their towns. County legislative districts1\u201319 retain precise IDs pending boundary/division joins.",
+        "Countywide Family Court is kept separate from shared state Supreme Court. Town office electorates use exact registered towns rather than villages/CDPs. No county legislative district is widened to Nassau County. School/special-district offices absent from the candidate list are not represented as verified absent or cancelled.",
+        "The list explicitly says subject to change and has no qualification/withdrawal/status columns. No late withdrawal, replacement or cancellation identity is inferred. Blank Write-in spaces do not identify people, and no separate current local declared-write-in certification has been established. Existing measures, legislative races and explainers are preserved by the partial merge.",
+        "Acquisition evidence includes current BOE/legacy/domain redirects, the public BOE DocumentCenter folder enumeration of319 documents, county search and city/town routes. It records the sample gap without asserting no sample exists. Replay scripts remain in scratch; this packet contains data and source evidence only. No production publication or git operation was performed."
+      ]
     }
   ],
   "sourceReviewCounties": [
@@ -710,17 +731,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 28,
-    "packetsPrepared": 29,
-    "candidateAndRetentionContests": 1901,
+    "countiesPrepared": 29,
+    "packetsPrepared": 30,
+    "candidateAndRetentionContests": 1930,
     "measureContests": 75,
-    "candidacyEntries": 4350,
-    "newContestEntriesAgainstCheckedInBaseline": 1574,
-    "distinctPreparedContestIds": 1962,
-    "distinctPreparedCandidateIds": 4324,
-    "distinctNewContestsAgainstCheckedInBaseline": 1568,
+    "candidacyEntries": 4421,
+    "newContestEntriesAgainstCheckedInBaseline": 1602,
+    "distinctPreparedContestIds": 1990,
+    "distinctPreparedCandidateIds": 4381,
+    "distinctNewContestsAgainstCheckedInBaseline": 1596,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 29
+    "distinctCountyHandoffs": 30
   },
   "remainingWork": [
     {

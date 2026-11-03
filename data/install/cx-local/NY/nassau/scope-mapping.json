@@ -1,0 +1,176 @@
+[
+  {
+    "contestId": "ny-cx-local-2026-nassau-supervisor-town-of-hempstead",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:hempstead_town",
+    "presentInCheckedInRegistry": true,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-town-clerk-town-of-hempstead",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:hempstead_town",
+    "presentInCheckedInRegistry": true,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-supervisor-town-of-north-hempstead",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:north_hempstead_town",
+    "presentInCheckedInRegistry": true,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-supervisor-town-of-oyster-bay",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:oyster_bay_town",
+    "presentInCheckedInRegistry": true,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-town-clerk-town-of-oyster-bay",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:oyster_bay_town",
+    "presentInCheckedInRegistry": true,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-1st-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:1",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-2nd-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:2",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-3rd-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:3",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-4th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-5th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:5",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-6th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:6",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-7th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:7",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-8th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:8",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-9th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:9",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-10th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:10",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-11th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:11",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-12th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:12",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-13th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:13",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-14th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:14",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-15th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:15",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-16th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:16",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-17th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:17",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-18th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:18",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-county-legislator-19th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:19",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-2026-general:supreme-court-10",
+    "ocdId": "ocd-division/country:us/state:ny/supreme_court:10",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": true
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-family-court-judge",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau",
+    "presentInCheckedInRegistry": true,
+    "resolvedBySourceBackedWholeMemberLinks": false
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-district-court-judge-2nd-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/district_court:2",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": true
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-district-court-judge-3rd-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/district_court:3",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": true
+  },
+  {
+    "contestId": "ny-cx-local-2026-nassau-district-court-judge-4th-district",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/district_court:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedBySourceBackedWholeMemberLinks": true
+  }
+]

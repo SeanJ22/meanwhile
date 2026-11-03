@@ -1,0 +1,465 @@
+[
+  {
+    "id": "ny-cx-local-2026-nassau-supervisor-town-of-hempstead",
+    "title": "Supervisor, Town of Hempstead",
+    "sourceTitle": "Supervisor, Town of Hempstead",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:hempstead_town",
+    "heldContest": false,
+    "sourcePage": 3,
+    "candidateNames": [
+      "Joe Scianablo",
+      "John R. Ferretti",
+      "Martin Oliner"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-town-clerk-town-of-hempstead",
+    "title": "Town Clerk, Town of Hempstead",
+    "sourceTitle": "Town Clerk, Town of Hempstead",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:hempstead_town",
+    "heldContest": false,
+    "sourcePage": 3,
+    "candidateNames": [
+      "Joylette E. Williams",
+      "Kate Murray"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-supervisor-town-of-north-hempstead",
+    "title": "Supervisor, Town of North Hempstead",
+    "sourceTitle": "Supervisor, Town of North Hempstead",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:north_hempstead_town",
+    "heldContest": false,
+    "sourcePage": 4,
+    "candidateNames": [
+      "Sean Michael McCarthy",
+      "Jennifer S. DeSena"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-supervisor-town-of-oyster-bay",
+    "title": "Supervisor, Town of Oyster Bay",
+    "sourceTitle": "Supervisor, Town of Oyster Bay",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:oyster_bay_town",
+    "heldContest": false,
+    "sourcePage": 4,
+    "candidateNames": [
+      "James T. Hoyle",
+      "Joseph S. Saladino"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-town-clerk-town-of-oyster-bay",
+    "title": "Town Clerk, Town of Oyster Bay",
+    "sourceTitle": "Town Clerk, Town of Oyster Bay",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:oyster_bay_town",
+    "heldContest": false,
+    "sourcePage": 4,
+    "candidateNames": [
+      "Shreya Gupta",
+      "Richard L. LaMarca"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-1st-district",
+    "title": "County Legislator, 1st District",
+    "sourceTitle": "County Legislator, 1st District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:1",
+    "heldContest": false,
+    "sourcePage": 4,
+    "candidateNames": [
+      "Scott M. Davis",
+      "Edward J. Lino"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-2nd-district",
+    "title": "County Legislator, 2nd District",
+    "sourceTitle": "County Legislator, 2nd District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:2",
+    "heldContest": false,
+    "sourcePage": 4,
+    "candidateNames": [
+      "Viviana L. Russell",
+      "Lamont E. Johnson"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-3rd-district",
+    "title": "County Legislator, 3rd District",
+    "sourceTitle": "County Legislator, 3rd District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:3",
+    "heldContest": false,
+    "sourcePage": 4,
+    "candidateNames": [
+      "Carri\u00e9 Solages",
+      "Kadeem M. Brown"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-4th-district",
+    "title": "County Legislator, 4th District",
+    "sourceTitle": "County Legislator, 4th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:4",
+    "heldContest": false,
+    "sourcePage": 4,
+    "candidateNames": [
+      "Michael J. Pentola",
+      "Patrick Mullaney"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-5th-district",
+    "title": "County Legislator, 5th District",
+    "sourceTitle": "County Legislator, 5th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:5",
+    "heldContest": false,
+    "sourcePage": 4,
+    "candidateNames": [
+      "Olena Nicks",
+      "Moshe E. Hill"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-6th-district",
+    "title": "County Legislator, 6th District",
+    "sourceTitle": "County Legislator, 6th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:6",
+    "heldContest": false,
+    "sourcePage": 4,
+    "candidateNames": [
+      "Debra S. Mul\u00e9",
+      "Benjamin Jackson"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-7th-district",
+    "title": "County Legislator, 7th District",
+    "sourceTitle": "County Legislator, 7th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:7",
+    "heldContest": false,
+    "sourcePage": 5,
+    "candidateNames": [
+      "Douglas J. Segan",
+      "Howard J. Kopel"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-8th-district",
+    "title": "County Legislator, 8th District",
+    "sourceTitle": "County Legislator, 8th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:8",
+    "heldContest": false,
+    "sourcePage": 5,
+    "candidateNames": [
+      "Joy Jankunas",
+      "John J. Giuffre"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-9th-district",
+    "title": "County Legislator, 9th District",
+    "sourceTitle": "County Legislator, 9th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:9",
+    "heldContest": false,
+    "sourcePage": 5,
+    "candidateNames": [
+      "Juleigh Chin",
+      "Scott P. Strauss"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-10th-district",
+    "title": "County Legislator, 10th District",
+    "sourceTitle": "County Legislator, 10th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:10",
+    "heldContest": false,
+    "sourcePage": 5,
+    "candidateNames": [
+      "Skylar A. Epstein",
+      "Mazi Melesa Pilip"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-11th-district",
+    "title": "County Legislator, 11th District",
+    "sourceTitle": "County Legislator, 11th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:11",
+    "heldContest": false,
+    "sourcePage": 5,
+    "candidateNames": [
+      "Delia M. DeRiggi Whitton",
+      "John Canning"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-12th-district",
+    "title": "County Legislator, 12th District",
+    "sourceTitle": "County Legislator, 12th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:12",
+    "heldContest": false,
+    "sourcePage": 5,
+    "candidateNames": [
+      "Michael Vanunu",
+      "Michael J. Giangregorio"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-13th-district",
+    "title": "County Legislator, 13th District",
+    "sourceTitle": "County Legislator, 13th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:13",
+    "heldContest": false,
+    "sourcePage": 5,
+    "candidateNames": [
+      "Christina M. Lemyre",
+      "Thomas McKevitt"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-14th-district",
+    "title": "County Legislator, 14th District",
+    "sourceTitle": "County Legislator, 14th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:14",
+    "heldContest": false,
+    "sourcePage": 5,
+    "candidateNames": [
+      "Cynthia Nu\u00f1ez",
+      "Anthony B. Capone"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-15th-district",
+    "title": "County Legislator, 15th District",
+    "sourceTitle": "County Legislator, 15th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:15",
+    "heldContest": false,
+    "sourcePage": 5,
+    "candidateNames": [
+      "David Louis Boldt Smith",
+      "Kayla Lianne Knight"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-16th-district",
+    "title": "County Legislator, 16th District",
+    "sourceTitle": "County Legislator, 16th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:16",
+    "heldContest": false,
+    "sourcePage": 6,
+    "candidateNames": [
+      "Jared Behr",
+      "Olivia G. Pfeifer"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-17th-district",
+    "title": "County Legislator, 17th District",
+    "sourceTitle": "County Legislator, 17th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:17",
+    "heldContest": false,
+    "sourcePage": 6,
+    "candidateNames": [
+      "Ryan J. Johnson",
+      "Rose Marie Walker"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-18th-district",
+    "title": "County Legislator, 18th District",
+    "sourceTitle": "County Legislator, 18th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:18",
+    "heldContest": false,
+    "sourcePage": 6,
+    "candidateNames": [
+      "Graham Musynske",
+      "Samantha A. Goetz"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-county-legislator-19th-district",
+    "title": "County Legislator, 19th District",
+    "sourceTitle": "County Legislator, 19th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:19",
+    "heldContest": false,
+    "sourcePage": 6,
+    "candidateNames": [
+      "Christine Barlow",
+      "James D. Kennedy"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-2026-general:supreme-court-10",
+    "title": "Supreme Court Justice, District 10",
+    "sourceTitle": "Justice of the Supreme Court, 10th Judicial District",
+    "ocdId": "ocd-division/country:us/state:ny/supreme_court:10",
+    "heldContest": true,
+    "sourcePage": 6,
+    "candidateNames": [
+      "Richard Ambro",
+      "Anthony R. Portesy",
+      "Leonard D. Steinman",
+      "Mary E. Porter",
+      "Kelly A. Reape",
+      "Joy M. Watson",
+      "Stephen L. Ukeiley",
+      "Karen M. Wilutis",
+      "Eric Sachs",
+      "John Iliou",
+      "William D. Wexler",
+      "James A. McDonaugh",
+      "John Kelly",
+      "Mary Kate Mullen"
+    ],
+    "heldCandidateIdsPreserved": [
+      "ny-2026-general:supreme-court-10:richard-ambro",
+      "ny-2026-general:supreme-court-10:anthony-r-portesy",
+      "ny-2026-general:supreme-court-10:leonard-d-steinman",
+      "ny-2026-general:supreme-court-10:mary-e-porter",
+      "ny-2026-general:supreme-court-10:kelly-a-reape",
+      "ny-2026-general:supreme-court-10:joy-m-watson",
+      "ny-2026-general:supreme-court-10:stephen-l-ukeiley",
+      "ny-2026-general:supreme-court-10:karen-m-wilutis",
+      "ny-2026-general:supreme-court-10:eric-sachs",
+      "ny-2026-general:supreme-court-10:john-iliou",
+      "ny-2026-general:supreme-court-10:william-d-wexler",
+      "ny-2026-general:supreme-court-10:james-a-mcdonaugh",
+      "ny-2026-general:supreme-court-10:john-kelly",
+      "ny-2026-general:supreme-court-10:mary-kate-mullen"
+    ],
+    "sampleCorroboration": "SUFFOLK_ACTUAL_SAMPLE_COMPLETE_SHARED_SUPREME10_FIELD",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-family-court-judge",
+    "title": "Family Court Judge",
+    "sourceTitle": "Family Court Judge",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau",
+    "heldContest": false,
+    "sourcePage": 7,
+    "candidateNames": [
+      "Ellen R. Greenberg",
+      "Ayesha Keri Brantley"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-district-court-judge-2nd-district",
+    "title": "District Court Judge - 2nd District",
+    "sourceTitle": "District Court Judge - 2nd District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/district_court:2",
+    "heldContest": false,
+    "sourcePage": 7,
+    "candidateNames": [
+      "Tricia M. Ferrell",
+      "Michael W. Alpert",
+      "Lauren Doddato Goldman"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-district-court-judge-3rd-district",
+    "title": "District Court Judge - 3rd District",
+    "sourceTitle": "District Court Judge - 3rd District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/district_court:3",
+    "heldContest": false,
+    "sourcePage": 7,
+    "candidateNames": [
+      "Lisa M. Petrocelli",
+      "William P. Bodkin"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  },
+  {
+    "id": "ny-cx-local-2026-nassau-district-court-judge-4th-district",
+    "title": "District Court Judge - 4th District",
+    "sourceTitle": "District Court Judge - 4th District",
+    "ocdId": "ocd-division/country:us/state:ny/county:nassau/district_court:4",
+    "heldContest": false,
+    "sourcePage": 7,
+    "candidateNames": [
+      "David W. Wright"
+    ],
+    "heldCandidateIdsPreserved": [],
+    "sampleCorroboration": "NASSAU_ACTUAL_SAMPLE_NOT_ACQUIRED",
+    "sourceSubjectToChange": true
+  }
+]

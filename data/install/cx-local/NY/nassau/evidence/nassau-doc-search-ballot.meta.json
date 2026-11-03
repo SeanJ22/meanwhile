@@ -1,0 +1,23 @@
+{
+  "url": "https://www.nassaucountyny.gov/Admin/DocumentCenter/Home/Document_AjaxBinding?renderMode=0&loadSource=7",
+  "finalUrl": "https://www.nassaucountyny.gov/Admin/DocumentCenter/Home/Document_AjaxBinding?renderMode=0&loadSource=7",
+  "status": 200,
+  "fetchedAt": "2026-11-03T04:50:30.402910+00:00",
+  "sha256": "314563c9ded49bf215a8d7d98bc06af3b48624ad46b795b62ad607e524d25cf9",
+  "bytes": 55,
+  "requestMethod": "POST",
+  "readOnlyPurpose": "Public DocumentCenter frontend search",
+  "payload": {
+    "folderId": 1,
+    "getDocuments": 1,
+    "imageRepo": false,
+    "renderMode": 0,
+    "loadSource": 7,
+    "requestingModuleID": 75,
+    "searchString": "ballot",
+    "pageNumber": 1,
+    "rowsPerPage": 200,
+    "sortColumn": "Name",
+    "sortOrder": 0
+  }
+}

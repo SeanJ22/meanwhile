@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="description" content="Official Website of Long Beach, New York" />
+<meta name="keywords" content="Keywords" />
+<meta property="og:image" content="https://www.longbeachny.gov/repository/designs/templates/GO_longbeach-ny_2021_resp/images/footerlogo.png" />
+<!-- OpenGraph meta tags -->
+<meta property="og:title" content="Election Day" />
+<meta property="og:type" content="article" />
+<meta property="og:description" content="" />
+<meta name="verify-v1" content="d3l/GKAmaHus4Gge73ApGuXQFczbbwg71eT66M2uXNA=" />
+<script src="https://kit.fontawesome.com/0fd5809d9d.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="/repository/designs/templates/GO_longbeach-ny_2024_resp/GO_longbeach-ny_2024_resp.css" />
+<link rel="stylesheet" type="text/css" href="/repository/designs/parts/styles_resp/print.css" media="print" />
+<link rel="icon" type="image/png" href="/repository/designs/templates/GO_longbeach-ny_2024_resp/images/favicon.png" />
+<!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="/repository/designs/templates/GO_longbeach-ny_2024_resp/images/favicon.ico" /><![endif]-->
+<link rel="apple-touch-icon" href="/repository/designs/templates/GO_longbeach-ny_2024_resp/images/apple-touch-icon.png" />
+<meta name="msapplication-TileColor" content="#ffffff" />
+<meta name="msapplication-TileImage" content="/repository/designs/templates/GO_longbeach-ny_2024_resp/images/mstile.png" />
+<title>Election Day - News In Our City - Long Beach, NY</title>
+<script src="/repository/designs/jquery3/jquery-3.7.1.min.js"></script>
+<script src="/repository/designs/jquery3/ui/jquery-ui.min.js"></script>
+<script src="/repository/designs/jquery3/jquery-migrate-1.4.1.min.js"></script>
+<script src="/repository/designs/parts/scripts/global.js"></script>
+<script src="/repository/designs/parts/scripts/global_resp.js"></script>
+<script>
+        var designPath = "/repository/designs/templates/GO_longbeach-ny_2024_resp";
+        var uploadPath = "/vertical/Sites/%7BC3C1054A-3D3A-41B3-8896-814D00B86D2A%7D/uploads";
+      </script>
+<script src="/repository/designs/parts/scripts/menunav_resp.js"></script>
+<script src="/repository/designs/parts/scripts/jquery.backTop.js"></script>
+<script src="/repository/designs/templates/GO_longbeach-ny_2024_resp/mobile.js"></script>
+<script src="/repository/designs/parts/scripts/heightmatch.js"></script>
+<script src="/repository/designs/parts/scripts/random.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, minimum-scale=0.8, user-scalable=yes" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+			<link rel="preconnect" href="https://fonts.googleapis.com">
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+			<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">  <script>
+            var privacyOverlayEnabled = "";
+            var privacyOverlayText = "";
+            var privacyOverlayText2 = "";
+            var privacyOverlayLink = "";
+            
+		    var accessibilityOptions = {
+		    
+		    };
+	      </script>
+</head>
+<body class="inner">
+<div class="skiptomain"><a href="#mainContent" id="skipLink">Skip to main content</a></div>
+<div class="allContainer">
+<div class="topbar">
+<nav class="top block table">
+<ul>
+<li><div class="titlewrap">
+<a class="title" href="/"><img src="/repository/designs/templates/GO_longbeach-ny_2024_resp/images/title.png" alt="Long Beach, NY" /></a>
+</div>
+</li>
+<li><a id="mobileSearchDropdown" href="#" aria-label="search" class="searchIcon" role="search"><i class="fa fa-search" aria-hidden="true"><!----></i><div>search</div></a></li>
+<li><a id="mobileNavDropdown" href="#" aria-label="menu" class="navIcon"><i class="fa fa-bars" aria-hidden="true"><!----></i><div>menu</div></a></li>
+</ul>
+</nav>
+<div class="searchDrop">
+<form role="search" class="mobilesearch" method="get" name="formSearchMobile" action="index.asp">
+<div class="fieldAndButton">
+<label class="mobileSearchLabel hidden" for="mobileSearchField">Search</label>
+<input id="mobileSearchField" class="searchField" name="keyword" value="" aria-label="search" />
+<a href="#" id="mobilesearchbutton" onclick="$('.mobilesearch').submit();" class="searchMag" aria-hidden="true">
+<i class="fa fa-search" aria-label="search">
+<!----></i>
+</a>
+<input type="submit" class="hidden" value="Search" />
+</div>
+<input type="hidden" name="SEC" value="A44EB132-080D-479E-8E53-848C513737BB" />
+</form>
+<!----></div>
+<div class="navDrop">
+<nav class="primary block mobilemenu">
+<ul>
+<li>
+<a href="//www.longbeachny.gov/"><span>Home</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/government"><span>Government</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/boards"><span>Boards & Commissions</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/financials"><span>Budget & Financial Information</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/councilmeetings"><span>City Council Meetings</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/officials"><span>City Officials</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/citycouncil"><span>City Council</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=C50281EA-B062-44FD-B714-35C29EDE6CB7"><span>City Manager</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=E2AC6473-18E0-415B-AB4B-5DD84B73A3F1"><span>City Court Judges</span></a>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={1A40DC3F-AB22-4EF5-8107-35B30A446295}&amp;DE={46CE5630-0337-4BAF-9880-017D43D760BB}"><span>Charter & Code of Ordinances</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/notices"><span>Public Notices</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/transparency"><span>Transparency Portal</span></a>
+<ul>
+<li>
+<a href="https://longbeachny.cleargov.com/"><span>Financial Transparency Center</span></a>
+</li></ul>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/department"><span>Departments</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/animal-control"><span>Animal Control</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/beach"><span>Beach Park</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/building"><span>Building</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/cityclerk"><span>City Clerk</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/comptroller"><span>City Comptroller</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/court"><span>City Court</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/civilservice"><span>Civil Service</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/corporation-counsel"><span>Corporation Counsel</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/community"><span>Community Development</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/emergency-management"><span>Emergency Management</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/econ-development"><span>Economic Development & Planning</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/parkingplan"><span>Parking Management Plan Survey</span></a>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/events"><span>Events</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/concerts"><span>2026 Concert Series</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/halloween"><span>Halloween House Map</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/halloween-form"><span>Halloween Decorated House Registration 2026</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=FA4B522E-685B-4E71-8F0B-3176EA4077D6"><span>Halloween Slider</span></a>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/america250"><span>America 250</span></a>
+</li><li>
+<a target="_blank" href="https://simplebooklet.com/longbeachsummerdirectory2026"><span>City of Long Beach Directory of Events - Summer 2026</span></a>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/fire"><span>Fire</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/lifeguards"><span>Lifeguard Patrol</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/rec"><span>Parks and Recreation</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/icearena"><span>Ice Arena</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/seniors"><span>Senior Services</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/seniorcalendar"><span>Senior Program Calendar</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/seniorpoll"><span>Senior Questionaire</span></a>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=CCC8B309-3094-4EBA-8506-F79532E00B9D"><span>Recreation Summer Hours</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/races"><span>Long Beach Race Series & More</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/index.asp?SEC=10796128-55B3-487E-A96B-14274B564393"><span>Race Slider</span></a>
+</li></ul>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/planning"><span>Planning Board</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/lbpd"><span>Police Department</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/public-relations"><span>Public Relations</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/publicworks"><span>Public Works</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/beach-maintenance"><span>Beach Maintenance</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/municipal-building"><span>Municipal Building</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/sanitation"><span>Sanitation & Recycling</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/sewer"><span>Sewer Maintenance</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/street-maint"><span>Street Maintenance</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/water-pollution"><span>Water Pollution Plant</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/water-purification"><span>Water Purification Plant</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/waterreport2025"><span>Drinking Water Quality Report</span></a>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/water-transmission"><span>Water Transmission</span></a>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/purchasing"><span>Purchasing</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/tax-assessor"><span>Tax Assessor</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/tax"><span>Tax Department</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/transportation"><span>Transportation</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/water-sewer"><span>Water/Sewer Administration</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/zoning"><span>Zoning Board of Appeals</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/530wbroadway"><span>Zoning 530 West Broadway</span></a>
+</li></ul>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/services"><span>Community</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/access"><span>Accessibility</span></a>
+</li><li>
+<a target="_blank" href="https://storymaps.arcgis.com/stories/489419a9f91f41459a5b235b2b164ce8"><span>Bayfront Resiliency Planning Study</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={DA8E2736-5A34-4E0D-9EBD-228AB63E425C}&amp;DE="><span>Beach</span></a>
+</li><li>
+<a target="_blank" href="https://www.longbeachny.gov/index.asp?SEC=C83C757E-C2A2-414A-B9AD-48EB351A5F47"><span>Building Permits</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/compplan"><span>Comprehensive Plan</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/wind"><span>Empire Wind Project</span></a>
+</li><li>
+<a target="_blank" href="https://alertlongbeachny.genasys.com/portal/en"><span>Genasys Alert</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={9C88689C-135F-4293-A9CE-7A50346BEA23}"><span>Jobs</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={1A40DC3F-AB22-4EF5-8107-35B30A446295}"><span>Licenses, Records & Ceremonies</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/pay"><span>Online Payments</span></a>
+</li><li>
+<a target="_blank" href="http://www.longbeachny.gov/rec"><span>Parks & Recreation</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/lbready"><span>Preparedness</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/safety"><span>Public Safety</span></a>
+<ul>
+<li>
+<a target="_blank" href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC=%7b1D0AD93D-F49F-4A51-B296-CA8968F615CB%7d"><span>Police Department</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?SEC=89B9695B-1D9A-49A1-B3CC-192093C90DFC"><span>Fire Department</span></a>
+</li><li>
+<a target="_blank" href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={B33561F2-EDA5-4537-8FB4-A748100470DE}"><span>Lifeguards</span></a>
+</li></ul>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={59CAE0CD-2EC0-474C-A1D8-9513023DE987}"><span>Sanitation & Recycling</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/bussafety"><span>School Bus Safety Program</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?SEC=0F7A7BCB-B475-436B-8FA0-353DDBEC998C"><span>Seniors</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/superblock"><span>Superblock - Engel Burman Project</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/safetyactionplan"><span>Roadway Safety Action Plan</span></a>
+</li><li>
+<a href="/stormwater"><span>Stormwater Management</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={FC64AE5C-ECA2-4D72-BD86-A1F4F8190EED}"><span>Transportation</span></a>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/business"><span>Business</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/index.asp?SEC=1EB2D018-3D17-4F17-A067-CE651DC74469"><span>Applying for a Mercantile License</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=550D049F-A30A-4916-B556-08FC928775F6"><span>Become an Ocean Friendly Restaurant</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=C3C51893-B7A6-4699-BF55-857F34B3751A"><span>Business Resources</span></a>
+</li><li>
+<a target="_blank" href="https://www.thelongbeachchamber.com/"><span>Chamber of Commerce</span></a>
+</li><li>
+<a target="_blank" href="https://www.longbeachlife.com/working-here/#coworking"><span>Co-working Space</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=E64FC5CA-C8F2-447D-A69F-257737F3917E"><span>Commercial Energy Rebates</span></a>
+</li><li>
+<a target="_blank" href="https://www.longbeachny.gov/index.asp?SEC=07152624-9A1D-4575-AFD3-3A80F61432E6"><span>Economic Development Homepage</span></a>
+</li><li>
+<a target="_blank" href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={2DCEB0D8-C476-4A88-A478-CBBB07D2102B}"><span>RFPs/Vendor Registration</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=DA4685FF-13BF-4EF8-BD2F-85BD6EF258DE"><span>Sign up for Business Notifications</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=A5E7089A-C3AC-4094-A2FA-154D22932A9C"><span>Business Resource Cards</span></a>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/howdoi"><span>How Do I...</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/index.asp?SEC=77B4E50E-CAD7-49BC-8FB6-3E996E0310A5"><span>Access</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=82E57818-497E-4AEE-A782-673460CD6A5F"><span>Apply For</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=32A3C03C-A326-4108-AE16-6F9056D69544"><span>Contact</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=6503D61A-5DE3-44DD-B2D6-877F1EBDFCBC"><span>Find Out About</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=9D50DC28-7BE3-4CB1-8B5C-A7200324FD9E"><span>Pay For</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=ACCE68E4-CBB2-48FD-9731-465BFB0DADC1"><span>Sign Up For</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=C701A5CF-6E95-4318-BE66-3450E24C3CBD"><span>Stay Connected</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/faq"><span>F.A.Q.</span></a>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/explore"><span>Explore</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/news2"><span>Welcome</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/about"><span>About</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/history"><span>History</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/worship"><span>Places of Worship</span></a>
+</li><li>
+<a target="_blank" href="https://thelongbeachchamber.com/"><span>The Long Beach Chamber of Commerce</span></a>
+</li><li>
+<a target="_blank" href="https://longbeachlibrary.org/"><span>Long Beach Public Library</span></a>
+</li><li>
+<a target="_blank" href="http://lbeach.org/"><span>Long Beach School District</span></a>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/quick-connect"><span>Quick Connect</span></a>
+<ul>
+<li>
+<a href="https://www.longbeachny.gov/vertical/sites/%7BC3C1054A-3D3A-41B3-8896-814D00B86D2A%7D/uploads/1119-4013_City_of_Long_Beach_TRANSPO_BROCHURE_UPDATED.pdf"><span>Bus Schedule</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?Type=B_EV&amp;SEC={3B2FBA1A-DF24-4F0C-9964-B8F658D4F579}"><span>Calendar of Events</span></a>
+</li><li>
+<a href="/transparency"><span>Transparency Portal</span></a>
+</li><li>
+<a href="/sanitation"><span>Recycling</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/forms"><span>Downloadable Forms</span></a>
+</li></ul>
+</li><li class="openweather"><i class="fa-regular fa-sun-cloud"></i>
+</li>
+<li class="airquality"><i class="fa-regular fa-wind"></i>
+</li>
+<li>
+<div class="header1"><a href="/pay"><i class="fa-solid fa-credit-card"></i><span>Online Payments</span></a><!----></div>
+</li>
+<li>
+<div class="mobileSocial">
+<div class="newSocialTools">
+<a href="https://www.facebook.com/longbeachnewyork/" title="Connect with us on Facebook" target="_blank" aria-label="facebook opens in a new tab"><img src="/repository/designs/images/social/fb.png" alt="Facebook" /></a><a href="https://www.instagram.com/cityoflongbeachny/" title="Connect with us on Instagram" target="_blank" aria-label="instagram opens in a new tab"><img src="/repository/designs/images/social/in.png" alt="Instagram" /></a><a href="https://www.linkedin.com/company/city-of-long-beach-new-york" title="Connect with us on Linked In" target="_blank" aria-label="linked in opens in a new tab"><img src="/repository/designs/images/social/li.png" alt="Linked In" /></a><a href="https://www.youtube.com/channel/UCQZnJLJW2wI83_FZRc53-Wg/featured" title="Connect with us on YouTube" target="_blank" aria-label="youtube opens in a new tab"><img src="/repository/designs/images/social/yt.png" alt="YouTube" /></a></div>
+<!----></div>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="topbar2">
+<div class="banner">
+<div class="titlewrap">
+<a class="title" href="/"><img src="/repository/designs/templates/GO_longbeach-ny_2024_resp/images/title.png" alt="Long Beach, NY" /></a>
+</div>
+<div class="searchSocial">
+<div class="openweather"><i class="fa-regular fa-sun-cloud"></i>
+</div>
+<div class="airquality"><i class="fa-regular fa-wind"></i>
+</div>
+<div>
+<div class="header1"><a href="/pay"><i class="fa-solid fa-credit-card"></i><span>Online Payments</span></a><!----></div>
+<div class="searchPositioner" role="search">
+<form role="search" class="search bar" method="get" name="formSearch" action="index.asp">
+<div class="fieldAndButton">
+<label class="hidden" for="searchField">Search</label>
+<input id="searchField" class="searchField" name="keyword" value="" aria-label="search" />
+<a href="#" id="searchbutton" onclick="$('.search.bar').submit();" role="button" aria-label="search" class="searchMag">
+<i class="fa fa-search" aria-label="search">
+<!----></i>
+</a>
+<input type="submit" class="hidden" value="Search" tabindex="-1" />
+</div>
+<input type="hidden" name="SEC" value="A44EB132-080D-479E-8E53-848C513737BB" />
+</form>
+<script>
+        $(document).ready(function() {
+        var prompt = "I'm looking for...";
+        var $s = $(".search.bar .searchField");
+        $s.focus(clearPrompt).blur(putPrompt).change(trimfield);
+        function clearPrompt() { if ($s.val() == prompt) $s.val(""); }
+        function putPrompt() { if ($.trim($s.val()) == "") $s.val(prompt); }
+        function trimfield() {
+        var searchval = $.trim($('#searchField').val());
+        searchval = searchval.replace(/\s{2,}/g,' ');
+        $('#searchField').val(searchval);
+        }
+        putPrompt();
+        });
+      </script>
+<!----></div>
+</div>
+</div>
+<nav class="primary menu block horizontal slab slabmaxthreecol">
+<span class="hidden">Navigation, primary</span>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/"><span>Home</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/government"><span>Government</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/boards"><span>Boards & Commissions</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/financials"><span>Budget & Financial Information</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/councilmeetings"><span>City Council Meetings</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/officials"><span>City Officials</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/citycouncil"><span>City Council</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=C50281EA-B062-44FD-B714-35C29EDE6CB7"><span>City Manager</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=E2AC6473-18E0-415B-AB4B-5DD84B73A3F1"><span>City Court Judges</span></a>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={1A40DC3F-AB22-4EF5-8107-35B30A446295}&amp;DE={46CE5630-0337-4BAF-9880-017D43D760BB}"><span>Charter & Code of Ordinances</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/notices"><span>Public Notices</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/transparency"><span>Transparency Portal</span></a>
+<ul>
+<li>
+<a href="https://longbeachny.cleargov.com/"><span>Financial Transparency Center</span></a>
+</li></ul>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/department"><span>Departments</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/animal-control"><span>Animal Control</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/beach"><span>Beach Park</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/building"><span>Building</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/cityclerk"><span>City Clerk</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/comptroller"><span>City Comptroller</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/court"><span>City Court</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/civilservice"><span>Civil Service</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/corporation-counsel"><span>Corporation Counsel</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/community"><span>Community Development</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/emergency-management"><span>Emergency Management</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/econ-development"><span>Economic Development & Planning</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/parkingplan"><span>Parking Management Plan Survey</span></a>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/events"><span>Events</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/concerts"><span>2026 Concert Series</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/halloween"><span>Halloween House Map</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/halloween-form"><span>Halloween Decorated House Registration 2026</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=FA4B522E-685B-4E71-8F0B-3176EA4077D6"><span>Halloween Slider</span></a>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/america250"><span>America 250</span></a>
+</li><li>
+<a target="_blank" href="https://simplebooklet.com/longbeachsummerdirectory2026"><span>City of Long Beach Directory of Events - Summer 2026</span></a>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/fire"><span>Fire</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/lifeguards"><span>Lifeguard Patrol</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/rec"><span>Parks and Recreation</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/icearena"><span>Ice Arena</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/seniors"><span>Senior Services</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/seniorcalendar"><span>Senior Program Calendar</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/seniorpoll"><span>Senior Questionaire</span></a>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=CCC8B309-3094-4EBA-8506-F79532E00B9D"><span>Recreation Summer Hours</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/races"><span>Long Beach Race Series & More</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/index.asp?SEC=10796128-55B3-487E-A96B-14274B564393"><span>Race Slider</span></a>
+</li></ul>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/planning"><span>Planning Board</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/lbpd"><span>Police Department</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/public-relations"><span>Public Relations</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/publicworks"><span>Public Works</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/beach-maintenance"><span>Beach Maintenance</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/municipal-building"><span>Municipal Building</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/sanitation"><span>Sanitation & Recycling</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/sewer"><span>Sewer Maintenance</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/street-maint"><span>Street Maintenance</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/water-pollution"><span>Water Pollution Plant</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/water-purification"><span>Water Purification Plant</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/waterreport2025"><span>Drinking Water Quality Report</span></a>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/water-transmission"><span>Water Transmission</span></a>
+</li></ul>
+</li><li>
+<a href="//www.longbeachny.gov/purchasing"><span>Purchasing</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/tax-assessor"><span>Tax Assessor</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/tax"><span>Tax Department</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/transportation"><span>Transportation</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/water-sewer"><span>Water/Sewer Administration</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/zoning"><span>Zoning Board of Appeals</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/530wbroadway"><span>Zoning 530 West Broadway</span></a>
+</li></ul>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/services"><span>Community</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/access"><span>Accessibility</span></a>
+</li><li>
+<a target="_blank" href="https://storymaps.arcgis.com/stories/489419a9f91f41459a5b235b2b164ce8"><span>Bayfront Resiliency Planning Study</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={DA8E2736-5A34-4E0D-9EBD-228AB63E425C}&amp;DE="><span>Beach</span></a>
+</li><li>
+<a target="_blank" href="https://www.longbeachny.gov/index.asp?SEC=C83C757E-C2A2-414A-B9AD-48EB351A5F47"><span>Building Permits</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/compplan"><span>Comprehensive Plan</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/wind"><span>Empire Wind Project</span></a>
+</li><li>
+<a target="_blank" href="https://alertlongbeachny.genasys.com/portal/en"><span>Genasys Alert</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={9C88689C-135F-4293-A9CE-7A50346BEA23}"><span>Jobs</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={1A40DC3F-AB22-4EF5-8107-35B30A446295}"><span>Licenses, Records & Ceremonies</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/pay"><span>Online Payments</span></a>
+</li><li>
+<a target="_blank" href="http://www.longbeachny.gov/rec"><span>Parks & Recreation</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/lbready"><span>Preparedness</span></a>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/safety"><span>Public Safety</span></a>
+<ul>
+<li>
+<a target="_blank" href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC=%7b1D0AD93D-F49F-4A51-B296-CA8968F615CB%7d"><span>Police Department</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?SEC=89B9695B-1D9A-49A1-B3CC-192093C90DFC"><span>Fire Department</span></a>
+</li><li>
+<a target="_blank" href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={B33561F2-EDA5-4537-8FB4-A748100470DE}"><span>Lifeguards</span></a>
+</li></ul>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={59CAE0CD-2EC0-474C-A1D8-9513023DE987}"><span>Sanitation & Recycling</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/bussafety"><span>School Bus Safety Program</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?SEC=0F7A7BCB-B475-436B-8FA0-353DDBEC998C"><span>Seniors</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/superblock"><span>Superblock - Engel Burman Project</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/safetyactionplan"><span>Roadway Safety Action Plan</span></a>
+</li><li>
+<a href="/stormwater"><span>Stormwater Management</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={FC64AE5C-ECA2-4D72-BD86-A1F4F8190EED}"><span>Transportation</span></a>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/business"><span>Business</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/index.asp?SEC=1EB2D018-3D17-4F17-A067-CE651DC74469"><span>Applying for a Mercantile License</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=550D049F-A30A-4916-B556-08FC928775F6"><span>Become an Ocean Friendly Restaurant</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=C3C51893-B7A6-4699-BF55-857F34B3751A"><span>Business Resources</span></a>
+</li><li>
+<a target="_blank" href="https://www.thelongbeachchamber.com/"><span>Chamber of Commerce</span></a>
+</li><li>
+<a target="_blank" href="https://www.longbeachlife.com/working-here/#coworking"><span>Co-working Space</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=E64FC5CA-C8F2-447D-A69F-257737F3917E"><span>Commercial Energy Rebates</span></a>
+</li><li>
+<a target="_blank" href="https://www.longbeachny.gov/index.asp?SEC=07152624-9A1D-4575-AFD3-3A80F61432E6"><span>Economic Development Homepage</span></a>
+</li><li>
+<a target="_blank" href="https://www.longbeachny.gov/index.asp?Type=B_BASIC&amp;SEC={2DCEB0D8-C476-4A88-A478-CBBB07D2102B}"><span>RFPs/Vendor Registration</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=DA4685FF-13BF-4EF8-BD2F-85BD6EF258DE"><span>Sign up for Business Notifications</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=A5E7089A-C3AC-4094-A2FA-154D22932A9C"><span>Business Resource Cards</span></a>
+</li></ul>
+</li></ul>
+</nav>
+</div>
+</div>
+<div class="socialFixed desktoponly">
+<div class="fixedSocialTools">
+<a class="facebook" href="https://www.facebook.com/longbeachnewyork/" title="Connect with us on Facebook" target="_blank" aria-label="opens in a new tab"><img src="/repository/designs/images/social/fixed/fb-ko.png" alt="Facebook" /></a><a class="instagram" href="https://www.instagram.com/cityoflongbeachny/" title="Connect with us on Instagram" target="_blank" aria-label="opens in a new tab"><img src="/repository/designs/images/social/fixed/in-ko.png" alt="Instagram" /></a><a class="linkedin" href="https://www.linkedin.com/company/city-of-long-beach-new-york" title="Connect with us on Linked In" target="_blank" aria-label="opens in a new tab"><img src="/repository/designs/images/social/fixed/li-ko.png" alt="Linked In" /></a><a class="youtube" href="https://www.youtube.com/channel/UCQZnJLJW2wI83_FZRc53-Wg/featured" title="Connect with us on YouTube" target="_blank" aria-label="opens in a new tab"><img src="/repository/designs/images/social/fixed/yt-ko.png" alt="YouTube" /></a></div>
+</div>
+<div id="random" role="img" class="innerimage random1"><!----></div>
+<script>Random.className(5, "random");</script><main>
+<a id="mainContent"><!----></a>
+<div class="widthContainer">
+<div class="contentBG">
+<div class="container content">
+<div class="mainContent">
+<div class="insideMainContent">
+<article class="fullDisplay B_PR">
+<div class="body">
+<div style="width: 400px;" class="image left">
+<img src="/vertical/Sites/%7BC3C1054A-3D3A-41B3-8896-814D00B86D2A%7D/uploads/Blue_and_Red_Photograph_Election_Day_Instagram_Post_Web.png" alt="Blue_and_Red_Photograph_Election_Day_Instagram_Post" />
+</div>
+<h1>Election Day</h1>
+<div class="newsdatetime">
+<!----></div>
+<div class="body"><div class="jodit-content"><p><span>Election Day is Tuesday, November 3rd. City Hall and the Magnolia Center will be closed. The Recreation Center and Ice Arena are open. There will be NO Residential and Commercial Sanitation pickup. Additionally, LB Buses are running on a REGULAR schedule. ASP is suspended.</span></p></div></div>
+</div>
+<div class="property contactInfo"></div>
+<div class="socialSharing">
+<a class="modalBTNSocial facebook" title="Share on Facebook" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.longbeachny.gov/index.asp%3FSEC%3D33BD7D65-42BC-45CB-ABAB-A6E2B4FB1BFB%26DE%3DDBD1268A-0A0A-47C4-A97B-42CEB565FF43">
+<i class="fab fa-facebook-f"></i>SHARE
+				</a>
+<a class="modalBTNSocial copy" onclick="copyToClipboard('www.longbeachny.gov/index.asp?SEC=33BD7D65-42BC-45CB-ABAB-A6E2B4FB1BFB&amp;DE=DBD1268A-0A0A-47C4-A97B-42CEB565FF43', this, 'COPIED!')" title="Copy to your clipboard">
+<i class="fal fa-copy"></i>COPY
+				</a>
+</div>
+</article>
+<div class="clr"><!----></div>
+</div>
+</div>
+</div>
+<div class="footersecondary desktoponly">
+<nav class="secondary block">
+<ul class="count3">
+<li class="hasChildren">
+<a href="//www.longbeachny.gov/howdoi"><span>How Do I...</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/index.asp?SEC=77B4E50E-CAD7-49BC-8FB6-3E996E0310A5"><span>Access</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=82E57818-497E-4AEE-A782-673460CD6A5F"><span>Apply For</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=32A3C03C-A326-4108-AE16-6F9056D69544"><span>Contact</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=6503D61A-5DE3-44DD-B2D6-877F1EBDFCBC"><span>Find Out About</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=9D50DC28-7BE3-4CB1-8B5C-A7200324FD9E"><span>Pay For</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=ACCE68E4-CBB2-48FD-9731-465BFB0DADC1"><span>Sign Up For</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/index.asp?SEC=C701A5CF-6E95-4318-BE66-3450E24C3CBD"><span>Stay Connected</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/faq"><span>F.A.Q.</span></a>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/explore"><span>Explore</span></a>
+<ul>
+<li>
+<a href="//www.longbeachny.gov/news2"><span>Welcome</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/about"><span>About</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/history"><span>History</span></a>
+</li><li>
+<a href="//www.longbeachny.gov/worship"><span>Places of Worship</span></a>
+</li><li>
+<a target="_blank" href="https://thelongbeachchamber.com/"><span>The Long Beach Chamber of Commerce</span></a>
+</li><li>
+<a target="_blank" href="https://longbeachlibrary.org/"><span>Long Beach Public Library</span></a>
+</li><li>
+<a target="_blank" href="http://lbeach.org/"><span>Long Beach School District</span></a>
+</li></ul>
+</li><li class="hasChildren">
+<a href="//www.longbeachny.gov/quick-connect"><span>Quick Connect</span></a>
+<ul>
+<li>
+<a href="https://www.longbeachny.gov/vertical/sites/%7BC3C1054A-3D3A-41B3-8896-814D00B86D2A%7D/uploads/1119-4013_City_of_Long_Beach_TRANSPO_BROCHURE_UPDATED.pdf"><span>Bus Schedule</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/index.asp?Type=B_EV&amp;SEC={3B2FBA1A-DF24-4F0C-9964-B8F658D4F579}"><span>Calendar of Events</span></a>
+</li><li>
+<a href="/transparency"><span>Transparency Portal</span></a>
+</li><li>
+<a href="/sanitation"><span>Recycling</span></a>
+</li><li>
+<a href="https://www.longbeachny.gov/forms"><span>Downloadable Forms</span></a>
+</li></ul>
+</li></ul>
+</nav>
+</div>
+</div>
+</div>
+</main>
+<footer role="contentinfo" class="main">
+<div class="footertext desktop">
+<div class="footer-col">
+<div class="footer-border">
+<div class="copyright"><span><script>document.write(new Date().getFullYear())</script>
+<i class="fa-sharp fa-light fa-copyright"></i>
+<span class="footer-cr">Official Website of Long Beach, New York <!----></span></span></div>
+<div class="text">1 West Chester Street, Long Beach, NY 11561<!----></div>
+</div>
+<div class="text2"><a href="/site-map">Site Map</a><!----></div><span> | </span>
+<div class="text3"><a href="/access">Accessibility</a><!----></div><span> | </span>
+<div class="text4"><a href="/cityclerk">Contact Us</a><!----></div>
+</div>
+<img class="footerlogo" src="/repository/designs/templates/GO_longbeach-ny_2024_resp/images/footerlogo.png" alt="" />
+<div class="footer-col">
+<div class="footer-border">
+<div>
+<div class="text5">(516) 431-1000<!----></div>
+<div class="text6"><a href="mailto:info@longbeachny.gov">info@longbeachny.gov</a><!----></div>
+</div>
+<div>
+<div class="text7">City Hall Summer Hours: 9:00am to 4:00pm<!----></div>
+<div class="text8">Appointments Recommended<!----></div>
+</div>
+</div>
+<div class="verticalLogo_text">
+<a href="https://catalisgov.com" target="blank">Government Websites by Catalis</a><span class="privacypolicydivider"> | </span>
+<a class="privacypolicylink" href="https://catalisgov.com/privacy-policy/" target="_blank">Privacy Policy</a>
+</div>
+</div>
+</div>
+<div class="footertext mobile">
+<img class="footerlogo" src="/repository/designs/templates/GO_longbeach-ny_2024_resp/images/footerlogo.png" alt="" />
+<div class="copyright"><span><script>document.write(new Date().getFullYear())</script>
+<i class="fa-sharp fa-light fa-copyright"></i>
+<span class="footer-cr">Official Website of Long Beach, New York <!----></span></span></div>
+<div class="text">1 West Chester Street, Long Beach, NY 11561<!----></div>
+<div class="footer-nav">
+<div class="text2"><a href="/site-map">Site Map</a><!----></div><span> | </span>
+<div class="text3"><a href="/access">Accessibility</a><!----></div><span> | </span>
+<div class="text4"><a href="/cityclerk">Contact Us</a><!----></div>
+</div>
+<div class="text5">(516) 431-1000<!----></div>
+<div class="text6"><a href="mailto:info@longbeachny.gov">info@longbeachny.gov</a><!----></div>
+<div class="text7">City Hall Summer Hours: 9:00am to 4:00pm<!----></div>
+<div class="text8">Appointments Recommended<!----></div>
+<div class="verticalLogo_text">
+<a href="https://catalisgov.com" target="blank">Government Websites by Catalis</a><span class="privacypolicydivider"> | </span>
+<a class="privacypolicylink" href="https://catalisgov.com/privacy-policy/" target="_blank">Privacy Policy</a>
+</div>
+</div>
+</footer>
+</div>
+<a href="#" id="backTop" title="Scroll To Top" aria-label="Scroll To Top"><i class="fa fa-arrow-up" aria-hidden="true"><!----></i></a>
+<script>
+				$(document).ready( function() {
+						$('#backTop').backTop({'position':100, 'speed':500, 'color':'white'});
+				});
+			</script>
+</body>
+</html>
+
+<!-- cache expires 11/09/2026 14:26 -->
+<!-- Web02 -->

@@ -1,0 +1,2104 @@
+{
+  "ballots": {
+    "NY:ny-2026-11-03": {
+      "election": {
+        "id": "ny-2026-11-03",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "NY"
+      },
+      "contests": [
+        {
+          "id": "ny-cx-local-2026-nassau-supervisor-town-of-hempstead",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:hempstead_town",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Town of Hempstead",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Supervisor, Town of Hempstead\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-town-clerk-town-of-hempstead",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:hempstead_town",
+          "divisionVintage": "2026",
+          "title": "Town Clerk, Town of Hempstead",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Town Clerk, Town of Hempstead\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-supervisor-town-of-north-hempstead",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:north_hempstead_town",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Town of North Hempstead",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Supervisor, Town of North Hempstead\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-supervisor-town-of-oyster-bay",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:oyster_bay_town",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Town of Oyster Bay",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Supervisor, Town of Oyster Bay\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-town-clerk-town-of-oyster-bay",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/place:oyster_bay_town",
+          "divisionVintage": "2026",
+          "title": "Town Clerk, Town of Oyster Bay",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Town Clerk, Town of Oyster Bay\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-1st-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:1",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 1st District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 1st District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-2nd-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:2",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 2nd District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 2nd District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-3rd-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:3",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 3rd District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 3rd District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-4th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:4",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 4th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 4th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-5th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:5",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 5th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 5th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-6th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:6",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 6th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 6th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-7th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:7",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 7th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 7th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-8th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:8",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 8th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 8th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-9th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:9",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 9th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 9th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-10th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:10",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 10th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 10th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-11th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:11",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 11th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 11th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-12th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:12",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 12th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 12th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-13th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:13",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 13th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 13th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-14th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:14",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 14th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 14th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-15th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:15",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 15th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 15th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-16th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:16",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 16th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 16th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-17th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:17",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 17th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 17th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-18th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:18",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 18th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 18th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-19th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/legislative_district:19",
+          "divisionVintage": "2026",
+          "title": "County Legislator, 19th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "County Legislator, 19th District\nVote for One (1)"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:10",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 10",
+          "type": "CANDIDACY",
+          "voteFor": 8,
+          "termYears": null,
+          "scopeNote": "Nassau and Suffolk form the whole Supreme Court10 electorate. Exact held contest and14 candidacy IDs retained; county native list, state native certification and Suffolk actual sample all agree on complete names/party lines and vote8.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Justice of the Supreme Court, 10th Judicial District\nVote for Eight (8)"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "SAMPLE - VOID Justice of the Supreme Court 10th Judicial District \n\n(Vote for up to Eight) See instructions below  Jueces De La Corte Supreme Ver instrucciones a\n\nont \n\nDemocratic \n\nDemocratico \n\nRepublican Republicano \n\nConservative \n\nConservador \n\nWrite-In \n\nEscribir-en \n\nCounty Court Judge \n\n(Vote for up to Four) \n\nJuez Del \n\nTribunal Condado \n\n(Voto para hasta Cuatro) \n\nFamily Court Judge \n\n(Vote for up to Three) \n\nJuez Del \n\nTribunal Familiar \n\n(Voto para hasta Tres) \n\ninuaci\u00f3n  10mo Distrito Judicial \n\n(Voto para hasta Ocho) Office / Oficina \n\nDemocratic \n\nRichard \n\nAmbro \n\nRepublican \n\nRichard \n\nAmbro \n\nConservative \n\nAnthony R\n\nPortesy \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nLeonard D\n\nSteinman \n\nRepublican \n\nLeonard D\n\nSteinman \n\nConservative \n\nLeonard D\n\nSteinman \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nMary E\n\nPorter \n\nRepublican \n\nKelly A\n\nReape \n\nConservative \n\nKelly A\n\nReape \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJoy M\n\nWatson \n\nRepublican \n\nJoy M\n\nWatson \n\nConservative \n\nJoy M\n\nWatson \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nStephen L\n\nUkeiley \n\nRepublican \n\nKaren M\n\nWilutis \n\nConservative \n\nKaren M\n\nWilutis \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nEric \n\nSachs \n\nRepublican \n\nJohn \n\nIliou \n\nConservative \n\nJohn \n\nIliou \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nWilliam D\n\nWexler \n\nRepublican \n\nJames A\n\nMcDonaugh \n\nConservative \n\nJames A\n\nMcDonaugh \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJohn \n\nKelly \n\nRepublican \n\nMary Kate \n\nMullen \n\nConservative \n\nMary Kate \n\nMullen \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nDaniel T\n\nDriscoll \n\nConservative \n\nDaniel T\n\nDriscoll \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnthony S\n\nSenft Jr \n\nConservative \n\nAnthony S\n\nSenft Jr \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnna \n\nAcquafredda \n\nConservative \n\nAnna \n\nAcquafredda \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nJames G\n\nChalifoux \n\nConservative \n\nJames G\n\nChalifoux \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nFrank A\n\nTantone \n\nConservative \n\nFrank A\n\nTantone \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nWilliam F\n\nGarbarino \n\nConservative \n\nWilliam F\n\nGarbarino \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nEvan S\n\nTanenbaum \n\nConservative \n\nEvan S\n\nTanenbaum \n\nWrite-in \n\nEscribir-en"
+            }
+          ]
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-family-court-judge",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau",
+          "divisionVintage": "2026",
+          "title": "Family Court Judge",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Family Court Judge\nVote for Two (2)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-district-court-judge-2nd-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/district_court:2",
+          "divisionVintage": "2026",
+          "title": "District Court Judge - 2nd District",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change. Exact Nassau DistrictCourt2 electorate is linked only through official rule212.2 whole-town/city membership proof.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "District Court Judge - 2nd District\nVote for Three (3)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-district-court-judge-3rd-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/district_court:3",
+          "divisionVintage": "2026",
+          "title": "District Court Judge - 3rd District",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change. Exact Nassau DistrictCourt3 electorate is linked only through official rule212.2 whole-town/city membership proof.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "District Court Judge - 3rd District\nVote for Two (2)"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-district-court-judge-4th-district",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:nassau/district_court:4",
+          "divisionVintage": "2026",
+          "title": "District Court Judge - 4th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete named field and fusion party lines from the current official county2026 candidate list. Actual Nassau ballot layout and any later candidate changes remain unverified; source is expressly subject to change. Exact Nassau DistrictCourt4 electorate is linked only through official rule212.2 whole-town/city membership proof.",
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "District Court Judge - 4th District\nVote for One (1)"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ny-cx-local-2026-nassau-supervisor-town-of-hempstead:joe-scianablo",
+          "contestId": "ny-cx-local-2026-nassau-supervisor-town-of-hempstead",
+          "givenName": "",
+          "familyName": "Joe Scianablo",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Joe Scianablo\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-supervisor-town-of-hempstead:john-r-ferretti",
+          "contestId": "ny-cx-local-2026-nassau-supervisor-town-of-hempstead",
+          "givenName": "",
+          "familyName": "John R. Ferretti",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "John R. Ferretti\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-supervisor-town-of-hempstead:martin-oliner",
+          "contestId": "ny-cx-local-2026-nassau-supervisor-town-of-hempstead",
+          "givenName": "",
+          "familyName": "Martin Oliner",
+          "partyLabel": "CITIZENS NOT DEVELOPERS",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Martin Oliner\nCITIZENS NOT DEVELOPERS"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-town-clerk-town-of-hempstead:joylette-e-williams",
+          "contestId": "ny-cx-local-2026-nassau-town-clerk-town-of-hempstead",
+          "givenName": "",
+          "familyName": "Joylette E. Williams",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Joylette E. Williams\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-town-clerk-town-of-hempstead:kate-murray",
+          "contestId": "ny-cx-local-2026-nassau-town-clerk-town-of-hempstead",
+          "givenName": "",
+          "familyName": "Kate Murray",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Kate Murray\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-supervisor-town-of-north-hempstead:sean-michael-mccarthy",
+          "contestId": "ny-cx-local-2026-nassau-supervisor-town-of-north-hempstead",
+          "givenName": "",
+          "familyName": "Sean Michael McCarthy",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Sean Michael McCarthy\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-supervisor-town-of-north-hempstead:jennifer-s-desena",
+          "contestId": "ny-cx-local-2026-nassau-supervisor-town-of-north-hempstead",
+          "givenName": "",
+          "familyName": "Jennifer S. DeSena",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Jennifer S. DeSena\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-supervisor-town-of-oyster-bay:james-t-hoyle",
+          "contestId": "ny-cx-local-2026-nassau-supervisor-town-of-oyster-bay",
+          "givenName": "",
+          "familyName": "James T. Hoyle",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "James T. Hoyle\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-supervisor-town-of-oyster-bay:joseph-s-saladino",
+          "contestId": "ny-cx-local-2026-nassau-supervisor-town-of-oyster-bay",
+          "givenName": "",
+          "familyName": "Joseph S. Saladino",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Joseph S. Saladino\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-town-clerk-town-of-oyster-bay:shreya-gupta",
+          "contestId": "ny-cx-local-2026-nassau-town-clerk-town-of-oyster-bay",
+          "givenName": "",
+          "familyName": "Shreya Gupta",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Shreya Gupta\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-town-clerk-town-of-oyster-bay:richard-l-lamarca",
+          "contestId": "ny-cx-local-2026-nassau-town-clerk-town-of-oyster-bay",
+          "givenName": "",
+          "familyName": "Richard L. LaMarca",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Richard L. LaMarca\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-1st-district:scott-m-davis",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-1st-district",
+          "givenName": "",
+          "familyName": "Scott M. Davis",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Scott M. Davis\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-1st-district:edward-j-lino",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-1st-district",
+          "givenName": "",
+          "familyName": "Edward J. Lino",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Edward J. Lino\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-2nd-district:viviana-l-russell",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-2nd-district",
+          "givenName": "",
+          "familyName": "Viviana L. Russell",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Viviana L. Russell\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-2nd-district:lamont-e-johnson",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-2nd-district",
+          "givenName": "",
+          "familyName": "Lamont E. Johnson",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Lamont E. Johnson\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-3rd-district:carri-solages",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-3rd-district",
+          "givenName": "",
+          "familyName": "Carri\u00e9 Solages",
+          "partyLabel": "Democratic / Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Carri\u00e9 Solages\nDEM,WFP"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-3rd-district:kadeem-m-brown",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-3rd-district",
+          "givenName": "",
+          "familyName": "Kadeem M. Brown",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Kadeem M. Brown\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-4th-district:michael-j-pentola",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-4th-district",
+          "givenName": "",
+          "familyName": "Michael J. Pentola",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Michael J. Pentola\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-4th-district:patrick-mullaney",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-4th-district",
+          "givenName": "",
+          "familyName": "Patrick Mullaney",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Patrick Mullaney\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-5th-district:olena-nicks",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-5th-district",
+          "givenName": "",
+          "familyName": "Olena Nicks",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Olena Nicks\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-5th-district:moshe-e-hill",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-5th-district",
+          "givenName": "",
+          "familyName": "Moshe E. Hill",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Moshe E. Hill\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-6th-district:debra-s-mul",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-6th-district",
+          "givenName": "",
+          "familyName": "Debra S. Mul\u00e9",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Debra S. Mul\u00e9\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-6th-district:benjamin-jackson",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-6th-district",
+          "givenName": "",
+          "familyName": "Benjamin Jackson",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Benjamin Jackson\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-7th-district:douglas-j-segan",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-7th-district",
+          "givenName": "",
+          "familyName": "Douglas J. Segan",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Douglas J. Segan\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-7th-district:howard-j-kopel",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-7th-district",
+          "givenName": "",
+          "familyName": "Howard J. Kopel",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Howard J. Kopel\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-8th-district:joy-jankunas",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-8th-district",
+          "givenName": "",
+          "familyName": "Joy Jankunas",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Joy Jankunas\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-8th-district:john-j-giuffre",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-8th-district",
+          "givenName": "",
+          "familyName": "John J. Giuffre",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "John J. Giuffre\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-9th-district:juleigh-chin",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-9th-district",
+          "givenName": "",
+          "familyName": "Juleigh Chin",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Juleigh Chin\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-9th-district:scott-p-strauss",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-9th-district",
+          "givenName": "",
+          "familyName": "Scott P. Strauss",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Scott P. Strauss\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-10th-district:skylar-a-epstein",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-10th-district",
+          "givenName": "",
+          "familyName": "Skylar A. Epstein",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Skylar A. Epstein\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-10th-district:mazi-melesa-pilip",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-10th-district",
+          "givenName": "",
+          "familyName": "Mazi Melesa Pilip",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Mazi Melesa Pilip\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-11th-district:delia-m-deriggi-whitton",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-11th-district",
+          "givenName": "",
+          "familyName": "Delia M. DeRiggi Whitton",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Delia M. DeRiggi Whitton\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-11th-district:john-canning",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-11th-district",
+          "givenName": "",
+          "familyName": "John Canning",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "John Canning\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-12th-district:michael-vanunu",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-12th-district",
+          "givenName": "",
+          "familyName": "Michael Vanunu",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Michael Vanunu\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-12th-district:michael-j-giangregorio",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-12th-district",
+          "givenName": "",
+          "familyName": "Michael J. Giangregorio",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Michael J. Giangregorio\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-13th-district:christina-m-lemyre",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-13th-district",
+          "givenName": "",
+          "familyName": "Christina M. Lemyre",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Christina M. Lemyre\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-13th-district:thomas-mckevitt",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-13th-district",
+          "givenName": "",
+          "familyName": "Thomas McKevitt",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Thomas McKevitt\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-14th-district:cynthia-nu-ez",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-14th-district",
+          "givenName": "",
+          "familyName": "Cynthia Nu\u00f1ez",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Cynthia Nu\u00f1ez\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-14th-district:anthony-b-capone",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-14th-district",
+          "givenName": "",
+          "familyName": "Anthony B. Capone",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Anthony B. Capone\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-15th-district:david-louis-boldt-smith",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-15th-district",
+          "givenName": "",
+          "familyName": "David Louis Boldt Smith",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "David Louis Boldt Smith\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-15th-district:kayla-lianne-knight",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-15th-district",
+          "givenName": "",
+          "familyName": "Kayla Lianne Knight",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Kayla Lianne Knight\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-16th-district:jared-behr",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-16th-district",
+          "givenName": "",
+          "familyName": "Jared Behr",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Jared Behr\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-16th-district:olivia-g-pfeifer",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-16th-district",
+          "givenName": "",
+          "familyName": "Olivia G. Pfeifer",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Olivia G. Pfeifer\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-17th-district:ryan-j-johnson",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-17th-district",
+          "givenName": "",
+          "familyName": "Ryan J. Johnson",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Ryan J. Johnson\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-17th-district:rose-marie-walker",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-17th-district",
+          "givenName": "",
+          "familyName": "Rose Marie Walker",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Rose Marie Walker\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-18th-district:graham-musynske",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-18th-district",
+          "givenName": "",
+          "familyName": "Graham Musynske",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Graham Musynske\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-18th-district:samantha-a-goetz",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-18th-district",
+          "givenName": "",
+          "familyName": "Samantha A. Goetz",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Samantha A. Goetz\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-19th-district:christine-barlow",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-19th-district",
+          "givenName": "",
+          "familyName": "Christine Barlow",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Christine Barlow\nDEM"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-legislator-19th-district:james-d-kennedy",
+          "contestId": "ny-cx-local-2026-nassau-county-legislator-19th-district",
+          "givenName": "",
+          "familyName": "James D. Kennedy",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "James D. Kennedy\nREP,CON"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:richard-ambro",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Richard Ambro",
+          "partyLabel": "Democratic / Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Richard Ambro\nDEM, REP"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "Richard \n\nAmbro"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:anthony-r-portesy",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Anthony R. Portesy",
+          "partyLabel": "Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Anthony R. Portesy\nCON"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "Anthony R\n\nPortesy"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:leonard-d-steinman",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Leonard D. Steinman",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Leonard  D. Steinman\nDEM, REP, CON"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "Leonard D\n\nSteinman"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:mary-e-porter",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Mary E. Porter",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Mary E. Porter\nDEM"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "Mary E\n\nPorter"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:kelly-a-reape",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Kelly A. Reape",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Kelly A. Reape\nREP, CON"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "Kelly A\n\nReape"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:joy-m-watson",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Joy M. Watson",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Joy M. Watson\nDEM, REP, CON"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "Joy M\n\nWatson"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:stephen-l-ukeiley",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Stephen L. Ukeiley",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Stephen L. Ukeiley\nDEM"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "Stephen L\n\nUkeiley"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:karen-m-wilutis",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Karen M. Wilutis",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Karen M. Wilutis\nREP, CON"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "Karen M\n\nWilutis"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:eric-sachs",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Eric Sachs",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Eric Sachs\nDEM"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "Eric \n\nSachs"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:john-iliou",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "John Iliou",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "John Iliou\nREP, CON"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "John \n\nIliou"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:william-d-wexler",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "William D. Wexler",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "William D. Wexler\nDEM"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "William D\n\nWexler"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:james-a-mcdonaugh",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "James A. McDonaugh",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "James A. McDonaugh\nREP, CON"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "James A\n\nMcDonaugh"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:john-kelly",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "John Kelly",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "John Kelly\nDEM"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "John \n\nKelly"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:mary-kate-mullen",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Mary Kate Mullen",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Mary Kate Mullen\nREP, CON"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+              "sourceOrg": "Suffolk County Board of Elections",
+              "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+              "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+              "quote": "Mary Kate \n\nMullen"
+            }
+          ]
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-family-court-judge:ellen-r-greenberg",
+          "contestId": "ny-cx-local-2026-nassau-family-court-judge",
+          "givenName": "",
+          "familyName": "Ellen R. Greenberg",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Ellen R. Greenberg\nDEM, REP, CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-family-court-judge:ayesha-keri-brantley",
+          "contestId": "ny-cx-local-2026-nassau-family-court-judge",
+          "givenName": "",
+          "familyName": "Ayesha Keri Brantley",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Ayesha Keri Brantley\nDEM, REP, CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-district-court-judge-2nd-district:tricia-m-ferrell",
+          "contestId": "ny-cx-local-2026-nassau-district-court-judge-2nd-district",
+          "givenName": "",
+          "familyName": "Tricia M. Ferrell",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Tricia M. Ferrell\nDEM, REP, CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-district-court-judge-2nd-district:michael-w-alpert",
+          "contestId": "ny-cx-local-2026-nassau-district-court-judge-2nd-district",
+          "givenName": "",
+          "familyName": "Michael W. Alpert",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Michael W. Alpert\nDEM, REP, CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-district-court-judge-2nd-district:lauren-doddato-goldman",
+          "contestId": "ny-cx-local-2026-nassau-district-court-judge-2nd-district",
+          "givenName": "",
+          "familyName": "Lauren Doddato Goldman",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Lauren Doddato Goldman\nDEM, REP, CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-district-court-judge-3rd-district:lisa-m-petrocelli",
+          "contestId": "ny-cx-local-2026-nassau-district-court-judge-3rd-district",
+          "givenName": "",
+          "familyName": "Lisa M. Petrocelli",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Lisa M. Petrocelli\nDEM, REP, CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-district-court-judge-3rd-district:william-p-bodkin",
+          "contestId": "ny-cx-local-2026-nassau-district-court-judge-3rd-district",
+          "givenName": "",
+          "familyName": "William P. Bodkin",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "William P. Bodkin\nDEM, REP, CON"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-district-court-judge-4th-district:david-w-wright",
+          "contestId": "ny-cx-local-2026-nassau-district-court-judge-4th-district",
+          "givenName": "",
+          "familyName": "David W. Wright",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+            "sourceOrg": "Nassau County Board of Elections",
+            "collectedAt": "2026-11-03T04:46:10.296889+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "David W. Wright\nDEM, REP, CON"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "ny-2026-court-membership:nassau->10",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:nassau",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:10",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-11-03T04:48:33.450378+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Office: \nSupreme Court Justice \nDistrict: \n10 \nCounties: Nassau & Suffolk \nVote For: 8"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:suffolk->10",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:suffolk",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:10",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-11-03T04:48:33.450378+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "Office: \nSupreme Court Justice \nDistrict: \n10 \nCounties: Nassau & Suffolk \nVote For: 8"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-nassau-place-hempstead-town-to-district-court-2",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:nassau/place:hempstead_town",
+          "districtOcdId": "ocd-division/country:us/state:ny/county:nassau/district_court:2",
+          "provenance": {
+            "sourceUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure",
+            "sourceOrg": "New York State Unified Court System",
+            "collectedAt": "2026-11-03T04:48:33.464394+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "The District Court of Nassau County, second district -- Town of Hempstead and City of Long Beach."
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-place-long-beach-to-district-court-2",
+          "memberOcdId": "ocd-division/country:us/state:ny/place:long_beach",
+          "districtOcdId": "ocd-division/country:us/state:ny/county:nassau/district_court:2",
+          "provenance": {
+            "sourceUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure",
+            "sourceOrg": "New York State Unified Court System",
+            "collectedAt": "2026-11-03T04:48:33.464394+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "The District Court of Nassau County, second district -- Town of Hempstead and City of Long Beach."
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-nassau-place-north-hempstead-town-to-district-court-3",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:nassau/place:north_hempstead_town",
+          "districtOcdId": "ocd-division/country:us/state:ny/county:nassau/district_court:3",
+          "provenance": {
+            "sourceUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure",
+            "sourceOrg": "New York State Unified Court System",
+            "collectedAt": "2026-11-03T04:48:33.464394+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "The District Court of Nassau County, third district -- Town of North Hempstead."
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-county-nassau-place-oyster-bay-town-to-district-court-4",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:nassau/place:oyster_bay_town",
+          "districtOcdId": "ocd-division/country:us/state:ny/county:nassau/district_court:4",
+          "provenance": {
+            "sourceUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure",
+            "sourceOrg": "New York State Unified Court System",
+            "collectedAt": "2026-11-03T04:48:33.464394+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "The District Court of Nassau County, fourth district -- Town of Oyster Bay and City of Glen Cove."
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-nassau-place-glen-cove-to-district-court-4",
+          "memberOcdId": "ocd-division/country:us/state:ny/place:glen_cove",
+          "districtOcdId": "ocd-division/country:us/state:ny/county:nassau/district_court:4",
+          "provenance": {
+            "sourceUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure",
+            "sourceOrg": "New York State Unified Court System",
+            "collectedAt": "2026-11-03T04:48:33.464394+00:00",
+            "verifiedAt": "2026-11-03T04:53:36.307237+00:00",
+            "quote": "The District Court of Nassau County, fourth district -- Town of Oyster Bay and City of Glen Cove."
+          }
+        }
+      ],
+      "scopedCoverageNotes": [
+        {
+          "text": "Official candidate-list coverage: the current county BOE homepage links the September18,2026 seven-page candidate PDF, publicly listed as modified September21. Every29 local office field/71 candidate names, full fusion parties and vote limits are prepared. All28 newly added office fields rely on that list; actual Nassau November3 sample ballots and later ballot replacements remain an explicit source gap. This packet does not claim Nassau sample-ballot completeness.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ny/county:nassau"
+            ]
+          }
+        },
+        {
+          "text": "Shared Supreme10: the existing contest and14 candidacy IDs are reused. Nassau native list, current state certification and Suffolk current actual sample agree on the full14 names/fusion line sets and vote8. Both Nassau and Suffolk county whole-membership IDs are preserved and refreshed from the source-exact state certification header.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ny/county:nassau"
+            ]
+          }
+        },
+        {
+          "text": "Nassau DistrictCourt2 consists of Hempstead town AND LongBeach city;3 NorthHempstead town;4 OysterBay town AND GlenCove city, under official court rule212.2. Allfive constituent whole divisions are linked to exact county-scoped court district IDs. Court2/4 are not narrowed to only their towns. County legislative districts1\u201319 retain precise IDs pending boundary/division joins.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ny/county:nassau"
+            ]
+          }
+        },
+        {
+          "text": "Countywide Family Court is kept separate from shared state Supreme Court. Town office electorates use exact registered towns rather than villages/CDPs. No county legislative district is widened to Nassau County. School/special-district offices absent from the candidate list are not represented as verified absent or cancelled.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ny/county:nassau"
+            ]
+          }
+        },
+        {
+          "text": "The list explicitly says subject to change and has no qualification/withdrawal/status columns. No late withdrawal, replacement or cancellation identity is inferred. Blank Write-in spaces do not identify people, and no separate current local declared-write-in certification has been established. Existing measures, legislative races and explainers are preserved by the partial merge.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ny/county:nassau"
+            ]
+          }
+        },
+        {
+          "text": "Acquisition evidence includes current BOE/legacy/domain redirects, the public BOE DocumentCenter folder enumeration of319 documents, county search and city/town routes. It records the sample gap without asserting no sample exists. Replay scripts remain in scratch; this packet contains data and source evidence only. No production publication or git operation was performed.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ny/county:nassau"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:53:36.307237+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+        "finalUrl": "https://www.nassaucountyny.gov/DocumentCenter/View/54522/Candidate-List-as-of-09182026",
+        "httpStatus": 200,
+        "rawHash": "cd2f225802c0d8e439b1c4b385c5833e315bab3546be93137be58f8a2052c0de",
+        "retrievedAt": "2026-11-03T04:46:10.296889+00:00",
+        "publisher": "Nassau County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://www.nassaucountyny.gov/566/Board-of-Elections",
+        "reviewedEvidence": "Current official BOE homepage directly links this seven-page General Election2026 Candidate List as of September18. Public DocumentCenter BOE folder lists this as the latest candidate-list publication, modified September21. Entire29 local office fields/71 named candidates and all party lines/vote limits extracted from native PDF by row/column coordinates. The document explicitly says subject to change. This is official candidate-list coverage, not a recovered Nassau actual sample ballot; final layout/later replacements remain an explicit source gap for28 additional local fields."
+      },
+      {
+        "requestedUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+        "finalUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+        "httpStatus": 200,
+        "rawHash": "10d95f5d2d6b282f98f13e9e771c78e3fb48bfdba4ac38d0c477d383a7712f8e",
+        "retrievedAt": "2026-11-03T04:48:33.450378+00:00",
+        "publisher": "New York State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://elections.ny.gov",
+        "reviewedEvidence": "Current native state general-election certification explicitly identifies Supreme Court District10, Nassau & Suffolk counties, vote8. It corroborates the14 shared canonical candidacy IDs and full fusion party sets; both exact held whole-county membership IDs are re-supported by the source-exact page133 header."
+      },
+      {
+        "requestedUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure",
+        "finalUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure",
+        "httpStatus": 200,
+        "rawHash": "26cc3f701e1a551ed2d55f1bad2ffcfcff6a575f45c5b00c11af8f91e873bebd",
+        "retrievedAt": "2026-11-03T04:48:33.464394+00:00",
+        "publisher": "New York State Unified Court System",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "sourceUiUrl": "https://www.nycourts.gov",
+        "reviewedEvidence": "Official court rule212.2 defines Nassau DistrictCourt2 as Hempstead town AND LongBeach city,3 as NorthHempstead town,4 as OysterBay town AND GlenCove city. These complete unions are represented with precise county-scoped court district IDs and five official whole-member links. No District2/4 election is narrowed to a town alone."
+      },
+      {
+        "requestedUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+        "finalUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+        "publisher": "Suffolk County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "75b339c4412813b3177e44e6e43789f9e42abbc76131fbbbb2a28ed0046b7e9f",
+        "retrievedAt": "2026-11-03T04:37:05.040209+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete official 80-page General Election2026 Sample Ballot Booklet, published Oct5, 39 styles/78 numbered ballot pages plus cover and contents. Complete local nominee blocks verified for17 offices,46 unique named choices. Blank write-ins excluded and fusion party lines deduplicated. Source text preserves exact PDF row order; several judicial grid headers precede the joint candidate grid. Quoted full pages retain that source layout, never recast all grid names as one race. Native county/apps2/www downloads returned403/1010; hash covers captured text, not PDF bytes."
+      }
+    ]
+  }
+}

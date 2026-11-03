@@ -1,0 +1,25 @@
+{
+  "nativeHtml": {
+    "sourceUrl": "https://www.millscountyiowa.gov/385/General-Election",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:02:59.150841+00:00",
+    "sourceFile": "sources/78b91192585b9421f27f7c571ffabf026552625e307041dd68ba90989632015d.official-native-index.html",
+    "originalSha256": "6f821ced0f2dbecbef1446ac3676dfb4609f8ad7fb475e71824bb2ef2108f6bc",
+    "archivedSha256": "78b91192585b9421f27f7c571ffabf026552625e307041dd68ba90989632015d",
+    "representation": "SANITIZED_NATIVE_HTML",
+    "sanitizer": "fx-cred-v1-2026-08-28",
+    "redactedClasses": [
+      "google_api_key"
+    ]
+  },
+  "corroboratingNativeSample": {
+    "sourceUrl": "https://www.millscountyiowa.gov/DocumentCenter/View/1798/2026_General_Ballots_Sample-Ballots_00101_001",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:04:13.032142+00:00",
+    "sourceFile": "sources/dcf71fd4f2ad6cde42560a5bb7359c1e5e4340f9ee2b252a9e12365bbe1f0507.native.pdf",
+    "nativePdfSha256": "dcf71fd4f2ad6cde42560a5bb7359c1e5e4340f9ee2b252a9e12365bbe1f0507",
+    "limitation": "Automated PDF text contains OCR artifacts (for example Iowa read as lowa). Canonical question comes from exact official HTML wording."
+  },
+  "sourceFact": "County of Mills Public Measure O asks increase supervisors from three to five.",
+  "scope": "Source-bounded official current notice lists one local question; no Iowa all-local completeness assertion."
+}

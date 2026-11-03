@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<meta name=viewport content="width=device-width, initial-scale=1">
+<link rel=icon type="image/png" href="/images/favicon.png"/>
+<script src="https://kit.fontawesome.com/bfe1867279.js"></script>
+<link href="/shared/styles/core2.css" type="text/css" rel="stylesheet">
+<link href="https://cdn.neapolitanlabs.com/styles/dm_county/print.css" type="text/css" rel="stylesheet" media="print">
+<link href="https://cdn.neapolitanlabs.com/scripts/dm_county/slicknav.css" type="text/css" rel="stylesheet">
+<script src="https://cdn.neapolitanlabs.com/scripts/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.neapolitanlabs.com/scripts/dm_county/jquery.slicknav.min.js"></script>
+<title>2026 General Election (November 3, 2026) - Elections - Des Moines County, Iowa</title>
+<meta name="description" content="">
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P4DXBL2');</script>
+<!-- End Google Tag Manager -->
+<meta property="og:title" content="2026 General Election (November 3, 2026) - Elections - Des Moines County, Iowa" />
+<meta property="og:type" content="website" />
+<meta property="og:description" content="" />
+<meta property="og:url" content="https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/" />
+<meta property="og:image" content="https://dmcountyelections.iowa.gov/images/des_moines_county_courthouse.jpg" />
+<link rel="canonical" href="https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/">
+</head>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P4DXBL2"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CPLGRS4D1P"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-CPLGRS4D1P');
+</script>
+<a class="skipLink" href="#content">Skip to content</a>
+ <header class="headerContainer" id="fixedHeader">
+  <div id="header" class="headerStart">
+  <div class="container">
+  <div id="headerImage">
+  <a href="/"><img src="/images/logo.png" alt="Des Moines County Home"></a>   
+ </div>
+<div id="headerText">
+	<a href="/">
+		Des Moines County
+		<p class="headerElectionTitle">Elections</p>
+	</a>
+</div>
+    <div class="mobileMenu"></div>
+    <div id="headerRight">
+                  <a href="/contact/"><i class="fad fa-envelope-open"></i><span class="linkDescription" style="display:none;">Contact Us</span></a>
+                </div>
+    <div id="headerNav">
+      <ul id="navigation">
+        <li class="homeLink"><a href="/">Home</a></li>
+        <li><a href="/vote/">Vote</a>
+          <ul>
+            <li><a href="/vote/register/">Register to Vote</a></li>
+            <li><a href="/vote/absentee/">Absentee Voting</a></li>
+            <li><a href="/vote/maps/">Maps</a></li>
+            <li><a href="/vote/military_overseas_voting/">Military/Overseas Voting</a></li>
+            <li><a href="/vote/precincts/">Precincts</a></li>
+            <li><a href="/vote/id/">Voter ID</a></li>
+          </ul>
+        </li>
+        <li><a href="/elections/">Elections</a>
+          <ul>
+            <li><a href="/elections/">Upcoming Elections</a></li>
+            <li><a href="/elections/past/">Past Elections</a></li>
+            <li><a href="/elections/ballots/">Sample Ballots</a></li>
+            <li><a href="/elections/peos/">Precinct Election Officials</a></li>
+            <li><a href="/elections/types/">Types of Elections</a></li>
+          </ul>
+        </li>
+        <li><a href="/elected_officials/">Elected Officials</a>
+          <ul>
+            <li><a href="/elected_officials/federal/">Federal</a></li>
+            <li><a href="/elected_officials/state/">State</a></li>
+            <li><a href="/elected_officials/county/">County</a></li>
+            <li><a href="/elected_officials/city/">City</a></li>
+            <li><a href="/elected_officials/school_board/">School Board</a></li>
+            <li><a href="/elected_officials/township/">Township</a></li>
+            <li><a href="/elected_officials/drainage_levee/">Drainage and Levee</a></li>
+          </ul>
+        </li>
+        <li><a href="/candidates/">Candidates</a></li>
+        <li><a href="/news/">News</a></li>
+        <li><a href="/faq">FAQ</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<script>
+	$(function(){
+		$('#navigation').slicknav({
+      label:"",
+      allowParentLinks: true,
+      prependTo:".mobileMenu"
+    });
+	});
+</script>
+</header>
+
+<main id="content">
+<div id="pageHeader">
+  <div class="container_alt container_first">
+    <img src="/global/images/how_do_i_vote.png" alt=""><h1 style="margin: 0;"><a href="/elections/">Elections</a> <i class="fad fa-angle-right"></i> 2026 General Election</h1>
+  </div>
+</div>
+
+<div class="container_alt">
+  <div class="leftNav">
+    <h3>Elections by Year</h3>
+<ul id="myBtnContainer">
+  <li><a href="/elections/past/2026/">2026</a></li>  <li><a href="/elections/past/2025/">2025</a></li>      <li><a href="/elections/past/2024/">2024</a></li>      <li><a href="/elections/past/2023/">2023</a></li>      <li><a href="/elections/past/2022/">2022</a></li>    <li><a href="/elections/past/2021/">2021</a></li>      <li><a href="/elections/past/2020/">2020</a></li>          <li><a href="/elections/past/2019/">2019</a></li>    <li><a href="/elections/past/2018/">2018</a></li>      <li><a href="/elections/past/2017/">2017</a></li>      <li><a href="/elections/past/2016/">2016</a></li>          <li><a href="/elections/past/2015/">2015</a></li>      <li><a href="/elections/past/2014/">2014</a></li>        <li><a href="/elections/past/2013/">2013</a></li>        <li><a href="/elections/past/2012/">2012</a></li>        <li><a href="/elections/past/"><b>View All</b></a></li>
+</ul>
+<h3>Elections</h3>
+<ul>
+  <li><a href="/elections/">Upcoming Elections</a></li>
+  <li><a href="/elections/past/">Past Elections</a></li>
+  <li><a href="/elections/ballots/">Sample Ballots</a></li>
+  <li><a href="/elections/peos/">Precinct Election Officials</a></li>
+  <li><a href="/elections/types/">Types of Elections</a></li>
+</ul>
+  </div>
+  <div class="rightContent electionPage">
+    <div class="addthis_inline_share_toolbox alt"></div><h2>2026 General Election</h2>
+
+    <h3>November 3, 2026</h3>
+    General Election <a class="electionTypeInfo"><i class="fad fa-info-circle"></i></a>
+    <div class="electionTypeDescription">
+      A General Election is the election in which federal and state officers, members of Congress and of the general assembly, county and township officers, and other officers appear on the ballot. General Elections are held the 1st Tuesday after the 1st Monday in November of each even-numbered year.    </div>
+
+    <!-- Show details if election is upcoming -->
+            <div class="introduction">NOTICE OF SATELLITE VOTING STATION
+
+The Des Moines County Auditor&rsquo;s Office 
+Will have a Satellite Voting Station for the
+November 3, 2026, General Election 
+at the following locations:
+
+Mediapolis City Hall
+510 Main St.
+Mediapolis, Ia 52637
+Tuesday, October 20, 2026
+Hours - 12:00 PM to 8:00 PM
+
+Southeastern Community College Room #225
+520 S. Gear Ave.
+West Burlington, Ia 52655
+Thursday, October 22, 2026
+Hours &ndash; 12:00 PM to 8:00 PM
+
+All ballot styles for Des Moines County residents will be available
+
+Voter registration forms will be available for new registrations and for those needing to make changes to their current voter registration within Des Moines County
+
+The Des Moines County Auditor&rsquo;s Office will also be open for 
+Voter Registrations and Absentee Voting at the Des Moines County Courthouse on the following days:
+
+Regular Office Hours: 
+Monday - Friday		8:00 AM - 4:30PM
+Monday,  October 19		8:00 AM - 5:00 PM
+Friday,      October 30		8:00 AM - 5:00 PM
+Saturday, October 31		8:00 AM - 5:00 PM
+
+
+
+</div>    <p style="margin-right:-18px; text-align:center"><strong>PUBLIC NOTICE OF 2026 GENERAL ELECTION</strong></p>
+
+<p style="margin-right:-18px; text-align:center">&nbsp;</p>
+
+<p style="text-indent:.5in">Notice is hereby given to the eligible voters of Des Moines County, State of Iowa, that the General Election will be held on Tuesday, November 3rd, 2026. Voters must vote in their precinct and polling place of residence. Please read this notice carefully to determine your correct voting location. If you are unsure of your voting location for this election, please contact the Des Moines County Auditor &amp; Commissioner of Elections at 319-753-8232.</p>
+
+<p>&nbsp;</p>
+
+<p style="text-indent:.5in">&nbsp;</p>
+
+<p style="text-indent:.5in">The polls will be <strong>open from</strong> <strong>7:00 A.M. until 8:00 P.M.</strong></p>
+
+<p>&nbsp;</p>
+
+<p style="text-indent:.5in"><strong>General Election polling places:</strong></p>
+
+<p style="margin-left:48px">&nbsp;</p>
+
+<p style="margin-left:48px">Pct 1, 2, &amp; Tama&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Oak Street Baptist Church</p>
+
+<p style="margin-left:48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;1303 Oak St., Burlington</p>
+
+<p style="margin-left:48px">&nbsp;</p>
+
+<p style="margin-left:48px">Pct 3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Optimae Life Services</p>
+
+<p style="margin-left:48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 910 Cottonwood, Ste 1001, Burlington</p>
+
+<p style="margin-left:48px">&nbsp;</p>
+
+<p style="margin-left:48px">Pct 4 &amp; Union&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; First Church of the Nazarene</p>
+
+<p style="margin-left:48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1015 S. Roosevelt Ave., Burlington</p>
+
+<p style="margin-left:48px">&nbsp;</p>
+
+<p style="margin-left:96px; text-indent:-.5in">Pct 5 &amp; 6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Harmony Bible Church</p>
+
+<p style="margin-left:96px; text-indent:-.5in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 550 Division St., Burlington</p>
+
+<p style="margin-left:96px; text-indent:-.5in">&nbsp;</p>
+
+<p style="margin-left:48px">Pct 7, 8 &amp; Concordia&nbsp;&nbsp;&nbsp;&nbsp; Bethany Lutheran Church</p>
+
+<p style="margin-left:48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2515 Madison Ave., Burlington</p>
+
+<p style="margin-left:48px">&nbsp;</p>
+
+<p style="margin-left:48px">City of Danville,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Danville Community Building</p>
+
+<p style="margin-left:48px">Danville Twp.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 104 Shepherd St. Danville</p>
+
+<p style="margin-left:48px">&nbsp;</p>
+
+<p style="margin-left:48px">Flint River Twp,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Middletown City Hall</p>
+
+<p style="margin-left:48px">Middletown&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 120 Mechanic St., Middletown</p>
+
+<p style="margin-left:48px">&nbsp;</p>
+
+<p style="margin-left:48px">Mediapolis Town&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mediapolis City Hall</p>
+
+<p style="margin-left:48px">Franklin, Yellow Spring, 510 Main St., Mediapolis</p>
+
+<p style="margin-left:48px">Benton, Huron,</p>
+
+<p style="margin-left:48px">Jackson Twp.</p>
+
+<p style="margin-left:48px">&nbsp;</p>
+
+<p style="margin-left:48px">Pleasant Grove,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Yarmouth Fire Station</p>
+
+<p style="margin-left:48px">Washington Twp.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20454 Eastern Ave., Yarmouth</p>
+
+<p style="margin-left:48px">&nbsp;</p>
+
+<p style="margin-left:48px">West Burlington Town&nbsp;&nbsp;&nbsp; Divine Mercy Parish Center</p>
+
+<p style="margin-left:48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 502 W Mt Pleasant St., West Burlington</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pre-registered voters are required to provide an approved form of identification at the polling place before receiving and casting a regular ballot. Voters who are not pre-registered, including voters registering to vote on Election Day and voters changing their precinct, must also provide proof of residence. A voter who is unable to provide an approved form of identification may establish identity and residence using Election Day Registration documents, if applicable, or cast a provisional ballot and provide the required proof of identity and/or residence to the County Auditor by noon on Monday, November 9, 2026. Election Day registrants who are unable to provide the required proof of identity and residence may have their identity and residence attested to by another registered voter in the precinct. An attester must provide an approved form of identification. For additional information about providing proof of identity and/or residence, visit the Iowa Secretary of State&rsquo;s Voter ID information at <a href="https://sos.iowa.gov/voterid" style="color:blue; text-decoration:underline">https://sos.iowa.gov/voterid</a> or contact the Des Moines County Auditor&rsquo;s Office at 319-753-8232.</p>
+
+<p>Voter pre-registration deadline and vote by mail request deadline is October 19th at 5:00 PM at the Des Moines County Auditor&rsquo;s Office.&nbsp; Absentee ballots voted in-person are available in the County Auditor&rsquo;s office until November 2nd at 4:30 PM.</p>
+
+<p style="margin-right:-48px; text-indent:.5in">&nbsp;</p>
+
+<p style="margin-right:-48px; text-indent:.5in">Any voter who is physically unable to enter a polling place has the right to vote in their vehicle.&nbsp; For further information, please contact the county auditor&rsquo;s office at the telephone number or email address below.</p>
+
+<p style="margin-right:-48px">Telephone: (319) 753-8232&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Email: <a href="mailto:dotys@dmcounty.com" style="color:blue; text-decoration:underline">dotys@dmcounty.com</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; For TTY access, dial 711+753-8232</p>
+
+<p style="margin-right:-48px; text-indent:.5in">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A full set of sample ballots are available for viewing on the Des Moines County website at <a href="https://dmcountyelections.iowa.gov" style="color:blue; text-decoration:underline">https://dmcountyelections.iowa.gov</a></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The following offices and candidates will appear on ballot styles according to the specific jurisdictions:</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>United States Senator (vote for no more than one )</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Ashley Hinson</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Josh Turek</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thomas Laehn</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; United States Representative District 1 (vote for no more than one)</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Mariannette Miller-Meeks</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Christina Bohannan</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Michael Bridgford</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Governor / Lieutenant Governor ( vote for no more than one team )</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Zach Lahn</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Derek Wulf</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Rob Sand</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Dave Muhlbauer</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Secretary of State ( vote for no more than one )</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Paul D. Pate</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ryan Peterman</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Auditor of State ( vote for no more than one )</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Chris Cournoyer</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Taylor Wettach</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Treasurer of State ( vote for no more than one )</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Roby Smith</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; John Norwood</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Secretary of Agriculture</strong></p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Mike Naig</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Chris Jones</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Attorney General</strong></p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Brenna Bird</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nate Williems</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State Representative District 95 (vote for no more than one)</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Taylor Collins</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Carrie Trevino</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>State Representative District 99 (vote for no more than one)</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Matthew Rinker</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Jennifer Kirkman</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Des Moines County Supervisor (vote for no more than one)</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Brian Thie</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bob Bartles</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Des Moines County Treasurer (vote for no more than two)</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Janelle Nalley-Londquist</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Des Moines County Recorder (vote for no more than one)</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Natalie Steffener</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Des Moines County Attorney ( vote for no more than one )</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Travis A Inghram</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Soil and Water Conservation District Commissioner (vote for no more than two)</strong></p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; June Morgan</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Brian Messer</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>County Agricultural Extension Council (vote for no more than five)</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Andrea Wright</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Dwight Byerly</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Brenda Wischmeier</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ericka Breuer</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sara McClure</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>County Agricultural Extension Council &ndash; To Fill a Vacancy ( vote for no more than one )</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Stefanie Riley</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Judicial Ballot</strong></p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Shall the following Justices/Judges be retained in office?</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Court of Appeals Judge</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Sharon Soorholtz Greer</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; John M. Sandy</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Julie A Schumacher</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; District 8B Court Judge</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>Wyatt P. Peterson</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>District 8B Associate Judge</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Emily S. Dean</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="text-align:center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<strong>Certification of Constitutional Amendment </strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p>Shall the following amendment to the Constitution be adopted?</p>
+
+<p>&nbsp;</p>
+
+<p style="margin-right:-48px; text-align:center">1</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">The Constitution of the State of Iowa is amended by adding the following new section to new Article XIII:</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">Passage of a bill that increases the individual income tax rate or the corporate income tax rate, or the rate of any other type of tax based upon income or legal and special reserves, shall require the affirmative votes of at least two-thirds of the members elected to each house of the general assembly. This requirement does not apply to taxes imposed at the option of a local government. Passage of a bill that establishes a new tax on any type of income or legal and special reserves imposed by the state shall require the affirmative votes of at least two-thirds of the members elected to each house of the general assembly. A lawsuit challenging the proper enactment of a bill under this section must be filed no later than one year following the enactment. If such a lawsuit is not filed within the one-year limit, the bill shall be considered properly enacted under this section. Each bill to which this section applies must include a separate provision describing the requirements for enactment prescribed by this section. The general assembly shall enact laws to implement this section.</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px; text-align:center"><strong>City of Burlington Public Measure GM</strong></p>
+
+<p style="margin-right:-48px; text-align:center">&nbsp;</p>
+
+<p style="margin-right:-48px">&ldquo;Shall the City of Burlington, in Des Moines County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $7,000,000 for the purpose of paying the cost, to that extent, of constructing, renovating and improving municipal swimming pool facilities?&rdquo;</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px; margin-left:96px"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+
+<p style="margin-right:-48px; text-align:center"><strong>PUBLIC TEST OF VOTING EQUIPMENT</strong></p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">Public testing of the Des Moines County voting equipment will begin on October 30th at 10:00 AM in the Public Meeting Room on the 2nd Floor at the Des Moines County Courthouse, according to the provisions of 52.35. The public is invited to attend.</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px; text-indent:.5in">Signed and dated this 1st day of October, 2026</p>
+
+<p style="margin-right:-48px; text-indent:.5in">&nbsp;</p>
+
+<p style="margin-right:-48px; text-indent:3.0in">Sara Doty</p>
+
+<p style="margin-right:-48px; text-indent:3.0in">Des Moines County Auditor/Commissioner of Elections</p>
+
+<p style="margin-right:-48px">&nbsp;</p>
+
+<p style="margin-right:-48px">Please publish one time on or after October 14th, 2026</p>
+    <h3><a href="/files/candidate_list/2026_general_election_36984.pdf" target="_blank">Candidate List</a> (PDF)</h3>    
+    <!-- Find Results -->
+                <div class="electionResults">
+        <h3>Election Results</h3>
+        <div class="resultsLink">
+        Results Available on Election Night
+        </div>
+        <div class="resultsCount">
+        0/17 Precincts Counted
+        </div>
+        <div class="clear"></div>
+      </div>
+          
+    <!-- Highlighted Races -->
+<div class="electionGraph">
+</div>
+
+     <!-- Find Turnout -->
+    
+    
+        <h3>Precincts and Polling Locations</h3>
+        <div class="pollingLocation">
+    <h4>Benton, Huron and Jackson Townships <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/510+Main+Street+Mediapolis+IA+52637" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Mediapolis City Hall &middot; 510 Main Street &middot; Mediapolis, IA 52637    <br><a href="/files/precincts/benton_huron_and_jackson_townships.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>Burlington 1 Precinct <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/1303+Oak+Street+Burlington+IA+52601" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Oak Street Baptist Church &middot; 1303 Oak Street &middot; Burlington, IA 52601    <br><a href="/files/precincts/2022_burlington_1_precinct.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>Burlington 2 <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/1303+Oak+St+Burlington+IA+52601" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Oak Street Baptist Church &middot; 1303 Oak St &middot; Burlington, IA 52601    <br><a href="/files/precincts/burlington_2.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>Burlington 3 <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/910+Cottonwood,+Ste+1001+Burlington+IA+52601" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Optimae Life Services &middot; 910 Cottonwood, Ste 1001 &middot; Burlington, IA 52601    <br><a href="/files/precincts/burlington_3.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>Burlington 4 <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/1015+S+Roosevelt+Avenue+Burlington+IA+52601" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> First Church of the Nazarene &middot; 1015 S Roosevelt Avenue &middot; Burlington, IA 52601    <br><a href="/files/precincts/burlington_4.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>Burlington 5 <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/550+Division+St+Burlington+IA+52601" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Harmony Bible Church &middot; 550 Division St &middot; Burlington, IA 52601    <br><a href="/files/precincts/burlington_5.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>Burlington 6 <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/550+Division+Street+Burlington+IA+52601" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Harmony Bible Church &middot; 550 Division Street &middot; Burlington, IA 52601    <br><a href="/files/precincts/burlington_6.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>Burlington 7 <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/2515+Madison+Ave+Burlington+IA+52601" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Bethany Lutheran Church &middot; 2515 Madison Ave &middot; Burlington, IA 52601    <br><a href="/files/precincts/burlington_7.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>Burlington 8 <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/2515+Madison+Avenue+Burlington+IA+52601" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Bethany Lutheran Church &middot; 2515 Madison Avenue &middot; Burlington, IA 52601    <br><a href="/files/precincts/burlington_8.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>City of Danville/Danville Township <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/104+W+Shepherd+Street+Danville+IA+52623" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Danville Community Building &middot; 104 W Shepherd Street &middot; Danville, IA 52623    <br><a href="/files/precincts/city_of_danvilledanville_township.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>City of Mediapolis/Yellow Spring, Franklin Townships <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/510+Main+Street+Mediapolis+IA+52637" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Mediapolis City Hall &middot; 510 Main Street &middot; Mediapolis, IA 52637    <br><a href="/files/precincts/city_of_mediapolisyellow_spring_franklin_townships.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>City of Middletown/Flint River Township  <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/120+Mechanics+St.++Middletown+IA+52638" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Middletown City Hall &middot; 120 Mechanics St.  &middot; Middletown, IA 52638    <br><a href="/files/precincts/city_of_middletownflint_river_township.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>Concordia Twp <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/2515+Madison+Ave+Burlington+IA+52601" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Bethany Lutheran Church &middot; 2515 Madison Ave &middot; Burlington, IA 52601    <br><a href="/files/precincts/concordia_twp.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>Pleasant Grove, Washington Townships <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/20454+Eastern+Avenue+Yarmouth+IA+52660" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Yarmouth Fire Station &middot; 20454 Eastern Avenue &middot; Yarmouth, IA 52660    <br><a href="/files/precincts/pleasant_grove_washington_townships.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>Tama Township <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/1303+Oak+St+Burlington+IA+52601" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Oak Street Baptist Church &middot; 1303 Oak St &middot; Burlington, IA 52601    <br><a href="/files/precincts/tama_township.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>Union Township <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/1015+S+Roosevelt+Avenue+Burlington+IA+52601" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> First Church of the Nazarene &middot; 1015 S Roosevelt Avenue &middot; Burlington, IA 52601    <br><a href="/files/precincts/union_township.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+        <div class="pollingLocation">
+    <h4>West Burlington <a class="precinctInfoIcon"><i class="fad fa-info-circle"></i></a>
+    <div class="precinctInfoDescription" style="font-weight: normal">
+          </div></h4>
+    <a href="https://maps.google.com/maps/place/502+W+Mt+Pleasant+Street+West+Burlington+IA+52655" target="_blank"><i class="fad fa-map-marker-alt" title="View Map and Driving Directions"></i></a> Divine Mercy Parish Center &middot; 502 W Mt Pleasant Street &middot; West Burlington, IA 52655    <br><a href="/files/precincts/west_burlington.pdf" target="_blank"><i class="fad fa-map"></i>Precinct Map</a>    </div>
+            <div class="clear"></div>
+                    <h3 id="ballots">Sample Ballots (PDF)</h3>
+         <input type="text" placeholder="Search Ballots" data-search />         <div class="ballotRow" data-filter-item data-filter-name="2026 general election  2026generalelection">
+           <b><a href="/files/sample_ballots/1223_2026_general_election_24275.pdf" target="_blank"><i class="fad fa-ballot"></i>2026 General Election</a></b>
+                    </div>
+                  <div class="clear"></div>
+    <div class="electionsBack"><b>Back:</b> <a href="/elections/past/">Past Elections</a></div>
+  </div>
+  <div class="clear"></div>
+</div>
+
+</main>
+<div class="printHeader disclaimer">This webpage was printed on November 3, 2026. For the most current election-related information, visit the Des Moines County, Iowa, Elections website at <b><u>https://dmcountyelections.iowa.gov/</u></b>.</div>
+<div class="container" id="footer">
+  <div class="footerLeft">
+    <b>Des Moines County Courthouse</b><br>
+    513 N. Main St.<br />
+P.O. Box 784<br />
+Burlington, IA 52601<br>
+    <a href="/contact/">Contact Us</a><br>
+    <a href="/site/accessibility/">Accessibility</a><br>
+    <a href="https://www.dmcounty.com" target="_blank">Des Moines County Website</a>
+  </div>
+  <div class="footerCenter"><b>Office Hours</b><br>
+    Monday - Friday<br />
+8:00 a.m. - 4:30 p.m.  </div>
+  <div class="footerCenter"><b>Contact Information</b><br>
+    Phone: (319) 753-8232<br />
+Fax: (319) 753-8227  </div>
+  <div class="clearMobile"></div>
+  <div class="footerRight footerSocial">
+            <a href="/contact/"><i class="fad fa-envelope-open"></i><span class="linkDescription" style="display:none;">Contact Us</span></a>
+            <div class="clear"></div>
+  </div>
+  <div class="clear"></div>
+</div>
+<div id="subFooter">
+  <div id="poweredBy"><a href="//www.neapolitanlabs.com/elections/" target="_blank">powered by <img src="/images/neapolitan_labs.png" alt="Neapolitan Labs"></a></div>
+</div>
+<script type="text/javascript" src="/shared/scripts/scroll.js"></script>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f185b2b610953e3"></script>
+<script type="text/javascript">
+</script>
+<script type="text/javascript" src="https://cdn.neapolitanlabs.com/scripts/dm_county/list_filter.js"></script>
+<script type="text/javascript" src="https://cdn.neapolitanlabs.com/scripts/dm_county/list_search.js"></script>
+
+</body>
+
+</html>

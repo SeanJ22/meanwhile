@@ -1,0 +1,89 @@
+[
+  {
+    "contestId": "ia-cx-2026-sumner-fredericksburg-school-bonds",
+    "sourceUrl": "https://bremercountyelections.iowa.gov/news/notice_of_bond_election_for_sumnerfredericksburg_school_district/",
+    "rawHash": "b3d936894d21e9d1af80a78ccfd50ea4963c498d4b383840488dd6c99dad181b",
+    "sourceFile": "sources/b3d936894d21e9d1af80a78ccfd50ea4963c498d4b383840488dd6c99dad181b.source",
+    "sourceTextFile": "sources/435209ad0de0aff09acf441c2496fe2692bf93d92710d488a9dbf361528bced3.txt",
+    "excerpt": "Shall the Board of Directors of the Sumner-Fredericksburg Community School District in the Counties of Bremer, Chickasaw, and Fayette, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $16,300,000 to provide funds to construct, build, furnish, and equip additions to the High School building; and to remodel, repair, improve, and equip the existing High School, Middle School, and Fredericksburg Elementary buildings, including playground, parking, and site improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Sumner-Fredericksburg Community School District in the Counties of Bremer, Chickasaw, and Fayette, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $16,300,000 to provide funds to construct, build, furnish, and equip additions to the High School building; and to remodel, repair, improve, and equip the existing High School, Middle School, and Fredericksburg Elementary buildings, including playground, parking, and site improvements?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Sumner-Fredericksburg Community School District in the Counties of Bremer, Chickasaw, and Fayette, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $16,300,000 to provide funds to construct, build, furnish, and equip additions to the High School building; and to remodel, repair, improve, and equip the existing High School, Middle School, and Fredericksburg Elementary buildings, including playground, parking, and site improvements?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Sumner-Fredericksburg Community School District in the Counties of Bremer, Chickasaw, and Fayette, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $16,300,000 to provide funds to construct, build, furnish, and equip additions to the High School building; and to remodel, repair, improve, and equip the existing High School, Middle School, and Fredericksburg Elementary buildings, including playground, parking, and site improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Three source-checked whole K12 school questions from current official Bremer and Keokuk publications. Shared Kirkwood college question held separately for exact taxing geography. No exhaustive Iowa local inventory claim.",
+    "textExtraction": {
+      "tool": "HTMLParser",
+      "scope": "Native HTML text nodes, script/style excluded; complete bounded school question."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-keota-school-bonds",
+    "sourceUrl": "https://keokukcounty.iowa.gov/news/2026_general_election/7118/",
+    "rawHash": "f66a7dc97394ff77f8cee1008f57df04e7a2916f64641cf0a1e8ce999928b89a",
+    "sourceFile": "sources/f66a7dc97394ff77f8cee1008f57df04e7a2916f64641cf0a1e8ce999928b89a.source",
+    "sourceTextFile": "sources/9cd20e80718edbbfbb7ac9b3ac5af2eec58468062011a645e538ddc9545d0eb5.txt",
+    "excerpt": "Shall the Board of Directors of the Keota Community School District in the Counties of Keokuk and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,400,000 to provide funds to remodel, repair, equip, and improve the Jr-Sr High School, including a secure entrance, educational spaces, HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, equip, and improve the Elementary School, including a secure entrance and plumbing improvements; and for fire alarm upgrades throughout the school building?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Keota Community School District in the Counties of Keokuk and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,400,000 to provide funds to remodel, repair, equip, and improve the Jr-Sr High School, including a secure entrance, educational spaces, HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, equip, and improve the Elementary School, including a secure entrance and plumbing improvements; and for fire alarm upgrades throughout the school building?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Keota Community School District in the Counties of Keokuk and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,400,000 to provide funds to remodel, repair, equip, and improve the Jr-Sr High School, including a secure entrance, educational spaces, HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, equip, and improve the Elementary School, including a secure entrance and plumbing improvements; and for fire alarm upgrades throughout the school building?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Keota Community School District in the Counties of Keokuk and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,400,000 to provide funds to remodel, repair, equip, and improve the Jr-Sr High School, including a secure entrance, educational spaces, HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, equip, and improve the Elementary School, including a secure entrance and plumbing improvements; and for fire alarm upgrades throughout the school building?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Three source-checked whole K12 school questions from current official Bremer and Keokuk publications. Shared Kirkwood college question held separately for exact taxing geography. No exhaustive Iowa local inventory claim.",
+    "textExtraction": {
+      "tool": "HTMLParser",
+      "scope": "Native HTML text nodes, script/style excluded; complete bounded school question."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-pekin-school-bonds",
+    "sourceUrl": "https://keokukcounty.iowa.gov/news/2026_general_election/7118/",
+    "rawHash": "f66a7dc97394ff77f8cee1008f57df04e7a2916f64641cf0a1e8ce999928b89a",
+    "sourceFile": "sources/f66a7dc97394ff77f8cee1008f57df04e7a2916f64641cf0a1e8ce999928b89a.source",
+    "sourceTextFile": "sources/9cd20e80718edbbfbb7ac9b3ac5af2eec58468062011a645e538ddc9545d0eb5.txt",
+    "excerpt": "Shall the Board of Directors of the Pekin Community School District in the Counties of Jefferson, Keokuk, Wapello, and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $9,200,000 to provide funds to build, furnish, and equip additions to the school building, including classroom and commons area spaces; to remodel, repair, improve, and equip the school building, including a secure entrance, HVAC, mechanical, electrical, plumbing, parking, accessibility, and site improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Pekin Community School District in the Counties of Jefferson, Keokuk, Wapello, and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $9,200,000 to provide funds to build, furnish, and equip additions to the school building, including classroom and commons area spaces; to remodel, repair, improve, and equip the school building, including a secure entrance, HVAC, mechanical, electrical, plumbing, parking, accessibility, and site improvements?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Pekin Community School District in the Counties of Jefferson, Keokuk, Wapello, and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $9,200,000 to provide funds to build, furnish, and equip additions to the school building, including classroom and commons area spaces; to remodel, repair, improve, and equip the school building, including a secure entrance, HVAC, mechanical, electrical, plumbing, parking, accessibility, and site improvements?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Pekin Community School District in the Counties of Jefferson, Keokuk, Wapello, and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $9,200,000 to provide funds to build, furnish, and equip additions to the school building, including classroom and commons area spaces; to remodel, repair, improve, and equip the school building, including a secure entrance, HVAC, mechanical, electrical, plumbing, parking, accessibility, and site improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Three source-checked whole K12 school questions from current official Bremer and Keokuk publications. Shared Kirkwood college question held separately for exact taxing geography. No exhaustive Iowa local inventory claim.",
+    "textExtraction": {
+      "tool": "HTMLParser",
+      "scope": "Native HTML text nodes, script/style excluded; complete bounded school question."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

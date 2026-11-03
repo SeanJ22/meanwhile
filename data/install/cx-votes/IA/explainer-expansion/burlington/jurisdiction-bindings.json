@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "ia-cx-2026-burlington-pool-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:burlington",
+      "place",
+      "1909550",
+      "Burlington city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact City of Burlington named in official question; not the whole Des Moines County division."
+  }
+]

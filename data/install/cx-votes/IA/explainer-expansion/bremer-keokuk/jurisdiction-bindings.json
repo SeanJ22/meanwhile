@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ia-cx-2026-sumner-fredericksburg-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:sumner_fredericksburg_community_school_district",
+      "unsd",
+      "1927600",
+      "Sumner-Fredericksburg Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole K12 school district named in official question; all cross-county territory retained, not restricted to publisher county."
+  },
+  {
+    "contestId": "ia-cx-2026-keota-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:keota_community_school_district",
+      "unsd",
+      "1915660",
+      "Keota Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole K12 school district named in official question; all cross-county territory retained, not restricted to publisher county."
+  },
+  {
+    "contestId": "ia-cx-2026-pekin-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:pekin_community_school_district",
+      "unsd",
+      "1922440",
+      "Pekin Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole K12 school district named in official question; all cross-county territory retained, not restricted to publisher county."
+  }
+]

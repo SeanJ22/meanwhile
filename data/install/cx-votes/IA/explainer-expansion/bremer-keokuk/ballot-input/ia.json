@@ -1,0 +1,239 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-sumner-fredericksburg-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:sumner_fredericksburg_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Sumner-Fredericksburg Community School District — School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://bremercountyelections.iowa.gov/news/notice_of_bond_election_for_sumnerfredericksburg_school_district/",
+          "provenance": {
+            "sourceUrl": "https://bremercountyelections.iowa.gov/news/notice_of_bond_election_for_sumnerfredericksburg_school_district/",
+            "sourceOrg": "Bremer County Iowa Elections",
+            "collectedAt": "2026-11-03T07:02:58.918418+00:00",
+            "verifiedAt": "2026-11-03T07:05:10.758117+00:00",
+            "quote": "Shall the Board of Directors of the Sumner-Fredericksburg Community School District in the Counties of Bremer, Chickasaw, and Fayette, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $16,300,000 to provide funds to construct, build, furnish, and equip additions to the High School building; and to remodel, repair, improve, and equip the existing High School, Middle School, and Fredericksburg Elementary buildings, including playground, parking, and site improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-keota-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:keota_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Keota Community School District — Measure ML: School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://keokukcounty.iowa.gov/news/2026_general_election/7118/",
+          "provenance": {
+            "sourceUrl": "https://keokukcounty.iowa.gov/news/2026_general_election/7118/",
+            "sourceOrg": "Keokuk County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:02:59.205418+00:00",
+            "verifiedAt": "2026-11-03T07:05:10.758117+00:00",
+            "quote": "Shall the Board of Directors of the Keota Community School District in the Counties of Keokuk and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,400,000 to provide funds to remodel, repair, equip, and improve the Jr-Sr High School, including a secure entrance, educational spaces, HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, equip, and improve the Elementary School, including a secure entrance and plumbing improvements; and for fire alarm upgrades throughout the school building?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-pekin-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:pekin_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pekin Community School District — Measure MN: School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://keokukcounty.iowa.gov/news/2026_general_election/7118/",
+          "provenance": {
+            "sourceUrl": "https://keokukcounty.iowa.gov/news/2026_general_election/7118/",
+            "sourceOrg": "Keokuk County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:02:59.205418+00:00",
+            "verifiedAt": "2026-11-03T07:05:10.758117+00:00",
+            "quote": "Shall the Board of Directors of the Pekin Community School District in the Counties of Jefferson, Keokuk, Wapello, and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $9,200,000 to provide funds to build, furnish, and equip additions to the school building, including classroom and commons area spaces; to remodel, repair, improve, and equip the school building, including a secure entrance, HVAC, mechanical, electrical, plumbing, parking, accessibility, and site improvements?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-sumner-fredericksburg-school-bonds:measure",
+          "contestId": "ia-cx-2026-sumner-fredericksburg-school-bonds",
+          "questionText": "Shall the Board of Directors of the Sumner-Fredericksburg Community School District in the Counties of Bremer, Chickasaw, and Fayette, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $16,300,000 to provide funds to construct, build, furnish, and equip additions to the High School building; and to remodel, repair, improve, and equip the existing High School, Middle School, and Fredericksburg Elementary buildings, including playground, parking, and site improvements?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://bremercountyelections.iowa.gov/news/notice_of_bond_election_for_sumnerfredericksburg_school_district/",
+            "sourceOrg": "Bremer County Iowa Elections",
+            "collectedAt": "2026-11-03T07:02:58.918418+00:00",
+            "verifiedAt": "2026-11-03T07:05:10.758117+00:00",
+            "quote": "Shall the Board of Directors of the Sumner-Fredericksburg Community School District in the Counties of Bremer, Chickasaw, and Fayette, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $16,300,000 to provide funds to construct, build, furnish, and equip additions to the High School building; and to remodel, repair, improve, and equip the existing High School, Middle School, and Fredericksburg Elementary buildings, including playground, parking, and site improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-keota-school-bonds:measure",
+          "contestId": "ia-cx-2026-keota-school-bonds",
+          "officialNumber": "ML",
+          "questionText": "Shall the Board of Directors of the Keota Community School District in the Counties of Keokuk and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,400,000 to provide funds to remodel, repair, equip, and improve the Jr-Sr High School, including a secure entrance, educational spaces, HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, equip, and improve the Elementary School, including a secure entrance and plumbing improvements; and for fire alarm upgrades throughout the school building?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://keokukcounty.iowa.gov/news/2026_general_election/7118/",
+            "sourceOrg": "Keokuk County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:02:59.205418+00:00",
+            "verifiedAt": "2026-11-03T07:05:10.758117+00:00",
+            "quote": "Shall the Board of Directors of the Keota Community School District in the Counties of Keokuk and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,400,000 to provide funds to remodel, repair, equip, and improve the Jr-Sr High School, including a secure entrance, educational spaces, HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, equip, and improve the Elementary School, including a secure entrance and plumbing improvements; and for fire alarm upgrades throughout the school building?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-pekin-school-bonds:measure",
+          "contestId": "ia-cx-2026-pekin-school-bonds",
+          "officialNumber": "MN",
+          "questionText": "Shall the Board of Directors of the Pekin Community School District in the Counties of Jefferson, Keokuk, Wapello, and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $9,200,000 to provide funds to build, furnish, and equip additions to the school building, including classroom and commons area spaces; to remodel, repair, improve, and equip the school building, including a secure entrance, HVAC, mechanical, electrical, plumbing, parking, accessibility, and site improvements?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://keokukcounty.iowa.gov/news/2026_general_election/7118/",
+            "sourceOrg": "Keokuk County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:02:59.205418+00:00",
+            "verifiedAt": "2026-11-03T07:05:10.758117+00:00",
+            "quote": "Shall the Board of Directors of the Pekin Community School District in the Counties of Jefferson, Keokuk, Wapello, and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $9,200,000 to provide funds to build, furnish, and equip additions to the school building, including classroom and commons area spaces; to remodel, repair, improve, and equip the school building, including a secure entrance, HVAC, mechanical, electrical, plumbing, parking, accessibility, and site improvements?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-sumner-fredericksburg-school-bonds",
+          "whatItDoes": "Authorizes up to $16.3 million in general-obligation bonds for high school additions and renovations, repairs and equipment at the high school, middle school and Fredericksburg Elementary, including playground, parking and site improvements.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://bremercountyelections.iowa.gov/news/notice_of_bond_election_for_sumnerfredericksburg_school_district/",
+          "sourceHash": "b6828e7bb7085d26fa6abdd50de4f0dad0fdc974bd564be895d7254b0b61ae21",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:05:10.758117+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-keota-school-bonds",
+          "whatItDoes": "Authorizes up to $6.4 million in general-obligation bonds for junior-senior high school renovations, including a secure entrance, educational spaces and heating, cooling, mechanical, electrical and plumbing systems; elementary school secure entrance and plumbing work; and fire alarm upgrades.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://keokukcounty.iowa.gov/news/2026_general_election/7118/",
+          "sourceHash": "297855deb80607624568773c8c0c3b70f47933fafd2e3a29c614f4d1cc758030",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:05:10.758117+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-pekin-school-bonds",
+          "whatItDoes": "Authorizes up to $9.2 million in general-obligation bonds for school additions with classrooms and common areas, renovations and equipment, a secure entrance, heating, cooling, mechanical, electrical and plumbing systems, parking, accessibility and site improvements.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://keokukcounty.iowa.gov/news/2026_general_election/7118/",
+          "sourceHash": "2807e492b4a2c8545e76bf4c6b01d25b092ff2531082e12caba3cc7e079af799",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:05:10.758117+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:05:10.758117+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://bremercountyelections.iowa.gov/news/notice_of_bond_election_for_sumnerfredericksburg_school_district/",
+        "finalUrl": "https://bremercountyelections.iowa.gov/news/notice_of_bond_election_for_sumnerfredericksburg_school_district/",
+        "httpStatus": 200,
+        "rawHash": "b3d936894d21e9d1af80a78ccfd50ea4963c498d4b383840488dd6c99dad181b",
+        "retrievedAt": "2026-11-03T07:02:58.918418+00:00",
+        "publisher": "Bremer County Iowa Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official November 3, 2026 public question. Exact complete school bond language, ceiling and purposes reviewed; school-district identity matches existing whole-district registration division."
+      },
+      {
+        "requestedUrl": "https://keokukcounty.iowa.gov/news/2026_general_election/7118/",
+        "finalUrl": "https://keokukcounty.iowa.gov/news/2026_general_election/7118/",
+        "httpStatus": 200,
+        "rawHash": "f66a7dc97394ff77f8cee1008f57df04e7a2916f64641cf0a1e8ce999928b89a",
+        "retrievedAt": "2026-11-03T07:02:59.205418+00:00",
+        "publisher": "Keokuk County Iowa Auditor",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official November 3, 2026 public question. Exact complete school bond language, ceiling and purposes reviewed; school-district identity matches existing whole-district registration division."
+      }
+    ]
+  }
+}

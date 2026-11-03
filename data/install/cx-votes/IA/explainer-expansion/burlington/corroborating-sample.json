@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+  "nativePdfSha256": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+  "retrievedAt": "2026-11-03T07:07:06.341550+00:00",
+  "sourceFile": "sources/13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324.corroborating.native.pdf",
+  "role": "Companion current official sample ballot; canonical exact question uses native official county notice."
+}

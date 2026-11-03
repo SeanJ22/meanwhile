@@ -1,0 +1,362 @@
+
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<meta name=viewport content="width=device-width, initial-scale=1">
+<link rel=icon type="image/png" href="/images/favicon.png"/>
+<link rel="stylesheet" href="https://use.typekit.net/pqk0ksc.css">
+<link href="/shared/styles/core.css" type="text/css" rel="stylesheet">
+<script src="https://cdn.neapolitanlabs.com/scripts/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.neapolitanlabs.com/scripts/jquery.fancybox.min.js"></script>
+<link rel="stylesheet" href="https://cdn.neapolitanlabs.com/scripts/jquery.fancybox.min.css" />
+<script src="https://kit.fontawesome.com/cbbc63f12c.js" crossorigin="anonymous"></script>
+<title>2026 General Election - Keokuk County, Iowa</title>
+<meta name="description" content="">
+
+<meta property="og:title" content="2026 General Election - Keokuk County, Iowa" />
+<meta property="og:type" content="website" />
+<meta property="og:description" content="" />
+<meta property="og:image" content="/images/social_sharing.png" />
+<meta property="og:image:secure_url" content="/images/social_sharing.png" />
+<meta property="og:image:type" content="image/jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Keokuk County" />
+
+<script type="module" src="/shared/scripts/neapolitan-elements/neapolitan-elements/neapolitan-elements.esm.js"></script>
+<script nomodule src="/shared/scripts/neapolitan-elements/neapolitan-elements/neapolitan-elements.js"></script>
+<script type="text/javascript" src="/shared/scripts/autocomplete/index.php"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0QYZ3HBN2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0QYZ3HBN2D');
+</script>
+</head>
+
+<body>
+<a class="skipLink" href="#content">
+	Skip to content
+</a>
+<div class="headerContainer" id="fixedHeader">
+<div id="header">
+  <div class="headerLogo">
+    <a href="/home/"><img src="/images/logo.png" alt="Keokuk County, Iowa"></a>
+  </div>
+  <div class="topIcon">
+    <a href="javascript:void(0);" class="icon" onclick="countyNav()"><i class="fa-thin fa-bars"></i></a>
+  </div>
+  <div class="headerSearch" id="searchButton">
+    <i class="fa-thin fa-search"></i><span style="display:none;">Search</span>
+  </div>
+  <div class="topnav" id="myTopnav">
+    <div class="dropdown">
+      <button class="dropbtn"><a href="/about/">About</a><span class="mobileIcon"> <i class="fa-thin fa-angle-down"></i></span></button>
+      <div class="dropdown-content">
+                <a href="/supervisors/boards_commissions/"><span>Boards &amp; Commissions</span></a>
+                <a href="/about/cemeteries/"><span>Cemeteries</span></a>
+                <a href="/about/communities/"><span>Communities</span></a>
+                <a href="/about/elected_officials/"><span>Elected Officials</span></a>
+                <a href="/about/schools/"><span>School Districts</span></a>
+                <a href="/about/township_information/"><span>Township Information</span></a>
+                <a href="/public_health/opioid_settlement/"><span>Opioid Settlement</span></a>
+              </div>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn"><a href="/departments/">Departments</a><span class="mobileIcon"> <i class="fa-thin fa-angle-down"></i></span></button>
+      <div class="dropdown-content dropdown-dept">
+                <a href="/assessor/">Assessor</a>
+                <a href="/attorney/">Attorney</a>
+                <a href="/auditor/">Auditor</a>
+                <a href="/supervisors/">Board of Supervisors</a>
+                <a href="/clerk_of_court/">Clerk of Court</a>
+                <a href="/conservation/">Conservation</a>
+                <a href="/emergency_management/">Emergency Management</a>
+                <a href="/engineer/">Engineer</a>
+                <a href="/general_assistance/">General Assistance</a>
+                <a href="/medical_examiner/">Medical Examiner</a>
+                <a href="/public_health/">Public Health</a>
+                <a href="/recorder/">Recorder</a>
+                <a href="/sheriff/">Sheriff</a>
+                <a href="/treasurer/">Treasurer</a>
+                <a href="/veteran_affairs/">Veteran Affairs</a>
+              </div>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn"><a href="/resources/">Resources</a><span class="mobileIcon"> <i class="fa-thin fa-angle-down"></i></span>
+      </button>
+      <div class="dropdown-content dropdown-resources">
+                <a href="/bid_notices/"><span>Bid Notices</span></a>
+                <a href="/calendar/"><span>Calendar</span></a>
+                <a href="/clerk_of_court/"><span>Courts</span></a>
+                <a href="https://kcediowa.org/" target="_blank"><span>Economic Development</span><i class="fa-thin fa-external-link"></i></a>
+                <a href="/employment/"><span>Employment</span></a>
+                <a href="/faq/"><span>Frequently Asked Questions</span></a>
+                <a href="/resources/landfill/"><span>Landfill</span></a>
+                <a href="/news/"><span>News</span></a>
+                <a href="/notifications/"><span>Notifications</span></a>
+              </div>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn"><a href="/contact/">Contact</a></button>
+    </div>
+  </div>
+  <div class="clear"></div>
+</div>
+</div>
+<div class="content contentPage" id="content">
+<div id="homeSearch" style="display: none;">
+<div class="headerSearchForm">
+	<label for="countyHeaderSearch" class="sr-only">
+		Search Keokuk County, Iowa
+	</label>
+
+	<nl-autocomplete>
+		<input
+			type="search"
+			name="countyHeaderSearch"
+			id="countyHeaderSearch"
+			placeholder="Search Keokuk County, Iowa"
+			aria-label="Search Keokuk County, Iowa"
+		>
+	</nl-autocomplete>
+
+	<button type="submit" name="Search" aria-label="Submit search">
+		<i class="fa-thin fa-search" aria-hidden="true"></i>
+	</button>
+</div>
+</div>
+<div class="pageHeaderContainer" style="background-image: url(/images/featured/flowers_34534.jpg); background-position: center center;"></div>
+
+<div id="sectionHeader">
+    <div class="sectionParent"><a href="/news/">News</a></div>    <div class="sectionPageHeader"><h1>2026 General Election</h1></div>
+</div>
+
+
+<div id="standardPage">
+  <div class="pageIntro">Posted October 14, 2026 &middot; <a href="auditor">Auditor</a></div>      <div class="contentColumns">
+      <div class="contentLeft">
+                        <img src="/images/news/2026_general_election_68508.png" class="newsImage"><p class="MsoTitle" style="text-align:center"><strong style="font-weight:bold">NOTICE OF ELECTION</strong></p>
+
+<p style="text-align:center">&nbsp;</p>
+
+<p style="text-align:justify"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>The 2026 General Election will be held on Tuesday, November 3, 2026.&nbsp; Polls will be open from 7:00 a.m. until 8:00 p.m.&nbsp; Keokuk County polling places will be as follows:</p>
+
+<p style="text-align:justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Precinct&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Polling Location</strong></p>
+
+<p style="text-align:justify">AD-PR-WS (Adams-Prairie-Washington)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thomas Hall &ndash; What Cheer Fairgrounds</p>
+
+<p style="text-align:justify">BN-SR (Benton-Steady Run)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hedrick City Hall</p>
+
+<p style="text-align:justify">ER-LB (English River-Liberty)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; South English Fire Station</p>
+
+<p style="text-align:justify">JA-RL (Jackson-Richland)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mother Cabrini Hall &ndash; Richland&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p style="text-align:justify">LF-CC (Lafayette-Clear Creek)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Keota City Hall &ndash; North Entrance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p style="text-align:justify">EL-WL-WN (East Lancaster-West Lancaster-Warren)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Keokuk County Expo &ndash; Sigourney&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p style="text-align:justify">SG-PL-VB (Sigourney-Plank-Van Buren)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Keokuk County Expo &ndash; Sigourney</p>
+
+<p style="text-align:justify">SG1 &amp; SG2 Wards&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Keokuk County Expo &ndash; Sigourney</p>
+
+<p style="text-align:justify">SG3 &amp; SG4 Wards&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Keokuk County Expo &ndash; Sigourney</p>
+
+<p style="text-align:justify; text-indent:.5in">&nbsp;</p>
+
+<p style="text-align:justify; text-indent:.5in">Pre-registered voters are required to provide an approved form of identification at the polling place before receiving and casting a regular ballot. Voters who are not pre-registered, such as voters registering to vote on election day and voters changing precincts, must also provide proof of residence. A voter who is unable to provide an approved form of identification (or prove residence if required) may cast a provisional ballot and provide proof of identity/residence at the county auditor&rsquo;s office by Monday, November 9, 2026. Election Day Registrants may use an attester from that precinct, but attesters must provide an approved form of identification. For additional information about providing proof of identity and/or residence visit: <a href="https://sos.iowa.gov/voterid">https://sos.iowa.gov/voterid</a> or phone (641) 622-2320 or email cbates@keokukcounty.iowa.gov.&nbsp; Any voter who is physically unable to enter a polling place has the right to vote in the voter&rsquo;s vehicle.</p>
+
+<p style="text-align:justify; text-indent:.5in">Public testing of the voting equipment will be held on October 26, 2026, beginning at 9:00 a.m. in the Elections Room, adjoining the Keokuk County Auditor&rsquo;s Office, 2nd floor of the Keokuk County Courthouse, Sigourney, Iowa and continue until testing is finished.</p>
+
+<p style="text-align:justify; text-indent:.5in">The Keokuk County Auditor&rsquo;s office will be open on Saturday, October 31, 2026, 9 a.m. to 5 p.m. for absentee voting. <strong>Sample Ballot will be posted in each precinct and are available at keokukcounty.iowa.gov.</strong></p>
+
+<p style="text-align:justify; text-indent:.5in">&nbsp;</p>
+
+<p style="text-align:justify"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The following is a complete listing of candidates for all Federal, State, County and Judicial offices:</strong></p>
+
+<p style="text-align:justify"><strong>U.S. Senator:</strong> Josh Turek (DEM), Ashley Hinson (REP), Thomas Laehn (LIB)</p>
+
+<p style="text-align:justify"><strong>U.S. Representative District 1:</strong> Christina Bohannan (DEM), Mariannette Miller-Meeks (REP), Michael Bridgford</p>
+
+<p style="text-align:justify"><strong>GovernorLt. Governor:</strong> Rob Sand/Dave Muhlbauer (DEM), Zach Lahn/Derek Wulf (REP)</p>
+
+<p style="text-align:justify"><strong>Secretary of State:</strong> Ryan Peterman (DEM), Paul D. Pate (REP)</p>
+
+<p style="text-align:justify"><strong>Auditor of State:</strong> Taylor Wettach (DEM), Chris Cournoyer (REP)</p>
+
+<p style="text-align:justify"><strong>Treasurer of State:</strong> John Norwood (DEM), Roby Smith (REP)</p>
+
+<p style="text-align:justify"><strong>Secretary of Agriculture:</strong><strong> </strong>Chris Jones (DEM), Mike Naig (REP)</p>
+
+<p style="text-align:justify"><strong>Attorney General:</strong><strong> </strong>Nate Willems (DEM), Brenna Bird (REP)</p>
+
+<p style="text-align:justify"><strong>State Representative District 88:</strong><strong> </strong>Helena Hayes (REP)</p>
+
+<p style="text-align:justify"><strong>County Board of Supervisors:</strong><strong> </strong>(Elect Two) Bryan Coffman (REP), Daryl Wood (REP)</p>
+
+<p style="text-align:justify"><strong>County Treasurer:</strong><strong> </strong>Christine Edmundson Long (REP)</p>
+
+<p style="text-align:justify"><strong>County Recorder:</strong><strong> </strong>Dawn T. Goldman (REP)</p>
+
+<p style="text-align:justify"><strong>County Attorney:</strong><strong> </strong>Maddison A.E. Denny (REP)</p>
+
+<p style="text-align:justify"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+
+<p style="text-align:justify; text-indent:.5in"><strong>The following is a complete listing of candidates for Non-Partisan Offices in Keokuk County:</strong></p>
+
+<p style="text-align:justify"><strong>Adams Township</strong>:&nbsp; Trustee (Elect Two) &ndash; Colt Mather; Clerk (Elect One) &ndash; Josh Annis</p>
+
+<p style="text-align:justify"><strong>Benton Township</strong>:&nbsp; Trustee (Elect Two) &ndash; Rick Abel; Clerk (Elect One) &ndash; Linda Abel</p>
+
+<p style="text-align:justify"><strong>Clear Creek Township</strong>:&nbsp; Trustee (Elect Two) &ndash; No Candidate Filed; Clerk (Elect One) &ndash; Alan Berg</p>
+
+<p><strong>English River Township</strong>: Trustee (Elect Two) &ndash; Tom Baird; Clerk (Elect One) &ndash; Cherrie Baird</p>
+
+<p><strong>Jackson Township</strong>:&nbsp; Trustee (Elect Two) &ndash; No Candidate Filed; Clerk (Elect One) &ndash; Julie Swanson</p>
+
+<p><strong>Lafayette Township</strong>:&nbsp; Trustee (Elect Two) &ndash; Dennis Lyle, Tom Adam; Clerk (Elect One) &ndash; Kevin Luers;</p>
+
+<p>Trustee To Fill Vacancy &ndash; No Candidate Filed</p>
+
+<p><strong>East Lancaster Township</strong>:&nbsp; Trustee (Elect Two) &ndash; David B. Klein, John Dumont; Clerk (Elect One) &ndash; Carla Dumont</p>
+
+<p><strong>West Lancaster Township</strong>:&nbsp; Trustee (Elect Two) &ndash; Gary Martin; Clerk (Elect One) &ndash; Janet D. Martin</p>
+
+<p><strong>Liberty Township</strong>:&nbsp; Trustee (Elect Two) &ndash; No Candidate Filed; Clerk (Elect One) &ndash; No Candidate Filed</p>
+
+<p><strong>Plank Township</strong>:&nbsp; Trustee (Elect Two) &ndash; Jeffrey H. Hinnah; Clerk (Elect One) &ndash; Holly A. Martin</p>
+
+<p><strong>Prairie Township</strong>:&nbsp; Trustee (Elect Two) &ndash; Kelvin Gale, Steve Van Zee; Clerk (Elect One) &ndash; Judith Christner</p>
+
+<p><strong>Richland Township</strong>:&nbsp; Trustee (Elect Two) &ndash; No Candidate Filed; Clerk (Elect One) &ndash; No Candidate Filed</p>
+
+<p><strong>Sigourney Township</strong><strong>:&nbsp; </strong>Trustee (Elect Two) &ndash; Ronald A. Waechter, Terry Steinhart; Clerk (Elect One) &ndash; Paula Rasplicka; Trustee To Fill Vacancy &ndash; No Candidate Filed</p>
+
+<p style="text-align:justify"><strong>Steady Run Township</strong>:&nbsp; Trustee (Elect Two) &ndash; David Jones; Clerk (Elect One) &ndash; James Campbell</p>
+
+<p style="text-align:justify"><strong>Van Buren Township</strong>:&nbsp; Trustee (Elect Two) &ndash; No Candidate Filed; Clerk (Elect One) &ndash; No Candidate Filed</p>
+
+<p style="text-align:justify"><strong>Warren Township</strong>:&nbsp; Trustee (Elect Two) &ndash; Doyle Abrams; Clerk (Elect One) &ndash; No Candidate Filed</p>
+
+<p style="text-align:justify"><strong>Washington Township</strong>:&nbsp; Trustee (Elect Two) &ndash; Michael Striegel, Kirk E. Beasley; Clerk (Elect One) &ndash; James L. Striegel</p>
+
+<p style="text-align:justify"><strong>County Hospital Trustee:</strong><strong> </strong>(Elect Five) Ron Kurtz, Allison Pence, Judy Striegel, Alan Sellers, Dustin R. Bensmiller,</p>
+
+<p style="text-align:justify">Jodi Greiner, Terry Fogle, Kathy Utterback, Candy Breon, John Dumont, David J. Peterson</p>
+
+<p style="text-align:justify"><strong>Soil &amp; Water Conservation District Commissioner:</strong> (Elect Two) Joel Millikin, Dan Striegel</p>
+
+<p style="text-align:justify"><strong>County Agricultural Extension Council:</strong> (Elect Five) Clinton Mikesell, Michael Bensmiller, Carla Dumont,</p>
+
+<p style="text-align:justify">Heather Bombei, Janis Collins</p>
+
+<p style="text-align:justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p style="text-align:justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>The following is a complete list of Judges for retention:</strong></p>
+
+<p style="text-align:justify"><strong>Court of Appeals:</strong><strong> </strong>John M. Sandy, Julie A. Schumacher, Sharon Soorholtz Greer</p>
+
+<p style="text-align:justify"><strong>District 8A Court Judge:</strong><strong> </strong>Dustin Hite, Amber L. Thompson</p>
+
+<p style="text-align:justify"><strong>District 8A Associate Judge:</strong><strong> </strong>Susan Cole, Jennifer Nicole Jensen</p>
+
+<p style="margin-top:14px"><strong>Statewide Public Measure - Constitutional Amendment #1:</strong></p>
+
+<p style="text-align:justify">&nbsp;</p>
+
+<p style="text-align:justify">The Constitution of the State of Iowa is amended by adding the following new section to new Article XIII:</p>
+
+<p style="text-align:justify">Passage of a bill that increases the individual income tax rate or the corporate income tax rate, or the rate of any other type of tax based upon income or legal and special reserves, shall require the affirmative votes of at least two-thirds of the members elected to each house of the general assembly. This requirement does not apply to taxes imposed at the option of a local government. Passage of a bill that establishes a new tax on any type of income or legal and special reserves imposed by the state shall require the affirmative votes of at least two-thirds of the members elected to each house of the general assembly. A lawsuit challenging the proper enactment of a bill under this section must be &#64257;led no later than one year following the enactment. If such a lawsuit is not &#64257;led within the one-year limit, the bill shall be considered properly enacted under this section. Each bill to which this section applies must include a separate provision describing the requirements for enactment prescribed by this section. The general assembly shall enact laws to implement this section.</p>
+
+<p style="text-align:justify">&nbsp;</p>
+
+<p style="margin-bottom:11px"><strong>Kirkwood Community College - Public Measure NC:</strong></p>
+
+<p style="margin-bottom:11px; text-align:justify">&ldquo;Shall Kirkwood Community College (Merged Area X) in the Counties of Benton, Black Hawk, Buchanan, Cedar, Clinton, Delaware, Dubuque, Iowa, Jackson, Jefferson, Johnson, Jones, Keokuk, Linn, Louisa, Poweshiek, Tama, and Washington, be authorized to renovate, improve, erect, and equip facilities to modernize learning spaces with an emphasis on health sciences, industrial technologies, agricultural sciences, and business and information technology, contract indebtedness therefor, and issue General Obligation Bonds in an amount not exceeding $88,000,000 for those purposes?&rdquo;</p>
+
+<p style="margin-bottom:11px"><strong>Keota Community School - Public Measure ML:</strong></p>
+
+<p style="margin-bottom:11px; text-align:justify">Shall the Board of Directors of the Keota Community School District in the Counties of Keokuk and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,400,000 to provide funds to remodel, repair, equip, and improve the Jr-Sr High School, including a secure entrance, educational spaces, HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, equip, and improve the Elementary School, including a secure entrance and plumbing improvements; and for fire alarm upgrades throughout the school building?</p>
+
+<p style="margin-bottom:11px"><strong>Pekin Community School - Public Measure MN:</strong></p>
+
+<p style="margin-bottom:11px; text-align:justify">Shall the Board of Directors of the Pekin Community School District in the Counties of Jefferson, Keokuk, Wapello, and Washington, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $9,200,000 to provide funds to build, furnish, and equip additions to the school building, including classroom and commons area spaces; to remodel, repair, improve, and equip the school building, including a secure entrance, HVAC, mechanical, electrical, plumbing, parking, accessibility, and site improvements?</p>
+
+<p style="margin-bottom:11px; text-align:justify">&nbsp;</p>
+
+<p style="text-align:right">Certified by Christy Bates</p>
+
+<p style="text-align:right">Keokuk County Auditor</p>
+
+<p style="margin-bottom:11px; text-align:right">And Commissioner of Elections</p>
+                      </div>
+      <div class="contentRight"><h3>More News</h3><div class="newsRight">
+  <div class="newsItem">
+    <a href="/news/keokuk_county_public_health_popup_event_keota/7160/">Keokuk County Public Health Pop-Up Event - Keota</a>
+    <div class="newsDetail">October 22, 2026</div>
+  </div>
+  <div class="newsItem">
+    <a href="/news/keokuk_county_public_health_bringing_public_health_popups_to_local_communities/6870/">Keokuk County Public Health Bringing &ldquo;Public Health Pop-Ups&rdquo; to Local Communities</a>
+    <div class="newsDetail">August 28, 2026</div>
+  </div>
+  <div class="newsItem">
+    <a href="/news/free_radon_test_kits_for_rural_iowans/6863/">Free Radon Test Kits for Rural Iowans!</a>
+    <div class="newsDetail">August 26, 2026</div>
+  </div>
+  <div class="newsItem">
+    <a href="/news/iowa_hhs_issues_latest_measles_outbreak_information_and_additional_exposure_location/6850/">Iowa HHS Issues Latest Measles Outbreak Information and Additional Exposure Location</a>
+    <div class="newsDetail">August 25, 2026</div>
+  </div>
+  <div class="newsItem">
+    <a href="/news/deer_and_turkey_tags_go_on_sale/6793/">Deer and Turkey Tags Go On Sale</a>
+    <div class="newsDetail">August 11, 2026</div>
+  </div>
+<a href="/news/" class="button">All News</a>
+</div>
+</div>
+    </div>
+  </div>
+
+</div>
+<footer>
+<div class="footerContainer">
+  <div class="footerContent">
+    <div class="footerColumn">
+      <b>Courthouse</b>
+      101 S. Main<br />
+Sigourney, IA 52591    </div>
+    <div class="footerColumn">
+      <b>Office Hours</b>
+      Monday - Friday<br />
+8:00 a.m. - 4:30 p.m.<br>
+      Department Hours May Vary
+    </div>
+    <div class="footerInfo">
+      <a href="/contact/" class="button">Contact Us</a>
+      <a href="javascript:;" data-fancybox data-src="#holidayList" class="button">Closed Holidays</a>    </div>
+  </div>
+</div>
+
+<div id="credit">
+  <div class="container">
+    <div class="copyright">&copy; 2026 Keokuk County<span> | </span><a href="/page/accessibility/">Accessibility</a></div>
+  	<div class="poweredBy"><a href="https://www.neapolitanlabs.com/" target="_blank" rel="noopener noreferrer">powered by <img src="/images/neapolitan_labs.png" alt="Neapolitan Labs ice cream sandwich logo"></a></div>
+  </div>
+</div>
+</footer>
+<script type="text/javascript" src="/shared/scripts/dropdown.js"></script>
+<div id="holidayList" style="display:none;">
+  <h2>Upcoming Holiday Closure Schedule</h2>
+  <ul>
+      <li>Veteran&#039;s day (November 11, 2026)</li>
+      <li>Thanksgiving Day (November 26, 2026)</li>
+      <li>Day after Thanksgiving (November 27, 2026)</li>
+      <li>Christmas Day (December 25, 2026)</li>
+    </ul>
+</div>
+</body>
+</html>

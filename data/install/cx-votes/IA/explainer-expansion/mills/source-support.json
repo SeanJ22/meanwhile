@@ -1,0 +1,30 @@
+[
+  {
+    "contestId": "ia-cx-2026-mills-supervisor-count",
+    "sourceUrl": "https://www.millscountyiowa.gov/385/General-Election",
+    "rawHash": "814e8b9507f19b8c6f22b04038cd7731df9811daf2e91e7fa323773992366776",
+    "sourceFile": "sources/814e8b9507f19b8c6f22b04038cd7731df9811daf2e91e7fa323773992366776.source-text",
+    "sourceTextFile": "sources/814e8b9507f19b8c6f22b04038cd7731df9811daf2e91e7fa323773992366776.txt",
+    "excerpt": "Shall the County of Mills, State of Iowa, increase the number of County Supervisors from three to five?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the County of Mills, State of Iowa, increase the number of County Supervisors from three to five?"
+      ],
+      "yesMeans": [
+        "Shall the County of Mills, State of Iowa, increase the number of County Supervisors from three to five?"
+      ],
+      "noMeans": [
+        "Shall the County of Mills, State of Iowa, increase the number of County Supervisors from three to five?"
+      ]
+    },
+    "semanticConditions": [
+      "Only membership count changes are explained. No implementation date, district election method, term or cost inferred."
+    ],
+    "inventoryScope": "Official current Mills notice lists one statewide and one local question, Measure O. Source-bounded current notice; no Iowa all-local completeness claim.",
+    "textExtraction": {
+      "tool": "HTMLParser",
+      "scope": "Complete native HTML text-node capture, script/style excluded; exact bounded county question."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

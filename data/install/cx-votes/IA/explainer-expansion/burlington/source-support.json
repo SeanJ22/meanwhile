@@ -1,0 +1,31 @@
+[
+  {
+    "contestId": "ia-cx-2026-burlington-pool-bonds",
+    "sourceUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+    "rawHash": "8feaed2dc12660c8eb0b1ff62b27e10f156ee39ccb0ad03a92c196f35a5f3174",
+    "sourceFile": "sources/8feaed2dc12660c8eb0b1ff62b27e10f156ee39ccb0ad03a92c196f35a5f3174.source",
+    "sourceTextFile": "sources/93b233dd2bbacf29b6c6e404d417ae6f652b1ab4633dd352852b557e4e9d4594.txt",
+    "excerpt": "Shall the City of Burlington, in Des Moines County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $7,000,000 for the purpose of paying the cost, to that extent, of constructing, renovating and improving municipal swimming pool facilities?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Burlington, in Des Moines County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $7,000,000 for the purpose of paying the cost, to that extent, of constructing, renovating and improving municipal swimming pool facilities?"
+      ],
+      "yesMeans": [
+        "Shall the City of Burlington, in Des Moines County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $7,000,000 for the purpose of paying the cost, to that extent, of constructing, renovating and improving municipal swimming pool facilities?"
+      ],
+      "noMeans": [
+        "Shall the City of Burlington, in Des Moines County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $7,000,000 for the purpose of paying the cost, to that extent, of constructing, renovating and improving municipal swimming pool facilities?"
+      ]
+    },
+    "semanticConditions": [
+      "Borrowing principal ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage, pool location or construction deadline inferred."
+    ],
+    "inventoryScope": "Current Des Moines County official notice lists one statewide amendment and one local question, Burlington GM. This is source-bounded county notice evidence; no Iowa all-local completeness claim.",
+    "textExtraction": {
+      "tool": "HTMLParser",
+      "scope": "Native HTML text nodes, script/style excluded; exact complete bounded question."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

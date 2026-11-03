@@ -1,0 +1,2189 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-hillsborough-2026-commission-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:hillsborough/council_district:1",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Board of County Commissioners District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Board of County Commissioners District 1\n(Vote for One)\nComisionado del Condado Distrito 1\n(Vote por Uno)\nJackie Toledo REP\nHarry Cohen DEM"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-commission-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:hillsborough/council_district:3",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Board of County Commissioners District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Board of County Commissioners District 3\n(Vote for One)\nComisionado del Condado Distrito 3\n(Vote por Uno)\nLuiz F. F. Garcia REP\nGwen Myers DEM"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-commission-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:hillsborough",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Board of County Commissioners District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Board of County Commissioners District 5\n(Vote for One)\nComisionado del Condado Distrito 5\n(Vote por Uno)\nStacy Hahn REP\nNeil Manimala DEM"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-commission-7",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:hillsborough",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Board of County Commissioners District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Board of County Commissioners District 7\n(Vote for One)\nComisionado del Condado Distrito 7\n(Vote por Uno)\nJoshua Wostal REP\nAileen Rodriguez DEM"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-school-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:hillsborough/school_board_district:2",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "School Board Member District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "School Board Member District 2\n(Vote for One)\nMiembro, Junta de Educación Distrito 2\n(Vote por Uno)\nBrittany Lyssy\nDaniela Simic"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-school-6",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:hillsborough",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "School Board Member District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "School Board Member District 6\n(Vote for One)\nMiembro, Junta de Educación Distrito 6\n(Vote por Uno)\nKenneth \"Ken\" Gay\nKaren Perez"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-temple-council",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:temple_terrace",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Temple Terrace City Council",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Temple Terrace City Council\n(Vote for no more than Three)\nConcejo de la Cuidad de Temple Terrace\n(Vote por hasta Tres)\nAlison McGillivray Fernandez\nRyan Gessman\nKaren Michalski\nEugene Papantoniou\nAmber Treat"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-avelar-creek-seat-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:avelar_creek_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Avelar Creek Community Development District Seat 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Avelar Creek Community\nDevelopment District Seat 3\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Avelar Creek Asiento 3\n(Vote por Uno)\nFrank B. Franco\nSebastian Johnson"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-avelar-creek-seat-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:avelar_creek_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Avelar Creek Community Development District Seat 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Avelar Creek Community\nDevelopment District Seat 4\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Avelar Creek Asiento 4\n(Vote por Uno)\nJulie Campbell\nEdwin Guillot"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-cory-lakes-seat-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:cory_lakes_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Cory Lakes Community Development District Seat 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Cory Lakes Community\nDevelopment District Seat 5\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Cory Lakes Asiento 5\n(Vote por Uno)\nPallu Gupta\nCynthia McIntyre"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-covington-park-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:covington_park_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Covington Park Community Development District Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Covington Park Community\nDevelopment District Seat 2\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Covington Park Asiento 2\n(Vote por Uno)\nStephen J. Brown\nRick L. Reidt"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-diamond-hill-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:diamond_hill_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Diamond Hill Community Development District Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Diamond Hill Community\nDevelopment District Seat 2\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Diamond Hill Asiento 2\n(Vote por Uno)\nLinda L. Dunn\nJohn I. Pollard"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-fishhawk-ranch-seat-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:fishhawk_ranch_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Fishhawk Ranch Community Development District Seat 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Fishhawk Ranch Community\nDevelopment District Seat 4\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Fishhawk Ranch Asiento 4\n(Vote por Uno)\nIndia Crawford\nDennis Moore"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-harbor-bay-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:harbor_bay_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Harbor Bay Community Development District Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Harbor Bay Community\nDevelopment District Seat 2\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Harbor Bay Asiento 2\n(Vote por Uno)\nDaniel J. Leventry\nJohn Vollbrecht"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:hidden_creek_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Hidden Creek Community Development District Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Hidden Creek Community\nDevelopment District Seat 2\n(Vote for One)\nSupervisor del Distrito del Desarollo\nComunitario de Hidden Creek Asiento 2\n(Vote por Uno)\nZoe Anene\nBarbara A. Kargol"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:hidden_creek_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Hidden Creek Community Development District Seat 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Hidden Creek Community\nDevelopment District Seat 5\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Hidden Creek Asiento 5\n(Vote por Uno)\nHarry Payton Gibson\nThomas H. Marrone\nElizabeth \"Liz\" Santeramo"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-k-bar-ranch-ii-seat-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:k_bar_ranch_ii_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Supervisor, K-Bar Ranch II Community Development District Seat 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, K-Bar Ranch II Community\nDevelopment District Seat 4\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de K-Bar Ranch II Asiento 4\n(Vote por Uno)\nKamolika Batabyal\nMichele Emery"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:lake_st_charles_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Lake St. Charles Community Development District Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Lake St. Charles Community\nDevelopment District Seat 1\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Lake St. Charles Asiento 1\n(Vote por Uno)\nGinny Gianakos\nStephanie Hinson\nAna Loney"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:lake_st_charles_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Lake St. Charles Community Development District Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Votes for Yvonne Brown and Toni Kristina Rhodus will count. A vote for Barbara A. Kirby will not count.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Lake St. Charles Community\nDevelopment District Seat 2\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Lake St. Charles Asiento 2\n(Vote por Uno)\nYvonne Brown\nBarbara A. Kirby\nToni Kristina Rhodus"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            },
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2623/Public-Notice-Lake-St-Charles-Seat-2-PDF",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:38:19.587690+00:00",
+              "verifiedAt": "2026-11-03T04:38:19.587690+00:00",
+              "quote": "A candidate in the race for the office of Supervisor, Lake St. Charles Community Development\nDistrict Seat 2 has withdrawn such that:\n\n\nA vote cast for Yvonne Brown will count.\n\n\nA vote cast for Barbara A. Kirby will not count.\n\n\nA vote cast for Toni Kristina Rhodus will count."
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-river-bend-seat-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:river_bend_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, River Bend Community Development District Seat 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, River Bend Community\nDevelopment District Seat 3\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de River Bend Asiento 3\n(Vote por Uno)\nLance C. Belka\nShanell McMiller Brown"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-rivercrest-seat-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:rivercrest_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Rivercrest Community Development District Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Rivercrest Community\nDevelopment District Seat 1\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Rivercrest Asiento 1\n(Vote por Uno)\nRobert F. Fuhrmeister IV\nJoseph A. McGee Sr."
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-shell-point-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:shell_point_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Shell Point Community Development District Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Shell Point Community\nDevelopment District Seat 2\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Shell Point Asiento 2\n(Vote por Uno)\nJayce E. Donley\nBrittany Schwartzbauer"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-south-fork-iii-seat-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:south_fork_iii_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, South Fork III Community Development District Seat 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, South Fork III Community\nDevelopment District Seat 3\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de South Fork III Asiento 3\n(Vote por Uno)\nScott Corder\nDustin Heflin"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-south-fork-iii-seat-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:south_fork_iii_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, South Fork III Community Development District Seat 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, South Fork III Community\nDevelopment District Seat 5\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de South Fork III Asiento 5\n(Vote por Uno)\nDarryl F. Dew\nJessica Ocasio"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-southshore-bay-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:southshore_bay_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Southshore Bay Community Development District Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Southshore Bay Community\nDevelopment District Seat 2\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Southshore Bay Asiento 2\n(Vote por Uno)\nDiane C. Anderson\nKathleen Robinson"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-spring-lake-seat-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:spring_lake_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Spring Lake Community Development District Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Spring Lake Community\nDevelopment District Seat 1\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Spring Lake Asiento 1\n(Vote por Uno)\nDanny R. Donegan Jr.\nKenneth A. Hoefle"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:triple_creek_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Triple Creek Community Development District Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Triple Creek Community\nDevelopment District Seat 1\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Triple Creek Asiento 1\n(Vote por Uno)\nMarc Carlton\nMirtha Amalia Moreno"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:triple_creek_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Triple Creek Community Development District Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Triple Creek Community\nDevelopment District Seat 2\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Triple Creek Asiento 2\n(Vote por Uno)\nDavid Galloway\nShannon Lewis\nJodi Steel"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-waterleaf-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:waterleaf_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Waterleaf Community Development District Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Waterleaf Community\nDevelopment District Seat 2\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Waterleaf Asiento 2\n(Vote por Uno)\nAlex Auld\nPalmer Johnson"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-waterleaf-seat-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:waterleaf_facilities",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Waterleaf Community Development District Seat 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Supervisor, Waterleaf Community\nDevelopment District Seat 3\n(Vote for One)\nSupervisor del Distrito de Desarrollo\nComunitario de Waterleaf Asiento 3\n(Vote por Uno)\nNichole Ann Hawkins\nMatthew Lenard"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+              "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+              "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-country-run-assessment",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:country_run_special_dependent_taxing_district",
+          "divisionVintage": "2026",
+          "title": "Referendum to Increase the Special Assessment of Country Run Special District from $50 to $75",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only voters residing in Country Run Special Dependent Tax District vote on this referendum.",
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Referendum to Increase the Special Assessment of Country Run\nSpecial District from $50 to $75\nReferéndum para Incrementar el Impuesto del Distrito Especial de\nCountry Run de $50 a $75\nIn order to continue existing and future maintenance needs, shall the\nBoard of Trustees of Country Run Special Tax District increase the\nfuture assessed tax from $50 to $75 and authorize at their discretion\nto increase the tax by $25 per year in subsequent years, not to\nexceed $200?"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/293/Country-Run-Special-Dependent-Taxing-Dis",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:38:19.860253+00:00",
+              "verifiedAt": "2026-11-03T04:38:19.860253+00:00",
+              "quote": "Notice is hereby given that a referendum will be placed on the November 3, 2026 General Election ballot for all voters in the Country Run Special Dependent Tax District. The wording of the referendum is as follows:"
+            }
+          ]
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "fl-hillsborough-2026-commission-1:27ab92f6a0a5e498",
+          "contestId": "fl-hillsborough-2026-commission-1",
+          "givenName": "",
+          "familyName": "Jackie Toledo",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Jackie Toledo REP"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-commission-1:3ca53d6bdbdc2973",
+          "contestId": "fl-hillsborough-2026-commission-1",
+          "givenName": "",
+          "familyName": "Harry Cohen",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Harry Cohen DEM"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-commission-3:c36dbf86a9fb93d1",
+          "contestId": "fl-hillsborough-2026-commission-3",
+          "givenName": "",
+          "familyName": "Luiz F. F. Garcia",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Luiz F. F. Garcia REP"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-commission-3:7d1171ea011904e2",
+          "contestId": "fl-hillsborough-2026-commission-3",
+          "givenName": "",
+          "familyName": "Gwen Myers",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Gwen Myers DEM"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-commission-5:0dabc7f70a954d9a",
+          "contestId": "fl-hillsborough-2026-commission-5",
+          "givenName": "",
+          "familyName": "Stacy Hahn",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Stacy Hahn REP"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-commission-5:dbcf8dedf23490a1",
+          "contestId": "fl-hillsborough-2026-commission-5",
+          "givenName": "",
+          "familyName": "Neil Manimala",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Neil Manimala DEM"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-commission-7:f00601905023ff59",
+          "contestId": "fl-hillsborough-2026-commission-7",
+          "givenName": "",
+          "familyName": "Joshua Wostal",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Joshua Wostal REP"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-commission-7:e0b759fc3b186ec4",
+          "contestId": "fl-hillsborough-2026-commission-7",
+          "givenName": "",
+          "familyName": "Aileen Rodriguez",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Aileen Rodriguez DEM"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-school-2:aa1d8b596736fa58",
+          "contestId": "fl-hillsborough-2026-school-2",
+          "givenName": "",
+          "familyName": "Brittany Lyssy",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Brittany Lyssy"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-school-2:8ac138103b15be76",
+          "contestId": "fl-hillsborough-2026-school-2",
+          "givenName": "",
+          "familyName": "Daniela Simic",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Daniela Simic"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-school-6:65fcbab59887f34a",
+          "contestId": "fl-hillsborough-2026-school-6",
+          "givenName": "",
+          "familyName": "Kenneth \"Ken\" Gay",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Kenneth \"Ken\" Gay"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-school-6:ec51f2e6f3aa430d",
+          "contestId": "fl-hillsborough-2026-school-6",
+          "givenName": "",
+          "familyName": "Karen Perez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Karen Perez"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-temple-council:5df4f8abd7fac355",
+          "contestId": "fl-hillsborough-2026-temple-council",
+          "givenName": "",
+          "familyName": "Alison McGillivray Fernandez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Alison McGillivray Fernandez"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-temple-council:6b9f6ffd500c742f",
+          "contestId": "fl-hillsborough-2026-temple-council",
+          "givenName": "",
+          "familyName": "Ryan Gessman",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Ryan Gessman"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-temple-council:c26a96d7b0abbc65",
+          "contestId": "fl-hillsborough-2026-temple-council",
+          "givenName": "",
+          "familyName": "Karen Michalski",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Karen Michalski"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-temple-council:069ac5fc12c771d0",
+          "contestId": "fl-hillsborough-2026-temple-council",
+          "givenName": "",
+          "familyName": "Eugene Papantoniou",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Eugene Papantoniou"
+          }
+        },
+        {
+          "id": "fl-hillsborough-2026-temple-council:08e3bac3cc8f372e",
+          "contestId": "fl-hillsborough-2026-temple-council",
+          "givenName": "",
+          "familyName": "Amber Treat",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Amber Treat"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-avelar-creek-seat-3:frank-b-franco",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-avelar-creek-seat-3",
+          "givenName": "",
+          "familyName": "Frank B. Franco",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Frank B. Franco"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-avelar-creek-seat-3:sebastian-johnson",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-avelar-creek-seat-3",
+          "givenName": "",
+          "familyName": "Sebastian Johnson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Sebastian Johnson"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-avelar-creek-seat-4:julie-campbell",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-avelar-creek-seat-4",
+          "givenName": "",
+          "familyName": "Julie Campbell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Julie Campbell"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-avelar-creek-seat-4:edwin-guillot",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-avelar-creek-seat-4",
+          "givenName": "",
+          "familyName": "Edwin Guillot",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Edwin Guillot"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-cory-lakes-seat-5:pallu-gupta",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-cory-lakes-seat-5",
+          "givenName": "",
+          "familyName": "Pallu Gupta",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Pallu Gupta"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-cory-lakes-seat-5:cynthia-mcintyre",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-cory-lakes-seat-5",
+          "givenName": "",
+          "familyName": "Cynthia McIntyre",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Cynthia McIntyre"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-covington-park-seat-2:stephen-j-brown",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-covington-park-seat-2",
+          "givenName": "",
+          "familyName": "Stephen J. Brown",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Stephen J. Brown"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-covington-park-seat-2:rick-l-reidt",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-covington-park-seat-2",
+          "givenName": "",
+          "familyName": "Rick L. Reidt",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Rick L. Reidt"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-diamond-hill-seat-2:linda-l-dunn",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-diamond-hill-seat-2",
+          "givenName": "",
+          "familyName": "Linda L. Dunn",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Linda L. Dunn"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-diamond-hill-seat-2:john-i-pollard",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-diamond-hill-seat-2",
+          "givenName": "",
+          "familyName": "John I. Pollard",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "John I. Pollard"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-fishhawk-ranch-seat-4:india-crawford",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-fishhawk-ranch-seat-4",
+          "givenName": "",
+          "familyName": "India Crawford",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "India Crawford"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-fishhawk-ranch-seat-4:dennis-moore",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-fishhawk-ranch-seat-4",
+          "givenName": "",
+          "familyName": "Dennis Moore",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Dennis Moore"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-harbor-bay-seat-2:daniel-j-leventry",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-harbor-bay-seat-2",
+          "givenName": "",
+          "familyName": "Daniel J. Leventry",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Daniel J. Leventry"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-harbor-bay-seat-2:john-vollbrecht",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-harbor-bay-seat-2",
+          "givenName": "",
+          "familyName": "John Vollbrecht",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "John Vollbrecht"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-2:zoe-anene",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-2",
+          "givenName": "",
+          "familyName": "Zoe Anene",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Zoe Anene"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-2:barbara-a-kargol",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-2",
+          "givenName": "",
+          "familyName": "Barbara A. Kargol",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Barbara A. Kargol"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-5:harry-payton-gibson",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-5",
+          "givenName": "",
+          "familyName": "Harry Payton Gibson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Harry Payton Gibson"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-5:thomas-h-marrone",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-5",
+          "givenName": "",
+          "familyName": "Thomas H. Marrone",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Thomas H. Marrone"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-5:elizabeth-liz-santeramo",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-5",
+          "givenName": "",
+          "familyName": "Elizabeth \"Liz\" Santeramo",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Elizabeth \"Liz\" Santeramo"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-k-bar-ranch-ii-seat-4:kamolika-batabyal",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-k-bar-ranch-ii-seat-4",
+          "givenName": "",
+          "familyName": "Kamolika Batabyal",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Kamolika Batabyal"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-k-bar-ranch-ii-seat-4:michele-emery",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-k-bar-ranch-ii-seat-4",
+          "givenName": "",
+          "familyName": "Michele Emery",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Michele Emery"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-1:ginny-gianakos",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-1",
+          "givenName": "",
+          "familyName": "Ginny Gianakos",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Ginny Gianakos"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-1:stephanie-hinson",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-1",
+          "givenName": "",
+          "familyName": "Stephanie Hinson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Stephanie Hinson"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-1:ana-loney",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-1",
+          "givenName": "",
+          "familyName": "Ana Loney",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Ana Loney"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-2:yvonne-brown",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-2",
+          "givenName": "",
+          "familyName": "Yvonne Brown",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Yvonne Brown"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2623/Public-Notice-Lake-St-Charles-Seat-2-PDF",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:38:19.587690+00:00",
+              "verifiedAt": "2026-11-03T04:38:19.587690+00:00",
+              "quote": "A candidate in the race for the office of Supervisor, Lake St. Charles Community Development\nDistrict Seat 2 has withdrawn such that:\n\n\nA vote cast for Yvonne Brown will count.\n\n\nA vote cast for Barbara A. Kirby will not count.\n\n\nA vote cast for Toni Kristina Rhodus will count."
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-2:toni-kristina-rhodus",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-2",
+          "givenName": "",
+          "familyName": "Toni Kristina Rhodus",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Toni Kristina Rhodus"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2623/Public-Notice-Lake-St-Charles-Seat-2-PDF",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:38:19.587690+00:00",
+              "verifiedAt": "2026-11-03T04:38:19.587690+00:00",
+              "quote": "A candidate in the race for the office of Supervisor, Lake St. Charles Community Development\nDistrict Seat 2 has withdrawn such that:\n\n\nA vote cast for Yvonne Brown will count.\n\n\nA vote cast for Barbara A. Kirby will not count.\n\n\nA vote cast for Toni Kristina Rhodus will count."
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-river-bend-seat-3:lance-c-belka",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-river-bend-seat-3",
+          "givenName": "",
+          "familyName": "Lance C. Belka",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Lance C. Belka"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-river-bend-seat-3:shanell-mcmiller-brown",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-river-bend-seat-3",
+          "givenName": "",
+          "familyName": "Shanell McMiller Brown",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Shanell McMiller Brown"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-rivercrest-seat-1:robert-f-fuhrmeister-iv",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-rivercrest-seat-1",
+          "givenName": "",
+          "familyName": "Robert F. Fuhrmeister IV",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Robert F. Fuhrmeister IV"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-rivercrest-seat-1:joseph-a-mcgee-sr",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-rivercrest-seat-1",
+          "givenName": "",
+          "familyName": "Joseph A. McGee Sr.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Joseph A. McGee Sr."
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-shell-point-seat-2:jayce-e-donley",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-shell-point-seat-2",
+          "givenName": "",
+          "familyName": "Jayce E. Donley",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Jayce E. Donley"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-shell-point-seat-2:brittany-schwartzbauer",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-shell-point-seat-2",
+          "givenName": "",
+          "familyName": "Brittany Schwartzbauer",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Brittany Schwartzbauer"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-south-fork-iii-seat-3:scott-corder",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-south-fork-iii-seat-3",
+          "givenName": "",
+          "familyName": "Scott Corder",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Scott Corder"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-south-fork-iii-seat-3:dustin-heflin",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-south-fork-iii-seat-3",
+          "givenName": "",
+          "familyName": "Dustin Heflin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Dustin Heflin"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-south-fork-iii-seat-5:darryl-f-dew",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-south-fork-iii-seat-5",
+          "givenName": "",
+          "familyName": "Darryl F. Dew",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Darryl F. Dew"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-south-fork-iii-seat-5:jessica-ocasio",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-south-fork-iii-seat-5",
+          "givenName": "",
+          "familyName": "Jessica Ocasio",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Jessica Ocasio"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-southshore-bay-seat-2:diane-c-anderson",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-southshore-bay-seat-2",
+          "givenName": "",
+          "familyName": "Diane C. Anderson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Diane C. Anderson"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-southshore-bay-seat-2:kathleen-robinson",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-southshore-bay-seat-2",
+          "givenName": "",
+          "familyName": "Kathleen Robinson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Kathleen Robinson"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-spring-lake-seat-1:danny-r-donegan-jr",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-spring-lake-seat-1",
+          "givenName": "",
+          "familyName": "Danny R. Donegan Jr.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Danny R. Donegan Jr."
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-spring-lake-seat-1:kenneth-a-hoefle",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-spring-lake-seat-1",
+          "givenName": "",
+          "familyName": "Kenneth A. Hoefle",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Kenneth A. Hoefle"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-1:marc-carlton",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-1",
+          "givenName": "",
+          "familyName": "Marc Carlton",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Marc Carlton"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-1:mirtha-amalia-moreno",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-1",
+          "givenName": "",
+          "familyName": "Mirtha Amalia Moreno",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Mirtha Amalia Moreno"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-2:david-galloway",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-2",
+          "givenName": "",
+          "familyName": "David Galloway",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "David Galloway"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-2:shannon-lewis",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-2",
+          "givenName": "",
+          "familyName": "Shannon Lewis",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Shannon Lewis"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-2:jodi-steel",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-2",
+          "givenName": "",
+          "familyName": "Jodi Steel",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Jodi Steel"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-waterleaf-seat-2:alex-auld",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-waterleaf-seat-2",
+          "givenName": "",
+          "familyName": "Alex Auld",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Alex Auld"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-waterleaf-seat-2:palmer-johnson",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-waterleaf-seat-2",
+          "givenName": "",
+          "familyName": "Palmer Johnson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Palmer Johnson"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-waterleaf-seat-3:nichole-ann-hawkins",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-waterleaf-seat-3",
+          "givenName": "",
+          "familyName": "Nichole Ann Hawkins",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Nichole Ann Hawkins"
+          }
+        },
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-waterleaf-seat-3:matthew-lenard",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-waterleaf-seat-3",
+          "givenName": "",
+          "familyName": "Matthew Lenard",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Matthew Lenard"
+          }
+        }
+      ],
+      "filingCandidacies": [
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-2:barbara-a-kirby",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-2",
+          "givenName": "",
+          "familyName": "Barbara A. Kirby",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Barbara A. Kirby"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2623/Public-Notice-Lake-St-Charles-Seat-2-PDF",
+              "sourceOrg": "Hillsborough County Supervisor of Elections",
+              "collectedAt": "2026-11-03T04:38:19.587690+00:00",
+              "verifiedAt": "2026-11-03T04:38:19.587690+00:00",
+              "quote": "A candidate in the race for the office of Supervisor, Lake St. Charles Community Development\nDistrict Seat 2 has withdrawn such that:\n\n\nA vote cast for Yvonne Brown will count.\n\n\nA vote cast for Barbara A. Kirby will not count.\n\n\nA vote cast for Toni Kristina Rhodus will count."
+            }
+          ]
+        }
+      ],
+      "removals": [
+        {
+          "id": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-2:barbara-a-kirby",
+          "contestId": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-2",
+          "givenName": "",
+          "familyName": "Barbara A. Kirby",
+          "partyLabel": null,
+          "slogan": null,
+          "status": "REMOVED_FROM_FILING",
+          "lastListed": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "Barbara A. Kirby"
+          },
+          "absentFrom": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2623/Public-Notice-Lake-St-Charles-Seat-2-PDF",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:38:19.587690+00:00",
+            "verifiedAt": "2026-11-03T04:38:19.587690+00:00",
+            "quote": "A candidate in the race for the office of Supervisor, Lake St. Charles Community Development\nDistrict Seat 2 has withdrawn such that:\n\n\nA vote cast for Yvonne Brown will count.\n\n\nA vote cast for Barbara A. Kirby will not count.\n\n\nA vote cast for Toni Kristina Rhodus will count."
+          },
+          "firstAbsentOn": "2026-11-03",
+          "statement": "A candidate in the race for the office of Supervisor, Lake St. Charles Community Development\nDistrict Seat 2 has withdrawn such that:\n\n\nA vote cast for Yvonne Brown will count.\n\n\nA vote cast for Barbara A. Kirby will not count.\n\n\nA vote cast for Toni Kristina Rhodus will count."
+        }
+      ],
+      "measures": [
+        {
+          "id": "fl-cx-local-hillsborough-2026-country-run-assessment-measure",
+          "contestId": "fl-cx-local-hillsborough-2026-country-run-assessment",
+          "questionText": "In order to continue existing and future maintenance needs, shall the Board of Trustees of Country Run Special Tax District increase the future assessed tax from $50 to $75 and authorize at their discretion to increase the tax by $25 per year in subsequent years, not to exceed $200?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+            "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+            "quote": "In order to continue existing and future maintenance needs, shall the\nBoard of Trustees of Country Run Special Tax District increase the\nfuture assessed tax from $50 to $75 and authorize at their discretion\nto increase the tax by $25 per year in subsequent years, not to\nexceed $200?"
+          }
+        }
+      ],
+      "absences": [],
+      "districtMemberships": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:45:38.079521+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:35:20.828250+00:00",
+        "rawHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official November 3, 2026 ALL RACES SAMPLE BALLOT. Complete 30 local candidate-office blocks contain 67 printed names. Lake St. Charles Seat 2 retains all three printed names as source history, while a newer withdrawal notice leaves two active choices. Four local questions include the three already-held county questions and the newly prepared precisely scoped Country Run question."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2623/Public-Notice-Lake-St-Charles-Seat-2-PDF",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2623/Public-Notice-Lake-St-Charles-Seat-2-PDF",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:38:19.587690+00:00",
+        "rawHash": "1069e6159e6da3fe6a33cf97be98824eb2114c5f1507ac59d4bb6fbda3315821",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official 2026 general election withdrawal notice: votes for Yvonne Brown and Toni Kristina Rhodus count; a vote for Barbara A. Kirby will not count. This is a notice, not a replacement sample ballot."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:42:54.196554+00:00",
+        "rawHash": "1b0793fa38409b07d488d15973d75e55626d4eda2fc4820ca82bc5468c9c8bcf",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official 2026 Community Development District Supervisor fact sheet explicitly states the electorate is all Hillsborough County registered voters residing in the district, nonpartisan, four-year terms. Seat number is an office within the CDD; no geographic seat subdivision is asserted."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/293",
+        "finalUrl": "https://www.votehillsborough.gov/293/Country-Run-Special-Dependent-Taxing-Dis",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:38:19.860253+00:00",
+        "rawHash": "ac870654332632071bf2abd6c18bfc4083508a5c287c2d7dce1e2ed99d3b95f1",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Native official HTML notice despite local .pdf filename: Country Run referendum appears on the 2026 general ballot only for voters residing inside the Country Run Special Dependent Tax District. Exact question agrees with actual master sample."
+      },
+      {
+        "requestedUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "finalUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "publisher": "Hillsborough County",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:40:39.227213+00:00",
+        "rawHash": "259d0d0a21676b64b755d92fca2d34f8c5385112c9dd249108bb97ef12a8ad80",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "County government explicitly identifies Commission Districts 5 and 7 as countywide. Districts 1 and 3 remain precise single districts."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218/",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218/School-Board-Fact-Sheet-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:40:39.817470+00:00",
+        "rawHash": "29baa4e03d2c374559e75ab57bb99c4d93c3a2e32a7537986a5b2d7e49eb16c1",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official 2026 School Board fact sheet explicitly labels Districts 2 and 4 single-member and District 6 countywide; four-year term. No school district subdivision inferred from candidate residence."
+      },
+      {
+        "requestedUrl": "https://www.templeterrace.gov/791/Elections",
+        "finalUrl": "https://www.templeterrace.gov/791/Elections",
+        "publisher": "City of Temple Terrace",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:45:38.079521+00:00",
+        "rawHash": "4c19f8e1202f23d79f968589b49b50d9648d9d9051cf6d3f7132e32ec6e89f6c",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official city current November 3, 2026 municipal election page gives the five qualified candidates for three city council positions, matching the county actual sample."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/180/On-the-Ballot",
+        "finalUrl": "https://www.votehillsborough.gov/180/On-the-Ballot",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:36:29.662471+00:00",
+        "rawHash": "eedfdc19faa50dc9fc924a697bc49e2d71dc60faecbff06c574628d01cda4110",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official current On the Ballot page links actual 2026 general All Races Sample Ballot, distinct from personal voter lookup."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/218/Public-Notices",
+        "finalUrl": "https://www.votehillsborough.gov/218/Public-Notices",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:37:54.784246+00:00",
+        "rawHash": "0bfbf82fe972370da9afba0206aeac6124420e0cdf0d76507ca5856bde73df2b",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official current Public Notices page directly links the Lake St. Charles withdrawal notice, Country Run referendum notice, and sample ballot legal notice."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:38:19.466248+00:00",
+        "rawHash": "20cbcd886cc5793df7cdc1ff21ec5ff7fa9ebbaed8c3b13480011f3dd2bc0c76",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official local certification supplemental history, not a sample ballot. Explicitly says a sole nonpartisan candidate will not appear on ballot. Certified-only unopposed fields are kept separately from actual printed general choices. Special dependent trustees are documented separately as August primary offices."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2611/Ballot-Certification-Department-of-State-PDF",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2611/Ballot-Certification-Department-of-State-PDF",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:38:19.524581+00:00",
+        "rawHash": "b67cee9ec583e420b5c2a6d692777473c0839c476a7ced65aae2a64cd95dafed",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official Department of State certification for Hillsborough, August 28, 2026. Named WRI filings are preserved separately and are not inserted as ordinary printed local candidates. Existing statewide/federal/judicial fields remain untouched."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/220",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/220/Special-Districts-Fact-Sheet-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:42:54.220895+00:00",
+        "rawHash": "f3c2dd0f24fc4ee70566b944febe886cfdab234bf2f4f7c5f9c9c7576e89a917",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official Special District Trustees 2026 fact sheet states August 18 primary election, distinguishing those certified dependent-district trustee lists from general ballot contests."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2650/General-Election-Sample-Ballot-Legal-Notice-PDF",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2650/General-Election-Sample-Ballot-Legal-Notice-PDF",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:38:19.771758+00:00",
+        "rawHash": "272f69a9241acc8aff4234267237d3ed54e35e5463f17efba55d5650056e1c45",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Additional actual official general-election all-races sample legal notice facsimile. Replays all 30 local candidate office blocks and all 67 printed names, including the three printed Lake St. Charles Seat 2 names. Withdrawal notice controls active choice status."
+      }
+    ]
+  }
+}

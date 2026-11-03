@@ -1,0 +1,2270 @@
+{
+  "sourceKind": "OFFICIAL_LOCAL_CERTIFICATION_SUPPLEMENT_NOT_SAMPLE",
+  "singleNameRule": {
+    "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+    "sourceOrg": "Hillsborough County Supervisor of Elections",
+    "collectedAt": "2026-11-03T04:38:19.466248+00:00",
+    "verifiedAt": "2026-11-03T04:38:19.466248+00:00",
+    "quote": "Where only one name appears as a particular party’s nominee or for a\nnonpartisan office, the name will not appear on the ballot."
+  },
+  "fields": [
+    {
+      "title": "County Commissioner, District 1",
+      "headerQuote": "County Commissioner, District 1",
+      "names": [
+        "Jackie Toledo (REP)",
+        "Harry Cohen (DEM)"
+      ],
+      "nameQuotes": [
+        "Jackie Toledo (REP)",
+        "Harry Cohen (DEM)"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "County Commissioner, District 3",
+      "headerQuote": "County Commissioner, District 3",
+      "names": [
+        "Luiz F. F. Garcia (REP)",
+        "Gwen Myers (DEM)"
+      ],
+      "nameQuotes": [
+        "Luiz F. F. Garcia (REP)",
+        "Gwen Myers (DEM)"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "County Commissioner, District 5",
+      "headerQuote": "County Commissioner, District 5",
+      "names": [
+        "Stacy Hahn (REP)",
+        "Neil Manimala (DEM)"
+      ],
+      "nameQuotes": [
+        "Stacy Hahn (REP)",
+        "Neil Manimala (DEM)"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "County Commissioner, District 7",
+      "headerQuote": "County Commissioner, District 7",
+      "names": [
+        "Joshua Wostal (REP)",
+        "Aileen Rodriguez (DEM)"
+      ],
+      "nameQuotes": [
+        "Joshua Wostal (REP)",
+        "Aileen Rodriguez (DEM)"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "County Court Judge, Group 7",
+      "headerQuote": "County Court Judge, Group 7",
+      "names": [
+        "Monique Scott"
+      ],
+      "nameQuotes": [
+        "Monique Scott"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "County Court Judge, Group 9",
+      "headerQuote": "County Court Judge, Group 9",
+      "names": [
+        "Jeremy Randall Griner"
+      ],
+      "nameQuotes": [
+        "Jeremy Randall Griner"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "County Court Judge, Group 13",
+      "headerQuote": "County Court Judge, Group 13",
+      "names": [
+        "Jennifer P. Johnson"
+      ],
+      "nameQuotes": [
+        "Jennifer P. Johnson"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "County Court Judge, Group 16",
+      "headerQuote": "County Court Judge, Group 16",
+      "names": [
+        "Margaret Rebecca Taylor"
+      ],
+      "nameQuotes": [
+        "Margaret Rebecca Taylor"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "County Court Judge, Group 17",
+      "headerQuote": "County Court Judge, Group 17",
+      "names": [
+        "Travis Coy"
+      ],
+      "nameQuotes": [
+        "Travis Coy"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "County Court Judge, Group 18",
+      "headerQuote": "County Court Judge, Group 18",
+      "names": [
+        "Matthew L. Felix"
+      ],
+      "nameQuotes": [
+        "Matthew L. Felix"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "County Court Judge, Group 20",
+      "headerQuote": "County Court Judge, Group 20",
+      "names": [
+        "Christopher E. Brown"
+      ],
+      "nameQuotes": [
+        "Christopher E. Brown"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "County Court Judge, Group 24",
+      "headerQuote": "County Court Judge, Group 24",
+      "names": [
+        "Colleen O'Brien"
+      ],
+      "nameQuotes": [
+        "Colleen O'Brien"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "County Court Judge, Group 25",
+      "headerQuote": "County Court Judge, Group 25",
+      "names": [
+        "Branden Henderson"
+      ],
+      "nameQuotes": [
+        "Branden Henderson"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "School Board, District 2",
+      "headerQuote": "School Board, District 2",
+      "names": [
+        "Brittany Lyssy",
+        "Daniela Simic"
+      ],
+      "nameQuotes": [
+        "Brittany Lyssy",
+        "Daniela Simic"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "School Board, District 4",
+      "headerQuote": "School Board, District 4",
+      "names": [
+        "Patricia \"Patti\" Rendon"
+      ],
+      "nameQuotes": [
+        "Patricia \"Patti\" Rendon"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "School Board, District 6",
+      "headerQuote": "School Board, District 6",
+      "names": [
+        "Kenneth \"Ken\" Gay",
+        "Karen Perez"
+      ],
+      "nameQuotes": [
+        "Kenneth \"Ken\" Gay",
+        "Karen Perez"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Hillsborough Soil and Water Conservation District, Group 1",
+      "headerQuote": "Hillsborough Soil and Water Conservation District, Group 1",
+      "names": [
+        "Terri Parke"
+      ],
+      "nameQuotes": [
+        "Terri Parke"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Hillsborough Soil and Water Conservation District, Group 5",
+      "headerQuote": "Hillsborough Soil and Water Conservation District, Group 5",
+      "names": [
+        "Matt Shivers"
+      ],
+      "nameQuotes": [
+        "Matt Shivers"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Arbor Greene Community Development District, Seat 1",
+      "headerQuote": "Arbor Greene Community Development District, Seat 1",
+      "names": [
+        "Mike Candella"
+      ],
+      "nameQuotes": [
+        "Mike Candella"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Arbor Greene Community Development District, Seat 2",
+      "headerQuote": "Arbor Greene Community Development District, Seat 2",
+      "names": [
+        "Matthew Dykeman"
+      ],
+      "nameQuotes": [
+        "Matthew Dykeman"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Avelar Creek Community Development District, Seat 3",
+      "headerQuote": "Avelar Creek Community Development District, Seat 3",
+      "names": [
+        "Frank B. Franco",
+        "Sebastian Johnson"
+      ],
+      "nameQuotes": [
+        "Frank B. Franco",
+        "Sebastian Johnson"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Avelar Creek Community Development District, Seat 4",
+      "headerQuote": "Avelar Creek Community Development District, Seat 4",
+      "names": [
+        "Julie Campbell",
+        "Edwin Guillot"
+      ],
+      "nameQuotes": [
+        "Julie Campbell",
+        "Edwin Guillot"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Bahia Lakes Community Development District, Seat 5",
+      "headerQuote": "Bahia Lakes Community Development District, Seat 5",
+      "names": [
+        "Edward C. Krayewski"
+      ],
+      "nameQuotes": [
+        "Edward C. Krayewski"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Ballentrae Hillsborough Community Development District, Seat 1",
+      "headerQuote": "Ballentrae Hillsborough Community Development District,\nSeat 1",
+      "names": [
+        "LaKeisha A. Mixon"
+      ],
+      "nameQuotes": [
+        "LaKeisha A. Mixon"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Ballentrae Hillsborough Community Development District, Seat 5",
+      "headerQuote": "Ballentrae Hillsborough Community Development District,\nSeat 5",
+      "names": [
+        "Richard Haussling"
+      ],
+      "nameQuotes": [
+        "Richard Haussling"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Belmond Reserve Community Development District, Seat 4",
+      "headerQuote": "Belmond Reserve Community Development District, Seat 4",
+      "names": [
+        "Will McPherson"
+      ],
+      "nameQuotes": [
+        "Will McPherson"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Belmont Community Development District, Seat 3",
+      "headerQuote": "Belmont Community Development District, Seat 3",
+      "names": [
+        "Shannon M. Carey"
+      ],
+      "nameQuotes": [
+        "Shannon M. Carey"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Belmont Community Development District, Seat 4",
+      "headerQuote": "Belmont Community Development District, Seat 4",
+      "names": [
+        "Jennifer Holliday"
+      ],
+      "nameQuotes": [
+        "Jennifer Holliday"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Brandon Hills Special Dependent District (Vote for 3)",
+      "headerQuote": "Brandon Hills Special Dependent District (Vote for 3)",
+      "names": [
+        "Martha \"Lesa\" Carroll",
+        "Zachary Cope",
+        "Bradford Sampson"
+      ],
+      "nameQuotes": [
+        "Martha \"Lesa\" Carroll",
+        "Zachary Cope",
+        "Bradford Sampson"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Bullfrog Creek Community Development District, Seat 5",
+      "headerQuote": "Bullfrog Creek Community Development District, Seat 5",
+      "names": [
+        "Jesus M. Sosa Burgos"
+      ],
+      "nameQuotes": [
+        "Jesus M. Sosa Burgos"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Carrollwood Recreation District (Vote for 9)",
+      "headerQuote": "Carrollwood Recreation District (Vote for 9)",
+      "names": [
+        "Anna L. Brown",
+        "Jared Brown",
+        "Mark Georgiades",
+        "Jack D. Griffie",
+        "Matthew J Lavisky",
+        "Daniel Seeley",
+        "Kevin L. Shidler",
+        "Mark Snellgrove",
+        "Kristy Taylor"
+      ],
+      "nameQuotes": [
+        "Anna L. Brown",
+        "Jared Brown",
+        "Mark Georgiades",
+        "Jack D. Griffie",
+        "Matthew J Lavisky",
+        "Daniel Seeley",
+        "Kevin L. Shidler",
+        "Mark Snellgrove",
+        "Kristy Taylor"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Cheval West Community Development District, Seat 1",
+      "headerQuote": "Cheval West Community Development District, Seat 1",
+      "names": [
+        "Chris Curran"
+      ],
+      "nameQuotes": [
+        "Chris Curran"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Cheval West Community Development District, Seat 2",
+      "headerQuote": "Cheval West Community Development District, Seat 2",
+      "names": [
+        "Scott Patrick Hostler"
+      ],
+      "nameQuotes": [
+        "Scott Patrick Hostler"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Cordoba Ranch Community Development District, Seat 1",
+      "headerQuote": "Cordoba Ranch Community Development District, Seat 1",
+      "names": [
+        "Erica Owen"
+      ],
+      "nameQuotes": [
+        "Erica Owen"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Cordoba Ranch Community Development District, Seat 2",
+      "headerQuote": "Cordoba Ranch Community Development District, Seat 2",
+      "names": [
+        "Jane C. Marlow"
+      ],
+      "nameQuotes": [
+        "Jane C. Marlow"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Cory Lakes Community Development District, Seat 4",
+      "headerQuote": "Cory Lakes Community Development District, Seat 4",
+      "names": [
+        "Ann E. Belyea"
+      ],
+      "nameQuotes": [
+        "Ann E. Belyea"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Cory Lakes Community Development District, Seat 5",
+      "headerQuote": "Cory Lakes Community Development District, Seat 5",
+      "names": [
+        "Pallu Gupta",
+        "Cynthia McIntyre"
+      ],
+      "nameQuotes": [
+        "Pallu Gupta",
+        "Cynthia McIntyre"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Covington Park Community Development District, Seat 1",
+      "headerQuote": "Covington Park Community Development District, Seat 1",
+      "names": [
+        "Lisa McKinney"
+      ],
+      "nameQuotes": [
+        "Lisa McKinney"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Covington Park Community Development District, Seat 2",
+      "headerQuote": "Covington Park Community Development District, Seat 2",
+      "names": [
+        "Stephen J. Brown",
+        "Rick L. Reidt"
+      ],
+      "nameQuotes": [
+        "Stephen J. Brown",
+        "Rick L. Reidt"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Covington Park Community Development District, Seat 3",
+      "headerQuote": "Covington Park Community Development District, Seat 3",
+      "names": [
+        "Joseph LaBranche"
+      ],
+      "nameQuotes": [
+        "Joseph LaBranche"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Creek Preserve Community Development District, Seat 1",
+      "headerQuote": "Creek Preserve Community Development District, Seat 1",
+      "names": [
+        "Marcia Pollard Hampton"
+      ],
+      "nameQuotes": [
+        "Marcia Pollard Hampton"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Creek Preserve Community Development District, Seat 2",
+      "headerQuote": "Creek Preserve Community Development District, Seat 2",
+      "names": [
+        "Jocelyn Cherry"
+      ],
+      "nameQuotes": [
+        "Jocelyn Cherry"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Cypress Creek Community Development District, Seat 4",
+      "headerQuote": "Cypress Creek Community Development District, Seat 4",
+      "names": [
+        "Nancy Fauci"
+      ],
+      "nameQuotes": [
+        "Nancy Fauci"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Cypress Creek Community Development District, Seat 5",
+      "headerQuote": "Cypress Creek Community Development District, Seat 5",
+      "names": [
+        "Joel Martin"
+      ],
+      "nameQuotes": [
+        "Joel Martin"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Cypress Mill Community Development District, Seat 2",
+      "headerQuote": "Cypress Mill Community Development District, Seat 2",
+      "names": [
+        "John Steven Zanikos"
+      ],
+      "nameQuotes": [
+        "John Steven Zanikos"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Cypress Mill Community Development District, Seat 4",
+      "headerQuote": "Cypress Mill Community Development District, Seat 4",
+      "names": [
+        "Anthony Seabrook"
+      ],
+      "nameQuotes": [
+        "Anthony Seabrook"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "DG Farms Community Development District, Seat 1",
+      "headerQuote": "DG Farms Community Development District, Seat 1",
+      "names": [
+        "Donald Reichard"
+      ],
+      "nameQuotes": [
+        "Donald Reichard"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "DG Farms Community Development District, Seat 3",
+      "headerQuote": "DG Farms Community Development District, Seat 3",
+      "names": [
+        "Robinson E. Mendoza Jr"
+      ],
+      "nameQuotes": [
+        "Robinson E. Mendoza Jr"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Diamond Hill Community Development District, Seat 1",
+      "headerQuote": "Diamond Hill Community Development District, Seat 1",
+      "names": [
+        "Srinivasa Muthineni"
+      ],
+      "nameQuotes": [
+        "Srinivasa Muthineni"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Diamond Hill Community Development District, Seat 2",
+      "headerQuote": "Diamond Hill Community Development District, Seat 2",
+      "names": [
+        "Linda L. Dunn",
+        "John I. Pollard"
+      ],
+      "nameQuotes": [
+        "Linda L. Dunn",
+        "John I. Pollard"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Diamond Hill Community Development District, Seat 3",
+      "headerQuote": "Diamond Hill Community Development District, Seat 3",
+      "names": [
+        "John Joseph McDonough"
+      ],
+      "nameQuotes": [
+        "John Joseph McDonough"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Easton Park Community Development District, Seat 4",
+      "headerQuote": "Easton Park Community Development District, Seat 4",
+      "names": [
+        "Brenda Menendez"
+      ],
+      "nameQuotes": [
+        "Brenda Menendez"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Easton Park Community Development District, Seat 5",
+      "headerQuote": "Easton Park Community Development District, Seat 5",
+      "names": [
+        "Lisa Murphy"
+      ],
+      "nameQuotes": [
+        "Lisa Murphy"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Encore Community Development District, Seat 1",
+      "headerQuote": "Encore Community Development District, Seat 1",
+      "names": [
+        "Irma Ruiz"
+      ],
+      "nameQuotes": [
+        "Irma Ruiz"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Encore Community Development District, Seat 5",
+      "headerQuote": "Encore Community Development District, Seat 5",
+      "names": [
+        "Michael Randolph"
+      ],
+      "nameQuotes": [
+        "Michael Randolph"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Fishhawk IV Community Development District, Seat 4",
+      "headerQuote": "Fishhawk IV Community Development District, Seat 4",
+      "names": [
+        "Adam Brygidyr"
+      ],
+      "nameQuotes": [
+        "Adam Brygidyr"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Fishhawk Ranch Community Development District, Seat 2",
+      "headerQuote": "Fishhawk Ranch Community Development District, Seat 2",
+      "names": [
+        "Dawn Turner"
+      ],
+      "nameQuotes": [
+        "Dawn Turner"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Fishhawk Ranch Community Development District, Seat 4",
+      "headerQuote": "Fishhawk Ranch Community Development District, Seat 4",
+      "names": [
+        "India Crawford",
+        "Dennis Moore"
+      ],
+      "nameQuotes": [
+        "India Crawford",
+        "Dennis Moore"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Forest Brooke Community Development District, Seat 2",
+      "headerQuote": "Forest Brooke Community Development District, Seat 2",
+      "names": [
+        "Steve Cemprola"
+      ],
+      "nameQuotes": [
+        "Steve Cemprola"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Forest Brooke Community Development District, Seat 4",
+      "headerQuote": "Forest Brooke Community Development District, Seat 4",
+      "names": [
+        "Cassandra Krause"
+      ],
+      "nameQuotes": [
+        "Cassandra Krause"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Grand Hampton Community Development District, Seat 1",
+      "headerQuote": "Grand Hampton Community Development District, Seat 1",
+      "names": [
+        "Mercedes Tutich"
+      ],
+      "nameQuotes": [
+        "Mercedes Tutich"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Grand Hampton Community Development District, Seat 2",
+      "headerQuote": "Grand Hampton Community Development District, Seat 2",
+      "names": [
+        "Alicia F. Stremming"
+      ],
+      "nameQuotes": [
+        "Alicia F. Stremming"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Grand Hampton Community Development District, Seat 3",
+      "headerQuote": "Grand Hampton Community Development District, Seat 3",
+      "names": [
+        "Andrew Z. Tapp"
+      ],
+      "nameQuotes": [
+        "Andrew Z. Tapp"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Harbour Isles Community Development District, Seat 1",
+      "headerQuote": "Harbour Isles Community Development District, Seat 1",
+      "names": [
+        "Elizabeth M. Fantauzzi"
+      ],
+      "nameQuotes": [
+        "Elizabeth M. Fantauzzi"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Harbour Isles Community Development District, Seat 2",
+      "headerQuote": "Harbour Isles Community Development District, Seat 2",
+      "names": [
+        "Bryce Bowden"
+      ],
+      "nameQuotes": [
+        "Bryce Bowden"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Hawk's Point Community Development District, Seat 2",
+      "headerQuote": "Hawk's Point Community Development District, Seat 2",
+      "names": [
+        "Caryn F. Williams"
+      ],
+      "nameQuotes": [
+        "Caryn F. Williams"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Harbor Bay Community Development District, Seat 1",
+      "headerQuote": "Harbor Bay Community Development District, Seat 1",
+      "names": [
+        "Patrick McAnally"
+      ],
+      "nameQuotes": [
+        "Patrick McAnally"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Harbor Bay Community Development District, Seat 2",
+      "headerQuote": "Harbor Bay Community Development District, Seat 2",
+      "names": [
+        "Daniel J. Leventry",
+        "John Vollbrecht"
+      ],
+      "nameQuotes": [
+        "Daniel J. Leventry",
+        "John Vollbrecht"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Harbor Bay Community Development District, Seat 3",
+      "headerQuote": "Harbor Bay Community Development District, Seat 3",
+      "names": [
+        "Dean L. Walters"
+      ],
+      "nameQuotes": [
+        "Dean L. Walters"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Hawkstone Community Development District, Seat 2",
+      "headerQuote": "Hawkstone Community Development District, Seat 2",
+      "names": [
+        "Sergei Begliarov"
+      ],
+      "nameQuotes": [
+        "Sergei Begliarov"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Hawkstone Community Development District, Seat 3",
+      "headerQuote": "Hawkstone Community Development District, Seat 3",
+      "names": [
+        "Vincent Cacciatore Jr"
+      ],
+      "nameQuotes": [
+        "Vincent Cacciatore Jr"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Heritage Harbor Community Development District, Seat 4",
+      "headerQuote": "Heritage Harbor Community Development District, Seat 4",
+      "names": [
+        "Russell Rossi"
+      ],
+      "nameQuotes": [
+        "Russell Rossi"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Heritage Harbor Community Development District, Seat 5",
+      "headerQuote": "Heritage Harbor Community Development District, Seat 5",
+      "names": [
+        "James Kelbaugh"
+      ],
+      "nameQuotes": [
+        "James Kelbaugh"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Heritage Isles Community Development District, Seat 4",
+      "headerQuote": "Heritage Isles Community Development District, Seat 4",
+      "names": [
+        "Dan Barravecchio"
+      ],
+      "nameQuotes": [
+        "Dan Barravecchio"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Heritage Isles Community Development District, Seat 5",
+      "headerQuote": "Heritage Isles Community Development District, Seat 5",
+      "names": [
+        "Ron Sorensen"
+      ],
+      "nameQuotes": [
+        "Ron Sorensen"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Hidden Creek Community Development District, Seat 1",
+      "headerQuote": "Hidden Creek Community Development District, Seat 1",
+      "names": [
+        "Karen Cassels"
+      ],
+      "nameQuotes": [
+        "Karen Cassels"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Hidden Creek Community Development District, Seat 2",
+      "headerQuote": "Hidden Creek Community Development District, Seat 2",
+      "names": [
+        "Zoe Anene",
+        "Barbara A. Kargol"
+      ],
+      "nameQuotes": [
+        "Zoe Anene",
+        "Barbara A. Kargol"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Hidden Creek Community Development District, Seat 5",
+      "headerQuote": "Hidden Creek Community Development District, Seat 5",
+      "names": [
+        "Harry Payton Gibson",
+        "Thomas H. Marrone",
+        "Elizabeth \"Liz\" Santeramo"
+      ],
+      "nameQuotes": [
+        "Harry Payton Gibson",
+        "Thomas H. Marrone",
+        "Elizabeth \"Liz\" Santeramo"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "K-Bar Ranch Community Development District, Seat 1",
+      "headerQuote": "K-Bar Ranch Community Development District, Seat 1",
+      "names": [
+        "Robert Johnson"
+      ],
+      "nameQuotes": [
+        "Robert Johnson"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "K-Bar Ranch Community Development District, Seat 4",
+      "headerQuote": "K-Bar Ranch Community Development District, Seat 4",
+      "names": [
+        "John Bowersox"
+      ],
+      "nameQuotes": [
+        "John Bowersox"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "K-Bar Ranch Community Development District, Seat 5",
+      "headerQuote": "K-Bar Ranch Community Development District, Seat 5",
+      "names": [
+        "Randy Scott Bach"
+      ],
+      "nameQuotes": [
+        "Randy Scott Bach"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "K-Bar Ranch II Community Development District, Seat 4",
+      "headerQuote": "K-Bar Ranch II Community Development District, Seat 4",
+      "names": [
+        "Kamolika Batabyal",
+        "Michele Emery"
+      ],
+      "nameQuotes": [
+        "Kamolika Batabyal",
+        "Michele Emery"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "K-Bar Ranch II Community Development District, Seat 5",
+      "headerQuote": "K-Bar Ranch II Community Development District, Seat 5",
+      "names": [
+        "Alexander Martinez"
+      ],
+      "nameQuotes": [
+        "Alexander Martinez"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "La Collina Community Development District, Seat 1",
+      "headerQuote": "La Collina Community Development District, Seat 1",
+      "names": [
+        "Daniel Goon"
+      ],
+      "nameQuotes": [
+        "Daniel Goon"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "La Collina Community Development District, Seat 5",
+      "headerQuote": "La Collina Community Development District, Seat 5",
+      "names": [
+        "Douglas W. Ford"
+      ],
+      "nameQuotes": [
+        "Douglas W. Ford"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Lake Saint Charles Community Development District, Seat 1",
+      "headerQuote": "Lake Saint Charles Community Development District, Seat 1",
+      "names": [
+        "Ginny Gianakos",
+        "Stephanie Hinson",
+        "Ana Loney"
+      ],
+      "nameQuotes": [
+        "Ginny Gianakos",
+        "Stephanie Hinson",
+        "Ana Loney"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Lake Saint Charles Community Development District, Seat 2",
+      "headerQuote": "Lake Saint Charles Community Development District, Seat 2",
+      "names": [
+        "Yvonne Brown",
+        "Barbara A. Kirby",
+        "Toni Kristina Rhodus"
+      ],
+      "nameQuotes": [
+        "Yvonne Brown",
+        "Barbara A. Kirby",
+        "Toni Kristina Rhodus"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Live Oak No. 1 Community Development District, Seat 4",
+      "headerQuote": "Live Oak No. 1 Community Development District, Seat 4",
+      "names": [
+        "Michael Ceparano"
+      ],
+      "nameQuotes": [
+        "Michael Ceparano"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Live Oak No. 1 Community Development District, Seat 5",
+      "headerQuote": "Live Oak No. 1 Community Development District, Seat 5",
+      "names": [
+        "Gerald Woods"
+      ],
+      "nameQuotes": [
+        "Gerald Woods"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Lynwood Community Development District, Seat 1",
+      "headerQuote": "Lynwood Community Development District, Seat 1",
+      "names": [
+        "Juan Gomez"
+      ],
+      "nameQuotes": [
+        "Juan Gomez"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Lynwood Community Development District, Seat 2",
+      "headerQuote": "Lynwood Community Development District, Seat 2",
+      "names": [
+        "Betty Gabriel"
+      ],
+      "nameQuotes": [
+        "Betty Gabriel"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Magnolia Park Community Development District, Seat 5",
+      "headerQuote": "Magnolia Park Community Development District, Seat 5",
+      "names": [
+        "Sherrie Almand"
+      ],
+      "nameQuotes": [
+        "Sherrie Almand"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Mirabella Community Development District, Seat 3",
+      "headerQuote": "Mirabella Community Development District, Seat 3",
+      "names": [
+        "Gail Reese"
+      ],
+      "nameQuotes": [
+        "Gail Reese"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Mirabella Community Development District, Seat 4",
+      "headerQuote": "Mirabella Community Development District, Seat 4",
+      "names": [
+        "David Dzien"
+      ],
+      "nameQuotes": [
+        "David Dzien"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "New Port - Tampa Bay Community Development District, Seat 4",
+      "headerQuote": "New Port - Tampa Bay Community Development District, Seat\n4",
+      "names": [
+        "Timothy J. Cox"
+      ],
+      "nameQuotes": [
+        "Timothy J. Cox"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "New Port - Tampa Bay Community Development District, Seat 5",
+      "headerQuote": "New Port - Tampa Bay Community Development District, Seat\n5",
+      "names": [
+        "Jay Plamann"
+      ],
+      "nameQuotes": [
+        "Jay Plamann"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "North Park Isle Community Development District, Seat 1",
+      "headerQuote": "North Park Isle Community Development District, Seat 1",
+      "names": [
+        "Alex Church"
+      ],
+      "nameQuotes": [
+        "Alex Church"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Oaks at Shady Creek Community Development District, Seat 3",
+      "headerQuote": "Oaks at Shady Creek Community Development District, Seat 3",
+      "names": [
+        "Amy Brown"
+      ],
+      "nameQuotes": [
+        "Amy Brown"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Oaks at Shady Creek Community Development District, Seat 4",
+      "headerQuote": "Oaks at Shady Creek Community Development District, Seat 4",
+      "names": [
+        "John Bentley"
+      ],
+      "nameQuotes": [
+        "John Bentley"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Oaks at Shady Creek Community Development District, Seat 5",
+      "headerQuote": "Oaks at Shady Creek Community Development District, Seat 5",
+      "names": [
+        "Vivian Rothstein"
+      ],
+      "nameQuotes": [
+        "Vivian Rothstein"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Panther Trace Community Development District, Seat 5",
+      "headerQuote": "Panther Trace Community Development District, Seat 5",
+      "names": [
+        "Richard M. Magerl"
+      ],
+      "nameQuotes": [
+        "Richard M. Magerl"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Panther Trace II Community Development District, Seat 1",
+      "headerQuote": "Panther Trace II Community Development District, Seat 1",
+      "names": [
+        "R. Clinton Miner"
+      ],
+      "nameQuotes": [
+        "R. Clinton Miner"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Panther Trace II Community Development District, Seat 3",
+      "headerQuote": "Panther Trace II Community Development District, Seat 3",
+      "names": [
+        "Jeffrey A. Spiess"
+      ],
+      "nameQuotes": [
+        "Jeffrey A. Spiess"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Panther Trails Community Development District, Seat 1",
+      "headerQuote": "Panther Trails Community Development District, Seat 1",
+      "names": [
+        "Jennifer Murray"
+      ],
+      "nameQuotes": [
+        "Jennifer Murray"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Park Creek Community Development District, Seat 1",
+      "headerQuote": "Park Creek Community Development District, Seat 1",
+      "names": [
+        "Joseph Long"
+      ],
+      "nameQuotes": [
+        "Joseph Long"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Park Place Community Development District, Seat 4",
+      "headerQuote": "Park Place Community Development District, Seat 4",
+      "names": [
+        "William Berra"
+      ],
+      "nameQuotes": [
+        "William Berra"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Park Place Community Development District, Seat 5",
+      "headerQuote": "Park Place Community Development District, Seat 5",
+      "names": [
+        "Eric C. Bullard"
+      ],
+      "nameQuotes": [
+        "Eric C. Bullard"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Parkway Center Community Development District, Seat 5",
+      "headerQuote": "Parkway Center Community Development District, Seat 5",
+      "names": [
+        "Koko Miller"
+      ],
+      "nameQuotes": [
+        "Koko Miller"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Reserve at Pradera Community Development District, Seat 1",
+      "headerQuote": "Reserve at Pradera Community Development District, Seat 1",
+      "names": [
+        "Lindsay Félix"
+      ],
+      "nameQuotes": [
+        "Lindsay Félix"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Reserve at Pradera Community Development District, Seat 2",
+      "headerQuote": "Reserve at Pradera Community Development District, Seat 2",
+      "names": [
+        "Kenneth Belcher"
+      ],
+      "nameQuotes": [
+        "Kenneth Belcher"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Reserve at Pradera Community Development District, Seat 3",
+      "headerQuote": "Reserve at Pradera Community Development District, Seat 3",
+      "names": [
+        "Jason Newbold"
+      ],
+      "nameQuotes": [
+        "Jason Newbold"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Rhodine Road North Community Development District, Seat 3",
+      "headerQuote": "Rhodine Road North Community Development District, Seat 3",
+      "names": [
+        "Keri Blocher"
+      ],
+      "nameQuotes": [
+        "Keri Blocher"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Rhodine Road North Community Development District, Seat 5",
+      "headerQuote": "Rhodine Road North Community Development District, Seat 5",
+      "names": [
+        "Lauren Toussaint"
+      ],
+      "nameQuotes": [
+        "Lauren Toussaint"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "River Bend Community Development District, Seat 1",
+      "headerQuote": "River Bend Community Development District, Seat 1",
+      "names": [
+        "Eugene Breazeale"
+      ],
+      "nameQuotes": [
+        "Eugene Breazeale"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "River Bend Community Development District, Seat 2",
+      "headerQuote": "River Bend Community Development District, Seat 2",
+      "names": [
+        "Martha Fleck"
+      ],
+      "nameQuotes": [
+        "Martha Fleck"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "River Bend Community Development District, Seat 3",
+      "headerQuote": "River Bend Community Development District, Seat 3",
+      "names": [
+        "Lance C. Belka",
+        "Shanell McMiller Brown"
+      ],
+      "nameQuotes": [
+        "Lance C. Belka",
+        "Shanell McMiller Brown"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Rivercrest Community Development District, Seat 1",
+      "headerQuote": "Rivercrest Community Development District, Seat 1",
+      "names": [
+        "Robert F. Fuhrmeister IV",
+        "Joseph A. McGee Sr"
+      ],
+      "nameQuotes": [
+        "Robert F. Fuhrmeister IV",
+        "Joseph A. McGee Sr"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Rivercrest Community Development District, Seat 2",
+      "headerQuote": "Rivercrest Community Development District, Seat 2",
+      "names": [
+        "Donald J. Vella Jr"
+      ],
+      "nameQuotes": [
+        "Donald J. Vella Jr"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Rivercrest Community Development District, Seat 3",
+      "headerQuote": "Rivercrest Community Development District, Seat 3",
+      "names": [
+        "Michael Ryan"
+      ],
+      "nameQuotes": [
+        "Michael Ryan"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Shell Point Community Development District, Seat 1",
+      "headerQuote": "Shell Point Community Development District, Seat 1",
+      "names": [
+        "Cheryl Hammond"
+      ],
+      "nameQuotes": [
+        "Cheryl Hammond"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Shell Point Community Development District, Seat 2",
+      "headerQuote": "Shell Point Community Development District, Seat 2",
+      "names": [
+        "Jayce E. Donley",
+        "Brittany Schwartzbauer"
+      ],
+      "nameQuotes": [
+        "Jayce E. Donley",
+        "Brittany Schwartzbauer"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "South Bay Community Development District, Seat 2",
+      "headerQuote": "South Bay Community Development District, Seat 2",
+      "names": [
+        "Ian Brown"
+      ],
+      "nameQuotes": [
+        "Ian Brown"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "South Bay Community Development District, Seat 4",
+      "headerQuote": "South Bay Community Development District, Seat 4",
+      "names": [
+        "Steve Fancy"
+      ],
+      "nameQuotes": [
+        "Steve Fancy"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "South Fork Community Development District, Seat 1",
+      "headerQuote": "South Fork Community Development District, Seat 1",
+      "names": [
+        "Patrick Barr"
+      ],
+      "nameQuotes": [
+        "Patrick Barr"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "South Fork Community Development District, Seat 2",
+      "headerQuote": "South Fork Community Development District, Seat 2",
+      "names": [
+        "Jason Amato"
+      ],
+      "nameQuotes": [
+        "Jason Amato"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "South Fork East Community Development District, Seat 1",
+      "headerQuote": "South Fork East Community Development District, Seat 1",
+      "names": [
+        "Frank Gagliardi"
+      ],
+      "nameQuotes": [
+        "Frank Gagliardi"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "South Fork East Community Development District, Seat 3",
+      "headerQuote": "South Fork East Community Development District, Seat 3",
+      "names": [
+        "Mona Dixon"
+      ],
+      "nameQuotes": [
+        "Mona Dixon"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "South Fork East Community Development District, Seat 4",
+      "headerQuote": "South Fork East Community Development District, Seat 4",
+      "names": [
+        "Karen Ann Gagliardi"
+      ],
+      "nameQuotes": [
+        "Karen Ann Gagliardi"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "South Fork III Community Development District, Seat 3",
+      "headerQuote": "South Fork III Community Development District, Seat 3",
+      "names": [
+        "Scott Corder",
+        "Dustin Heflin"
+      ],
+      "nameQuotes": [
+        "Scott Corder",
+        "Dustin Heflin"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "South Fork III Community Development District, Seat 4",
+      "headerQuote": "South Fork III Community Development District, Seat 4",
+      "names": [
+        "Susan Peltz"
+      ],
+      "nameQuotes": [
+        "Susan Peltz"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "South Fork III Community Development District, Seat 5",
+      "headerQuote": "South Fork III Community Development District, Seat 5",
+      "names": [
+        "Darryl F. Dew",
+        "Jessica Ocasio"
+      ],
+      "nameQuotes": [
+        "Darryl F. Dew",
+        "Jessica Ocasio"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Southshore Bay Community Development District, Seat 1",
+      "headerQuote": "Southshore Bay Community Development District, Seat 1",
+      "names": [
+        "Susan E. Rizos"
+      ],
+      "nameQuotes": [
+        "Susan E. Rizos"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Southshore Bay Community Development District, Seat 2",
+      "headerQuote": "Southshore Bay Community Development District, Seat 2",
+      "names": [
+        "Diane C. Anderson",
+        "Kathleen Robinson"
+      ],
+      "nameQuotes": [
+        "Diane C. Anderson",
+        "Kathleen Robinson"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Spring Lake Community Development District, Seat 1",
+      "headerQuote": "Spring Lake Community Development District, Seat 1",
+      "names": [
+        "Danny R. Donegan Jr",
+        "Kenneth A. Hoefle"
+      ],
+      "nameQuotes": [
+        "Danny R. Donegan Jr",
+        "Kenneth A. Hoefle"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Spring Lake Community Development District, Seat 2",
+      "headerQuote": "Spring Lake Community Development District, Seat 2",
+      "names": [
+        "Hovhannes Mouradian"
+      ],
+      "nameQuotes": [
+        "Hovhannes Mouradian"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Spring Lake Community Development District, Seat 5",
+      "headerQuote": "Spring Lake Community Development District, Seat 5",
+      "names": [
+        "Warren C. Keipper"
+      ],
+      "nameQuotes": [
+        "Warren C. Keipper"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Stonebrier Community Development District, Seat 4",
+      "headerQuote": "Stonebrier Community Development District, Seat 4",
+      "names": [
+        "Kristyn Fada"
+      ],
+      "nameQuotes": [
+        "Kristyn Fada"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Stonebrier Community Development District, Seat 5",
+      "headerQuote": "Stonebrier Community Development District, Seat 5",
+      "names": [
+        "Harikrishna S. Joshi"
+      ],
+      "nameQuotes": [
+        "Harikrishna S. Joshi"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "StoneLake Ranch Community Development District, Seat 3",
+      "headerQuote": "StoneLake Ranch Community Development District, Seat 3",
+      "names": [
+        "George Kurppe"
+      ],
+      "nameQuotes": [
+        "George Kurppe"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "StoneLake Ranch Community Development District, Seat 5",
+      "headerQuote": "StoneLake Ranch Community Development District, Seat 5",
+      "names": [
+        "Brad Snellings"
+      ],
+      "nameQuotes": [
+        "Brad Snellings"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Timber Creek Community Development District, Seat 2",
+      "headerQuote": "Timber Creek Community Development District, Seat 2",
+      "names": [
+        "Claude A. Neidlinger"
+      ],
+      "nameQuotes": [
+        "Claude A. Neidlinger"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Tampa Palms Community Development District, Seat 2",
+      "headerQuote": "Tampa Palms Community Development District, Seat 2",
+      "names": [
+        "Richard Diaz Jr"
+      ],
+      "nameQuotes": [
+        "Richard Diaz Jr"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Tampa Palms Open Space & Transportation Community Development District, Seat 1",
+      "headerQuote": "Tampa Palms Open Space & Transportation Community\nDevelopment District, Seat 1",
+      "names": [
+        "Fred Pfister"
+      ],
+      "nameQuotes": [
+        "Fred Pfister"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Tampa Palms Open Space & Transportation Community Development District, Seat 2",
+      "headerQuote": "Tampa Palms Open Space & Transportation Community\nDevelopment District, Seat 2",
+      "names": [
+        "Leah Black"
+      ],
+      "nameQuotes": [
+        "Leah Black"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Tampa Palms Open Space & Transportation Community Development District, Seat 3",
+      "headerQuote": "Tampa Palms Open Space & Transportation Community\nDevelopment District, Seat 3",
+      "names": [
+        "Jay Krause"
+      ],
+      "nameQuotes": [
+        "Jay Krause"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Touchstone Community Development District, Seat 2",
+      "headerQuote": "Touchstone Community Development District, Seat 2",
+      "names": [
+        "Anson Thomas Angail"
+      ],
+      "nameQuotes": [
+        "Anson Thomas Angail"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "The Hammocks Community Development District, Seat 4",
+      "headerQuote": "The Hammocks Community Development District, Seat 4",
+      "names": [
+        "Mike Henke"
+      ],
+      "nameQuotes": [
+        "Mike Henke"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Highlands Community Development District, Seat 2",
+      "headerQuote": "Highlands Community Development District, Seat 2",
+      "names": [
+        "Phuong Trang Chu"
+      ],
+      "nameQuotes": [
+        "Phuong Trang Chu"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Highlands Community Development District, Seat 5",
+      "headerQuote": "Highlands Community Development District, Seat 5",
+      "names": [
+        "Kangelia Baxter"
+      ],
+      "nameQuotes": [
+        "Kangelia Baxter"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Triple Creek Community Development District, Seat 1",
+      "headerQuote": "Triple Creek Community Development District, Seat 1",
+      "names": [
+        "Marc Carlton",
+        "Mirtha Amalia Moreno"
+      ],
+      "nameQuotes": [
+        "Marc Carlton",
+        "Mirtha Amalia Moreno"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Triple Creek Community Development District, Seat 2",
+      "headerQuote": "Triple Creek Community Development District, Seat 2",
+      "names": [
+        "David Galloway",
+        "Shannon Lewis",
+        "Jodi Steel"
+      ],
+      "nameQuotes": [
+        "David Galloway",
+        "Shannon Lewis",
+        "Jodi Steel"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Ventana Community Development District, Seat 3",
+      "headerQuote": "Ventana Community Development District, Seat 3",
+      "names": [
+        "Juan Carlos \"JC\" Reyes"
+      ],
+      "nameQuotes": [
+        "Juan Carlos \"JC\" Reyes"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Ventana Community Development District, Seat 4",
+      "headerQuote": "Ventana Community Development District, Seat 4",
+      "names": [
+        "Martha Rockovich"
+      ],
+      "nameQuotes": [
+        "Martha Rockovich"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Villages of Bloomingdale Community Development District, Seat 1",
+      "headerQuote": "Villages of Bloomingdale Community Development District,\nSeat 1",
+      "names": [
+        "Derryll Fox"
+      ],
+      "nameQuotes": [
+        "Derryll Fox"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Villages of Bloomingdale Community Development District, Seat 2",
+      "headerQuote": "Villages of Bloomingdale Community Development District,\nSeat 2",
+      "names": [
+        "Jacqueline Darden"
+      ],
+      "nameQuotes": [
+        "Jacqueline Darden"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Waterchase Community Development District, Seat 4",
+      "headerQuote": "Waterchase Community Development District, Seat 4",
+      "names": [
+        "Michael Acheson"
+      ],
+      "nameQuotes": [
+        "Michael Acheson"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Waterchase Community Development District, Seat 5",
+      "headerQuote": "Waterchase Community Development District, Seat 5",
+      "names": [
+        "Ian Watson"
+      ],
+      "nameQuotes": [
+        "Ian Watson"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Waterleaf Community Development District, Seat 2",
+      "headerQuote": "Waterleaf Community Development District, Seat 2",
+      "names": [
+        "Alex Auld",
+        "Palmer Johnson"
+      ],
+      "nameQuotes": [
+        "Alex Auld",
+        "Palmer Johnson"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Waterleaf Community Development District, Seat 3",
+      "headerQuote": "Waterleaf Community Development District, Seat 3",
+      "names": [
+        "Nichole Ann Hawkins",
+        "Matthew Lenard"
+      ],
+      "nameQuotes": [
+        "Nichole Ann Hawkins",
+        "Matthew Lenard"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_FIELD_COMPARE_TO_SAMPLE"
+    },
+    {
+      "title": "Waterleaf Community Development District, Seat 5",
+      "headerQuote": "Waterleaf Community Development District, Seat 5",
+      "names": [
+        "James Robert Ciciora"
+      ],
+      "nameQuotes": [
+        "James Robert Ciciora"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Waterset Central Community Development District, Seat 1",
+      "headerQuote": "Waterset Central Community Development District, Seat 1",
+      "names": [
+        "Brandon Bentley"
+      ],
+      "nameQuotes": [
+        "Brandon Bentley"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Waterset North Community Development District, Seat 1",
+      "headerQuote": "Waterset North Community Development District, Seat 1",
+      "names": [
+        "Bob Kellner"
+      ],
+      "nameQuotes": [
+        "Bob Kellner"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Waterset North Community Development District, Seat 2",
+      "headerQuote": "Waterset North Community Development District, Seat 2",
+      "names": [
+        "Patricia A. Cianci-Deckard"
+      ],
+      "nameQuotes": [
+        "Patricia A. Cianci-Deckard"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Westchase Community Development District, Seat 1",
+      "headerQuote": "Westchase Community Development District, Seat 1",
+      "names": [
+        "Christopher High"
+      ],
+      "nameQuotes": [
+        "Christopher High"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Westchase Community Development District, Seat 2",
+      "headerQuote": "Westchase Community Development District, Seat 2",
+      "names": [
+        "Christopher Barrett"
+      ],
+      "nameQuotes": [
+        "Christopher Barrett"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Wynnmere West Community Development District, Seat 1",
+      "headerQuote": "Wynnmere West Community Development District, Seat 1",
+      "names": [
+        "Salvatore Castelli"
+      ],
+      "nameQuotes": [
+        "Salvatore Castelli"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    },
+    {
+      "title": "Wynnmere East Community Development District, Seat 1",
+      "headerQuote": "Wynnmere East Community Development District, Seat 1",
+      "names": [
+        "Fluffy Cazalas"
+      ],
+      "nameQuotes": [
+        "Fluffy Cazalas"
+      ],
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+      "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+      "classification": "CERTIFIED_SINGLE_NONPARTISAN_NAME_NOT_PRINTED"
+    }
+  ],
+  "scope": "Supplemental certification history only; not new ordinary November ballot choices. Dependent trustee offices have August primary electorate documentation."
+}

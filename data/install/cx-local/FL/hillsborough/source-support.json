@@ -1,0 +1,139 @@
+[
+  {
+    "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/",
+    "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+    "sourceCheckedAt": "2026-11-03T04:35:20.828250+00:00",
+    "sha256": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+    "sourceFile": "sources/f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd.source",
+    "excerptFile": "sources/b4779dcde8b415d5244a1413a229584964c2c12af80449058d52a0b33170668c.txt",
+    "excerptSha256": "b4779dcde8b415d5244a1413a229584964c2c12af80449058d52a0b33170668c",
+    "evidence": "Actual official November 3, 2026 ALL RACES SAMPLE BALLOT. Complete 30 local candidate-office blocks contain 67 printed names. Lake St. Charles Seat 2 retains all three printed names as source history, while a newer withdrawal notice leaves two active choices. Four local questions include the three already-held county questions and the newly prepared precisely scoped Country Run question.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2623/Public-Notice-Lake-St-Charles-Seat-2-PDF",
+    "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2623/Public-Notice-Lake-St-Charles-Seat-2-PDF",
+    "sourceCheckedAt": "2026-11-03T04:38:19.587690+00:00",
+    "sha256": "1069e6159e6da3fe6a33cf97be98824eb2114c5f1507ac59d4bb6fbda3315821",
+    "sourceFile": "sources/1069e6159e6da3fe6a33cf97be98824eb2114c5f1507ac59d4bb6fbda3315821.source",
+    "excerptFile": "sources/b36412d76da23155a32240c9a4e7d6c814a691a6b1b4b78a08877d3d1a2b8b2c.txt",
+    "excerptSha256": "b36412d76da23155a32240c9a4e7d6c814a691a6b1b4b78a08877d3d1a2b8b2c",
+    "evidence": "Official 2026 general election withdrawal notice: votes for Yvonne Brown and Toni Kristina Rhodus count; a vote for Barbara A. Kirby will not count. This is a notice, not a replacement sample ballot.",
+    "sourceKind": "OFFICIAL_WITHDRAWAL_NOTICE"
+  },
+  {
+    "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214",
+    "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+    "sourceCheckedAt": "2026-11-03T04:42:54.196554+00:00",
+    "sha256": "1b0793fa38409b07d488d15973d75e55626d4eda2fc4820ca82bc5468c9c8bcf",
+    "sourceFile": "sources/1b0793fa38409b07d488d15973d75e55626d4eda2fc4820ca82bc5468c9c8bcf.source",
+    "excerptFile": "sources/c2b2e7378d652160e1c9b0a96a053fe88e3ed157d5c93dc90ef83b8c3ce03723.txt",
+    "excerptSha256": "c2b2e7378d652160e1c9b0a96a053fe88e3ed157d5c93dc90ef83b8c3ce03723",
+    "evidence": "Official 2026 Community Development District Supervisor fact sheet explicitly states the electorate is all Hillsborough County registered voters residing in the district, nonpartisan, four-year terms. Seat number is an office within the CDD; no geographic seat subdivision is asserted.",
+    "sourceKind": "OFFICIAL_ELECTORATE_FACT_SHEET"
+  },
+  {
+    "sourceUrl": "https://www.votehillsborough.gov/293",
+    "finalUrl": "https://www.votehillsborough.gov/293/Country-Run-Special-Dependent-Taxing-Dis",
+    "sourceCheckedAt": "2026-11-03T04:38:19.860253+00:00",
+    "sha256": "ac870654332632071bf2abd6c18bfc4083508a5c287c2d7dce1e2ed99d3b95f1",
+    "sourceFile": "sources/ac870654332632071bf2abd6c18bfc4083508a5c287c2d7dce1e2ed99d3b95f1.source",
+    "excerptFile": "sources/e9b18a43b281f396969b77a1462b87de8a81ee0737d06cea8e205030b7ed7859.txt",
+    "excerptSha256": "e9b18a43b281f396969b77a1462b87de8a81ee0737d06cea8e205030b7ed7859",
+    "evidence": "Native official HTML notice despite local .pdf filename: Country Run referendum appears on the 2026 general ballot only for voters residing inside the Country Run Special Dependent Tax District. Exact question agrees with actual master sample.",
+    "sourceKind": "OFFICIAL_REFERENDUM_NOTICE_HTML"
+  },
+  {
+    "sourceUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+    "finalUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+    "sourceCheckedAt": "2026-11-03T04:40:39.227213+00:00",
+    "sha256": "259d0d0a21676b64b755d92fca2d34f8c5385112c9dd249108bb97ef12a8ad80",
+    "sourceFile": "sources/259d0d0a21676b64b755d92fca2d34f8c5385112c9dd249108bb97ef12a8ad80.source",
+    "excerptFile": "sources/d2ad4853ca762c48907a2fe194d13e0ad584b9aa4f2fa1241501e45f0043b428.txt",
+    "excerptSha256": "d2ad4853ca762c48907a2fe194d13e0ad584b9aa4f2fa1241501e45f0043b428",
+    "evidence": "County government explicitly identifies Commission Districts 5 and 7 as countywide. Districts 1 and 3 remain precise single districts."
+  },
+  {
+    "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218/",
+    "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218/School-Board-Fact-Sheet-PDF?bidId=",
+    "sourceCheckedAt": "2026-11-03T04:40:39.817470+00:00",
+    "sha256": "29baa4e03d2c374559e75ab57bb99c4d93c3a2e32a7537986a5b2d7e49eb16c1",
+    "sourceFile": "sources/29baa4e03d2c374559e75ab57bb99c4d93c3a2e32a7537986a5b2d7e49eb16c1.source",
+    "excerptFile": "sources/f2a4ea555b41a038dc9e80c8f509cb07031ca068a0c144726f2151410d1eed4f.txt",
+    "excerptSha256": "f2a4ea555b41a038dc9e80c8f509cb07031ca068a0c144726f2151410d1eed4f",
+    "evidence": "Official 2026 School Board fact sheet explicitly labels Districts 2 and 4 single-member and District 6 countywide; four-year term. No school district subdivision inferred from candidate residence."
+  },
+  {
+    "sourceUrl": "https://www.templeterrace.gov/791/Elections",
+    "finalUrl": "https://www.templeterrace.gov/791/Elections",
+    "sourceCheckedAt": "2026-11-03T04:45:38.079521+00:00",
+    "sha256": "4c19f8e1202f23d79f968589b49b50d9648d9d9051cf6d3f7132e32ec6e89f6c",
+    "sourceFile": "sources/4c19f8e1202f23d79f968589b49b50d9648d9d9051cf6d3f7132e32ec6e89f6c.source",
+    "excerptFile": "sources/8a5af48500e580c5951f4c5b6c3c73614b08aa9b96edf4278c41a8deadddad09.txt",
+    "excerptSha256": "8a5af48500e580c5951f4c5b6c3c73614b08aa9b96edf4278c41a8deadddad09",
+    "evidence": "Official city current November 3, 2026 municipal election page gives the five qualified candidates for three city council positions, matching the county actual sample."
+  },
+  {
+    "sourceUrl": "https://www.votehillsborough.gov/180/On-the-Ballot",
+    "finalUrl": "https://www.votehillsborough.gov/180/On-the-Ballot",
+    "sourceCheckedAt": "2026-11-03T04:36:29.662471+00:00",
+    "sha256": "eedfdc19faa50dc9fc924a697bc49e2d71dc60faecbff06c574628d01cda4110",
+    "sourceFile": "sources/eedfdc19faa50dc9fc924a697bc49e2d71dc60faecbff06c574628d01cda4110.source",
+    "excerptFile": "sources/0d0e479a2f16fc36283b790c6c2be7aad1b1719a735fbe5485762c805368d479.txt",
+    "excerptSha256": "0d0e479a2f16fc36283b790c6c2be7aad1b1719a735fbe5485762c805368d479",
+    "evidence": "Official current On the Ballot page links actual 2026 general All Races Sample Ballot, distinct from personal voter lookup."
+  },
+  {
+    "sourceUrl": "https://www.votehillsborough.gov/218/Public-Notices",
+    "finalUrl": "https://www.votehillsborough.gov/218/Public-Notices",
+    "sourceCheckedAt": "2026-11-03T04:37:54.784246+00:00",
+    "sha256": "0bfbf82fe972370da9afba0206aeac6124420e0cdf0d76507ca5856bde73df2b",
+    "sourceFile": "sources/0bfbf82fe972370da9afba0206aeac6124420e0cdf0d76507ca5856bde73df2b.source",
+    "excerptFile": "sources/52ef4c90a38fb658fe333632c4de2754f43ecf42a331d3180c59db4a55c9dcce.txt",
+    "excerptSha256": "52ef4c90a38fb658fe333632c4de2754f43ecf42a331d3180c59db4a55c9dcce",
+    "evidence": "Official current Public Notices page directly links the Lake St. Charles withdrawal notice, Country Run referendum notice, and sample ballot legal notice."
+  },
+  {
+    "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+    "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2610/Ballot-Certification-Local-Contests-PDF",
+    "sourceCheckedAt": "2026-11-03T04:38:19.466248+00:00",
+    "sha256": "20cbcd886cc5793df7cdc1ff21ec5ff7fa9ebbaed8c3b13480011f3dd2bc0c76",
+    "sourceFile": "sources/20cbcd886cc5793df7cdc1ff21ec5ff7fa9ebbaed8c3b13480011f3dd2bc0c76.source",
+    "excerptFile": "sources/a9d8c52aced8a5d07e74d3e2c9e1bb2e329a479d4d5a09bc6156edf64a937ccd.txt",
+    "excerptSha256": "a9d8c52aced8a5d07e74d3e2c9e1bb2e329a479d4d5a09bc6156edf64a937ccd",
+    "evidence": "Official local certification supplemental history, not a sample ballot. Explicitly says a sole nonpartisan candidate will not appear on ballot. Certified-only unopposed fields are kept separately from actual printed general choices. Special dependent trustees are documented separately as August primary offices.",
+    "sourceKind": "OFFICIAL_LOCAL_CERTIFICATION_SUPPLEMENT"
+  },
+  {
+    "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2611/Ballot-Certification-Department-of-State-PDF",
+    "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2611/Ballot-Certification-Department-of-State-PDF",
+    "sourceCheckedAt": "2026-11-03T04:38:19.524581+00:00",
+    "sha256": "b67cee9ec583e420b5c2a6d692777473c0839c476a7ced65aae2a64cd95dafed",
+    "sourceFile": "sources/b67cee9ec583e420b5c2a6d692777473c0839c476a7ced65aae2a64cd95dafed.source",
+    "excerptFile": "sources/4760e35e992db90216ff7e7c0c9a2e723e91d2b6292fd6c0cdd70d191f114a48.txt",
+    "excerptSha256": "4760e35e992db90216ff7e7c0c9a2e723e91d2b6292fd6c0cdd70d191f114a48",
+    "evidence": "Official Department of State certification for Hillsborough, August 28, 2026. Named WRI filings are preserved separately and are not inserted as ordinary printed local candidates. Existing statewide/federal/judicial fields remain untouched.",
+    "sourceKind": "OFFICIAL_STATE_CERTIFICATION_SUPPLEMENT"
+  },
+  {
+    "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/220",
+    "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/220/Special-Districts-Fact-Sheet-PDF?bidId=",
+    "sourceCheckedAt": "2026-11-03T04:42:54.220895+00:00",
+    "sha256": "f3c2dd0f24fc4ee70566b944febe886cfdab234bf2f4f7c5f9c9c7576e89a917",
+    "sourceFile": "sources/f3c2dd0f24fc4ee70566b944febe886cfdab234bf2f4f7c5f9c9c7576e89a917.source",
+    "excerptFile": "sources/85d4c928bcde956422812c56dea0146a324204b3d74010c03cf7a0f66e6a2bd7.txt",
+    "excerptSha256": "85d4c928bcde956422812c56dea0146a324204b3d74010c03cf7a0f66e6a2bd7",
+    "evidence": "Official Special District Trustees 2026 fact sheet states August 18 primary election, distinguishing those certified dependent-district trustee lists from general ballot contests."
+  },
+  {
+    "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2650/General-Election-Sample-Ballot-Legal-Notice-PDF",
+    "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2650/General-Election-Sample-Ballot-Legal-Notice-PDF",
+    "sourceCheckedAt": "2026-11-03T04:38:19.771758+00:00",
+    "sha256": "272f69a9241acc8aff4234267237d3ed54e35e5463f17efba55d5650056e1c45",
+    "sourceFile": "sources/272f69a9241acc8aff4234267237d3ed54e35e5463f17efba55d5650056e1c45.source",
+    "excerptFile": "sources/9bf93bef3d0212ca9c410853e30fce2de5309eb0bb37a2a76d6c3e02ae53c36f.txt",
+    "excerptSha256": "9bf93bef3d0212ca9c410853e30fce2de5309eb0bb37a2a76d6c3e02ae53c36f",
+    "evidence": "Additional actual official general-election all-races sample legal notice facsimile. Replays all 30 local candidate office blocks and all 67 printed names, including the three printed Lake St. Charles Seat 2 names. Withdrawal notice controls active choice status.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT_LEGAL_NOTICE"
+  }
+]

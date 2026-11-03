@@ -1,0 +1,91 @@
+{
+  "sourceKind": "OFFICIAL_STATE_CERTIFICATION_SUPPLEMENT_NOT_SAMPLE",
+  "filings": [
+    {
+      "office": "Representative in Congress, District 14",
+      "printedCertifiedName": "Salomon Hernandez Sr.",
+      "partyLabel": "WRI",
+      "quote": "Salomon Hernandez Sr. (WRI)",
+      "provenance": {
+        "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2611/Ballot-Certification-Department-of-State-PDF",
+        "sourceOrg": "Hillsborough County Supervisor of Elections",
+        "collectedAt": "2026-11-03T04:38:19.524581+00:00",
+        "verifiedAt": "2026-11-03T04:38:19.524581+00:00",
+        "quote": "Salomon Hernandez Sr. (WRI)"
+      },
+      "representation": "DECLARED_WRITE_IN_SEPARATE_PENDING_CORRECT_READER_REPRESENTATION"
+    },
+    {
+      "office": "Representative in Congress, District 14",
+      "printedCertifiedName": "Keith Varian",
+      "partyLabel": "WRI",
+      "quote": "Keith Varian (WRI)",
+      "provenance": {
+        "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2611/Ballot-Certification-Department-of-State-PDF",
+        "sourceOrg": "Hillsborough County Supervisor of Elections",
+        "collectedAt": "2026-11-03T04:38:19.524581+00:00",
+        "verifiedAt": "2026-11-03T04:38:19.524581+00:00",
+        "quote": "Keith Varian (WRI)"
+      },
+      "representation": "DECLARED_WRITE_IN_SEPARATE_PENDING_CORRECT_READER_REPRESENTATION"
+    },
+    {
+      "office": "Representative in Congress, District 15",
+      "printedCertifiedName": "Angie Boone",
+      "partyLabel": "WRI",
+      "quote": "Angie Boone (WRI)",
+      "provenance": {
+        "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2611/Ballot-Certification-Department-of-State-PDF",
+        "sourceOrg": "Hillsborough County Supervisor of Elections",
+        "collectedAt": "2026-11-03T04:38:19.524581+00:00",
+        "verifiedAt": "2026-11-03T04:38:19.524581+00:00",
+        "quote": "Angie Boone (WRI)"
+      },
+      "representation": "DECLARED_WRITE_IN_SEPARATE_PENDING_CORRECT_READER_REPRESENTATION"
+    },
+    {
+      "office": "Governor and Lieutenant Governor",
+      "printedCertifiedName": "Kathy Anderson and Daniel Nokovich",
+      "partyLabel": "WRI",
+      "quote": "Kathy Anderson and Daniel Nokovich (WRI)",
+      "provenance": {
+        "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2611/Ballot-Certification-Department-of-State-PDF",
+        "sourceOrg": "Hillsborough County Supervisor of Elections",
+        "collectedAt": "2026-11-03T04:38:19.524581+00:00",
+        "verifiedAt": "2026-11-03T04:38:19.524581+00:00",
+        "quote": "Kathy Anderson and Daniel Nokovich (WRI)"
+      },
+      "representation": "DECLARED_WRITE_IN_SEPARATE_PENDING_CORRECT_READER_REPRESENTATION"
+    },
+    {
+      "office": "Governor and Lieutenant Governor",
+      "printedCertifiedName": "Erik Morris and LeRoy Alaways",
+      "partyLabel": "WRI",
+      "quote": "Erik Morris and LeRoy Alaways (WRI)",
+      "provenance": {
+        "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2611/Ballot-Certification-Department-of-State-PDF",
+        "sourceOrg": "Hillsborough County Supervisor of Elections",
+        "collectedAt": "2026-11-03T04:38:19.524581+00:00",
+        "verifiedAt": "2026-11-03T04:38:19.524581+00:00",
+        "quote": "Erik Morris and LeRoy Alaways (WRI)"
+      },
+      "representation": "DECLARED_WRITE_IN_SEPARATE_PENDING_CORRECT_READER_REPRESENTATION"
+    },
+    {
+      "office": "Commissioner of Agriculture",
+      "printedCertifiedName": "Kyle \"KC\" Gibson",
+      "partyLabel": "WRI",
+      "quote": "Kyle \"KC\" Gibson (WRI)",
+      "provenance": {
+        "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2611/Ballot-Certification-Department-of-State-PDF",
+        "sourceOrg": "Hillsborough County Supervisor of Elections",
+        "collectedAt": "2026-11-03T04:38:19.524581+00:00",
+        "verifiedAt": "2026-11-03T04:38:19.524581+00:00",
+        "quote": "Kyle \"KC\" Gibson (WRI)"
+      },
+      "representation": "DECLARED_WRITE_IN_SEPARATE_PENDING_CORRECT_READER_REPRESENTATION"
+    }
+  ],
+  "localDeclaredWriteInsFound": 0,
+  "genericSampleWriteInSlotsAreNotPeople": true
+}

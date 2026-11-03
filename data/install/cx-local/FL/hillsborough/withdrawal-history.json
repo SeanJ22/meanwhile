@@ -1,0 +1,29 @@
+{
+  "contestId": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-2",
+  "printedCandidateCount": 3,
+  "activeCandidateCount": 2,
+  "allPrintedNames": [
+    "Yvonne Brown",
+    "Barbara A. Kirby",
+    "Toni Kristina Rhodus"
+  ],
+  "retainedFilingId": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-2:barbara-a-kirby",
+  "lastListed": {
+    "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+    "sourceOrg": "Hillsborough County Supervisor of Elections",
+    "collectedAt": "2026-11-03T04:35:20.828250+00:00",
+    "verifiedAt": "2026-11-03T04:35:20.828250+00:00",
+    "quote": "Barbara A. Kirby"
+  },
+  "withdrawalNotice": {
+    "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2623/Public-Notice-Lake-St-Charles-Seat-2-PDF",
+    "sourceOrg": "Hillsborough County Supervisor of Elections",
+    "collectedAt": "2026-11-03T04:38:19.587690+00:00",
+    "verifiedAt": "2026-11-03T04:38:19.587690+00:00",
+    "quote": "A candidate in the race for the office of Supervisor, Lake St. Charles Community Development\nDistrict Seat 2 has withdrawn such that:\n\n\nA vote cast for Yvonne Brown will count.\n\n\nA vote cast for Barbara A. Kirby will not count.\n\n\nA vote cast for Toni Kristina Rhodus will count."
+  },
+  "firstDiscoveredOn": "2026-11-03",
+  "samplePublicationDate": "Not stated in document",
+  "samplePdfMetadata": "Custom Metadata: no\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            AcroForm\nJavaScript:      no\nPages:           3\nEncrypted:       no\nPage size:       612 x 1224 pts\nPage rot:        0\nFile size:       659086 bytes\nOptimized:       yes\nPDF version:     1.6\n",
+  "noticePdfMetadata": "Title:           \nSubject:         \nKeywords:        \nAuthor:          Ryan Bashore\nCreator:         Acrobat PDFMaker 26 for Word\nProducer:        Adobe PDF Library 26.2.171\nCreationDate:    Tue Sep 22 19:22:50 2026 UTC\nModDate:         Tue Sep 22 19:22:50 2026 UTC\nCustom Metadata: yes\nMetadata Stream: yes\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           1\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       208177 bytes\nOptimized:       yes\nPDF version:     1.6\n"
+}

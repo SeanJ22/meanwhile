@@ -1,0 +1,446 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "FL",
+  "county": "Hillsborough County",
+  "countyFips": "12057",
+  "populationRank": 26,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "fl-hillsborough-2026-commission-1",
+      "title": "Board of County Commissioners District 1",
+      "ocdId": "ocd-division/country:us/state:fl/county:hillsborough/council_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-hillsborough-2026-commission-3",
+      "title": "Board of County Commissioners District 3",
+      "ocdId": "ocd-division/country:us/state:fl/county:hillsborough/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-hillsborough-2026-commission-5",
+      "title": "Board of County Commissioners District 5",
+      "ocdId": "ocd-division/country:us/state:fl/county:hillsborough",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-hillsborough-2026-commission-7",
+      "title": "Board of County Commissioners District 7",
+      "ocdId": "ocd-division/country:us/state:fl/county:hillsborough",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-hillsborough-2026-school-2",
+      "title": "School Board Member District 2",
+      "ocdId": "ocd-division/country:us/state:fl/county:hillsborough/school_board_district:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-hillsborough-2026-school-6",
+      "title": "School Board Member District 6",
+      "ocdId": "ocd-division/country:us/state:fl/county:hillsborough",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-hillsborough-2026-temple-council",
+      "title": "Temple Terrace City Council",
+      "ocdId": "ocd-division/country:us/state:fl/place:temple_terrace",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "printedCandidates": 5,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-avelar-creek-seat-3",
+      "title": "Supervisor, Avelar Creek Community Development District Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:avelar_creek_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-avelar-creek-seat-4",
+      "title": "Supervisor, Avelar Creek Community Development District Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:avelar_creek_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-cory-lakes-seat-5",
+      "title": "Supervisor, Cory Lakes Community Development District Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:cory_lakes_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-covington-park-seat-2",
+      "title": "Supervisor, Covington Park Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:covington_park_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-diamond-hill-seat-2",
+      "title": "Supervisor, Diamond Hill Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:diamond_hill_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-fishhawk-ranch-seat-4",
+      "title": "Supervisor, Fishhawk Ranch Community Development District Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:fishhawk_ranch_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-harbor-bay-seat-2",
+      "title": "Supervisor, Harbor Bay Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:harbor_bay_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-2",
+      "title": "Supervisor, Hidden Creek Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:hidden_creek_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-hidden-creek-seat-5",
+      "title": "Supervisor, Hidden Creek Community Development District Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:hidden_creek_facilities",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "printedCandidates": 3,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-k-bar-ranch-ii-seat-4",
+      "title": "Supervisor, K-Bar Ranch II Community Development District Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:k_bar_ranch_ii_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-1",
+      "title": "Supervisor, Lake St. Charles Community Development District Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:lake_st_charles_facilities",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "printedCandidates": 3,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-lake-st-charles-seat-2",
+      "title": "Supervisor, Lake St. Charles Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:lake_st_charles_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 3,
+      "retainedWithdrawnFilings": 1,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-river-bend-seat-3",
+      "title": "Supervisor, River Bend Community Development District Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:river_bend_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-rivercrest-seat-1",
+      "title": "Supervisor, Rivercrest Community Development District Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:rivercrest_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-shell-point-seat-2",
+      "title": "Supervisor, Shell Point Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:shell_point_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-south-fork-iii-seat-3",
+      "title": "Supervisor, South Fork III Community Development District Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:south_fork_iii_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-south-fork-iii-seat-5",
+      "title": "Supervisor, South Fork III Community Development District Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:south_fork_iii_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-southshore-bay-seat-2",
+      "title": "Supervisor, Southshore Bay Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:southshore_bay_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-spring-lake-seat-1",
+      "title": "Supervisor, Spring Lake Community Development District Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:spring_lake_community_development_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-1",
+      "title": "Supervisor, Triple Creek Community Development District Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:triple_creek_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-triple-creek-seat-2",
+      "title": "Supervisor, Triple Creek Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:triple_creek_facilities",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "printedCandidates": 3,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-waterleaf-seat-2",
+      "title": "Supervisor, Waterleaf Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:waterleaf_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-cdd-waterleaf-seat-3",
+      "title": "Supervisor, Waterleaf Community Development District Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:waterleaf_facilities",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "retainedWithdrawnFilings": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    },
+    {
+      "id": "fl-cx-local-hillsborough-2026-country-run-assessment",
+      "title": "Referendum to Increase the Special Assessment of Country Run Special District from $50 to $75",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:country_run_special_dependent_taxing_district",
+      "type": "MEASURE",
+      "candidates": 0,
+      "printedCandidates": 0,
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+      "sampleVerified": true
+    }
+  ],
+  "sourceKind": "OFFICIAL_ALL_RACES_SAMPLE_BALLOT_WITH_OFFICIAL_WITHDRAWAL_NOTICE",
+  "operation": "Prepared data only. Seven held local candidate contests retain their exact IDs and all seventeen candidate IDs; adds 23 CDD seats and the Country Run district question. No production calls.",
+  "counts": {
+    "contests": 31,
+    "candidateOffices": 30,
+    "candidacies": 66,
+    "printedNamedCandidacies": 67,
+    "filingCandidacies": 1,
+    "withdrawnCandidacies": 1,
+    "measures": 1,
+    "newContests": 24,
+    "refreshedContests": 7,
+    "heldCandidateIdsPreserved": 17
+  },
+  "coverage": {
+    "actualSampleBallotVerifiedContests": 31,
+    "localCandidateOfficeUnionInMasterSampleComplete": true,
+    "printedCandidateNamesPreserved": 67,
+    "activeCandidateChoices": 66,
+    "countyComplete": false,
+    "completeBallotParity": false,
+    "addressSpecificReaderCoverageComplete": false,
+    "distinction": "Complete local candidate office union in the official all-races master and official legal-notice facsimile; not a claim of all individualized style parity or resolved reader geography. Withdrawal notice controls active choice status.",
+    "existingHeldFieldsPreserved": "Three county referendums, statewide/federal/legislative and Supreme/Second DCA fields already held remain untouched.",
+    "unopposed": "Certified single-name nonpartisan offices excluded from printed ballot by explicit certification rule; separate source-backed history saved.",
+    "declaredWriteIns": "Named certified write-ins preserved separately; generic blank slots are not candidates. No local declared write-in name appears in local certification.",
+    "remaining": [
+      "River must install or validate exact CDD and Country Run boundary applicability; no countywide fallback.",
+      "Eleven existing facilities-suffixed CDD registry divisions need confirmation that their geometry is the electoral district, not only facilities.",
+      "Seven new exact district IDs require geometry/registration support; six CDD governments already exist without Census geography.",
+      "Individualized style parity and any newer post-notice candidate changes remain open; no personal voter lookup was used."
+    ],
+    "unopposedCertifiedNonpartisanFieldsKeptSeparate": 136,
+    "namedStateFederalDeclaredWriteInFilingsKeptSeparate": 6,
+    "heldExactDistrictIdsWithoutRegistryGeometry": 3
+  },
+  "unmatchedDivisions": [
+    {
+      "ocdId": "ocd-division/country:us/state:fl/county:hillsborough/council_district:1",
+      "nextAction": "River:register exact source district and official electoral boundary; do not widen to county."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/county:hillsborough/council_district:3",
+      "nextAction": "River:register exact source district and official electoral boundary; do not widen to county."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/county:hillsborough/school_board_district:2",
+      "nextAction": "River:register exact source district and official electoral boundary; do not widen to county."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/special_district:cory_lakes_community_development_district",
+      "nextAction": "River:register exact source district and official electoral boundary; do not widen to county."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/special_district:country_run_special_dependent_taxing_district",
+      "nextAction": "River:register exact source district and official electoral boundary; do not widen to county."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/special_district:fishhawk_ranch_community_development_district",
+      "nextAction": "River:register exact source district and official electoral boundary; do not widen to county."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/special_district:k_bar_ranch_ii_community_development_district",
+      "nextAction": "River:register exact source district and official electoral boundary; do not widen to county."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/special_district:shell_point_community_development_district",
+      "nextAction": "River:register exact source district and official electoral boundary; do not widen to county."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/special_district:southshore_bay_community_development_district",
+      "nextAction": "River:register exact source district and official electoral boundary; do not widen to county."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/special_district:spring_lake_community_development_district",
+      "nextAction": "River:register exact source district and official electoral boundary; do not widen to county."
+    }
+  ],
+  "validation": {
+    "savedSampleBytesAndExactFields": "PASS",
+    "sourceHashes": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "withdrawalProjection": "PASS",
+    "genericBallotProblems": "PASS",
+    "savedSourceQuotes": 98,
+    "sourceHistoryQuotes": 97,
+    "unrelatedContestsPreserved": 300,
+    "unrelatedCandidateCoreFieldsPreserved": 497,
+    "sourceHashesAndQuotes": "PASS: 13 captured sources and 101 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "River:merge data against latest held state, retain filing/removal history, connect exact district applicability, and perform reader checks. No production publication performed."
+}

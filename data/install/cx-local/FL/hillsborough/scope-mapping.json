@@ -1,0 +1,371 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:avelar_creek_facilities",
+    "sourceDistrictName": "Avelar Creek Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": true,
+    "registryDivision": [
+      "ocd-division/country:us/state:fl/special_district:avelar_creek_facilities",
+      "district",
+      "fl-hillsborough-county-community-development-districts-562cac#34",
+      "AVELAR CREEK (Hillsborough County Community Development Districts)",
+      "facilities"
+    ],
+    "existingGovernmentKey": "fl:special:avelar-creek-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:cory_lakes_community_development_district",
+    "sourceDistrictName": "Cory Lakes Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": false,
+    "registryDivision": null,
+    "existingGovernmentKey": "fl:special:cory-lakes-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:covington_park_facilities",
+    "sourceDistrictName": "Covington Park Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": true,
+    "registryDivision": [
+      "ocd-division/country:us/state:fl/special_district:covington_park_facilities",
+      "district",
+      "fl-hillsborough-county-community-development-districts-562cac#10",
+      "COVINGTON PARK (Hillsborough County Community Development Districts)",
+      "facilities"
+    ],
+    "existingGovernmentKey": "fl:special:covington-park-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:diamond_hill_facilities",
+    "sourceDistrictName": "Diamond Hill Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": true,
+    "registryDivision": [
+      "ocd-division/country:us/state:fl/special_district:diamond_hill_facilities",
+      "district",
+      "fl-hillsborough-county-community-development-districts-562cac#26",
+      "DIAMOND HILL (Hillsborough County Community Development Districts)",
+      "facilities"
+    ],
+    "existingGovernmentKey": "fl:special:diamond-hill-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:fishhawk_ranch_community_development_district",
+    "sourceDistrictName": "Fishhawk Ranch Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": false,
+    "registryDivision": null,
+    "existingGovernmentKey": "fl:special:fishhawk-ranch-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:harbor_bay_facilities",
+    "sourceDistrictName": "Harbor Bay Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": true,
+    "registryDivision": [
+      "ocd-division/country:us/state:fl/special_district:harbor_bay_facilities",
+      "district",
+      "fl-hillsborough-county-community-development-districts-562cac#11",
+      "HARBOR BAY (Hillsborough County Community Development Districts)",
+      "facilities"
+    ],
+    "existingGovernmentKey": "fl:special:harbor-bay-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:hidden_creek_facilities",
+    "sourceDistrictName": "Hidden Creek Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": true,
+    "registryDivision": [
+      "ocd-division/country:us/state:fl/special_district:hidden_creek_facilities",
+      "district",
+      "fl-hillsborough-county-community-development-districts-562cac#52",
+      "HIDDEN CREEK (Hillsborough County Community Development Districts)",
+      "facilities"
+    ],
+    "existingGovernmentKey": "fl:special:hidden-creek-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:k_bar_ranch_ii_community_development_district",
+    "sourceDistrictName": "K-Bar Ranch II Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": false,
+    "registryDivision": null,
+    "existingGovernmentKey": "fl:special:k-bar-ranch-ii-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:lake_st_charles_facilities",
+    "sourceDistrictName": "Lake St. Charles Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": true,
+    "registryDivision": [
+      "ocd-division/country:us/state:fl/special_district:lake_st_charles_facilities",
+      "district",
+      "fl-hillsborough-county-community-development-districts-562cac#7",
+      "LAKE ST. CHARLES (Hillsborough County Community Development Districts)",
+      "facilities"
+    ],
+    "existingGovernmentKey": null,
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:river_bend_facilities",
+    "sourceDistrictName": "River Bend Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": true,
+    "registryDivision": [
+      "ocd-division/country:us/state:fl/special_district:river_bend_facilities",
+      "district",
+      "fl-hillsborough-county-community-development-districts-562cac#28",
+      "RIVER BEND (Hillsborough County Community Development Districts)",
+      "facilities"
+    ],
+    "existingGovernmentKey": "fl:special:river-bend-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:rivercrest_facilities",
+    "sourceDistrictName": "Rivercrest Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": true,
+    "registryDivision": [
+      "ocd-division/country:us/state:fl/special_district:rivercrest_facilities",
+      "district",
+      "fl-hillsborough-county-community-development-districts-562cac#12",
+      "RIVERCREST (Hillsborough County Community Development Districts)",
+      "facilities"
+    ],
+    "existingGovernmentKey": "fl:special:rivercrest-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:shell_point_community_development_district",
+    "sourceDistrictName": "Shell Point Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": false,
+    "registryDivision": null,
+    "existingGovernmentKey": "fl:special:shell-point-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:south_fork_iii_facilities",
+    "sourceDistrictName": "South Fork III Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": true,
+    "registryDivision": [
+      "ocd-division/country:us/state:fl/special_district:south_fork_iii_facilities",
+      "district",
+      "fl-hillsborough-county-community-development-districts-562cac#67",
+      "SOUTH FORK III (Hillsborough County Community Development Districts)",
+      "facilities"
+    ],
+    "existingGovernmentKey": "fl:special:south-fork-iii-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:southshore_bay_community_development_district",
+    "sourceDistrictName": "Southshore Bay Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": false,
+    "registryDivision": null,
+    "existingGovernmentKey": "fl:special:southshore-bay-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:spring_lake_community_development_district",
+    "sourceDistrictName": "Spring Lake Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": false,
+    "registryDivision": null,
+    "existingGovernmentKey": "fl:special:spring-lake-community-development-district",
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:triple_creek_facilities",
+    "sourceDistrictName": "Triple Creek Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": true,
+    "registryDivision": [
+      "ocd-division/country:us/state:fl/special_district:triple_creek_facilities",
+      "district",
+      "fl-hillsborough-county-community-development-districts-562cac#48",
+      "TRIPLE CREEK (Hillsborough County Community Development Districts)",
+      "facilities"
+    ],
+    "existingGovernmentKey": null,
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:waterleaf_facilities",
+    "sourceDistrictName": "Waterleaf Community Development District",
+    "sourceScope": "All Hillsborough County registered voters residing in the district",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/214/Community-Development-Districts-Fact-Sheet-PDF?bidId=",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:42:54.196554+00:00",
+      "verifiedAt": "2026-11-03T04:42:54.196554+00:00",
+      "quote": "All Hillsborough County\nregistered voters residing in\nthe district"
+    },
+    "existingRegistryDivision": true,
+    "registryDivision": [
+      "ocd-division/country:us/state:fl/special_district:waterleaf_facilities",
+      "district",
+      "fl-hillsborough-county-community-development-districts-562cac#40",
+      "WATERLEAF (Hillsborough County Community Development Districts)",
+      "facilities"
+    ],
+    "existingGovernmentKey": null,
+    "boundaryStatus": "REQUIRES_RIVER_READER_APPLICABILITY_CHECK",
+    "note": "Preserves source-correct district identity. Existing facilities-suffixed registry divisions require boundary applicability review. Fishhawk Ranch is not joined to Fishhawk I/II/III/IV; Spring Lake CDD is not joined to Spring Lake Improvement District."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:country_run_special_dependent_taxing_district",
+    "sourceDistrictName": "Country Run Special Dependent Tax District",
+    "sourceScope": "All voters residing within Country Run Special Dependent Tax District",
+    "scopeProvenance": {
+      "sourceUrl": "https://www.votehillsborough.gov/293/Country-Run-Special-Dependent-Taxing-Dis",
+      "sourceOrg": "Hillsborough County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:38:19.860253+00:00",
+      "verifiedAt": "2026-11-03T04:38:19.860253+00:00",
+      "quote": "Notice is hereby given that a referendum will be placed on the November 3, 2026 General Election ballot for all voters in the Country Run Special Dependent Tax District. The wording of the referendum is as follows:"
+    },
+    "existingRegistryDivision": false,
+    "boundaryStatus": "REQUIRES_RIVER_EXACT_DISTRICT_GEOMETRY"
+  }
+]

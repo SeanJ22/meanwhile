@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:24:53.479191+00:00",
+  "preparedAt": "2026-11-03T05:24:59.668769+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -586,6 +586,41 @@
       ]
     },
     {
+      "state": "FL",
+      "county": "Hillsborough County",
+      "populationRank": 26,
+      "manifest": "FL/hillsborough/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 30,
+      "measureContests": 1,
+      "candidacies": 66,
+      "newContests": 24,
+      "refreshedContests": 7,
+      "sourceInputSha256": "f7060b014aeeb3254c6b4ecee6a1726c23f65107515477d271729d9ce45f4058",
+      "coverage": {
+        "actualSampleBallotVerifiedContests": 31,
+        "localCandidateOfficeUnionInMasterSampleComplete": true,
+        "printedCandidateNamesPreserved": 67,
+        "activeCandidateChoices": 66,
+        "countyComplete": false,
+        "completeBallotParity": false,
+        "addressSpecificReaderCoverageComplete": false,
+        "distinction": "Complete local candidate office union in the official all-races master and official legal-notice facsimile; not a claim of all individualized style parity or resolved reader geography. Withdrawal notice controls active choice status.",
+        "existingHeldFieldsPreserved": "Three county referendums, statewide/federal/legislative and Supreme/Second DCA fields already held remain untouched.",
+        "unopposed": "Certified single-name nonpartisan offices excluded from printed ballot by explicit certification rule; separate source-backed history saved.",
+        "declaredWriteIns": "Named certified write-ins preserved separately; generic blank slots are not candidates. No local declared write-in name appears in local certification.",
+        "remaining": [
+          "River must install or validate exact CDD and Country Run boundary applicability; no countywide fallback.",
+          "Eleven existing facilities-suffixed CDD registry divisions need confirmation that their geometry is the electoral district, not only facilities.",
+          "Seven new exact district IDs require geometry/registration support; six CDD governments already exist without Census geography.",
+          "Individualized style parity and any newer post-notice candidate changes remain open; no personal voter lookup was used."
+        ],
+        "unopposedCertifiedNonpartisanFieldsKeptSeparate": 136,
+        "namedStateFederalDeclaredWriteInFilingsKeptSeparate": 6,
+        "heldExactDistrictIdsWithoutRegistryGeometry": 3
+      }
+    },
+    {
       "state": "NY",
       "county": "Suffolk",
       "populationRank": 27,
@@ -647,17 +682,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 25,
-    "packetsPrepared": 26,
-    "candidateAndRetentionContests": 1854,
-    "measureContests": 74,
-    "candidacyEntries": 4252,
-    "newContestEntriesAgainstCheckedInBaseline": 1539,
-    "distinctPreparedContestIds": 1914,
-    "distinctPreparedCandidateIds": 4226,
-    "distinctNewContestsAgainstCheckedInBaseline": 1533,
+    "countiesPrepared": 26,
+    "packetsPrepared": 27,
+    "candidateAndRetentionContests": 1884,
+    "measureContests": 75,
+    "candidacyEntries": 4318,
+    "newContestEntriesAgainstCheckedInBaseline": 1563,
+    "distinctPreparedContestIds": 1945,
+    "distinctPreparedCandidateIds": 4292,
+    "distinctNewContestsAgainstCheckedInBaseline": 1557,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 26
+    "distinctCountyHandoffs": 27
   },
   "remainingWork": [
     {

@@ -1,0 +1,794 @@
+[
+  {
+    "contestId": "la-cx-2026-proposition-13750",
+    "detailId": "13750",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:26.671176+00:00",
+      "rawHash": "24602a5a25ae177ccb246347bec1b81e487338b491f70e4124c7bd23a98a91b9",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "2"
+      },
+      "file": "sources/24602a5a25ae177ccb246347bec1b81e487338b491f70e4124c7bd23a98a91b9.election-index.html"
+    },
+    "parishLabel": "ACADIA - 01",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13751",
+    "detailId": "13751",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:26.671176+00:00",
+      "rawHash": "24602a5a25ae177ccb246347bec1b81e487338b491f70e4124c7bd23a98a91b9",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "2"
+      },
+      "file": "sources/24602a5a25ae177ccb246347bec1b81e487338b491f70e4124c7bd23a98a91b9.election-index.html"
+    },
+    "parishLabel": "ACADIA - 01",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13752",
+    "detailId": "13752",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:26.671176+00:00",
+      "rawHash": "24602a5a25ae177ccb246347bec1b81e487338b491f70e4124c7bd23a98a91b9",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "2"
+      },
+      "file": "sources/24602a5a25ae177ccb246347bec1b81e487338b491f70e4124c7bd23a98a91b9.election-index.html"
+    },
+    "parishLabel": "ACADIA - 01",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13753",
+    "detailId": "13753",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:26.671176+00:00",
+      "rawHash": "24602a5a25ae177ccb246347bec1b81e487338b491f70e4124c7bd23a98a91b9",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "2"
+      },
+      "file": "sources/24602a5a25ae177ccb246347bec1b81e487338b491f70e4124c7bd23a98a91b9.election-index.html"
+    },
+    "parishLabel": "ACADIA - 01",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13805",
+    "detailId": "13805",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:26.019478+00:00",
+      "rawHash": "85484b59f0502ad50ad366dc387970bbfa45309795a7ee30fb99b7936cc60b48",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "3"
+      },
+      "file": "sources/85484b59f0502ad50ad366dc387970bbfa45309795a7ee30fb99b7936cc60b48.election-index.html"
+    },
+    "parishLabel": "ALLEN - 02",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13806",
+    "detailId": "13806",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:26.434178+00:00",
+      "rawHash": "8ed92ad77ca1d1c5d95b83d5201906b2ee636eb8bb2dc2a74413eb68ce3bf85f",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "5"
+      },
+      "file": "sources/8ed92ad77ca1d1c5d95b83d5201906b2ee636eb8bb2dc2a74413eb68ce3bf85f.election-index.html"
+    },
+    "parishLabel": "ASSUMPTION - 04",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13807",
+    "detailId": "13807",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:26.434178+00:00",
+      "rawHash": "8ed92ad77ca1d1c5d95b83d5201906b2ee636eb8bb2dc2a74413eb68ce3bf85f",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "5"
+      },
+      "file": "sources/8ed92ad77ca1d1c5d95b83d5201906b2ee636eb8bb2dc2a74413eb68ce3bf85f.election-index.html"
+    },
+    "parishLabel": "ASSUMPTION - 04",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13808",
+    "detailId": "13808",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:26.042176+00:00",
+      "rawHash": "98191a9ea6a71f64786373c4156386b972724aba7653f1e9a448dc0c704d5141",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "6"
+      },
+      "file": "sources/98191a9ea6a71f64786373c4156386b972724aba7653f1e9a448dc0c704d5141.election-index.html"
+    },
+    "parishLabel": "AVOYELLES - 05",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13793",
+    "detailId": "13793",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:26.928832+00:00",
+      "rawHash": "faf5c32091a6675d82b3727b74f2236c840e0f4159b8554511f6413274dbded4",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "8"
+      },
+      "file": "sources/faf5c32091a6675d82b3727b74f2236c840e0f4159b8554511f6413274dbded4.election-index.html"
+    },
+    "parishLabel": "BIENVILLE - 07",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13809",
+    "detailId": "13809",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:27.587909+00:00",
+      "rawHash": "d7cafba7c220d979ba9a1ccda7a22fe4d77523ed0922ea76b1598599abcb931b",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "10"
+      },
+      "file": "sources/d7cafba7c220d979ba9a1ccda7a22fe4d77523ed0922ea76b1598599abcb931b.election-index.html"
+    },
+    "parishLabel": "CADDO - 09",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13812",
+    "detailId": "13812",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:27.585126+00:00",
+      "rawHash": "b92e09b69a7aa939a800d0c7fa2c1d7f590facd3317c49487bb8fe74a8f60c14",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "11"
+      },
+      "file": "sources/b92e09b69a7aa939a800d0c7fa2c1d7f590facd3317c49487bb8fe74a8f60c14.election-index.html"
+    },
+    "parishLabel": "CALCASIEU - 10",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13754",
+    "detailId": "13754",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:28.801475+00:00",
+      "rawHash": "3a23d6ebbd0dba9b07e4fb4783195c1ba2155708ae0759a648e75b90003bfdb7",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "18"
+      },
+      "file": "sources/3a23d6ebbd0dba9b07e4fb4783195c1ba2155708ae0759a648e75b90003bfdb7.election-index.html"
+    },
+    "parishLabel": "EAST BATON ROUGE - 17",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13794",
+    "detailId": "13794",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:29.809333+00:00",
+      "rawHash": "b6958ab8815e2e38ce38a86a0a6c09dfb86661e9d0b947f5bf20ba47178708e7",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "27"
+      },
+      "file": "sources/b6958ab8815e2e38ce38a86a0a6c09dfb86661e9d0b947f5bf20ba47178708e7.election-index.html"
+    },
+    "parishLabel": "JEFFERSON - 26",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13795",
+    "detailId": "13795",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:29.809333+00:00",
+      "rawHash": "b6958ab8815e2e38ce38a86a0a6c09dfb86661e9d0b947f5bf20ba47178708e7",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "27"
+      },
+      "file": "sources/b6958ab8815e2e38ce38a86a0a6c09dfb86661e9d0b947f5bf20ba47178708e7.election-index.html"
+    },
+    "parishLabel": "JEFFERSON - 26",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13801",
+    "detailId": "13801",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:29.998060+00:00",
+      "rawHash": "99fdfd03aa37156a89713a03b725137c671ddad088b906a303a92f9b2c33bbd2",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "28"
+      },
+      "file": "sources/99fdfd03aa37156a89713a03b725137c671ddad088b906a303a92f9b2c33bbd2.election-index.html"
+    },
+    "parishLabel": "JEFFERSON DAVIS - 27",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13737",
+    "detailId": "13737",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:30.385019+00:00",
+      "rawHash": "5f4f9e4fefc70da72ea1bc68acf77fcbef8c6149d6fedb6003bc966b69a95393",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "35"
+      },
+      "file": "sources/5f4f9e4fefc70da72ea1bc68acf77fcbef8c6149d6fedb6003bc966b69a95393.election-index.html"
+    },
+    "parishLabel": "MOREHOUSE - 34",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13738",
+    "detailId": "13738",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:30.385019+00:00",
+      "rawHash": "5f4f9e4fefc70da72ea1bc68acf77fcbef8c6149d6fedb6003bc966b69a95393",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "35"
+      },
+      "file": "sources/5f4f9e4fefc70da72ea1bc68acf77fcbef8c6149d6fedb6003bc966b69a95393.election-index.html"
+    },
+    "parishLabel": "MOREHOUSE - 34",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13625",
+    "detailId": "13625",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:31.289995+00:00",
+      "rawHash": "230e0b1d79e739a35c25fd9b9146fcfb24c640505b4d0fbda114a5addff6be05",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "37"
+      },
+      "file": "sources/230e0b1d79e739a35c25fd9b9146fcfb24c640505b4d0fbda114a5addff6be05.election-index.html"
+    },
+    "parishLabel": "ORLEANS - 36",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13819",
+    "detailId": "13819",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:30.600374+00:00",
+      "rawHash": "01d442974e024c609f38436f3159d0531bcbabd869329286981e86d0cb627be1",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "39"
+      },
+      "file": "sources/01d442974e024c609f38436f3159d0531bcbabd869329286981e86d0cb627be1.election-index.html"
+    },
+    "parishLabel": "PLAQUEMINES - 38",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13770",
+    "detailId": "13770",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:30.982126+00:00",
+      "rawHash": "ad4bab07cc662955c9a0a683623af717d440f94017389295068241a2354cf92c",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "40"
+      },
+      "file": "sources/ad4bab07cc662955c9a0a683623af717d440f94017389295068241a2354cf92c.election-index.html"
+    },
+    "parishLabel": "POINTE COUPEE - 39",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13772",
+    "detailId": "13772",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:30.982126+00:00",
+      "rawHash": "ad4bab07cc662955c9a0a683623af717d440f94017389295068241a2354cf92c",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "40"
+      },
+      "file": "sources/ad4bab07cc662955c9a0a683623af717d440f94017389295068241a2354cf92c.election-index.html"
+    },
+    "parishLabel": "POINTE COUPEE - 39",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13802",
+    "detailId": "13802",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:31.445502+00:00",
+      "rawHash": "2f51b7fe5ca1582f1ccf15284e8a0fda73cebc3a3bea88f03cab839133203eb3",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "41"
+      },
+      "file": "sources/2f51b7fe5ca1582f1ccf15284e8a0fda73cebc3a3bea88f03cab839133203eb3.election-index.html"
+    },
+    "parishLabel": "RAPIDES - 40",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13780",
+    "detailId": "13780",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:31.465697+00:00",
+      "rawHash": "f79c68fae72c9b4ed56d1f8fb75cbc0e5533e28f83b77ad7f010dc994976e915",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "46"
+      },
+      "file": "sources/f79c68fae72c9b4ed56d1f8fb75cbc0e5533e28f83b77ad7f010dc994976e915.election-index.html"
+    },
+    "parishLabel": "ST. CHARLES - 45",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13781",
+    "detailId": "13781",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:31.465697+00:00",
+      "rawHash": "f79c68fae72c9b4ed56d1f8fb75cbc0e5533e28f83b77ad7f010dc994976e915",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "46"
+      },
+      "file": "sources/f79c68fae72c9b4ed56d1f8fb75cbc0e5533e28f83b77ad7f010dc994976e915.election-index.html"
+    },
+    "parishLabel": "ST. CHARLES - 45",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13775",
+    "detailId": "13775",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:31.663737+00:00",
+      "rawHash": "d5be20cedeee5af4340e6e98b1384de43dd47cceb60e5f137193e6e6befe6320",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "52"
+      },
+      "file": "sources/d5be20cedeee5af4340e6e98b1384de43dd47cceb60e5f137193e6e6befe6320.election-index.html"
+    },
+    "parishLabel": "ST. MARY - 51",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13773",
+    "detailId": "13773",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:32.178165+00:00",
+      "rawHash": "71d61baf08a54b779e8e48b096e39fd07ab79266764a99ddbf863e4bfd22ed0b",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "55"
+      },
+      "file": "sources/71d61baf08a54b779e8e48b096e39fd07ab79266764a99ddbf863e4bfd22ed0b.election-index.html"
+    },
+    "parishLabel": "TENSAS - 54",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13744",
+    "detailId": "13744",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:32.233167+00:00",
+      "rawHash": "e84bd4992797602172e80be6c3733217cc444589f074409ab77172d79732a012",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "56"
+      },
+      "file": "sources/e84bd4992797602172e80be6c3733217cc444589f074409ab77172d79732a012.election-index.html"
+    },
+    "parishLabel": "TERREBONNE - 55",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13745",
+    "detailId": "13745",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:32.233167+00:00",
+      "rawHash": "e84bd4992797602172e80be6c3733217cc444589f074409ab77172d79732a012",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "56"
+      },
+      "file": "sources/e84bd4992797602172e80be6c3733217cc444589f074409ab77172d79732a012.election-index.html"
+    },
+    "parishLabel": "TERREBONNE - 55",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13758",
+    "detailId": "13758",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:33.236589+00:00",
+      "rawHash": "8ff957ea83375d6b299fb3a4aafbb7858f47e4f8f2da90d0c08122fc4b8e48ff",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "57"
+      },
+      "file": "sources/8ff957ea83375d6b299fb3a4aafbb7858f47e4f8f2da90d0c08122fc4b8e48ff.election-index.html"
+    },
+    "parishLabel": "UNION - 56",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13736",
+    "detailId": "13736",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:33.783711+00:00",
+      "rawHash": "2275e3c4031855b3674083cbeb12c9b7ae4a84e97ecc9a5a2ac8ec59d7419ad4",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "62"
+      },
+      "file": "sources/2275e3c4031855b3674083cbeb12c9b7ae4a84e97ecc9a5a2ac8ec59d7419ad4.election-index.html"
+    },
+    "parishLabel": "WEST BATON ROUGE - 61",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13774",
+    "detailId": "13774",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:33.547518+00:00",
+      "rawHash": "f7eb27d3de61dbffaebff7b094bcffc033fe46dc1c97e3012304fd6b2cfe1c6b",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "64"
+      },
+      "file": "sources/f7eb27d3de61dbffaebff7b094bcffc033fe46dc1c97e3012304fd6b2cfe1c6b.election-index.html"
+    },
+    "parishLabel": "WEST FELICIANA - 63",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13776",
+    "detailId": "13776",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:33.547518+00:00",
+      "rawHash": "f7eb27d3de61dbffaebff7b094bcffc033fe46dc1c97e3012304fd6b2cfe1c6b",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "64"
+      },
+      "file": "sources/f7eb27d3de61dbffaebff7b094bcffc033fe46dc1c97e3012304fd6b2cfe1c6b.election-index.html"
+    },
+    "parishLabel": "WEST FELICIANA - 63",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13777",
+    "detailId": "13777",
+    "source": {
+      "requestedUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "finalUrl": "https://voterportal.sos.la.gov/PropositionText",
+      "httpStatus": 200,
+      "requestMethod": "POST",
+      "retrievedAt": "2026-11-03T04:51:33.547518+00:00",
+      "rawHash": "f7eb27d3de61dbffaebff7b094bcffc033fe46dc1c97e3012304fd6b2cfe1c6b",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "64"
+      },
+      "file": "sources/f7eb27d3de61dbffaebff7b094bcffc033fe46dc1c97e3012304fd6b2cfe1c6b.election-index.html"
+    },
+    "parishLabel": "WEST FELICIANA - 63",
+    "checks": {
+      "selectedNovember3Election": "PASS",
+      "selectedParish": "PASS",
+      "exactPropositionDetailLink": "PASS",
+      "nativeSourceByteHash": "PASS"
+    }
+  }
+]

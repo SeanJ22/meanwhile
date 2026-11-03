@@ -1,0 +1,1135 @@
+[
+  {
+    "contestId": "la-cx-2026-proposition-13750",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13750",
+    "rawHash": "eb3beed9f2dcbe282cb92a33e1e0f51fe4b5c9adefd7c32aaead7edafbb47142",
+    "sourceFile": "sources/eb3beed9f2dcbe282cb92a33e1e0f51fe4b5c9adefd7c32aaead7edafbb47142.source",
+    "sourceTextFile": "sources/611cabddb9b039be24e481c444836f5d4c902c0f1e8964165ebe94b1fef014eb.txt",
+    "excerpt": "Shall the City of Crowley, State of Louisiana (the \"City\"), under the laws of Louisiana, be authorized to levy and collect, and adopt an ordinance providing for such levy and collection, a tax of one-half of one percent (1/2 of 1%) (an estimated $2,020,680 reasonably expected at this time to be collected from the levy of tax for an entire year) (the \"Tax\") upon the sale at retail, the use, the lease or rental, the consumption and the storage for use or consumption of tangible personal property and on sales of services in the City, all as defined by law, for a period of fifteen (15) years from an effective first levy date of July 1, 2027, with the proceeds of the Tax to be dedicated and used for the purposes of acquiring, constructing, maintaining and improving infrastructure and capital improvements within the City; and further, shall the City be authorized to fund the proceeds of the Tax into bonds to be issued in series from time to time for any of the aforesaid capital purposes as permitted by the laws of Louisiana?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Crowley, State of Louisiana (the \"City\"), under the laws of Louisiana, be authorized to levy and collect, and adopt an ordinance providing for such levy and collection, a tax of one-half of one percent (1/2 of 1%) (an estimated $2,020,680 reasonably expected at this time to be collected from the levy of tax for an entire year) (the \"Tax\") upon the sale at retail, the use, the lease or rental, the consumption and the storage for use or consumption of tangible personal property and on sales of services in the City, all as defined by law, for a period of fifteen (15) years from an effective first levy date of July 1, 2027, with the proceeds of the Tax to be dedicated and used for the purposes of acquiring, constructing, maintaining and improving infrastructure and capital improvements within the City; and further, shall the City be authorized to fund the proceeds of the Tax into bonds to be issued in series from time to time for any of the aforesaid capital purposes as permitted by the laws of Louisiana?"
+      ],
+      "yesMeans": [
+        "Shall the City of Crowley, State of Louisiana (the \"City\"), under the laws of Louisiana, be authorized to levy and collect, and adopt an ordinance providing for such levy and collection, a tax of one-half of one percent (1/2 of 1%) (an estimated $2,020,680 reasonably expected at this time to be collected from the levy of tax for an entire year) (the \"Tax\") upon the sale at retail, the use, the lease or rental, the consumption and the storage for use or consumption of tangible personal property and on sales of services in the City, all as defined by law, for a period of fifteen (15) years from an effective first levy date of July 1, 2027, with the proceeds of the Tax to be dedicated and used for the purposes of acquiring, constructing, maintaining and improving infrastructure and capital improvements within the City; and further, shall the City be authorized to fund the proceeds of the Tax into bonds to be issued in series from time to time for any of the aforesaid capital purposes as permitted by the laws of Louisiana?"
+      ],
+      "noMeans": [
+        "Shall the City of Crowley, State of Louisiana (the \"City\"), under the laws of Louisiana, be authorized to levy and collect, and adopt an ordinance providing for such levy and collection, a tax of one-half of one percent (1/2 of 1%) (an estimated $2,020,680 reasonably expected at this time to be collected from the levy of tax for an entire year) (the \"Tax\") upon the sale at retail, the use, the lease or rental, the consumption and the storage for use or consumption of tangible personal property and on sales of services in the City, all as defined by law, for a period of fifteen (15) years from an effective first levy date of July 1, 2027, with the proceeds of the Tax to be dedicated and used for the purposes of acquiring, constructing, maintaining and improving infrastructure and capital improvements within the City; and further, shall the City be authorized to fund the proceeds of the Tax into bonds to be issued in series from time to time for any of the aforesaid capital purposes as permitted by the laws of Louisiana?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "24602a5a25ae177ccb246347bec1b81e487338b491f70e4124c7bd23a98a91b9",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "2"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13750"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13751",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13751",
+    "rawHash": "d3977e17ef33824da57ba7a14e69a6deb57650419e7a3a65f31522da1be454e9",
+    "sourceFile": "sources/d3977e17ef33824da57ba7a14e69a6deb57650419e7a3a65f31522da1be454e9.source",
+    "sourceTextFile": "sources/557c197dfcea3956186cb3a6270011917b93ae87ff40d02a47ac25098b04cc3e.txt",
+    "excerpt": "Shall the City of Crowley, State of Louisiana, (the \"City\") under the provisions of Article VI, Section 22, Section 27(B), Section 30(A) and Section 32 of the Constitution of the State of Louisiana of 1974, levy and collect a Three and One-Half (3.5) Mills Tax on all property subject to taxation situated within said City (current estimated annual amount of $350,232), annually for a period of ten (10) years, commencing with the year 2028 and ending in the year 2037 for the purpose of maintaining the wastewater disposal facilities?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Crowley, State of Louisiana, (the \"City\") under the provisions of Article VI, Section 22, Section 27(B), Section 30(A) and Section 32 of the Constitution of the State of Louisiana of 1974, levy and collect a Three and One-Half (3.5) Mills Tax on all property subject to taxation situated within said City (current estimated annual amount of $350,232), annually for a period of ten (10) years, commencing with the year 2028 and ending in the year 2037 for the purpose of maintaining the wastewater disposal facilities?"
+      ],
+      "yesMeans": [
+        "Shall the City of Crowley, State of Louisiana, (the \"City\") under the provisions of Article VI, Section 22, Section 27(B), Section 30(A) and Section 32 of the Constitution of the State of Louisiana of 1974, levy and collect a Three and One-Half (3.5) Mills Tax on all property subject to taxation situated within said City (current estimated annual amount of $350,232), annually for a period of ten (10) years, commencing with the year 2028 and ending in the year 2037 for the purpose of maintaining the wastewater disposal facilities?"
+      ],
+      "noMeans": [
+        "Shall the City of Crowley, State of Louisiana, (the \"City\") under the provisions of Article VI, Section 22, Section 27(B), Section 30(A) and Section 32 of the Constitution of the State of Louisiana of 1974, levy and collect a Three and One-Half (3.5) Mills Tax on all property subject to taxation situated within said City (current estimated annual amount of $350,232), annually for a period of ten (10) years, commencing with the year 2028 and ending in the year 2037 for the purpose of maintaining the wastewater disposal facilities?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "24602a5a25ae177ccb246347bec1b81e487338b491f70e4124c7bd23a98a91b9",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "2"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13751"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13752",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13752",
+    "rawHash": "ab8830441e22baee588bc35b3ce186dd34983fdd9698222c211018ab83b35055",
+    "sourceFile": "sources/ab8830441e22baee588bc35b3ce186dd34983fdd9698222c211018ab83b35055.source",
+    "sourceTextFile": "sources/4e0063542e6033e19dc83e5edef840067534dcc1ef9af108a4c5e2f60fe8a364.txt",
+    "excerpt": "Shall the City of Crowley, State of Louisiana, (the \"City\") under the provisions of Article VI, Section 22, Section 27(B), Section 30(A) and Section 32 of the Constitution of the State of Louisiana of 1974, levy and collect a Three (3) Mills Tax on all property subject to taxation situated within said City (current estimated annual amount of $300,775), annually for a period of ten (10) years, commencing with the year 2028 and ending in the year 2037 for the purpose of public parks and recreation?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Crowley, State of Louisiana, (the \"City\") under the provisions of Article VI, Section 22, Section 27(B), Section 30(A) and Section 32 of the Constitution of the State of Louisiana of 1974, levy and collect a Three (3) Mills Tax on all property subject to taxation situated within said City (current estimated annual amount of $300,775), annually for a period of ten (10) years, commencing with the year 2028 and ending in the year 2037 for the purpose of public parks and recreation?"
+      ],
+      "yesMeans": [
+        "Shall the City of Crowley, State of Louisiana, (the \"City\") under the provisions of Article VI, Section 22, Section 27(B), Section 30(A) and Section 32 of the Constitution of the State of Louisiana of 1974, levy and collect a Three (3) Mills Tax on all property subject to taxation situated within said City (current estimated annual amount of $300,775), annually for a period of ten (10) years, commencing with the year 2028 and ending in the year 2037 for the purpose of public parks and recreation?"
+      ],
+      "noMeans": [
+        "Shall the City of Crowley, State of Louisiana, (the \"City\") under the provisions of Article VI, Section 22, Section 27(B), Section 30(A) and Section 32 of the Constitution of the State of Louisiana of 1974, levy and collect a Three (3) Mills Tax on all property subject to taxation situated within said City (current estimated annual amount of $300,775), annually for a period of ten (10) years, commencing with the year 2028 and ending in the year 2037 for the purpose of public parks and recreation?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "24602a5a25ae177ccb246347bec1b81e487338b491f70e4124c7bd23a98a91b9",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "2"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13752"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13753",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13753",
+    "rawHash": "5e2eeb4aca04a4d7e96a257b64866ef530c54046637bcfcb8464b7ccb1ccdc09",
+    "sourceFile": "sources/5e2eeb4aca04a4d7e96a257b64866ef530c54046637bcfcb8464b7ccb1ccdc09.source",
+    "sourceTextFile": "sources/6bce2acdcdd79dd0892db10712caa8f2aaec7e73baaaafd1141e1bde24bfc861.txt",
+    "excerpt": "Shall the City of Crowley, State of Louisiana, (the \"City\") under the provisions of Article VI, Section 22, Section 27(B), Section 30(A) and Section 32 of the Constitution of the State of Louisiana of 1974, levy and collect a One (1) Mill Tax on all property subject to taxation situated within said City (current estimated annual amount of $99,924), annually for a period of ten (10) years, commencing with the year 2028 and ending in the year 2037 for the purpose of youth recreation building maintenance?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Crowley, State of Louisiana, (the \"City\") under the provisions of Article VI, Section 22, Section 27(B), Section 30(A) and Section 32 of the Constitution of the State of Louisiana of 1974, levy and collect a One (1) Mill Tax on all property subject to taxation situated within said City (current estimated annual amount of $99,924), annually for a period of ten (10) years, commencing with the year 2028 and ending in the year 2037 for the purpose of youth recreation building maintenance?"
+      ],
+      "yesMeans": [
+        "Shall the City of Crowley, State of Louisiana, (the \"City\") under the provisions of Article VI, Section 22, Section 27(B), Section 30(A) and Section 32 of the Constitution of the State of Louisiana of 1974, levy and collect a One (1) Mill Tax on all property subject to taxation situated within said City (current estimated annual amount of $99,924), annually for a period of ten (10) years, commencing with the year 2028 and ending in the year 2037 for the purpose of youth recreation building maintenance?"
+      ],
+      "noMeans": [
+        "Shall the City of Crowley, State of Louisiana, (the \"City\") under the provisions of Article VI, Section 22, Section 27(B), Section 30(A) and Section 32 of the Constitution of the State of Louisiana of 1974, levy and collect a One (1) Mill Tax on all property subject to taxation situated within said City (current estimated annual amount of $99,924), annually for a period of ten (10) years, commencing with the year 2028 and ending in the year 2037 for the purpose of youth recreation building maintenance?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "24602a5a25ae177ccb246347bec1b81e487338b491f70e4124c7bd23a98a91b9",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "2"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13753"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13805",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13805",
+    "rawHash": "ff2b98a8efacd21838c755dffdaf0832daf411065a3b42d91676432f05bfa91f",
+    "sourceFile": "sources/ff2b98a8efacd21838c755dffdaf0832daf411065a3b42d91676432f05bfa91f.source",
+    "sourceTextFile": "sources/d9378d8fa89a26c0906104bb5fa30608d484845552e19ee44b2f5e20a575023a.txt",
+    "excerpt": "Shall the City of Oakdale, State of Louisiana (the \"City\"), be authorized to levy a 3.10 mills tax on all the property subject to taxation in the City (an estimated $74,800 reasonably expected at this time to be collected annually from the levy of this tax), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of acquiring, constructing, improving, maintaining and/or operating recreational facilities for the City?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Oakdale, State of Louisiana (the \"City\"), be authorized to levy a 3.10 mills tax on all the property subject to taxation in the City (an estimated $74,800 reasonably expected at this time to be collected annually from the levy of this tax), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of acquiring, constructing, improving, maintaining and/or operating recreational facilities for the City?"
+      ],
+      "yesMeans": [
+        "Shall the City of Oakdale, State of Louisiana (the \"City\"), be authorized to levy a 3.10 mills tax on all the property subject to taxation in the City (an estimated $74,800 reasonably expected at this time to be collected annually from the levy of this tax), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of acquiring, constructing, improving, maintaining and/or operating recreational facilities for the City?"
+      ],
+      "noMeans": [
+        "Shall the City of Oakdale, State of Louisiana (the \"City\"), be authorized to levy a 3.10 mills tax on all the property subject to taxation in the City (an estimated $74,800 reasonably expected at this time to be collected annually from the levy of this tax), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of acquiring, constructing, improving, maintaining and/or operating recreational facilities for the City?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "85484b59f0502ad50ad366dc387970bbfa45309795a7ee30fb99b7936cc60b48",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "3"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13805"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13806",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13806",
+    "rawHash": "4733692441c6984c389c3cb16bdd7e38959b76c8930ef86e1c4245feb87d76f6",
+    "sourceFile": "sources/4733692441c6984c389c3cb16bdd7e38959b76c8930ef86e1c4245feb87d76f6.source",
+    "sourceTextFile": "sources/d9c8f567d992feedca93119eeb5b865d522ac632316ea7545f327edc9a3dbc31.txt",
+    "excerpt": "Shall the Parish of Assumption, State of Louisiana (the \"Parish\"), having been previously authorized at elections held on October 12, 1968, and January 17, 1998, to levy a 1% sales and use tax (the \"Tax\") (an estimated $3,700,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), after providing for the principal, interest and reserve requirements in connection with the issuance and payment of all bonds of the Parish heretofore or hereafter sold and issued by the Parish and payable from the proceeds of the Tax, then be authorized to appropriate, dedicate and use the remaining revenues heretofore or hereafter derived from the Tax for the purposes set forth in the prior propositions approving the levy of the Tax and for the additional purpose of providing funding for needs and expenditures of inmates at the Assumption Parish Detention Center, provided that no more than 1/8 of the revenues of the Tax received in any year may be used for inmate purposes?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Assumption, State of Louisiana (the \"Parish\"), having been previously authorized at elections held on October 12, 1968, and January 17, 1998, to levy a 1% sales and use tax (the \"Tax\") (an estimated $3,700,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), after providing for the principal, interest and reserve requirements in connection with the issuance and payment of all bonds of the Parish heretofore or hereafter sold and issued by the Parish and payable from the proceeds of the Tax, then be authorized to appropriate, dedicate and use the remaining revenues heretofore or hereafter derived from the Tax for the purposes set forth in the prior propositions approving the levy of the Tax and for the additional purpose of providing funding for needs and expenditures of inmates at the Assumption Parish Detention Center, provided that no more than 1/8 of the revenues of the Tax received in any year may be used for inmate purposes?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Assumption, State of Louisiana (the \"Parish\"), having been previously authorized at elections held on October 12, 1968, and January 17, 1998, to levy a 1% sales and use tax (the \"Tax\") (an estimated $3,700,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), after providing for the principal, interest and reserve requirements in connection with the issuance and payment of all bonds of the Parish heretofore or hereafter sold and issued by the Parish and payable from the proceeds of the Tax, then be authorized to appropriate, dedicate and use the remaining revenues heretofore or hereafter derived from the Tax for the purposes set forth in the prior propositions approving the levy of the Tax and for the additional purpose of providing funding for needs and expenditures of inmates at the Assumption Parish Detention Center, provided that no more than 1/8 of the revenues of the Tax received in any year may be used for inmate purposes?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Assumption, State of Louisiana (the \"Parish\"), having been previously authorized at elections held on October 12, 1968, and January 17, 1998, to levy a 1% sales and use tax (the \"Tax\") (an estimated $3,700,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), after providing for the principal, interest and reserve requirements in connection with the issuance and payment of all bonds of the Parish heretofore or hereafter sold and issued by the Parish and payable from the proceeds of the Tax, then be authorized to appropriate, dedicate and use the remaining revenues heretofore or hereafter derived from the Tax for the purposes set forth in the prior propositions approving the levy of the Tax and for the additional purpose of providing funding for needs and expenditures of inmates at the Assumption Parish Detention Center, provided that no more than 1/8 of the revenues of the Tax received in any year may be used for inmate purposes?"
+      ]
+    },
+    "semanticConditions": [
+      "Rededication of an existing tax, not authorization of a new1% tax. Bond-payment requirements precede allocation.",
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "8ed92ad77ca1d1c5d95b83d5201906b2ee636eb8bb2dc2a74413eb68ce3bf85f",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "5"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13806"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13807",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13807",
+    "rawHash": "9562d553a784e18062e3dade914ab2dc9a7bb88a3136af16497366765da29416",
+    "sourceFile": "sources/9562d553a784e18062e3dade914ab2dc9a7bb88a3136af16497366765da29416.source",
+    "sourceTextFile": "sources/27d0b3da1ccab986d848b5961e30247dff33c98a1b4a995077ed2ed535512c81.txt",
+    "excerpt": "Shall the Parish of Assumption, State of Louisiana (the \"Parish\"), continue to levy a 2 mills tax (the \"Tax\") on all property subject to taxation in the Parish (an estimated $494,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), for a period of ten (10) years, beginning with the year 2028 and ending with the year 2037, and shall the proceeds of the Tax heretofore or hereafter received be used for the purposes as follows: (i) at least 25% for acquiring, constructing, improving, maintaining and operating library facilities, including the necessary equipment and furnishings therefor, and (ii) up to 75% for any lawful General Fund purpose of the Parish?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Assumption, State of Louisiana (the \"Parish\"), continue to levy a 2 mills tax (the \"Tax\") on all property subject to taxation in the Parish (an estimated $494,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), for a period of ten (10) years, beginning with the year 2028 and ending with the year 2037, and shall the proceeds of the Tax heretofore or hereafter received be used for the purposes as follows: (i) at least 25% for acquiring, constructing, improving, maintaining and operating library facilities, including the necessary equipment and furnishings therefor, and (ii) up to 75% for any lawful General Fund purpose of the Parish?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Assumption, State of Louisiana (the \"Parish\"), continue to levy a 2 mills tax (the \"Tax\") on all property subject to taxation in the Parish (an estimated $494,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), for a period of ten (10) years, beginning with the year 2028 and ending with the year 2037, and shall the proceeds of the Tax heretofore or hereafter received be used for the purposes as follows: (i) at least 25% for acquiring, constructing, improving, maintaining and operating library facilities, including the necessary equipment and furnishings therefor, and (ii) up to 75% for any lawful General Fund purpose of the Parish?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Assumption, State of Louisiana (the \"Parish\"), continue to levy a 2 mills tax (the \"Tax\") on all property subject to taxation in the Parish (an estimated $494,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), for a period of ten (10) years, beginning with the year 2028 and ending with the year 2037, and shall the proceeds of the Tax heretofore or hereafter received be used for the purposes as follows: (i) at least 25% for acquiring, constructing, improving, maintaining and operating library facilities, including the necessary equipment and furnishings therefor, and (ii) up to 75% for any lawful General Fund purpose of the Parish?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "8ed92ad77ca1d1c5d95b83d5201906b2ee636eb8bb2dc2a74413eb68ce3bf85f",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "5"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13807"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13808",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13808",
+    "rawHash": "128e1d062362dd2fd81f30c2e2234d36f4cbeea0cb9b6262bd6b84e04b005fd8",
+    "sourceFile": "sources/128e1d062362dd2fd81f30c2e2234d36f4cbeea0cb9b6262bd6b84e04b005fd8.source",
+    "sourceTextFile": "sources/6b5491c3d3157711564596365c66862346716c70f716a3a5ad495d08cffff76c.txt",
+    "excerpt": "Shall the Parish of Avoyelles, State of Louisiana (the \"Parish\"), continue to levy a 4 mills tax the (\"Tax\") on all the property subject to taxation in the Parish for a period of 10 years, beginning with the year 2027 and ending with the year 2036 (an estimated $787,600 reasonably expected at this time to be collected from the levy of the Tax for an entire year), and shall the proceeds of the Tax heretofore or hereafter received be used for the purpose of acquiring, constructing, improving, maintaining, operating and supporting the public health units and an animal shelter in the Parish, including equipment required therefor?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Avoyelles, State of Louisiana (the \"Parish\"), continue to levy a 4 mills tax the (\"Tax\") on all the property subject to taxation in the Parish for a period of 10 years, beginning with the year 2027 and ending with the year 2036 (an estimated $787,600 reasonably expected at this time to be collected from the levy of the Tax for an entire year), and shall the proceeds of the Tax heretofore or hereafter received be used for the purpose of acquiring, constructing, improving, maintaining, operating and supporting the public health units and an animal shelter in the Parish, including equipment required therefor?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Avoyelles, State of Louisiana (the \"Parish\"), continue to levy a 4 mills tax the (\"Tax\") on all the property subject to taxation in the Parish for a period of 10 years, beginning with the year 2027 and ending with the year 2036 (an estimated $787,600 reasonably expected at this time to be collected from the levy of the Tax for an entire year), and shall the proceeds of the Tax heretofore or hereafter received be used for the purpose of acquiring, constructing, improving, maintaining, operating and supporting the public health units and an animal shelter in the Parish, including equipment required therefor?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Avoyelles, State of Louisiana (the \"Parish\"), continue to levy a 4 mills tax the (\"Tax\") on all the property subject to taxation in the Parish for a period of 10 years, beginning with the year 2027 and ending with the year 2036 (an estimated $787,600 reasonably expected at this time to be collected from the levy of the Tax for an entire year), and shall the proceeds of the Tax heretofore or hereafter received be used for the purpose of acquiring, constructing, improving, maintaining, operating and supporting the public health units and an animal shelter in the Parish, including equipment required therefor?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "98191a9ea6a71f64786373c4156386b972724aba7653f1e9a448dc0c704d5141",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "6"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13808"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13793",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13793",
+    "rawHash": "2dad97adc45e015f07866b38d48e3bcab1988f566969cb5428f1af778919b0c9",
+    "sourceFile": "sources/2dad97adc45e015f07866b38d48e3bcab1988f566969cb5428f1af778919b0c9.source",
+    "sourceTextFile": "sources/f67cd6a2adb71b05aa9d1ac230bbbe753c9754729f7f41881228a57a205a4f3d.txt",
+    "excerpt": "Shall the Town of Arcadia, State of Louisiana (the \"Town\"), be authorized to levy and collect a 1% sales and use tax (the \"Tax\") in accordance with Louisiana law (an estimated $862,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), in perpetuity, beginning January 1, 2027, with the proceeds of the Tax (after paying reasonable and necessary expenses of collecting and administering the Tax) to be dedicated and used for at least 40% for constructing, acquiring, extending and/or improving sewer and sewerage disposal facilities of the Town and the waterworks system of the Town and the remainder of such proceeds for any lawful corporate purpose?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Arcadia, State of Louisiana (the \"Town\"), be authorized to levy and collect a 1% sales and use tax (the \"Tax\") in accordance with Louisiana law (an estimated $862,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), in perpetuity, beginning January 1, 2027, with the proceeds of the Tax (after paying reasonable and necessary expenses of collecting and administering the Tax) to be dedicated and used for at least 40% for constructing, acquiring, extending and/or improving sewer and sewerage disposal facilities of the Town and the waterworks system of the Town and the remainder of such proceeds for any lawful corporate purpose?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Arcadia, State of Louisiana (the \"Town\"), be authorized to levy and collect a 1% sales and use tax (the \"Tax\") in accordance with Louisiana law (an estimated $862,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), in perpetuity, beginning January 1, 2027, with the proceeds of the Tax (after paying reasonable and necessary expenses of collecting and administering the Tax) to be dedicated and used for at least 40% for constructing, acquiring, extending and/or improving sewer and sewerage disposal facilities of the Town and the waterworks system of the Town and the remainder of such proceeds for any lawful corporate purpose?"
+      ],
+      "noMeans": [
+        "Shall the Town of Arcadia, State of Louisiana (the \"Town\"), be authorized to levy and collect a 1% sales and use tax (the \"Tax\") in accordance with Louisiana law (an estimated $862,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), in perpetuity, beginning January 1, 2027, with the proceeds of the Tax (after paying reasonable and necessary expenses of collecting and administering the Tax) to be dedicated and used for at least 40% for constructing, acquiring, extending and/or improving sewer and sewerage disposal facilities of the Town and the waterworks system of the Town and the remainder of such proceeds for any lawful corporate purpose?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "faf5c32091a6675d82b3727b74f2236c840e0f4159b8554511f6413274dbded4",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "8"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13793"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13809",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13809",
+    "rawHash": "d6d590c8e6a745b1df58fd24959d20dafa694619c6e71112621f17732c1d0ca0",
+    "sourceFile": "sources/d6d590c8e6a745b1df58fd24959d20dafa694619c6e71112621f17732c1d0ca0.source",
+    "sourceTextFile": "sources/16ffbb0bcb790ca48082589e0542eba764f5ebc9f6254e19729ab9fcdb5e0911.txt",
+    "excerpt": "Shall Caddo Parish, Louisiana (the \"Parish\"), incur debt and issue bonds not exceeding $60,000,000, in one or more series, to run not exceeding 25 years from the date thereof, with interest at a rate not exceeding 7% per annum, for the purpose of constructing a multi-sports complex and other capital improvements, together with acquiring all necessary land, equipment and furnishings, which bonds will be general obligations of the Parish and will be payable from ad valorem taxes to be levied and collected in the manner provided by Article VI, Section 33 of the Constitution of the State of Louisiana of 1974 and statutory authority supplemental thereto, with no estimated increase in the millage rate to be levied in the first year of issue above the 1.50 mills currently being levied to pay General Obligation Bonds of the Parish?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Caddo Parish, Louisiana (the \"Parish\"), incur debt and issue bonds not exceeding $60,000,000, in one or more series, to run not exceeding 25 years from the date thereof, with interest at a rate not exceeding 7% per annum, for the purpose of constructing a multi-sports complex and other capital improvements, together with acquiring all necessary land, equipment and furnishings, which bonds will be general obligations of the Parish and will be payable from ad valorem taxes to be levied and collected in the manner provided by Article VI, Section 33 of the Constitution of the State of Louisiana of 1974 and statutory authority supplemental thereto, with no estimated increase in the millage rate to be levied in the first year of issue above the 1.50 mills currently being levied to pay General Obligation Bonds of the Parish?"
+      ],
+      "yesMeans": [
+        "Shall Caddo Parish, Louisiana (the \"Parish\"), incur debt and issue bonds not exceeding $60,000,000, in one or more series, to run not exceeding 25 years from the date thereof, with interest at a rate not exceeding 7% per annum, for the purpose of constructing a multi-sports complex and other capital improvements, together with acquiring all necessary land, equipment and furnishings, which bonds will be general obligations of the Parish and will be payable from ad valorem taxes to be levied and collected in the manner provided by Article VI, Section 33 of the Constitution of the State of Louisiana of 1974 and statutory authority supplemental thereto, with no estimated increase in the millage rate to be levied in the first year of issue above the 1.50 mills currently being levied to pay General Obligation Bonds of the Parish?"
+      ],
+      "noMeans": [
+        "Shall Caddo Parish, Louisiana (the \"Parish\"), incur debt and issue bonds not exceeding $60,000,000, in one or more series, to run not exceeding 25 years from the date thereof, with interest at a rate not exceeding 7% per annum, for the purpose of constructing a multi-sports complex and other capital improvements, together with acquiring all necessary land, equipment and furnishings, which bonds will be general obligations of the Parish and will be payable from ad valorem taxes to be levied and collected in the manner provided by Article VI, Section 33 of the Constitution of the State of Louisiana of 1974 and statutory authority supplemental thereto, with no estimated increase in the millage rate to be levied in the first year of issue above the 1.50 mills currently being levied to pay General Obligation Bonds of the Parish?"
+      ]
+    },
+    "semanticConditions": [
+      "First-year estimated millage is not a guarantee of no future tax increase. Principal cap, debt term and interest cap are separate.",
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "d7cafba7c220d979ba9a1ccda7a22fe4d77523ed0922ea76b1598599abcb931b",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "10"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13809"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13812",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13812",
+    "rawHash": "98d51bea63f58403d3c1ca4797473734f5bce5072a68c13968cb82172ef8d80f",
+    "sourceFile": "sources/98d51bea63f58403d3c1ca4797473734f5bce5072a68c13968cb82172ef8d80f.source",
+    "sourceTextFile": "sources/f79533f2921677d764e822e4fee1f9e72af79915980994fe0de8ee7cdad6b3cc.txt",
+    "excerpt": "Shall the City of DeQuincy, Louisiana (the \"City\") per Louisiana law continue to levy and collect a sales and use tax of one-half of one percent (1/2%), for a period of 15 years beginning August 1, 2027, with collections estimated at $362,976.24 for one calendar year, upon the sale at retail, use, lease or rental, consumption and storage for use or consumption of tangible personal property and on sales of services within the City, as presently or hereafter defined in La. R.S. 47:301 to 317, inclusive (the \"Tax\"), with the avails of the Tax (after paying reasonable costs of collecting and administering the Tax) dedicated for constructing, acquiring, operating, maintaining, or improving public safety, fire protection, criminal justice facilities, operations, equipment, and other operating expenses of and works of public improvement within the City, title to which shall be in the public; and, authorization to fund avails of the Tax into bonds in various series at various times, to fund capital costs of the City, including the purchase of fire trucks or other public safety equipment, per Louisiana law?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of DeQuincy, Louisiana (the \"City\") per Louisiana law continue to levy and collect a sales and use tax of one-half of one percent (1/2%), for a period of 15 years beginning August 1, 2027, with collections estimated at $362,976.24 for one calendar year, upon the sale at retail, use, lease or rental, consumption and storage for use or consumption of tangible personal property and on sales of services within the City, as presently or hereafter defined in La. R.S. 47:301 to 317, inclusive (the \"Tax\"), with the avails of the Tax (after paying reasonable costs of collecting and administering the Tax) dedicated for constructing, acquiring, operating, maintaining, or improving public safety, fire protection, criminal justice facilities, operations, equipment, and other operating expenses of and works of public improvement within the City, title to which shall be in the public; and, authorization to fund avails of the Tax into bonds in various series at various times, to fund capital costs of the City, including the purchase of fire trucks or other public safety equipment, per Louisiana law?"
+      ],
+      "yesMeans": [
+        "Shall the City of DeQuincy, Louisiana (the \"City\") per Louisiana law continue to levy and collect a sales and use tax of one-half of one percent (1/2%), for a period of 15 years beginning August 1, 2027, with collections estimated at $362,976.24 for one calendar year, upon the sale at retail, use, lease or rental, consumption and storage for use or consumption of tangible personal property and on sales of services within the City, as presently or hereafter defined in La. R.S. 47:301 to 317, inclusive (the \"Tax\"), with the avails of the Tax (after paying reasonable costs of collecting and administering the Tax) dedicated for constructing, acquiring, operating, maintaining, or improving public safety, fire protection, criminal justice facilities, operations, equipment, and other operating expenses of and works of public improvement within the City, title to which shall be in the public; and, authorization to fund avails of the Tax into bonds in various series at various times, to fund capital costs of the City, including the purchase of fire trucks or other public safety equipment, per Louisiana law?"
+      ],
+      "noMeans": [
+        "Shall the City of DeQuincy, Louisiana (the \"City\") per Louisiana law continue to levy and collect a sales and use tax of one-half of one percent (1/2%), for a period of 15 years beginning August 1, 2027, with collections estimated at $362,976.24 for one calendar year, upon the sale at retail, use, lease or rental, consumption and storage for use or consumption of tangible personal property and on sales of services within the City, as presently or hereafter defined in La. R.S. 47:301 to 317, inclusive (the \"Tax\"), with the avails of the Tax (after paying reasonable costs of collecting and administering the Tax) dedicated for constructing, acquiring, operating, maintaining, or improving public safety, fire protection, criminal justice facilities, operations, equipment, and other operating expenses of and works of public improvement within the City, title to which shall be in the public; and, authorization to fund avails of the Tax into bonds in various series at various times, to fund capital costs of the City, including the purchase of fire trucks or other public safety equipment, per Louisiana law?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "b92e09b69a7aa939a800d0c7fa2c1d7f590facd3317c49487bb8fe74a8f60c14",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "11"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13812"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13754",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13754",
+    "rawHash": "94e032f72dc1d76fea075321a9da5525098b70527d31f79de26c482af08b1479",
+    "sourceFile": "sources/94e032f72dc1d76fea075321a9da5525098b70527d31f79de26c482af08b1479.source",
+    "sourceTextFile": "sources/639bf44408a57022f39f23e49cf210aa97e6f07aa1c9ace9e5d0abfb9077a2d2.txt",
+    "excerpt": "Shall the Parish of East Baton Rouge, State of Louisiana (the \"Parish\") be authorized to renew the levy and collection of a .50 mills ad valorem tax (the \"Tax\") (an estimated $3,135,435 is reasonably expected to be collected from the levy of the Tax for an entire year), for a period of ten (10) years, beginning with the tax collection for the year 2027, and annually thereafter to and including the year 2036, and shall the proceeds of the Tax (after paying reasonable and necessary expenses of collecting and administering the Tax) be used entirely and exclusively to provide funds to purchase, maintain and operate machinery, facilities and equipment necessary and useful in the eradication, abatement or control of mosquitoes, other arthropods of public health importance and rodents, title to which shall be in the public, and maintaining and providing for adequate administrative and support staff in connection therewith?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of East Baton Rouge, State of Louisiana (the \"Parish\") be authorized to renew the levy and collection of a .50 mills ad valorem tax (the \"Tax\") (an estimated $3,135,435 is reasonably expected to be collected from the levy of the Tax for an entire year), for a period of ten (10) years, beginning with the tax collection for the year 2027, and annually thereafter to and including the year 2036, and shall the proceeds of the Tax (after paying reasonable and necessary expenses of collecting and administering the Tax) be used entirely and exclusively to provide funds to purchase, maintain and operate machinery, facilities and equipment necessary and useful in the eradication, abatement or control of mosquitoes, other arthropods of public health importance and rodents, title to which shall be in the public, and maintaining and providing for adequate administrative and support staff in connection therewith?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of East Baton Rouge, State of Louisiana (the \"Parish\") be authorized to renew the levy and collection of a .50 mills ad valorem tax (the \"Tax\") (an estimated $3,135,435 is reasonably expected to be collected from the levy of the Tax for an entire year), for a period of ten (10) years, beginning with the tax collection for the year 2027, and annually thereafter to and including the year 2036, and shall the proceeds of the Tax (after paying reasonable and necessary expenses of collecting and administering the Tax) be used entirely and exclusively to provide funds to purchase, maintain and operate machinery, facilities and equipment necessary and useful in the eradication, abatement or control of mosquitoes, other arthropods of public health importance and rodents, title to which shall be in the public, and maintaining and providing for adequate administrative and support staff in connection therewith?"
+      ],
+      "noMeans": [
+        "Shall the Parish of East Baton Rouge, State of Louisiana (the \"Parish\") be authorized to renew the levy and collection of a .50 mills ad valorem tax (the \"Tax\") (an estimated $3,135,435 is reasonably expected to be collected from the levy of the Tax for an entire year), for a period of ten (10) years, beginning with the tax collection for the year 2027, and annually thereafter to and including the year 2036, and shall the proceeds of the Tax (after paying reasonable and necessary expenses of collecting and administering the Tax) be used entirely and exclusively to provide funds to purchase, maintain and operate machinery, facilities and equipment necessary and useful in the eradication, abatement or control of mosquitoes, other arthropods of public health importance and rodents, title to which shall be in the public, and maintaining and providing for adequate administrative and support staff in connection therewith?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "3a23d6ebbd0dba9b07e4fb4783195c1ba2155708ae0759a648e75b90003bfdb7",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "18"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13754"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13794",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13794",
+    "rawHash": "403530e9986009ad0dc4929bec5704eb7051301e6c7e7465b7d760511630dc18",
+    "sourceFile": "sources/403530e9986009ad0dc4929bec5704eb7051301e6c7e7465b7d760511630dc18.source",
+    "sourceTextFile": "sources/e637a29f667e0f94e685681e21c5fe89e06a732d8ccadd2abfbc139dcd4d0832.txt",
+    "excerpt": "Shall the City of Gretna, Parish of Jefferson, State of Louisiana (the \"City\") be authorized to levy and collect a special tax of four (4.00) mills (an estimated $683,939.47 reasonably expected at this time to be collected from the levy of the special tax for an entire year) on all property subject to taxation in the City of Gretna; that being the same area contained within voting precincts G-001 through G-011, City of Gretna; including voting precincts G-012 and G-013 Parts, Annexed Timberlane Subdivision; for a period of ten (10) years, beginning with the year 2028, and ending with the year 2037, for the object and purpose of providing ambulance service, within said city; a work of permanent public improvement, title to which shall be in the public?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Gretna, Parish of Jefferson, State of Louisiana (the \"City\") be authorized to levy and collect a special tax of four (4.00) mills (an estimated $683,939.47 reasonably expected at this time to be collected from the levy of the special tax for an entire year) on all property subject to taxation in the City of Gretna; that being the same area contained within voting precincts G-001 through G-011, City of Gretna; including voting precincts G-012 and G-013 Parts, Annexed Timberlane Subdivision; for a period of ten (10) years, beginning with the year 2028, and ending with the year 2037, for the object and purpose of providing ambulance service, within said city; a work of permanent public improvement, title to which shall be in the public?"
+      ],
+      "yesMeans": [
+        "Shall the City of Gretna, Parish of Jefferson, State of Louisiana (the \"City\") be authorized to levy and collect a special tax of four (4.00) mills (an estimated $683,939.47 reasonably expected at this time to be collected from the levy of the special tax for an entire year) on all property subject to taxation in the City of Gretna; that being the same area contained within voting precincts G-001 through G-011, City of Gretna; including voting precincts G-012 and G-013 Parts, Annexed Timberlane Subdivision; for a period of ten (10) years, beginning with the year 2028, and ending with the year 2037, for the object and purpose of providing ambulance service, within said city; a work of permanent public improvement, title to which shall be in the public?"
+      ],
+      "noMeans": [
+        "Shall the City of Gretna, Parish of Jefferson, State of Louisiana (the \"City\") be authorized to levy and collect a special tax of four (4.00) mills (an estimated $683,939.47 reasonably expected at this time to be collected from the levy of the special tax for an entire year) on all property subject to taxation in the City of Gretna; that being the same area contained within voting precincts G-001 through G-011, City of Gretna; including voting precincts G-012 and G-013 Parts, Annexed Timberlane Subdivision; for a period of ten (10) years, beginning with the year 2028, and ending with the year 2037, for the object and purpose of providing ambulance service, within said city; a work of permanent public improvement, title to which shall be in the public?"
+      ]
+    },
+    "semanticConditions": [
+      "Question explicitly includes specified G012/G013parts in AnnexedTimberlane. Fire-tax proposition has different excluded territory and is not in this packet.",
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "b6958ab8815e2e38ce38a86a0a6c09dfb86661e9d0b947f5bf20ba47178708e7",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "27"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13794"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13795",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13795",
+    "rawHash": "9f1990d2e6a78b2cf1857f3a678c0d97fff9fab9e33c2d4fcdaa20f26c984339",
+    "sourceFile": "sources/9f1990d2e6a78b2cf1857f3a678c0d97fff9fab9e33c2d4fcdaa20f26c984339.source",
+    "sourceTextFile": "sources/1bece51de46b28a7d2dca06bf893db62f275671fec8dff2f817e0bbe86f99109.txt",
+    "excerpt": "Shall the City of Gretna, Parish of Jefferson, State of Louisiana (the \"City\") be authorized to levy and collect a special tax of eight (8.00) mills (an estimated $1,367,878.94 reasonably expected at this time to be collected from the levy of the special tax for an entire year) on all property subject to taxation in the City of Gretna; that being the same area contained within voting precincts G-001 through G-011, City of Gretna; and including voting precincts G-012 and G-013 Parts, Annexed Timberlane Subdivision; for a period of ten (10) years, beginning with the year 2028, and ending with the year 2037, for the purpose of maintaining existing City Police Department manpower levels, a work of permanent public improvement, title to which shall be in the public?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Gretna, Parish of Jefferson, State of Louisiana (the \"City\") be authorized to levy and collect a special tax of eight (8.00) mills (an estimated $1,367,878.94 reasonably expected at this time to be collected from the levy of the special tax for an entire year) on all property subject to taxation in the City of Gretna; that being the same area contained within voting precincts G-001 through G-011, City of Gretna; and including voting precincts G-012 and G-013 Parts, Annexed Timberlane Subdivision; for a period of ten (10) years, beginning with the year 2028, and ending with the year 2037, for the purpose of maintaining existing City Police Department manpower levels, a work of permanent public improvement, title to which shall be in the public?"
+      ],
+      "yesMeans": [
+        "Shall the City of Gretna, Parish of Jefferson, State of Louisiana (the \"City\") be authorized to levy and collect a special tax of eight (8.00) mills (an estimated $1,367,878.94 reasonably expected at this time to be collected from the levy of the special tax for an entire year) on all property subject to taxation in the City of Gretna; that being the same area contained within voting precincts G-001 through G-011, City of Gretna; and including voting precincts G-012 and G-013 Parts, Annexed Timberlane Subdivision; for a period of ten (10) years, beginning with the year 2028, and ending with the year 2037, for the purpose of maintaining existing City Police Department manpower levels, a work of permanent public improvement, title to which shall be in the public?"
+      ],
+      "noMeans": [
+        "Shall the City of Gretna, Parish of Jefferson, State of Louisiana (the \"City\") be authorized to levy and collect a special tax of eight (8.00) mills (an estimated $1,367,878.94 reasonably expected at this time to be collected from the levy of the special tax for an entire year) on all property subject to taxation in the City of Gretna; that being the same area contained within voting precincts G-001 through G-011, City of Gretna; and including voting precincts G-012 and G-013 Parts, Annexed Timberlane Subdivision; for a period of ten (10) years, beginning with the year 2028, and ending with the year 2037, for the purpose of maintaining existing City Police Department manpower levels, a work of permanent public improvement, title to which shall be in the public?"
+      ]
+    },
+    "semanticConditions": [
+      "Question explicitly includes specified G012/G013parts in AnnexedTimberlane. No citywide inference for the separate fire-tax question.",
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "b6958ab8815e2e38ce38a86a0a6c09dfb86661e9d0b947f5bf20ba47178708e7",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "27"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13795"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13801",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13801",
+    "rawHash": "eae2b814fd19501ca05515c29257ae672ba6fc21e332c234f9f95bcc76afbeb1",
+    "sourceFile": "sources/eae2b814fd19501ca05515c29257ae672ba6fc21e332c234f9f95bcc76afbeb1.source",
+    "sourceTextFile": "sources/7ba71405e0becd017fc59ffbcdb563b11810c85d2631514d8225629ae95a4011.txt",
+    "excerpt": "Shall the Parish of Jefferson Davis, State of Louisiana (the \"Parish\"), be authorized to continue to levy and collect a 1/2% sales and use tax (the \"Tax\") in accordance with Louisiana law (an estimated $3,300,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), for a period of 10 years from and after July 1, 2034, with the proceeds of the Tax hereafter collected to be used for the purposes of acquiring, constructing, improving, operating, and maintaining jail facilities and animal shelter facilities for the Parish, and for providing additional support for animal control operations in the Parish, provided that no more than 10% of the proceeds of the Tax received in any year may be used for animal shelter or animal control purposes?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Jefferson Davis, State of Louisiana (the \"Parish\"), be authorized to continue to levy and collect a 1/2% sales and use tax (the \"Tax\") in accordance with Louisiana law (an estimated $3,300,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), for a period of 10 years from and after July 1, 2034, with the proceeds of the Tax hereafter collected to be used for the purposes of acquiring, constructing, improving, operating, and maintaining jail facilities and animal shelter facilities for the Parish, and for providing additional support for animal control operations in the Parish, provided that no more than 10% of the proceeds of the Tax received in any year may be used for animal shelter or animal control purposes?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Jefferson Davis, State of Louisiana (the \"Parish\"), be authorized to continue to levy and collect a 1/2% sales and use tax (the \"Tax\") in accordance with Louisiana law (an estimated $3,300,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), for a period of 10 years from and after July 1, 2034, with the proceeds of the Tax hereafter collected to be used for the purposes of acquiring, constructing, improving, operating, and maintaining jail facilities and animal shelter facilities for the Parish, and for providing additional support for animal control operations in the Parish, provided that no more than 10% of the proceeds of the Tax received in any year may be used for animal shelter or animal control purposes?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Jefferson Davis, State of Louisiana (the \"Parish\"), be authorized to continue to levy and collect a 1/2% sales and use tax (the \"Tax\") in accordance with Louisiana law (an estimated $3,300,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), for a period of 10 years from and after July 1, 2034, with the proceeds of the Tax hereafter collected to be used for the purposes of acquiring, constructing, improving, operating, and maintaining jail facilities and animal shelter facilities for the Parish, and for providing additional support for animal control operations in the Parish, provided that no more than 10% of the proceeds of the Tax received in any year may be used for animal shelter or animal control purposes?"
+      ]
+    },
+    "semanticConditions": [
+      "The source explicitly begins the ten-year extension in2034, not2027. The new spending dedication applies to future collections.",
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "99fdfd03aa37156a89713a03b725137c671ddad088b906a303a92f9b2c33bbd2",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "28"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13801"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13737",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13737",
+    "rawHash": "cd980acddc27a5df0009583254b609d51753c96eccdee3243e8c8031490f9c5d",
+    "sourceFile": "sources/cd980acddc27a5df0009583254b609d51753c96eccdee3243e8c8031490f9c5d.source",
+    "sourceTextFile": "sources/149d5fa26c2a1fd9de64c5e8da83a5d9dd6cf6de6c6f6e7370899c3cbf4f9a65.txt",
+    "excerpt": "Shall the Parish of Morehouse, State of Louisiana (the \"Parish\"), acting under the authority of Article VI, Section 30 of the Louisiana Constitution of 1974 and La. R.S. 3:301, continue to levy and collect a special ad valorem tax of fifty-seven hundredths of one (0.57) mill, on all the property subject to taxation within the Parish (an estimated $120,000 reasonably expected at this time to be collected from the levy of the tax for one entire year), for a period of ten (10) years, beginning with the year 2027 and ending with the year 2036, for the purpose of improving, operating, maintaining and equipping the Morehouse Parish Extension Office of the LSU Agricultural Center, including 4-H youth programs and all other educational programs?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Morehouse, State of Louisiana (the \"Parish\"), acting under the authority of Article VI, Section 30 of the Louisiana Constitution of 1974 and La. R.S. 3:301, continue to levy and collect a special ad valorem tax of fifty-seven hundredths of one (0.57) mill, on all the property subject to taxation within the Parish (an estimated $120,000 reasonably expected at this time to be collected from the levy of the tax for one entire year), for a period of ten (10) years, beginning with the year 2027 and ending with the year 2036, for the purpose of improving, operating, maintaining and equipping the Morehouse Parish Extension Office of the LSU Agricultural Center, including 4-H youth programs and all other educational programs?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Morehouse, State of Louisiana (the \"Parish\"), acting under the authority of Article VI, Section 30 of the Louisiana Constitution of 1974 and La. R.S. 3:301, continue to levy and collect a special ad valorem tax of fifty-seven hundredths of one (0.57) mill, on all the property subject to taxation within the Parish (an estimated $120,000 reasonably expected at this time to be collected from the levy of the tax for one entire year), for a period of ten (10) years, beginning with the year 2027 and ending with the year 2036, for the purpose of improving, operating, maintaining and equipping the Morehouse Parish Extension Office of the LSU Agricultural Center, including 4-H youth programs and all other educational programs?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Morehouse, State of Louisiana (the \"Parish\"), acting under the authority of Article VI, Section 30 of the Louisiana Constitution of 1974 and La. R.S. 3:301, continue to levy and collect a special ad valorem tax of fifty-seven hundredths of one (0.57) mill, on all the property subject to taxation within the Parish (an estimated $120,000 reasonably expected at this time to be collected from the levy of the tax for one entire year), for a period of ten (10) years, beginning with the year 2027 and ending with the year 2036, for the purpose of improving, operating, maintaining and equipping the Morehouse Parish Extension Office of the LSU Agricultural Center, including 4-H youth programs and all other educational programs?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "5f4f9e4fefc70da72ea1bc68acf77fcbef8c6149d6fedb6003bc966b69a95393",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "35"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13737"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13738",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13738",
+    "rawHash": "5368b87521b9b5b5357cc8a64261ea2c41ea85344625938b3d6c7aa462a79089",
+    "sourceFile": "sources/5368b87521b9b5b5357cc8a64261ea2c41ea85344625938b3d6c7aa462a79089.source",
+    "sourceTextFile": "sources/538e68104962f17f31c146712c0ebd93828a390032f66d960cdad04f2298899f.txt",
+    "excerpt": "Shall the Parish of Morehouse, State of Louisiana (the \"Parish\"), acting under the authority of Article VI, Sections 30 and 32 of the Louisiana Constitution of 1974, levy and collect a special ad valorem tax of one (1.00) mill, on all the property subject to taxation within the Parish (an estimated $211,000 reasonably expected at this time to be collected from the levy of the tax for one entire year), for a period of five (5) years, beginning with the year 2027 and ending with the year 2031, for the purpose of improving, operating, maintaining and equipping the Morehouse Activity Complex?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Morehouse, State of Louisiana (the \"Parish\"), acting under the authority of Article VI, Sections 30 and 32 of the Louisiana Constitution of 1974, levy and collect a special ad valorem tax of one (1.00) mill, on all the property subject to taxation within the Parish (an estimated $211,000 reasonably expected at this time to be collected from the levy of the tax for one entire year), for a period of five (5) years, beginning with the year 2027 and ending with the year 2031, for the purpose of improving, operating, maintaining and equipping the Morehouse Activity Complex?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Morehouse, State of Louisiana (the \"Parish\"), acting under the authority of Article VI, Sections 30 and 32 of the Louisiana Constitution of 1974, levy and collect a special ad valorem tax of one (1.00) mill, on all the property subject to taxation within the Parish (an estimated $211,000 reasonably expected at this time to be collected from the levy of the tax for one entire year), for a period of five (5) years, beginning with the year 2027 and ending with the year 2031, for the purpose of improving, operating, maintaining and equipping the Morehouse Activity Complex?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Morehouse, State of Louisiana (the \"Parish\"), acting under the authority of Article VI, Sections 30 and 32 of the Louisiana Constitution of 1974, levy and collect a special ad valorem tax of one (1.00) mill, on all the property subject to taxation within the Parish (an estimated $211,000 reasonably expected at this time to be collected from the levy of the tax for one entire year), for a period of five (5) years, beginning with the year 2027 and ending with the year 2031, for the purpose of improving, operating, maintaining and equipping the Morehouse Activity Complex?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "5f4f9e4fefc70da72ea1bc68acf77fcbef8c6149d6fedb6003bc966b69a95393",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "35"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13738"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13625",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13625",
+    "rawHash": "52fd366d6d40b01e86027bfa8943e5760ea5cedca20d2b520241072614718da9",
+    "sourceFile": "sources/52fd366d6d40b01e86027bfa8943e5760ea5cedca20d2b520241072614718da9.source",
+    "sourceTextFile": "sources/8b8dc48b322a7f796abefb5184a1cf68e34bdfaa13608e96fcde86ec26b7fd3e.txt",
+    "excerpt": "Shall Section 6-103 of the Home Rule Charter of the City of New Orleans be amended (i) to prohibit allotments, reallotments, or transfers of budgeted operating funds that will cause, or that are reasonably anticipated to cause, expenditures from any funding category for any department to exceed the amount appropriated for that fiscal year, unless an amendment to the operating budget ordinance reflecting the increase has been adopted and approved, (ii) to require monthly reports to the City Council regarding expenditures to assess whether spending remains in line with the approved budget, and (iii) to prohibit the approval of any requisition, purchase order, voucher or check that would cause, or that is reasonably anticipated to cause, any category of expenditures in the approved annual operating budget to exceed the appropriated amount for that fiscal year, all as more fully described in Ord. No. 30553, M.C.S.?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 6-103 of the Home Rule Charter of the City of New Orleans be amended (i) to prohibit allotments, reallotments, or transfers of budgeted operating funds that will cause, or that are reasonably anticipated to cause, expenditures from any funding category for any department to exceed the amount appropriated for that fiscal year, unless an amendment to the operating budget ordinance reflecting the increase has been adopted and approved, (ii) to require monthly reports to the City Council regarding expenditures to assess whether spending remains in line with the approved budget, and (iii) to prohibit the approval of any requisition, purchase order, voucher or check that would cause, or that is reasonably anticipated to cause, any category of expenditures in the approved annual operating budget to exceed the appropriated amount for that fiscal year, all as more fully described in Ord. No. 30553, M.C.S.?"
+      ],
+      "yesMeans": [
+        "Shall Section 6-103 of the Home Rule Charter of the City of New Orleans be amended (i) to prohibit allotments, reallotments, or transfers of budgeted operating funds that will cause, or that are reasonably anticipated to cause, expenditures from any funding category for any department to exceed the amount appropriated for that fiscal year, unless an amendment to the operating budget ordinance reflecting the increase has been adopted and approved, (ii) to require monthly reports to the City Council regarding expenditures to assess whether spending remains in line with the approved budget, and (iii) to prohibit the approval of any requisition, purchase order, voucher or check that would cause, or that is reasonably anticipated to cause, any category of expenditures in the approved annual operating budget to exceed the appropriated amount for that fiscal year, all as more fully described in Ord. No. 30553, M.C.S.?"
+      ],
+      "noMeans": [
+        "Shall Section 6-103 of the Home Rule Charter of the City of New Orleans be amended (i) to prohibit allotments, reallotments, or transfers of budgeted operating funds that will cause, or that are reasonably anticipated to cause, expenditures from any funding category for any department to exceed the amount appropriated for that fiscal year, unless an amendment to the operating budget ordinance reflecting the increase has been adopted and approved, (ii) to require monthly reports to the City Council regarding expenditures to assess whether spending remains in line with the approved budget, and (iii) to prohibit the approval of any requisition, purchase order, voucher or check that would cause, or that is reasonably anticipated to cause, any category of expenditures in the approved annual operating budget to exceed the appropriated amount for that fiscal year, all as more fully described in Ord. No. 30553, M.C.S.?"
+      ]
+    },
+    "semanticConditions": [
+      "Budget-amendment exception applies to increased allotments/reallotments/transfers. Separately prohibits requisitions/orders/vouchers/checks expected to exceed approved appropriations.",
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "230e0b1d79e739a35c25fd9b9146fcfb24c640505b4d0fbda114a5addff6be05",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "37"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13625"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13819",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13819",
+    "rawHash": "0b5b5a96bbe959d6a33d6b598e35ba343d0d6803a9d6a2e174bdd1989245b1ff",
+    "sourceFile": "sources/0b5b5a96bbe959d6a33d6b598e35ba343d0d6803a9d6a2e174bdd1989245b1ff.source",
+    "sourceTextFile": "sources/60d69b815b4efdcc4389d162a3e96e34d40fc4d6da487f57c19f31c61f46c252.txt",
+    "excerpt": "Shall the Parish of Plaquemines, State of Louisiana (\"Parish\") be authorized (i) to rededicate 30% of net revenues collected in the future from the levy and collection of an existing 1% sales and use tax (the \"Tax\") authorized to be levied in the Parish perpetually pursuant to an election held on November 14, 2009 (an estimated $15,000,000 reasonably expected to be collected from the levy of the Tax for an entire year), to provide funding for Plaquemines Parish Emergency Medical Services, such funds to be used for the purposes of paying costs associated with the provision of emergency medical services in the Parish, including operations, salaries, training and the acquisition and/or construction of land, buildings, equipment, and machinery for such purposes, and (ii) to continue to use 70% net revenues of the Tax for paying salaries, benefits, training, insurance, administration, maintenance and other costs associated with establishing a paid fire department for the Parish, with said funds to be additionally dedicated for expenditure for the acquisition of firefighting equipment, lands, buildings and machinery as may be necessary to provide adequate fire protection?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Plaquemines, State of Louisiana (\"Parish\") be authorized (i) to rededicate 30% of net revenues collected in the future from the levy and collection of an existing 1% sales and use tax (the \"Tax\") authorized to be levied in the Parish perpetually pursuant to an election held on November 14, 2009 (an estimated $15,000,000 reasonably expected to be collected from the levy of the Tax for an entire year), to provide funding for Plaquemines Parish Emergency Medical Services, such funds to be used for the purposes of paying costs associated with the provision of emergency medical services in the Parish, including operations, salaries, training and the acquisition and/or construction of land, buildings, equipment, and machinery for such purposes, and (ii) to continue to use 70% net revenues of the Tax for paying salaries, benefits, training, insurance, administration, maintenance and other costs associated with establishing a paid fire department for the Parish, with said funds to be additionally dedicated for expenditure for the acquisition of firefighting equipment, lands, buildings and machinery as may be necessary to provide adequate fire protection?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Plaquemines, State of Louisiana (\"Parish\") be authorized (i) to rededicate 30% of net revenues collected in the future from the levy and collection of an existing 1% sales and use tax (the \"Tax\") authorized to be levied in the Parish perpetually pursuant to an election held on November 14, 2009 (an estimated $15,000,000 reasonably expected to be collected from the levy of the Tax for an entire year), to provide funding for Plaquemines Parish Emergency Medical Services, such funds to be used for the purposes of paying costs associated with the provision of emergency medical services in the Parish, including operations, salaries, training and the acquisition and/or construction of land, buildings, equipment, and machinery for such purposes, and (ii) to continue to use 70% net revenues of the Tax for paying salaries, benefits, training, insurance, administration, maintenance and other costs associated with establishing a paid fire department for the Parish, with said funds to be additionally dedicated for expenditure for the acquisition of firefighting equipment, lands, buildings and machinery as may be necessary to provide adequate fire protection?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Plaquemines, State of Louisiana (\"Parish\") be authorized (i) to rededicate 30% of net revenues collected in the future from the levy and collection of an existing 1% sales and use tax (the \"Tax\") authorized to be levied in the Parish perpetually pursuant to an election held on November 14, 2009 (an estimated $15,000,000 reasonably expected to be collected from the levy of the Tax for an entire year), to provide funding for Plaquemines Parish Emergency Medical Services, such funds to be used for the purposes of paying costs associated with the provision of emergency medical services in the Parish, including operations, salaries, training and the acquisition and/or construction of land, buildings, equipment, and machinery for such purposes, and (ii) to continue to use 70% net revenues of the Tax for paying salaries, benefits, training, insurance, administration, maintenance and other costs associated with establishing a paid fire department for the Parish, with said funds to be additionally dedicated for expenditure for the acquisition of firefighting equipment, lands, buildings and machinery as may be necessary to provide adequate fire protection?"
+      ]
+    },
+    "semanticConditions": [
+      "Changes uses of an existing perpetual tax; not described as a new tax. All continuation paragraphs of operative question preserved.",
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "01d442974e024c609f38436f3159d0531bcbabd869329286981e86d0cb627be1",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "39"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13819"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13770",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13770",
+    "rawHash": "985a30d5090fa5240059288bacc12f3189d4e4c3f976bcdfbaf3d1f122190d29",
+    "sourceFile": "sources/985a30d5090fa5240059288bacc12f3189d4e4c3f976bcdfbaf3d1f122190d29.source",
+    "sourceTextFile": "sources/61b1388d4d27bf80f255b70f70cef3ecdcc7fba2448d5317272fc36b8dcc0707.txt",
+    "excerpt": "Shall the Parish of Pointe Coupee, State of Louisiana (the \"Parish\"), be authorized to continue to levy and collect a tax of 1/2% (the \"Tax\") in accordance with Louisiana law, for a period of 15 years from July 1, 2027 (an estimated $2,300,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), with the proceeds of the Tax (after paying the reasonable and necessary expenses of collecting and administering the Tax), to be dedicated and used for the purpose of constructing, improving and resurfacing public roads and bridges in the Parish, including incidental drainage and acquiring equipment therefor?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Pointe Coupee, State of Louisiana (the \"Parish\"), be authorized to continue to levy and collect a tax of 1/2% (the \"Tax\") in accordance with Louisiana law, for a period of 15 years from July 1, 2027 (an estimated $2,300,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), with the proceeds of the Tax (after paying the reasonable and necessary expenses of collecting and administering the Tax), to be dedicated and used for the purpose of constructing, improving and resurfacing public roads and bridges in the Parish, including incidental drainage and acquiring equipment therefor?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Pointe Coupee, State of Louisiana (the \"Parish\"), be authorized to continue to levy and collect a tax of 1/2% (the \"Tax\") in accordance with Louisiana law, for a period of 15 years from July 1, 2027 (an estimated $2,300,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), with the proceeds of the Tax (after paying the reasonable and necessary expenses of collecting and administering the Tax), to be dedicated and used for the purpose of constructing, improving and resurfacing public roads and bridges in the Parish, including incidental drainage and acquiring equipment therefor?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Pointe Coupee, State of Louisiana (the \"Parish\"), be authorized to continue to levy and collect a tax of 1/2% (the \"Tax\") in accordance with Louisiana law, for a period of 15 years from July 1, 2027 (an estimated $2,300,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), with the proceeds of the Tax (after paying the reasonable and necessary expenses of collecting and administering the Tax), to be dedicated and used for the purpose of constructing, improving and resurfacing public roads and bridges in the Parish, including incidental drainage and acquiring equipment therefor?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "ad4bab07cc662955c9a0a683623af717d440f94017389295068241a2354cf92c",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "40"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13770"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13772",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13772",
+    "rawHash": "d69027ded6627dea635a3f6e297441fe73035f00768fc8b38d56bd0583796c04",
+    "sourceFile": "sources/d69027ded6627dea635a3f6e297441fe73035f00768fc8b38d56bd0583796c04.source",
+    "sourceTextFile": "sources/f9d0800419a91f08f942f75968d40a210716ff9b980aa454f5a8a3513ee17e13.txt",
+    "excerpt": "Shall the Parish of Pointe Coupee, State of Louisiana (the \"Parish\"), be authorized to continue to levy and collect a tax of 1/4% (the \"Tax\") in accordance with Louisiana law, for a period of 10 years from July 1, 2027 (an estimated $1,150,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), with the proceeds of the Tax (after paying the reasonable and necessary costs and expenses of collecting and administering the Tax), to be used solely for capital improvements, maintenance and operation of the Pointe Coupee Parish Health Services District Number One?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Pointe Coupee, State of Louisiana (the \"Parish\"), be authorized to continue to levy and collect a tax of 1/4% (the \"Tax\") in accordance with Louisiana law, for a period of 10 years from July 1, 2027 (an estimated $1,150,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), with the proceeds of the Tax (after paying the reasonable and necessary costs and expenses of collecting and administering the Tax), to be used solely for capital improvements, maintenance and operation of the Pointe Coupee Parish Health Services District Number One?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Pointe Coupee, State of Louisiana (the \"Parish\"), be authorized to continue to levy and collect a tax of 1/4% (the \"Tax\") in accordance with Louisiana law, for a period of 10 years from July 1, 2027 (an estimated $1,150,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), with the proceeds of the Tax (after paying the reasonable and necessary costs and expenses of collecting and administering the Tax), to be used solely for capital improvements, maintenance and operation of the Pointe Coupee Parish Health Services District Number One?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Pointe Coupee, State of Louisiana (the \"Parish\"), be authorized to continue to levy and collect a tax of 1/4% (the \"Tax\") in accordance with Louisiana law, for a period of 10 years from July 1, 2027 (an estimated $1,150,000 reasonably expected at this time to be collected from the levy of the Tax for an entire year), with the proceeds of the Tax (after paying the reasonable and necessary costs and expenses of collecting and administering the Tax), to be used solely for capital improvements, maintenance and operation of the Pointe Coupee Parish Health Services District Number One?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "ad4bab07cc662955c9a0a683623af717d440f94017389295068241a2354cf92c",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "40"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13772"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13802",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13802",
+    "rawHash": "fd25b2493fc4fc8c5d767c980e1d4cb1a3287eb90b51ec17b36c9f13c126c71e",
+    "sourceFile": "sources/fd25b2493fc4fc8c5d767c980e1d4cb1a3287eb90b51ec17b36c9f13c126c71e.source",
+    "sourceTextFile": "sources/3bab2a9e0ba73b8f32c5d07df6e606493a781892e33bd0768877cb834fce825d.txt",
+    "excerpt": "Shall the Town of Boyce, State of Louisiana (the \"Town\"), be authorized to appoint a marshal who is the chief of police of the Town with the approval of the Board of Aldermen and the Mayor?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Boyce, State of Louisiana (the \"Town\"), be authorized to appoint a marshal who is the chief of police of the Town with the approval of the Board of Aldermen and the Mayor?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Boyce, State of Louisiana (the \"Town\"), be authorized to appoint a marshal who is the chief of police of the Town with the approval of the Board of Aldermen and the Mayor?"
+      ],
+      "noMeans": [
+        "Shall the Town of Boyce, State of Louisiana (the \"Town\"), be authorized to appoint a marshal who is the chief of police of the Town with the approval of the Board of Aldermen and the Mayor?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "2f51b7fe5ca1582f1ccf15284e8a0fda73cebc3a3bea88f03cab839133203eb3",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "41"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13802"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13780",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13780",
+    "rawHash": "451be2aee28e9b68098a9dbd66dd4eeec12f11dc0d179fafd755ac92dfc2442e",
+    "sourceFile": "sources/451be2aee28e9b68098a9dbd66dd4eeec12f11dc0d179fafd755ac92dfc2442e.source",
+    "sourceTextFile": "sources/8555f343e3b75643aa9874de2dadc266b9e18a277e778eb4478225f2db3fe78c.txt",
+    "excerpt": "Shall the Parish of St. Charles, State of Louisiana (the \"Parish\"), be authorized to continue to levy a 2.68 mills tax on all property subject to taxation in the Parish (an estimated $6,800,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2028 and ending with the year 2037, for the purpose of constructing, improving, maintaining and operating recreation facilities and programs in the Parish?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of St. Charles, State of Louisiana (the \"Parish\"), be authorized to continue to levy a 2.68 mills tax on all property subject to taxation in the Parish (an estimated $6,800,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2028 and ending with the year 2037, for the purpose of constructing, improving, maintaining and operating recreation facilities and programs in the Parish?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of St. Charles, State of Louisiana (the \"Parish\"), be authorized to continue to levy a 2.68 mills tax on all property subject to taxation in the Parish (an estimated $6,800,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2028 and ending with the year 2037, for the purpose of constructing, improving, maintaining and operating recreation facilities and programs in the Parish?"
+      ],
+      "noMeans": [
+        "Shall the Parish of St. Charles, State of Louisiana (the \"Parish\"), be authorized to continue to levy a 2.68 mills tax on all property subject to taxation in the Parish (an estimated $6,800,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2028 and ending with the year 2037, for the purpose of constructing, improving, maintaining and operating recreation facilities and programs in the Parish?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "f79c68fae72c9b4ed56d1f8fb75cbc0e5533e28f83b77ad7f010dc994976e915",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "46"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13780"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13781",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13781",
+    "rawHash": "d1b3deb8507131b68ab19381fa232fe135a242090a771fc5fa27825b03b6071e",
+    "sourceFile": "sources/d1b3deb8507131b68ab19381fa232fe135a242090a771fc5fa27825b03b6071e.source",
+    "sourceTextFile": "sources/673f18746f798fa91583375b29182b5ee92ca1697724467db245064bc7d9176d.txt",
+    "excerpt": "Shall Parish of St. Charles, State of Louisiana (the \"Parish\"), be authorized to levy and collect a special tax of 1.25 mills on all property subject to taxation in the Parish (an estimated $3,200,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of constructing, improving, maintaining and operating facilities and programs for the elderly in the Parish through the St. Charles Council on Aging Incorporated, said tax to be in lieu of and completely replace separate taxes aggregating 1.8 mills previously authorized, specifically consisting of the following: (i) 1.00 mill tax authorized to be levied in the Parish through the year 2027 pursuant to an election on December 10, 2016, and (ii) 0.8 mills tax authorized to be levied in the Parish through the year 2028 pursuant to an election on November 6, 2018?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Parish of St. Charles, State of Louisiana (the \"Parish\"), be authorized to levy and collect a special tax of 1.25 mills on all property subject to taxation in the Parish (an estimated $3,200,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of constructing, improving, maintaining and operating facilities and programs for the elderly in the Parish through the St. Charles Council on Aging Incorporated, said tax to be in lieu of and completely replace separate taxes aggregating 1.8 mills previously authorized, specifically consisting of the following: (i) 1.00 mill tax authorized to be levied in the Parish through the year 2027 pursuant to an election on December 10, 2016, and (ii) 0.8 mills tax authorized to be levied in the Parish through the year 2028 pursuant to an election on November 6, 2018?"
+      ],
+      "yesMeans": [
+        "Shall Parish of St. Charles, State of Louisiana (the \"Parish\"), be authorized to levy and collect a special tax of 1.25 mills on all property subject to taxation in the Parish (an estimated $3,200,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of constructing, improving, maintaining and operating facilities and programs for the elderly in the Parish through the St. Charles Council on Aging Incorporated, said tax to be in lieu of and completely replace separate taxes aggregating 1.8 mills previously authorized, specifically consisting of the following: (i) 1.00 mill tax authorized to be levied in the Parish through the year 2027 pursuant to an election on December 10, 2016, and (ii) 0.8 mills tax authorized to be levied in the Parish through the year 2028 pursuant to an election on November 6, 2018?"
+      ],
+      "noMeans": [
+        "Shall Parish of St. Charles, State of Louisiana (the \"Parish\"), be authorized to levy and collect a special tax of 1.25 mills on all property subject to taxation in the Parish (an estimated $3,200,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of constructing, improving, maintaining and operating facilities and programs for the elderly in the Parish through the St. Charles Council on Aging Incorporated, said tax to be in lieu of and completely replace separate taxes aggregating 1.8 mills previously authorized, specifically consisting of the following: (i) 1.00 mill tax authorized to be levied in the Parish through the year 2027 pursuant to an election on December 10, 2016, and (ii) 0.8 mills tax authorized to be levied in the Parish through the year 2028 pursuant to an election on November 6, 2018?"
+      ]
+    },
+    "semanticConditions": [
+      "Replacement of two existing authorizations, not an additional1.25mills layered on top. No unsupported household-dollar savings asserted.",
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "f79c68fae72c9b4ed56d1f8fb75cbc0e5533e28f83b77ad7f010dc994976e915",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "46"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13781"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13775",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13775",
+    "rawHash": "57b9386086a23a2dc1b546ee4083ff00ad595dbe4662ef617367a09f7ab7e995",
+    "sourceFile": "sources/57b9386086a23a2dc1b546ee4083ff00ad595dbe4662ef617367a09f7ab7e995.source",
+    "sourceTextFile": "sources/d34d771a97f3f955890d39e19b73bf5a9d387d7800e69c0dda3ff44f0eda45fe.txt",
+    "excerpt": "Shall the St. Mary Parish Home Rule Charter be amended and restated to modernize parish governance by reducing the Parish Council from eleven members (eight district and three at-large) to eight single-member districts, eliminating at-large seats; updating council and parish-president compensation to reflect current duties, with cost-of-living adjustments every four years; establishing term limits of one-and-one-half consecutive terms for both the council and the parish president; designating the Parish President as chief executive and administrative officer, eliminating the separate chief administrative officer position; clarifying procedures for vacancies, meetings, and publication of ordinances; and removing obsolete or redundant sections, including outdated ballot and district provisions, all as provided in the revised St. Mary Parish Home Rule Charter adopted by the Charter Commission?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the St. Mary Parish Home Rule Charter be amended and restated to modernize parish governance by reducing the Parish Council from eleven members (eight district and three at-large) to eight single-member districts, eliminating at-large seats; updating council and parish-president compensation to reflect current duties, with cost-of-living adjustments every four years; establishing term limits of one-and-one-half consecutive terms for both the council and the parish president; designating the Parish President as chief executive and administrative officer, eliminating the separate chief administrative officer position; clarifying procedures for vacancies, meetings, and publication of ordinances; and removing obsolete or redundant sections, including outdated ballot and district provisions, all as provided in the revised St. Mary Parish Home Rule Charter adopted by the Charter Commission?"
+      ],
+      "yesMeans": [
+        "Shall the St. Mary Parish Home Rule Charter be amended and restated to modernize parish governance by reducing the Parish Council from eleven members (eight district and three at-large) to eight single-member districts, eliminating at-large seats; updating council and parish-president compensation to reflect current duties, with cost-of-living adjustments every four years; establishing term limits of one-and-one-half consecutive terms for both the council and the parish president; designating the Parish President as chief executive and administrative officer, eliminating the separate chief administrative officer position; clarifying procedures for vacancies, meetings, and publication of ordinances; and removing obsolete or redundant sections, including outdated ballot and district provisions, all as provided in the revised St. Mary Parish Home Rule Charter adopted by the Charter Commission?"
+      ],
+      "noMeans": [
+        "Shall the St. Mary Parish Home Rule Charter be amended and restated to modernize parish governance by reducing the Parish Council from eleven members (eight district and three at-large) to eight single-member districts, eliminating at-large seats; updating council and parish-president compensation to reflect current duties, with cost-of-living adjustments every four years; establishing term limits of one-and-one-half consecutive terms for both the council and the parish president; designating the Parish President as chief executive and administrative officer, eliminating the separate chief administrative officer position; clarifying procedures for vacancies, meetings, and publication of ordinances; and removing obsolete or redundant sections, including outdated ballot and district provisions, all as provided in the revised St. Mary Parish Home Rule Charter adopted by the Charter Commission?"
+      ]
+    },
+    "semanticConditions": [
+      "Official question does not give compensation dollar amounts or explain term-limit transition; none invented. One-and-one-half terms is not converted to years without an official term-length source.",
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "d5be20cedeee5af4340e6e98b1384de43dd47cceb60e5f137193e6e6befe6320",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "52"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13775"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13773",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13773",
+    "rawHash": "456a380337cf2748c94c6e15cbabaa457f528ae6be632c9b781e0e3828595418",
+    "sourceFile": "sources/456a380337cf2748c94c6e15cbabaa457f528ae6be632c9b781e0e3828595418.source",
+    "sourceTextFile": "sources/ce212716a0140590cdf04e253490b78c6cd5a092839fce95c7456df7b8ac0569.txt",
+    "excerpt": "Shall the Parish of Tensas, State of Louisiana (the \"Parish\"), be authorized to continue to levy a special tax of 14.32 mills on all property subject to taxation in the Parish (an estimated $754,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2028 and ending with the year 2037, for the purposes of providing court systems for civil, criminal and juvenile cases; expenditures for election expenses and other related costs; expenditures necessary to construct, repair and maintain governmental buildings and plants; general governmental insurance expenditures; expenditures for the temporary detention, custody and medical services of offenders; and expenses related to the operation of the office of the Coroner, said millage to represent a .61 mills increase (due to reappraisal) over the 13.71 mills tax authorized to be levied through the year 2027 pursuant to an election held on December 10, 2016?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Tensas, State of Louisiana (the \"Parish\"), be authorized to continue to levy a special tax of 14.32 mills on all property subject to taxation in the Parish (an estimated $754,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2028 and ending with the year 2037, for the purposes of providing court systems for civil, criminal and juvenile cases; expenditures for election expenses and other related costs; expenditures necessary to construct, repair and maintain governmental buildings and plants; general governmental insurance expenditures; expenditures for the temporary detention, custody and medical services of offenders; and expenses related to the operation of the office of the Coroner, said millage to represent a .61 mills increase (due to reappraisal) over the 13.71 mills tax authorized to be levied through the year 2027 pursuant to an election held on December 10, 2016?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Tensas, State of Louisiana (the \"Parish\"), be authorized to continue to levy a special tax of 14.32 mills on all property subject to taxation in the Parish (an estimated $754,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2028 and ending with the year 2037, for the purposes of providing court systems for civil, criminal and juvenile cases; expenditures for election expenses and other related costs; expenditures necessary to construct, repair and maintain governmental buildings and plants; general governmental insurance expenditures; expenditures for the temporary detention, custody and medical services of offenders; and expenses related to the operation of the office of the Coroner, said millage to represent a .61 mills increase (due to reappraisal) over the 13.71 mills tax authorized to be levied through the year 2027 pursuant to an election held on December 10, 2016?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Tensas, State of Louisiana (the \"Parish\"), be authorized to continue to levy a special tax of 14.32 mills on all property subject to taxation in the Parish (an estimated $754,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2028 and ending with the year 2037, for the purposes of providing court systems for civil, criminal and juvenile cases; expenditures for election expenses and other related costs; expenditures necessary to construct, repair and maintain governmental buildings and plants; general governmental insurance expenditures; expenditures for the temporary detention, custody and medical services of offenders; and expenses related to the operation of the office of the Coroner, said millage to represent a .61 mills increase (due to reappraisal) over the 13.71 mills tax authorized to be levied through the year 2027 pursuant to an election held on December 10, 2016?"
+      ]
+    },
+    "semanticConditions": [
+      "Increase explicitly disclosed despite continuation title. Reappraisal millage change is not presented as a uniform household tax-bill percentage.",
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "71d61baf08a54b779e8e48b096e39fd07ab79266764a99ddbf863e4bfd22ed0b",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "55"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13773"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13744",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13744",
+    "rawHash": "3d64d85468185cb342ca5a08c1931f828bc3c7d8eb7eb9f35386eb2fe804ee26",
+    "sourceFile": "sources/3d64d85468185cb342ca5a08c1931f828bc3c7d8eb7eb9f35386eb2fe804ee26.source",
+    "sourceTextFile": "sources/444fb9b2767ffc41e926444b0c593d756eb0e1212503ed3f27a5868a49ff1dd9.txt",
+    "excerpt": "Shall the Parish of Terrebonne, State of Louisiana (the \"Parish\"), continue to levy a five and thirty-three hundredths (5.33) mills tax on all the property subject to taxation within the Parish (an estimated $5,856,495 reasonably expected at this time to be collected from the levy of the tax for the entire year), for a period of ten (10) years, beginning with the year 2028 and ending with the year 2037, for the purpose of operating, maintaining and constructing facilities for all people with intellectual and developmental disabilities in Terrebonne Parish?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Terrebonne, State of Louisiana (the \"Parish\"), continue to levy a five and thirty-three hundredths (5.33) mills tax on all the property subject to taxation within the Parish (an estimated $5,856,495 reasonably expected at this time to be collected from the levy of the tax for the entire year), for a period of ten (10) years, beginning with the year 2028 and ending with the year 2037, for the purpose of operating, maintaining and constructing facilities for all people with intellectual and developmental disabilities in Terrebonne Parish?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Terrebonne, State of Louisiana (the \"Parish\"), continue to levy a five and thirty-three hundredths (5.33) mills tax on all the property subject to taxation within the Parish (an estimated $5,856,495 reasonably expected at this time to be collected from the levy of the tax for the entire year), for a period of ten (10) years, beginning with the year 2028 and ending with the year 2037, for the purpose of operating, maintaining and constructing facilities for all people with intellectual and developmental disabilities in Terrebonne Parish?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Terrebonne, State of Louisiana (the \"Parish\"), continue to levy a five and thirty-three hundredths (5.33) mills tax on all the property subject to taxation within the Parish (an estimated $5,856,495 reasonably expected at this time to be collected from the levy of the tax for the entire year), for a period of ten (10) years, beginning with the year 2028 and ending with the year 2037, for the purpose of operating, maintaining and constructing facilities for all people with intellectual and developmental disabilities in Terrebonne Parish?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "e84bd4992797602172e80be6c3733217cc444589f074409ab77172d79732a012",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "56"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13744"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13745",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13745",
+    "rawHash": "7cc4a0d5012dae54bde30bb485e33573dc21ff28eac9132d9f4033e760b96e7b",
+    "sourceFile": "sources/7cc4a0d5012dae54bde30bb485e33573dc21ff28eac9132d9f4033e760b96e7b.source",
+    "sourceTextFile": "sources/ee4d37f61265f0807b1b986971228a2e54797b4e8d0494650180753ef6c61ba0.txt",
+    "excerpt": "Shall the Parish of Terrebonne, State of Louisiana (the \"Parish\"), continue to levy a seven and thirty-one hundredths (7.31) mills tax on all the property subject to taxation within the Parish (an estimated $8,032,078 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of ten (10) years, beginning with the year 2028 and ending with the year 2037, for the purpose of operating, maintaining and constructing drainage works within and for said Parish, title to which shall be in the public?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Terrebonne, State of Louisiana (the \"Parish\"), continue to levy a seven and thirty-one hundredths (7.31) mills tax on all the property subject to taxation within the Parish (an estimated $8,032,078 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of ten (10) years, beginning with the year 2028 and ending with the year 2037, for the purpose of operating, maintaining and constructing drainage works within and for said Parish, title to which shall be in the public?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Terrebonne, State of Louisiana (the \"Parish\"), continue to levy a seven and thirty-one hundredths (7.31) mills tax on all the property subject to taxation within the Parish (an estimated $8,032,078 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of ten (10) years, beginning with the year 2028 and ending with the year 2037, for the purpose of operating, maintaining and constructing drainage works within and for said Parish, title to which shall be in the public?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Terrebonne, State of Louisiana (the \"Parish\"), continue to levy a seven and thirty-one hundredths (7.31) mills tax on all the property subject to taxation within the Parish (an estimated $8,032,078 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of ten (10) years, beginning with the year 2028 and ending with the year 2037, for the purpose of operating, maintaining and constructing drainage works within and for said Parish, title to which shall be in the public?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "e84bd4992797602172e80be6c3733217cc444589f074409ab77172d79732a012",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "56"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13745"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13758",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13758",
+    "rawHash": "caed6fd6bffd4999b429c4a92c1a1cdbf76f4f5ffde2cc673fbe5c24bbaad428",
+    "sourceFile": "sources/caed6fd6bffd4999b429c4a92c1a1cdbf76f4f5ffde2cc673fbe5c24bbaad428.source",
+    "sourceTextFile": "sources/129cda2c5bf46c9ac6ffdd32917dc83ab2b02aec763562039143e27198362057.txt",
+    "excerpt": "Shall the Parish of Union, State of Louisiana (the \"Parish\"), levy a 12 mills tax on all property subject to taxation in the Parish (an estimated $2,173,000 reasonably expected to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, with the revenues therefrom to be used for the purpose of constructing, improving and maintaining public roads and bridges throughout Union Parish, Louisiana, said tax to be an extension and replacement of (i) a 5.13 mills tax and (ii) a 6.15 mills tax authorized to be levied through 2026 pursuant to an election held on December 10, 2016?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of Union, State of Louisiana (the \"Parish\"), levy a 12 mills tax on all property subject to taxation in the Parish (an estimated $2,173,000 reasonably expected to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, with the revenues therefrom to be used for the purpose of constructing, improving and maintaining public roads and bridges throughout Union Parish, Louisiana, said tax to be an extension and replacement of (i) a 5.13 mills tax and (ii) a 6.15 mills tax authorized to be levied through 2026 pursuant to an election held on December 10, 2016?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of Union, State of Louisiana (the \"Parish\"), levy a 12 mills tax on all property subject to taxation in the Parish (an estimated $2,173,000 reasonably expected to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, with the revenues therefrom to be used for the purpose of constructing, improving and maintaining public roads and bridges throughout Union Parish, Louisiana, said tax to be an extension and replacement of (i) a 5.13 mills tax and (ii) a 6.15 mills tax authorized to be levied through 2026 pursuant to an election held on December 10, 2016?"
+      ],
+      "noMeans": [
+        "Shall the Parish of Union, State of Louisiana (the \"Parish\"), levy a 12 mills tax on all property subject to taxation in the Parish (an estimated $2,173,000 reasonably expected to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, with the revenues therefrom to be used for the purpose of constructing, improving and maintaining public roads and bridges throughout Union Parish, Louisiana, said tax to be an extension and replacement of (i) a 5.13 mills tax and (ii) a 6.15 mills tax authorized to be levied through 2026 pursuant to an election held on December 10, 2016?"
+      ]
+    },
+    "semanticConditions": [
+      "Replacement of the two stated existing taxes, not an additional12mills on top. No unsupported homeowner-dollar effect inferred.",
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "8ff957ea83375d6b299fb3a4aafbb7858f47e4f8f2da90d0c08122fc4b8e48ff",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "57"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13758"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13736",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13736",
+    "rawHash": "7604085efec78fe6a4dbda87c4595c3819b054f090884730fb488aa1194a2709",
+    "sourceFile": "sources/7604085efec78fe6a4dbda87c4595c3819b054f090884730fb488aa1194a2709.source",
+    "sourceTextFile": "sources/9d69e2bd98ebf13876ed2f9cccd5a6974f3f422057137669fb58b6470bc75c97.txt",
+    "excerpt": "Shall the Parish of West Baton Rouge, State of Louisiana (the \"Parish\") be authorized to renew the levy and collection, and adopt an ordinance providing for such levy and collection, of an one and seventy-five hundredths (1.75) mills tax on all property subject to taxation in the Parish (an estimated $1,300,000 reasonably expected at this time to be collected from the levy of the tax for an entire year) (the \"Tax\") for a period of ten (10) years, beginning with the year 2027, and annually thereafter to and including the year 2036, for the purpose of continuing the maintenance, operation and capital expenditures necessary for the Public Health Unit in the Parish?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of West Baton Rouge, State of Louisiana (the \"Parish\") be authorized to renew the levy and collection, and adopt an ordinance providing for such levy and collection, of an one and seventy-five hundredths (1.75) mills tax on all property subject to taxation in the Parish (an estimated $1,300,000 reasonably expected at this time to be collected from the levy of the tax for an entire year) (the \"Tax\") for a period of ten (10) years, beginning with the year 2027, and annually thereafter to and including the year 2036, for the purpose of continuing the maintenance, operation and capital expenditures necessary for the Public Health Unit in the Parish?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of West Baton Rouge, State of Louisiana (the \"Parish\") be authorized to renew the levy and collection, and adopt an ordinance providing for such levy and collection, of an one and seventy-five hundredths (1.75) mills tax on all property subject to taxation in the Parish (an estimated $1,300,000 reasonably expected at this time to be collected from the levy of the tax for an entire year) (the \"Tax\") for a period of ten (10) years, beginning with the year 2027, and annually thereafter to and including the year 2036, for the purpose of continuing the maintenance, operation and capital expenditures necessary for the Public Health Unit in the Parish?"
+      ],
+      "noMeans": [
+        "Shall the Parish of West Baton Rouge, State of Louisiana (the \"Parish\") be authorized to renew the levy and collection, and adopt an ordinance providing for such levy and collection, of an one and seventy-five hundredths (1.75) mills tax on all property subject to taxation in the Parish (an estimated $1,300,000 reasonably expected at this time to be collected from the levy of the tax for an entire year) (the \"Tax\") for a period of ten (10) years, beginning with the year 2027, and annually thereafter to and including the year 2036, for the purpose of continuing the maintenance, operation and capital expenditures necessary for the Public Health Unit in the Parish?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "2275e3c4031855b3674083cbeb12c9b7ae4a84e97ecc9a5a2ac8ec59d7419ad4",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "62"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13736"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13774",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13774",
+    "rawHash": "22dad27cee084b34276d02b293cd2dc495ea3f902a5b007fcba6d2375d0981e9",
+    "sourceFile": "sources/22dad27cee084b34276d02b293cd2dc495ea3f902a5b007fcba6d2375d0981e9.source",
+    "sourceTextFile": "sources/0992a91b4025432809962dcf09fb5b530159b184d037bd5fbee7afea79158606.txt",
+    "excerpt": "Shall the Parish of West Feliciana, State of Louisiana (the \"Parish\"), continue to levy a 0.5 mill tax on all the property subject to taxation within the Parish (an estimated $255,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of maintaining, operating and/or improving the public hospital in the Parish?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of West Feliciana, State of Louisiana (the \"Parish\"), continue to levy a 0.5 mill tax on all the property subject to taxation within the Parish (an estimated $255,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of maintaining, operating and/or improving the public hospital in the Parish?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of West Feliciana, State of Louisiana (the \"Parish\"), continue to levy a 0.5 mill tax on all the property subject to taxation within the Parish (an estimated $255,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of maintaining, operating and/or improving the public hospital in the Parish?"
+      ],
+      "noMeans": [
+        "Shall the Parish of West Feliciana, State of Louisiana (the \"Parish\"), continue to levy a 0.5 mill tax on all the property subject to taxation within the Parish (an estimated $255,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of maintaining, operating and/or improving the public hospital in the Parish?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "f7eb27d3de61dbffaebff7b094bcffc033fe46dc1c97e3012304fd6b2cfe1c6b",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "64"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13774"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13776",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13776",
+    "rawHash": "bfed276e0e78acfda33ca2c2f3517c812db1dc2323a1e6f2e867325bc7312b18",
+    "sourceFile": "sources/bfed276e0e78acfda33ca2c2f3517c812db1dc2323a1e6f2e867325bc7312b18.source",
+    "sourceTextFile": "sources/05ba8ac82b16322c20ba1cae8cda543edfae55486abd5fe4e98e57bdb5b216f4.txt",
+    "excerpt": "Shall the Parish of West Feliciana, State of Louisiana (the \"Parish\"), continue to levy a 1 mill tax on all the property subject to taxation within the Parish (an estimated $510,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of acquiring, constructing, improving, maintaining, operating, providing and/or supporting (i) public health facilities and other social services, (ii) animal control equipment, facilities and/or services, (iii) equipment, facilities and/or services necessary or useful in the eradication, abatement or control of mosquitoes and other arthropods of public health importance, (iv) solid waste collection and disposal equipment, facilities and services and (v) the coroner's office in the Parish?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of West Feliciana, State of Louisiana (the \"Parish\"), continue to levy a 1 mill tax on all the property subject to taxation within the Parish (an estimated $510,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of acquiring, constructing, improving, maintaining, operating, providing and/or supporting (i) public health facilities and other social services, (ii) animal control equipment, facilities and/or services, (iii) equipment, facilities and/or services necessary or useful in the eradication, abatement or control of mosquitoes and other arthropods of public health importance, (iv) solid waste collection and disposal equipment, facilities and services and (v) the coroner's office in the Parish?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of West Feliciana, State of Louisiana (the \"Parish\"), continue to levy a 1 mill tax on all the property subject to taxation within the Parish (an estimated $510,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of acquiring, constructing, improving, maintaining, operating, providing and/or supporting (i) public health facilities and other social services, (ii) animal control equipment, facilities and/or services, (iii) equipment, facilities and/or services necessary or useful in the eradication, abatement or control of mosquitoes and other arthropods of public health importance, (iv) solid waste collection and disposal equipment, facilities and services and (v) the coroner's office in the Parish?"
+      ],
+      "noMeans": [
+        "Shall the Parish of West Feliciana, State of Louisiana (the \"Parish\"), continue to levy a 1 mill tax on all the property subject to taxation within the Parish (an estimated $510,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, for the purpose of acquiring, constructing, improving, maintaining, operating, providing and/or supporting (i) public health facilities and other social services, (ii) animal control equipment, facilities and/or services, (iii) equipment, facilities and/or services necessary or useful in the eradication, abatement or control of mosquitoes and other arthropods of public health importance, (iv) solid waste collection and disposal equipment, facilities and services and (v) the coroner's office in the Parish?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "f7eb27d3de61dbffaebff7b094bcffc033fe46dc1c97e3012304fd6b2cfe1c6b",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "64"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13776"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13777",
+    "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13777",
+    "rawHash": "50677fc519c3079417a31fde69bbda472fd91c5e19c6933b30d236ac6836aa01",
+    "sourceFile": "sources/50677fc519c3079417a31fde69bbda472fd91c5e19c6933b30d236ac6836aa01.source",
+    "sourceTextFile": "sources/192d7d7b3f5e3f1bac31b9b7c47ba33b0f3765a5e499243de459269bd52fc91d.txt",
+    "excerpt": "Shall the Parish of West Feliciana, State of Louisiana (the \"Parish\"), continue to levy a 8.89 mills tax (the \"Tax\") on all property subject to taxation in the Parish (an estimated $4,532,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, with the proceeds of the Tax to be dedicated and used solely as follows: (i) 50% of the Tax proceeds for acquiring, constructing, improving, maintaining, supporting and/or operating public roads and bridges and related drainage facilities and equipment; (ii) 33% of the Tax proceeds for acquiring, constructing, improving, maintaining, supporting and/or operating public buildings, grounds, equipment and furnishings; and (iii) 17% of the Tax proceeds for acquiring, constructing, improving, maintaining, supporting and/or operating recreational parks, facilities, equipment and programs in the Parish?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Parish of West Feliciana, State of Louisiana (the \"Parish\"), continue to levy a 8.89 mills tax (the \"Tax\") on all property subject to taxation in the Parish (an estimated $4,532,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, with the proceeds of the Tax to be dedicated and used solely as follows: (i) 50% of the Tax proceeds for acquiring, constructing, improving, maintaining, supporting and/or operating public roads and bridges and related drainage facilities and equipment; (ii) 33% of the Tax proceeds for acquiring, constructing, improving, maintaining, supporting and/or operating public buildings, grounds, equipment and furnishings; and (iii) 17% of the Tax proceeds for acquiring, constructing, improving, maintaining, supporting and/or operating recreational parks, facilities, equipment and programs in the Parish?"
+      ],
+      "yesMeans": [
+        "Shall the Parish of West Feliciana, State of Louisiana (the \"Parish\"), continue to levy a 8.89 mills tax (the \"Tax\") on all property subject to taxation in the Parish (an estimated $4,532,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, with the proceeds of the Tax to be dedicated and used solely as follows: (i) 50% of the Tax proceeds for acquiring, constructing, improving, maintaining, supporting and/or operating public roads and bridges and related drainage facilities and equipment; (ii) 33% of the Tax proceeds for acquiring, constructing, improving, maintaining, supporting and/or operating public buildings, grounds, equipment and furnishings; and (iii) 17% of the Tax proceeds for acquiring, constructing, improving, maintaining, supporting and/or operating recreational parks, facilities, equipment and programs in the Parish?"
+      ],
+      "noMeans": [
+        "Shall the Parish of West Feliciana, State of Louisiana (the \"Parish\"), continue to levy a 8.89 mills tax (the \"Tax\") on all property subject to taxation in the Parish (an estimated $4,532,000 reasonably expected at this time to be collected from the levy of the tax for an entire year), for a period of 10 years, beginning with the year 2027 and ending with the year 2036, with the proceeds of the Tax to be dedicated and used solely as follows: (i) 50% of the Tax proceeds for acquiring, constructing, improving, maintaining, supporting and/or operating public roads and bridges and related drainage facilities and equipment; (ii) 33% of the Tax proceeds for acquiring, constructing, improving, maintaining, supporting and/or operating public buildings, grounds, equipment and furnishings; and (iii) 17% of the Tax proceeds for acquiring, constructing, improving, maintaining, supporting and/or operating recreational parks, facilities, equipment and programs in the Parish?"
+      ]
+    },
+    "semanticConditions": [
+      "Estimated annual collections are government revenue estimates, not a household tax amount. Renewals/extensions/rededications/replacements are distinguished."
+    ],
+    "electionDateAssociation": {
+      "metadataFile": "election-date-association.json",
+      "nativeIndexHash": "f7eb27d3de61dbffaebff7b094bcffc033fe46dc1c97e3012304fd6b2cfe1c6b",
+      "requestMethod": "POST",
+      "publicFormFields": {
+        "ElectionId": "344",
+        "ParishId": "64"
+      },
+      "selectedDate": "11/03/2026",
+      "linkedDetailId": "13777"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

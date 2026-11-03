@@ -1,0 +1,248 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "LA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:LA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "la-cx-2026-proposition-13750",
+      "title": "Crowley — City of Crowley Proposition No. 1 of 4 (One-half of One Percent (1/2 of 1%) Sales and Use Tax) (City Infrastructure & Capital Improvements)",
+      "ocdId": "ocd-division/country:us/state:la/place:crowley",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13750"
+    },
+    {
+      "id": "la-cx-2026-proposition-13751",
+      "title": "Crowley — City of Crowley Proposition No. 2 of 4 (Renewal of Wastewater Disposal Facilities Tax) (Three and One-half Millage Ad Valorem Tax)",
+      "ocdId": "ocd-division/country:us/state:la/place:crowley",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13751"
+    },
+    {
+      "id": "la-cx-2026-proposition-13752",
+      "title": "Crowley — City of Crowley Proposition No. 3 of 4 (Renewal of Public Parks and Recreation Tax) (Three Millage Ad Valorem Tax)",
+      "ocdId": "ocd-division/country:us/state:la/place:crowley",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13752"
+    },
+    {
+      "id": "la-cx-2026-proposition-13753",
+      "title": "Crowley — City of Crowley Proposition No. 4 of 4 (Renewal of Youth Recreation Building Maintenance Tax) (One Millage Ad Valorem Tax)",
+      "ocdId": "ocd-division/country:us/state:la/place:crowley",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13753"
+    },
+    {
+      "id": "la-cx-2026-proposition-13805",
+      "title": "Oakdale — City of Oakdale Proposition (Millage)",
+      "ocdId": "ocd-division/country:us/state:la/place:oakdale",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13805"
+    },
+    {
+      "id": "la-cx-2026-proposition-13806",
+      "title": "Assumption Parish — Parishwide Proposition No. 1 of 2 (Sales Tax Rededication)",
+      "ocdId": "ocd-division/country:us/state:la/county:assumption",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13806"
+    },
+    {
+      "id": "la-cx-2026-proposition-13807",
+      "title": "Assumption Parish — Parishwide Proposition No. 2 of 2 (Millage Extension and Rededication)",
+      "ocdId": "ocd-division/country:us/state:la/county:assumption",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13807"
+    },
+    {
+      "id": "la-cx-2026-proposition-13808",
+      "title": "Avoyelles Parish — Parishwide Proposition (Millage Extension and Rededication)",
+      "ocdId": "ocd-division/country:us/state:la/county:avoyelles",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13808"
+    },
+    {
+      "id": "la-cx-2026-proposition-13793",
+      "title": "Arcadia — Town of Arcadia Proposition (Sales Tax)",
+      "ocdId": "ocd-division/country:us/state:la/place:arcadia",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13793"
+    },
+    {
+      "id": "la-cx-2026-proposition-13809",
+      "title": "Caddo Parish — Parishwide Proposition (Bond)",
+      "ocdId": "ocd-division/country:us/state:la/county:caddo",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13809"
+    },
+    {
+      "id": "la-cx-2026-proposition-13812",
+      "title": "DeQuincy — City of DeQuincy Proposition (Sales Tax Renewal)",
+      "ocdId": "ocd-division/country:us/state:la/place:dequincy",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13812"
+    },
+    {
+      "id": "la-cx-2026-proposition-13754",
+      "title": "East Baton Rouge Parish — Parishwide Proposition (Millage Renewal)",
+      "ocdId": "ocd-division/country:us/state:la/county:east_baton_rouge",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13754"
+    },
+    {
+      "id": "la-cx-2026-proposition-13794",
+      "title": "Gretna — City of Gretna Proposition (Ambulance Millage)",
+      "ocdId": "ocd-division/country:us/state:la/place:gretna",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13794"
+    },
+    {
+      "id": "la-cx-2026-proposition-13795",
+      "title": "Gretna — City of Gretna Proposition (Police Millage)",
+      "ocdId": "ocd-division/country:us/state:la/place:gretna",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13795"
+    },
+    {
+      "id": "la-cx-2026-proposition-13801",
+      "title": "Jefferson Davis Parish — Parishwide Proposition (Sales Tax Extension & Rededication)",
+      "ocdId": "ocd-division/country:us/state:la/county:jefferson_davis",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13801"
+    },
+    {
+      "id": "la-cx-2026-proposition-13737",
+      "title": "Morehouse Parish — Parishwide Proposition No. 1 of 2 (Millage Renewal) (LSU Ag Center)",
+      "ocdId": "ocd-division/country:us/state:la/county:morehouse",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13737"
+    },
+    {
+      "id": "la-cx-2026-proposition-13738",
+      "title": "Morehouse Parish — Parishwide Proposition No. 2 of 2 (Millage) (Morehouse Activity Complex)",
+      "ocdId": "ocd-division/country:us/state:la/county:morehouse",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13738"
+    },
+    {
+      "id": "la-cx-2026-proposition-13625",
+      "title": "Orleans Parish — Parishwide Home Rule Charter Amendment Proposition",
+      "ocdId": "ocd-division/country:us/state:la/county:orleans",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13625"
+    },
+    {
+      "id": "la-cx-2026-proposition-13819",
+      "title": "Plaquemines Parish — Parishwide Proposition (Sales & Use Tax Rededication)",
+      "ocdId": "ocd-division/country:us/state:la/county:plaquemines",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13819"
+    },
+    {
+      "id": "la-cx-2026-proposition-13770",
+      "title": "Pointe Coupee Parish — Parishwide Proposition No. 1 of 2 (Sales Tax Renewal)",
+      "ocdId": "ocd-division/country:us/state:la/county:pointe_coupee",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13770"
+    },
+    {
+      "id": "la-cx-2026-proposition-13772",
+      "title": "Pointe Coupee Parish — Parishwide Proposition No. 2 of 2 (Sales Tax Renewal)",
+      "ocdId": "ocd-division/country:us/state:la/county:pointe_coupee",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13772"
+    },
+    {
+      "id": "la-cx-2026-proposition-13802",
+      "title": "Boyce — Town of Boyce Proposition",
+      "ocdId": "ocd-division/country:us/state:la/place:boyce",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13802"
+    },
+    {
+      "id": "la-cx-2026-proposition-13780",
+      "title": "St. Charles Parish — Parishwide Proposition No. 1 of 2 (Recreation Millage Renewal)",
+      "ocdId": "ocd-division/country:us/state:la/county:st_charles",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13780"
+    },
+    {
+      "id": "la-cx-2026-proposition-13781",
+      "title": "St. Charles Parish — Parishwide Proposition No. 2 of 2 (Council on Aging In-Lieu Millage)",
+      "ocdId": "ocd-division/country:us/state:la/county:st_charles",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13781"
+    },
+    {
+      "id": "la-cx-2026-proposition-13775",
+      "title": "St. Mary Parish — Parishwide Home Rule Charter Amendment Proposition",
+      "ocdId": "ocd-division/country:us/state:la/county:st_mary",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13775"
+    },
+    {
+      "id": "la-cx-2026-proposition-13773",
+      "title": "Tensas Parish — Parishwide Proposition (Millage Continuation)",
+      "ocdId": "ocd-division/country:us/state:la/county:tensas",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13773"
+    },
+    {
+      "id": "la-cx-2026-proposition-13744",
+      "title": "Terrebonne Parish — Parishwide Proposition No. 1 of 2 (TARC Tax Renewal)",
+      "ocdId": "ocd-division/country:us/state:la/county:terrebonne",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13744"
+    },
+    {
+      "id": "la-cx-2026-proposition-13745",
+      "title": "Terrebonne Parish — Parishwide Proposition No. 2 of 2 (Drainage Maintenance Tax Renewal)",
+      "ocdId": "ocd-division/country:us/state:la/county:terrebonne",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13745"
+    },
+    {
+      "id": "la-cx-2026-proposition-13758",
+      "title": "Union Parish — Parishwide Proposition (Millage)",
+      "ocdId": "ocd-division/country:us/state:la/county:union",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13758"
+    },
+    {
+      "id": "la-cx-2026-proposition-13736",
+      "title": "West Baton Rouge Parish — Parishwide Proposition (Public Health Unit Renewal)",
+      "ocdId": "ocd-division/country:us/state:la/county:west_baton_rouge",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13736"
+    },
+    {
+      "id": "la-cx-2026-proposition-13774",
+      "title": "West Feliciana Parish — Parishwide Proposition No. 1 of 3 (Millage Renewal)",
+      "ocdId": "ocd-division/country:us/state:la/county:west_feliciana",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13774"
+    },
+    {
+      "id": "la-cx-2026-proposition-13776",
+      "title": "West Feliciana Parish — Parishwide Proposition No. 2 of 3 (Millage Renewal)",
+      "ocdId": "ocd-division/country:us/state:la/county:west_feliciana",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13776"
+    },
+    {
+      "id": "la-cx-2026-proposition-13777",
+      "title": "West Feliciana Parish — Parishwide Proposition No. 3 of 3 (Millage Renewal)",
+      "ocdId": "ocd-division/country:us/state:la/county:west_feliciana",
+      "sourceUrl": "https://voterportal.sos.la.gov/PropositionText/PropositionText/Detail?referendumId=13777"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 33,
+    "newPlainLanguageExplanations": 33,
+    "localCompleteness": "33exact citywide/parishwide questions of90distinct local proposition IDs advertised by official Nov3portal selection;57remain unprepared. No widening of special-district, ward or excluded-subdivision geography."
+  },
+  "validation": {
+    "state": "LA",
+    "newMeasures": 33,
+    "newExplanations": 33,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "nativeSelectedDateParishAndExactDetailIdAssociations": "PASS",
+    "nativeIndexCredentialScan": "PASS",
+    "distinctLocalPortalInventory": {
+      "selectedDate": "2026-11-03",
+      "parishSelectors": 40,
+      "linkedAppearances": 91,
+      "distinctDetailUrls": 90,
+      "prepared": 33,
+      "remaining": "57 unprepared distinct detail IDs; mostly special districts or subcity/ward geography, plus source details requiring further review. Not a statewide all-local absence certification."
+    }
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

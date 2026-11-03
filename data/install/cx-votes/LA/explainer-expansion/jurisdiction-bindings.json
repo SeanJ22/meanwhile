@@ -1,0 +1,398 @@
+[
+  {
+    "contestId": "la-cx-2026-proposition-13750",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/place:crowley",
+      "place",
+      "2218650",
+      "Crowley city"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13751",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/place:crowley",
+      "place",
+      "2218650",
+      "Crowley city"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13752",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/place:crowley",
+      "place",
+      "2218650",
+      "Crowley city"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13753",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/place:crowley",
+      "place",
+      "2218650",
+      "Crowley city"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13805",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/place:oakdale",
+      "place",
+      "2256540",
+      "Oakdale city"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13806",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:assumption",
+      "county",
+      "22007",
+      "Assumption Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13807",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:assumption",
+      "county",
+      "22007",
+      "Assumption Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13808",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:avoyelles",
+      "county",
+      "22009",
+      "Avoyelles Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13793",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/place:arcadia",
+      "place",
+      "2202655",
+      "Arcadia town"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13809",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:caddo",
+      "county",
+      "22017",
+      "Caddo Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13812",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/place:dequincy",
+      "place",
+      "2220575",
+      "DeQuincy city"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13754",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:east_baton_rouge",
+      "county",
+      "22033",
+      "East Baton Rouge Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13794",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/place:gretna",
+      "place",
+      "2231915",
+      "Gretna city"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13795",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/place:gretna",
+      "place",
+      "2231915",
+      "Gretna city"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13801",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:jefferson_davis",
+      "county",
+      "22053",
+      "Jefferson Davis Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13737",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:morehouse",
+      "county",
+      "22067",
+      "Morehouse Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13738",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:morehouse",
+      "county",
+      "22067",
+      "Morehouse Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13625",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:orleans",
+      "county",
+      "22071",
+      "Orleans Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13819",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:plaquemines",
+      "county",
+      "22075",
+      "Plaquemines Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13770",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:pointe_coupee",
+      "county",
+      "22077",
+      "Pointe Coupee Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13772",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:pointe_coupee",
+      "county",
+      "22077",
+      "Pointe Coupee Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13802",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/place:boyce",
+      "place",
+      "2209165",
+      "Boyce town"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13780",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:st_charles",
+      "county",
+      "22089",
+      "St. Charles Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13781",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:st_charles",
+      "county",
+      "22089",
+      "St. Charles Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13775",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:st_mary",
+      "county",
+      "22101",
+      "St. Mary Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13773",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:tensas",
+      "county",
+      "22107",
+      "Tensas Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13744",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:terrebonne",
+      "county",
+      "22109",
+      "Terrebonne Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13745",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:terrebonne",
+      "county",
+      "22109",
+      "Terrebonne Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13758",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:union",
+      "county",
+      "22111",
+      "Union Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13736",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:west_baton_rouge",
+      "county",
+      "22121",
+      "West Baton Rouge Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13774",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:west_feliciana",
+      "county",
+      "22125",
+      "West Feliciana Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13776",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:west_feliciana",
+      "county",
+      "22125",
+      "West Feliciana Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  },
+  {
+    "contestId": "la-cx-2026-proposition-13777",
+    "registryDivision": [
+      "ocd-division/country:us/state:la/county:west_feliciana",
+      "county",
+      "22125",
+      "West Feliciana Parish"
+    ],
+    "registryPath": "repository:data/derived/registration/la.json",
+    "registryFileSha256": "b0b51aa508ab96553a99da6187a2923e4a28c9ee109c9606cb73ea92fb05a25f",
+    "matchingRule": "Exact stated city/town or explicitly parishwide county. Special districts, ward-only tax and Gretna fire-tax area excluding AnnexedTimberlane are not widened to county/city."
+  }
+]

@@ -160,12 +160,12 @@ test("a state's registry gives a place's card the rows of its boards, the divisi
   assert.deepEqual(mine.d?.map(row => row[1].ocdId), [PLACE], "its divisions, but not the state's, which its card leaves to the state's");
   assert.deepEqual(mine.r?.map(row => row[1].bodyId), ["b1", "b3"]);
   assert.deepEqual(mine.x?.map(row => row[1].sourceId), ["roster:b1#1"]);
-  assert.deepEqual(mine.c?.map(row => row[1].holder.id), ["p1", "mayor"], "the people it seats, and those whose seats lie in its divisions");
+  assert.deepEqual(mine.c?.map(row => (row[1] as { holder: { id: string } }).holder.id), ["p1", "mayor"], "the people it seats, and those whose seats lie in its divisions");
   assert.deepEqual(mine.p?.map(row => row[0]), [0, 2]);
   assert.deepEqual(mine.f?.map(row => row[1][0]), ["roster:b1#1"]);
   const above = placeRuntime(model, { selected: [], seed: ["ocd-division/country:us/state:az"], boards: new Map(), peopleIds: [], stateLevel: true });
-  assert.deepEqual([above.d?.map(row => row[1].ocdId), above.c?.map(row => row[1].holder.id), above.e], [["ocd-division/country:us/state:az"], ["senator"], []]);
-  const named = mergeRuntime([{ k: model, ...above, sel: { e: [[0, model.statewideExecutives[0]]] } }, mine], true), plain = mergeRuntime([{ k: model, ...above, sel: { e: [[0, model.statewideExecutives[0]]] } }, mine], false);
+  assert.deepEqual([above.d?.map(row => row[1].ocdId), above.c?.map(row => (row[1] as { holder: { id: string } }).holder.id), above.e], [["ocd-division/country:us/state:az"], ["senator"], []]);
+  const named = mergeRuntime([{ k: model, ...above, sel: { e: [[0, model.statewideExecutives[0] as never]] } }, mine], true), plain = mergeRuntime([{ k: model, ...above, sel: { e: [[0, model.statewideExecutives[0] as never]] } }, mine], false);
   assert.deepEqual([named?.model.statewideExecutives.length, plain?.model.statewideExecutives.length], [1, 0], "statewide executives are on a page that names the state");
   assert.deepEqual(plain?.model.registry.divisions.map(row => row.ocdId), [PLACE, "ocd-division/country:us/state:az"], "the divisions of every card, once, in the state's order");
   assert.deepEqual([...plain!.bodies.keys()], ["b1", "b3"]);

@@ -1,0 +1,22 @@
+[
+  {
+    "contestId": "co-sombrero-ranch-public-improvement-district-2026-ballot-6b",
+    "whatItDoes": "Create Sombrero Ranch Public Improvement District in Boulder County and authorize a property-tax levy of up to 14.47 mills. Authorize $185,000 in tax collection year 2027 and amounts based on the levy afterward. Revenue would resurface county roads and fund other county-road improvements within the district. The district could enter a multiyear financial obligation of up to $3.5 million, paid from the tax and other legally available funds. Tax revenue, other available funding and interest earnings would be exempt from Colorado’s constitutional revenue limits, statutory property-tax limits and other applicable limits.",
+    "yesMeans": "Approve formation of the district, the property-tax levy, the multiyear obligation and the revenue-limit exceptions.",
+    "noMeans": "Do not approve forming the district or the proposed taxes, multiyear obligation and revenue-limit exceptions.",
+    "parts": [
+      {
+        "id": "co-sombrero-ranch-public-improvement-district-2026-ballot-6b#cost-review",
+        "number": "F",
+        "kind": "PROGRAM",
+        "label": "Cost reviews and future tax rates",
+        "what": "The incorporated resolution calls for a county review of ongoing costs “at least 10 years” after the formation election and every 10 years thereafter. If the initial tax rate raises more revenue than revised project estimates, the district board must lower it. The maximum rate cannot be increased without district voter approval."
+      }
+    ],
+    "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+    "sourceHash": "35ece219927cf2b803ffea73411691b59866cbab2657a7b0adf26ee2af645a44",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T05:43:14.232550+00:00",
+    "citation": "measure-source"
+  }
+]

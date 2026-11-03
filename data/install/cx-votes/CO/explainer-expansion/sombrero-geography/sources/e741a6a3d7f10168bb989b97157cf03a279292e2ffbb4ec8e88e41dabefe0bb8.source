@@ -1,0 +1,71 @@
+{
+  "id": "89ae49d4ddf246388ee5f5e952aa84db",
+  "owner": "BoulderCountyAdmin",
+  "ownerId": "6caf874bf1cf17df6d24160be0214138",
+  "orgId": "0jWpHMuhmHsukKE3",
+  "created": 1445982750000,
+  "modified": 1762815940000,
+  "guid": null,
+  "name": null,
+  "title": "Parcels",
+  "type": "Map Service",
+  "typeKeywords": [
+    "ArcGIS Server",
+    "Data",
+    "Dynamic",
+    "Map Service",
+    "Metadata",
+    "Service",
+    "Singlelayer"
+  ],
+  "description": "<div style='text-align:Left;'><div><div><p><span>Current parcel boundaries are updated nightly. Parcels are intended to depict approximate location of land ownership. This data is not survey accuracy. The only people that can perform official surveys in the State of Colorado are Colorado Licensed Professional Land Surveyors.<\/span><\/p><\/div><\/div><\/div>",
+  "tags": [
+    "Parcels",
+    "Parcel Boundaries",
+    "Property"
+  ],
+  "snippet": "Shows current parcel boundaries",
+  "thumbnail": "thumbnail/89ae49d4ddf246388ee5f5e952aa84db.png",
+  "documentation": null,
+  "extent": [
+    [
+      -105.6954,
+      39.9121
+    ],
+    [
+      -105.0508,
+      40.2642
+    ]
+  ],
+  "categories": [],
+  "spatialReference": "2876",
+  "accessInformation": "Boulder County Assessor's Office",
+  "classification": null,
+  "licenseInfo": "<div style='text-align:Left;'><div><div><p><span><span>The data for this application have been developed solely for internal use by Boulder County, and Boulder County makes no warranties, representations or guarantees, either expressed or implied, as to the completeness, accuracy or correctness of the data, nor accepts or assumes any liability arising from or for any incorrect, incomplete or misleading data provided pursuant to the use of this application. There are no warranties and/or representations, either expressed or implied, of merchantability or fitness of the data for a particular purpose or use.<\/span><\/span><\/p><p><span>These maps give approximate representations of property boundaries and other features. All GIS data have inherent spatial inaccuracies, including aerial photography. Only a licensed surveyor can create an exact depiction of property boundaries.<\/span><\/p><\/div><\/div><\/div> <p><span style='color: rgb(74, 74, 74); font-family: &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif;'>https://creativecommons.org/licenses/by/4.0/<\/span><\/p>",
+  "culture": "en-us",
+  "properties": null,
+  "advancedSettings": null,
+  "url": "https://maps.bouldercounty.org/arcgis/rest/services/Emap/BOCO_Parcels/MapServer/0",
+  "proxyFilter": null,
+  "access": "public",
+  "size": 78,
+  "subInfo": 0,
+  "appCategories": [],
+  "industries": [],
+  "languages": [],
+  "largeThumbnail": "largethumbnail/89ae49d4ddf246388ee5f5e952aa84db.png",
+  "banner": null,
+  "screenshots": [],
+  "listed": false,
+  "commentsEnabled": true,
+  "numComments": 0,
+  "numRatings": 0,
+  "avgRating": 0,
+  "numViews": 28602,
+  "contentStatus": "public_authoritative",
+  "scoreCompleteness": 70,
+  "groupDesignations": null,
+  "apiToken1ExpirationDate": -1,
+  "apiToken2ExpirationDate": -1,
+  "lastViewed": 1793656800000
+}

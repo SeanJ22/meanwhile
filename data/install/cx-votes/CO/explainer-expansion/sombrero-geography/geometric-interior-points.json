@@ -1,0 +1,22 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:co/special_district:sombrero_ranch_public_improvement_district",
+    "point": [
+      -105.21144952962206,
+      40.008993750696646
+    ],
+    "expected": true,
+    "zcta": "80303",
+    "pointBasis": "Deterministic geometric interior point in one of the exact 94 official parcels; no residential address or voter data."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/special_district:sombrero_ranch_public_improvement_district",
+    "point": [
+      -105.22555700019238,
+      39.94914400003844
+    ],
+    "expected": false,
+    "zcta": "80303",
+    "pointBasis": "Deterministic geometric point in the same original Census ZCTA, outside all 94 parcels; prevents whole-ZIP widening."
+  }
+]

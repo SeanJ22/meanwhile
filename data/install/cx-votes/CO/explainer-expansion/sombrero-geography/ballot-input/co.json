@@ -1,0 +1,100 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-sombrero-ranch-public-improvement-district-2026-ballot-6b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:sombrero_ranch_public_improvement_district",
+          "divisionVintage": "2026",
+          "title": "Sombrero Ranch Public Improvement District Ballot Issue 6B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only the 94 parcels expressly enumerated in Resolution 2026-040 Exhibit A. This is the proposed district’s election territory, not the entire county or an assumed neighborhood boundary.",
+          "provenance": {
+            "quote": "SHALL SOMBRERO RANCH PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY TAXES BE INCREASED $185,000 (IN TAX COLLECTION YEAR 2027) AND THEREAFTER BY THE DOLLAR AMOUNT PRODUCED FROM THE LEVY OF AN AD VALOREM PROPERTY TAX IMPOSED AT A RATE UP TO 14.47 MILLS, WITH THE ANNUAL TAX REVENUES (REGARDLESS OF DOLLAR AMOUNT) FROM SUCH MILL LEVY TO BE USED FOR RESURFACING COUNTY ROADS WITHIN THE DISTRICT AND OTHER COUNTY ROAD IMPROVEMENT PURPOSES WITHIN THE DISTRICT; AND, SHALL THE DISTRICT BE AUTHORIZED TO ENTER INTO A MULTIPLE-FISCAL YEAR OBLIGATION IN AN AMOUNT NOT TO EXCEED $3,500,000, TO BE PAID FROM THE REVENUES OF THE TAX DESCRIBED ABOVE AND ANY OTHER SOURCES OF FUNDING LEGALLY AVAILABLE TO THE DISTRICT; AND SHALL THE TAX REVENUES DESCRIBED ABOVE, OTHER LEGALLY AVAILABLE FUNDING, IF ANY, AND THE INTEREST EARNINGS THEREON CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSITUTION (TABOR) AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES OR ANY OTHER LIMITS WHICH MAY OTHERWISE APPLY; AND SHALL SOMBRERO RANCH PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY BE ORGANIZED, ALL AS MORE PARTICULARLY SET FORTH IN BOARD OF COUNTY COMMISSIONERS’ RESOLUTION 2026-040.",
+            "sourceOrg": "Boulder County Board of County Commissioners",
+            "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+            "collectedAt": "2026-11-03T03:49:53.568314+00:00",
+            "verifiedAt": "2026-11-03T05:43:14.232550+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-sombrero-ranch-public-improvement-district-2026-ballot-6b#question",
+          "contestId": "co-sombrero-ranch-public-improvement-district-2026-ballot-6b",
+          "officialNumber": "6B",
+          "questionText": "SHALL SOMBRERO RANCH PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY TAXES BE INCREASED $185,000 (IN TAX COLLECTION YEAR 2027) AND THEREAFTER BY THE DOLLAR AMOUNT PRODUCED FROM THE LEVY OF AN AD VALOREM PROPERTY TAX IMPOSED AT A RATE UP TO 14.47 MILLS, WITH THE ANNUAL TAX REVENUES (REGARDLESS OF DOLLAR AMOUNT) FROM SUCH MILL LEVY TO BE USED FOR RESURFACING COUNTY ROADS WITHIN THE DISTRICT AND OTHER COUNTY ROAD IMPROVEMENT PURPOSES WITHIN THE DISTRICT; AND, SHALL THE DISTRICT BE AUTHORIZED TO ENTER INTO A MULTIPLE-FISCAL YEAR OBLIGATION IN AN AMOUNT NOT TO EXCEED $3,500,000, TO BE PAID FROM THE REVENUES OF THE TAX DESCRIBED ABOVE AND ANY OTHER SOURCES OF FUNDING LEGALLY AVAILABLE TO THE DISTRICT; AND SHALL THE TAX REVENUES DESCRIBED ABOVE, OTHER LEGALLY AVAILABLE FUNDING, IF ANY, AND THE INTEREST EARNINGS THEREON CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSITUTION (TABOR) AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES OR ANY OTHER LIMITS WHICH MAY OTHERWISE APPLY; AND SHALL SOMBRERO RANCH PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY BE ORGANIZED, ALL AS MORE PARTICULARLY SET FORTH IN BOARD OF COUNTY COMMISSIONERS’ RESOLUTION 2026-040.",
+          "officialStatement": "The initial mill levy is proposed to remain in place in perpetuity or until adjusted by the\n      Board of Directors for the District. The County agrees to reevaluate the costs of the\n      ongoing work at least 10 years from the date of the election forming the District and\n      every 10 years thereafter. Upon such reevaluation, the Board of Directors for the District\n      shall revise the mill levy downward if the initial mill levy results in revenues excess to\n      the revised project estimates. The maximum mill levy will not be increased without the\n      approval of the eligible electors of the District.",
+          "provenance": {
+            "quote": "SHALL SOMBRERO RANCH PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY TAXES BE INCREASED $185,000 (IN TAX COLLECTION YEAR 2027) AND THEREAFTER BY THE DOLLAR AMOUNT PRODUCED FROM THE LEVY OF AN AD VALOREM PROPERTY TAX IMPOSED AT A RATE UP TO 14.47 MILLS, WITH THE ANNUAL TAX REVENUES (REGARDLESS OF DOLLAR AMOUNT) FROM SUCH MILL LEVY TO BE USED FOR RESURFACING COUNTY ROADS WITHIN THE DISTRICT AND OTHER COUNTY ROAD IMPROVEMENT PURPOSES WITHIN THE DISTRICT; AND, SHALL THE DISTRICT BE AUTHORIZED TO ENTER INTO A MULTIPLE-FISCAL YEAR OBLIGATION IN AN AMOUNT NOT TO EXCEED $3,500,000, TO BE PAID FROM THE REVENUES OF THE TAX DESCRIBED ABOVE AND ANY OTHER SOURCES OF FUNDING LEGALLY AVAILABLE TO THE DISTRICT; AND SHALL THE TAX REVENUES DESCRIBED ABOVE, OTHER LEGALLY AVAILABLE FUNDING, IF ANY, AND THE INTEREST EARNINGS THEREON CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSITUTION (TABOR) AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES OR ANY OTHER LIMITS WHICH MAY OTHERWISE APPLY; AND SHALL SOMBRERO RANCH PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY BE ORGANIZED, ALL AS MORE PARTICULARLY SET FORTH IN BOARD OF COUNTY COMMISSIONERS’ RESOLUTION 2026-040.",
+            "sourceOrg": "Boulder County Board of County Commissioners",
+            "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+            "collectedAt": "2026-11-03T03:49:53.568314+00:00",
+            "verifiedAt": "2026-11-03T05:43:14.232550+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-sombrero-ranch-public-improvement-district-2026-ballot-6b",
+          "whatItDoes": "Create Sombrero Ranch Public Improvement District in Boulder County and authorize a property-tax levy of up to 14.47 mills. Authorize $185,000 in tax collection year 2027 and amounts based on the levy afterward. Revenue would resurface county roads and fund other county-road improvements within the district. The district could enter a multiyear financial obligation of up to $3.5 million, paid from the tax and other legally available funds. Tax revenue, other available funding and interest earnings would be exempt from Colorado’s constitutional revenue limits, statutory property-tax limits and other applicable limits.",
+          "yesMeans": "Approve formation of the district, the property-tax levy, the multiyear obligation and the revenue-limit exceptions.",
+          "noMeans": "Do not approve forming the district or the proposed taxes, multiyear obligation and revenue-limit exceptions.",
+          "parts": [
+            {
+              "id": "co-sombrero-ranch-public-improvement-district-2026-ballot-6b#cost-review",
+              "number": "F",
+              "kind": "PROGRAM",
+              "label": "Cost reviews and future tax rates",
+              "what": "The incorporated resolution calls for a county review of ongoing costs “at least 10 years” after the formation election and every 10 years thereafter. If the initial tax rate raises more revenue than revised project estimates, the district board must lower it. The maximum rate cannot be increased without district voter approval."
+            }
+          ],
+          "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+          "sourceHash": "35ece219927cf2b803ffea73411691b59866cbab2657a7b0adf26ee2af645a44",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:43:14.232550+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:43:14.232550+00:00",
+    "reviewedBy": "CX-VOTES data preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+        "finalUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+        "publisher": "Boulder County Board of County Commissioners",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T03:49:53.568314+00:00",
+        "httpStatus": 200,
+        "rawHash": "7eaafa7cc075e32ad8a15027ac3e082ddd555bd4673d869ab2d73a42b1347079",
+        "reviewedEvidence": "Official current2026 source question captured in full. SHA identifies original capture bytes; any repository credential sanitization is separately hash-identified in source-manifest. Draft explanation awaiting root independent review."
+      },
+      {
+        "requestedUrl": "https://pub-bouldercounty.escribemeetings.com/FileStream.ashx?DocumentId=44268",
+        "finalUrl": "https://pub-bouldercounty.escribemeetings.com/FileStream.ashx?DocumentId=44268",
+        "publisher": "Boulder County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:31:15.782571+00:00",
+        "httpStatus": 200,
+        "rawHash": "42ab0e55677314ff894587b4fe7d548b1fc68ab072330d903b1695e68333bce1",
+        "reviewedEvidence": "Official county meeting attachment: Resolution 2026-040, adopted July 9, 2026 as confirmed by official minutes. The final certified ballot question expressly incorporates this resolution. Recital F gives the additional cost-review and rate-reduction conditions; Exhibit A enumerates all 94 exact parcels. Linked official county meeting portal and native captures preserved; no advocacy used."
+      }
+    ]
+  }
+}

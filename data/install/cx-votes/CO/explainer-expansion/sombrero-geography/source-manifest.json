@@ -1,0 +1,39 @@
+[
+  {
+    "id": "boulder-county",
+    "url": "https://bouldercounty.gov/government/county-ballot-measures/",
+    "originalSha256": "7eaafa7cc075e32ad8a15027ac3e082ddd555bd4673d869ab2d73a42b1347079",
+    "retrievedAt": "2026-11-03T03:49:53.568314+00:00",
+    "sourceOrg": "Boulder County Board of County Commissioners",
+    "rawFormat": "HTML",
+    "hashScope": "complete original captured HTML bytes; any repository sanitization separately identified",
+    "privateOriginalFile": "/workspace/work/election-day/explainers-only/CO/boulder-county.html",
+    "savedFile": "../boulder/sources/boulder-county.sanitized.html",
+    "sanitization": {
+      "originalSha256": "7eaafa7cc075e32ad8a15027ac3e082ddd555bd4673d869ab2d73a42b1347079",
+      "savedSha256": "60d614754bb03358de9c6f6a5792985564548db69ab58970fae4c90510bf39fe",
+      "replacements": 1,
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "16e20c7a2e94",
+          "length": 39,
+          "line": 101,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "preserved": []
+    },
+    "savedSha256": "60d614754bb03358de9c6f6a5792985564548db69ab58970fae4c90510bf39fe"
+  },
+  {
+    "url": "https://pub-bouldercounty.escribemeetings.com/FileStream.ashx?DocumentId=44268",
+    "originalSha256": "42ab0e55677314ff894587b4fe7d548b1fc68ab072330d903b1695e68333bce1",
+    "retrievedAt": "2026-11-03T05:31:15.782571+00:00",
+    "sourceOrg": "Boulder County Board of County Commissioners",
+    "rawFormat": "DOCUMENT_BYTES",
+    "savedFile": "sources/42ab0e55677314ff894587b4fe7d548b1fc68ab072330d903b1695e68333bce1.source.gz",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

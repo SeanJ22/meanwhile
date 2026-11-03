@@ -1,0 +1,46 @@
+{
+  "heldReference": "data/derived/registration/ca.json",
+  "heldReferenceSha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+  "governments": [
+    {
+      "fid": 3,
+      "row": [
+        "204110",
+        "ca:school:grossmont-cuyamaca-community-college-district",
+        "GROSSMONT CUYAMACA COMMUNITY COLLEGE DISTRICT",
+        "SCHOOL DISTRICT",
+        -1,
+        "NO_CENSUS_SCHOOL_GEOGRAPHY",
+        -1
+      ],
+      "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district"
+    },
+    {
+      "fid": 62,
+      "row": [
+        "178356",
+        "ca:school:barstow-community-college-district",
+        "BARSTOW COMMUNITY COLLEGE DISTRICT",
+        "SCHOOL DISTRICT",
+        -1,
+        "NO_CENSUS_SCHOOL_GEOGRAPHY",
+        -1
+      ],
+      "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district"
+    },
+    {
+      "fid": 69,
+      "row": [
+        "201488",
+        "ca:school:san-bernardino-community-college-district",
+        "SAN BERNARDINO COMMUNITY COLLEGE DISTRICT",
+        "SCHOOL DISTRICT",
+        -1,
+        "NO_CENSUS_SCHOOL_GEOGRAPHY",
+        -1
+      ],
+      "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_san_bernardino_community_college_district"
+    }
+  ],
+  "note": "Exact existing college governments, all explicitly NO_CENSUS_SCHOOL_GEOGRAPHY. Grossmont Healthcare PID201429 and Grossmont Union High PID202990 are distinct and excluded."
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "code": "89019",
+    "rawOverlapPolygons": 20,
+    "californiaOverlapPolygons": 2
+  },
+  {
+    "code": "89039",
+    "rawOverlapPolygons": 7,
+    "californiaOverlapPolygons": 0
+  },
+  {
+    "code": "89029",
+    "rawOverlapPolygons": 26,
+    "californiaOverlapPolygons": 0
+  },
+  {
+    "code": "89046",
+    "rawOverlapPolygons": 6,
+    "californiaOverlapPolygons": 0
+  },
+  {
+    "code": "89048",
+    "rawOverlapPolygons": 1,
+    "californiaOverlapPolygons": 0
+  },
+  {
+    "code": "89061",
+    "rawOverlapPolygons": 2,
+    "californiaOverlapPolygons": 0
+  }
+]

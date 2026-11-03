@@ -1,0 +1,74 @@
+California Community College Districts - CA Open Data Publishing
+Skip to main content
+Official website of the State of California
+CA.gov
+Log in
+Search datasets
+Search
+Fire Data
+Datasets
+Organizations
+Topics
+CA State Geoportal
+About
+Home /
+Datasets /
+California Community College Districts
+Authoritative
+California Community College Districts
+The Foundation for California Community Colleges produces the map linked here. To access the California Community College Foundation webpage https://foundationccc.org/. To request access to the source data, please visit https://foundationccc.org/our-work/system-support/sustaining-systemwide-infrastructure/fusion/ccc-gis/#ccc-gis-map and contact the Senior Director listed on the page.
+Published by
+California Department of Technology
+Updated September 30, 2026
+Download all (2 files)
+API endpoint
+2resources
+Data & resources
+Metadata
+HTML
+ArcGIS Hub Dataset
+Updated Sep 30, 2026
+Preview
+Download
+ArcGIS GeoServices REST API
+ArcGIS GeoService
+Updated Sep 30, 2026
+Preview
+Download
+About this dataset
+Identifier
+08c33129-2662-498f-b99e-f44613bb07b4
+Access level
+public
+Rights
+No restrictions on public use
+Update frequency
+irregular
+Contact
+CDT_GIS
+Contact email
+gis@state.ca.gov
+Created
+October 1, 2025
+Tags
+california department of technology
+Publisher
+California Department of Technology
+All datasets from this publisher →
+Cite this dataset
+California Department of Technology. (2025).
+California Community College Districts.
+publish.data.ca.gov
+CA Open Data Publishing
+Explore
+Datasets
+Topics
+Publishers
+Build
+API documentation
+Data catalog (data.json)
+DCAT catalog
+Support
+About this portal
+Request a dataset
+© 2026 State of California

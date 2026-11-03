@@ -1,0 +1,14 @@
+{
+  "state": "CA",
+  "newExplainersAttached": [
+    "Barstow CCD C",
+    "San Bernardino CCD Y, shared into Riverside"
+  ],
+  "existingExplainerScopeCompleted": "Grossmont-Cuyamaca CCD G; preserve existing4whole-city memberships",
+  "exactGeometryVintage": 2008,
+  "currentPublicSourceCaptureEdition": 2026,
+  "limits": "Current state catalog/public Foundation map still publishes explicit2008legal/voter-precinct geometries. No assertion that all boundaries remained legally unchanged in every intervening year. Source precision/gaps retained. National/local inventory sweep remains open.",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "stateBorderHandling": "Native2008 shapes retain tiny state-border slivers. Postal edges use exact three-way ZCTA/district/current-California intersection, consistent with existing point-reader state restriction; no arbitrary tolerance or boundary repair. Five Nevada-only source overlaps excluded;89019 retains a real California intersection and stays partial. Three native out-of-state synthetic controls correctly exclude the California district. See state-conflict.json and border-zip-replay.json."
+}

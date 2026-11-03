@@ -1,0 +1,21 @@
+{
+  "districts": 3,
+  "sourceZctaCounts": [
+    {
+      "fid": 3,
+      "count": 46
+    },
+    {
+      "fid": 62,
+      "count": 82
+    },
+    {
+      "fid": 69,
+      "count": 64
+    }
+  ],
+  "zctaEdges": 107,
+  "zipEdges": 111,
+  "allPositiveZctasKnownPostal": true,
+  "limits": "Full enclosing Census2020 ZCTA sets independently counted for each native district; each overlap uses exact district geometry. ZIP-only links, if any, come from existing state postal links. Native2008 district geometries have small state-border slivers; postal overlaps enforce the same current Census state polygon as the existing point reader."
+}

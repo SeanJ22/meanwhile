@@ -1,0 +1,100 @@
+[
+  {
+    "fid": 3,
+    "name": "Grossmont-Cuyamaca",
+    "components": [
+      {
+        "component": 0,
+        "sourcePlanarArea": 0.283473718849109,
+        "insidePlanarArea": 0.2834586337503424,
+        "outsidePlanarArea": 0.000015085098311828915,
+        "insideRatio": 0.9999467848418971,
+        "outPolygons": 7
+      }
+    ]
+  },
+  {
+    "fid": 62,
+    "name": "Barstow",
+    "components": [
+      {
+        "component": 0,
+        "sourcePlanarArea": 1.3142198440618813e-10,
+        "insidePlanarArea": 1.3142198440618813e-10,
+        "outsidePlanarArea": 0,
+        "insideRatio": 1,
+        "outPolygons": 0
+      },
+      {
+        "component": 1,
+        "sourcePlanarArea": 2.3471771515942237,
+        "insidePlanarArea": 2.346880825007247,
+        "outsidePlanarArea": 0.0002963265810649318,
+        "insideRatio": 0.9998737519293014,
+        "outPolygons": 68
+      },
+      {
+        "component": 2,
+        "sourcePlanarArea": 2.5313511287095025e-9,
+        "insidePlanarArea": 2.5313511287095025e-9,
+        "outsidePlanarArea": 0,
+        "insideRatio": 1,
+        "outPolygons": 0
+      },
+      {
+        "component": 3,
+        "sourcePlanarArea": 3.7512063499889337e-7,
+        "insidePlanarArea": 3.7512063499889337e-7,
+        "outsidePlanarArea": 0,
+        "insideRatio": 1,
+        "outPolygons": 0
+      },
+      {
+        "component": 4,
+        "sourcePlanarArea": 0.000013145221146260155,
+        "insidePlanarArea": 5.9117155615240335e-12,
+        "outsidePlanarArea": 0.000013145214779797243,
+        "insideRatio": 4.4972355320214066e-7,
+        "outPolygons": 1
+      },
+      {
+        "component": 5,
+        "sourcePlanarArea": 0.000001817966222006362,
+        "insidePlanarArea": 9.094947017729282e-13,
+        "outsidePlanarArea": 0.0000018179653125116602,
+        "insideRatio": 5.002814082921643e-7,
+        "outPolygons": 1
+      },
+      {
+        "component": 6,
+        "sourcePlanarArea": 7.959124559420161e-8,
+        "insidePlanarArea": 0,
+        "outsidePlanarArea": 7.959124559420161e-8,
+        "insideRatio": 0,
+        "outPolygons": 1
+      }
+    ]
+  },
+  {
+    "fid": 69,
+    "name": "San Bernardino",
+    "components": [
+      {
+        "component": 0,
+        "sourcePlanarArea": 2.5715962692629546e-10,
+        "insidePlanarArea": 2.5715962692629546e-10,
+        "outsidePlanarArea": 0,
+        "insideRatio": 1,
+        "outPolygons": 0
+      },
+      {
+        "component": 1,
+        "sourcePlanarArea": 0.20967390458599766,
+        "insidePlanarArea": 0.20967390458599766,
+        "outsidePlanarArea": 0,
+        "insideRatio": 1,
+        "outPolygons": 0
+      }
+    ]
+  }
+]

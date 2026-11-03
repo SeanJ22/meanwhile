@@ -1,0 +1,216 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026, General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-san-bernardino-y",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/electoral_district:2026_san_bernardino_community_college_district",
+          "title": "San Bernardino Community College District — Measure Y",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/Notice_SBCCD.pdf",
+            "collectedAt": "2026-11-03T05:20:40.839663+00:00",
+            "verifiedAt": "2026-11-03T10:33:50.478635+00:00",
+            "quote": "Local College Affordability, Job Training, Repairs Measure. To maintain affordable college education access, by repairing /upgrading San Bernardino Valley College, Crafton Hills College; preparing students/ veterans for high-demand careers including skilled trades, firefighting, healthcare; providing safe drinking water; removing asbestos, mold; repairing deteriorating gas lines; acquiring, constructing, repairing facilities, sites, equipment; shall San Bernardino Community College District’s measure authorizing $898,000,000 in bonds at legal rates, levying $25 per $100,000 of assessed valuation ($56,000,000 annually) while bonds are outstanding, requiring oversight, audits, be adopted?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/FT_SBCCD.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-c",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district",
+          "title": "Barstow Community College District — Measure C",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/Notice_BCCD.pdf",
+            "collectedAt": "2026-11-03T05:20:41.643844+00:00",
+            "verifiedAt": "2026-11-03T10:33:50.478635+00:00",
+            "quote": "Barstow Community College Repair, Safety, Affordable Higher Education Measure. To repair/upgrade local community college classrooms/labs, maintain affordable higher education in classrooms preparing students/veterans for high-demand jobs/careers, including skilled trades, engineering, nursing; update aging computer technology, emergency systems; repair deteriorating gas/electrical lines; shall Barstow Community College District's measure be adopted authorizing $37,000,000 in bonds at legal rates, levying approximately $25 per $100,000 assessed valuation ($2,500,000 annually) while bonds are outstanding, requiring spending disclosure, oversight, audits?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/FT_BarstowCCD.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-san-bernardino-y-text",
+          "contestId": "ca-2026-san-bernardino-y",
+          "officialNumber": "Measure Y",
+          "questionText": "Local College Affordability, Job Training, Repairs Measure. To maintain affordable college education access, by repairing /upgrading San Bernardino Valley College, Crafton Hills College; preparing students/ veterans for high-demand careers including skilled trades, firefighting, healthcare; providing safe drinking water; removing asbestos, mold; repairing deteriorating gas lines; acquiring, constructing, repairing facilities, sites, equipment; shall San Bernardino Community College District’s measure authorizing $898,000,000 in bonds at legal rates, levying $25 per $100,000 of assessed valuation ($56,000,000 annually) while bonds are outstanding, requiring oversight, audits, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/Notice_SBCCD.pdf",
+            "collectedAt": "2026-11-03T05:20:40.839663+00:00",
+            "verifiedAt": "2026-11-03T10:33:50.478635+00:00",
+            "quote": "Local College Affordability, Job Training, Repairs Measure. To maintain affordable college education access, by repairing /upgrading San Bernardino Valley College, Crafton Hills College; preparing students/ veterans for high-demand careers including skilled trades, firefighting, healthcare; providing safe drinking water; removing asbestos, mold; repairing deteriorating gas lines; acquiring, constructing, repairing facilities, sites, equipment; shall San Bernardino Community College District’s measure authorizing $898,000,000 in bonds at legal rates, levying $25 per $100,000 of assessed valuation ($56,000,000 annually) while bonds are outstanding, requiring oversight, audits, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-c-text",
+          "contestId": "ca-2026-san-bernardino-c",
+          "officialNumber": "Measure C",
+          "questionText": "Barstow Community College Repair, Safety, Affordable Higher Education Measure. To repair/upgrade local community college classrooms/labs, maintain affordable higher education in classrooms preparing students/veterans for high-demand jobs/careers, including skilled trades, engineering, nursing; update aging computer technology, emergency systems; repair deteriorating gas/electrical lines; shall Barstow Community College District's measure be adopted authorizing $37,000,000 in bonds at legal rates, levying approximately $25 per $100,000 assessed valuation ($2,500,000 annually) while bonds are outstanding, requiring spending disclosure, oversight, audits?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/Notice_BCCD.pdf",
+            "collectedAt": "2026-11-03T05:20:41.643844+00:00",
+            "verifiedAt": "2026-11-03T10:33:50.478635+00:00",
+            "quote": "Barstow Community College Repair, Safety, Affordable Higher Education Measure. To repair/upgrade local community college classrooms/labs, maintain affordable higher education in classrooms preparing students/veterans for high-demand jobs/careers, including skilled trades, engineering, nursing; update aging computer technology, emergency systems; repair deteriorating gas/electrical lines; shall Barstow Community College District's measure be adopted authorizing $37,000,000 in bonds at legal rates, levying approximately $25 per $100,000 assessed valuation ($2,500,000 annually) while bonds are outstanding, requiring spending disclosure, oversight, audits?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ca-2026-san-bernardino-y",
+          "whatItDoes": "Authorize up to $898 million in bonds for San Bernardino Valley College and Crafton Hills College facilities, career-training and student/veteran education facilities, drinking water, asbestos and mold removal, gas-line repairs, and other listed projects, including a new mountain-community college center. Property taxes on taxable property in the district would repay principal and interest. The district estimates $56 million annually, an average rate of $25 and highest rate of $25 per $100,000 of assessed value, collection through fiscal year 2058–59, and approximately $1.9 billion total repayment. These are estimates that may vary, not guaranteed tax caps or repayment amounts. Interest rates must stay within legal limits. Money must remain local and be spent on the listed facility projects. Bond proceeds cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight and annual financial and performance audits are required. Listing a project does not guarantee that it will be completed; costs, available funds and other funding sources affect the final work. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $898 million for the listed facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/FT_SBCCD.pdf",
+          "sourceHash": "ea4420a2f7563a4bac6fb0a609639633c7fe89864d03aeabc78016e95ddc7d8b",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-c",
+          "whatItDoes": "Authorize up to $37 million in bonds for community-college classrooms and laboratories, career training, facilities for veterans, a university center and child care, computer and emergency systems, and deteriorating gas and electrical lines. Property taxes on taxable property in the district would repay principal and interest. The district estimates $2.5 million annually, an average rate of $25 and highest rate of $25 per $100,000 of assessed value, collection through fiscal year 2056–57, and approximately $73,723,057 total repayment. These are estimates that may vary, not guaranteed tax caps or repayment amounts. Interest rates must stay within legal limits. Money must remain local and be spent on the listed facility projects. Bond proceeds cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight and annual financial and performance audits are required. Listing a project does not guarantee that every project will be completed. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $37 million for the listed facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/FT_BarstowCCD.pdf",
+          "sourceHash": "0127a4469d83675f6a20c2de1b95a5b8bca91532cede9dc1ae8a6989a7ecc508",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:33:50.478635+00:00",
+    "reviewedBy": "CX-VOTES source-backed college scope completion",
+    "sources": [
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/Notice_SBCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/Notice_SBCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "7e4d8ed6ab4233ac91611e96044d162f8e8266313ff0a6a1924d0e3566c51406",
+        "retrievedAt": "2026-11-03T05:20:40.839663+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/RES_SBCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/RES_SBCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "243cf92dec698091a4595c3fdc0abf657037b277e5f2377bde479db8c5d1176a",
+        "retrievedAt": "2026-11-03T05:20:41.060048+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/FT_SBCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/FT_SBCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "ea4420a2f7563a4bac6fb0a609639633c7fe89864d03aeabc78016e95ddc7d8b",
+        "retrievedAt": "2026-11-03T05:20:40.549284+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/IA_SBCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/IA_SBCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "a812b037f4f2102a076c9c3443ed6f9a328a8dbe8dd9744673ee9e8bdbbefad8",
+        "retrievedAt": "2026-11-03T05:20:40.864684+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/TR_SBCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/TR_SBCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "1535d241cb7471ad849ef19ebd3c3d1446301c5f34da1109bc5262ec78d73ff4",
+        "retrievedAt": "2026-11-03T05:20:40.738499+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/Notice_BCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/Notice_BCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "5537d9f7443b9fafc844f973357e3842599b2ce6c989f55f8a521178c51e7f2a",
+        "retrievedAt": "2026-11-03T05:20:41.643844+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/RES_BarstowCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/RES_BarstowCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "ce93075ca048c14aef2a7b3b34c98c03724d89d47a3e214f7311c1ef0eb10624",
+        "retrievedAt": "2026-11-03T05:20:41.516104+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/FT_BarstowCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/FT_BarstowCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "0127a4469d83675f6a20c2de1b95a5b8bca91532cede9dc1ae8a6989a7ecc508",
+        "retrievedAt": "2026-11-03T05:20:41.510864+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/IA_BarstowCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/IA_BarstowCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "62c5024756fb98a218647442b870647fb5ac86f15d074b9d22a6acff3aa264f4",
+        "retrievedAt": "2026-11-03T05:20:41.743293+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/TR_BarstowCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/TR_BarstowCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "ed041f0615481b580f1f1b193733565c42ef47beb1c9a26f215d22b8baa3d1a3",
+        "retrievedAt": "2026-11-03T05:20:41.586895+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      }
+    ]
+  }
+}

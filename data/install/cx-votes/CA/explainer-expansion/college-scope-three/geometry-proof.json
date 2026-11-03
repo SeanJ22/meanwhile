@@ -1,0 +1,122 @@
+{
+  "captureEdition": 2026,
+  "geometryVintage": 2008,
+  "sourceFeatureRevision": "2008-07-25T00:00:00.000Z",
+  "source": "Current state-published data catalog updatedSeptember30,2026 directly links the current FoundationCCC public map; its legal/voter-precinct layer4 exposes these exact features, explicitly last revisedJuly25,2008.",
+  "scopeLimit": "Current public-source geometry with explicit2008 revision; no assertion that all legal boundaries remained unchanged throughout2008–2026. Exact native precision, gaps, island pieces and rings preserved; no whole-city/county/service-area inference.",
+  "specs": [
+    {
+      "fid": 3,
+      "cds": "3768148",
+      "name": "Grossmont-Cuyamaca Community College District",
+      "id": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district",
+      "pid": "204110",
+      "entity": "ca:school:grossmont-cuyamaca-community-college-district",
+      "geo": "ca-08358925960a.json",
+      "count": "ca-d090741b00cd.json",
+      "expected": 46,
+      "contestId": "ca-2026-san-diego-g",
+      "sourceProperties": {
+        "FID": 3,
+        "DistrictNa": "Grossmont-Cuyamaca",
+        "ShortName": "Grossmont",
+        "CDS": "3768148",
+        "DID": 20,
+        "SourceOf_1": "www.gcccd.edu",
+        "LegalBou_1": "Based on the legal boundary, the layer matches the Township & Range defined in the legal narrative, as well as the K-12 school districts within the CCC District boundary.",
+        "PrimaryBou": "This layer uses Voter Precincts as the primary boundary definition",
+        "Revision_1": 1216944000000,
+        "Notes_1": " ",
+        "Shape_Leng": 2.97249383518,
+        "Shape_Area": 0.283473718852,
+        "Shape__Area": 4177223893.890625,
+        "Shape__Length": 349618.1361765549
+      },
+      "sourceUrl": "https://services6.arcgis.com/XNnWmtFBLgSx99Bz/arcgis/rest/services/CCC_ArcGIS__Map_Bundle/FeatureServer/4/query?objectIds=3%2C62%2C69&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceFile": "ca-be3ff59ca658.json",
+      "enclosingEnvelope": [
+        -117.066987999781,
+        32.5601969998067,
+        -116.102458000052,
+        32.9636780001246
+      ]
+    },
+    {
+      "fid": 62,
+      "cds": "3667629",
+      "name": "Barstow Community College District",
+      "id": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district",
+      "pid": "178356",
+      "entity": "ca:school:barstow-community-college-district",
+      "geo": "ca-a30225aa247f.json",
+      "count": "ca-0e386bec9712.json",
+      "expected": 82,
+      "contestId": "ca-2026-san-bernardino-c",
+      "sourceProperties": {
+        "FID": 62,
+        "DistrictNa": "Barstow",
+        "ShortName": "Barstow",
+        "CDS": "3667629",
+        "DID": 910,
+        "SourceOf_1": "Curt Mitchell  cmitchell@barstow.edu",
+        "LegalBou_1": "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.",
+        "PrimaryBou": "This layer uses Voter Precincts as the primary boundary definition",
+        "Revision_1": 1216944000000,
+        "Notes_1": "Note uses K-12 SD boundaries for 910-990, 910520, 910-950, and 910-970",
+        "Shape_Leng": 8.58935095573,
+        "Shape_Area": 2.3471918169,
+        "Shape__Area": 35590690681.078125,
+        "Shape__Length": 1021883.9381883898
+      },
+      "sourceUrl": "https://services6.arcgis.com/XNnWmtFBLgSx99Bz/arcgis/rest/services/CCC_ArcGIS__Map_Bundle/FeatureServer/4/query?objectIds=3%2C62%2C69&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceFile": "ca-be3ff59ca658.json",
+      "enclosingEnvelope": [
+        -117.63339100957201,
+        34.4539576525387,
+        -114.713081999949,
+        36.132408109331905
+      ]
+    },
+    {
+      "fid": 69,
+      "cds": "3667884",
+      "name": "San Bernardino Community College District",
+      "id": "ocd-division/country:us/state:ca/electoral_district:2026_san_bernardino_community_college_district",
+      "pid": "201488",
+      "entity": "ca:school:san-bernardino-community-college-district",
+      "geo": "ca-4ac0cc68d391.json",
+      "count": "ca-91898c35bdfa.json",
+      "expected": 64,
+      "contestId": "ca-2026-san-bernardino-y",
+      "sourceProperties": {
+        "FID": 69,
+        "DistrictNa": "San Bernardino",
+        "ShortName": "San Bernardino",
+        "CDS": "3667884",
+        "DID": 980,
+        "SourceOf_1": "David Salazar, Executive Director of Facilities & Planning  dsalazar@sbccd.cc.ca.us",
+        "LegalBou_1": "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.",
+        "PrimaryBou": "This layer uses Voter Precincts as the primary boundary definition",
+        "Revision_1": 1216944000000,
+        "Notes_1": "Note K-12 SD boundaries used in 980-920, 980-990, 980-970, and 980-940 with gaps along 920 and 940",
+        "Shape_Leng": 2.96230400023,
+        "Shape_Area": 0.209673904847,
+        "Shape__Area": 3140378071.5742188,
+        "Shape__Length": 349894.4410659652
+      },
+      "sourceUrl": "https://services6.arcgis.com/XNnWmtFBLgSx99Bz/arcgis/rest/services/CCC_ArcGIS__Map_Bundle/FeatureServer/4/query?objectIds=3%2C62%2C69&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceFile": "ca-be3ff59ca658.json",
+      "enclosingEnvelope": [
+        -117.559312000034,
+        34.003715000162195,
+        -116.60644300025899,
+        34.383468999879504
+      ]
+    }
+  ],
+  "sourceCoordinateTransformation": "Native GeoJSON coordinates/rings copied exactly, publisher outSR4326; no rounding, smoothing, repair, buffer, gap-bridging or intersection-derived scope geometry.",
+  "zctaYear": 2020,
+  "sourceGeometryBoundaryYear": 2008,
+  "postalOverlapRule": "Postal intersections use source district AND the same current Census California state polygon enforced by existing placesAtPoint. Native stored district shape is unchanged. This removes only out-of-state old-border slivers from ZIP membership; no area threshold, coordinate repair or rounded geometry.",
+  "sourceBorderDiscrepancy": "state-conflict.json"
+}

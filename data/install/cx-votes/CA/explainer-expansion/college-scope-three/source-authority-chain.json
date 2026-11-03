@@ -1,0 +1,48 @@
+{
+  "route": [
+    {
+      "url": "https://publish.data.ca.gov/dataset/california-community-college-districts",
+      "proof": "Captured current state catalog .gov page actual href points to FoundationCCC public map; saved source-manifest entry preserves native capture hash and any sanitization."
+    },
+    {
+      "url": "https://foundationccc.org/our-work/system-support/sustaining-systemwide-infrastructure/fusion/ccc-gis/",
+      "proof": "Producer page links same public current map; source-manifest has exact capture."
+    },
+    {
+      "url": "https://foundationcccorg.maps.arcgis.com/apps/mapviewer/index.html?webmap=c75f6a9484b2478396bdfa40a4376494",
+      "proof": "Public map item/data retained in source-captures; operational layer CCD Boundaries names exact FeatureServer/4."
+    },
+    {
+      "url": "https://services6.arcgis.com/XNnWmtFBLgSx99Bz/arcgis/rest/services/CCC_ArcGIS__Map_Bundle/FeatureServer/4",
+      "proof": "Native layer metadata and all72feature attributes retained; legal/voter-precinct basis and explicit2008revision."
+    },
+    {
+      "url": "https://services6.arcgis.com/XNnWmtFBLgSx99Bz/arcgis/rest/services/CCC_ArcGIS__Map_Bundle/FeatureServer/4/query?objectIds=3%2C62%2C69&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "proof": "Selected exact FIDs3,62,69/CDS3768148,3667629,3667884; all matched to held named college governments and current2026official ballot notices."
+    }
+  ],
+  "selection": [
+    {
+      "fid": 3,
+      "cds": "3768148",
+      "name": "Grossmont-Cuyamaca Community College District",
+      "contestId": "ca-2026-san-diego-g",
+      "pid": "204110"
+    },
+    {
+      "fid": 62,
+      "cds": "3667629",
+      "name": "Barstow Community College District",
+      "contestId": "ca-2026-san-bernardino-c",
+      "pid": "178356"
+    },
+    {
+      "fid": 69,
+      "cds": "3667884",
+      "name": "San Bernardino Community College District",
+      "contestId": "ca-2026-san-bernardino-y",
+      "pid": "201488"
+    }
+  ],
+  "underlyingFeatureRevision": "2008-07-25; deliberately not represented as2026boundaryrevision."
+}

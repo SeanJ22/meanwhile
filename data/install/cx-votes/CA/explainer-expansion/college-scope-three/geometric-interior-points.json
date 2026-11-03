@@ -1,0 +1,102 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district",
+    "fid": 3,
+    "component": 0,
+    "point": [
+      -116.5847229999165,
+      32.761937499965654
+    ],
+    "basis": "Deterministic source-component geometric interior; no residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district",
+    "fid": 62,
+    "component": 0,
+    "point": [
+      -116.2070440669702,
+      35.793366215998084
+    ],
+    "basis": "Deterministic source-component geometric interior; no residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district",
+    "fid": 62,
+    "component": 1,
+    "point": [
+      -116.1732365047605,
+      35.16333062640735
+    ],
+    "basis": "Deterministic source-component geometric interior; no residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district",
+    "fid": 62,
+    "component": 2,
+    "point": [
+      -116.7973753923105,
+      34.64725477593725
+    ],
+    "basis": "Deterministic source-component geometric interior; no residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district",
+    "fid": 62,
+    "component": 3,
+    "point": [
+      -116.453822500108,
+      34.45690150040395
+    ],
+    "basis": "Deterministic source-component geometric interior; no residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district",
+    "fid": 62,
+    "component": 4,
+    "point": [
+      -115.8548881333604,
+      35.9709639821661
+    ],
+    "basis": "Deterministic source-component geometric interior; no residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district",
+    "fid": 62,
+    "component": 5,
+    "point": [
+      -115.8831410693297,
+      35.992553812083806
+    ],
+    "basis": "Deterministic source-component geometric interior; no residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district",
+    "fid": 62,
+    "component": 6,
+    "point": [
+      -116.0607436992924,
+      36.13031910664156
+    ],
+    "basis": "Deterministic source-component geometric interior; no residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_san_bernardino_community_college_district",
+    "fid": 69,
+    "component": 0,
+    "point": [
+      -117.0115743870484,
+      34.0048052362927
+    ],
+    "basis": "Deterministic source-component geometric interior; no residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_san_bernardino_community_college_district",
+    "fid": 69,
+    "component": 1,
+    "point": [
+      -117.0828775001465,
+      34.19359200002085
+    ],
+    "basis": "Deterministic source-component geometric interior; no residential address."
+  }
+]

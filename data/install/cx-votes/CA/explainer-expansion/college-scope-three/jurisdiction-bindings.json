@@ -1,0 +1,20 @@
+{
+  "ocd-division/country:us/state:ca/electoral_district:2026_san_bernardino_community_college_district": {
+    "kind": "PROJECT_ELECTION_ALIAS",
+    "district": "San Bernardino Community College District",
+    "districtIdentitySource": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/FT_SBCCD.pdf",
+    "boundarySource": "Current state-linked FoundationCCC public legal/voter-precinct boundary layer4; exact feature identity CDS/FID recorded in geometry-proof.json",
+    "boundaryVintage": 2008,
+    "captureEdition": 2026,
+    "note": "Electoral place ID identifies2026contest, not2026geometryrevision. Exact held government has NO_CENSUS_SCHOOL_GEOGRAPHY. No county/city/service-area substitute."
+  },
+  "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district": {
+    "kind": "PROJECT_ELECTION_ALIAS",
+    "district": "Barstow Community College District",
+    "districtIdentitySource": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/FT_BarstowCCD.pdf",
+    "boundarySource": "Current state-linked FoundationCCC public legal/voter-precinct boundary layer4; exact feature identity CDS/FID recorded in geometry-proof.json",
+    "boundaryVintage": 2008,
+    "captureEdition": 2026,
+    "note": "Electoral place ID identifies2026contest, not2026geometryrevision. Exact held government has NO_CENSUS_SCHOOL_GEOGRAPHY. No county/city/service-area substitute."
+  }
+}

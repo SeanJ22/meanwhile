@@ -1,0 +1,131 @@
+{
+  "state": "CA",
+  "status": "PASS",
+  "districts": 3,
+  "newMeasureRecords": 2,
+  "existingGrossmontRecordPreserved": "PASS",
+  "nativeGeometries": "PASS exact selected FIDs3,62,69/CDS matching; no coordinate changes",
+  "geometryVintage": 2008,
+  "currentPublicSourceCaptureEdition": 2026,
+  "sourceHashes": "PASS",
+  "completeEnclosingZctaCounts": [
+    {
+      "fid": 3,
+      "count": 46
+    },
+    {
+      "fid": 62,
+      "count": 82
+    },
+    {
+      "fid": 69,
+      "count": 64
+    }
+  ],
+  "actualLoader": "PASS offline memory fixture",
+  "heldGovernmentLinks": 3,
+  "actualPointReaderChecks": [
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no household address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    }
+  ],
+  "countyAloneExcluded": "PASS",
+  "actualZipReaderChecks": 110,
+  "zipEdges": 111,
+  "zctaEdges": 107,
+  "postalLinkedEdges": [
+    {
+      "code": "92318",
+      "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_san_bernardino_community_college_district",
+      "basis": "unknown"
+    },
+    {
+      "code": "92323",
+      "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district",
+      "basis": "unknown"
+    },
+    {
+      "code": "92366",
+      "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district",
+      "basis": "unknown"
+    },
+    {
+      "code": "92403",
+      "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_san_bernardino_community_college_district",
+      "basis": "unknown"
+    }
+  ],
+  "crossBorderZctaOverlaps": [
+    {
+      "code": "89019",
+      "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_barstow_community_college_district",
+      "partial": true,
+      "basis": "Exact source district intersection with cross-state Census ZCTA; not whole-ZIP assignment."
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "limits": "Source legal/voter-precinct geometry explicitly datedJuly25,2008; current state catalog links it. No invented2026boundaryrevision or assurance of unchanged legal boundaries for every intervening year. Exact source gaps retained. Postal intersections enforce current Census California to match the existing point reader, retaining a genuine partial89019cross-state ZIP and excluding five Nevada-only old-border overlaps. Native source shape is unchanged. Three native sliver controls correctly return no California district. River installs and verifies live."
+}

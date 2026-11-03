@@ -1,0 +1,124 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T06:19:55.918486+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-brevard-lagoon-half-cent-renewal",
+      "title": "Brevard County — Renewal of the Save Our Indian River Lagoon half-cent sales tax",
+      "ocdId": "ocd-division/country:us/state:fl/county:brevard"
+    },
+    {
+      "id": "fl-2026-brevard-school-operating-tax-renewal",
+      "title": "Brevard County School District — Renewal of the one-mill operating property tax",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:brevard_county_school_district"
+    },
+    {
+      "id": "fl-2026-brevard-school-half-cent-renewal",
+      "title": "Brevard County School District — Renewal of the half-cent school sales surtax",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:brevard_county_school_district"
+    },
+    {
+      "id": "fl-2026-melbourne-zoning-delegation",
+      "title": "Melbourne — Delegating Board of Adjustment duties to the Zoning Commission",
+      "ocdId": "ocd-division/country:us/state:fl/place:melbourne"
+    },
+    {
+      "id": "fl-2026-palm-bay-council-vacancies",
+      "title": "Palm Bay — Filling City Council vacancies",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_bay"
+    },
+    {
+      "id": "fl-2026-melbourne-beach-stormwater-road-bonds",
+      "title": "Melbourne Beach — Up to $5 million in stormwater and roadwork bonds",
+      "ocdId": "ocd-division/country:us/state:fl/place:melbourne_beach"
+    },
+    {
+      "id": "fl-2026-malabar-at-large-council-voting",
+      "title": "Malabar — At-large voting for Town Council members",
+      "ocdId": "ocd-division/country:us/state:fl/place:malabar"
+    },
+    {
+      "id": "fl-2026-palm-shores-question-1",
+      "title": "Palm Shores — Question 1: Form of government",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_shores"
+    },
+    {
+      "id": "fl-2026-palm-shores-question-2",
+      "title": "Palm Shores — Question 2: Council composition",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_shores"
+    },
+    {
+      "id": "fl-2026-palm-shores-question-3",
+      "title": "Palm Shores — Question 3: Compensation provisions",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_shores"
+    },
+    {
+      "id": "fl-2026-palm-shores-question-4",
+      "title": "Palm Shores — Question 4: Town Manager appointment, powers and duties",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_shores"
+    },
+    {
+      "id": "fl-2026-palm-shores-question-5",
+      "title": "Palm Shores — Question 5: Town Clerk appointment and supervision",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_shores"
+    },
+    {
+      "id": "fl-2026-palm-shores-question-6",
+      "title": "Palm Shores — Question 6: Town Clerk removal",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_shores"
+    },
+    {
+      "id": "fl-2026-palm-shores-question-7",
+      "title": "Palm Shores — Question 7: Town departments and personnel",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_shores"
+    },
+    {
+      "id": "fl-2026-palm-shores-question-8",
+      "title": "Palm Shores — Question 8: Town Manager selection and removal",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_shores"
+    },
+    {
+      "id": "fl-2026-palm-shores-question-9",
+      "title": "Palm Shores — Question 9: Mayor and council seat numbers",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_shores"
+    },
+    {
+      "id": "fl-2026-palm-shores-question-10",
+      "title": "Palm Shores — Question 10: Charter amendment procedures",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_shores"
+    }
+  ],
+  "operation": "Merge17 new local questions and neutral explanations through the existing ballot data path; preserve all prior candidate and measure facts.",
+  "coverageLimit": "Current official county sample styles positively establish these 17 measures. The 67-county local inventory continues; this is not a statewide local-measure completeness claim.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T06:20:50.778Z",
+    "preparedRecords": 17,
+    "originalSourceHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "boundedNativeSourceReading": "PASS; all17 official questions compared against native rendered pages; watermark artifacts removed only from normalized derived question text",
+    "officialAuthority": "PASS",
+    "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/brevard",
+    "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "providerCalls": 0,
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "701846098bda4d379fd2b98560909a6e4bd3aa7c13b45852952ccc606933f53e",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

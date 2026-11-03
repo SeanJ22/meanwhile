@@ -1,0 +1,827 @@
+{
+  "preparedAt": "2026-11-03T06:19:55.918486+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+      "sha256": "9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8",
+      "bytes": 340503,
+      "kind": "ORIGINAL_OFFICIAL_GENERAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-100.pdf",
+      "retrievedAt": "2026-11-03T06:05:40.895228+00:00"
+    },
+    {
+      "file": "sources/994e5e2036b095647608aa9f2fb51de976a7aabfde979d0e1a3933653ce554a0.txt",
+      "sha256": "994e5e2036b095647608aa9f2fb51de976a7aabfde979d0e1a3933653ce554a0",
+      "bytes": 20874,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf"
+    },
+    {
+      "file": "sources/61d7565f6a6ce4dc0e1b96acbe43b9f28f94f384ffc1be09a71b38933fe82a02.txt",
+      "sha256": "61d7565f6a6ce4dc0e1b96acbe43b9f28f94f384ffc1be09a71b38933fe82a02",
+      "bytes": 1543,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        4,
+        90,
+        199,
+        640
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/44a1595f5a549ac40f724130eb1aa9aeb1f9acb38c0d8aee92f3229dcbfbed02.txt",
+      "sha256": "44a1595f5a549ac40f724130eb1aa9aeb1f9acb38c0d8aee92f3229dcbfbed02",
+      "bytes": 478,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        4,
+        90,
+        199,
+        640
+      ]
+    },
+    {
+      "file": "sources/db8eb5174518f4e9dd9d6e5262460c201ad5231ca73d5aa1062e9535ca95dc31.png",
+      "sha256": "db8eb5174518f4e9dd9d6e5262460c201ad5231ca73d5aa1062e9535ca95dc31",
+      "bytes": 234448,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        4,
+        90,
+        199,
+        640
+      ]
+    },
+    {
+      "file": "sources/1db4af7bf048cae344fdb4ca20c69e527348bed09d1773988d351c6db458275e.txt",
+      "sha256": "1db4af7bf048cae344fdb4ca20c69e527348bed09d1773988d351c6db458275e",
+      "bytes": 1536,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        204,
+        90,
+        398,
+        640
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/8d812368a8e4ce99459a0f7c8da5f76b3d4badd5f5df5b619cb051f33b3a743e.txt",
+      "sha256": "8d812368a8e4ce99459a0f7c8da5f76b3d4badd5f5df5b619cb051f33b3a743e",
+      "bytes": 481,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        204,
+        90,
+        398,
+        640
+      ]
+    },
+    {
+      "file": "sources/aee70b5312646253822c4c49cea8ea0da89ddab732d0b43addb6f3793817cd1f.png",
+      "sha256": "aee70b5312646253822c4c49cea8ea0da89ddab732d0b43addb6f3793817cd1f",
+      "bytes": 257127,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        204,
+        90,
+        398,
+        640
+      ]
+    },
+    {
+      "file": "sources/592302b70d442d6ed51d67242208593afae5d9224dc6b915f11bc49d69fec30d.txt",
+      "sha256": "592302b70d442d6ed51d67242208593afae5d9224dc6b915f11bc49d69fec30d",
+      "bytes": 1668,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        403,
+        90,
+        594,
+        645
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/4d8cbbb166248034be000172dda884abd0cbe655f49df2b7847a835d3c232f88.txt",
+      "sha256": "4d8cbbb166248034be000172dda884abd0cbe655f49df2b7847a835d3c232f88",
+      "bytes": 442,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        403,
+        90,
+        594,
+        645
+      ]
+    },
+    {
+      "file": "sources/464b855e31e994cb3e54382028708f45d14ab001658dc2c9135d8f5cef0e0594.png",
+      "sha256": "464b855e31e994cb3e54382028708f45d14ab001658dc2c9135d8f5cef0e0594",
+      "bytes": 260659,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        403,
+        90,
+        594,
+        645
+      ]
+    },
+    {
+      "file": "sources/86dbe9ddf02b5d67ccfb4f3584d79a76c24c20d4d842f656d5ed105c6e3a7608.pdf",
+      "sha256": "86dbe9ddf02b5d67ccfb4f3584d79a76c24c20d4d842f656d5ed105c6e3a7608",
+      "bytes": 284645,
+      "kind": "ORIGINAL_OFFICIAL_GENERAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-300.pdf",
+      "retrievedAt": "2026-11-03T06:09:38.730097+00:00"
+    },
+    {
+      "file": "sources/2ba3b239e5eb602cae25b76082a6f96bde2c211240c7360821acbed6db5b953c.txt",
+      "sha256": "2ba3b239e5eb602cae25b76082a6f96bde2c211240c7360821acbed6db5b953c",
+      "bytes": 22308,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/86dbe9ddf02b5d67ccfb4f3584d79a76c24c20d4d842f656d5ed105c6e3a7608.pdf"
+    },
+    {
+      "file": "sources/fdfe0ca672ff372e32b8e70597573398800ecba96b8e13d5d853403d75c50202.txt",
+      "sha256": "fdfe0ca672ff372e32b8e70597573398800ecba96b8e13d5d853403d75c50202",
+      "bytes": 1330,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/86dbe9ddf02b5d67ccfb4f3584d79a76c24c20d4d842f656d5ed105c6e3a7608.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        0,
+        201,
+        930
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/9a7d59ee9728ffac972133682604de90098670122b02a19c0910c785a0777f1a.txt",
+      "sha256": "9a7d59ee9728ffac972133682604de90098670122b02a19c0910c785a0777f1a",
+      "bytes": 446,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/86dbe9ddf02b5d67ccfb4f3584d79a76c24c20d4d842f656d5ed105c6e3a7608.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        0,
+        201,
+        930
+      ]
+    },
+    {
+      "file": "sources/0c6523ba55f7b6a18390f8ee2e0f1596b24aedcaaf4fc9142fd35072b0a65b54.png",
+      "sha256": "0c6523ba55f7b6a18390f8ee2e0f1596b24aedcaaf4fc9142fd35072b0a65b54",
+      "bytes": 213532,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/86dbe9ddf02b5d67ccfb4f3584d79a76c24c20d4d842f656d5ed105c6e3a7608.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        0,
+        201,
+        930
+      ]
+    },
+    {
+      "file": "sources/f9905227242e06e0fb0bdd59409b1f8bc913a634f55a37e4b43543887b38488e.pdf",
+      "sha256": "f9905227242e06e0fb0bdd59409b1f8bc913a634f55a37e4b43543887b38488e",
+      "bytes": 215267,
+      "kind": "ORIGINAL_OFFICIAL_GENERAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-303.pdf",
+      "retrievedAt": "2026-11-03T06:09:38.837130+00:00"
+    },
+    {
+      "file": "sources/447a30ac76ffc1bd6f7c71239bc4bca88833e4f13625e934504912dd9d50d814.txt",
+      "sha256": "447a30ac76ffc1bd6f7c71239bc4bca88833e4f13625e934504912dd9d50d814",
+      "bytes": 21068,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/f9905227242e06e0fb0bdd59409b1f8bc913a634f55a37e4b43543887b38488e.pdf"
+    },
+    {
+      "file": "sources/1a5b17b33b11c8443f6b3be0c94247307667a3d499b4e1d586dd4afbe511aba4.txt",
+      "sha256": "1a5b17b33b11c8443f6b3be0c94247307667a3d499b4e1d586dd4afbe511aba4",
+      "bytes": 1073,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/f9905227242e06e0fb0bdd59409b1f8bc913a634f55a37e4b43543887b38488e.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        0,
+        201,
+        930
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/b2e363bc0524583873e7ed66f5acf2557ee6cfe029b4347d845005a1b3f45c46.txt",
+      "sha256": "b2e363bc0524583873e7ed66f5acf2557ee6cfe029b4347d845005a1b3f45c46",
+      "bytes": 383,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/f9905227242e06e0fb0bdd59409b1f8bc913a634f55a37e4b43543887b38488e.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        0,
+        201,
+        930
+      ]
+    },
+    {
+      "file": "sources/0a5fdbe8ed79cf23115036346764410605f2ec65ba7761c9e259b9d6830721a4.png",
+      "sha256": "0a5fdbe8ed79cf23115036346764410605f2ec65ba7761c9e259b9d6830721a4",
+      "bytes": 173037,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/f9905227242e06e0fb0bdd59409b1f8bc913a634f55a37e4b43543887b38488e.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        0,
+        201,
+        930
+      ]
+    },
+    {
+      "file": "sources/5b9e69bbd5bb2b9cd7e05c27e64d18dd2a32a20608925226ab66d6b9ded4e61e.pdf",
+      "sha256": "5b9e69bbd5bb2b9cd7e05c27e64d18dd2a32a20608925226ab66d6b9ded4e61e",
+      "bytes": 214042,
+      "kind": "ORIGINAL_OFFICIAL_GENERAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-305.pdf",
+      "retrievedAt": "2026-11-03T06:09:38.840452+00:00"
+    },
+    {
+      "file": "sources/269bcd4c5698017574bc30539a99747a5c48cbac83a91e8031b425887539e09c.txt",
+      "sha256": "269bcd4c5698017574bc30539a99747a5c48cbac83a91e8031b425887539e09c",
+      "bytes": 21290,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/5b9e69bbd5bb2b9cd7e05c27e64d18dd2a32a20608925226ab66d6b9ded4e61e.pdf"
+    },
+    {
+      "file": "sources/24cb69f68867aa3ba1f4c30f94419e2b6277e82ce6c92bb4f06ec4eab957f865.txt",
+      "sha256": "24cb69f68867aa3ba1f4c30f94419e2b6277e82ce6c92bb4f06ec4eab957f865",
+      "bytes": 1326,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/5b9e69bbd5bb2b9cd7e05c27e64d18dd2a32a20608925226ab66d6b9ded4e61e.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        0,
+        201,
+        950
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/bbef636087d18be7e334984d7c976a9a2b94b35cb672dfc11718858ed8006bce.txt",
+      "sha256": "bbef636087d18be7e334984d7c976a9a2b94b35cb672dfc11718858ed8006bce",
+      "bytes": 436,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/5b9e69bbd5bb2b9cd7e05c27e64d18dd2a32a20608925226ab66d6b9ded4e61e.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        0,
+        201,
+        950
+      ]
+    },
+    {
+      "file": "sources/ba6be29544400261cc7806284f2745ebaf0ac145bf33388989e4a352ce237fcd.png",
+      "sha256": "ba6be29544400261cc7806284f2745ebaf0ac145bf33388989e4a352ce237fcd",
+      "bytes": 212333,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/5b9e69bbd5bb2b9cd7e05c27e64d18dd2a32a20608925226ab66d6b9ded4e61e.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        0,
+        201,
+        950
+      ]
+    },
+    {
+      "file": "sources/ac18de4d63d7cc12837b94064be5998245d2324a75fa7dbb4fe298f5481df578.pdf",
+      "sha256": "ac18de4d63d7cc12837b94064be5998245d2324a75fa7dbb4fe298f5481df578",
+      "bytes": 213999,
+      "kind": "ORIGINAL_OFFICIAL_GENERAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-301.pdf",
+      "retrievedAt": "2026-11-03T06:09:38.745737+00:00"
+    },
+    {
+      "file": "sources/9fe832c3d41b5da3c2c13724b3fa1572109e5a61a0b72df4bf82bbdb0c2e966b.txt",
+      "sha256": "9fe832c3d41b5da3c2c13724b3fa1572109e5a61a0b72df4bf82bbdb0c2e966b",
+      "bytes": 21771,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/ac18de4d63d7cc12837b94064be5998245d2324a75fa7dbb4fe298f5481df578.pdf"
+    },
+    {
+      "file": "sources/451b8705b9f3e39dcfab1c41d9051543290c4b3fc362ed9c923ebaeab6d84ed5.txt",
+      "sha256": "451b8705b9f3e39dcfab1c41d9051543290c4b3fc362ed9c923ebaeab6d84ed5",
+      "bytes": 547,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/ac18de4d63d7cc12837b94064be5998245d2324a75fa7dbb4fe298f5481df578.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        400,
+        665,
+        600,
+        977
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/182f5b121024e959646a98389e211143b7d3a15bd1bb2d3ac98bad3ff378b9f2.txt",
+      "sha256": "182f5b121024e959646a98389e211143b7d3a15bd1bb2d3ac98bad3ff378b9f2",
+      "bytes": 94,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/ac18de4d63d7cc12837b94064be5998245d2324a75fa7dbb4fe298f5481df578.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        400,
+        665,
+        600,
+        977
+      ]
+    },
+    {
+      "file": "sources/38599e4f219a8f8cf0ec2e488c527fe8c1916bf8136892154722137c7720d0c8.png",
+      "sha256": "38599e4f219a8f8cf0ec2e488c527fe8c1916bf8136892154722137c7720d0c8",
+      "bytes": 82985,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/ac18de4d63d7cc12837b94064be5998245d2324a75fa7dbb4fe298f5481df578.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        400,
+        665,
+        600,
+        977
+      ]
+    },
+    {
+      "file": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sha256": "b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf",
+      "bytes": 238795,
+      "kind": "ORIGINAL_OFFICIAL_GENERAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-410.pdf",
+      "retrievedAt": "2026-11-03T06:09:39.536919+00:00"
+    },
+    {
+      "file": "sources/4ed37e46cc4fbcf22300d305fb13ca24fdec5579210fc7d57aceeb238fb24448.txt",
+      "sha256": "4ed37e46cc4fbcf22300d305fb13ca24fdec5579210fc7d57aceeb238fb24448",
+      "bytes": 30076,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf"
+    },
+    {
+      "file": "sources/46b69412b8d25ee68c70e7b345acf554b204d89ce1769ec0f96e26dad8c432af.txt",
+      "sha256": "46b69412b8d25ee68c70e7b345acf554b204d89ce1769ec0f96e26dad8c432af",
+      "bytes": 580,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        403,
+        665,
+        594,
+        965
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/e8c8955117c358e2753560cf8813ca0dbd3d5305062db19f2cafe94ee10eafe3.txt",
+      "sha256": "e8c8955117c358e2753560cf8813ca0dbd3d5305062db19f2cafe94ee10eafe3",
+      "bytes": 128,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        403,
+        665,
+        594,
+        965
+      ]
+    },
+    {
+      "file": "sources/a23be50757f116e56deedf55882e27bf2a2f0b1a65053540071a6b993cd69375.png",
+      "sha256": "a23be50757f116e56deedf55882e27bf2a2f0b1a65053540071a6b993cd69375",
+      "bytes": 91064,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        403,
+        665,
+        594,
+        965
+      ]
+    },
+    {
+      "file": "sources/2320efb1dfa6343f81f0e82066f543ce376ae99f58b936bcf6b0da1cfa13618b.txt",
+      "sha256": "2320efb1dfa6343f81f0e82066f543ce376ae99f58b936bcf6b0da1cfa13618b",
+      "bytes": 640,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        0,
+        201,
+        280
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/55cc3f5b5affc0d1ebbc0346a129821ad57e0893274852fca95ff18b0fa71c1a.txt",
+      "sha256": "55cc3f5b5affc0d1ebbc0346a129821ad57e0893274852fca95ff18b0fa71c1a",
+      "bytes": 118,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        0,
+        201,
+        280
+      ]
+    },
+    {
+      "file": "sources/bec6c35788ceae2f01f7ba666787070b1d22f7f9d49aeddad88338f127c7604c.png",
+      "sha256": "bec6c35788ceae2f01f7ba666787070b1d22f7f9d49aeddad88338f127c7604c",
+      "bytes": 101679,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        0,
+        201,
+        280
+      ]
+    },
+    {
+      "file": "sources/d275a052ac6ebb2bc6adda42b53c457a990ef06acd4dbcb166b58cc5c13e08c7.txt",
+      "sha256": "d275a052ac6ebb2bc6adda42b53c457a990ef06acd4dbcb166b58cc5c13e08c7",
+      "bytes": 569,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        280,
+        201,
+        525
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/fb2fec4681914e079d326b2b9417e81532a12d42050920e06a4da1a68cb8228e.txt",
+      "sha256": "fb2fec4681914e079d326b2b9417e81532a12d42050920e06a4da1a68cb8228e",
+      "bytes": 121,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        280,
+        201,
+        525
+      ]
+    },
+    {
+      "file": "sources/565ce671c1d0c5b7792637a6727dbef8ed930bae32fa465b07fca8617f14e45d.png",
+      "sha256": "565ce671c1d0c5b7792637a6727dbef8ed930bae32fa465b07fca8617f14e45d",
+      "bytes": 90132,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        280,
+        201,
+        525
+      ]
+    },
+    {
+      "file": "sources/e9c6a6c1f11d6c5f45c3c8c50ff0f6b340a311515ecf487a81d46d6c9c03541c.txt",
+      "sha256": "e9c6a6c1f11d6c5f45c3c8c50ff0f6b340a311515ecf487a81d46d6c9c03541c",
+      "bytes": 558,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        525,
+        201,
+        766
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/eae1c7cb4bbbcf74be5da8c944c7a934da8167650927ab3351893a78d173db9b.txt",
+      "sha256": "eae1c7cb4bbbcf74be5da8c944c7a934da8167650927ab3351893a78d173db9b",
+      "bytes": 123,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        525,
+        201,
+        766
+      ]
+    },
+    {
+      "file": "sources/bf074e9c0cd4ddd9f76cc5081c04dd40a92d33ea7ef101050964fdebf85b3188.png",
+      "sha256": "bf074e9c0cd4ddd9f76cc5081c04dd40a92d33ea7ef101050964fdebf85b3188",
+      "bytes": 104718,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        525,
+        201,
+        766
+      ]
+    },
+    {
+      "file": "sources/c1b3e9eda7f3fc443c29eb9b47343420a0691acde4ac4e8a3626a6274727c5b2.txt",
+      "sha256": "c1b3e9eda7f3fc443c29eb9b47343420a0691acde4ac4e8a3626a6274727c5b2",
+      "bytes": 500,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        766,
+        201,
+        977
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/9b3c702dbae6d585a0d9792908082b96c98d8526287918de1e8bcc709483a700.txt",
+      "sha256": "9b3c702dbae6d585a0d9792908082b96c98d8526287918de1e8bcc709483a700",
+      "bytes": 115,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        766,
+        201,
+        977
+      ]
+    },
+    {
+      "file": "sources/630fbebc08d21becea7a81f8516ee11ae9a9dc0376bb48cab081e6d2513e2e75.png",
+      "sha256": "630fbebc08d21becea7a81f8516ee11ae9a9dc0376bb48cab081e6d2513e2e75",
+      "bytes": 76966,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        4,
+        766,
+        201,
+        977
+      ]
+    },
+    {
+      "file": "sources/38079720dec25621240350dcb54bafb0e4b35690061e5d8aff39a06644e378d5.txt",
+      "sha256": "38079720dec25621240350dcb54bafb0e4b35690061e5d8aff39a06644e378d5",
+      "bytes": 602,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        204,
+        0,
+        400,
+        263
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/fc877f14c10172f6c6a21c5cd75ac7e7cb8031cb0c10fd4ebd28a2afab40258e.txt",
+      "sha256": "fc877f14c10172f6c6a21c5cd75ac7e7cb8031cb0c10fd4ebd28a2afab40258e",
+      "bytes": 120,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        204,
+        0,
+        400,
+        263
+      ]
+    },
+    {
+      "file": "sources/809f76be2bf8a73a31d1dd31a310c8cbd8fb7ef002b78d85cae122a30b254681.png",
+      "sha256": "809f76be2bf8a73a31d1dd31a310c8cbd8fb7ef002b78d85cae122a30b254681",
+      "bytes": 93549,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        204,
+        0,
+        400,
+        263
+      ]
+    },
+    {
+      "file": "sources/29c5eedc0d52308bb3afd2f428570db35b1fd6f80c168b8eb7414f5fac3dfbba.txt",
+      "sha256": "29c5eedc0d52308bb3afd2f428570db35b1fd6f80c168b8eb7414f5fac3dfbba",
+      "bytes": 826,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        204,
+        263,
+        400,
+        565
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/03cf70afb1acce66397eb87892ff5fbcea4ba8c31cfde50f70c67682af99dd7e.txt",
+      "sha256": "03cf70afb1acce66397eb87892ff5fbcea4ba8c31cfde50f70c67682af99dd7e",
+      "bytes": 207,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        204,
+        263,
+        400,
+        565
+      ]
+    },
+    {
+      "file": "sources/c0f397d0a3be152dec8c9cd4ef119943dd603821fe77c7681720c20c219b890b.png",
+      "sha256": "c0f397d0a3be152dec8c9cd4ef119943dd603821fe77c7681720c20c219b890b",
+      "bytes": 155334,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        204,
+        263,
+        400,
+        565
+      ]
+    },
+    {
+      "file": "sources/31d15151b10d655df281aaa8fee332a14225ca210013d5c15e855c93d67ab12a.txt",
+      "sha256": "31d15151b10d655df281aaa8fee332a14225ca210013d5c15e855c93d67ab12a",
+      "bytes": 567,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        204,
+        565,
+        400,
+        790
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/3c17f828eee8d54faa416161e1daf0e1cdafa1187e42ecbcb9adcb281f2ce37c.txt",
+      "sha256": "3c17f828eee8d54faa416161e1daf0e1cdafa1187e42ecbcb9adcb281f2ce37c",
+      "bytes": 120,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        204,
+        565,
+        400,
+        790
+      ]
+    },
+    {
+      "file": "sources/13700379dc27940c8d7eb5779905610636fdf8d3fd6c16677c87a28c8c3045b1.png",
+      "sha256": "13700379dc27940c8d7eb5779905610636fdf8d3fd6c16677c87a28c8c3045b1",
+      "bytes": 103386,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        204,
+        565,
+        400,
+        790
+      ]
+    },
+    {
+      "file": "sources/58e9720b7eb44266a15894d88320386d8157cf450054000310c27d6baee6bd71.txt",
+      "sha256": "58e9720b7eb44266a15894d88320386d8157cf450054000310c27d6baee6bd71",
+      "bytes": 557,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        403,
+        0,
+        594,
+        263
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/7066a42e5d29bd4b2e139a8c30b966059904b45586d8c6ef91fc9c0f9b7237f0.txt",
+      "sha256": "7066a42e5d29bd4b2e139a8c30b966059904b45586d8c6ef91fc9c0f9b7237f0",
+      "bytes": 92,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        403,
+        0,
+        594,
+        263
+      ]
+    },
+    {
+      "file": "sources/f539a8c6c7831c0c2366b6c4e8028f41e582d6c5f5db05ea3536bff3cede4209.png",
+      "sha256": "f539a8c6c7831c0c2366b6c4e8028f41e582d6c5f5db05ea3536bff3cede4209",
+      "bytes": 88367,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        403,
+        0,
+        594,
+        263
+      ]
+    },
+    {
+      "file": "sources/7abc35630d870be8cf9c57bbd5a3812c5e89d7a63461361952bb8f9c9d68e359.txt",
+      "sha256": "7abc35630d870be8cf9c57bbd5a3812c5e89d7a63461361952bb8f9c9d68e359",
+      "bytes": 757,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        403,
+        263,
+        594,
+        560
+      ],
+      "extractionCommand": "pdftotext -layout -r 72 with source page and point-bounded x/y/W/H"
+    },
+    {
+      "file": "sources/45d4985e9e22ea617072ab0b2f3352d7bc3266a58ac1ad905197e41df1f76410.txt",
+      "sha256": "45d4985e9e22ea617072ab0b2f3352d7bc3266a58ac1ad905197e41df1f76410",
+      "bytes": 169,
+      "kind": "NORMALIZED_RELEVANT_MEASURE_TEXT",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        403,
+        263,
+        594,
+        560
+      ]
+    },
+    {
+      "file": "sources/a68bcb15189c508c8851b4ea2b96a4f80c3c597edaab595a348f8e28a37f4d68.png",
+      "sha256": "a68bcb15189c508c8851b4ea2b96a4f80c3c597edaab595a348f8e28a37f4d68",
+      "bytes": 133690,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+      "sourcePage": 4,
+      "bbox": [
+        403,
+        263,
+        594,
+        560
+      ]
+    }
+  ]
+}

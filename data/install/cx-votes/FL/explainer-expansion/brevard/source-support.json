@@ -1,0 +1,636 @@
+[
+  {
+    "contestId": "fl-2026-brevard-lagoon-half-cent-renewal",
+    "ocdId": "ocd-division/country:us/state:fl/county:brevard",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-100.pdf",
+    "rawPdfFile": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+    "rawPdfSha256": "9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8",
+    "nativeTextFile": "sources/994e5e2036b095647608aa9f2fb51de976a7aabfde979d0e1a3933653ce554a0.txt",
+    "boundedTextFile": "sources/61d7565f6a6ce4dc0e1b96acbe43b9f28f94f384ffc1be09a71b38933fe82a02.txt",
+    "textFilePerMeasure": "sources/44a1595f5a549ac40f724130eb1aa9aeb1f9acb38c0d8aee92f3229dcbfbed02.txt",
+    "imageFile": "sources/db8eb5174518f4e9dd9d6e5262460c201ad5231ca73d5aa1062e9535ca95dc31.png",
+    "sourcePage": 3,
+    "bbox": [
+      4,
+      90,
+      199,
+      640
+    ],
+    "fields": {
+      "whatItDoes": [
+        "To restore the Indian River Lagoon through infrastructure, capital improvements, capital maintenance projects and programs designed to improve water quality and fish and wildlife habitat, remove muck, and reduce pollution, shall Brevard County renew the existing Save Our Indian River Lagoon half-cent sales tax for ten years, and require deposit of all revenue to a trust fund solely for such purposes, with continued citizen committee oversight and annual independent audits?"
+      ],
+      "yesMeans": [
+        "To restore the Indian River Lagoon through infrastructure, capital improvements, capital maintenance projects and programs designed to improve water quality and fish and wildlife habitat, remove muck, and reduce pollution, shall Brevard County renew the existing Save Our Indian River Lagoon half-cent sales tax for ten years, and require deposit of all revenue to a trust fund solely for such purposes, with continued citizen committee oversight and annual independent audits?"
+      ],
+      "noMeans": [
+        "To restore the Indian River Lagoon through infrastructure, capital improvements, capital maintenance projects and programs designed to improve water quality and fish and wildlife habitat, remove muck, and reduce pollution, shall Brevard County renew the existing Save Our Indian River Lagoon half-cent sales tax for ten years, and require deposit of all revenue to a trust fund solely for such purposes, with continued citizen committee oversight and annual independent audits?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Brevard County, Florida - November 3, 2026",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-brevard-school-operating-tax-renewal",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:brevard_county_school_district",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-100.pdf",
+    "rawPdfFile": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+    "rawPdfSha256": "9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8",
+    "nativeTextFile": "sources/994e5e2036b095647608aa9f2fb51de976a7aabfde979d0e1a3933653ce554a0.txt",
+    "boundedTextFile": "sources/1db4af7bf048cae344fdb4ca20c69e527348bed09d1773988d351c6db458275e.txt",
+    "textFilePerMeasure": "sources/8d812368a8e4ce99459a0f7c8da5f76b3d4badd5f5df5b619cb051f33b3a743e.txt",
+    "imageFile": "sources/aee70b5312646253822c4c49cea8ea0da89ddab732d0b43addb6f3793817cd1f.png",
+    "sourcePage": 3,
+    "bbox": [
+      204,
+      90,
+      398,
+      640
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the School Board renew a one (1) mill ad valorem millage for four years to sustain increased teacher and staff pay, fund technical training for students, and for other similar purposes, to ensure student achievement, recruit and retain teachers and staff with competitive salaries, and distribute funds as required to charter schools based on their proportionate share of district enrollment, with all expenditures reviewed by an independent citizens’ oversight committee."
+      ],
+      "yesMeans": [
+        "Shall the School Board renew a one (1) mill ad valorem millage for four years to sustain increased teacher and staff pay, fund technical training for students, and for other similar purposes, to ensure student achievement, recruit and retain teachers and staff with competitive salaries, and distribute funds as required to charter schools based on their proportionate share of district enrollment, with all expenditures reviewed by an independent citizens’ oversight committee."
+      ],
+      "noMeans": [
+        "Shall the School Board renew a one (1) mill ad valorem millage for four years to sustain increased teacher and staff pay, fund technical training for students, and for other similar purposes, to ensure student achievement, recruit and retain teachers and staff with competitive salaries, and distribute funds as required to charter schools based on their proportionate share of district enrollment, with all expenditures reviewed by an independent citizens’ oversight committee."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Brevard County, Florida - November 3, 2026",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred.",
+    "jurisdictionBindingNote": "The official Brevard County general-election sample names the School Board and the school levy. The exact existing Brevard County School District division is used; no municipal or special-district expansion is inferred."
+  },
+  {
+    "contestId": "fl-2026-brevard-school-half-cent-renewal",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:brevard_county_school_district",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-100.pdf",
+    "rawPdfFile": "sources/9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8.pdf",
+    "rawPdfSha256": "9bdc5683685223f6723534df2ef75438c775524615a5c605ae5b9872cdf673f8",
+    "nativeTextFile": "sources/994e5e2036b095647608aa9f2fb51de976a7aabfde979d0e1a3933653ce554a0.txt",
+    "boundedTextFile": "sources/592302b70d442d6ed51d67242208593afae5d9224dc6b915f11bc49d69fec30d.txt",
+    "textFilePerMeasure": "sources/4d8cbbb166248034be000172dda884abd0cbe655f49df2b7847a835d3c232f88.txt",
+    "imageFile": "sources/464b855e31e994cb3e54382028708f45d14ab001658dc2c9135d8f5cef0e0594.png",
+    "sourcePage": 3,
+    "bbox": [
+      403,
+      90,
+      594,
+      645
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the half-cent sales surtax approved by the voters in 2014 and 2020 be renewed for ten years to continue critical school facility projects, school security improvements and technology upgrades that keep schools safe and conducive to learning, revenue will be shared with charter schools as per statute based on proportionate share of district enrollment, with all expenditures reviewed by an independent citizens’ oversight committee."
+      ],
+      "yesMeans": [
+        "Shall the half-cent sales surtax approved by the voters in 2014 and 2020 be renewed for ten years to continue critical school facility projects, school security improvements and technology upgrades that keep schools safe and conducive to learning, revenue will be shared with charter schools as per statute based on proportionate share of district enrollment, with all expenditures reviewed by an independent citizens’ oversight committee."
+      ],
+      "noMeans": [
+        "Shall the half-cent sales surtax approved by the voters in 2014 and 2020 be renewed for ten years to continue critical school facility projects, school security improvements and technology upgrades that keep schools safe and conducive to learning, revenue will be shared with charter schools as per statute based on proportionate share of district enrollment, with all expenditures reviewed by an independent citizens’ oversight committee."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Brevard County, Florida - November 3, 2026",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred.",
+    "jurisdictionBindingNote": "The official Brevard County general-election sample names the School Board and the school levy. The exact existing Brevard County School District division is used; no municipal or special-district expansion is inferred."
+  },
+  {
+    "contestId": "fl-2026-melbourne-zoning-delegation",
+    "ocdId": "ocd-division/country:us/state:fl/place:melbourne",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-300.pdf",
+    "rawPdfFile": "sources/86dbe9ddf02b5d67ccfb4f3584d79a76c24c20d4d842f656d5ed105c6e3a7608.pdf",
+    "rawPdfSha256": "86dbe9ddf02b5d67ccfb4f3584d79a76c24c20d4d842f656d5ed105c6e3a7608",
+    "nativeTextFile": "sources/2ba3b239e5eb602cae25b76082a6f96bde2c211240c7360821acbed6db5b953c.txt",
+    "boundedTextFile": "sources/fdfe0ca672ff372e32b8e70597573398800ecba96b8e13d5d853403d75c50202.txt",
+    "textFilePerMeasure": "sources/9a7d59ee9728ffac972133682604de90098670122b02a19c0910c785a0777f1a.txt",
+    "imageFile": "sources/0c6523ba55f7b6a18390f8ee2e0f1596b24aedcaaf4fc9142fd35072b0a65b54.png",
+    "sourcePage": 4,
+    "bbox": [
+      4,
+      0,
+      201,
+      930
+    ],
+    "fields": {
+      "whatItDoes": [
+        "City Charter requires City Council to establish a Zoning Commission and appoint a Board of Adjustment. A charter amendment would enable City Council to delegate the duties of the Board of Adjustment to be performed by the Zoning Commission.",
+        "Shall Section 8.04 of the City Charter be amended such that the duties and functions of the Board of Adjustment may be delegated by City Council to the City Zoning Commission (Planning and Zoning Board)?"
+      ],
+      "yesMeans": [
+        "City Charter requires City Council to establish a Zoning Commission and appoint a Board of Adjustment. A charter amendment would enable City Council to delegate the duties of the Board of Adjustment to be performed by the Zoning Commission.",
+        "Shall Section 8.04 of the City Charter be amended such that the duties and functions of the Board of Adjustment may be delegated by City Council to the City Zoning Commission (Planning and Zoning Board)?"
+      ],
+      "noMeans": [
+        "City Charter requires City Council to establish a Zoning Commission and appoint a Board of Adjustment. A charter amendment would enable City Council to delegate the duties of the Board of Adjustment to be performed by the Zoning Commission.",
+        "Shall Section 8.04 of the City Charter be amended such that the duties and functions of the Board of Adjustment may be delegated by City Council to the City Zoning Commission (Planning and Zoning Board)?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Melbourne City Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-palm-bay-council-vacancies",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_bay",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-303.pdf",
+    "rawPdfFile": "sources/f9905227242e06e0fb0bdd59409b1f8bc913a634f55a37e4b43543887b38488e.pdf",
+    "rawPdfSha256": "f9905227242e06e0fb0bdd59409b1f8bc913a634f55a37e4b43543887b38488e",
+    "nativeTextFile": "sources/447a30ac76ffc1bd6f7c71239bc4bca88833e4f13625e934504912dd9d50d814.txt",
+    "boundedTextFile": "sources/1a5b17b33b11c8443f6b3be0c94247307667a3d499b4e1d586dd4afbe511aba4.txt",
+    "textFilePerMeasure": "sources/b2e363bc0524583873e7ed66f5acf2557ee6cfe029b4347d845005a1b3f45c46.txt",
+    "imageFile": "sources/0a5fdbe8ed79cf23115036346764410605f2ec65ba7761c9e259b9d6830721a4.png",
+    "sourcePage": 4,
+    "bbox": [
+      4,
+      0,
+      201,
+      930
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall section 3.062 of the Palm Bay City Charter be amended to provide that in the event of a vacancy on the City Council, if there are 12 months or less remaining in the unexpired term the vacancy may be filled by appointment by the remaining members of the City Council, and if there are more than 12 months remaining in the unexpired term the vacancy shall be filled by election?"
+      ],
+      "yesMeans": [
+        "Shall section 3.062 of the Palm Bay City Charter be amended to provide that in the event of a vacancy on the City Council, if there are 12 months or less remaining in the unexpired term the vacancy may be filled by appointment by the remaining members of the City Council, and if there are more than 12 months remaining in the unexpired term the vacancy shall be filled by election?"
+      ],
+      "noMeans": [
+        "Shall section 3.062 of the Palm Bay City Charter be amended to provide that in the event of a vacancy on the City Council, if there are 12 months or less remaining in the unexpired term the vacancy may be filled by appointment by the remaining members of the City Council, and if there are more than 12 months remaining in the unexpired term the vacancy shall be filled by election?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "City of Palm Bay Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-melbourne-beach-stormwater-road-bonds",
+    "ocdId": "ocd-division/country:us/state:fl/place:melbourne_beach",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-305.pdf",
+    "rawPdfFile": "sources/5b9e69bbd5bb2b9cd7e05c27e64d18dd2a32a20608925226ab66d6b9ded4e61e.pdf",
+    "rawPdfSha256": "5b9e69bbd5bb2b9cd7e05c27e64d18dd2a32a20608925226ab66d6b9ded4e61e",
+    "nativeTextFile": "sources/269bcd4c5698017574bc30539a99747a5c48cbac83a91e8031b425887539e09c.txt",
+    "boundedTextFile": "sources/24cb69f68867aa3ba1f4c30f94419e2b6277e82ce6c92bb4f06ec4eab957f865.txt",
+    "textFilePerMeasure": "sources/bbef636087d18be7e334984d7c976a9a2b94b35cb672dfc11718858ed8006bce.txt",
+    "imageFile": "sources/ba6be29544400261cc7806284f2745ebaf0ac145bf33388989e4a352ce237fcd.png",
+    "sourcePage": 4,
+    "bbox": [
+      4,
+      0,
+      201,
+      950
+    ],
+    "fields": {
+      "whatItDoes": [
+        "To develop, construct and install stormwater and roadwork transportation projects within the Town of Melbourne Beach shall the Town issue general obligation bonds in one or more series not exceeding $5,000,000 total principal amount, maturing within 20 years of each issuance, with interest not exceeding the maximum legal rate, and payable from ad valorem property taxes levied in amounts sufficient to pay debt service on such Bonds?"
+      ],
+      "yesMeans": [
+        "To develop, construct and install stormwater and roadwork transportation projects within the Town of Melbourne Beach shall the Town issue general obligation bonds in one or more series not exceeding $5,000,000 total principal amount, maturing within 20 years of each issuance, with interest not exceeding the maximum legal rate, and payable from ad valorem property taxes levied in amounts sufficient to pay debt service on such Bonds?"
+      ],
+      "noMeans": [
+        "To develop, construct and install stormwater and roadwork transportation projects within the Town of Melbourne Beach shall the Town issue general obligation bonds in one or more series not exceeding $5,000,000 total principal amount, maturing within 20 years of each issuance, with interest not exceeding the maximum legal rate, and payable from ad valorem property taxes levied in amounts sufficient to pay debt service on such Bonds?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Town of Melbourne Beach Bond Referendum",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-malabar-at-large-council-voting",
+    "ocdId": "ocd-division/country:us/state:fl/place:malabar",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-301.pdf",
+    "rawPdfFile": "sources/ac18de4d63d7cc12837b94064be5998245d2324a75fa7dbb4fe298f5481df578.pdf",
+    "rawPdfSha256": "ac18de4d63d7cc12837b94064be5998245d2324a75fa7dbb4fe298f5481df578",
+    "nativeTextFile": "sources/9fe832c3d41b5da3c2c13724b3fa1572109e5a61a0b72df4bf82bbdb0c2e966b.txt",
+    "boundedTextFile": "sources/451b8705b9f3e39dcfab1c41d9051543290c4b3fc362ed9c923ebaeab6d84ed5.txt",
+    "textFilePerMeasure": "sources/182f5b121024e959646a98389e211143b7d3a15bd1bb2d3ac98bad3ff378b9f2.txt",
+    "imageFile": "sources/38599e4f219a8f8cf0ec2e488c527fe8c1916bf8136892154722137c7720d0c8.png",
+    "sourcePage": 3,
+    "bbox": [
+      400,
+      665,
+      600,
+      977
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Charter Section 2.02 be amended to provide for at large voting for Town Counci members?"
+      ],
+      "yesMeans": [
+        "Shall Charter Section 2.02 be amended to provide for at large voting for Town Counci members?"
+      ],
+      "noMeans": [
+        "Shall Charter Section 2.02 be amended to provide for at large voting for Town Counci members?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Town of Malabar Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained. No continuation, repeal, implementation details or unprinted effective dates are inferred. Malabar formal question preserves the source text spelling Town Counci."
+  },
+  {
+    "contestId": "fl-2026-palm-shores-question-1",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_shores",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-410.pdf",
+    "rawPdfFile": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+    "rawPdfSha256": "b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf",
+    "nativeTextFile": "sources/4ed37e46cc4fbcf22300d305fb13ca24fdec5579210fc7d57aceeb238fb24448.txt",
+    "boundedTextFile": "sources/46b69412b8d25ee68c70e7b345acf554b204d89ce1769ec0f96e26dad8c432af.txt",
+    "textFilePerMeasure": "sources/e8c8955117c358e2753560cf8813ca0dbd3d5305062db19f2cafe94ee10eafe3.txt",
+    "imageFile": "sources/a23be50757f116e56deedf55882e27bf2a2f0b1a65053540071a6b993cd69375.png",
+    "sourcePage": 3,
+    "bbox": [
+      403,
+      665,
+      594,
+      965
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Charter Section 1.05 be amended to provide for a council form of government instead of a strong Mayor form of government?"
+      ],
+      "yesMeans": [
+        "Shall Charter Section 1.05 be amended to provide for a council form of government instead of a strong Mayor form of government?"
+      ],
+      "noMeans": [
+        "Shall Charter Section 1.05 be amended to provide for a council form of government instead of a strong Mayor form of government?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Town of Palm Shores Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-palm-shores-question-2",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_shores",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-410.pdf",
+    "rawPdfFile": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+    "rawPdfSha256": "b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf",
+    "nativeTextFile": "sources/4ed37e46cc4fbcf22300d305fb13ca24fdec5579210fc7d57aceeb238fb24448.txt",
+    "boundedTextFile": "sources/2320efb1dfa6343f81f0e82066f543ce376ae99f58b936bcf6b0da1cfa13618b.txt",
+    "textFilePerMeasure": "sources/55cc3f5b5affc0d1ebbc0346a129821ad57e0893274852fca95ff18b0fa71c1a.txt",
+    "imageFile": "sources/bec6c35788ceae2f01f7ba666787070b1d22f7f9d49aeddad88338f127c7604c.png",
+    "sourcePage": 4,
+    "bbox": [
+      4,
+      0,
+      201,
+      280
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Charter Section 2.02 be amended to recognize the Town Council is made up of 5 members which includes the Mayor?"
+      ],
+      "yesMeans": [
+        "Shall Charter Section 2.02 be amended to recognize the Town Council is made up of 5 members which includes the Mayor?"
+      ],
+      "noMeans": [
+        "Shall Charter Section 2.02 be amended to recognize the Town Council is made up of 5 members which includes the Mayor?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Town of Palm Shores Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-palm-shores-question-3",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_shores",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-410.pdf",
+    "rawPdfFile": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+    "rawPdfSha256": "b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf",
+    "nativeTextFile": "sources/4ed37e46cc4fbcf22300d305fb13ca24fdec5579210fc7d57aceeb238fb24448.txt",
+    "boundedTextFile": "sources/d275a052ac6ebb2bc6adda42b53c457a990ef06acd4dbcb166b58cc5c13e08c7.txt",
+    "textFilePerMeasure": "sources/fb2fec4681914e079d326b2b9417e81532a12d42050920e06a4da1a68cb8228e.txt",
+    "imageFile": "sources/565ce671c1d0c5b7792637a6727dbef8ed930bae32fa465b07fca8617f14e45d.png",
+    "sourcePage": 4,
+    "bbox": [
+      4,
+      280,
+      201,
+      525
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Charter Section 2.07 be amended to remove provisions relating to the compensation of Councilmembers and the Mayor?"
+      ],
+      "yesMeans": [
+        "Shall Charter Section 2.07 be amended to remove provisions relating to the compensation of Councilmembers and the Mayor?"
+      ],
+      "noMeans": [
+        "Shall Charter Section 2.07 be amended to remove provisions relating to the compensation of Councilmembers and the Mayor?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Town of Palm Shores Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-palm-shores-question-4",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_shores",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-410.pdf",
+    "rawPdfFile": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+    "rawPdfSha256": "b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf",
+    "nativeTextFile": "sources/4ed37e46cc4fbcf22300d305fb13ca24fdec5579210fc7d57aceeb238fb24448.txt",
+    "boundedTextFile": "sources/e9c6a6c1f11d6c5f45c3c8c50ff0f6b340a311515ecf487a81d46d6c9c03541c.txt",
+    "textFilePerMeasure": "sources/eae1c7cb4bbbcf74be5da8c944c7a934da8167650927ab3351893a78d173db9b.txt",
+    "imageFile": "sources/bf074e9c0cd4ddd9f76cc5081c04dd40a92d33ea7ef101050964fdebf85b3188.png",
+    "sourcePage": 4,
+    "bbox": [
+      4,
+      525,
+      201,
+      766
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Charter Section 2.09 be amended to provide for appointment of a Town Manager and assigned powers and duties thereof?"
+      ],
+      "yesMeans": [
+        "Shall Charter Section 2.09 be amended to provide for appointment of a Town Manager and assigned powers and duties thereof?"
+      ],
+      "noMeans": [
+        "Shall Charter Section 2.09 be amended to provide for appointment of a Town Manager and assigned powers and duties thereof?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Town of Palm Shores Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-palm-shores-question-5",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_shores",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-410.pdf",
+    "rawPdfFile": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+    "rawPdfSha256": "b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf",
+    "nativeTextFile": "sources/4ed37e46cc4fbcf22300d305fb13ca24fdec5579210fc7d57aceeb238fb24448.txt",
+    "boundedTextFile": "sources/c1b3e9eda7f3fc443c29eb9b47343420a0691acde4ac4e8a3626a6274727c5b2.txt",
+    "textFilePerMeasure": "sources/9b3c702dbae6d585a0d9792908082b96c98d8526287918de1e8bcc709483a700.txt",
+    "imageFile": "sources/630fbebc08d21becea7a81f8516ee11ae9a9dc0376bb48cab081e6d2513e2e75.png",
+    "sourcePage": 4,
+    "bbox": [
+      4,
+      766,
+      201,
+      977
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Charter Section 4.01 be amended to provide that the Town Council shall appoint and supervise the Town Clerk?"
+      ],
+      "yesMeans": [
+        "Shall Charter Section 4.01 be amended to provide that the Town Council shall appoint and supervise the Town Clerk?"
+      ],
+      "noMeans": [
+        "Shall Charter Section 4.01 be amended to provide that the Town Council shall appoint and supervise the Town Clerk?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Town of Palm Shores Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-palm-shores-question-6",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_shores",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-410.pdf",
+    "rawPdfFile": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+    "rawPdfSha256": "b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf",
+    "nativeTextFile": "sources/4ed37e46cc4fbcf22300d305fb13ca24fdec5579210fc7d57aceeb238fb24448.txt",
+    "boundedTextFile": "sources/38079720dec25621240350dcb54bafb0e4b35690061e5d8aff39a06644e378d5.txt",
+    "textFilePerMeasure": "sources/fc877f14c10172f6c6a21c5cd75ac7e7cb8031cb0c10fd4ebd28a2afab40258e.txt",
+    "imageFile": "sources/809f76be2bf8a73a31d1dd31a310c8cbd8fb7ef002b78d85cae122a30b254681.png",
+    "sourcePage": 4,
+    "bbox": [
+      204,
+      0,
+      400,
+      263
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Charter Section 4.03 be amended to provide that the Town Council has the sole authority to remove the Town Clerk?"
+      ],
+      "yesMeans": [
+        "Shall Charter Section 4.03 be amended to provide that the Town Council has the sole authority to remove the Town Clerk?"
+      ],
+      "noMeans": [
+        "Shall Charter Section 4.03 be amended to provide that the Town Council has the sole authority to remove the Town Clerk?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Town of Palm Shores Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-palm-shores-question-7",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_shores",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-410.pdf",
+    "rawPdfFile": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+    "rawPdfSha256": "b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf",
+    "nativeTextFile": "sources/4ed37e46cc4fbcf22300d305fb13ca24fdec5579210fc7d57aceeb238fb24448.txt",
+    "boundedTextFile": "sources/29c5eedc0d52308bb3afd2f428570db35b1fd6f80c168b8eb7414f5fac3dfbba.txt",
+    "textFilePerMeasure": "sources/03cf70afb1acce66397eb87892ff5fbcea4ba8c31cfde50f70c67682af99dd7e.txt",
+    "imageFile": "sources/c0f397d0a3be152dec8c9cd4ef119943dd603821fe77c7681720c20c219b890b.png",
+    "sourcePage": 4,
+    "bbox": [
+      204,
+      263,
+      400,
+      565
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Charter Section 5.01 be amended to provide that the Town Council is the sole authority to create Town Departments, Offices and Agencies and that the Town Manager directs and supervises town personnel?"
+      ],
+      "yesMeans": [
+        "Shall Charter Section 5.01 be amended to provide that the Town Council is the sole authority to create Town Departments, Offices and Agencies and that the Town Manager directs and supervises town personnel?"
+      ],
+      "noMeans": [
+        "Shall Charter Section 5.01 be amended to provide that the Town Council is the sole authority to create Town Departments, Offices and Agencies and that the Town Manager directs and supervises town personnel?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Town of Palm Shores Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-palm-shores-question-8",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_shores",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-410.pdf",
+    "rawPdfFile": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+    "rawPdfSha256": "b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf",
+    "nativeTextFile": "sources/4ed37e46cc4fbcf22300d305fb13ca24fdec5579210fc7d57aceeb238fb24448.txt",
+    "boundedTextFile": "sources/31d15151b10d655df281aaa8fee332a14225ca210013d5c15e855c93d67ab12a.txt",
+    "textFilePerMeasure": "sources/3c17f828eee8d54faa416161e1daf0e1cdafa1187e42ecbcb9adcb281f2ce37c.txt",
+    "imageFile": "sources/13700379dc27940c8d7eb5779905610636fdf8d3fd6c16677c87a28c8c3045b1.png",
+    "sourcePage": 4,
+    "bbox": [
+      204,
+      565,
+      400,
+      790
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Charter Section 5.02 be amended to provide for the selection and removal of the Town Manager by the Town Council?"
+      ],
+      "yesMeans": [
+        "Shall Charter Section 5.02 be amended to provide for the selection and removal of the Town Manager by the Town Council?"
+      ],
+      "noMeans": [
+        "Shall Charter Section 5.02 be amended to provide for the selection and removal of the Town Manager by the Town Council?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Town of Palm Shores Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-palm-shores-question-9",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_shores",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-410.pdf",
+    "rawPdfFile": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+    "rawPdfSha256": "b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf",
+    "nativeTextFile": "sources/4ed37e46cc4fbcf22300d305fb13ca24fdec5579210fc7d57aceeb238fb24448.txt",
+    "boundedTextFile": "sources/58e9720b7eb44266a15894d88320386d8157cf450054000310c27d6baee6bd71.txt",
+    "textFilePerMeasure": "sources/7066a42e5d29bd4b2e139a8c30b966059904b45586d8c6ef91fc9c0f9b7237f0.txt",
+    "imageFile": "sources/f539a8c6c7831c0c2366b6c4e8028f41e582d6c5f5db05ea3536bff3cede4209.png",
+    "sourcePage": 4,
+    "bbox": [
+      403,
+      0,
+      594,
+      263
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Charter Section 10.01 be amended to designate seat numbers for the Mayor and Council?"
+      ],
+      "yesMeans": [
+        "Shall Charter Section 10.01 be amended to designate seat numbers for the Mayor and Council?"
+      ],
+      "noMeans": [
+        "Shall Charter Section 10.01 be amended to designate seat numbers for the Mayor and Council?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Town of Palm Shores Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  },
+  {
+    "contestId": "fl-2026-palm-shores-question-10",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_shores",
+    "sourceUrl": "https://www.votebrevard.gov/Portals/Brevard/Documents/PreviousElections/2026GE/Sample%20Ballots/105-410.pdf",
+    "rawPdfFile": "sources/b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf.pdf",
+    "rawPdfSha256": "b102fe552f7c5dbbff89717dd7ce0d68b7c4ed2e3cfba16bb6c1f9db858e9bcf",
+    "nativeTextFile": "sources/4ed37e46cc4fbcf22300d305fb13ca24fdec5579210fc7d57aceeb238fb24448.txt",
+    "boundedTextFile": "sources/7abc35630d870be8cf9c57bbd5a3812c5e89d7a63461361952bb8f9c9d68e359.txt",
+    "textFilePerMeasure": "sources/45d4985e9e22ea617072ab0b2f3352d7bc3266a58ac1ad905197e41df1f76410.txt",
+    "imageFile": "sources/a68bcb15189c508c8851b4ea2b96a4f80c3c597edaab595a348f8e28a37f4d68.png",
+    "sourcePage": 4,
+    "bbox": [
+      403,
+      263,
+      594,
+      560
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Charter Section 11.06 be amended to comply with state law requiring proposed charter amendments to be adopted by ordinance and state law advertising requirements?"
+      ],
+      "yesMeans": [
+        "Shall Charter Section 11.06 be amended to comply with state law requiring proposed charter amendments to be adopted by ordinance and state law advertising requirements?"
+      ],
+      "noMeans": [
+        "Shall Charter Section 11.06 be amended to comply with state law requiring proposed charter amendments to be adopted by ordinance and state law advertising requirements?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "jurisdictionQuote": "Town of Palm Shores Charter Amendment",
+    "extractionMethod": "pdftotext point-bounded single column, English formal question isolated before the Spanish version; isolated watermark letter E excluded after visual comparison; native full PDF and unaltered bounded extraction retained.",
+    "hashScope": "Original official county sample PDF bytes",
+    "reviewNote": "Only the official question and printed neutral introductory description are explained; all printed limits and conditions retained, with no unprinted implementation details or dates inferred."
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-03T06:20:50.778Z",
+  "preparedRecords": 17,
+  "originalSourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "boundedNativeSourceReading": "PASS; all17 official questions compared against native rendered pages; watermark artifacts removed only from normalized derived question text",
+  "officialAuthority": "PASS",
+  "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/brevard",
+  "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "providerCalls": 0,
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

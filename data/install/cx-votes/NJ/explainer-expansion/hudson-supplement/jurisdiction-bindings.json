@@ -20,7 +20,7 @@
       "SCHOOL_NAME_NOT_FOUND",
       -1
     ],
-    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government.",
+    "basis": "Currentnativeofficialschoolsitehost matchesheldNCES3404200 andCensusgovernment181307; exactschoolname,501NorthThirdStreet,EastNewark07029,phone9734816800 correspond. HeldNCESstreet501-11NorthThirdStreet namesblockrange; currentandCensus501 areconsistent,notclaimedbyteexact. ExistingEastNewarkBoroughSchoolDistrictdivision1395/3404200 usedforschoolboardquestion,notmunicipality;governmentprimary-1unchanged.",
     "identityEvidencePath": "sources/5640cdf719541d694cf7e17c81955a381a83b8a32b3a8d2f16cff2eb3a4f703d.json",
     "governmentPrimaryDivisionBindingUnchanged": -1
   },

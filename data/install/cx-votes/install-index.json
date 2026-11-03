@@ -3,7 +3,7 @@
   "step": "CX-VOTES",
   "branch": "stream/cx-votes",
   "status": "READY_FOR_RIVER_DATA_INSTALL_PENDING_LIVE_VERIFICATION",
-  "preparedAt": "2026-11-03T10:26:09.146113+00:00",
+  "preparedAt": "2026-11-03T10:46:00.417109+00:00",
   "productionAuthorization": "No production writes after the branch-only instruction; no reader data was published by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
   "appCodeChanged": false,
   "sourceReview": "source-review/install.json",
@@ -650,7 +650,7 @@
     }
   ],
   "activeFocus": "EXPLAINERS_ONLY",
-  "explainersPreparedThroughCommit": "57b49ea1d8a31e9962f7a5a2a2c109033438299d",
+  "explainersPreparedThroughCommit": "cff07f259ec33147efff47d83e949794f3db0a5d",
   "states": [
     {
       "state": "AK",
@@ -696,8 +696,26 @@
     },
     {
       "state": "AR",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 9,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 15,
       "dataInstalls": [
+        {
+          "manifest": "AR/explainer-expansion/garland/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:AR",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "AR/explainer-expansion/saline/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:AR",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "AR/explainer-expansion/sebastian/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:AR",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "AR/explainer-expansion/stone/install.json",
           "preparedExplainers": 1,
@@ -726,7 +744,7 @@
     },
     {
       "state": "CA",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 190,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 193,
       "dataInstalls": [
         {
           "manifest": "CA/explainer-expansion/alameda-city/install.json",
@@ -771,6 +789,12 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CA/explainer-expansion/college-scope-three/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CA/explainer-expansion/coronado/install.json",
           "preparedExplainers": 1,
           "contractId": "ballot-contests:CA",
@@ -808,6 +832,12 @@
         },
         {
           "manifest": "CA/explainer-expansion/fresno-fowler-t/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/fresno-hospital-h/install.json",
           "preparedExplainers": 1,
           "contractId": "ballot-contests:CA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
@@ -1398,7 +1428,7 @@
     },
     {
       "state": "FL",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 119,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 124,
       "dataInstalls": [
         {
           "manifest": "FL/explainer-expansion/alachua/install.json",
@@ -1415,6 +1445,12 @@
         {
           "manifest": "FL/explainer-expansion/broward-county-school/install.json",
           "preparedExplainers": 4,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "FL/explainer-expansion/coconut-creek/install.json",
+          "preparedExplainers": 5,
           "contractId": "ballot-contests:FL",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -2058,7 +2094,7 @@
     },
     {
       "state": "KS",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 17,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 19,
       "dataInstalls": [
         {
           "manifest": "KS/explainer-expansion/coffey-reno/install.json",
@@ -2075,6 +2111,18 @@
         {
           "manifest": "KS/explainer-expansion/emporia-three/install.json",
           "preparedExplainers": 3,
+          "contractId": "ballot-contests:KS",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "KS/explainer-expansion/finney-tax/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:KS",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "KS/explainer-expansion/kechi-precincts/install.json",
+          "preparedExplainers": 1,
           "contractId": "ballot-contests:KS",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -2436,11 +2484,23 @@
     },
     {
       "state": "NJ",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 27,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 37,
       "dataInstalls": [
         {
           "manifest": "NJ/explainer-expansion/essex-supplement/install.json",
           "preparedExplainers": 3,
+          "contractId": "ballot-contests:NJ",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "NJ/explainer-expansion/hudson-supplement/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:NJ",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "NJ/explainer-expansion/hunterdon-supplement/install.json",
+          "preparedExplainers": 8,
           "contractId": "ballot-contests:NJ",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -2826,8 +2886,20 @@
     },
     {
       "state": "VT",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 22,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 27,
       "dataInstalls": [
+        {
+          "manifest": "VT/explainer-expansion/berlin-and-school-four/install.json",
+          "preparedExplainers": 4,
+          "contractId": "ballot-contests:VT",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "VT/explainer-expansion/bradford-recall/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:VT",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "VT/explainer-expansion/first23/install.json",
           "preparedExplainers": 22,
@@ -3012,7 +3084,7 @@
     }
   ],
   "currentExplainerPreparation": {
-    "uniquePreparedExplanationsOrAttachmentRepairs": 1987,
+    "uniquePreparedExplanationsOrAttachmentRepairs": 2018,
     "statesAndDCWithPreparedChanges": 46,
     "liveInstallation": "Not performed by this session; River installs as data and verifies live.",
     "scope": "Source-checked packets committed to this branch. This is not a nationwide completeness claim. Local official-source acquisition continues.",
@@ -3033,11 +3105,13 @@
       "NE_Douglas": "3/3 local questions in current official countywide sample prepared. Othercounty/independent inventories remain open.",
       "ND": "23/24 current official yes/no question slots covered after queued packets; Cedar River Ambulance exact question/electorate remains source acquisition",
       "CA_Marin": "20/20 current official county-listed measures prepared with exact source-defined electorates; older college geometry vintage and road-tax official revenue conflict explicitly retained.",
-      "CA_Fresno": "8/9 current official county-listed questions prepared; only SierraKingsHealthcareH exact hospital district map remains in progress.",
+      "CA_Fresno": "9/9 current county-listed questions prepared, including exact current SierraKingsHealthcare district map. OtherCalifornia county and district source inventories continue.",
       "KS_Emporia": "3/3 current City-listed November3questions prepared, with full proposedordinance definitions and different data-center versus BESS courtconditions retained. OtherLyonCounty locals are not independently bounded.",
       "NJ_Union": "1/1 unique question in42current official municipality/ward ballotstyles covering all21municipalities prepared; separate off-cycle/fire-district inventories not certified.",
       "NJ_Morris": "3/3 unique questions in46current official ballotstyles covering39municipalities prepared; operative ballot panels read in addition to selectable surrounding instructions. Separate off-cycle inventories not certified.",
-      "VT": "22 local explainers prepared from officially assigned current ballot questions. Superseded b04c4c6a0 first23 packet corrected by b5fefaa17:EssexJunction force-main unlinked ENR row removed and source-guarded conditional three-row retraction supplied. Current municipal sample PDFs omit it. Raw37 ENR rows are not an established current-measure denominator. Otherofficial current questions are still being reconciled."
+      "VT": "27 currently verified local explainer records prepared:22 corrected first packet,Bradfordrecall1,Berlinandregional-school4. Superseded b04c4c6a0 correctedbyb5fefaa17, with source-guarded exact3row conditionalwithdrawal for EssexJunction. Raw37ENRquestionfields are not a verified currentdenominator; unlinked/staleentries excluded and independentlocal acquisition continues.",
+      "KS_Sedgwick": "5/5 questions in the four current published county special-election notices prepared:Andale,ValleyCenter,WichitaUSD259two propositions,KechiTownship building. Kechi electorate is exact13nativeCountyGISprecinct union; priorCensusTownship draft removed. Independent local/offcycle inventories notcertified.",
+      "NJ_Hunterdon": "7/7 proposals in currentofficial countypublicquestions master prepared as8electoratecontests; NHVregionalization has separateexistingregional andBloomsbury approvals. Full26municipal packets/117pages checked for actualwording; firequestion voterterritory is wholeLambertville perall4cityprecinctballots."
     },
     "activeWork": "Continue official local-measure inventories in every state and prepare each missing source-linked neutral explainer."
   }

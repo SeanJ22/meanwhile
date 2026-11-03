@@ -1,0 +1,9 @@
+{
+  "heldReference": "data/derived/registration/ca.json",
+  "governments": [],
+  "collegeIdentifier": {
+    "CDS": "4970946",
+    "FID": 18,
+    "source": "Current state-linked Foundation legal/voterprecinct map"
+  }
+}

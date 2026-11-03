@@ -1,0 +1,10 @@
+{
+  "completeZctaFeatures": 29,
+  "positivePolygonIntersections": 23,
+  "zipEdges": 24,
+  "zctaEdges": 23,
+  "allPositiveZctasKnownPostal": true,
+  "districts": 6,
+  "limits": "Exact current published district polygons only; not service-provider areas, SOI, town/CDP or county fallback.",
+  "additionalExistingPostalLinks": 1
+}

@@ -1,0 +1,129 @@
+{
+  "source": "Current county-published Administrative_District_LAFCO MapServer exact district layers3/8/11/18. Sphere-of-influence layers and separate service-provider layers excluded.",
+  "captureEdition": 2026,
+  "underlyingLegalBoundaryDate": "Not stated;2026 labels capture edition only.",
+  "sourceCoordinateTransformation": "Native GeoJSON coordinates and polygon/ring structure copied exactly; publisher performs requested outSR4326. No rounding, repair, simplification, buffer or service-area widening.",
+  "govAuthoritySource": "https://assets.marincounty.gov/marincounty-prod/public/2025-09/well-drilling-fillable-application-form-and-instructions-rev-Sept-2025.pdf",
+  "govAuthorityRawSha256": "474c9d2e4a757f9ba1bd252e8803ef243c661fd0c9305bdd40bf8616081a2e25",
+  "govHostLinkProof": "Native .gov PDF page2 actual URI hyperlink; official-gis-host-link.json",
+  "completeZctaFeatures": 29,
+  "enclosingEnvelope": [
+    -122.89,
+    37.88,
+    -122.47,
+    38.12
+  ],
+  "specs": [
+    {
+      "letter": "Y",
+      "name": "County Service Area27 — Ross Valley Paramedic Service Area",
+      "id": "ocd-division/country:us/state:ca/special_district:county_service_area_27",
+      "file": "ca-9414f6372977.json",
+      "oid": 16,
+      "sbe": "142CSA",
+      "pid": null,
+      "sourceUrl": "https://gis.marinpublic.com/arcgis/rest/services/MarinMap2/Administrative_District_LAFCO/MapServer/3/query?objectIds=3,16&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceProperties": {
+        "OBJECTID": 16,
+        "Name": "ROSS VALLEY PARAMEDIC SERVICE AREA",
+        "Acres": 3555.905,
+        "Number": "CSA 27",
+        "SBE_ID": "142CSA",
+        "SHAPE.STArea()": 156569885.9187087,
+        "SHAPE.STLength()": 192296.28145298024
+      }
+    },
+    {
+      "letter": "Z",
+      "name": "County Service Area29 — Paradise Cay",
+      "id": "ocd-division/country:us/state:ca/special_district:county_service_area_29",
+      "file": "ca-9414f6372977.json",
+      "oid": 3,
+      "sbe": "164CSA",
+      "pid": null,
+      "sourceUrl": "https://gis.marinpublic.com/arcgis/rest/services/MarinMap2/Administrative_District_LAFCO/MapServer/3/query?objectIds=3,16&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceProperties": {
+        "OBJECTID": 3,
+        "Name": "PARADISE CAY SERVICE AREA",
+        "Acres": 44.072,
+        "Number": "CSA 29",
+        "SBE_ID": "164CSA",
+        "SHAPE.STArea()": 1868905.6204081,
+        "SHAPE.STLength()": 10910.264263594476
+      }
+    },
+    {
+      "letter": "AA",
+      "name": "Inverness Public Utility District",
+      "id": "ocd-division/country:us/state:ca/special_district:inverness_public_utility_district",
+      "file": "ca-07200318c79a.json",
+      "oid": 1,
+      "sbe": "148PUD",
+      "pid": "201401",
+      "sourceUrl": "https://gis.marinpublic.com/arcgis/rest/services/MarinMap2/Administrative_District_LAFCO/MapServer/11/query?objectIds=1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceProperties": {
+        "OBJECTID": 1,
+        "District": "INVERNESS PUBLIC UTILITY DISTRICT",
+        "Acres": 1410.297,
+        "SBE_ID": "148PUD",
+        "SHAPE.STArea()": 61432560.227357365,
+        "SHAPE.STLength()": 38658.189983088494
+      }
+    },
+    {
+      "letter": "BB",
+      "name": "Kentfield Fire Protection District",
+      "id": "ocd-division/country:us/state:ca/special_district:kentfield_fire_protection_district",
+      "file": "ca-d52508420706.json",
+      "oid": 4,
+      "sbe": "067FIRE",
+      "pid": "205941",
+      "sourceUrl": "https://gis.marinpublic.com/arcgis/rest/services/MarinMap2/Administrative_District_LAFCO/MapServer/8/query?objectIds=3,4&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceProperties": {
+        "OBJECTID": 4,
+        "District": "KENTFIELD FIRE PROTECTION DISTRICT",
+        "Acres": 1747.739,
+        "SBE_ID": "067FIRE",
+        "SHAPE.STArea()": 76121664.47128828,
+        "SHAPE.STLength()": 68291.19801342557
+      }
+    },
+    {
+      "letter": "DD",
+      "name": "Sleepy Hollow Fire Protection District",
+      "id": "ocd-division/country:us/state:ca/special_district:sleepy_hollow_fire_protection_district",
+      "file": "ca-d52508420706.json",
+      "oid": 3,
+      "sbe": "069FIRE",
+      "pid": "142383",
+      "sourceUrl": "https://gis.marinpublic.com/arcgis/rest/services/MarinMap2/Administrative_District_LAFCO/MapServer/8/query?objectIds=3,4&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceProperties": {
+        "OBJECTID": 3,
+        "District": "SLEEPY HOLLOW FIRE PROTECTION DISTRICT",
+        "Acres": 1610.492,
+        "SBE_ID": "069FIRE",
+        "SHAPE.STArea()": 70144537.19384892,
+        "SHAPE.STLength()": 42529.861807193956
+      }
+    },
+    {
+      "letter": "EE",
+      "name": "Stinson Beach County Water District",
+      "id": "ocd-division/country:us/state:ca/special_district:stinson_beach_county_water_district",
+      "file": "ca-d17b88e61ad5.json",
+      "oid": 2,
+      "sbe": "161WTR",
+      "pid": "205948",
+      "sourceUrl": "https://gis.marinpublic.com/arcgis/rest/services/MarinMap2/Administrative_District_LAFCO/MapServer/18/query?objectIds=2&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceProperties": {
+        "OBJECTID": 2,
+        "District": "STINSON BEACH COUNTY WATER DISTRICT",
+        "Acres": 5977.854,
+        "SBE_ID": "161WTR",
+        "SHAPE.STArea()": 260395322.89471987,
+        "SHAPE.STLength()": 124141.09405369734
+      }
+    }
+  ],
+  "knownIdentityNotes": "Kentfield and Inverness existing canonical electoral OCDs retained. The new Inverness polygon is the actual whole PUD district, replacing the older drinking-water-only source for current election geography; never the Inverness CDP. Other source-defined district IDs are not claimed Census geographic IDs."
+}

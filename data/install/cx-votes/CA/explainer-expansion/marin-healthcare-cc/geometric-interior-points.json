@@ -1,0 +1,10 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:marin_healthcare_district",
+    "point": [
+      -122.688339554675,
+      38.068045680298354
+    ],
+    "basis": "Deterministic geometric interior; no voter, household or residential address."
+  }
+]

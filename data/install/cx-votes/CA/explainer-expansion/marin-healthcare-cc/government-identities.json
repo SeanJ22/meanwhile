@@ -1,0 +1,18 @@
+{
+  "heldReference": "data/derived/registration/ca.json",
+  "governments": [
+    {
+      "letter": "CC",
+      "row": [
+        "142381",
+        "ca:special:marin-healthcare-district",
+        "MARIN HEALTHCARE DISTRICT",
+        "SPECIAL DISTRICT",
+        -1,
+        "NO_CENSUS_GEOGRAPHY",
+        -1
+      ]
+    }
+  ],
+  "heldReferenceSha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc"
+}

@@ -1,0 +1,13 @@
+{
+  "route": [
+    "https://www.marincounty.gov/departments/it/maps-and-geographic-information-systems-gis",
+    "https://www.marinmap.org/",
+    "https://www.marinlafco.org/marin-lafco-gis-map-viewer-4d5fdc4",
+    "https://marinlafco.maps.arcgis.com/apps/webappviewer/index.html?id=357a2744762c4f2da5094955125329e5",
+    "https://marinlafco.maps.arcgis.com/sharing/rest/content/items/357a2744762c4f2da5094955125329e5/data?f=json",
+    "https://marinlafco.maps.arcgis.com/sharing/rest/content/items/1d21058329044424998439eb45342a49/data?f=json",
+    "https://services3.arcgis.com/dkpOfuz3lCHMxq7I/arcgis/rest/services/Marin_Healthcare_Districts/FeatureServer/26"
+  ],
+  "basis": "First three are actual href links in native current HTML; app JSON names exact webmap ID; current map JSON operational layer names exact legal HealthcareDistrict service26. Separate SOI27 excluded. No invented HTML or owner assumption.",
+  "rawCaptures": "source-manifest.json and source-captures.json"
+}

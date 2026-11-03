@@ -1,0 +1,259 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-marin-t",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:mill_valley",
+          "title": "Mill Valley municipal services tax — Measure T",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-t-110326",
+            "collectedAt": "2026-11-03T08:57:24.117102+00:00",
+            "verifiedAt": "2026-11-03T09:21:40.258792+00:00",
+            "quote": "To renew funding exclusively for improved fire suppression activities including vegetation management and tree maintenance, and road repair and street maintenance, shall the Mill Valley Municipal Service Tax be renewed within the City of Mill Valley Community Facilities District Number 2026-1, at a rate of $303 for single family residential property, with a 2% annual adjustment, raising an average of $1.9 million annually over 10 years, and shall the appropriations limit be established, all as specified in Mill Valley City Council Resolution No. 26-49?"
+          },
+          "measureTextUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-t-110326",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-marin-x",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:sausalito",
+          "title": "Sausalito industrial and waterfront zoning initiative — Measure X",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-city-sausalito-110326",
+            "collectedAt": "2026-11-03T08:57:24.613284+00:00",
+            "verifiedAt": "2026-11-03T09:21:40.258792+00:00",
+            "quote": "Shall the measure named the \"Arts. Industrial & Maritime Preservation and Improvement Initiative,\" which revises zoning standards in the I and W zoning district to increase permitted height, building coverage limits and floor area ratio and allow certain new land uses; repeals the Marinship Specific Plan; revises Ordinance No. 1022 to allow future city council modifications to zoning outside the Downtown Historic District; and modifies various portions of the Sausalito General Plan, be adopted?"
+          },
+          "measureTextUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-city-sausalito-110326",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-marin-t-text",
+          "contestId": "ca-2026-marin-t",
+          "officialNumber": "Measure T",
+          "questionText": "To renew funding exclusively for improved fire suppression activities including vegetation management and tree maintenance, and road repair and street maintenance, shall the Mill Valley Municipal Service Tax be renewed within the City of Mill Valley Community Facilities District Number 2026-1, at a rate of $303 for single family residential property, with a 2% annual adjustment, raising an average of $1.9 million annually over 10 years, and shall the appropriations limit be established, all as specified in Mill Valley City Council Resolution No. 26-49?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-t-110326",
+            "collectedAt": "2026-11-03T08:57:24.117102+00:00",
+            "verifiedAt": "2026-11-03T09:21:40.258792+00:00",
+            "quote": "To renew funding exclusively for improved fire suppression activities including vegetation management and tree maintenance, and road repair and street maintenance, shall the Mill Valley Municipal Service Tax be renewed within the City of Mill Valley Community Facilities District Number 2026-1, at a rate of $303 for single family residential property, with a 2% annual adjustment, raising an average of $1.9 million annually over 10 years, and shall the appropriations limit be established, all as specified in Mill Valley City Council Resolution No. 26-49?"
+          }
+        },
+        {
+          "id": "ca-2026-marin-x-text",
+          "contestId": "ca-2026-marin-x",
+          "officialNumber": "Measure X",
+          "questionText": "Shall the measure named the \"Arts. Industrial & Maritime Preservation and Improvement Initiative,\" which revises zoning standards in the I and W zoning district to increase permitted height, building coverage limits and floor area ratio and allow certain new land uses; repeals the Marinship Specific Plan; revises Ordinance No. 1022 to allow future city council modifications to zoning outside the Downtown Historic District; and modifies various portions of the Sausalito General Plan, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-city-sausalito-110326",
+            "collectedAt": "2026-11-03T08:57:24.613284+00:00",
+            "verifiedAt": "2026-11-03T09:21:40.258792+00:00",
+            "quote": "Shall the measure named the \"Arts. Industrial & Maritime Preservation and Improvement Initiative,\" which revises zoning standards in the I and W zoning district to increase permitted height, building coverage limits and floor area ratio and allow certain new land uses; repeals the Marinship Specific Plan; revises Ordinance No. 1022 to allow future city council modifications to zoning outside the Downtown Historic District; and modifies various portions of the Sausalito General Plan, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Renews Mill Valley’s tax for streets, roads and fire suppression for ten years beginning in 2027–28. Starting maximums include $303 for an occupied single-family home, with different rates for second units, multifamily, commercial and vacant property. The maximum rates rise 2% annually starting in 2028–29.",
+          "yesMeans": "Approve the renewed special tax and the district’s spending limit, with restricted services, rate limits, exemptions and annual reporting.",
+          "noMeans": "Let the existing special tax expire June 30, 2027, without this new tax replacing it.",
+          "contestId": "ca-2026-marin-t",
+          "parts": [
+            {
+              "id": "ca-2026-marin-t#homes",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Residential maximum rates",
+              "what": "An occupied single-family home starts at $303 a year, with $151.50 for a second unit. Multifamily property starts at $303 for the first unit plus $151.50 for each additional unit, with the total divided equally among units. If no unit exceeds 700 square feet, the rate is $151.50 for every unit."
+            },
+            {
+              "id": "ca-2026-marin-t#commercial",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Commercial and vacant property",
+              "what": "Occupied commercial property up to 2,071 square feet starts at $303; larger commercial property pays 15 cents per square foot. For multiple businesses, the charge is divided by floor area. Property occupied for any part of the year counts as occupied all year. Property that is never improved or occupied during the year has an $81.06 starting maximum, with required City vacancy or unimproved-status documentation."
+            },
+            {
+              "id": "ca-2026-marin-t#time",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Annual limits and ten-year term",
+              "what": "The levy runs from fiscal year 2027–28 through 2036–37. Maximum rates increase 2% each year starting in 2028–29. The Council sets a common percentage of maximums to meet annual needs and expects to levy the maximum. It can never exceed the authorized maximum; if the levy falls below 91% of maximum, a property’s later increase caused by other owners’ defaults is limited to 10% a year."
+            },
+            {
+              "id": "ca-2026-marin-t#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and proof deadline",
+              "what": "Exemptions cover public-use property, property legally exempt from regular property taxes, permanently unbuildable property with satisfactory proof, and a single-family dwelling owned and occupied by a resident older than 65 with income at or below the Marin housing authority’s median-income scale. Required proof is due June 1 for the next year. Privately used public leaseholds remain taxable; unbuildable-property owners must report changes or owe tax, interest and penalties from the change."
+            },
+            {
+              "id": "ca-2026-marin-t#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Restricted services and related costs",
+              "what": "Money may fund road and street maintenance, repair and improvement; fire suppression, including vegetation and tree maintenance; and related tangible property lasting at least five years. It may also cover authorized formation, tax collection, planning, engineering and other incidental costs, including repayment of City advances and interest in the first year. The estimate is $1.9 million a year on average."
+            },
+            {
+              "id": "ca-2026-marin-t#oversight",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Separate accounts and spending limit",
+              "what": "Proceeds have dedicated accounts and may be used only for the authorized purposes. The City Manager or designee must report to the Council annually. The district’s constitutional spending limit is based on special-tax revenues, with cost-of-living and population adjustments."
+            },
+            {
+              "id": "ca-2026-marin-t#collection",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Collection and appeals",
+              "what": "The levy is secured by liens and normally collected with property taxes, with comparable delinquency, sale and lien-priority rules; the Council may authorize another method such as direct billing. A disputed charge must be challenged within 90 days after the installment’s delinquency date, with 14 days to appeal a denial to the Council. An appeal does not postpone payment."
+            },
+            {
+              "id": "ca-2026-marin-t#scope",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Who votes and approval threshold",
+              "what": "The new community facilities district’s boundary is identical to Mill Valley’s city limits, according to the City Attorney. Registered voters within it vote on the tax and spending limit together. At least two-thirds of votes cast must be yes."
+            }
+          ],
+          "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-t-110326",
+          "sourceHash": "c84d8681c9c5894f739e72fb027748e9ad86a220bbce66f87461998fd19dd6ad",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:21:40.258792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Changes Sausalito’s industrial and waterfront zoning to allow larger buildings and additional uses, repeals the Marinship Specific Plan, and lets the Council change zoning outside the Downtown Historic District without another public vote.",
+          "yesMeans": "Adopt the new industrial and waterfront development rules, related General Plan changes and the Council’s expanded zoning authority, while retaining voter approval for changes affecting the Downtown Historic District.",
+          "noMeans": "Do not adopt these zoning changes, repeal the Marinship Specific Plan or expand the Council’s zoning authority through Measure X.",
+          "contestId": "ca-2026-marin-x",
+          "parts": [
+            {
+              "id": "ca-2026-marin-x#size",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Building size and setbacks",
+              "what": "In both I and W zones, maximum lot coverage becomes 70%, from 50% and 30% respectively, and maximum floor-area ratio becomes 3.0, from 0.4 and 0.3. Floor-area ratio compares total building floor space with lot size. Side yards next to R or H districts become 15 feet rather than half the building height; the I-zone rear yard next to those districts falls from 30 to 15 feet."
+            },
+            {
+              "id": "ca-2026-marin-x#height",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Height limits and existing cultural uses",
+              "what": "The I-zone height limit rises from 32 to 47 feet. In the W zone, up to 47 feet is permitted for marine commercial-service and marine industrial uses with a use permit. New uses cannot displace existing uses at the ICB Building or historic Arques Shipyard."
+            },
+            {
+              "id": "ca-2026-marin-x#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Additional uses and accessory businesses",
+              "what": "The I and W zones would share allowed-use rules in Municipal Code Chapter 10.26. Some uses and permit requirements change, with new W-zone uses including arts, some manufacturing and industry, public utility and safety facilities, bakeries, fitness centers, financial uses and medical clinics. Accessory offices and retail in either zone may occupy no more than 40% of permitted floor area."
+            },
+            {
+              "id": "ca-2026-marin-x#plans",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Plans, overlays and liveaboard slips",
+              "what": "The measure repeals the Marinship Specific Plan, Marinship Overlay District provisions, and W/W-M provisions in Chapter 10.24, and updates the General Plan’s land-use, waterfront and economic provisions. City limits on the number of marina liveaboard slips are repealed; Bay Conservation and Development Commission permit requirements and state law still govern."
+            },
+            {
+              "id": "ca-2026-marin-x#authority",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Future zoning decisions and approval",
+              "what": "The Council could change land-use standards and zoning outside the Downtown Historic District without further voter approval, while still following applicable state and local procedures. Changes affecting that historic district still require voter approval. A simple majority of votes cast must approve Measure X."
+            }
+          ],
+          "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-city-sausalito-110326",
+          "sourceHash": "8ef415bf71ff71253b9ab5e4e03bf7ee677621331b0506d869a463e581d67c36",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:21:40.258792+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:21:40.258792+00:00",
+    "reviewedBy": "CX-VOTES current official Marin source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326",
+        "httpStatus": 200,
+        "rawHash": "00c2b9471950e708183cbb64366ea647627f18dee1cd6ceca0d7f7e6a1e19210",
+        "retrievedAt": "2026-11-03T08:57:09.598609+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current corrected official November3,2026 list of20localmeasures. Earlier R/U label announcement error explicitly noted by county; current labels control."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-t-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-t-110326",
+        "httpStatus": 200,
+        "rawHash": "c84d8681c9c5894f739e72fb027748e9ad86a220bbce66f87461998fd19dd6ad",
+        "retrievedAt": "2026-11-03T08:57:24.117102+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-t-110326/measure-t-full-text-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-t-110326/measure-t-full-text-110326",
+        "httpStatus": 200,
+        "rawHash": "0ae81fda4b9a82a8e837279c7f89c45e6ff5495e10301f9a2828cd6b25349729",
+        "retrievedAt": "2026-11-03T08:58:03.293728+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "County-published full proposed voter ordinance/resolution; not claimed signed or already voter-adopted."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-city-sausalito-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-city-sausalito-110326",
+        "httpStatus": 200,
+        "rawHash": "8ef415bf71ff71253b9ab5e4e03bf7ee677621331b0506d869a463e581d67c36",
+        "retrievedAt": "2026-11-03T08:57:24.613284+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+      },
+      {
+        "requestedUrl": "https://www.sausalito.gov/departments/administration/city_clerk/local_elections/measure_x_%282026%29.php",
+        "finalUrl": "https://www.sausalito.gov/departments/administration/city_clerk/local_elections/measure_x_%282026%29.php",
+        "httpStatus": 200,
+        "rawHash": "b392527ccecf58aea575f19b887ae0e1295a5779eb0909aa2d0ea03c4121b3d6",
+        "retrievedAt": "2026-11-03T09:18:35.175155+00:00",
+        "publisher": "City of Sausalito",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current CityClerk explicitly identifies earlier withdrawn June16draft and controlling July7correctedResolution33–2026; earlierdraft notused."
+      }
+    ]
+  }
+}

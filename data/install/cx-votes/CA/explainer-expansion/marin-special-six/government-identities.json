@@ -1,0 +1,55 @@
+{
+  "heldReference": "data/derived/registration/ca.json",
+  "governments": [
+    {
+      "letter": "AA",
+      "row": [
+        "201401",
+        "ca:special:inverness-public-utility-district",
+        "INVERNESS PUBLIC UTILITY DISTRICT",
+        "SPECIAL DISTRICT",
+        3314,
+        "BOUNDARY_SOURCE",
+        -1
+      ]
+    },
+    {
+      "letter": "BB",
+      "row": [
+        "205941",
+        "ca:special:kentfield-fire-protection-district",
+        "KENTFIELD FIRE PROTECTION DISTRICT",
+        "SPECIAL DISTRICT",
+        3123,
+        "BOUNDARY_SOURCE",
+        -1
+      ]
+    },
+    {
+      "letter": "DD",
+      "row": [
+        "142383",
+        "ca:special:sleepy-hollow-fire-protec-district",
+        "SLEEPY HOLLOW FIRE PROTEC DISTRICT",
+        "SPECIAL DISTRICT",
+        -1,
+        "NO_CENSUS_GEOGRAPHY",
+        -1
+      ]
+    },
+    {
+      "letter": "EE",
+      "row": [
+        "205948",
+        "ca:special:stinson-beach-county-water-district",
+        "STINSON BEACH COUNTY WATER DISTRICT",
+        "SPECIAL DISTRICT",
+        -1,
+        "NO_CENSUS_GEOGRAPHY",
+        -1
+      ]
+    }
+  ],
+  "countyServiceAreas": "CSA27 and CSA29 are identified by exact official county names, CSA numbers and BOE SBE_IDs, not invented independent Census government PIDs.",
+  "heldReferenceSha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc"
+}

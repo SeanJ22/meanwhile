@@ -1,0 +1,16 @@
+{
+  "route": [
+    "https://publish.data.ca.gov/dataset/california-community-college-districts",
+    "https://foundationcccorg.maps.arcgis.com/apps/mapviewer/index.html?webmap=c75f6a9484b2478396bdfa40a4376494",
+    "https://foundationcccorg.maps.arcgis.com/sharing/rest/content/items/c75f6a9484b2478396bdfa40a4376494/data?f=json",
+    "https://services6.arcgis.com/XNnWmtFBLgSx99Bz/arcgis/rest/services/CCC_ArcGIS__Map_Bundle/FeatureServer/4"
+  ],
+  "selection": {
+    "FID": 18,
+    "DistrictNa": "Sonoma County",
+    "CDS": "4970946",
+    "ShortName": "Sonoma"
+  },
+  "underlyingFeatureRevision": "2008-07-25",
+  "scopeLimit": "Current state and Foundation publisher still link this legal/voterprecinct map, but current catalog publication is not a new legal survey. Source vintage preserved as2008 in map. Latest2025audit provides no-boundary-change corroboration only forFY2024\u201325. No silent current2026geometricupdate claim."
+}

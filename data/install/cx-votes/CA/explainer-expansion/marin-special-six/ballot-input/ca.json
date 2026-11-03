@@ -1,0 +1,549 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-marin-bb",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:kentfield_fire_protection_district",
+          "title": "Kentfield Fire Protection District paramedic services tax — Measure BB",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-kentfield-fire-protection-district-110326",
+            "collectedAt": "2026-11-03T08:57:25.404328+00:00",
+            "verifiedAt": "2026-11-03T09:12:45.019061+00:00",
+            "quote": "To maintain rapid 9-1-1 emergency response times and preserve the number of on-duty paramedics ready to respond to accidents/medical emergencies, shall the Ross Valley Paramedic Authority measure be adopted continuing for four years the paramedic services special tax of up to $107.50/residential living unit or 1,000 square feet of developed nonresidential property, adjusted up to $4/ year, generating approximately $326,000 annually, with annual audits, public spending disclosure and all funds for local paramedic services?"
+          },
+          "measureTextUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-kentfield-fire-protection-district-110326",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-marin-dd",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:sleepy_hollow_fire_protection_district",
+          "title": "Sleepy Hollow Fire Protection District paramedic services tax — Measure DD",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-sleepy-hollow-fire-protection-district-110326",
+            "collectedAt": "2026-11-03T08:57:25.810895+00:00",
+            "verifiedAt": "2026-11-03T09:12:45.019061+00:00",
+            "quote": "To maintain rapid 9-1-1 emergency response times and preserve the number of on-duty paramedics ready to respond to accidents/medical emergencies, shall the Ross Valley Paramedic Authority measure be adopted continuing for four years the paramedic services special tax of up to $107.50/residential living unit or 1,000 square feet of developed nonresidential property, adjusted up to $4/ year, generating approximately One Hundred Five Thousand Dollars ($105,000) annually, with annual audits, public spending disclosure and all funds for local paramedic services?"
+          },
+          "measureTextUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-sleepy-hollow-fire-protection-district-110326",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-marin-y",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:county_service_area_27",
+          "title": "County Service Area27 paramedic services tax — Measure Y",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-27-ross-valley-paramedic-service-area-110326",
+            "collectedAt": "2026-11-03T08:57:24.956000+00:00",
+            "verifiedAt": "2026-11-03T09:12:45.019061+00:00",
+            "quote": "To maintain rapid 9-1-1 emergency response times and preserve the number of on-duty paramedics ready to respond to accidents/medical emergencies, shall the Ross Valley Paramedic Authority measure be adopted continuing for four years the paramedic services special tax of up to $107.50/ residential living unit or 1,000 square feet of developed nonresidential property, adjusted up to $4/ year, generating approximately $84,000 annually, with annual audits, public spending disclosure and all funds for local paramedic services?"
+          },
+          "measureTextUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-27-ross-valley-paramedic-service-area-110326",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-marin-z",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:county_service_area_29",
+          "title": "County Service Area29 Paradise Cay dredging tax — Measure Z",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-29-paradise-cay-service-area-110326",
+            "collectedAt": "2026-11-03T08:57:25.008283+00:00",
+            "verifiedAt": "2026-11-03T09:12:45.019061+00:00",
+            "quote": "For ongoing maintenance dredging in the principal waterways of Paradise Cay along with the north and south entry channels to San Francisco Bay, shall the measure for an annual parcel tax in County Service Area No. 29, for $2,200 per lot per year commencing in July 2027 providing an estimated $272,800 and automatically increasing 3% each year thereafter, for a total of ten years, be adopted?"
+          },
+          "measureTextUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-29-paradise-cay-service-area-110326",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-marin-aa",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:inverness_public_utility_district",
+          "title": "Inverness Public Utility District spending limit — Measure AA",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-inverness-public-utility-district-110326",
+            "collectedAt": "2026-11-03T08:57:25.566413+00:00",
+            "verifiedAt": "2026-11-03T09:12:45.019061+00:00",
+            "quote": "Shall the measure adjusting the appropriations limit for the Inverness Public Utility District pursuant to Article XIIIB of the California Constitution so that for each of the fiscal years 2026/2027 through 2029/2030 the appropriations limit shall include the combined total of all applicable revenue sources be adopted?"
+          },
+          "measureTextUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-inverness-public-utility-district-110326",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-marin-ee",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:stinson_beach_county_water_district",
+          "title": "Stinson Beach County Water District spending limit — Measure EE",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-stinson-beach-county-water-district-110326",
+            "collectedAt": "2026-11-03T08:57:26.317655+00:00",
+            "verifiedAt": "2026-11-03T09:12:45.019061+00:00",
+            "quote": "Shall the appropriations limit of the Stinson Beach County Water District for Fiscal Year 2026-2027 be established at $1,536,312 and should the limit for that Fiscal Year (i.e., $1,536,312) be used to determine the limits for Fiscal Years 2026-2027 through 2029-2030?"
+          },
+          "measureTextUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-stinson-beach-county-water-district-110326",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-marin-bb-text",
+          "contestId": "ca-2026-marin-bb",
+          "officialNumber": "Measure BB",
+          "questionText": "To maintain rapid 9-1-1 emergency response times and preserve the number of on-duty paramedics ready to respond to accidents/medical emergencies, shall the Ross Valley Paramedic Authority measure be adopted continuing for four years the paramedic services special tax of up to $107.50/residential living unit or 1,000 square feet of developed nonresidential property, adjusted up to $4/ year, generating approximately $326,000 annually, with annual audits, public spending disclosure and all funds for local paramedic services?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-kentfield-fire-protection-district-110326",
+            "collectedAt": "2026-11-03T08:57:25.404328+00:00",
+            "verifiedAt": "2026-11-03T09:12:45.019061+00:00",
+            "quote": "To maintain rapid 9-1-1 emergency response times and preserve the number of on-duty paramedics ready to respond to accidents/medical emergencies, shall the Ross Valley Paramedic Authority measure be adopted continuing for four years the paramedic services special tax of up to $107.50/residential living unit or 1,000 square feet of developed nonresidential property, adjusted up to $4/ year, generating approximately $326,000 annually, with annual audits, public spending disclosure and all funds for local paramedic services?"
+          }
+        },
+        {
+          "id": "ca-2026-marin-dd-text",
+          "contestId": "ca-2026-marin-dd",
+          "officialNumber": "Measure DD",
+          "questionText": "To maintain rapid 9-1-1 emergency response times and preserve the number of on-duty paramedics ready to respond to accidents/medical emergencies, shall the Ross Valley Paramedic Authority measure be adopted continuing for four years the paramedic services special tax of up to $107.50/residential living unit or 1,000 square feet of developed nonresidential property, adjusted up to $4/ year, generating approximately One Hundred Five Thousand Dollars ($105,000) annually, with annual audits, public spending disclosure and all funds for local paramedic services?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-sleepy-hollow-fire-protection-district-110326",
+            "collectedAt": "2026-11-03T08:57:25.810895+00:00",
+            "verifiedAt": "2026-11-03T09:12:45.019061+00:00",
+            "quote": "To maintain rapid 9-1-1 emergency response times and preserve the number of on-duty paramedics ready to respond to accidents/medical emergencies, shall the Ross Valley Paramedic Authority measure be adopted continuing for four years the paramedic services special tax of up to $107.50/residential living unit or 1,000 square feet of developed nonresidential property, adjusted up to $4/ year, generating approximately One Hundred Five Thousand Dollars ($105,000) annually, with annual audits, public spending disclosure and all funds for local paramedic services?"
+          }
+        },
+        {
+          "id": "ca-2026-marin-y-text",
+          "contestId": "ca-2026-marin-y",
+          "officialNumber": "Measure Y",
+          "questionText": "To maintain rapid 9-1-1 emergency response times and preserve the number of on-duty paramedics ready to respond to accidents/medical emergencies, shall the Ross Valley Paramedic Authority measure be adopted continuing for four years the paramedic services special tax of up to $107.50/ residential living unit or 1,000 square feet of developed nonresidential property, adjusted up to $4/ year, generating approximately $84,000 annually, with annual audits, public spending disclosure and all funds for local paramedic services?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-27-ross-valley-paramedic-service-area-110326",
+            "collectedAt": "2026-11-03T08:57:24.956000+00:00",
+            "verifiedAt": "2026-11-03T09:12:45.019061+00:00",
+            "quote": "To maintain rapid 9-1-1 emergency response times and preserve the number of on-duty paramedics ready to respond to accidents/medical emergencies, shall the Ross Valley Paramedic Authority measure be adopted continuing for four years the paramedic services special tax of up to $107.50/ residential living unit or 1,000 square feet of developed nonresidential property, adjusted up to $4/ year, generating approximately $84,000 annually, with annual audits, public spending disclosure and all funds for local paramedic services?"
+          }
+        },
+        {
+          "id": "ca-2026-marin-z-text",
+          "contestId": "ca-2026-marin-z",
+          "officialNumber": "Measure Z",
+          "questionText": "For ongoing maintenance dredging in the principal waterways of Paradise Cay along with the north and south entry channels to San Francisco Bay, shall the measure for an annual parcel tax in County Service Area No. 29, for $2,200 per lot per year commencing in July 2027 providing an estimated $272,800 and automatically increasing 3% each year thereafter, for a total of ten years, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-29-paradise-cay-service-area-110326",
+            "collectedAt": "2026-11-03T08:57:25.008283+00:00",
+            "verifiedAt": "2026-11-03T09:12:45.019061+00:00",
+            "quote": "For ongoing maintenance dredging in the principal waterways of Paradise Cay along with the north and south entry channels to San Francisco Bay, shall the measure for an annual parcel tax in County Service Area No. 29, for $2,200 per lot per year commencing in July 2027 providing an estimated $272,800 and automatically increasing 3% each year thereafter, for a total of ten years, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-marin-aa-text",
+          "contestId": "ca-2026-marin-aa",
+          "officialNumber": "Measure AA",
+          "questionText": "Shall the measure adjusting the appropriations limit for the Inverness Public Utility District pursuant to Article XIIIB of the California Constitution so that for each of the fiscal years 2026/2027 through 2029/2030 the appropriations limit shall include the combined total of all applicable revenue sources be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-inverness-public-utility-district-110326",
+            "collectedAt": "2026-11-03T08:57:25.566413+00:00",
+            "verifiedAt": "2026-11-03T09:12:45.019061+00:00",
+            "quote": "Shall the measure adjusting the appropriations limit for the Inverness Public Utility District pursuant to Article XIIIB of the California Constitution so that for each of the fiscal years 2026/2027 through 2029/2030 the appropriations limit shall include the combined total of all applicable revenue sources be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-marin-ee-text",
+          "contestId": "ca-2026-marin-ee",
+          "officialNumber": "Measure EE",
+          "questionText": "Shall the appropriations limit of the Stinson Beach County Water District for Fiscal Year 2026-2027 be established at $1,536,312 and should the limit for that Fiscal Year (i.e., $1,536,312) be used to determine the limits for Fiscal Years 2026-2027 through 2029-2030?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-stinson-beach-county-water-district-110326",
+            "collectedAt": "2026-11-03T08:57:26.317655+00:00",
+            "verifiedAt": "2026-11-03T09:12:45.019061+00:00",
+            "quote": "Shall the appropriations limit of the Stinson Beach County Water District for Fiscal Year 2026-2027 be established at $1,536,312 and should the limit for that Fiscal Year (i.e., $1,536,312) be used to determine the limits for Fiscal Years 2026-2027 through 2029-2030?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Continues Kentfield Fire Protection District’s special tax for paramedic services for four years, from July 1, 2027 through June 30, 2031. It starts at $107.50 per residential unit or per 1,000 square feet of developed nonresidential property, with annual increases of up to $4 beginning in 2028.",
+          "yesMeans": "Approve this four-year tax continuation and its annual adjustment authority, with proceeds restricted to local paramedic services.",
+          "noMeans": "Do not continue this levy; the current paramedic tax expires June 30, 2027.",
+          "contestId": "ca-2026-marin-bb",
+          "parts": [
+            {
+              "id": "ca-2026-marin-bb#rate",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Rate and estimate",
+              "what": "The starting annual charge is $107.50 per residential unit or per 1,000 square feet of developed nonresidential property. Increases of up to $4 a year begin July 1, 2028. The District estimates $326,000 a year; that amount is an estimate."
+            },
+            {
+              "id": "ca-2026-marin-bb#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Restricted services and oversight",
+              "what": "Money must go into a separate special account and may fund only the stated paramedic-service purposes, including emergency response and keeping on-duty paramedics available through the Ross Valley Paramedic Authority. The ballot requires annual audits and public spending disclosure."
+            },
+            {
+              "id": "ca-2026-marin-bb#approval",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Four-year limit and approval",
+              "what": "The continuation begins July 1, 2027 and expires June 30, 2031. At least two-thirds of votes cast on the measure must be yes. This tax applies only within this fire protection district, not throughout the whole paramedic authority."
+            }
+          ],
+          "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-kentfield-fire-protection-district-110326",
+          "sourceHash": "17eefe9fedff22c897d7618033e54d2729b98db388a6fdaf68e265b98b7cbee2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:12:45.019061+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Continues Sleepy Hollow Fire Protection District’s special tax for paramedic services for four years, from July 1, 2027 through June 30, 2031. It starts at $107.50 per residential unit or per 1,000 square feet of developed nonresidential property, with annual increases of up to $4 beginning in 2028.",
+          "yesMeans": "Approve this four-year tax continuation and its annual adjustment authority, with proceeds restricted to local paramedic services.",
+          "noMeans": "Do not continue this levy; the current paramedic tax expires June 30, 2027.",
+          "contestId": "ca-2026-marin-dd",
+          "parts": [
+            {
+              "id": "ca-2026-marin-dd#rate",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Rate and estimate",
+              "what": "The starting annual charge is $107.50 per residential unit or per 1,000 square feet of developed nonresidential property. Increases of up to $4 a year begin July 1, 2028. The District estimates $105,000 a year; that amount is an estimate."
+            },
+            {
+              "id": "ca-2026-marin-dd#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Restricted services and oversight",
+              "what": "Money must go into a separate special account and may fund only the stated paramedic-service purposes, including emergency response and keeping on-duty paramedics available through the Ross Valley Paramedic Authority. The ballot requires annual audits and public spending disclosure."
+            },
+            {
+              "id": "ca-2026-marin-dd#approval",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Four-year limit and approval",
+              "what": "The continuation begins July 1, 2027 and expires June 30, 2031. At least two-thirds of votes cast on the measure must be yes. This tax applies only within this fire protection district, not throughout the whole paramedic authority."
+            }
+          ],
+          "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-sleepy-hollow-fire-protection-district-110326",
+          "sourceHash": "22c6bc4c04984a50561be31fe5ca1fd71501e0f32a2d496e8f75cf67a41cdede",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:12:45.019061+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Continues County Service Area 27’s paramedic tax for four years, from July 1, 2027 through June 30, 2031, with a $107.50 starting charge and increases of up to $4 a year beginning in 2028. The ballot and full text describe the charge’s basis differently, as explained below.",
+          "yesMeans": "Approve this four-year restricted paramedic-tax continuation, its annual adjustments, separate fund and collection rules.",
+          "noMeans": "Do not continue this levy; the existing paramedic tax expires June 30, 2027.",
+          "contestId": "ca-2026-marin-y",
+          "parts": [
+            {
+              "id": "ca-2026-marin-y#basis",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Different wording about the tax basis",
+              "what": "The ballot question and County Counsel analysis say $107.50 per residential unit or per 1,000 square feet of developed nonresidential property. The full measure’s rate clause instead says $107.50 per separately property-tax-billed parcel. This explainer preserves that difference rather than treating those charges as identical."
+            },
+            {
+              "id": "ca-2026-marin-y#time",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Start and annual adjustments",
+              "what": "The continuation runs from July 1, 2027 through June 30, 2031. Annual increases of up to $4 begin July 1, 2028. The full text estimates $84,000 in the first year and says yearly collections can change with the number of taxable parcels and the annual adjustment."
+            },
+            {
+              "id": "ca-2026-marin-y#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Restricted local services and oversight",
+              "what": "Money must go into a separate special fund and be used only for paramedic and emergency medical services through the Ross Valley Paramedic Authority. The ballot requires annual audits and public spending disclosure."
+            },
+            {
+              "id": "ca-2026-marin-y#definitions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Property definitions and exemptions",
+              "what": "The full text defines a residential unit as a building or portion with a separate bathroom and one kitchen. Hotels and motels count as nonresidential uses; floor area includes all enclosed floors measured to the outer walls. Property otherwise exempt from regular property tax, or on which none is levied that year, is exempt."
+            },
+            {
+              "id": "ca-2026-marin-y#collection",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Collection and spending limit",
+              "what": "County collection follows property-tax timing, penalties and unpaid-interest rules, with final exemption or relief decisions by the County Tax Collector. The constitutional spending limit is adjusted for the tax proceeds. The levy is not a tax based on property value or a property-sale tax."
+            },
+            {
+              "id": "ca-2026-marin-y#approval",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Approval and severability",
+              "what": "At least two-thirds of votes cast on Measure Y must be yes. If a court invalidates part of the measure or tax formula, the remaining provisions continue as far as the law allows."
+            }
+          ],
+          "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-27-ross-valley-paramedic-service-area-110326",
+          "sourceHash": "b14c0c96cff778e436689af24dc14ec95dd490bd54d789a60e077ccf1752ccce",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:12:45.019061+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Continues the Paradise Cay dredging tax in County Service Area 29 for ten years, from July 1, 2027 through June 30, 2037. The charge starts at $2,200 per lot each year and rises automatically by 3% annually starting July 1, 2028.",
+          "yesMeans": "Approve this ten-year tax continuation and automatic annual increases for the stated dredging work.",
+          "noMeans": "Do not continue the levy; the existing dredging tax expires June 30, 2027.",
+          "contestId": "ca-2026-marin-z",
+          "parts": [
+            {
+              "id": "ca-2026-marin-z#cost",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Rate and estimated revenue",
+              "what": "The starting annual charge is $2,200 per lot. It increases automatically by 3% each year beginning July 1, 2028. The County estimates about $272,800 a year."
+            },
+            {
+              "id": "ca-2026-marin-z#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Dredging purposes",
+              "what": "Revenue may fund the purposes and projects stated in Measure Z: ongoing maintenance dredging in Paradise Cay’s principal waterways and the north and south entry channels to San Francisco Bay. It applies only within County Service Area29."
+            },
+            {
+              "id": "ca-2026-marin-z#approval",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Ten-year term and approval",
+              "what": "The extension begins July 1, 2027 and expires June 30, 2037. At least two-thirds of votes cast on Measure Z must be yes."
+            }
+          ],
+          "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-29-paradise-cay-service-area-110326",
+          "sourceHash": "a7ad45ea93c7d59d14df3d1c822fd3937442f9ff618a6eea8e6b4695c8189bc5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:12:45.019061+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Continues Inverness Public Utility District’s higher constitutional spending limit for fiscal years 2026–27 through 2029–30, using the combined total of all applicable revenue sources. It does not create a new assessment or increase a property-tax rate.",
+          "yesMeans": "Allow the District to keep spending tax revenue above its base limit for another four years, through 2029–30.",
+          "noMeans": "Do not approve the four-year adjustment. County Counsel says the District’s spending limit would fall, reducing funds available for its current service levels.",
+          "contestId": "ca-2026-marin-aa",
+          "parts": [
+            {
+              "id": "ca-2026-marin-aa#limit",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "What the spending limit does",
+              "what": "California’s constitutional appropriations limit caps how much tax revenue the District may spend. Voters may adjust that limit for up to four years at a time. This measure includes the combined total of applicable revenue sources for 2026–27 through 2029–30."
+            },
+            {
+              "id": "ca-2026-marin-aa#tax",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "No new tax authorization",
+              "what": "The measure changes spending authority. It does not authorize a new assessment or increase any property-tax rate."
+            },
+            {
+              "id": "ca-2026-marin-aa#approval",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Approval threshold",
+              "what": "A simple majority of votes cast on Measure AA must be yes."
+            }
+          ],
+          "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-inverness-public-utility-district-110326",
+          "sourceHash": "566b523132fec1434d493ee85a1ff0665cc6b16dc640740ae91c9e7807b66c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:12:45.019061+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Sets Stinson Beach County Water District’s constitutional spending limit at $1,536,312 for fiscal year 2026–27 and uses that base to determine the limits through 2029–30. It does not authorize a new assessment or increase a property-tax rate.",
+          "yesMeans": "Approve the $1,536,312 base and the four-year spending-limit adjustment through fiscal year 2029–30.",
+          "noMeans": "Do not approve this adjustment. County Counsel says the District’s spending limit would fall, reducing funds available for its current service levels.",
+          "contestId": "ca-2026-marin-ee",
+          "parts": [
+            {
+              "id": "ca-2026-marin-ee#amount",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Base year and following years",
+              "what": "The proposed limit is $1,536,312 for 2026–27. That base is used to determine limits for 2026–27 through 2029–30; the measure does not say every later year has the same dollar limit."
+            },
+            {
+              "id": "ca-2026-marin-ee#tax",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Spending authority, without a new tax",
+              "what": "The constitutional limit restricts spending of tax revenue. County Counsel says this measure continues authority to spend above the base limit and does not authorize a new assessment or increase any property-tax rate."
+            },
+            {
+              "id": "ca-2026-marin-ee#approval",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Four-year adjustment and approval",
+              "what": "Voters may adjust the constitutional spending limit for up to four years at a time. A simple majority of votes cast on Measure EE must be yes."
+            }
+          ],
+          "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-stinson-beach-county-water-district-110326",
+          "sourceHash": "6a744d1318ca39ca194a68bc5ef75bcad7157f727c16737493c01f9109e4b418",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:12:45.019061+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:12:45.019061+00:00",
+    "reviewedBy": "CX-VOTES current official Marin source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326",
+        "httpStatus": 200,
+        "rawHash": "00c2b9471950e708183cbb64366ea647627f18dee1cd6ceca0d7f7e6a1e19210",
+        "retrievedAt": "2026-11-03T08:57:09.598609+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current corrected official November3,2026 list of20localmeasures. Earlier R/U label announcement error explicitly noted by county; current labels control."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-kentfield-fire-protection-district-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-kentfield-fire-protection-district-110326",
+        "httpStatus": 200,
+        "rawHash": "17eefe9fedff22c897d7618033e54d2729b98db388a6fdaf68e265b98b7cbee2",
+        "retrievedAt": "2026-11-03T08:57:25.404328+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-sleepy-hollow-fire-protection-district-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-sleepy-hollow-fire-protection-district-110326",
+        "httpStatus": 200,
+        "rawHash": "22c6bc4c04984a50561be31fe5ca1fd71501e0f32a2d496e8f75cf67a41cdede",
+        "retrievedAt": "2026-11-03T08:57:25.810895+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-27-ross-valley-paramedic-service-area-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-27-ross-valley-paramedic-service-area-110326",
+        "httpStatus": 200,
+        "rawHash": "b14c0c96cff778e436689af24dc14ec95dd490bd54d789a60e077ccf1752ccce",
+        "retrievedAt": "2026-11-03T08:57:24.956000+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-27-ross-valley-paramedic-service-area-110326/template-measure-html-060226-full-text",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-27-ross-valley-paramedic-service-area-110326/template-measure-html-060226-full-text",
+        "httpStatus": 200,
+        "rawHash": "c767766b4407eb430a62cf6b3ee011b6fe66d448ea0d257cfb72dcea552a4947",
+        "retrievedAt": "2026-11-03T08:58:04.075636+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "County-published full proposed voter ordinance/resolution; not claimed signed or already voter-adopted."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-29-paradise-cay-service-area-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-29-paradise-cay-service-area-110326",
+        "httpStatus": 200,
+        "rawHash": "a7ad45ea93c7d59d14df3d1c822fd3937442f9ff618a6eea8e6b4695c8189bc5",
+        "retrievedAt": "2026-11-03T08:57:25.008283+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-inverness-public-utility-district-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-inverness-public-utility-district-110326",
+        "httpStatus": 200,
+        "rawHash": "566b523132fec1434d493ee85a1ff0665cc6b16dc640740ae91c9e7807b66c4d",
+        "retrievedAt": "2026-11-03T08:57:25.566413+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-stinson-beach-county-water-district-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-stinson-beach-county-water-district-110326",
+        "httpStatus": 200,
+        "rawHash": "6a744d1318ca39ca194a68bc5ef75bcad7157f727c16737493c01f9109e4b418",
+        "retrievedAt": "2026-11-03T08:57:26.317655+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-stinson-beach-county-water-district-110326/measure-stinson-beach-county-water-district-110326-full-text",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-stinson-beach-county-water-district-110326/measure-stinson-beach-county-water-district-110326-full-text",
+        "httpStatus": 200,
+        "rawHash": "e75d01dd3b35b06e2a8d35546211cff4f002880acf51f2b9596fa29555412cb7",
+        "retrievedAt": "2026-11-03T08:58:04.404035+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "County-published full proposed voter ordinance/resolution; not claimed signed or already voter-adopted."
+      },
+      {
+        "requestedUrl": "https://assets.marincounty.gov/marincounty-prod/public/2025-09/well-drilling-fillable-application-form-and-instructions-rev-Sept-2025.pdf",
+        "finalUrl": "https://assets.marincounty.gov/marincounty-prod/public/2025-09/well-drilling-fillable-application-form-and-instructions-rev-Sept-2025.pdf",
+        "httpStatus": 200,
+        "rawHash": "474c9d2e4a757f9ba1bd252e8803ef243c661fd0c9305bdd40bf8616081a2e25",
+        "retrievedAt": "2026-11-03T09:15:30.402078+00:00",
+        "publisher": "Marin County Environmental Health Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Native current .gov PDF page2 URI hyperlink explicitly links gis.marinpublic.com. Exact PDF bytes/annotation evidence retained, no fabricated HTML links."
+      }
+    ]
+  }
+}

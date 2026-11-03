@@ -1,0 +1,1440 @@
+{
+  "objectIdFieldName" : "FID", 
+  "uniqueIdField" : 
+  {
+    "name" : "FID", 
+    "isSystemMaintained" : true
+  }, 
+  "globalIdFieldName" : "", 
+  "geometryProperties" : 
+  {
+    "shapeAreaFieldName" : "Shape__Area", 
+    "shapeLengthFieldName" : "Shape__Length", 
+    "units" : "esriMeters"
+  }, 
+  "geometryType" : "esriGeometryPolygon", 
+  "spatialReference" : {
+    "wkid" : 102100, 
+    "latestWkid" : 3857
+  }, 
+  "fields" : [
+    {
+      "name" : "FID", 
+      "type" : "esriFieldTypeOID", 
+      "alias" : "FID", 
+      "sqlType" : "sqlTypeInteger", 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "DistrictNa", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "DistrictNa", 
+      "sqlType" : "sqlTypeNVarchar", 
+      "length" : 254, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "ShortName", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "ShortName", 
+      "sqlType" : "sqlTypeNVarchar", 
+      "length" : 254, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "CDS", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "CDS", 
+      "sqlType" : "sqlTypeNVarchar", 
+      "length" : 254, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "DID", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "DID", 
+      "sqlType" : "sqlTypeFloat", 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "SourceOf_1", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "SourceOf_1", 
+      "sqlType" : "sqlTypeNVarchar", 
+      "length" : 254, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "LegalBou_1", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "LegalBou_1", 
+      "sqlType" : "sqlTypeNVarchar", 
+      "length" : 254, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "PrimaryBou", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "PrimaryBou", 
+      "sqlType" : "sqlTypeNVarchar", 
+      "length" : 254, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Revision_1", 
+      "type" : "esriFieldTypeDate", 
+      "alias" : "Revision_1", 
+      "sqlType" : "sqlTypeTimestamp2", 
+      "length" : 8, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Notes_1", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "Notes_1", 
+      "sqlType" : "sqlTypeNVarchar", 
+      "length" : 254, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Shape_Leng", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "Shape_Leng", 
+      "sqlType" : "sqlTypeFloat", 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Shape_Area", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "Shape_Area", 
+      "sqlType" : "sqlTypeFloat", 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Shape__Area", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "Shape__Area", 
+      "sqlType" : "sqlTypeFloat", 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Shape__Length", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "Shape__Length", 
+      "sqlType" : "sqlTypeFloat", 
+      "domain" : null, 
+      "defaultValue" : null
+    }
+  ], 
+  "features" : [
+    {
+      "attributes" : {
+        "FID" : 1, 
+        "DistrictNa" : "Ohlone", 
+        "ShortName" : "Ohlone", 
+        "CDS" : "0161184", 
+        "DID" : 430, 
+        "SourceOf_1" : "Donna Ordahl, Executive Assistant to V.P.  dordahl@ohlone.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1231459200000, 
+        "Notes_1" : "Note gaps and slivers around most of border.  K-12 SD used for some borders between 430-410, 430-470, and 430-590.  Also, some non-voter geography used for border of 430-450, no SD. 20090109--Transposed attributes for DID 430 &440", 
+        "Shape_Leng" : 0.869447503231, 
+        "Shape_Area" : 0.0176618046732, 
+        "Shape__Area" : 276000577.3828125, 
+        "Shape__Length" : 108152.3186474441
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 2, 
+        "DistrictNa" : "Gavilan", 
+        "ShortName" : "Gavilan", 
+        "CDS" : "4369476", 
+        "DID" : 440, 
+        "SourceOf_1" : "Joseph Keeler, V.P. Admin Services  jkeeler@gavilan.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1231459200000, 
+        "Notes_1" : "Note a gap/island on south side of 440-490.  K-12 SD used in 440-480 border. 20090109--Transposed attributes for DID 430 &440", 
+        "Shape_Leng" : 5.11599450125, 
+        "Shape_Area" : 0.442697101325, 
+        "Shape__Area" : 6853250910.8515625, 
+        "Shape__Length" : 630617.976614841
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 3, 
+        "DistrictNa" : "Grossmont-Cuyamaca", 
+        "ShortName" : "Grossmont", 
+        "CDS" : "3768148", 
+        "DID" : 20, 
+        "SourceOf_1" : "www.gcccd.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches the Township & Range defined in the legal narrative, as well as the K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 2.97249383518, 
+        "Shape_Area" : 0.283473718852, 
+        "Shape__Area" : 4177223893.890625, 
+        "Shape__Length" : 349618.13617655489
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 4, 
+        "DistrictNa" : "Imperial", 
+        "ShortName" : "Imperial", 
+        "CDS" : "1363156", 
+        "DID" : 30, 
+        "SourceOf_1" : "www.imperial.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches the Township & Range defined in the legal narrative, as well as the K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "There were no revisions to the boundaries in the original shape file", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 5.27468578003, 
+        "Shape_Area" : 1.0726685587, 
+        "Shape__Area" : 15854568585.808594, 
+        "Shape__Length" : 619648.56665715913
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 5, 
+        "DistrictNa" : "MiraCosta", 
+        "ShortName" : "MiraCosta", 
+        "CDS" : "3768247", 
+        "DID" : 50, 
+        "SourceOf_1" : "Kimberly Coutts, Director of Institutional Research  kcoutts@miracosta.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches the Township & Range defined in the legal narrative, as well as the K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note to correct slivers in the future.", 
+        "Shape_Leng" : 1.66005012442, 
+        "Shape_Area" : 0.0448841426306, 
+        "Shape__Area" : 664117327.30078125, 
+        "Shape__Length" : 205383.43170791137
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 6, 
+        "DistrictNa" : "Palomar", 
+        "ShortName" : "Palomar", 
+        "CDS" : "3768270", 
+        "DID" : 60, 
+        "SourceOf_1" : "Kelley Hudson MacIsaac, Manager, Facilities Planning/EH&S  kmacisaac@palomar.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches the Township & Range defined in the legal narrative, as well as the K-12 school districts within the CCC District boundary, and county boundaries.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note to correct slivers in the future.", 
+        "Shape_Leng" : 4.80868201929, 
+        "Shape_Area" : 0.639744877504, 
+        "Shape__Area" : 9473958934.7695313, 
+        "Shape__Length" : 568954.4758262547
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 7, 
+        "DistrictNa" : "San Diego", 
+        "ShortName" : "San Diego", 
+        "CDS" : "3773528", 
+        "DID" : 70, 
+        "SourceOf_1" : "Lance Lareau, District Architect  llareau@sdccd.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches  K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note to correct slivers in the near future.  Military base area juts into San Diego Bay, yet is part of San Diego CC District.", 
+        "Shape_Leng" : 2.84687149058, 
+        "Shape_Area" : 0.0509685644375, 
+        "Shape__Area" : 751496110.40625, 
+        "Shape__Length" : 346585.20123885793
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 8, 
+        "DistrictNa" : "Southwestern", 
+        "ShortName" : "Southwestern", 
+        "CDS" : "3768429", 
+        "DID" : 90, 
+        "SourceOf_1" : "www.swccd.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches the Township & Range defined in the legal narrative, as well as the K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note to correct slivers in the near future.  Military base area juts into San Diego Bay, yet is part of San Diego CC District.", 
+        "Shape_Leng" : 2.25108953293, 
+        "Shape_Area" : 0.0400271561841, 
+        "Shape__Area" : 588881068.9296875, 
+        "Shape__Length" : 268696.51179181325
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 9, 
+        "DistrictNa" : "Butte-Glenn", 
+        "ShortName" : "Butte", 
+        "CDS" : "0461416", 
+        "DID" : 110, 
+        "SourceOf_1" : "Kristie Jellison, Manager, Business Contracts & Risk Management  jellisonkr@butte.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches the Township & Range defined in the legal narrative, as well as the K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 7.01284320112, 
+        "Shape_Area" : 0.673199913446, 
+        "Shape__Area" : 10834841319.0625, 
+        "Shape__Length" : 854783.046201182
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 10, 
+        "DistrictNa" : "Feather River", 
+        "ShortName" : "Feather River", 
+        "CDS" : "3275143", 
+        "DID" : 120, 
+        "SourceOf_1" : "Lori Bergum, Marketing & Outreach Coordinator  lbergum@frc.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches the Township & Range defined in the legal narrative, as well as the K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 5.88036901911, 
+        "Shape_Area" : 0.713799484201, 
+        "Shape__Area" : 11547826288.449219, 
+        "Shape__Length" : 734923.788977936
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 11, 
+        "DistrictNa" : "Lassen", 
+        "ShortName" : "Lassen", 
+        "CDS" : "1864147", 
+        "DID" : 130, 
+        "SourceOf_1" : "www.lassencollege.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition.  In the northwest boundary meets school districts, beyond voter precincts", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 7.95097382726, 
+        "Shape_Area" : 1.26503882019, 
+        "Shape__Area" : 20680542040.097656, 
+        "Shape__Length" : 1031859.5102296416
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 12, 
+        "DistrictNa" : "Mendocino-Lake", 
+        "ShortName" : "Mendocino", 
+        "CDS" : "2373718", 
+        "DID" : 140, 
+        "SourceOf_1" : "Terrence Willett, Director of Research - Cal-PASS  twillett@calpass.org", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "Fort Bragg acquried by Mendocino July 2017 This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1509235200000, 
+        "Notes_1" : "There are at least two gaps to be corrected in the southeast border.  On the southwest border, overlapping issues with school districts and voter precincts.  Combination of census geography and voter precincts used to make final decisions.", 
+        "Shape_Leng" : 7.68541205953, 
+        "Shape_Area" : 1.11591928429, 
+        "Shape__Area" : 17902433760.667969, 
+        "Shape__Length" : 957626.34721700731
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 13, 
+        "DistrictNa" : "Shasta-Tehama-Trinity", 
+        "ShortName" : "Shasta", 
+        "CDS" : "4570144", 
+        "DID" : 170, 
+        "SourceOf_1" : "Sue Vanderwerf, Assistant to the President/P.I.O.  svanderwerf@shastacollege.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "In the northeast boundary meets school districts, beyond voter precincts.  The northern boundary long the Shasta-Siskiyou County line shows an undefined area that is attributed to Siskiyou (180)", 
+        "Shape_Leng" : 11.2960382601, 
+        "Shape_Area" : 2.78958609596, 
+        "Shape__Area" : 45490943542.28125, 
+        "Shape__Length" : 1408142.412197483
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 14, 
+        "DistrictNa" : "Siskiyou Joint", 
+        "ShortName" : "Siskiyou", 
+        "CDS" : "4770474", 
+        "DID" : 180, 
+        "SourceOf_1" : "Paula Hildreth, Admin & Business Services  hildreth@siskiyous.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "The southern boundary along the Shasta-Siskiyou County line shows an undefined area that is attributed to Siskiyou (180)", 
+        "Shape_Leng" : 8.75796030485, 
+        "Shape_Area" : 1.78550627719, 
+        "Shape__Area" : 29576103992.085938, 
+        "Shape__Length" : 1083267.5190742188
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 15, 
+        "DistrictNa" : "Lake Tahoe", 
+        "ShortName" : "Tahoe", 
+        "CDS" : "0973775", 
+        "DID" : 220, 
+        "SourceOf_1" : "Frances Brady, Admin Assistant to V.P.  brady@ltcc.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition, as well as Township and Range.", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 1.47381308918, 
+        "Shape_Area" : 0.056383549099, 
+        "Shape__Area" : 897373319.23828125, 
+        "Shape__Length" : 191383.61296049759
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 16, 
+        "DistrictNa" : "Los Rios", 
+        "ShortName" : "Los Rios", 
+        "CDS" : "3467371", 
+        "DID" : 230, 
+        "SourceOf_1" : "Bob Carlson, Director II - Sacramento County Office of Education  bcarlson@scoe.net", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition, as well as county and K-12 school districts to address a portion of Sacramento county that belongs to the district on the north (270).", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "There is a gap on the north", 
+        "Shape_Leng" : 6.74073367357, 
+        "Shape_Area" : 0.649627826212, 
+        "Shape__Area" : 10312995991.234375, 
+        "Shape__Length" : 832403.66977167316
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 17, 
+        "DistrictNa" : "Napa Valley", 
+        "ShortName" : "Napa", 
+        "CDS" : "2866274", 
+        "DID" : 240, 
+        "SourceOf_1" : "Dan TerAvest, Director of Campus Planning & Construction  dteravest@napavalley.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition, but basically follows the county line.", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 2.86617543779, 
+        "Shape_Area" : 0.210972258072, 
+        "Shape__Area" : 3340919428.8085938, 
+        "Shape__Length" : 359878.93140206108
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 18, 
+        "DistrictNa" : "Sonoma County", 
+        "ShortName" : "Sonoma", 
+        "CDS" : "4970946", 
+        "DID" : 260, 
+        "SourceOf_1" : "Maria Gaitan, Executive Assistant to the President  mgaitan@santarosa.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition, but basically follows the county line.", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 4.4866023738, 
+        "Shape_Area" : 0.425001664166, 
+        "Shape__Area" : 6732363655.0742188, 
+        "Shape__Length" : 550808.72389146814
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 19, 
+        "DistrictNa" : "Sierra Joint", 
+        "ShortName" : "Sierra", 
+        "CDS" : "3166936", 
+        "DID" : 270, 
+        "SourceOf_1" : "www.sierracollege.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition, but basically follows the county line for Placer and Nevada County with some school district boundaries along the southwest.", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 5.01732368129, 
+        "Shape_Area" : 0.666352052391, 
+        "Shape__Area" : 10649305678.789063, 
+        "Shape__Length" : 621502.19713119615
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 20, 
+        "DistrictNa" : "Solano", 
+        "ShortName" : "Solano", 
+        "CDS" : "4870557", 
+        "DID" : 280, 
+        "SourceOf_1" : "Judy Anderson, Executive Assistant, Admin & Business Services  judy.anderson@solano.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition, but basically follows the county line for Placer and Nevada County with some school district boundaries along the southwest.", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Water features on southwest could be collapsed into the boundary", 
+        "Shape_Leng" : 3.92886010165, 
+        "Shape_Area" : 0.211723395388, 
+        "Shape__Area" : 3344449858.2265625, 
+        "Shape__Length" : 488800.34416285274
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 21, 
+        "DistrictNa" : "Yuba", 
+        "ShortName" : "Yuba", 
+        "CDS" : "5872777", 
+        "DID" : 290, 
+        "SourceOf_1" : "www.yccd.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition, with some school district boundaries.", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Two gaps also 140 border", 
+        "Shape_Leng" : 9.74317982203, 
+        "Shape_Area" : 1.11657123352, 
+        "Shape__Area" : 17834645659.992188, 
+        "Shape__Length" : 1212433.6425623344
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 22, 
+        "DistrictNa" : "Contra Costa", 
+        "ShortName" : "Contra Costa", 
+        "CDS" : "0761689", 
+        "DID" : 310, 
+        "SourceOf_1" : "Douglas W. Roberts, Acting Vice Chancellor, Finance and Admin", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition, with some school district boundaries", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 3.33967645938, 
+        "Shape_Area" : 0.193623648857, 
+        "Shape__Area" : 3041643172.7890625, 
+        "Shape__Length" : 407923.64826123574
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 23, 
+        "DistrictNa" : "Marin", 
+        "ShortName" : "Marin", 
+        "CDS" : "2165383", 
+        "DID" : 330, 
+        "SourceOf_1" : "Kathy Joyner, Admin Asst to VP of College Operations  kathy.joyner@marin.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition that coincide with Marin County", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 3.83488011349, 
+        "Shape_Area" : 0.142831620424, 
+        "Shape__Area" : 2248404320.0585938, 
+        "Shape__Length" : 478550.82144513115
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 24, 
+        "DistrictNa" : "Peralta", 
+        "ShortName" : "Peralta", 
+        "CDS" : "0161267", 
+        "DID" : 340, 
+        "SourceOf_1" : "www.peralta.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 1.84152179446, 
+        "Shape_Area" : 0.0218907377142, 
+        "Shape__Area" : 343318829.26953125, 
+        "Shape__Length" : 225921.67871715577
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 25, 
+        "DistrictNa" : "San Francisco", 
+        "ShortName" : "San Francisco", 
+        "CDS" : "3873536", 
+        "DID" : 360, 
+        "SourceOf_1" : "Ronald Lee, General Counsel - S.F.CCD  rlee@ccsf.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 1.94771764507, 
+        "Shape_Area" : 0.012521907727, 
+        "Shape__Area" : 196264581.60546875, 
+        "Shape__Length" : 240801.51604391568
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 26, 
+        "DistrictNa" : "San Mateo County", 
+        "ShortName" : "San Mateo", 
+        "CDS" : "4169054", 
+        "DID" : 370, 
+        "SourceOf_1" : "Kanjana Srisupatpongsa, Construction Planning Dept  srrisupatpongsak@smccd.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note slight slivers along 370-420 border on the east bay side", 
+        "Shape_Leng" : 2.79301567438, 
+        "Shape_Area" : 0.115149551918, 
+        "Shape__Area" : 1796618303.875, 
+        "Shape__Length" : 350409.2209610804
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 27, 
+        "DistrictNa" : "Cabrillo", 
+        "ShortName" : "Cabrillo", 
+        "CDS" : "4469740", 
+        "DID" : 410, 
+        "SourceOf_1" : "www.cabrillo.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note gaps along 410-430 border NW side, 410-490 border n side, and 410-430 border has bigger gap issues.  School district used in one place, but not another.  Check feed K-12 lists for both ccd.", 
+        "Shape_Leng" : 2.7644451349, 
+        "Shape_Area" : 0.118770056302, 
+        "Shape__Area" : 1843564815.4414063, 
+        "Shape__Length" : 341023.2088141932
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 28, 
+        "DistrictNa" : "Foothill-DeAnza", 
+        "ShortName" : "Foothill", 
+        "CDS" : "4369443", 
+        "DID" : 420, 
+        "SourceOf_1" : "Suzanne Carrig, Sr. Research Analyst @ Santa Clara County Office of Education  suzanne_carrig@sccoe.org", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matchesK-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note gap/island on east side of 420-370 border with slivers, and more gaps with voter precincts, gaps along water edge, harbor excluded, the 420-490 border uses K-12 school districts instead of voter precincts along most of the border.", 
+        "Shape_Leng" : 1.29365815558, 
+        "Shape_Area" : 0.030686530278, 
+        "Shape__Area" : 478429003.0078125, 
+        "Shape__Length" : 159685.75894841694
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 29, 
+        "DistrictNa" : "Hartnell", 
+        "ShortName" : "Hartnell", 
+        "CDS" : "2766043", 
+        "DID" : 450, 
+        "SourceOf_1" : "www.hartnell.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 450-460, 450-410, and 450-580 use K-12 SD boundaries, while 450-430 uses Township & Range.  Some gaps along 450-410 and 450-430", 
+        "Shape_Leng" : 5.9375355598, 
+        "Shape_Area" : 0.662958223466, 
+        "Shape__Area" : 10185497593.050781, 
+        "Shape__Length" : 728583.14510843309
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 30, 
+        "DistrictNa" : "Monterey Peninsula", 
+        "ShortName" : "Monterey", 
+        "CDS" : "2766100", 
+        "DID" : 460, 
+        "SourceOf_1" : "www.mpc.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.  Uses K-12 SD between 460-450 instead of voter precincts", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 3.72534646041, 
+        "Shape_Area" : 0.172779431025, 
+        "Shape__Area" : 2657267622.0273438, 
+        "Shape__Length" : 462615.349956491
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 31, 
+        "DistrictNa" : "San Jose-Evergreen", 
+        "ShortName" : "San Jose", 
+        "CDS" : "4369658", 
+        "DID" : 470, 
+        "SourceOf_1" : "www.sjeccd.org", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 schools districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 470-430 border uses K-12 SD, gaps along 470-490.", 
+        "Shape_Leng" : 2.08688563267, 
+        "Shape_Area" : 0.07773999479, 
+        "Shape__Area" : 1212044282.09375, 
+        "Shape__Length" : 251512.31225659986
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 32, 
+        "DistrictNa" : "Chabot-Las Positas", 
+        "ShortName" : "Chabot", 
+        "CDS" : "0161317", 
+        "DID" : 480, 
+        "SourceOf_1" : "Beverly Bailey, Assistant to the Chancellor bbailey@clpccd.org", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 480-440, 480-340, and 480-310 use K-12 SD.  Gaps along water edges west side.", 
+        "Shape_Leng" : 2.757308736, 
+        "Shape_Area" : 0.149985683804, 
+        "Shape__Area" : 2347320958.109375, 
+        "Shape__Length" : 339971.11764363979
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 33, 
+        "DistrictNa" : "West Valley-Mission", 
+        "ShortName" : "West Valley", 
+        "CDS" : "4369716", 
+        "DID" : 490, 
+        "SourceOf_1" : "Suzanne Carrig, Sr. Research Analyst @ Santa Clara County Office of Education  suzanne_carrig@sccoe.org", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 490-420 gaps, unknown split in voter precinct, SD used inconsistently   490-470 uses K-12 SD, and gap.  490-430 gap.", 
+        "Shape_Leng" : 2.32628183053, 
+        "Shape_Area" : 0.0537133877256, 
+        "Shape__Area" : 835942297.890625, 
+        "Shape__Length" : 289237.60880360747
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 34, 
+        "DistrictNa" : "Kern", 
+        "ShortName" : "Kern", 
+        "CDS" : "1563537", 
+        "DID" : 520, 
+        "SourceOf_1" : "www.kccd.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 520-690 border has 3 strange overlap/gap issues not shown in voter precincts, SD, or T&R.  520 northeast border uses K-12 SD boundary to exclude Eastern Sierra.  520-910 and 520-620 use SD in a few places.  Note revisions made in boundary effective", 
+        "Shape_Leng" : 18.5008929362, 
+        "Shape_Area" : 5.51567927444, 
+        "Shape__Area" : 84555095660.65625, 
+        "Shape__Length" : 2229508.8179472289
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 35, 
+        "DistrictNa" : "Merced", 
+        "ShortName" : "Merced", 
+        "CDS" : "2465797", 
+        "DID" : 530, 
+        "SourceOf_1" : "Delores Merino, Admin. Assistant to the President  Merino@mccd.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note uses K-12 SD borders for 530-580, 530-570, and 530-590; however gaps for 530-570 and 530-590 not shown by voter precinct or SD", 
+        "Shape_Leng" : 4.90613618634, 
+        "Shape_Area" : 0.573413791417, 
+        "Shape__Area" : 8911354424.296875, 
+        "Shape__Length" : 602541.045812746
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 36, 
+        "DistrictNa" : "Sequoias", 
+        "ShortName" : "Sequoias", 
+        "CDS" : "5472124", 
+        "DID" : 560, 
+        "SourceOf_1" : "Eric Mittlestead, Dean of Facilities  ericm@cos.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 560-580 and 560-570 use K-12 SD borders.  560-520 has gaps", 
+        "Shape_Leng" : 6.11811467447, 
+        "Shape_Area" : 0.752137155418, 
+        "Shape__Area" : 11571179319.75, 
+        "Shape__Length" : 740255.40522355761
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 37, 
+        "DistrictNa" : "State Center", 
+        "ShortName" : "State Center", 
+        "CDS" : "1062463", 
+        "DID" : 570, 
+        "SourceOf_1" : "Brian Speece, Assoc. Vice Chancellor, Business & Operations  brian.speece@scccd.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 570-580, 570-530, and 570-560 use K-12 SD borders, gaps for 570-530 NW side not shown in SD", 
+        "Shape_Leng" : 7.53004657705, 
+        "Shape_Area" : 1.506435651, 
+        "Shape__Area" : 23384861709.125, 
+        "Shape__Length" : 921288.32146026345
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 38, 
+        "DistrictNa" : "West Hills", 
+        "ShortName" : "West Hills", 
+        "CDS" : "1062133", 
+        "DID" : 580, 
+        "SourceOf_1" : "Susan Bailey, Admin Assistant - Fresno County Committee on School District Organization  sbailey@fcoe.k12.ca.us", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 580-450, 580-530, 580-570, and 580-560 use K-12 SD borders.  Gap along 580-570 edge.", 
+        "Shape_Leng" : 5.03894154877, 
+        "Shape_Area" : 0.75966345685, 
+        "Shape__Area" : 11682332132.691406, 
+        "Shape__Length" : 622522.48647025914
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 39, 
+        "DistrictNa" : "Yosemite", 
+        "ShortName" : "Yosemite", 
+        "CDS" : "5071340", 
+        "DID" : 590, 
+        "SourceOf_1" : "Nick Stavrianoudakis, Director of External Affairs  stavrianoudakisn@yosemite.cc.ca.us", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 590-530, 590-430, and 590-550 use K-12 SD borders.  Overlap gap and slivers along 590-550 north side", 
+        "Shape_Leng" : 9.9232750069, 
+        "Shape_Area" : 1.24758913164, 
+        "Shape__Area" : 19571523080.144531, 
+        "Shape__Length" : 1229401.1738234365
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 40, 
+        "DistrictNa" : "Allan Hancock", 
+        "ShortName" : "Allan Hancock", 
+        "CDS" : "4269096", 
+        "DID" : 610, 
+        "SourceOf_1" : "Elizabeth Miller, V.P. Admin Services  emiller@hancock.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 610-640 uses K-12 SD on northwest corner.", 
+        "Shape_Leng" : 4.46585219712, 
+        "Shape_Area" : 0.622754267936, 
+        "Shape__Area" : 9392523112.5039063, 
+        "Shape__Length" : 543043.85565531277
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 41, 
+        "DistrictNa" : "Antelope Valley", 
+        "ShortName" : "Antelope", 
+        "CDS" : "1964253", 
+        "DID" : 620, 
+        "SourceOf_1" : "www.avc.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note K-12 SD borders used in 620-770, 620-740, and 620-520.  Gap on SW corner could be Township & Range", 
+        "Shape_Leng" : 4.04602985111, 
+        "Shape_Area" : 0.500140164063, 
+        "Shape__Area" : 7535614814.5195313, 
+        "Shape__Length" : 489009.41097466805
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 42, 
+        "DistrictNa" : "San Luis Obispo County", 
+        "ShortName" : "San Luis Obispo", 
+        "CDS" : "4068817", 
+        "DID" : 640, 
+        "SourceOf_1" : "Todd Frederick, Presidents Office  tfrederi@cuesta.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note only 640-610 border used K-12 SD", 
+        "Shape_Leng" : 6.66230088569, 
+        "Shape_Area" : 0.914551551497, 
+        "Shape__Area" : 13910096543.648438, 
+        "Shape__Length" : 810019.97515375819
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 43, 
+        "DistrictNa" : "Santa Barbara", 
+        "ShortName" : "Santa Barbara", 
+        "CDS" : "4269294", 
+        "DID" : 650, 
+        "SourceOf_1" : "Barbara Armstrong, Secretary to the VP, Business Services  armstron@sbccd.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note two places along 650-610 are not covered by voter precincts or school districts, but may be township and range or gaps", 
+        "Shape_Leng" : 1.55969862678, 
+        "Shape_Area" : 0.0455881443509, 
+        "Shape__Area" : 685120450.80859375, 
+        "Shape__Length" : 183463.14215187987
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 44, 
+        "DistrictNa" : "Santa Clarita", 
+        "ShortName" : "Santa Clarita", 
+        "CDS" : "1964972", 
+        "DID" : 660, 
+        "SourceOf_1" : "www.canyons.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note small island gap on the south side along 660-740 edge", 
+        "Shape_Leng" : 1.59067813186, 
+        "Shape_Area" : 0.0900538330625, 
+        "Shape__Area" : 1353550328.7734375, 
+        "Shape__Length" : 194679.53345420616
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 45, 
+        "DistrictNa" : "Ventura County", 
+        "ShortName" : "Ventura", 
+        "CDS" : "5672660", 
+        "DID" : 680, 
+        "SourceOf_1" : "Linda Cooper, Capital Planning, Design & Construction", 
+        "LegalBou_1" : "Based on legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note boundary equals Ventura County", 
+        "Shape_Leng" : 3.79422701466, 
+        "Shape_Area" : 0.471792139776, 
+        "Shape__Area" : 7090572193.0234375, 
+        "Shape__Length" : 466519.68449414347
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 46, 
+        "DistrictNa" : "Compton", 
+        "ShortName" : "Compton", 
+        "CDS" : "1964428", 
+        "DID" : 710, 
+        "SourceOf_1" : "www.compton.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note gaps along 710-740, 710-840 with K-12 SD borders used along 710-740 and 710-810.", 
+        "Shape_Leng" : 0.601266668835, 
+        "Shape_Area" : 0.0074762506, 
+        "Shape__Area" : 111616163.34765625, 
+        "Shape__Length" : 72867.300809298511
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 47, 
+        "DistrictNa" : "El Camino", 
+        "ShortName" : "El Camino", 
+        "CDS" : "1964493", 
+        "DID" : 720, 
+        "SourceOf_1" : "www.elcamino.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.  side.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note internal slivers and along harbor on west side.  K-12 SD used in some places with 720-740, although 1 gap on north", 
+        "Shape_Leng" : 0.958496313486, 
+        "Shape_Area" : 0.0148958037142, 
+        "Shape__Area" : 222355679.65234375, 
+        "Shape__Length" : 119226.75109938139
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 48, 
+        "DistrictNa" : "Glendale", 
+        "ShortName" : "Glendale", 
+        "CDS" : "1973486", 
+        "DID" : 730, 
+        "SourceOf_1" : "www.glendale.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 730-770 used K-12 SD border in NE corner with some gaps along edges and internal slivers", 
+        "Shape_Leng" : 0.581956010087, 
+        "Shape_Area" : 0.00957171148198, 
+        "Shape__Area" : 143400314.046875, 
+        "Shape__Length" : 71439.0629172236
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 49, 
+        "DistrictNa" : "Los Angeles", 
+        "ShortName" : "L.A.", 
+        "CDS" : "1964741", 
+        "DID" : 740, 
+        "SourceOf_1" : "Matthew Spies, Los Angeles County Office of Education", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 740-780, 740-620, 740-770, 740-880, 740-810, and 740-710 all use K-12 SD for borders although most have some gaps along edges.", 
+        "Shape_Leng" : 4.6931241858, 
+        "Shape_Area" : 0.208094503793, 
+        "Shape__Area" : 3114446083.9023438, 
+        "Shape__Length" : 566254.995598242
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 50, 
+        "DistrictNa" : "Pasadena Area", 
+        "ShortName" : "Pasadena", 
+        "CDS" : "1964899", 
+        "DID" : 770, 
+        "SourceOf_1" : "www.pasadena.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 770-740, 770-730, 770-620, 770-820, and 770-880 use K-12 SD borders, with gaps along edges of 730, 620, large gap north of 820, and possible error/gaps along 880", 
+        "Shape_Leng" : 1.49626572477, 
+        "Shape_Area" : 0.061824811213, 
+        "Shape__Area" : 926893275.515625, 
+        "Shape__Length" : 182587.94042550458
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 51, 
+        "DistrictNa" : "Santa Monica", 
+        "ShortName" : "Santa Monica", 
+        "CDS" : "1973502", 
+        "DID" : 780, 
+        "SourceOf_1" : "www.smc.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 1.18596948382, 
+        "Shape_Area" : 0.0206395417561, 
+        "Shape__Area" : 308710309.2578125, 
+        "Shape__Length" : 139555.69889443438
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 52, 
+        "DistrictNa" : "West Kern", 
+        "ShortName" : "West Kern", 
+        "CDS" : "1563867", 
+        "DID" : 690, 
+        "SourceOf_1" : "Adrian Agundez, Director, Information Services  aagundez@taft.org", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note several gaps along east side of 690-520 border", 
+        "Shape_Leng" : 3.53586824652, 
+        "Shape_Area" : 0.196426254175, 
+        "Shape__Area" : 2976743168.6210938, 
+        "Shape__Length" : 435103.2839733116
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 53, 
+        "DistrictNa" : "Cerritos", 
+        "ShortName" : "Cerritos", 
+        "CDS" : "1964360", 
+        "DID" : 810, 
+        "SourceOf_1" : "www.cerritos.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 810-840, 810-710, 810-740, and 810-880 use K-12 SD borders with several gaps along edges and some internal slivers.", 
+        "Shape_Leng" : 0.736186255079, 
+        "Shape_Area" : 0.0130466954966, 
+        "Shape__Area" : 194780283.67578125, 
+        "Shape__Length" : 89407.083677083239
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 54, 
+        "DistrictNa" : "Citrus", 
+        "ShortName" : "Citrus", 
+        "CDS" : "1964386", 
+        "DID" : 820, 
+        "SourceOf_1" : "Christine Link, Executive Assistant Superintendent/Presidents Office  clink@citruscollege.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 820-770, 820-850 and 820-880 use K-12 SD borders with some gaps along 880 edges", 
+        "Shape_Leng" : 1.58520745433, 
+        "Shape_Area" : 0.0688202411132, 
+        "Shape__Area" : 1031479657.234375, 
+        "Shape__Length" : 196115.44481934083
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 55, 
+        "DistrictNa" : "Coast", 
+        "ShortName" : "Coast", 
+        "CDS" : "3066639", 
+        "DID" : 830, 
+        "SourceOf_1" : "Erin Curtis, Assoc. Vice Chancellor  ecurtis@mail.cccd.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note gaps and slivers along 860", 
+        "Shape_Leng" : 1.03503035407, 
+        "Shape_Area" : 0.0264895730264, 
+        "Shape__Area" : 394542649.19921875, 
+        "Shape__Length" : 123798.58587777011
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 56, 
+        "DistrictNa" : "Long Beach", 
+        "ShortName" : "Long Beach", 
+        "CDS" : "1973494", 
+        "DID" : 840, 
+        "SourceOf_1" : "Emma Ford-Panek, LBCCD Contracts Unit   eford-panek@lbcc.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 840-740 gaps fit K-12 SD along western edge, 840-710 gaps need correction, check island on north edge, 840-860 edge has gaps & need correction on east side", 
+        "Shape_Leng" : 1.30547245756, 
+        "Shape_Area" : 0.0148443133638, 
+        "Shape__Area" : 221383181.29296875, 
+        "Shape__Length" : 159037.79120405405
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 57, 
+        "DistrictNa" : "Mt. San Antonio", 
+        "ShortName" : "Mt. San Antonio", 
+        "CDS" : "1964824", 
+        "DID" : 850, 
+        "SourceOf_1" : "Barbara Oberg, Business Services  boberg@msjc.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 850-860 gaps may need correcting, not based on SD.  850-880 uses K-12 SD borders although some possible errors not matches to SD, and 850-820 uses SD along borders", 
+        "Shape_Leng" : 1.33143711652, 
+        "Shape_Area" : 0.0453082479143, 
+        "Shape__Area" : 677706635.78515625, 
+        "Shape__Length" : 163440.68861086766
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 58, 
+        "DistrictNa" : "North Orange County", 
+        "ShortName" : "North Orange", 
+        "CDS" : "3066605", 
+        "DID" : 860, 
+        "SourceOf_1" : "Ron Beeler, District Director of Facilities & Planning  rbeeler@noccc.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.  Voter precincts along all borders", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : " ", 
+        "Shape_Leng" : 1.26438677316, 
+        "Shape_Area" : 0.0396003995398, 
+        "Shape__Area" : 591041469.5, 
+        "Shape__Length" : 149815.35930843954
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 59, 
+        "DistrictNa" : "Rancho Santiago", 
+        "ShortName" : "Rancho Santiago", 
+        "CDS" : "3066688", 
+        "DID" : 870, 
+        "SourceOf_1" : "Peter Hardash, Vice Chancellor, Business Operations  Hardash_Peter@rsccd.org", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 870-890 border uses K-12 SD boundaries with a possible gap error on southeast side.", 
+        "Shape_Leng" : 1.61097481035, 
+        "Shape_Area" : 0.0462002000123, 
+        "Shape__Area" : 688728520.18359375, 
+        "Shape__Length" : 192847.17729336675
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 60, 
+        "DistrictNa" : "Rio Hondo", 
+        "ShortName" : "Rio Hondo", 
+        "CDS" : "1964923", 
+        "DID" : 880, 
+        "SourceOf_1" : "www.riohondo.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note uses K-12 SD boundaries along 880-810, 880-740, 880-820, and 880-850 with gaps along edges in 810 and 740 along the west, and 850 on the east.  One precinct seems to be split in half with 880-770.", 
+        "Shape_Leng" : 0.783290982347, 
+        "Shape_Area" : 0.0164650772651, 
+        "Shape__Area" : 246095106.68359375, 
+        "Shape__Length" : 95652.379021607048
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 61, 
+        "DistrictNa" : "South Orange County", 
+        "ShortName" : "South Orange", 
+        "CDS" : "3066654", 
+        "DID" : 890, 
+        "SourceOf_1" : "David Wilson, Orange County Department of Education  dvwilson@ocde.us", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.  Note 890-870 uses K-12 SD boundaries with one gap along northeast side.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 890-870 uses K-12 SD boundaries with one gap along northeast side.", 
+        "Shape_Leng" : 1.6843004563, 
+        "Shape_Area" : 0.0912099896728, 
+        "Shape__Area" : 1357033736.1757813, 
+        "Shape__Length" : 203965.10926946093
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 62, 
+        "DistrictNa" : "Barstow", 
+        "ShortName" : "Barstow", 
+        "CDS" : "3667629", 
+        "DID" : 910, 
+        "SourceOf_1" : "Curt Mitchell  cmitchell@barstow.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note uses K-12 SD boundaries for 910-990, 910520, 910-950, and 910-970", 
+        "Shape_Leng" : 8.58935095573, 
+        "Shape_Area" : 2.3471918169, 
+        "Shape__Area" : 35590690681.078125, 
+        "Shape__Length" : 1021883.9381883898
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 63, 
+        "DistrictNa" : "Chaffey", 
+        "ShortName" : "Chaffey", 
+        "CDS" : "3667660", 
+        "DID" : 920, 
+        "SourceOf_1" : "Dennis Mobley, SBCSS Governance Liaison  mobley@sbcss.k12.ca.us", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note the 920-980 border uses K-12 SD.", 
+        "Shape_Leng" : 1.541942886, 
+        "Shape_Area" : 0.0806289402253, 
+        "Shape__Area" : 1206494197.4335938, 
+        "Shape__Length" : 189950.76387761385
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 64, 
+        "DistrictNa" : "Desert", 
+        "ShortName" : "Desert", 
+        "CDS" : "3367025", 
+        "DID" : 930, 
+        "SourceOf_1" : "Steve Renew, Director of M & O  srenew@collegeofthedesert.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note 930-940 and 930-030 use K-12 SD boundaries, while gaps exist with 030 edge on the south side", 
+        "Shape_Leng" : 5.35477888769, 
+        "Shape_Area" : 1.06533939904, 
+        "Shape__Area" : 15872641249.363281, 
+        "Shape__Length" : 634001.84806828818
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 65, 
+        "DistrictNa" : "Mt. San Jacinto", 
+        "ShortName" : "Mt. San Jacinto", 
+        "CDS" : "3367132", 
+        "DID" : 940, 
+        "SourceOf_1" : "www.msjc.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note K-12 SD boundaries used in 940-960, 940-980, and 940-930 with several gaps on the northwest edge and others", 
+        "Shape_Leng" : 3.60373026543, 
+        "Shape_Area" : 0.442198837899, 
+        "Shape__Area" : 6585923784.0664063, 
+        "Shape__Length" : 428895.09171012847
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 66, 
+        "DistrictNa" : "Palo Verde", 
+        "ShortName" : "Palo Verde", 
+        "CDS" : "3373510", 
+        "DID" : 950, 
+        "SourceOf_1" : "Quenton Hanson, Institutional Researcher  qhanson@paloverde.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note uses K-12 SD boundaries for 950-970 and 950-910 borders", 
+        "Shape_Leng" : 7.79185985698, 
+        "Shape_Area" : 1.65542974588, 
+        "Shape__Area" : 24864402226.242188, 
+        "Shape__Length" : 946776.6412852112
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 67, 
+        "DistrictNa" : "Riverside", 
+        "ShortName" : "Riverside", 
+        "CDS" : "3367223", 
+        "DID" : 960, 
+        "SourceOf_1" : "Daniel Martinez, Assoc. Director, Institutional Research  Daniel.Martinez@rcc.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note uses K-12 SD boundaries along 960-940 border with gaps", 
+        "Shape_Leng" : 1.92141829713, 
+        "Shape_Area" : 0.113926516748, 
+        "Shape__Area" : 1700822051.2460938, 
+        "Shape__Length" : 227908.22891763941
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 68, 
+        "DistrictNa" : "Copper Mountain", 
+        "ShortName" : "Copper Mountain", 
+        "CDS" : "3676463", 
+        "DID" : 970, 
+        "SourceOf_1" : "www.cmccd.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note uses K-12 SD boundaries for 970-980, 970-990, and 970-950 borders.", 
+        "Shape_Leng" : 3.10999073076, 
+        "Shape_Area" : 0.339907835416, 
+        "Shape__Area" : 5093648432.4882813, 
+        "Shape__Length" : 365912.79508430557
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 69, 
+        "DistrictNa" : "San Bernardino", 
+        "ShortName" : "San Bernardino", 
+        "CDS" : "3667884", 
+        "DID" : 980, 
+        "SourceOf_1" : "David Salazar, Executive Director of Facilities & Planning  dsalazar@sbccd.cc.ca.us", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note K-12 SD boundaries used in 980-920, 980-990, 980-970, and 980-940 with gaps along 920 and 940", 
+        "Shape_Leng" : 2.96230400023, 
+        "Shape_Area" : 0.209673904847, 
+        "Shape__Area" : 3140378071.5742188, 
+        "Shape__Length" : 349894.44106596522
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 70, 
+        "DistrictNa" : "Victor Valley", 
+        "ShortName" : "Victor Valley", 
+        "CDS" : "3667926", 
+        "DID" : 990, 
+        "SourceOf_1" : "Angel Arrington, San Bernardino County Superintendent of Schools, Angel_Arrington@sbcss.k12.ca.us", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1216944000000, 
+        "Notes_1" : "Note uses K-12 SD boundaries for 990-520, 990-910, 990-970, and 990-980 borders with gaps along 910 edge", 
+        "Shape_Leng" : 4.13218665337, 
+        "Shape_Area" : 0.457473693212, 
+        "Shape__Area" : 6878776780.8398438, 
+        "Shape__Length" : 496677.21619131794
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 71, 
+        "DistrictNa" : "San Joaquin Delta", 
+        "ShortName" : "Delta", 
+        "CDS" : "3968668", 
+        "DID" : 550, 
+        "SourceOf_1" : "www.deltacollege.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1217289600000, 
+        "Notes_1" : "Revision20080729-Removed Amador County from Boundary 550. Original Note 550-310 gap, 550-230, and 550-590 use K-12 SD borders, some slivers and gaps for all three, and overlap on 550-590 south side", 
+        "Shape_Leng" : 7.76775458373, 
+        "Shape_Area" : 0.673876375811, 
+        "Shape__Area" : 10608473574.617188, 
+        "Shape__Length" : 977039.53861278726
+      }
+    }, 
+    {
+      "attributes" : {
+        "FID" : 72, 
+        "DistrictNa" : "Redwoods", 
+        "ShortName" : "Redwoods", 
+        "CDS" : "1262992", 
+        "DID" : 160, 
+        "SourceOf_1" : "Tim Flanagan, Co-Director, Facilities & Operations  tim-flanagan@redwoods.edu", 
+        "LegalBou_1" : "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary.  Fort Bragg Center and Service area moved to Mendocino CCD as of July 2019.", 
+        "PrimaryBou" : "This layer uses Voter Precincts as the primary boundary definition", 
+        "Revision_1" : 1509235200000, 
+        "Notes_1" : "Fort Bragg moved to Mendocino CCD.  On the southeast border, overlapping issues with school districts and voter precincts.  Combination of census geography and voter precincts used to make final decisions.", 
+        "Shape_Leng" : 9.27133942487, 
+        "Shape_Area" : 1.28032009736, 
+        "Shape__Area" : 21003931952.050781, 
+        "Shape__Length" : 1201882.8466883192
+      }
+    }
+  ]
+}

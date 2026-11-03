@@ -1,0 +1,50 @@
+{
+  "checkedAt": "2026-11-03T09:17:09.489Z",
+  "status": "PASS",
+  "sourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "measureRecordContract": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "genericBallotProblems": "PASS",
+  "sourceAuthorityEnforced": true,
+  "heldInputUnrelatedContestsPreserved": 346,
+  "heldInputCandidatesPreserved": 461,
+  "priorBasis": "Saved repository official-source state input. Current measure-only live audit used for actual reader attachment. No production write.",
+  "readerAttachment": "PASS",
+  "records": 6,
+  "checks": [
+    {
+      "contestId": "ca-2026-marin-bb",
+      "status": "PASS",
+      "parts": 3
+    },
+    {
+      "contestId": "ca-2026-marin-dd",
+      "status": "PASS",
+      "parts": 3
+    },
+    {
+      "contestId": "ca-2026-marin-y",
+      "status": "PASS",
+      "parts": 6
+    },
+    {
+      "contestId": "ca-2026-marin-z",
+      "status": "PASS",
+      "parts": 3
+    },
+    {
+      "contestId": "ca-2026-marin-aa",
+      "status": "PASS",
+      "parts": 3
+    },
+    {
+      "contestId": "ca-2026-marin-ee",
+      "status": "PASS",
+      "parts": 3
+    }
+  ],
+  "productionWrites": 0,
+  "paidCalls": 0
+}

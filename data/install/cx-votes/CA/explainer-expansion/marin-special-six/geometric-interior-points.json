@@ -1,0 +1,50 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:county_service_area_27",
+    "point": [
+      -122.61418149638446,
+      37.975809937664934
+    ],
+    "basis": "Deterministic geometric interior; no voter, household or residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:county_service_area_29",
+    "point": [
+      -122.47549967873093,
+      37.91195657843937
+    ],
+    "basis": "Deterministic geometric interior; no voter, household or residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:inverness_public_utility_district",
+    "point": [
+      -122.86632340760522,
+      38.09953367545941
+    ],
+    "basis": "Deterministic geometric interior; no voter, household or residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:kentfield_fire_protection_district",
+    "point": [
+      -122.56046523208539,
+      37.94534283011758
+    ],
+    "basis": "Deterministic geometric interior; no voter, household or residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:sleepy_hollow_fire_protection_district",
+    "point": [
+      -122.5861888665883,
+      38.01239650952988
+    ],
+    "basis": "Deterministic geometric interior; no voter, household or residential address."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:stinson_beach_county_water_district",
+    "point": [
+      -122.65986245888278,
+      37.92505111490911
+    ],
+    "basis": "Deterministic geometric interior; no voter, household or residential address."
+  }
+]

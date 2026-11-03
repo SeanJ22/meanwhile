@@ -1,0 +1,43 @@
+{
+  "source": "Current California Department of Technology catalog links FoundationCCC public statewide map, whose CCD Boundaries layer supplies Sonoma County featureFID18/CDS4970946. LegalBou_1 explicitly identifies legal/K12 boundary, PrimaryBou identifies voterprecinct/countyline basis. The feature explicitly reports July25,2008 revision; that vintage is preserved.",
+  "captureEdition": 2026,
+  "underlyingFeatureRevisionYear": 2008,
+  "underlyingLegalBoundaryDate": "Per-feature Revision_1: July25,2008. Current catalog publication/link does not establish a later legal revision. Current FY2024–25 district audit says no district-boundary change during that year.",
+  "sourceCoordinateTransformation": "Native GeoJSON coordinates and polygon/ring structure copied exactly; publisher performs requested outSR4326. No rounding, repair, simplification, buffer or service-area widening.",
+  "completeZctaFeatures": 66,
+  "enclosingEnvelope": [
+    -123.54,
+    38.11,
+    -122.34,
+    38.86
+  ],
+  "specs": [
+    {
+      "letter": "AB",
+      "name": "Sonoma County Junior College District",
+      "id": "ocd-division/country:us/state:ca/electoral_district:2026_sonoma_county_junior_college_district",
+      "file": "ca-90407650c957.json",
+      "oid": 18,
+      "sbe": null,
+      "pid": null,
+      "sourceUrl": "https://services6.arcgis.com/XNnWmtFBLgSx99Bz/arcgis/rest/services/CCC_ArcGIS__Map_Bundle/FeatureServer/4/query?objectIds=3,18,43&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceProperties": {
+        "FID": 18,
+        "DistrictNa": "Sonoma County",
+        "ShortName": "Sonoma",
+        "CDS": "4970946",
+        "DID": 260,
+        "SourceOf_1": "Maria Gaitan, Executive Assistant to the President  mgaitan@santarosa.edu",
+        "LegalBou_1": "Based on the legal boundary, the layer matches K-12 school districts within the CCC District boundary",
+        "PrimaryBou": "This layer uses Voter Precincts as the primary boundary definition, but basically follows the county line.",
+        "Revision_1": 1216944000000,
+        "Notes_1": " ",
+        "Shape_Leng": 4.4866023738,
+        "Shape_Area": 0.425001664166,
+        "Shape__Area": 6732363655.074219,
+        "Shape__Length": 550808.7238914681
+      }
+    }
+  ],
+  "knownIdentityNotes": "Source-defined2026 electoral OCD identifies this election, not a Census geographic ID. CDS4970946 and explicit district legal/voterprecinct source attributes bind Sonoma County JCCD. No whole-county or generic service-region substitution."
+}

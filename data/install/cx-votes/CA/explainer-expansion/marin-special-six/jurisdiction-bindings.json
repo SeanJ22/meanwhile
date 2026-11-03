@@ -1,0 +1,8 @@
+{
+  "ocd-division/country:us/state:ca/special_district:kentfield_fire_protection_district": "map.json; exact current county LAFCO district boundary; source-defined identity, not a claimed Census geographic ID",
+  "ocd-division/country:us/state:ca/special_district:sleepy_hollow_fire_protection_district": "map.json; exact current county LAFCO district boundary; source-defined identity, not a claimed Census geographic ID",
+  "ocd-division/country:us/state:ca/special_district:county_service_area_27": "map.json; exact current county LAFCO district boundary; source-defined identity, not a claimed Census geographic ID",
+  "ocd-division/country:us/state:ca/special_district:county_service_area_29": "map.json; exact current county LAFCO district boundary; source-defined identity, not a claimed Census geographic ID",
+  "ocd-division/country:us/state:ca/special_district:inverness_public_utility_district": "map.json; exact current county LAFCO district boundary; source-defined identity, not a claimed Census geographic ID",
+  "ocd-division/country:us/state:ca/special_district:stinson_beach_county_water_district": "map.json; exact current county LAFCO district boundary; source-defined identity, not a claimed Census geographic ID"
+}

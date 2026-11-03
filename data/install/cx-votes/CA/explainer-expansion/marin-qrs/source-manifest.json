@@ -1,0 +1,62 @@
+[
+  {
+    "url": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326",
+    "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326",
+    "httpStatus": 200,
+    "sha256": "00c2b9471950e708183cbb64366ea647627f18dee1cd6ceca0d7f7e6a1e19210",
+    "bytes": 45184,
+    "retrievedAt": "2026-11-03T08:57:09.598609+00:00",
+    "savedFile": "sources/00c2b9471950e708183cbb64366ea647627f18dee1cd6ceca0d7f7e6a1e19210.html",
+    "sourceTextFile": "sources/00c2b9471950e708183cbb64366ea647627f18dee1cd6ceca0d7f7e6a1e19210.txt",
+    "extractedTextSha256": "51d5003a52321d6fbf65595cf72c82848725af39a359509213de868c41848dc9",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "DETERMINISTIC_VISIBLE_HTML_TEXT_BOUNDED_TO_OFFICIAL_MEASURE_OR_NEUTRAL_ANALYSIS",
+    "publisher": "Marin County Elections",
+    "role": "Current corrected official November3,2026 list of20localmeasures. Earlier R/U label announcement error explicitly noted by county; current labels control."
+  },
+  {
+    "url": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-q-110326",
+    "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-q-110326",
+    "httpStatus": 200,
+    "sha256": "2aa2d31f73291fd7b0bbf180d0a65e0a744822d64ad2264e43e8ddfa094b06de",
+    "bytes": 47739,
+    "retrievedAt": "2026-11-03T08:57:23.189606+00:00",
+    "savedFile": "sources/2aa2d31f73291fd7b0bbf180d0a65e0a744822d64ad2264e43e8ddfa094b06de.html",
+    "sourceTextFile": "sources/2aa2d31f73291fd7b0bbf180d0a65e0a744822d64ad2264e43e8ddfa094b06de.txt",
+    "extractedTextSha256": "a75bc47a6fd26253d9299f8fec2f4cead56e81b5701b4475a97fe443bd89b526",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "DETERMINISTIC_VISIBLE_HTML_TEXT_BOUNDED_TO_OFFICIAL_MEASURE_OR_NEUTRAL_ANALYSIS",
+    "publisher": "Marin County Elections",
+    "role": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+  },
+  {
+    "url": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-r-110326",
+    "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-r-110326",
+    "httpStatus": 200,
+    "sha256": "9e071253d55577effff7c02da0e925561a71bbeaf67dbaaed2685e2eccf54d49",
+    "bytes": 47420,
+    "retrievedAt": "2026-11-03T08:57:23.368043+00:00",
+    "savedFile": "sources/9e071253d55577effff7c02da0e925561a71bbeaf67dbaaed2685e2eccf54d49.html",
+    "sourceTextFile": "sources/9e071253d55577effff7c02da0e925561a71bbeaf67dbaaed2685e2eccf54d49.txt",
+    "extractedTextSha256": "9597db49f77ee825b594f4e591e2f1a23367d262594cae567177e1fd019713e9",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "DETERMINISTIC_VISIBLE_HTML_TEXT_BOUNDED_TO_OFFICIAL_MEASURE_OR_NEUTRAL_ANALYSIS",
+    "publisher": "Marin County Elections",
+    "role": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+  },
+  {
+    "url": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-s-110326",
+    "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-s-110326",
+    "httpStatus": 200,
+    "sha256": "00c288af6414e864540da420d0c31847d820b4ef5963927a8a3249717515c24a",
+    "bytes": 46840,
+    "retrievedAt": "2026-11-03T08:57:23.488279+00:00",
+    "savedFile": "sources/00c288af6414e864540da420d0c31847d820b4ef5963927a8a3249717515c24a.html",
+    "sourceTextFile": "sources/00c288af6414e864540da420d0c31847d820b4ef5963927a8a3249717515c24a.txt",
+    "extractedTextSha256": "320733ac6baf4fc97864d95d1916aed2e8b3eb8c989bf7929699775963bdc0dd",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "DETERMINISTIC_VISIBLE_HTML_TEXT_BOUNDED_TO_OFFICIAL_MEASURE_OR_NEUTRAL_ANALYSIS",
+    "publisher": "Marin County Elections",
+    "role": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+  }
+]

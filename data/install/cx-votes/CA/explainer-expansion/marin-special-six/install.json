@@ -1,0 +1,64 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-marin-bb",
+      "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-kentfield-fire-protection-district-110326"
+    },
+    {
+      "id": "ca-2026-marin-dd",
+      "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-sleepy-hollow-fire-protection-district-110326"
+    },
+    {
+      "id": "ca-2026-marin-y",
+      "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-27-ross-valley-paramedic-service-area-110326"
+    },
+    {
+      "id": "ca-2026-marin-z",
+      "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-csa-29-paradise-cay-service-area-110326"
+    },
+    {
+      "id": "ca-2026-marin-aa",
+      "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-inverness-public-utility-district-110326"
+    },
+    {
+      "id": "ca-2026-marin-ee",
+      "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-stinson-beach-county-water-district-110326"
+    }
+  ],
+  "operation": "Load only these six exact county-published district shapes through existing loadStatePlaceMap, then merge questions/explainers through existing runBallotPublication. Preserve unrelated geography and ballot rows. No app/registry code or release.",
+  "coverage": {
+    "state": "CA",
+    "county": "Marin",
+    "officialCountyDenominator": 20,
+    "preparedLabels": [
+      "BB",
+      "DD",
+      "Y",
+      "Z",
+      "AA",
+      "EE"
+    ],
+    "preparedAttached": 6,
+    "scope": "Only measures and exact jurisdictions in this packet. Remaining Marin measures and other local inventories remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "source-reader-check.json and reader-map-check.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "placeMapFile": "map.json",
+  "placeMapSha256": "db721415a172c1cb65ff0587dee42d0e6d705e65ad9e90d6731083c07121efd7",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

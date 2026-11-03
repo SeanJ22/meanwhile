@@ -1,0 +1,10 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_sonoma_county_junior_college_district",
+    "point": [
+      -122.9415802418345,
+      38.482512500301695
+    ],
+    "basis": "Deterministic geometric interior; no voter, household or residential address."
+  }
+]

@@ -1,0 +1,49 @@
+{
+  "state": "CA",
+  "county": "Marin",
+  "status": "PASS",
+  "districts": 1,
+  "nativeGeometriesExact": "PASS no rounding or scope transformations",
+  "collegeLegalDistrictNotWholeCounty": "PASS exact current publisher-linked FID18 geometry with explicit2008vintage",
+  "govAuthority": "Current California Department of Technology catalog→FoundationCCC webmap→exact legal/voterprecinct CCDlayer4/FID18 route retained",
+  "sourceHashes": "PASS",
+  "completeEnclosingZctas": 66,
+  "actualLoader": "PASS offline memory fixture",
+  "heldGovernmentLinks": 0,
+  "actualPointReaderChecks": [
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    }
+  ],
+  "allThreeCountyWideNegatives": "PASS",
+  "actualZipReaderChecks": 50,
+  "zipEdges": 50,
+  "zctaEdges": 49,
+  "postalLinkedEdges": [
+    {
+      "code": "94999",
+      "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_sonoma_county_junior_college_district",
+      "basis": "unknown"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "limits": "Current publisher-linked geometry retains explicit2008feature-revision vintage. Latest2025audit corroborates no boundarychange only duringFY2024–25. No claim of new2026geometry. River installs data and verifies live."
+}

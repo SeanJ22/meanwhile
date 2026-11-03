@@ -1,0 +1,36 @@
+{
+  "source": "Current official LAFCO public map references exact Marin_Healthcare_Districts FeatureServer26; SOI27 excluded. Layer credits county CommunityDevelopment, Registrar, MarinHealth and LAFCO; source data last edited May26,2026.",
+  "captureEdition": 2026,
+  "underlyingLegalBoundaryDate": "Not stated;2026 labels capture edition only.",
+  "sourceCoordinateTransformation": "Native GeoJSON coordinates and polygon/ring structure copied exactly; publisher performs requested outSR4326. No rounding, repair, simplification, buffer or service-area widening.",
+  "govAuthoritySource": "https://www.marincounty.gov/departments/it/maps-and-geographic-information-systems-gis",
+  "govHostLinkProof": "Current county .gov IT page links MarinMap.org; MarinMap links MarinLAFCO.org; LAFCO page links official ArcGIS viewer; its public app/map JSON explicitly identifies source26. Exact chain captured in source-authority-chain.json.",
+  "completeZctaFeatures": 49,
+  "enclosingEnvelope": [
+    -123.03,
+    37.81,
+    -122.35,
+    38.33
+  ],
+  "specs": [
+    {
+      "letter": "CC",
+      "name": "Marin Healthcare District",
+      "id": "ocd-division/country:us/state:ca/special_district:marin_healthcare_district",
+      "file": "ca-0c221803a95a.json",
+      "oid": 1,
+      "sbe": null,
+      "pid": "142381",
+      "sourceUrl": "https://services3.arcgis.com/dkpOfuz3lCHMxq7I/arcgis/rest/services/Marin_Healthcare_Districts/FeatureServer/26/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceProperties": {
+        "OBJECTID": 1,
+        "District": "Marin Healthcare District",
+        "Shape__Area": 14969337419.19336,
+        "Shape__Length": 845566.3748982036
+      }
+    }
+  ],
+  "knownIdentityNotes": "Existing government PID142381/ca:special:marin-healthcare-district bound to new source-defined exact electoral place. No invented Census geographic ID.",
+  "govAuthorityRawSha256": "c075a8dcdd4ca6f039c195e2d9eaba2c18bbe4b602b81ad1e3d4fb0bf2fc1c92",
+  "completeSourceChain": "source-authority-chain.json"
+}

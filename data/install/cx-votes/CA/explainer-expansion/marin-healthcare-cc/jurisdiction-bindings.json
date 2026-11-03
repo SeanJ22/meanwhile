@@ -1,0 +1,3 @@
+{
+  "ocd-division/country:us/state:ca/special_district:marin_healthcare_district": "map.json; exact current county LAFCO district boundary; source-defined identity, not a claimed Census geographic ID"
+}

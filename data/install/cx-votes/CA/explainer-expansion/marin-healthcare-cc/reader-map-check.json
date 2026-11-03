@@ -1,0 +1,54 @@
+{
+  "state": "CA",
+  "county": "Marin",
+  "status": "PASS",
+  "districts": 1,
+  "nativeGeometriesExact": "PASS no rounding or scope transformations",
+  "healthcareNotSoiOrGuessedCountyDifference": "PASS exact current May2026 source26 polygon",
+  "govAuthority": "Exact native government→MarinMap→LAFCO→official public viewer/map→legal layer26 route retained",
+  "sourceHashes": "PASS",
+  "completeEnclosingZctas": 49,
+  "actualLoader": "PASS offline memory fixture",
+  "heldGovernmentLinks": 1,
+  "actualPointReaderChecks": [
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 1,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    },
+    {
+      "basis": "Deterministic geometry only; no residential address",
+      "expectedDistricts": 0,
+      "status": "PASS"
+    }
+  ],
+  "countyAndNovatoCityNegative": "PASS",
+  "actualZipReaderChecks": 35,
+  "zipEdges": 35,
+  "zctaEdges": 33,
+  "postalLinkedEdges": [
+    {
+      "code": "94850",
+      "placeId": "ocd-division/country:us/state:ca/special_district:marin_healthcare_district",
+      "basis": "unknown"
+    },
+    {
+      "code": "94974",
+      "placeId": "ocd-division/country:us/state:ca/special_district:marin_healthcare_district",
+      "basis": "unknown"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "limits": "Current published legal district geometry; underlying legal boundary date not stated. River installs and checks live. Healthcare source26 is distinct from SOI27 and county/minus-NovatoCity approximations."
+}

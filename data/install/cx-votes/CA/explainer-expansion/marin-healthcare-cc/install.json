@@ -1,0 +1,39 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-marin-cc",
+      "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-cc-110326"
+    }
+  ],
+  "operation": "Load only this exact current county/LAFCO healthcare district shape through existing loadStatePlaceMap, then merge questions/explainers through existing runBallotPublication. Preserve unrelated geography and ballot rows. No app/registry code or release.",
+  "coverage": {
+    "state": "CA",
+    "county": "Marin",
+    "officialCountyDenominator": 20,
+    "preparedLabels": [
+      "CC"
+    ],
+    "preparedAttached": 1,
+    "scope": "Only measures and exact jurisdictions in this packet. Remaining Marin measures and other local inventories remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "source-reader-check.json and reader-map-check.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "placeMapFile": "map.json",
+  "placeMapSha256": "4f6dcd9ff61b580e51a97c1bdfd63a2c8de237d46648753adcba62807a776c27",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

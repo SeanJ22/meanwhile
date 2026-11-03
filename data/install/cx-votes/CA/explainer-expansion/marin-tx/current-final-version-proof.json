@@ -1,0 +1,37 @@
+{
+  "currentCityCorrectionSource": "https://www.sausalito.gov/departments/administration/city_clerk/local_elections/measure_x_%282026%29.php",
+  "rawNativeSha256": "b392527ccecf58aea575f19b887ae0e1295a5779eb0909aa2d0ea03c4121b3d6",
+  "primarySummary": "Complete current county-published CityAttorney impartial analysis, not June16withdrawndraft.",
+  "failedCityFullPdfLinks": [
+    {
+      "state": "CA",
+      "url": "https://www.sausalito.gov/departments/administration/city_clerk/local_elections/Documents/Departments/Administration/City%20Clerk/Local%20Elections/Measure%20X/AIM%20Petition%20Text%20Document.pdf?t=202609221341070",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "state": "CA",
+      "url": "https://www.sausalito.gov/departments/administration/city_clerk/local_elections/Documents/Departments/Administration/City%20Clerk/Local%20Elections/Measure%20X/Resolution%2033-2026%20%28Corrected%29%20%E2%80%93%20Submitting%20the%20AIM%20Initiative%20to%20Voters%20Text%20Document.pdf?t=202609221341410",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "state": "CA",
+      "url": "https://www.sausalito.gov/departments/administration/city_clerk/local_elections/Documents/Departments/Administration/City%20Clerk/Local%20Elections/Measure%20X/City%20Attorneys%20Impartial%20Analysis%20of%20Measure%20X.pdf?t=202609240822560",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "state": "CA",
+      "url": "https://www.sausalito.gov/Documents/Departments/Administration/City%20Clerk/Local%20Elections/Measure%20X/AIM%20Petition%20Text%20Document.pdf?t=202609221341070",
+      "error": "HTTP Error 406: Not Acceptable"
+    },
+    {
+      "state": "CA",
+      "url": "https://www.sausalito.gov/Documents/Departments/Administration/City%20Clerk/Local%20Elections/Measure%20X/Resolution%2033-2026%20%28Corrected%29%20%E2%80%93%20Submitting%20the%20AIM%20Initiative%20to%20Voters%20Text%20Document.pdf?t=202609221341410",
+      "error": "HTTP Error 406: Not Acceptable"
+    },
+    {
+      "state": "CA",
+      "url": "https://www.sausalito.gov/Documents/Departments/Administration/City%20Clerk/Local%20Elections/Measure%20X/City%20Attorneys%20Impartial%20Analysis%20of%20Measure%20X.pdf?t=202609240822560",
+      "error": "HTTP Error 406: Not Acceptable"
+    }
+  ]
+}

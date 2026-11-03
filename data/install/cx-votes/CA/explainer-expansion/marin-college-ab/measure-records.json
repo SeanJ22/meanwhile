@@ -1,0 +1,64 @@
+[
+  {
+    "whatItDoes": "Authorizes Sonoma County Junior College District to issue up to $830 million in bonds for facilities, equipment and other listed capital projects, repaid through property taxes. The tax statement estimates an average $22 per $100,000 of assessed value and about $1.76 billion in total principal and interest.",
+    "yesMeans": "Authorize the new bonds and their property-tax repayment, with project restrictions, independent audits and citizen oversight. Although the ballot describes a plan without increasing tax rates, this measure still authorizes taxes to repay the new debt.",
+    "noMeans": "Do not authorize these $830 million in bonds or the tax levies associated with this authorization.",
+    "contestId": "ca-2026-marin-ab",
+    "parts": [
+      {
+        "id": "ca-2026-marin-ab#cost",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Repayment estimates",
+        "what": "The statement estimates an average $22 per $100,000 of assessed value, a highest rate of $25 first expected in 2041–42, and collections through 2058–59. Estimated total principal and interest is $1.76 billion; the ballot estimates $55.3 million annually. Rates and dates are projections, not binding maximums or guaranteed expiration dates; they depend on bond sales, interest rates and assessed values, not market values."
+      },
+      {
+        "id": "ca-2026-marin-ab#facilities",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Authorized projects",
+        "what": "Projects include classrooms, labs, job-training and public-safety facilities, healthcare and trade-training centers, roofs and utilities, earthquake/fire safety, accessibility, technology and cybersecurity infrastructure, energy systems, parking and other listed campus support facilities. They cover the Santa Rosa and Petaluma campuses and district centers, including the Public Safety Training Center, Roseland and Shone Farm."
+      },
+      {
+        "id": "ca-2026-marin-ab#housing",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Housing and property acquisition",
+        "what": "The project list also allows planning, constructing, acquiring or contributing to affordable student and workforce housing, and acquiring or leasing land and facilities. These are authorized uses of the bond money alongside the training and campus projects."
+      },
+      {
+        "id": "ca-2026-marin-ab#restriction",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Restricted money and related costs",
+        "what": "Money cannot pay ordinary teacher, faculty or administrator salaries, pensions or other operating expenses. It may pay authorized capital work and related equipment, design, management, temporary facilities, software/infrastructure and other specified project costs, including district staff work necessary or incidental to projects. It may reduce, refinance or retire prior leases or interim financing for listed projects."
+      },
+      {
+        "id": "ca-2026-marin-ab#choices",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Board priorities and project choices",
+        "what": "The Board chooses timing, priorities and how much debt to sell within the authorization. Listing a project does not guarantee funding or completion; costs and available money can change the plans. Joint-use projects with public or nonprofit agencies are allowed, and the Board may replace a facility instead of renovating when more cost-effective."
+      },
+      {
+        "id": "ca-2026-marin-ab#oversight",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Annual audits and citizens’ committee",
+        "what": "Independent financial and performance audits occur annually. A citizens’ committee must be established within 60 days after results enter Board minutes, with taxpayer, business and senior-citizen representation; district employees and vendors cannot serve. Proceeds have a separate county-treasury account and annual project/receipt/spending reports, with public spending disclosure."
+      },
+      {
+        "id": "ca-2026-marin-ab#approval",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Approval and borrowing limits",
+        "what": "At least 55% of votes cast on Measure AB must be yes. Interest must stay within legal limits. This is the Sonoma County Junior College District electorate across its portions of Sonoma, Marin and Mendocino counties, not every resident of each county."
+      }
+    ],
+    "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-ab-110326",
+    "sourceHash": "ebf005768a4a8030a0355fd9f2004a210ad821df19541abbb4a373bb676e18df",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:37:08.115719+00:00",
+    "citation": "measure-source"
+  }
+]

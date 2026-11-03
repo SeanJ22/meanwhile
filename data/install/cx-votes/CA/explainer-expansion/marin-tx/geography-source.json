@@ -1,0 +1,19 @@
+{
+  "heldRows": [
+    [
+      "ocd-division/country:us/state:ca/place:mill_valley",
+      "place",
+      "0647710",
+      "Mill Valley city"
+    ],
+    [
+      "ocd-division/country:us/state:ca/place:sausalito",
+      "place",
+      "0670364",
+      "Sausalito city"
+    ]
+  ],
+  "MillValleyScopeQuote": "The boundaries of the District are identical to the city limits of Mill Valley.",
+  "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-t-110326",
+  "basis": "Exact current official CityAttorney scope statement, not inference from district name."
+}

@@ -1,0 +1,195 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-marin-cc",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:marin_healthcare_district",
+          "title": "Marin Healthcare District healthcare parcel tax — Measure CC",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-cc-110326",
+            "collectedAt": "2026-11-03T08:57:25.460370+00:00",
+            "verifiedAt": "2026-11-03T09:29:00.372670+00:00",
+            "quote": "Shall the measure funding expanded and upgraded emergency room, intensive care, hospital, and other medical facilities to care for trauma, heart attack, stroke, and other patients and attract qualified doctors and nurses, with no funds for administrator salaries, by enacting a parcel tax of 14¢ per square foot of improved building area annually, generating approximately $12,400,000 annually for 30 years, subject to annual audits and citizens' committee oversight, be adopted?"
+          },
+          "measureTextUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-cc-110326",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-marin-cc-text",
+          "contestId": "ca-2026-marin-cc",
+          "officialNumber": "Measure CC",
+          "questionText": "Shall the measure funding expanded and upgraded emergency room, intensive care, hospital, and other medical facilities to care for trauma, heart attack, stroke, and other patients and attract qualified doctors and nurses, with no funds for administrator salaries, by enacting a parcel tax of 14¢ per square foot of improved building area annually, generating approximately $12,400,000 annually for 30 years, subject to annual audits and citizens' committee oversight, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-cc-110326",
+            "collectedAt": "2026-11-03T08:57:25.460370+00:00",
+            "verifiedAt": "2026-11-03T09:29:00.372670+00:00",
+            "quote": "Shall the measure funding expanded and upgraded emergency room, intensive care, hospital, and other medical facilities to care for trauma, heart attack, stroke, and other patients and attract qualified doctors and nurses, with no funds for administrator salaries, by enacting a parcel tax of 14¢ per square foot of improved building area annually, generating approximately $12,400,000 annually for 30 years, subject to annual audits and citizens' committee oversight, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Creates a 30-year tax of 14 cents per square foot of improved building area in the Marin Healthcare District, estimated to raise $12.4 million a year. Money is restricted to specified hospital, emergency-care and other healthcare facilities and services, with no administrator salaries or benefits.",
+          "yesMeans": "Approve the tax beginning July 1 after the measure takes effect, its restricted healthcare uses, oversight rules and authority to repay eligible hospital-improvement borrowing with tax proceeds.",
+          "noMeans": "Do not enact this new healthcare parcel tax.",
+          "contestId": "ca-2026-marin-cc",
+          "parts": [
+            {
+              "id": "ca-2026-marin-cc#rate",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Rate, buildings and term",
+              "what": "The charge is 14 cents per square foot of improved building area each year, for 30 years starting July 1 after the effective date. The measure defines buildings to include roofed residential, commercial and industrial structures. The $12.4 million annual revenue figure is an estimate."
+            },
+            {
+              "id": "ca-2026-marin-cc#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Authorized healthcare purposes",
+              "what": "Money may expand and modernize intensive-care, trauma, triage, emergency-room, patient-room, operating-room, laboratory and imaging facilities; meet health and earthquake-safety standards; maintain qualified doctors, nurses and specialists; and improve mental-health, addiction and suicide-prevention services. These limits are legally binding; District or hospital administrator salaries and benefits are barred."
+            },
+            {
+              "id": "ca-2026-marin-cc#borrowing",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Eligible hospital borrowing",
+              "what": "The District may borrow for eligible capital costs of planning and constructing hospital improvements and upgrades, using parcel-tax proceeds to repay principal and interest. The measure does not state a separate dollar amount for that borrowing."
+            },
+            {
+              "id": "ca-2026-marin-cc#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and collection",
+              "what": "Parcels otherwise exempt from property taxes, or on which no regular property tax is levied that year, are exempt. Taxable parcels are those receiving separate county property-tax bills. The charge is assessed to the owner, or a taxable possessory-interest holder if the owner is legally exempt. County property-tax collection, penalty, challenge and refund rules apply."
+            },
+            {
+              "id": "ca-2026-marin-cc#funding",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Separate fund and protection of other funding",
+              "what": "Proceeds, interest and penalties go into a designated fund for the stated purposes. They are additional resources and may not replace existing District, state, federal or other funding. If the state tries to redistribute the spending or reduce other funding because of it, the Board must redirect the affected annual money to another designated fund for substantially equivalent purposes."
+            },
+            {
+              "id": "ca-2026-marin-cc#oversight",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Annual reports, resident oversight and audits",
+              "what": "The District must report at least annually on collections, spending and funded-project status to its Board and oversight committee. A committee of District residents begins in the first operative year and reports annually on whether proceeds are properly spent. Generally applicable independent annual audits also apply."
+            },
+            {
+              "id": "ca-2026-marin-cc#limit",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Spending limit and effective date",
+              "what": "The measure takes effect at the earliest legally possible date after election certification. Where tax revenue exceeds the District’s constitutional spending limit, voter approval raises that limit by the tax revenue for the maximum period the law allows."
+            },
+            {
+              "id": "ca-2026-marin-cc#changes",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Voter control and competing measures",
+              "what": "Only District voters may amend or repeal the measure. Compatible taxes may coexist. If an irreconcilable same-ballot tax measure conflicts with this one, the measure with more yes votes controls in full; this measure can take effect if the winning conflicting measure is later invalidated."
+            },
+            {
+              "id": "ca-2026-marin-cc#approval",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Approval and legal limits",
+              "what": "The citizen initiative requires a simple majority. It asks that future changes in voting requirements apply prospectively as far as law allows. If a court invalidates a provision or application, the other provisions remain effective; the Board is asked to cure or reenact invalid portions consistently with the initiative."
+            }
+          ],
+          "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-cc-110326",
+          "sourceHash": "3634b6f3b926aa636486e86bb81355630aa6e3488babf135daebb573b78de345",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:29:00.372670+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:29:00.372670+00:00",
+    "reviewedBy": "CX-VOTES current official Marin source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326",
+        "httpStatus": 200,
+        "rawHash": "00c2b9471950e708183cbb64366ea647627f18dee1cd6ceca0d7f7e6a1e19210",
+        "retrievedAt": "2026-11-03T08:57:09.598609+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current corrected official November3,2026 list of20localmeasures. Earlier R/U label announcement error explicitly noted by county; current labels control."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-cc-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-cc-110326",
+        "httpStatus": 200,
+        "rawHash": "3634b6f3b926aa636486e86bb81355630aa6e3488babf135daebb573b78de345",
+        "retrievedAt": "2026-11-03T08:57:25.460370+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-cc-110326/measure-cc-full-text-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-cc-110326/measure-cc-full-text-110326",
+        "httpStatus": 200,
+        "rawHash": "0e212fce399e93de6783f53f334063e1e31d70bcbb824eb9de769935410150fd",
+        "retrievedAt": "2026-11-03T08:58:04.289456+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "County-published full proposed voter ordinance/resolution; not claimed signed or already voter-adopted."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/it/maps-and-geographic-information-systems-gis",
+        "finalUrl": "https://www.marincounty.gov/departments/it/maps-and-geographic-information-systems-gis",
+        "httpStatus": 200,
+        "rawHash": "c075a8dcdd4ca6f039c195e2d9eaba2c18bbe4b602b81ad1e3d4fb0bf2fc1c92",
+        "retrievedAt": "2026-11-03T09:05:55.795719+00:00",
+        "publisher": "Marin County Information Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official .gov GIS page links MarinMap.org consortium."
+      },
+      {
+        "requestedUrl": "https://www.marinmap.org/",
+        "finalUrl": "https://www.marinmap.org/dnn/",
+        "httpStatus": 200,
+        "rawHash": "9625c3a0680d99372095d2263fea956ed0e4afae3a7fd8ce4a71fe13bf9f300b",
+        "retrievedAt": "2026-11-03T09:06:22.585378+00:00",
+        "publisher": "MarinMap government GIS consortium",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current county-linked GIS consortium page links Marin LAFCO official boundary viewer."
+      },
+      {
+        "requestedUrl": "https://www.marinlafco.org/marin-lafco-gis-map-viewer-4d5fdc4",
+        "finalUrl": "https://www.marinlafco.org/marin-lafco-gis-map-viewer-4d5fdc4",
+        "httpStatus": 200,
+        "rawHash": "d39bcc07470242cb271c64bde595decb132c88dadff4802251e858eb21f8c00f",
+        "retrievedAt": "2026-11-03T09:09:17.840476+00:00",
+        "publisher": "Marin Local Agency Formation Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official LAFCO page links its exact ArcGIS viewer, whose public app/map JSON selects the healthcare legal boundary layer26, not SOI27."
+      }
+    ]
+  }
+}

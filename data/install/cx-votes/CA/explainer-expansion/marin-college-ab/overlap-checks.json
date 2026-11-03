@@ -1,0 +1,10 @@
+{
+  "completeZctaFeatures": 66,
+  "positivePolygonIntersections": 49,
+  "zipEdges": 50,
+  "zctaEdges": 49,
+  "allPositiveZctasKnownPostal": true,
+  "districts": 1,
+  "limits": "Exact current publisher-linked legal district polygon with reported2008revision; no wholecounty/service-area replacement and no claimed2026geometryrevision.",
+  "explicitGeometryVintage": 2008
+}

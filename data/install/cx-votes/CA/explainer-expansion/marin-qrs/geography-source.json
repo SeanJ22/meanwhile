@@ -1,0 +1,30 @@
+{
+  "heldReference": "data/derived/registration/ca.json",
+  "rows": [
+    [
+      "ocd-division/country:us/state:ca/place:corte_madera",
+      "place",
+      "0616462",
+      "Corte Madera town"
+    ],
+    [
+      "ocd-division/country:us/state:ca/place:fairfax_0623158",
+      "place",
+      "0623158",
+      "Fairfax CDP"
+    ],
+    [
+      "ocd-division/country:us/state:ca/place:fairfax_0623168",
+      "place",
+      "0623168",
+      "Fairfax town"
+    ],
+    [
+      "ocd-division/country:us/state:ca/place:larkspur",
+      "place",
+      "0640438",
+      "Larkspur city"
+    ]
+  ],
+  "binding": "MeasureR names TownofFairfax; Censusplace0623168 isFairfaxtown;0623158 isseparateFairfaxCDP andexcluded."
+}

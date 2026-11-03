@@ -39,6 +39,8 @@ const FAMILY = "source:derived:family:";
 const HISTORY = ":history";
 /** Percent-encoding as a calendar scope spells a board's id. */
 const encoded = encodeURIComponent;
+/** A state's family calendar is the state's own: US-NJ's is held by the card of New Jersey and by no other state's. */
+const ownFamily = (scope: string, place: string): boolean => STATE_LEVEL.test(place) && scope.slice(FAMILY.length).replace(HISTORY, "") === `US-${place.slice(place.lastIndexOf(":") + 1).toUpperCase()}`;
 const ownBody = (scope: string): string | null => {
   const match = /^source:[^:]+:body:([^:]+)(?::|$)/.exec(scope);
   try { return match ? decodeURIComponent(match[1]!) : null; } catch { return match![1]!; }
@@ -112,7 +114,7 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
     }).map(row => row.value as Meeting);
     const members = ((partition.members ?? []) as Row[]).filter(member => home.has(canon(member.bodyId) ?? ""));
     // A state's own card holds its family calendar even with no row of its own: a request for the state itself is answered by it.
-    if (!mine.length && !members.length && !owned && !(family && STATE_LEVEL.test(place))) return [];
+    if (!mine.length && !members.length && !owned && !(family && ownFamily(scope, place))) return [];
     return [{ s: scope, v: String(partition.version), c: (partition.confirmation as string | null) ?? null, h: partition.header as Row,
       ...(partition.members ? { m: members } : {}), r: mine }];
   });

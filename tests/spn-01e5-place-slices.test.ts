@@ -4,6 +4,7 @@ import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { forgetNationalShelf } from "../lib/reader/shelf.ts";
 import { readPlacePackage } from "../lib/reader/place.ts";
 import { PLACE_SLICES_SQL } from "../lib/reader/place-slices.ts";
+import { buildSlices, type SliceCard } from "../lib/reader/slices.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { readReaderEdgeMeetings } from "../lib/meetings/edge-serving.ts";
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
@@ -155,5 +156,16 @@ test("the map and the ballot share one slice read for their request, and a later
     });
     await withReaderSelection({ ...selection }, () => readPlacePackage({ state: "AZ", divisionIds: [PLACE] }));
     assert.equal(reads, 2, "a settled place response cannot outlive its request");
+  } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await db.pg.close(); }
+});
+
+test("a state's family calendar is held on that state's card and on no other state's", async () => {
+  const db = await open();
+  try {
+    const AZ = "ocd-division/country:us/state:az", NM = "ocd-division/country:us/state:nm";
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$1,'AZ'),($2,'place',$2,'NM')", [AZ, NM]);
+    const built = await buildSlices(db.query, new Map([[AZ, new Set<SliceCard>(["meetings"])], [NM, new Set<SliceCard>(["meetings"])]]));
+    assert.deepEqual((built.get(AZ)!.get("meetings") as { parts: { s: string }[] }).parts.map(part => part.s), [FAMILY], "Arizona's card holds Arizona's family");
+    assert.equal(built.get(NM)!.get("meetings"), null, "New Mexico's card holds no other state's family");
   } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await db.pg.close(); }
 });

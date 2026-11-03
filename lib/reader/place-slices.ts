@@ -133,8 +133,6 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
     const fields: Row[] = [], rosters: Row[] = [], comments: Row[] = [], sittings: Row[] = [], partitions: Row[] = [], archivedMeetings: Row[] = [], archivedDocuments: Row[] = [], documents: Row[] = [];
     const familyRows = new Map<string, Map<string, Row>>(), familyHeads = new Map<string, SlicePartition>(), familyMembers = new Map<string, Map<string, Row>>(), own = new Set<string>();
     const hold = (part: SlicePartition, board?: string) => {
-      // A family calendar with nothing of this page's on it is on the page only when the state itself is what was asked for.
-      if (part.s.startsWith(FAMILY) && !stateOnly && !part.r.length && !part.m?.length) return;
       if (part.s.startsWith(FAMILY)) { if (!familyHeads.has(part.s)) familyHeads.set(part.s, part); const rows = familyRows.get(part.s) ?? new Map<string, Row>(); for (const meeting of part.r) rows.set(String(meeting.id), meeting); familyRows.set(part.s, rows);
         const members = familyMembers.get(part.s) ?? new Map<string, Row>(); for (const member of part.m ?? []) members.set(JSON.stringify(member), member); familyMembers.set(part.s, members); return; }
       if (board && part.s.startsWith("source:derived~US-") && !part.s.endsWith(":history")) own.add(board);

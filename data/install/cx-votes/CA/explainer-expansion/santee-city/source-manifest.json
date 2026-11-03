@@ -1,0 +1,70 @@
+[
+  {
+    "url": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+    "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:49:46.376245+00:00",
+    "sha256": "fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8",
+    "bytes": 366927,
+    "savedFile": "sources/fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8.pdf",
+    "sourceTextFile": "sources/fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8.txt",
+    "extractedTextSha256": "b3461b4772853e1dfc3b394bbe1a611b55a368748e45b2561b72439703d214c4",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "PDFTOTEXT_RAW",
+    "ocrPages": [],
+    "publisher": "City of Santee",
+    "role": "composite"
+  },
+  {
+    "url": "https://www.cityofsanteeca.gov/documents/city-clerk/elections/2026%20Resolutions/reso-071-2026.pdf",
+    "finalUrl": "https://www.cityofsanteeca.gov/documents/city-clerk/elections/2026%20Resolutions/reso-071-2026.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:49:48.208487+00:00",
+    "sha256": "40e22b967c10128beea2627168229bb35f1f82b3c482213daf7d4adac052a798",
+    "bytes": 7683180,
+    "savedFile": "sources/40e22b967c10128beea2627168229bb35f1f82b3c482213daf7d4adac052a798.pdf",
+    "sourceTextFile": "sources/40e22b967c10128beea2627168229bb35f1f82b3c482213daf7d4adac052a798.txt",
+    "extractedTextSha256": "74a5a7b8591054d4881123ab8a6b978051be3bd9f4f211b21f9ceeac68add0f1",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "PDFTOTEXT_WITH_SOURCE_OCR",
+    "ocrPages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "publisher": "City of Santee",
+    "role": "measure"
+  },
+  {
+    "url": "https://www.cityofsanteeca.gov/documents/city-clerk/elections/2026-measure-documents/impartial-analysis.pdf",
+    "finalUrl": "https://www.cityofsanteeca.gov/documents/city-clerk/elections/2026-measure-documents/impartial-analysis.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:49:46.976914+00:00",
+    "sha256": "9a18c002e6ecc26ea80757bb88cc0cd65244b8fb1c85e021e84f39c246ef1e4c",
+    "bytes": 113794,
+    "savedFile": "sources/9a18c002e6ecc26ea80757bb88cc0cd65244b8fb1c85e021e84f39c246ef1e4c.pdf",
+    "sourceTextFile": "sources/9a18c002e6ecc26ea80757bb88cc0cd65244b8fb1c85e021e84f39c246ef1e4c.txt",
+    "extractedTextSha256": "f78ee63d34add73fd59b13ae8ca96a68c6d0bbe4747d482e7d9f7de930b2fb34",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "PDFTOTEXT_WITH_SOURCE_OCR",
+    "ocrPages": [
+      1,
+      2
+    ],
+    "publisher": "City of Santee",
+    "role": "measure"
+  }
+]

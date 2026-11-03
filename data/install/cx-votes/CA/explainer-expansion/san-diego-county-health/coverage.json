@@ -1,0 +1,16 @@
+{
+  "state": "CA",
+  "county": "San Diego",
+  "electionDate": "2026-11-03",
+  "officialCompositeLocalMeasureDenominator": 20,
+  "preparedAttached": 1,
+  "scope": "Countywide Measure B has full primary legal text and exact existing county identity. Other San Diego measures are prepared separately or remain standing work.",
+  "sourceNotes": [
+    "Signed June25,2026 resolution26-097 submits the certified citizen initiative without alteration to all county voters.",
+    "Do not replace maxima with fixed earmarks: healthcare≤60%, nutrition≤7%, environmental≤22.5%, generaladmin≤1.5%; infrastructure/fire/law shares are minimums where specified.",
+    "Use the ordinance’s actual operative-date formula; no unsupported April2027 calendar-date assumption.",
+    "Conflicting-measure clause concerns special transactions-and-use taxes, not every general local sales tax."
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

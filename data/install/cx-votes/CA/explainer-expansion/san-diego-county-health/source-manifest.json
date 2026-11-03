@@ -1,0 +1,38 @@
+[
+  {
+    "url": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+    "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:49:46.376245+00:00",
+    "sha256": "fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8",
+    "bytes": 366927,
+    "savedFile": "sources/fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8.pdf",
+    "sourceTextFile": "sources/fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8.txt",
+    "extractedTextSha256": "b3461b4772853e1dfc3b394bbe1a611b55a368748e45b2561b72439703d214c4",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "PDFTOTEXT_RAW",
+    "ocrPages": [],
+    "publisher": "San Diego County Registrar of Voters",
+    "role": "composite"
+  },
+  {
+    "url": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-county-fund-health-and-safety-services.pdf",
+    "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-county-fund-health-and-safety-services.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:49:45.855830+00:00",
+    "sha256": "7d0c9a550060c9c7285c1b00e43386eb8cd50b67dc75c5fc8e6d8d7dac7d84e0",
+    "bytes": 223087,
+    "savedFile": "sources/7d0c9a550060c9c7285c1b00e43386eb8cd50b67dc75c5fc8e6d8d7dac7d84e0.pdf",
+    "sourceTextFile": "sources/7d0c9a550060c9c7285c1b00e43386eb8cd50b67dc75c5fc8e6d8d7dac7d84e0.txt",
+    "extractedTextSha256": "9e557b7f542de32c3bcec2fe1ea089c3ee01d375a0fd8687c333fdd16134532b",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "PDFTOTEXT_WITH_SOURCE_OCR",
+    "ocrPages": [
+      1,
+      2,
+      3
+    ],
+    "publisher": "San Diego County Registrar of Voters",
+    "role": "measure"
+  }
+]

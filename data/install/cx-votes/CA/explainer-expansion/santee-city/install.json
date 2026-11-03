@@ -1,0 +1,38 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-san-diego-y",
+      "sourceUrl": "https://www.cityofsanteeca.gov/documents/city-clerk/elections/2026%20Resolutions/reso-071-2026.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory; preserve all unrelated contests, candidates, explanations and other county additions. No app release.",
+  "coverage": {
+    "state": "CA",
+    "county": "San Diego",
+    "electionDate": "2026-11-03",
+    "officialCompositeLocalMeasureDenominator": 20,
+    "preparedAttached": 1,
+    "scope": "Santee city Y source-complete with exact existing place identity. Other San Diego measures are prepared separately or remain standing source and geography work.",
+    "sourceNotes": [
+      "Controlling ordinance fixes April1,2027–March31,2037 and requires response to oversight concerns within60days. General-tax examples are not spending earmarks."
+    ],
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "See source-reader-check.json after the existing source/admission/actual-reader checks.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

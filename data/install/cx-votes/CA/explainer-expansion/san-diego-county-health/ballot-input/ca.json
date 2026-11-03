@@ -1,0 +1,127 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-san-diego-b",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_diego",
+          "title": "San Diego County — Measure B",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T06:01:59.983363+00:00",
+            "quote": "MEASURE TO FUND SAN DIEGO COUNTY HEALTH & SAFETY SERVICES To clean-up sewage pollution in Tijuana River Valley, improve wildfire prevention, emergency response, access to healthcare, food assistance, childhood development services, and authorized administrative expenses; shall the measure authorizing a half-cent sales tax raising an estimated $400,000,000 to $450,000,000 annually, requiring citizen oversight, public spending disclosure, and independent annual audits, and lasting until ended by voters, be adopted?"
+          },
+          "measureTextUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-county-fund-health-and-safety-services.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-san-diego-b-text",
+          "contestId": "ca-2026-san-diego-b",
+          "officialNumber": "Measure B",
+          "questionText": "MEASURE TO FUND SAN DIEGO COUNTY HEALTH & SAFETY SERVICES To clean-up sewage pollution in Tijuana River Valley, improve wildfire prevention, emergency response, access to healthcare, food assistance, childhood development services, and authorized administrative expenses; shall the measure authorizing a half-cent sales tax raising an estimated $400,000,000 to $450,000,000 annually, requiring citizen oversight, public spending disclosure, and independent annual audits, and lasting until ended by voters, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T06:01:59.983363+00:00",
+            "quote": "MEASURE TO FUND SAN DIEGO COUNTY HEALTH & SAFETY SERVICES To clean-up sewage pollution in Tijuana River Valley, improve wildfire prevention, emergency response, access to healthcare, food assistance, childhood development services, and authorized administrative expenses; shall the measure authorizing a half-cent sales tax raising an estimated $400,000,000 to $450,000,000 annually, requiring citizen oversight, public spending disclosure, and independent annual audits, and lasting until ended by voters, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ca-2026-san-diego-b",
+          "whatItDoes": "Add a countywide 0.5% sales and use tax for specified health, food assistance, child-development, Tijuana River sewage and public-safety programs. It would be added to existing taxes and is estimated to raise $400 million to $450 million annually. Collection begins in the first calendar quarter more than 110 days after adoption, subject to the state collection agreement. Revenue goes into a separate local fund with legally binding spending limits, independent annual fiscal and compliance audits, public reports and an 11-member citizen oversight committee. The tax has no fixed expiration, and only voters may amend the ordinance. As a voter-initiated measure, its ordinance requires a majority vote.",
+          "yesMeans": "Approve the additional countywide 0.5% tax and the specified allocations, spending restrictions and oversight rules.",
+          "noMeans": "Do not authorize this proposed additional countywide 0.5% tax.",
+          "parts": [
+            {
+              "id": "ca-2026-san-diego-b#health-children",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Healthcare, food and children",
+              "what": "No more than 60% of annual revenue may fund this category. The specified shares are 5% for in-home health services for older and infirm residents; up to 7% for nutrition and food security through SNAP/CalFresh, with up to two-thirds of that food allocation for eligibility staff; 9% for other affordable healthcare; 17% for county medical services and similar programs for uninsured or underinsured low-income residents; and 22% for children through First 5. That 22% consists of 8% for licensed-provider stipends, 8% for family childcare vouchers and 6% for early-childhood mental and behavioral health. Provider stipends and vouchers prioritize infant and toddler care. Healthcare expansion through existing providers cannot replace current funding."
+            },
+            {
+              "id": "ca-2026-san-diego-b#sewage",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Tijuana River sewage",
+              "what": "No more than 22.5% may fund environmental mitigation and related responses to the sewage crisis. At least 20% of total tax revenue must fund infrastructure and engineering to stop sewage flows, including treatment expansion. The board may redirect that infrastructure share to other permitted environmental work only if the state water board finds the river meets all applicable recreation and environmental-health standards and removes affected portions from the polluted-waters list, or the river is diverted directly into a wastewater treatment facility."
+            },
+            {
+              "id": "ca-2026-san-diego-b#safety-admin",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Public safety, administration and prohibited uses",
+              "what": "The ordinance assigns 17.5% to public safety, wildfire prevention and crisis response, with at least 8% of total revenue for county fire-district preparedness and at least 8% for law enforcement. General administration may use no more than 1.5%. The fund also reimburses state tax-collection costs and permitted oversight-committee expenses. Revenue cannot pay elected officials’ salaries or benefits, management or executive bonuses or pay increases, lobbying or public-relations contracts, construction or renovation of county administrative offices or headquarters, or purposes outside the expenditure plan. These shares include caps and minimums, rather than a promise that every maximum will be spent."
+            },
+            {
+              "id": "ca-2026-san-diego-b#oversight",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Citizen oversight",
+              "what": "The board must appoint 11 at-large voting members within 90 days after the ordinance takes effect. Members represent the specified professional and community backgrounds and cannot simultaneously hold elected office; the county auditor serves ex officio. The committee commissions an independent annual fiscal and compliance audit, certifies spending compliance and publishes an annual report to the board. Suspected unlawful misuse must be referred to the district attorney, state attorney general and other appropriate authorities. Oversight activities may use up to $300,000 a year, adjusted for San Diego County consumer-price inflation. Regular terms are four years, with initial staggered two- and three-year terms; service is normally limited to eight years, or up to ten when the first term was partial."
+            },
+            {
+              "id": "ca-2026-san-diego-b#changes-conflicts",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Budget priorities and competing measures",
+              "what": "The county must apportion funding through its budget and permitted quarterly decisions within the listed uses, prioritizing protection of vital services against severe federal and local budget cuts. Only voters can amend the ordinance. It declares other special sales-and-use-tax measures on the same ballot to be conflicting; if this measure receives more affirmative votes, it says its provisions prevail in full and the other conflicting provisions are void."
+            }
+          ],
+          "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-county-fund-health-and-safety-services.pdf",
+          "sourceHash": "7d0c9a550060c9c7285c1b00e43386eb8cd50b67dc75c5fc8e6d8d7dac7d84e0",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:01:59.983363+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:01:59.983363+00:00",
+    "reviewedBy": "CX-VOTES explainer-only official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8",
+        "retrievedAt": "2026-11-03T05:49:46.376245+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 full measure/legal text, resolution, neutral analysis or complete composite ballot. Original PDF bytes retained with distinct deterministic extraction hash. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-county-fund-health-and-safety-services.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-county-fund-health-and-safety-services.pdf",
+        "httpStatus": 200,
+        "rawHash": "7d0c9a550060c9c7285c1b00e43386eb8cd50b67dc75c5fc8e6d8d7dac7d84e0",
+        "retrievedAt": "2026-11-03T05:49:45.855830+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 full measure/legal text, resolution, neutral analysis or complete composite ballot. Original PDF bytes retained with distinct deterministic extraction hash. No submitted voter arguments used."
+      }
+    ]
+  }
+}

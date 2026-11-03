@@ -1,0 +1,22 @@
+[
+  {
+    "contestId": "ca-2026-san-diego-y",
+    "whatItDoes": "Add a 1% Santee sales and use tax, or $1 per $100 of taxable purchases, from April 1, 2027 through March 31, 2037. It would be added to existing sales taxes. The city estimates $14 million annually for its general fund, available for any lawful city program, improvement or service, including streets, parks, storm drains, public safety and emergency response. Existing legal tax exemptions remain. Revenue stays local. Annual independent financial audits and a five-member citizen oversight committee are required. Extending the tax beyond ten years would require majority voter approval at a future election. This measure also requires a majority vote.",
+    "yesMeans": "Approve the additional 1% tax for ten years and its spending-review and public-reporting rules.",
+    "noMeans": "Do not add this proposed ten-year 1% tax.",
+    "parts": [
+      {
+        "id": "ca-2026-san-diego-y#oversight",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Annual spending and citizen review",
+        "what": "The council appoints a five-member committee of city residents, property owners and business owners. Its meetings are public. It reviews the proposed annual spending plan before council budget approval, the annual financial audit, spending consistency and the council’s maintenance of effort compared with the three years before the ordinance. It presents an annual public report. If it reports a concern over tax revenue use, the council must place the matter on a public meeting agenda and respond on the record within 60 days. The committee recommends and reviews; the council approves the annual budget."
+      }
+    ],
+    "sourceUrl": "https://www.cityofsanteeca.gov/documents/city-clerk/elections/2026%20Resolutions/reso-071-2026.pdf",
+    "sourceHash": "40e22b967c10128beea2627168229bb35f1f82b3c482213daf7d4adac052a798",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:00:47.342746+00:00",
+    "citation": "measure-source"
+  }
+]

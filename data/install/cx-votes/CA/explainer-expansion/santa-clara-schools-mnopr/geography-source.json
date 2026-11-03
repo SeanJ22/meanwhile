@@ -1,0 +1,46 @@
+{
+  "kind": "HELD_PROJECT_REGISTRY_EVIDENCE",
+  "finding": "Existing exact K12 district OCDs reused. Los Gatos–Saratoga Union High maps to Census secondary district0622800, distinct from Los Gatos Union Elementary.",
+  "sources": [
+    {
+      "file": "/workspace/work/election-runtime/data/derived/registration/ca.json",
+      "sha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+      "divisionRows": [
+        [
+          "ocd-division/country:us/state:ca/school_district:alum_rock_union_elementary_school_district",
+          "elsd",
+          "0602310",
+          "Alum Rock Union Elementary School District"
+        ],
+        [
+          "ocd-division/country:us/state:ca/school_district:gilroy_unified_school_district",
+          "unsd",
+          "0615180",
+          "Gilroy Unified School District"
+        ],
+        [
+          "ocd-division/country:us/state:ca/school_district:los_gatos_saratoga_joint_union_school_district",
+          "scsd",
+          "0622800",
+          "Los Gatos-Saratoga Joint Union School District"
+        ],
+        [
+          "ocd-division/country:us/state:ca/school_district:orchard_elementary_school_district",
+          "elsd",
+          "0628680",
+          "Orchard Elementary School District"
+        ]
+      ]
+    },
+    {
+      "file": "/workspace/work/election-runtime/data/derived/census-nces-crosswalk.csv",
+      "sha256": "2b7d46fc8cbf41bc7c193408562162be5726229fea827d881fdada2c9e315b2f",
+      "csvRows": [
+        "115948,GILROY UNIFIED SCHOOL DISTRICT,INDEPENDENT,0615180,Gilroy Unified,CENSUS_COMPARABLE,06,CA,06|GILROY",
+        "115949,LOS GATOS-SARATOGA UNION HIGH SCHOOL DIST,INDEPENDENT,0622800,Los Gatos-Saratoga Union High,CENSUS_COMPARABLE,06,CA,06|LOS GATOS SARATOGA",
+        "178407,ORCHARD ELEMENTARY SCH DIST,INDEPENDENT,0628680,Orchard Elementary,CENSUS_COMPARABLE,06,CA,06|ORCHARD",
+        "188167,ALUM ROCK UNION ELEM SCH DIST,INDEPENDENT,0602310,Alum Rock Union Elementary,CENSUS_COMPARABLE,06,CA,06|ALUM ROCK"
+      ]
+    }
+  ]
+}

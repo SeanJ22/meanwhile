@@ -1,0 +1,421 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-santa-clara-m",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:gilroy_unified_school_district",
+          "title": "Gilroy Unified School District — Measure M",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:17:39.565601+00:00",
+            "quote": "To improve the quality of education; construct, upgrade, and modernize classrooms, restrooms, and school facilities; make safety and security improvements; renovate or construct career technical education classrooms; and replace leaky roofs; shall Gilroy Unified School District's measure authorizing $295,000,000 in bonds, at legal rates, and levying approximately $59 per $100,000 of assessed value (raising $18,300,000 annually) while bonds are outstanding, be adopted, with annual audits, independent oversight, NO money for teacher/administrator salaries and all money spent locally?"
+          },
+          "measureTextUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-m-impartial-analysis-gilroy-unified_redacted.pdf?VersionId=scFxKaSFWmw__kvplf8DbZI0FCWlXCZh",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-santa-clara-n",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:los_gatos_saratoga_joint_union_school_district",
+          "title": "Los Gatos–Saratoga Union High School District — Measure N",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:17:39.565601+00:00",
+            "quote": "To maintain quality academic facilities at Los Gatos High School and Saratoga High School by replacing leaky roofs and failing restrooms, plumbing, electrical, heating/ cooling systems; improving school safety; updating, repairing and equipping schools including science, technology, engineering, arts, math, robotics, and career/ college readiness classrooms/ labs; shall Los Gatos­ Saratoga Union High School District's measure be adopted, authorizing $321,000,000 in bonds at legal rates, levying approximately $30 per $100,000 assessed value ($23,000,000 annually) while bonds are outstanding, with oversight, annual audits, and local control?"
+          },
+          "measureTextUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/ia-measure-n-lg-saratoga-union-hsd-bonds-stamped_redacted.pdf?VersionId=sGpQcuU_H2eGu3tXHIzgxBwlNbeQR1sm",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-santa-clara-p",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:alum_rock_union_elementary_school_district",
+          "title": "Alum Rock Union Elementary School District — Measure P",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:17:39.565601+00:00",
+            "quote": "With funds that cannot be taken by the State or Federal government, shall Alum Rock Union Elementary School District's measure to repair leaky roofs and plumbing; replace heating, ventilation, and air conditioning; and upgrade emergency communication and security systems be adopted, authorizing $100 million of bonds with legal rates, without increasing current tax rates, average levies below $26 per $100,000 of assessed valuation (raising $6.3 million annually while outstanding), audits, independent oversight, and disclosure of all spending?"
+          },
+          "measureTextUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/alum-rock-union-esd-bond-measure-ia-nov-26-to-rov-final_redacted.pdf?VersionId=wHC3Gme81VWm0wm_ZojVC4k1MGKwVRah",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-santa-clara-o",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:alum_rock_union_elementary_school_district",
+          "title": "Alum Rock Union Elementary School District — Measure O",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:17:39.565601+00:00",
+            "quote": "With funds that cannot be taken by State or Federal Government officials, shall Alum Rock Union Elementary School District's measure to protect services for students with disabilities; improve reading, writing, math and science programs; attract and retain highly qualified teachers; and support students experiencing housing instability be adopted, by replacing the current tax at $310 per parcel for seven years, while raising $6.5 million annually with senior exemptions, and public disclosure of all spending?"
+          },
+          "measureTextUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/ia-measure-o-alum-rock-union-esd-parcel-tax-stamped_redacted.pdf?VersionId=PmLkocwbXMETRl7Qw2_7KeYkws3_yp2Q",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-santa-clara-r",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:orchard_elementary_school_district",
+          "title": "Orchard School District — Measure R",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:17:39.565601+00:00",
+            "quote": "To enhance and create quality educational opportunities, attract and retain teachers and staff, support Science, Technology, Engineering, Arts and Mathematics (STEAM) education and visual and performing arts, shall the Orchard School District measure levying a parcel tax at the rate of 4 cents per building square foot (not-to-exceed $7,500 non-residential and $89 residential per parcel), raising $1.4 million annually for eight years beginning July 1, 2027, with senior exemptions and all expenditures audited be adopted?"
+          },
+          "measureTextUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-r-orchard-school-district-parcel-tax-ia-redacted-20260818.pdf?VersionId=OxQ5w3LdKR5wiJMFVOX5sGPFd78K1LMo",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-santa-clara-m-text",
+          "contestId": "ca-2026-santa-clara-m",
+          "officialNumber": "Measure M",
+          "questionText": "To improve the quality of education; construct, upgrade, and modernize classrooms, restrooms, and school facilities; make safety and security improvements; renovate or construct career technical education classrooms; and replace leaky roofs; shall Gilroy Unified School District's measure authorizing $295,000,000 in bonds, at legal rates, and levying approximately $59 per $100,000 of assessed value (raising $18,300,000 annually) while bonds are outstanding, be adopted, with annual audits, independent oversight, NO money for teacher/administrator salaries and all money spent locally?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:17:39.565601+00:00",
+            "quote": "To improve the quality of education; construct, upgrade, and modernize classrooms, restrooms, and school facilities; make safety and security improvements; renovate or construct career technical education classrooms; and replace leaky roofs; shall Gilroy Unified School District's measure authorizing $295,000,000 in bonds, at legal rates, and levying approximately $59 per $100,000 of assessed value (raising $18,300,000 annually) while bonds are outstanding, be adopted, with annual audits, independent oversight, NO money for teacher/administrator salaries and all money spent locally?"
+          }
+        },
+        {
+          "id": "ca-2026-santa-clara-n-text",
+          "contestId": "ca-2026-santa-clara-n",
+          "officialNumber": "Measure N",
+          "questionText": "To maintain quality academic facilities at Los Gatos High School and Saratoga High School by replacing leaky roofs and failing restrooms, plumbing, electrical, heating/ cooling systems; improving school safety; updating, repairing and equipping schools including science, technology, engineering, arts, math, robotics, and career/ college readiness classrooms/ labs; shall Los Gatos­ Saratoga Union High School District's measure be adopted, authorizing $321,000,000 in bonds at legal rates, levying approximately $30 per $100,000 assessed value ($23,000,000 annually) while bonds are outstanding, with oversight, annual audits, and local control?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:17:39.565601+00:00",
+            "quote": "To maintain quality academic facilities at Los Gatos High School and Saratoga High School by replacing leaky roofs and failing restrooms, plumbing, electrical, heating/ cooling systems; improving school safety; updating, repairing and equipping schools including science, technology, engineering, arts, math, robotics, and career/ college readiness classrooms/ labs; shall Los Gatos­ Saratoga Union High School District's measure be adopted, authorizing $321,000,000 in bonds at legal rates, levying approximately $30 per $100,000 assessed value ($23,000,000 annually) while bonds are outstanding, with oversight, annual audits, and local control?"
+          }
+        },
+        {
+          "id": "ca-2026-santa-clara-p-text",
+          "contestId": "ca-2026-santa-clara-p",
+          "officialNumber": "Measure P",
+          "questionText": "With funds that cannot be taken by the State or Federal government, shall Alum Rock Union Elementary School District's measure to repair leaky roofs and plumbing; replace heating, ventilation, and air conditioning; and upgrade emergency communication and security systems be adopted, authorizing $100 million of bonds with legal rates, without increasing current tax rates, average levies below $26 per $100,000 of assessed valuation (raising $6.3 million annually while outstanding), audits, independent oversight, and disclosure of all spending?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:17:39.565601+00:00",
+            "quote": "With funds that cannot be taken by the State or Federal government, shall Alum Rock Union Elementary School District's measure to repair leaky roofs and plumbing; replace heating, ventilation, and air conditioning; and upgrade emergency communication and security systems be adopted, authorizing $100 million of bonds with legal rates, without increasing current tax rates, average levies below $26 per $100,000 of assessed valuation (raising $6.3 million annually while outstanding), audits, independent oversight, and disclosure of all spending?"
+          }
+        },
+        {
+          "id": "ca-2026-santa-clara-o-text",
+          "contestId": "ca-2026-santa-clara-o",
+          "officialNumber": "Measure O",
+          "questionText": "With funds that cannot be taken by State or Federal Government officials, shall Alum Rock Union Elementary School District's measure to protect services for students with disabilities; improve reading, writing, math and science programs; attract and retain highly qualified teachers; and support students experiencing housing instability be adopted, by replacing the current tax at $310 per parcel for seven years, while raising $6.5 million annually with senior exemptions, and public disclosure of all spending?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:17:39.565601+00:00",
+            "quote": "With funds that cannot be taken by State or Federal Government officials, shall Alum Rock Union Elementary School District's measure to protect services for students with disabilities; improve reading, writing, math and science programs; attract and retain highly qualified teachers; and support students experiencing housing instability be adopted, by replacing the current tax at $310 per parcel for seven years, while raising $6.5 million annually with senior exemptions, and public disclosure of all spending?"
+          }
+        },
+        {
+          "id": "ca-2026-santa-clara-r-text",
+          "contestId": "ca-2026-santa-clara-r",
+          "officialNumber": "Measure R",
+          "questionText": "To enhance and create quality educational opportunities, attract and retain teachers and staff, support Science, Technology, Engineering, Arts and Mathematics (STEAM) education and visual and performing arts, shall the Orchard School District measure levying a parcel tax at the rate of 4 cents per building square foot (not-to-exceed $7,500 non-residential and $89 residential per parcel), raising $1.4 million annually for eight years beginning July 1, 2027, with senior exemptions and all expenditures audited be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:17:39.565601+00:00",
+            "quote": "To enhance and create quality educational opportunities, attract and retain teachers and staff, support Science, Technology, Engineering, Arts and Mathematics (STEAM) education and visual and performing arts, shall the Orchard School District measure levying a parcel tax at the rate of 4 cents per building square foot (not-to-exceed $7,500 non-residential and $89 residential per parcel), raising $1.4 million annually for eight years beginning July 1, 2027, with senior exemptions and all expenditures audited be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Lets Gilroy Unified borrow up to $295 million for school facilities and equipment, repaid with district property taxes. Projects include classroom replacements and modernization, roofs, restrooms, safety systems, technology, physical-education facilities and energy upgrades. The official estimate is an average $59.14 annually per $100,000 of assessed property value, with total principal and interest of about $623.3 million. Independent oversight and annual audits are required.",
+          "yesMeans": "Authorize up to $295 million in facilities bonds and the taxes to repay them. At least 55% of votes cast on the measure are required.",
+          "noMeans": "Do not authorize these bonds or their repayment taxes under Measure M.",
+          "contestId": "ca-2026-santa-clara-m",
+          "parts": [
+            {
+              "id": "ca-2026-santa-clara-m#projects",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Eligible facilities and costs",
+              "what": "Eligible work includes replacing portable classrooms, classrooms and support spaces, libraries, cafeterias, parking areas, restrooms, playfields and physical-education facilities, damage repairs, energy efficiency, roofs, fencing, lighting, fire protection and emergency communications. The list is not exhaustive. Planning, design, hazardous-material removal, seismic evaluation, furnishings and other necessary related costs may be funded."
+            },
+            {
+              "id": "ca-2026-santa-clara-m#repayment",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Repayment estimates and limits",
+              "what": "Bond money may fund eligible facilities, equipment and related project costs, rather than teacher or administrator salaries or ordinary school operations. Repayment comes from property taxes based on assessed value within the district. The stated tax rates, repayment dates and total debt service are official estimates rather than fixed repayment guarantees. The estimated final tax-collection year is 2059–60. The ballot’s rounded estimate is $59 per $100,000 and $18.3 million in annual collections; interest must stay within legal rates."
+            },
+            {
+              "id": "ca-2026-santa-clara-m#controls",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Accountability",
+              "what": "Proceeds go into a special bond account. An independent citizens’ committee oversees spending, independent performance and financial audits occur annually, and annual reports to the Board state money collected and spent and project status."
+            }
+          ],
+          "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-m-impartial-analysis-gilroy-unified_redacted.pdf?VersionId=scFxKaSFWmw__kvplf8DbZI0FCWlXCZh",
+          "sourceHash": "75f18b2cfb43d9d5e0b842162f0fac258216f39498ac72459b39b0ee82ad4bbd",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:17:39.565601+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Lets Los Gatos–Saratoga Union High School District borrow up to $321 million to repair, modernize and equip school facilities, repaid with district property taxes. Eligible projects include roofs, utilities, safety and accessibility, classrooms and labs, restrooms, athletics, energy upgrades and hazardous-material removal. The official estimate is an average $30 annually per $100,000 of assessed property value and $690 million in total principal and interest. Citizen oversight and annual independent audits are required.",
+          "yesMeans": "Authorize up to $321 million in school-facilities bonds and the taxes to repay them. At least 55% of votes cast on the measure are required.",
+          "noMeans": "Do not authorize these bonds or their repayment taxes under Measure N.",
+          "contestId": "ca-2026-santa-clara-n",
+          "parts": [
+            {
+              "id": "ca-2026-santa-clara-n#projects",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Eligible projects",
+              "what": "Projects may include Los Gatos and Saratoga High School roofs and building systems, security and emergency communications, science, technology, engineering, arts and math classrooms, robotics and maker spaces, accessibility, restrooms, athletic facilities, energy efficiency, libraries, art and music rooms, wood and metal shops, hazardous-material removal, paving, fields and drainage. Eligible related expenses include equipment, studies, design documents, engineering, legal services, project management and training."
+            },
+            {
+              "id": "ca-2026-santa-clara-n#repayment",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Repayment estimates and limits",
+              "what": "Bond money may fund eligible facilities, equipment and related project costs, rather than teacher or administrator salaries or ordinary school operations. Repayment comes from property taxes based on assessed value within the district. The stated tax rates, repayment dates and total debt service are official estimates rather than fixed repayment guarantees. The estimated final collection year is 2056–57, with approximately $23 million collected annually while bonds remain outstanding and interest at legal rates."
+            },
+            {
+              "id": "ca-2026-santa-clara-n#oversight",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Accountability",
+              "what": "A citizens’ oversight committee reviews spending, independent audits occur annually, proceeds go into a dedicated account, and state-law reporting requirements apply."
+            }
+          ],
+          "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/ia-measure-n-lg-saratoga-union-hsd-bonds-stamped_redacted.pdf?VersionId=sGpQcuU_H2eGu3tXHIzgxBwlNbeQR1sm",
+          "sourceHash": "8a530cec8a65c5b9db103cd0a44476ed8d6e8fec2dad22920ce31830c11d4265",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:17:39.565601+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Lets Alum Rock Union Elementary borrow up to $100 million for school repairs, modernization, safety, classrooms, technology and other facilities, repaid with property taxes. The district estimates an average levy of $25.52 annually per $100,000 of assessed value, with final collection in 2053–54 and about $170 million in principal and interest. The ballot describes a plan to avoid increasing current tax rates, while the measure still authorizes taxes to repay the new debt. Independent oversight and annual audits are required.",
+          "yesMeans": "Authorize up to $100 million in school-facilities bonds and their repayment taxes. At least 55% of votes cast on the measure are required.",
+          "noMeans": "Do not authorize these bonds or their repayment taxes under Measure P.",
+          "contestId": "ca-2026-santa-clara-p",
+          "parts": [
+            {
+              "id": "ca-2026-santa-clara-p#projects",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Facilities and project costs",
+              "what": "Eligible projects include roofs, plumbing and sewer and gas lines, heating and cooling, safety and emergency communications, classrooms and student-support facilities, science and arts labs, restrooms and drinking fountains, early-learning and play spaces, paving, cafeterias, multipurpose rooms, athletics, technology and accessibility. Related design, engineering, professional services, construction management, planning, permits, legal and accounting costs are eligible."
+            },
+            {
+              "id": "ca-2026-santa-clara-p#limits",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Repayment and spending limits",
+              "what": "Bond money may fund eligible facilities, equipment and related project costs, rather than teacher or administrator salaries or ordinary school operations. Repayment comes from property taxes based on assessed value within the district. The stated tax rates, repayment dates and total debt service are official estimates rather than fixed repayment guarantees. The ballot rounds the average tax estimate to below $26 per $100,000, with estimated annual collections of $6.3 million."
+            },
+            {
+              "id": "ca-2026-santa-clara-p#controls",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Accountability",
+              "what": "An independent citizens’ oversight committee reviews spending. Annual independent performance and financial audits and an annual Board report track collections, spending and project status. Bond money goes into a fund held by the county Treasurer."
+            }
+          ],
+          "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/alum-rock-union-esd-bond-measure-ia-nov-26-to-rov-final_redacted.pdf?VersionId=wHC3Gme81VWm0wm_ZojVC4k1MGKwVRah",
+          "sourceHash": "57dd9fa0d31cafbae0442881055ff3d47c5c3fd7d4286a077e4beed494782634",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:17:39.565601+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Replaces Alum Rock Union Elementary’s existing parcel tax with a $310 annual tax per parcel for seven years starting July 1, 2027, estimated to raise $6.5 million annually. It funds listed instruction and student-support programs and teacher and staff recruitment and retention. Administrator salaries, benefits and pensions cannot be paid with it. A separate fund, annual audit report and citizen oversight are required, with senior and qualifying disability exemptions.",
+          "yesMeans": "Replace the current tax with the $310-per-parcel tax and its restricted spending plan. Approval requires two-thirds of votes cast on the measure.",
+          "noMeans": "Do not replace the existing Measure I tax; its current authorization continues under its own terms.",
+          "contestId": "ca-2026-santa-clara-o",
+          "parts": [
+            {
+              "id": "ca-2026-santa-clara-o#programs",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Permitted education spending",
+              "what": "Revenue may support core academics, literacy, math and science; special education; intervention, English learners, multilingual and dual-language programs; students experiencing homelessness, foster youth and other support services; teacher and staff salaries and benefits; STEM and arts instruction; and music and enrichment. Spending is limited to listed purposes and excludes administrators’ salaries, benefits and pensions."
+            },
+            {
+              "id": "ca-2026-santa-clara-o#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Parcel-tax exemptions",
+              "what": "Otherwise tax-exempt property is excluded. Senior owners age 65 or older who use the property as their principal residence may apply for exemption. Principal-residence occupants receiving disability SSI qualify regardless of age; those receiving SSDI may qualify regardless of age if annual income does not exceed 250% of the 2012 federal poverty guidelines."
+            },
+            {
+              "id": "ca-2026-santa-clara-o#controls",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Tax transition and oversight",
+              "what": "The current Measure I tax would stop when the new tax begins. The official analysis describes the old authorization as $214.10 per parcel with annual adjustments for seven years, adopted in 2022; that is not a claim that its inflation-adjusted current bill remains $214.10. New proceeds go into a separate fund, with an annual written audit report to the Board and a citizens’ committee advising on spending."
+            }
+          ],
+          "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/ia-measure-o-alum-rock-union-esd-parcel-tax-stamped_redacted.pdf?VersionId=PmLkocwbXMETRl7Qw2_7KeYkws3_yp2Q",
+          "sourceHash": "06336648a81a7c22f98b83eef9dcc531cd24398ef3610e009f23f6cb472857f5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:17:39.565601+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Creates an Orchard School District parcel tax for eight years starting July 1, 2027. The annual rate is 4 cents per square foot of building area, capped at $89 per residential parcel and $7,500 per nonresidential parcel, with estimated revenue of $1.4 million annually. It funds listed instructional programs, teachers and student-support services. Senior and qualifying disability exemptions, a separate account, audits and annual reporting to the Board apply.",
+          "yesMeans": "Approve the parcel tax, annual caps and restricted school-spending plan. Approval requires two-thirds of votes cast on the measure.",
+          "noMeans": "Do not impose this tax under Measure R.",
+          "contestId": "ca-2026-santa-clara-r",
+          "parts": [
+            {
+              "id": "ca-2026-santa-clara-r#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Eligible education spending",
+              "what": "Purposes include recruiting, training and retaining teachers and instructional staff; core academics and targeted reading and writing help; mental-health counselors, social workers and healthcare professionals; STEAM programs including artificial intelligence, coding and robotics; and current instructional materials, technology, spaces, equipment and resources. Revenue is restricted to the measure’s purposes."
+            },
+            {
+              "id": "ca-2026-santa-clara-r#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and combined parcels",
+              "what": "Otherwise tax-exempt property or property with no property tax levied that year is excluded. Owners using a parcel solely as an owner-occupied single-family home may apply for exemption if age 65 by the June 30 cutoff in the prior fiscal year, receiving disability SSI, or receiving SSDI with income at or below 250% of the 2012 federal poverty guidelines. Applications are due June 15. By that same deadline, identically owned contiguous parcels used solely as an owner-occupied single-family residence may be treated as one parcel."
+            },
+            {
+              "id": "ca-2026-santa-clara-r#controls",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Spending controls",
+              "what": "Proceeds go into a separate account and may be spent only for the specified purposes. The Board receives an annual report showing collections, expenditures and the status of funded projects or programs; the ballot also requires expenditures to be audited. The measure does not authorize an automatic increase above the stated annual parcel caps."
+            }
+          ],
+          "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-r-orchard-school-district-parcel-tax-ia-redacted-20260818.pdf?VersionId=OxQ5w3LdKR5wiJMFVOX5sGPFd78K1LMo",
+          "sourceHash": "f899053d636f414e026dce5ee75bb1b44a0160bcf317d10d03feed1f5df1e96f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:17:39.565601+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:17:39.565601+00:00",
+    "reviewedBy": "CX-VOTES official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+        "finalUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+        "httpStatus": 200,
+        "rawHash": "2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519",
+        "retrievedAt": "2026-11-03T07:56:51.243398+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-m-impartial-analysis-gilroy-unified_redacted.pdf?VersionId=scFxKaSFWmw__kvplf8DbZI0FCWlXCZh",
+        "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-m-impartial-analysis-gilroy-unified_redacted.pdf?VersionId=scFxKaSFWmw__kvplf8DbZI0FCWlXCZh",
+        "httpStatus": 200,
+        "rawHash": "75f18b2cfb43d9d5e0b842162f0fac258216f39498ac72459b39b0ee82ad4bbd",
+        "retrievedAt": "2026-11-03T07:57:13.888828+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/ia-measure-n-lg-saratoga-union-hsd-bonds-stamped_redacted.pdf?VersionId=sGpQcuU_H2eGu3tXHIzgxBwlNbeQR1sm",
+        "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/ia-measure-n-lg-saratoga-union-hsd-bonds-stamped_redacted.pdf?VersionId=sGpQcuU_H2eGu3tXHIzgxBwlNbeQR1sm",
+        "httpStatus": 200,
+        "rawHash": "8a530cec8a65c5b9db103cd0a44476ed8d6e8fec2dad22920ce31830c11d4265",
+        "retrievedAt": "2026-11-03T07:57:13.942538+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/alum-rock-union-esd-bond-measure-ia-nov-26-to-rov-final_redacted.pdf?VersionId=wHC3Gme81VWm0wm_ZojVC4k1MGKwVRah",
+        "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/alum-rock-union-esd-bond-measure-ia-nov-26-to-rov-final_redacted.pdf?VersionId=wHC3Gme81VWm0wm_ZojVC4k1MGKwVRah",
+        "httpStatus": 200,
+        "rawHash": "57dd9fa0d31cafbae0442881055ff3d47c5c3fd7d4286a077e4beed494782634",
+        "retrievedAt": "2026-11-03T07:57:14.434697+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/ia-measure-o-alum-rock-union-esd-parcel-tax-stamped_redacted.pdf?VersionId=PmLkocwbXMETRl7Qw2_7KeYkws3_yp2Q",
+        "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/ia-measure-o-alum-rock-union-esd-parcel-tax-stamped_redacted.pdf?VersionId=PmLkocwbXMETRl7Qw2_7KeYkws3_yp2Q",
+        "httpStatus": 200,
+        "rawHash": "06336648a81a7c22f98b83eef9dcc531cd24398ef3610e009f23f6cb472857f5",
+        "retrievedAt": "2026-11-03T07:57:14.066807+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-r-orchard-school-district-parcel-tax-ia-redacted-20260818.pdf?VersionId=OxQ5w3LdKR5wiJMFVOX5sGPFd78K1LMo",
+        "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-r-orchard-school-district-parcel-tax-ia-redacted-20260818.pdf?VersionId=OxQ5w3LdKR5wiJMFVOX5sGPFd78K1LMo",
+        "httpStatus": 200,
+        "rawHash": "f899053d636f414e026dce5ee75bb1b44a0160bcf317d10d03feed1f5df1e96f",
+        "retrievedAt": "2026-11-03T07:57:14.554236+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      }
+    ]
+  }
+}

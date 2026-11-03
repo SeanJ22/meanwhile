@@ -1,0 +1,58 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-santa-clara-m",
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-m-impartial-analysis-gilroy-unified_redacted.pdf?VersionId=scFxKaSFWmw__kvplf8DbZI0FCWlXCZh"
+    },
+    {
+      "id": "ca-2026-santa-clara-n",
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/ia-measure-n-lg-saratoga-union-hsd-bonds-stamped_redacted.pdf?VersionId=sGpQcuU_H2eGu3tXHIzgxBwlNbeQR1sm"
+    },
+    {
+      "id": "ca-2026-santa-clara-p",
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/alum-rock-union-esd-bond-measure-ia-nov-26-to-rov-final_redacted.pdf?VersionId=wHC3Gme81VWm0wm_ZojVC4k1MGKwVRah"
+    },
+    {
+      "id": "ca-2026-santa-clara-o",
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/ia-measure-o-alum-rock-union-esd-parcel-tax-stamped_redacted.pdf?VersionId=PmLkocwbXMETRl7Qw2_7KeYkws3_yp2Q"
+    },
+    {
+      "id": "ca-2026-santa-clara-r",
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-r-orchard-school-district-parcel-tax-ia-redacted-20260818.pdf?VersionId=OxQ5w3LdKR5wiJMFVOX5sGPFd78K1LMo"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory; preserve all unrelated contests, candidates, explanations and county additions. No app release.",
+  "coverage": {
+    "state": "CA",
+    "county": "Santa Clara",
+    "officialCountyDenominator": 20,
+    "officialLocalLabels": "A–S (19) plus shared RTM",
+    "preparedAttached": 5,
+    "preparedLabels": [
+      "M",
+      "N",
+      "P",
+      "O",
+      "R"
+    ],
+    "scope": "Only measures and exact jurisdictions in this packet. Other county and western-state inventories remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "See source-reader-check.json and reader-scope-check.json.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "checkedAt": "2026-11-03T08:17:23.747Z",
+  "status": "PASS",
+  "exactDivisionReaderSelection": "PASS",
+  "outsideSelectionsExcluded": "PASS",
+  "scope": "Exact K12 school districts for M,N,O,P,R only.",
+  "checks": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:gilroy_unified_school_district",
+      "contests": [
+        "ca-2026-santa-clara-m"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_gatos_saratoga_joint_union_school_district",
+      "contests": [
+        "ca-2026-santa-clara-n"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:alum_rock_union_elementary_school_district",
+      "contests": [
+        "ca-2026-santa-clara-p",
+        "ca-2026-santa-clara-o"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:orchard_elementary_school_district",
+      "contests": [
+        "ca-2026-santa-clara-r"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:santa_clara",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:berkeley",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:san_jose",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_clara",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:sunnyvale",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_gatos_union_elementary_school_district",
+      "contests": [],
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

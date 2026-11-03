@@ -1,0 +1,16 @@
+{
+  "state": "CT",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "6399896c2176df1ad19ca1036c048c07ccf1055b5ce277113880c9e25d358eca",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Complete native current clerk/attorney Question 2 and all official explanatory sections attached.",
+    "All four marked-up legal-notice pages visually checked; accepted-language transcript is bounded and labeled, not a whole-charter claim.",
+    "Vacancy exceptions, unanimity and two-thirds denominators, 60-day/unexpired-term limits, constable-election date, assessment alternates, manager approval, percentages and grants exclusions preserved.",
+    "Notice footer date discrepancy documented against current 2026 body/current official page and clerk explanation.",
+    "Exact source bytes and text hashes, all per-sentence quotations, actual registered government division, exact held election identity, normal manual admission and actual reader attachment pass.",
+    "No tax-dollar household estimate, guaranteed grant or unsupported financial impact claim."
+  ]
+}

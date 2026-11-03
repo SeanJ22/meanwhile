@@ -1,0 +1,32 @@
+{
+  "packetPath": "ballot-input/ct.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.enfield-ct.gov/DocumentCenter/View/26952/Explanatory-Text-Two-Questions",
+      "finalUrl": "https://www.enfield-ct.gov/DocumentCenter/View/26952/Explanatory-Text-Two-Questions",
+      "rawPath": "sources/348b25c7237b20be9d701fa27294c28b509763c589f9837d4bbdb9f3cfa53818.source",
+      "rawHash": "348b25c7237b20be9d701fa27294c28b509763c589f9837d4bbdb9f3cfa53818",
+      "textPath": "sources/5ea9e4ff3f58b4f619f7cc5fc418035b99af37bfb5c411850235fded4dd295dc.txt",
+      "textSha256": "5ea9e4ff3f58b4f619f7cc5fc418035b99af37bfb5c411850235fded4dd295dc",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:enfield-question-2"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.enfield-ct.gov/DocumentCenter/View/26717/Charter-Publication",
+      "finalUrl": "https://www.enfield-ct.gov/DocumentCenter/View/26717/Charter-Publication",
+      "rawPath": "sources/6eb7764cd553c13dd2d0dee63c6f20233052a9c620e7c836672574e78ea4b835.source",
+      "rawHash": "6eb7764cd553c13dd2d0dee63c6f20233052a9c620e7c836672574e78ea4b835",
+      "textPath": "sources/d42ed20a53623714bfd06017587ad86e00ffe3e8ed371f294d5ee71d14e78802.txt",
+      "textSha256": "d42ed20a53623714bfd06017587ad86e00ffe3e8ed371f294d5ee71d14e78802",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:enfield-question-2"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

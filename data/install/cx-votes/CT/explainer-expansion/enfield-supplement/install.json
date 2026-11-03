@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "CT",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CT",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": 8
+  },
+  "subjects": [
+    {
+      "id": "ct-sots-2026:enfield-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:enfield_town",
+      "sourceUrl": "https://www.enfield-ct.gov/DocumentCenter/View/26952/Explanatory-Text-Two-Questions"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Original official two-page Enfield clerk/attorney PDF and complete four-page proposed-charter legal notice bytes. Complete Question 2 official text; separately bounded visually checked accepted-language excerpts resolve material qualifiers.",
+  "reviewedScratchPacketSha256": "6399896c2176df1ad19ca1036c048c07ccf1055b5ce277113880c9e25d358eca",
+  "canonicalInputSha256": "50d7ce89c8c1cb360ed7e3171483d6be3ba8037cf17b684ca4323b048556342f",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": "Install after base CT42, Danbury Q1 and Simsbury Q1; merge this one-contest partial packet and preserve all other held contests and explanations.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

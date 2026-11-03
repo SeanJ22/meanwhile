@@ -1,0 +1,244 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "MA",
+  "county": "Middlesex",
+  "countyFips": "25017",
+  "populationRank": 20,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ma-cx-local-2026-district-attorney-northern",
+      "title": "District Attorney \u2014 Northern District",
+      "ocdId": "ocd-division/country:us/state:ma/county:middlesex",
+      "candidates": 1,
+      "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "id": "ma-cx-local-2026-middlesex-register-of-probate",
+      "title": "Register of Probate \u2014 Middlesex County",
+      "ocdId": "ocd-division/country:us/state:ma/county:middlesex",
+      "candidates": 2,
+      "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "id": "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy",
+      "title": "Northeastern Metropolitan Regional School Committee \u2014 Malden (to fill vacancy)",
+      "ocdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "id": "ma-cx-local-2026-greater-lowell-school-committee-dracut",
+      "title": "Greater Lowell Regional School Committee \u2014 Dracut (4 years)",
+      "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF"
+    },
+    {
+      "id": "ma-cx-local-2026-greater-lowell-school-committee-lowell",
+      "title": "Greater Lowell Regional School Committee \u2014 Lowell (4 years)",
+      "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF"
+    },
+    {
+      "id": "ma-cx-local-2026-greater-lowell-school-committee-tyngsborough",
+      "title": "Greater Lowell Regional School Committee \u2014 Tyngsborough (4 years)",
+      "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF"
+    }
+  ],
+  "operation": "Partial state ballot merge through existing BallotContestMerge/runBallotPublication. Preserve all held statewide,federal,legislative,Governor Councillor fields,and9 already prepared statewide measures/explainers. No production writes or publication performed.",
+  "counts": {
+    "contests": 6,
+    "candidacies": 10,
+    "newContests": 6,
+    "refreshedContests": 0,
+    "newCandidacies": 10,
+    "reusedCandidacies": 0,
+    "printedWriteInOnlyContests": 1,
+    "declaredWriteIns": 0,
+    "measuresInstalled": 0,
+    "heldContests": 1,
+    "districtMemberships": 16
+  },
+  "newContestIds": [
+    "ma-cx-local-2026-district-attorney-northern",
+    "ma-cx-local-2026-middlesex-register-of-probate",
+    "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy",
+    "ma-cx-local-2026-greater-lowell-school-committee-dracut",
+    "ma-cx-local-2026-greater-lowell-school-committee-lowell",
+    "ma-cx-local-2026-greater-lowell-school-committee-tyngsborough"
+  ],
+  "reusedContestIds": [],
+  "reusedCandidacyIds": [],
+  "resolvedHeldContests": [],
+  "scope": {
+    "countywideOfficeFields": 2,
+    "regionalSchoolFields": 5,
+    "countywideCandidates": 3,
+    "regionalSchoolCandidates": 7,
+    "reviewedMunicipalities": [
+      "Billerica",
+      "Dracut",
+      "Lowell",
+      "Malden",
+      "North Reading",
+      "Reading",
+      "Somerville"
+    ],
+    "wholeCountyStyleCoverage": false,
+    "reviewedPdfFiles": 11,
+    "coverageStatement": "Middlesex local candidate packet:7 complete printed office fields,10 named candidates, including Northern District Attorney,county Register of Probate,Northeast Metro Malden vacancy,and4 Greater Lowell residency fields. Dunstable field has0 named printed candidates; a blank write-in line is not a person. Exact official districtwide regional electorate is preserved; this packet is partial municipal/style coverage, not a54-municipality completeness claim.",
+    "sourceOmissions": "Other municipal precinct/style PDFs, special municipal elections, special districts and named declared write-in certifications remain open. Current candidate roster is not used to infer absence of regional fields; state lookup explicitly warns additional local offices may appear. No judges,Registry of Deeds,clerks or sheriff races invented from office cycles.",
+    "measures": "Full source PDFs retain all printed questions for later separate review; this candidate packet installs no measure fact or explainer update.",
+    "printedOfficeFields": 7,
+    "readyNamedOfficeFields": 6,
+    "heldWriteInOnlyFields": 1
+  },
+  "geographicDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "status": "WHOLE_MUNICIPALITY_MEMBERSHIPS_SUPPLIED",
+      "owner": "River/registry",
+      "memberMunicipalities": [
+        "Chelsea",
+        "Malden",
+        "Melrose",
+        "North Reading",
+        "Reading",
+        "Revere",
+        "Saugus",
+        "Stoneham",
+        "Wakefield",
+        "Winchester",
+        "Winthrop",
+        "Woburn"
+      ],
+      "electionMethod": "Districtwide at-large,Malden residency requirement.",
+      "next": "Verify selected-ballot delivery from each existing COUSUB member through supplied districtMemberships. New district key need not replace existing municipality boundary polygons.",
+      "membershipCount": 12
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "status": "WHOLE_MUNICIPALITY_MEMBERSHIPS_SUPPLIED",
+      "owner": "River/registry",
+      "memberMunicipalities": [
+        "Dracut",
+        "Dunstable",
+        "Lowell",
+        "Tyngsborough"
+      ],
+      "electionMethod": "Districtwide; seat residency designations Dracut,Dunstable,Lowell,Tyngsborough. Lowell vote2; others vote1.",
+      "next": "Verify selected-ballot delivery from each existing COUSUB member through supplied districtMemberships. New district key need not replace existing municipality boundary polygons.",
+      "membershipCount": 4
+    }
+  ],
+  "countyOfficeTerritoryEvidence": {
+    "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+    "quote": "Middlesex county, the northern district",
+    "distinction": "Northern prosecutorial district is whole Middlesex County. No Northern/Southern Registry of Deeds candidates occur in installed fields."
+  },
+  "sourceFailures": [
+    {
+      "url": "https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/314/0/9",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/middlesex/ma-sample314.source"
+    },
+    {
+      "url": "https://www.wakefieldma.gov/458/Voting-Elections",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/middlesex/wakefield-page.source"
+    },
+    {
+      "url": "https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/141/0/05",
+      "status": 503,
+      "savedArtifact": "/workspace/cx-local-work/middlesex/ma-sample141.source"
+    },
+    {
+      "url": "https://www.wakefieldma.gov/182/Northeast-School-Committee",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/middlesex/wakefield-school-scope.source"
+    },
+    {
+      "url": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+      "status": 503,
+      "savedArtifact": "/workspace/cx-local-work/middlesex/ma-candidates.source"
+    },
+    {
+      "url": "https://www.gltech.org/about-us/school-committee/school-charter",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/middlesex/greaterlowell-charter-page.source"
+    },
+    {
+      "url": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-information-for-voters/offices.htm",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/middlesex/ma-offices.source"
+    },
+    {
+      "url": "https://woburnma.gov/government/city-clerk/elections/presidential-and-state-election/",
+      "status": 202,
+      "savedArtifact": "/workspace/cx-local-work/middlesex/woburn-election.source"
+    },
+    {
+      "url": "https://www.gltech.org/about-us/school-committee/district-members",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/middlesex/greaterlowell-district.source"
+    },
+    {
+      "url": "https://northeastmetrotech.com/77018_2",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/middlesex/northeast-committee.source"
+    }
+  ],
+  "remainingWork": [
+    {
+      "owner": "Parent/River",
+      "next": "Verify all16 existing whole-municipality COUSUB reader divisions select their supplied regional school overlay and appropriate complete candidate fields; preserve held Dunstable write-in-only field."
+    },
+    {
+      "owner": "CX-LOCAL acquisition",
+      "next": "Acquire remaining municipality styles,special local ballots and named declared write-in certifications; do not infer absence from partial style coverage."
+    },
+    {
+      "owner": "Parent/River",
+      "next": "Run shared offline source/merge/manual checks,then install authorized data and verify reader delivery."
+    }
+  ],
+  "nextOwner": "Parent for shared validation; River for installation and geographic delivery.",
+  "heldSubjects": [
+    {
+      "id": "ma-cx-local-2026-greater-lowell-school-committee-dunstable",
+      "electionId": "ma-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "title": "Greater Lowell Regional School Committee \u2014 Dunstable (4 years)",
+      "provenance": {
+        "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+        "sourceOrg": "Town of Dracut Town Clerk",
+        "collectedAt": "2026-11-03T04:24:01.106654+00:00",
+        "verifiedAt": "2026-11-03T04:24:01.106654+00:00",
+        "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) DUNSTABLE\nVote for not more than ONE\nWRITE-IN SPACE ONLY"
+      },
+      "reason": "The current official November3,2026 sample prints only WRITE-IN SPACE ONLY for this Dunstable residency field and no named candidate. Named declared write-in certification has not been acquired. This real election field is held pending a supported named choice or explicit write-in representation; no generic person or no-election claim is added."
+    }
+  ],
+  "regionalMemberships": {
+    "supplied": 16,
+    "northeastMetro": 12,
+    "greaterLowell": 4,
+    "sourceReview": "district-membership-review.json",
+    "boundaryMethod": "Whole-municipality COUSUB membership edges; no polygon added and no county fallback.",
+    "ambiguities": "No partial municipality asserted. Generic write-in-only Dunstable field remains held, with no invented candidate."
+  },
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 20 captured sources and 33 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

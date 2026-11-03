@@ -1,0 +1,675 @@
+  <!DOCTYPE html>
+  <html class="" lang="en-US">
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no">
+
+      <title>Chapter 550: Vocational Regional School District Agreement - Town of North Reading, MA</title>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+
+  <script>
+    if (!window.generalcode) {
+      window.generalcode = {};
+    }
+    window.generalcode.eventParameters = {
+      user_id: "",
+      username: "",
+      custId: "NO1817",
+      cust_id: "NO1817",
+      ip_address: "",
+      page_type: "CODE",
+      page_sub_type: "CODE"
+    };
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(window.generalcode.eventParameters);
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-5010755-1"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=154567252"></script>
+  <script>
+    function gtag(){
+      window.dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", 'UA-5010755-1');
+    gtag("config", '154567252', { send_page_view: false });
+    window.generalcode.logAnalyticsEvent = function(eventName, additionalEventParameters) {
+      gtag("event", eventName, {
+        ...window.generalcode.eventParameters,
+        ...additionalEventParameters
+      });
+    }
+    window.generalcode.logAnalyticsEvent("page_view", {
+      page_title: document.title,
+      page_location: window.location.href,
+      page_referrer: document.referrer,
+      page_path: window.location.pathname
+    });
+  </script>
+
+  <link rel="stylesheet" id="silktide-consent-manager-css"
+        href="/legacy/css/silktide-consent-manager-9f2f03cef275b79efbf0abbae2f2c1fa.css">
+  <script src="/legacy/js/silktide-consent-manager-dc3f1c1715fbec97bd7220673ea7e01d.js"></script>
+  <script>
+    silktideCookieBannerManager.updateCookieBannerConfig({
+      background: {
+        showBackground: true
+      },
+      cookieIcon: {
+        position: "bottomRight"
+      },
+      cookieTypes: [
+        {
+          id: "necessary",
+          name: "Necessary",
+          description: "<p>These cookies are necessary for the website to function properly and cannot be switched off. They help with things like logging in and setting your privacy preferences.</p>",
+          required: true,
+          onAccept: function () {
+            // Do nothing since we need these to function
+          }
+        },
+        {
+          id: "analytics",
+          name: "Analytics",
+          description: "<p>These cookies help us improve the site by tracking which pages are most popular and how visitors move around the site.</p>",
+          defaultValue: true,
+          onAccept: function () {
+            gtag('consent', 'update', {
+              analytics_storage: 'granted',
+            });
+            dataLayer.push({
+              'event': 'consent_accepted_analytics',
+            });
+          },
+          onReject: function () {
+            gtag('consent', 'update', {
+              analytics_storage: 'denied',
+            });
+          }
+        }
+      ],
+      text: {
+        banner: {
+          description: "<header><h2 id='silktide-banner-title'>Cookies</h2></header><p>We use cookies on our site to enhance your user experience, provide personalized content, and analyze our traffic. <a href=\"https://www.iccsafe.org/about/icc-online-privacy-policy/\" target=\"_blank\">Cookie Policy.</a></p>",
+          acceptAllButtonText: "Accept all",
+          acceptAllButtonAccessibleLabel: "Accept all cookies",
+          rejectNonEssentialButtonText: "Reject non-essential",
+          rejectNonEssentialButtonAccessibleLabel: "Reject non-essential",
+          preferencesButtonText: "Preferences",
+          preferencesButtonAccessibleLabel: "Toggle preferences"
+        },
+        preferences: {
+          title: "Customize your cookie preferences",
+          description: "<p>We respect your right to privacy. You can choose not to allow some types of cookies. Your cookie preferences will apply across our website.</p>",
+          creditLinkText: "",
+          creditLinkAccessibleLabel: ""
+        }
+      }
+    });
+  </script>
+
+      <link rel="apple-touch-icon" sizes="180x180" href="/legacy/favicon/apple-touch-icon-48ed3daf8de195214048d08490ab5db2.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="/legacy/favicon/favicon-32x32-7011951d6df1586b12c4cc83808ea331.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/legacy/favicon/favicon-16x16-6b456107bc52d334c65924844305805b.png">
+        <link rel="manifest" href="/manifest/NO1817/manifest.webmanifest">
+      <meta name="theme-color" content="#3a7662">
+      <link rel="mask-icon" href="/legacy/favicon/safari-pinned-tab-8ec78a536bf9eb82aef8233f3201db3c.svg" color="#5bbad5">
+      <meta name="msapplication-TileColor" content="#00aba9">
+
+        <meta name="mobile-web-app-capable" content="yes">
+  <meta property="og:title" content="Town of North Reading, MA: Vocational Regional School District Agreement">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://ecode360.com/images/eCode360_Facebook_share.jpg">
+  <meta property="og:url" content="https://ecode360.com/10398016">
+  <meta property="og:site_name" content="Town of North Reading, MA Code">
+  <meta property="og:description" content="Ch 550  AGREEMENT WITH RESPECT TO THE ESTABLISHMENT OF A VOCATIONAL REGIONAL SCHOOL DISTRICT 1994    This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelse">
+  <meta property="fb:app_id" content="635525276612098">
+
+              <link rel="modulepreload" href="/static/index-Bs1aa9Wk.js"/>
+              <link rel="modulepreload" href="/static/react-DDfPUfJW.js"/>
+              <link rel="modulepreload" href="/static/SelectReferenceDialogContainer-CU3mc1XL.js"/>
+              <link rel="modulepreload" href="/static/Typography-D4GeZyH5.js"/>
+              <link rel="modulepreload" href="/static/EventManager-ZY6f89Bm.js"/>
+              <link rel="modulepreload" href="/static/InputAdornment-CTFx5vpm.js"/>
+              <link rel="modulepreload" href="/static/ListItem-COeP9QoM.js"/>
+              <link rel="modulepreload" href="/static/useThemeProps-g7OMH4XG.js"/>
+              <link rel="modulepreload" href="/static/Store-0D4LyaBc.js"/>
+              <link rel="modulepreload" href="/static/TableCell-pfAM-3ml.js"/>
+              <link rel="modulepreload" href="/static/dayjs.min-Cezxqr0R.js"/>
+      <link rel="preload" href="/legacy/js/code-9a27691f0232e7d638d1ca34d9b2c1b8.js" as="script"/>
+      <link rel="preload" href="/legacy/js/sticky-d176cdbb6aada10dbfa690f9427846f7.js" as="script"/>
+      <link rel="preload" href="/legacy/js/no-js-d6fc482fdb7ec34161c547b8c0c7a171.js" as="script"/>
+    <link rel="stylesheet" href="https://use.typekit.net/dfx6tpu.css"/>
+        <link href="/static/index-BfdnScNv.css" rel="stylesheet"/>
+        <link href="/static/SelectReferenceDialogContainer-B8RaY2Ot.css" rel="stylesheet"/>
+      <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+      <link type="text/css" rel="stylesheet" href="/legacy/fonts/ecode/style-2feba20a42e0a7d0b5765c07eef48c1b.css">
+      <link type="text/css" rel="stylesheet" href="/legacy/css/vars-1c1ff631668a824240e6b459bd2eded2.css">
+      <link type="text/css" rel="stylesheet" href="/legacy/css/font-icons-deb62ae04beee3ee2479cd3ad219697d.css">
+      <link type="text/css" rel="stylesheet" href="/legacy/css/normalize-2de6cbbd6b2380c0ee2993ca53e3f7f7.css">
+      <link type="text/css" rel="stylesheet" href="/legacy/css/scheme-5f43c6da95426c0cfaac8901bf44395c.css">
+      <link type="text/css" rel="stylesheet" href="/legacy/css/code-df3b0d1c278003fa3b38dd4c3dfa0740.css">
+      <link type="text/css" rel="stylesheet" href="/legacy/css/FLX-f928e12696380d6326a2ae77581fe0b1.css">
+      <link type="text/css" rel="stylesheet" href="/legacy/css/QCX-e9bb17b441e871bf62ce52c8aaa6b0c2.css">
+      <link type="text/css" rel="stylesheet" href="/legacy/css/ALP-d5448f0f49ee3259f00982739f621cb2.css">
+      <link type="text/css" rel="stylesheet" href="/legacy/css/main-85fae19b5bb24c6f36bc3987f27f4cf3.css">
+      <link type="text/css" rel="stylesheet" href="/legacy/css/nav-d15c7bdd47ddba68f907631bd6f78784.css">
+      <link type="text/css" rel="stylesheet" media="screen" href="/legacy/css/responsive-b78a8230eb87ba4219cc0c41a7d46605.css">
+        <link type="text/css" rel="stylesheet" media="print" href="/legacy/css/code-print-b094de3263f9f6c65abe2882fab8bcf3.css">
+        <link type="text/css" rel="stylesheet" href="/legacy/css/code-page-controls-ca59b72ba9e22f0fc004f8aefe75c071.css"/>
+  <link type="text/css" rel="stylesheet" href="/legacy/css/modal-63330daa5f38efac7e5eb5577434d93a.css"/>
+
+
+<link id="baseCustomizationCss" type="text/css" rel="stylesheet"
+      href="/legacy/css/customization-base-a21a5d5123a650a982447ba836680cf7.css"/>
+    <link id="customizationCss" type="text/css" rel="stylesheet" href="/customization/NO1817/css?ts=1782404594496"/>
+
+        <link rel="canonical" href="/10398016">
+      <!-- Hide everything until react comes up unless you have javascript disabled -->
+      <style>
+        body {
+          display: none;
+        }
+      </style>
+      <noscript>
+        <style>
+          body {
+            display: initial;
+          }
+        </style>
+      </noscript>
+    </head>
+    <body id=""
+          class="responsive contentPage GX NO1817"
+             data-page-string="Chapter 550: Vocational Regional School District Agreement" data-trackback-enabled="false" data-role="page" data-long-page-string="Chapter 550: Vocational Regional School District Agreement" data-code-date="2025-10-06" data-next-content-title="Disposition List" data-previous-guid="10397582" data-previous-content-title="Special Acts" data-current-code-id="332343" data-ia2-permission="false" data-word-permission="false" data-definition-linking-view="true" data-subscription-question="Do you want to save time using &lt;span class=&#39;eCodeStyle&#39;&gt;eCode360&lt;/span&gt;?" data-group-annotation="false" data-pdf-login-required="true" data-word-login-required="true" data-code-id="332343" data-pdf-permission="true" data-url-schema="https" data-ia2-default-enabled="false" data-next-guid="10398022" data-trackback-law-ledger-view="true" data-groups="[]" data-chapter-string="Chapter 550: Vocational Regional School District Agreement" data-content-preview-permission="true" data-cust-id="NO1817" data-facebook-app-id="635525276612098" data-public-annotation="false" data-customer-name="Town of North Reading, MA" data-ia2-enabled="false" data-google-translate="false" data-build="2.10.2" data-export-permission="false" data-definition-linking-enabled="false" data-version-prefix="" data-guid="10398016" data-allContent="true" data-previous-content-label="Chapter" data-subscription-purchase-url="null" data-next-content-label="Chapter" data-customer="{&quot;id&quot;:79841,&quot;county&quot;:&quot;Middlesex&quot;,&quot;custId&quot;:&quot;NO1817&quot;,&quot;customization&quot;:{&quot;accentBorderColor&quot;:&quot;164b39&quot;,&quot;accentColor&quot;:&quot;164b39&quot;,&quot;accentHighlightColor&quot;:null,&quot;accentLineColor&quot;:null,&quot;accentTextColor&quot;:&quot;3a58a0&quot;,&quot;adminLongName&quot;:&quot;Admin&quot;,&quot;adminShortName&quot;:&quot;Admin&quot;,&quot;adminX&quot;:4,&quot;adminY&quot;:null,&quot;allowRemoteAuth&quot;:false,&quot;banner&quot;:true,&quot;bannerBackgroundColor&quot;:&quot;3a7662&quot;,&quot;bannerBackgroundColorLight&quot;:false,&quot;calculatorsEnabled&quot;:false,&quot;canDoAudit&quot;:true,&quot;cname&quot;:null,&quot;codeLongName&quot;:&quot;Code&quot;,&quot;codeReviewPhase&quot;:null,&quot;codeShortName&quot;:&quot;Code&quot;,&quot;codifiedLawViewEnabled&quot;:false,&quot;created&quot;:&quot;2019-06-27T18:22:30.660+00:00&quot;,&quot;customerName&quot;:null,&quot;enhancedGraphics&quot;:false,&quot;enhancedTocEnabled&quot;:true,&quot;helpLongName&quot;:&quot;Help&quot;,&quot;helpShortName&quot;:&quot;Help&quot;,&quot;homeLongName&quot;:&quot;Home&quot;,&quot;homePageMessage&quot;:&quot;&lt;p style=\&quot;text-align: center;\&quot;&gt;Welcome to the Town of North Reading, MA&#39;s municipal code site.&lt;/p&gt;&lt;p style=\&quot;text-align: center;\&quot;&gt;&lt;/p&gt;&lt;p style=\&quot;text-align: center;\&quot;&gt;The town&#39;s municipal code is provided here as a convenience. As new bylaws, regulations, or other legislation is adopted by the town&#39;s legislative body, it will be supplemented into the code on a regular schedule. Items pending supplementation can be found in the &lt;a target=\&quot;_blank\&quot; rel=\&quot;noopener noreferrer nofollow\&quot; href=\&quot;https://ecode360.com/NO1817/laws\&quot;&gt;New Laws&lt;/a&gt; tab to the left or within the affected Chapters. Chapters with new legislation pending will have a gavel icon next to them.&lt;/p&gt;&lt;p style=\&quot;text-align: center;\&quot;&gt;&lt;/p&gt;&lt;p style=\&quot;text-align: center;\&quot;&gt;For any questions about the code, or for items not included, please consult with the &lt;a target=\&quot;_blank\&quot; rel=\&quot;noopener noreferrer nofollow\&quot; href=\&quot;https://www.northreadingma.gov/201/Town-Clerk\&quot;&gt;Town Clerk&lt;/a&gt; or the applicable &lt;a target=\&quot;_blank\&quot; rel=\&quot;noopener noreferrer nofollow\&quot; href=\&quot;https://www.northreadingma.gov/193/Departments\&quot;&gt;Department&lt;/a&gt;.&lt;/p&gt;&quot;,&quot;homeShortName&quot;:&quot;Home&quot;,&quot;ia2&quot;:false,&quot;ia2ImportEnabled&quot;:true,&quot;lawLedgerName&quot;:&quot;Law Ledger&quot;,&quot;lawsLongName&quot;:&quot;Laws&quot;,&quot;lawsShortName&quot;:&quot;Laws&quot;,&quot;lawTitleField&quot;:&quot;description&quot;,&quot;mapUrl&quot;:null,&quot;mixedContentEnabled&quot;:true,&quot;muniAddress&quot;:&quot;235 North Street, North Reading, MA 01864&quot;,&quot;muniContactPerson&quot;:&quot;Susan Duplin - Town Clerk&quot;,&quot;muniEmail&quot;:&quot;&quot;,&quot;muniPhone&quot;:&quot;978-664-6000&quot;,&quot;muniUrl&quot;:&quot;https://www.northreadingma.gov/&quot;,&quot;newLawsName&quot;:&quot;New Laws&quot;,&quot;notesLongName&quot;:&quot;Notes&quot;,&quot;notesShortName&quot;:&quot;Notes&quot;,&quot;pubdocsDateDisabled&quot;:false,&quot;pubdocsLongName&quot;:&quot;Public Documents&quot;,&quot;pubDocsOnlyText&quot;:null,&quot;pubdocsShortName&quot;:&quot;Public Documents&quot;,&quot;questionsLongName&quot;:&quot;Questions&quot;,&quot;questionsShortName&quot;:&quot;Questions&quot;,&quot;seal&quot;:false,&quot;shallowSchemeEnabled&quot;:false,&quot;showCountyLine&quot;:true,&quot;sidebarLabel&quot;:null,&quot;trackbackEnabled&quot;:false,&quot;definitionLinkingEnabled&quot;:false,&quot;aiNavigatorEnabled&quot;:false,&quot;translate&quot;:false,&quot;updated&quot;:&quot;2026-06-25T16:23:14.496+00:00&quot;,&quot;website&quot;:&quot;https://www.northreadingma.gov/&quot;,&quot;websiteHeight&quot;:106,&quot;websiteOffsetX&quot;:0,&quot;websiteOffsetY&quot;:0,&quot;websiteWidth&quot;:940,&quot;zoningChapterName&quot;:&quot;Zoning Chapter&quot;,&quot;zoningLongName&quot;:&quot;Zoning&quot;,&quot;zoningMapName&quot;:&quot;Zoning Map&quot;,&quot;zoningShortName&quot;:&quot;Zoning&quot;},&quot;featureLevel&quot;:&quot;Premium&quot;,&quot;govtype&quot;:&quot;Town&quot;,&quot;govtypesub&quot;:null,&quot;municipality&quot;:&quot;North Reading&quot;,&quot;name&quot;:&quot;Town of North Reading, MA&quot;,&quot;population&quot;:15343,&quot;pubDocsOnly&quot;:false,&quot;state&quot;:&quot;MA&quot;,&quot;warning&quot;:null,&quot;zipcode&quot;:&quot;01864&quot;,&quot;url&quot;:&quot;https://ecode360.com/NO1817&quot;,&quot;mapUrl&quot;:null,&quot;pdfOnly&quot;:false,&quot;subdivisionName&quot;:&quot;County&quot;,&quot;subdivisionNamePlural&quot;:&quot;Counties&quot;,&quot;preferredName&quot;:&quot;Town of North Reading, MA&quot;}"
+    >
+    <a id="skip-link" href="#page-content"><span id="skip-link-content">Skip to content</span></a>
+      <div id="page-grid">
+    <nav id="rail" aria-label="Main" class="collapsed">
+      <div class="items">
+            <div class="item">
+              <a class="item-label" href="/NO1817/home" title="Home">
+  <span class="material-icons material-symbols-outlined md-32 notranslate material-symbols-and-filled rail-icon"
+  translate="no"
+    aria-label="Home icon"
+    
+    
+    
+    
+  >home</span>
+                <span class="item-label-text">Home</span>
+              </a>
+            </div>
+          <div class="item selected nav-expand collapsed">
+            <a class="item-label expand-toggle no-js-link" href="/NO1817#NO1817" title="Code">
+  <span class="material-icons material-symbols-outlined md-32 notranslate material-symbols-and-filled rail-icon"
+  translate="no"
+    aria-label="Code icon"
+    
+    
+    
+    
+  >code</span>
+              <span class="item-label-text">
+                  Code
+              </span>
+            </a>
+            <div class="subitems">
+                <div class="item-wrapper">
+    <div class="selected item item-title">
+      <span class="item-label">
+        <span class="item-label-text">Code</span>
+      </span>
+    </div>
+                </div>
+            </div>
+          </div>
+          <div class="item nav-expand collapsed">
+            <a class="item-label expand-toggle no-js-link" href="/NO1817/laws" title="Laws, Ordinances, and other Enactments">
+  <span class="material-icons material-symbols-outlined md-32 notranslate material-symbols-and-filled rail-icon"
+  translate="no"
+    aria-label="Laws icon"
+    
+    
+    
+    
+  >law</span>
+              <span class="item-label-text">Laws (0)</span>
+            </a>
+            <div class="subitems">
+              <div class="item-wrapper">
+    <div class="item">
+      <a class="item-label" href="/NO1817/laws" title="New Laws">
+          <span class="item-label-text">New Laws (0)</span>
+      </a>
+    </div>
+    <div class="item">
+      <a class="item-label" href="/law-ledger/NO1817" title="Law Ledger">
+          <span class="item-label-text">Law Ledger (0)</span>
+      </a>
+    </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        <div class="item nav-expand collapsed">
+          <a class="item-label expand-toggle no-js-link" href="/help/NO1817" title="Help">
+  <span class="material-icons material-symbols-outlined md-32 notranslate material-symbols-and-filled rail-icon"
+  translate="no"
+    aria-label="Help icon"
+    
+    
+    
+    
+  >help_center</span>
+            <span class="item-label-text">
+                Help
+            </span>
+          </a>
+          <div class="subitems">
+            <div class="item-wrapper">
+    <div class="item">
+      <a class="item-label" href="/help/NO1817" title="Help">
+          <span class="item-label-text item-title-text">Help</span>
+      </a>
+    </div>
+    <div class="item">
+      <a class="item-label" href="/help/NO1817/about" title="About Us">
+          <span class="item-label-text">About Us</span>
+      </a>
+    </div>
+            </div>
+          </div>
+        </div>
+
+        <a id="gcLogo" href="https://www.generalcode.com" target="_blank" rel="noopener noreferrer">
+  <span class="material-icons material-symbols-outlined md-50 notranslate material-symbols-and-filled"
+  translate="no"
+    aria-label="eCode360 logo"
+    
+    
+    
+    
+  >ecode</span>
+        </a>
+      </div>
+    </nav>
+    <header id="search-bar">
+      <div id="search-bar-wrapper">
+        <div class="content-area">
+          <div id="menu">
+            <div id="menuButtons">
+              <div id="menubarExpand"><span id="menubarExpandLabel"></span></div>
+            </div>
+            <div id="menuSearchArea" class="menuButton searchArea">
+              <form id="menubarSearchForm" method="GET" autocomplete="off"
+                  action="/NO1817/search">
+                <div id="menubarScopeChipContainer">
+                </div>
+                <input id="menubarSearchField"
+                    name="query"
+                    type="text"
+                    placeholder="Enter search term..."
+                    value=""
+                    aria-label="Enter search term"
+                    aria-owns="autoSuggestContainer"
+                />
+                <button id="menubarSearchButton" class="iconButton" type="submit" value="Submit Search"
+                        aria-label="Submit Search">
+  <span class="material-icons material-symbols-outlined md-24 notranslate material-symbols-and-filled"
+  translate="no"
+    aria-label="Search icon"
+    
+    
+    
+    
+  >search</span>
+                </button>
+              </form>
+            </div>
+            <div id="search-bar-actions">
+                <div class="search-bar-action">
+                  <div class="muiButtonContainer light">
+                    <a class="muiButton" tabindex="0" role="button" href="/user/login/NO1817?url=%2F10398016" rel="nofollow">Login</a>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div id="breadcrumbs-bar">
+      <div id="breadcrumbs-bar-wrapper">
+        <div id="breadcrumbs-bar-content">
+          <div id="breadcrumbs">
+              <a href="/NO1817/home" class="breadcrumb" title="Town of North Reading, MA Home">
+                  Town of North Reading, MA
+              </a>
+  <span class="material-icons material-symbols-outlined md-28 notranslate material-symbols-and-filled separator"
+  translate="no"
+    aria-label="Separator icon"
+    
+    
+    
+    
+  >chevron_right</span>
+                    <span id="breadcrumbsVersions" class="breadcrumb"></span>
+  <span class="material-icons material-symbols-outlined md-28 notranslate material-symbols-and-filled separator"
+  translate="no"
+    aria-label="Separator icon"
+    
+    
+    
+    
+  >chevron_right</span>
+                  <a href="/16116913" class="breadcrumb" title="Appendix">Appendix</a>
+  <span class="material-icons material-symbols-outlined md-28 notranslate material-symbols-and-filled separator"
+  translate="no"
+    aria-label="Separator icon"
+    
+    
+    
+    
+  >chevron_right</span>
+                  <a href="/10398016" class="breadcrumb" title="Ch 550 Vocational Regional School District Agreement">Ch 550 Vocational Regional School District Agreement</a>
+          </div>
+          <div id="pageActions">
+          </div>
+        </div>
+      </div>
+    </div>
+        <div id="page-controls">
+            <div id="page-controls-expand-wrapper">
+              <button id="page-controls-expand-button" class="iconButton" type="button" title="Collapse page controls" rel="nofollow">
+                <span class="material-icons material-symbols-outlined md-24 notranslate material-symbols-and-filled" translate="no"></span>
+              </button>
+              <div id="page-controls-edge"></div>
+            </div>
+                <div id="page-controls-wrapper" class="fixed">
+
+  <section id="code-toc-widget"
+           class="page-control-widget paper paperColor elevation1 scrollable toc-widget"
+           data-toc-nodes="{&quot;prefix&quot;:&quot;&quot;,&quot;tocName&quot;:&quot;Town of North Reading, MA&quot;,&quot;guid&quot;:&quot;NO1817&quot;,&quot;href&quot;:&quot;/NO1817&quot;,&quot;title&quot;:&quot;Town of North Reading, MA&quot;,&quot;number&quot;:&quot;&quot;,&quot;indexNum&quot;:&quot;&quot;,&quot;type&quot;:&quot;code&quot;,&quot;label&quot;:&quot;&quot;,&quot;hideNumber&quot;:true,&quot;children&quot;:[{&quot;prefix&quot;:&quot;&quot;,&quot;tocName&quot;:&quot;The Charter&quot;,&quot;guid&quot;:&quot;16116916&quot;,&quot;parent&quot;:&quot;NO1817&quot;,&quot;href&quot;:&quot;/16116916&quot;,&quot;title&quot;:&quot;The Charter&quot;,&quot;number&quot;:&quot;1&quot;,&quot;indexNum&quot;:&quot;&quot;,&quot;type&quot;:&quot;division&quot;,&quot;label&quot;:&quot;&quot;,&quot;hideNumber&quot;:true,&quot;children&quot;:[{&quot;prefix&quot;:&quot;Ch C&quot;,&quot;tocName&quot;:&quot;Charter&quot;,&quot;guid&quot;:&quot;16116915&quot;,&quot;parent&quot;:&quot;16116916&quot;,&quot;href&quot;:&quot;/16116915&quot;,&quot;title&quot;:&quot;Charter&quot;,&quot;number&quot;:&quot;C&quot;,&quot;indexNum&quot;:&quot;Ch C&quot;,&quot;type&quot;:&quot;chapter&quot;,&quot;label&quot;:&quot;Chapter&quot;,&quot;hideNumber&quot;:false,&quot;children&quot;:[]}]},{&quot;prefix&quot;:&quot;&quot;,&quot;tocName&quot;:&quot;The Code&quot;,&quot;guid&quot;:&quot;16116917&quot;,&quot;parent&quot;:&quot;NO1817&quot;,&quot;href&quot;:&quot;/16116917&quot;,&quot;title&quot;:&quot;The Code&quot;,&quot;number&quot;:&quot;2&quot;,&quot;indexNum&quot;:&quot;&quot;,&quot;type&quot;:&quot;division&quot;,&quot;label&quot;:&quot;&quot;,&quot;hideNumber&quot;:true,&quot;children&quot;:[{&quot;prefix&quot;:&quot;&quot;,&quot;tocName&quot;:&quot;Part I: General Bylaws&quot;,&quot;guid&quot;:&quot;16116910&quot;,&quot;parent&quot;:&quot;16116917&quot;,&quot;href&quot;:&quot;/16116910&quot;,&quot;title&quot;:&quot;Part I: General Bylaws&quot;,&quot;number&quot;:&quot;3&quot;,&quot;indexNum&quot;:&quot;&quot;,&quot;type&quot;:&quot;division&quot;,&quot;label&quot;:&quot;&quot;,&quot;hideNumber&quot;:true,&quot;children&quot;:[]},{&quot;prefix&quot;:&quot;&quot;,&quot;tocName&quot;:&quot;Part II: Zoning Bylaw&quot;,&quot;guid&quot;:&quot;16116911&quot;,&quot;parent&quot;:&quot;16116917&quot;,&quot;href&quot;:&quot;/16116911&quot;,&quot;title&quot;:&quot;Part II: Zoning Bylaw&quot;,&quot;number&quot;:&quot;4&quot;,&quot;indexNum&quot;:&quot;&quot;,&quot;type&quot;:&quot;division&quot;,&quot;label&quot;:&quot;&quot;,&quot;hideNumber&quot;:true,&quot;children&quot;:[]},{&quot;prefix&quot;:&quot;&quot;,&quot;tocName&quot;:&quot;Part III: Regulations&quot;,&quot;guid&quot;:&quot;16116912&quot;,&quot;parent&quot;:&quot;16116917&quot;,&quot;href&quot;:&quot;/16116912&quot;,&quot;title&quot;:&quot;Part III: Regulations&quot;,&quot;number&quot;:&quot;5&quot;,&quot;indexNum&quot;:&quot;&quot;,&quot;type&quot;:&quot;division&quot;,&quot;label&quot;:&quot;&quot;,&quot;hideNumber&quot;:true,&quot;children&quot;:[]}]},{&quot;prefix&quot;:&quot;&quot;,&quot;tocName&quot;:&quot;Appendix&quot;,&quot;guid&quot;:&quot;16116913&quot;,&quot;parent&quot;:&quot;NO1817&quot;,&quot;href&quot;:&quot;/16116913&quot;,&quot;title&quot;:&quot;Appendix&quot;,&quot;number&quot;:&quot;6&quot;,&quot;indexNum&quot;:&quot;&quot;,&quot;type&quot;:&quot;division&quot;,&quot;label&quot;:&quot;&quot;,&quot;hideNumber&quot;:true,&quot;children&quot;:[{&quot;prefix&quot;:&quot;Ch 500&quot;,&quot;tocName&quot;:&quot;Acts Accepted by Town&quot;,&quot;guid&quot;:&quot;10397579&quot;,&quot;parent&quot;:&quot;16116913&quot;,&quot;href&quot;:&quot;/10397579&quot;,&quot;title&quot;:&quot;Acts Accepted by Town&quot;,&quot;number&quot;:&quot;500&quot;,&quot;indexNum&quot;:&quot;Ch 500&quot;,&quot;type&quot;:&quot;chapter&quot;,&quot;label&quot;:&quot;Chapter&quot;,&quot;hideNumber&quot;:false,&quot;children&quot;:[]},{&quot;prefix&quot;:&quot;Ch 525&quot;,&quot;tocName&quot;:&quot;Special Acts&quot;,&quot;guid&quot;:&quot;10397582&quot;,&quot;parent&quot;:&quot;16116913&quot;,&quot;href&quot;:&quot;/10397582&quot;,&quot;title&quot;:&quot;Special Acts&quot;,&quot;number&quot;:&quot;525&quot;,&quot;indexNum&quot;:&quot;Ch 525&quot;,&quot;type&quot;:&quot;chapter&quot;,&quot;label&quot;:&quot;Chapter&quot;,&quot;hideNumber&quot;:false,&quot;children&quot;:[]},{&quot;prefix&quot;:&quot;Ch 550&quot;,&quot;tocName&quot;:&quot;Vocational Regional School District Agreement&quot;,&quot;guid&quot;:&quot;10398016&quot;,&quot;parent&quot;:&quot;16116913&quot;,&quot;href&quot;:&quot;/10398016&quot;,&quot;title&quot;:&quot;Vocational Regional School District Agreement&quot;,&quot;number&quot;:&quot;550&quot;,&quot;indexNum&quot;:&quot;Ch 550&quot;,&quot;type&quot;:&quot;chapter&quot;,&quot;label&quot;:&quot;Chapter&quot;,&quot;hideNumber&quot;:false,&quot;children&quot;:[]}]},{&quot;prefix&quot;:&quot;&quot;,&quot;tocName&quot;:&quot;Disposition List&quot;,&quot;guid&quot;:&quot;16116914&quot;,&quot;parent&quot;:&quot;NO1817&quot;,&quot;href&quot;:&quot;/16116914&quot;,&quot;title&quot;:&quot;Disposition List&quot;,&quot;number&quot;:&quot;7&quot;,&quot;indexNum&quot;:&quot;&quot;,&quot;type&quot;:&quot;division&quot;,&quot;label&quot;:&quot;&quot;,&quot;hideNumber&quot;:true,&quot;children&quot;:[{&quot;prefix&quot;:&quot;Ch DL&quot;,&quot;tocName&quot;:&quot;Disposition List&quot;,&quot;guid&quot;:&quot;10398022&quot;,&quot;parent&quot;:&quot;16116914&quot;,&quot;href&quot;:&quot;/10398022&quot;,&quot;title&quot;:&quot;Disposition List&quot;,&quot;number&quot;:&quot;DL&quot;,&quot;indexNum&quot;:&quot;Ch DL&quot;,&quot;type&quot;:&quot;chapter&quot;,&quot;label&quot;:&quot;Chapter&quot;,&quot;hideNumber&quot;:false,&quot;children&quot;:[]}]}]}" data-initial-toc-depth="1" data-type="code" data-label="" data-toc-view="enhanced"
+  >
+  <div 
+       class="page-control-widget-content">
+  </div>
+  </section>
+    </div>
+
+        </div>
+        <main id="page-content">
+          <div id="page-content-wrapper">
+            <div id="contentContainer">
+
+
+    <span id="toolbarRoot"></span>
+
+
+  <div id="codePageTitleArea">
+    <div id="pageTitleHeaderRoot">
+      <header id="pageTitleHeader">
+        <div id="pageTitleContainer" class="clearfix chapterTitle">
+          <h1 id="pageTitle" class="customerTitleColor">
+            <span>
+  <a href="/10398016#10398016"
+     class="link">
+    <span class="titleNumber">
+      Chapter 550
+    </span>
+    <span class="titleTitle"
+          data-guid="10398016"
+    >
+Vocational Regional School District Agreement    </span>
+  </a>
+            </span>
+          </h1>
+        </div>
+      </header>
+    </div>
+  </div>
+  <div id="codeContent">
+
+        <div class="notes" id="notes-10398016" data-guid="10398016"></div>
+        <div id="questions-10398016" data-guid="10398016" class="questions"></div>
+
+<div class="chapter_content content" id="10398016_content" title-footnotes="0"><div class="footnotes"></div></div>
+
+
+      <nav id="toc" aria-label="On this page">
+            <div >
+            </div>
+            <div >
+  <div 
+       class="contentTitle barTitle sectionTitle 10398017"
+      id="10398017_title"
+      data-guid="10398017"
+      data-position="4104"
+      data-full-title="§ 550-1: Terms of agreement."
+      data-code-content-type="section"
+  >
+    <span class="selectionBox material-icons material-symbols-outlined material-symbols-and-filled md-24"
+         title="Select this content"
+         aria-label="Select this content"
+    >
+      <input type="checkbox" class="selectionBoxInput" id="10398017_input"/>
+    </span>
+    
+  <div class="titleLinkContainer">
+    <a href="#10398017"
+       class="titleLink"
+    >
+    <span class="titleNumber">
+      § 550-1
+    </span>
+    <span class="titleTitle"
+          data-guid="10398017"
+    >
+Terms of agreement.    </span>
+    </a>
+  </div>
+      
+  <div class="schemeIcons">
+  </div>
+  </div>
+            </div>
+      </nav>
+
+      <div id="childContent">
+                <article>
+                <header>
+  <div data-component="h2"
+       class="contentTitle barTitle sectionTitle 10398017"
+      id="10398017"
+      data-guid="10398017"
+      data-position="4104"
+      data-full-title="§ 550-1: Terms of agreement."
+      data-code-content-type="section"
+  >
+    <span class="selectionBox material-icons material-symbols-outlined material-symbols-and-filled md-24"
+         title="Select this content"
+         aria-label="Select this content"
+    >
+      <input type="checkbox" class="selectionBoxInput" id="10398017_input"/>
+    </span>
+    <label class="selectionLabel" id="10398017_label" for="10398017_input">
+  <div class="titleLinkContainer">
+    <a href="#10398017"
+       class="titleLink"
+    >
+    <span class="titleNumber">
+      § 550-1
+    </span>
+    <span class="titleTitle"
+          data-guid="10398017"
+    >
+Terms of agreement.    </span>
+    </a>
+  </div>
+      </label>
+  </div>
+                </header>
+        <div class="notes" id="notes-10398017" data-guid="10398017"></div>
+        <div id="questions-10398017" data-guid="10398017" class="questions"></div>
+
+
+<div class="section_content content" id="10398017_content" title-footnotes="0"><div class="para">AGREEMENT WITH RESPECT TO THE ESTABLISHMENT OF A VOCATIONAL REGIONAL SCHOOL DISTRICT 1994</div><div class="codeTable " style="border-color:"><table class=" frame frameNone"><colgroup><col style="width: 100%"></col></colgroup><tbody valign="top"><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">   This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703).</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">   In consideration of the mutual promises herein contained, it is hereby agreed as follows:</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     SECTION I. The Regional District School Committee</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (A)  Composition. Reference to Non-Accepting Municipalities</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (B) Initial Committee</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (C) Elected Members</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          1.  At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town. The terms of such members shall commence on the third day of January following their election.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          2.  Nominations for membership on the Committee shall be made in accordance with all procedures prescribed by Massachusetts General Laws, Chapter 53, section <a class="statref" href="https://municipal.codes/MA/MGL/53-122" target="_blank">122</a> as from time to time amended and other pertinent provisions of law.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          3.  The names and addresses of the candidates shall be arranged on the ballot under separate heading according to the city/town in which they reside. There shall be printed such directions to instruct the voter to vote for one candidate from each city/town.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          4.  The members of the Committee, incumbent on the effective date of this provision, shall hold office until their successors have been elected and qualified at the biennial state election referred to in Section I(C)1.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (D) Vacancies</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          If there is a failure to elect or a vacancy occurs among the members elected by the District, the local school committee members and the selectmen from the town in which the member is required to reside, acting jointly, shall appoint a member to serve. If a vacancy occurs among the members elected by a city, the local school committee members and the members of the city council from the city involved, acting jointly, shall appoint a member to serve. The appointee filling such vacancy shall serve until the next biennial state election at which election a successor shall be elected to serve for the balance of the unexpired term, if any.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (E)  Organization</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Upon acceptance of the Amendment, the regional school district committee shall designate an individual to serve as district Clerk pursuant to Massachusetts General Laws, Chapter 71, section <a class="statref" href="https://municipal.codes/MA/MGL/71-14E" target="_blank">14E</a>.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Until the biennial election referred to in Section I(C) is held, the Committee shall meet on or about April 1 to organize and choose a chairman and a vice-chairman from amongst its own membership. At the same meeting or at any other meeting, the Committee shall appoint a treasurer, secretary, and Clerk who may be members of the Committee, choose such officers as it deems advisable, determine the terms of office of its officers (except the chairman and vice-chairman who shall be elected annually), prescribe the powers and duties of its officers, fix the time and place for its regular meetings and provide for the calling of special meetings.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          After the biennial election referred to in Section I(C), the organizational meeting shall occur at the first regular meeting in January.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (F)  Powers and Duties</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          The Committee shall have all the powers and duties conferred and imposed upon it by this agreement and such other additional powers and duties as are specified in Chapter 703 of the Acts of 1962 and any amendments thereof or additions thereto now or hereafter enacted, or as may be specified in any other applicable general or special law.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (G) Quorum</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          The quorum for the transaction of business shall be a majority of the Committee, but a number less than the majority may adjourn.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     SECTION II. Type of Regional District School</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     The regional district school shall be a vocational technical high school consisting of grades nine through twelve, inclusive. The Committee is also hereby authorized to establish and maintain state-aided vocational education, acting as trustees therefor, in accordance with the provisions of Chapter <a class="statref" href="https://municipal.codes/MA/MGL/74" target="_blank">74</a> of the General Laws and acts amendatory thereof, in addition thereto or dependent thereon.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     SECTION III. Location of the Regional District School</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     The regional district school or schools shall be located within the geographical limits of the District and within a radius of five miles from the line where Main Street intersects the cities of Malden and Melrose.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     SECTION IV. Apportionment and payment of costs incurred by the District</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (A)  Classification of Costs</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          For the purpose of apportioning assessments levied by the District against the member municipalities, costs shall be divided into two categories: capital costs and operating costs.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (B)  Capital Costs</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Capital costs shall include all expenses in the nature of capital outlay such as the cost of acquiring land, the cost of constructing, reconstructing, and adding to buildings, and the cost of remodeling or making extraordinary repairs to a school building or buildings, including without limitation the cost of the original equipment and furnishings for such buildings or additions, plans, architects' and consultants' fees, grading and other cost incidental to placing school buildings and additions and related structures and premises in operating condition. Capital costs shall also include payment of principal of and interest on bonds, notes or other obligations issued by the District to finance capital costs.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (C) Operating Costs</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Operating costs shall include all costs not included in capital costs as defined in subsection IV(B), but including interest on temporary notes issued by the District in anticipation of revenue.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (D) Apportionment of Capital and Operating Costs</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Capital and operating costs for each fiscal year shall be apportioned to the member municipalities on the basis of their respective pupil enrollments in the regional district school. Each member municipality's share of capital and operating costs for each fiscal year shall be determined by computing the ratio which that municipality's pupil enrollment in the regional district school on October 1 of the year next preceding the fiscal year for which the apportionment is determined bears to the total pupil enrollment from all the member municipalities in the regional district school on the same date. In the event that enrollment in the regional district school has not been accomplished by October 1 of any such year, capital and operating cost shall be apportioned on the basis of enrollment in grades nine through twelve of member municipality and receiving education at such municipality's expense on October 1 of such year.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (E)  Times of Payment of Apportioned Costs</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Each member municipality shall pay to the District in each year its proportionate share, certified as provided in subsection V(C), of the capital and operating costs. Except as otherwise provided in subsection V(A) the annual share of each member municipality shall be paid in such amounts at such time that at least the following percentages of such annual share shall be paid on or before the dates indicated, respectively:</div></td></tr></tbody></table></div><div class="codeTable " style="border-color:"><table class=" frame frameNone"><colgroup><col style="width: 11%"></col><col style="width: 20%"></col><col style="width: 69%"></col></colgroup><tbody valign="top"><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;"></div></td><td align="justify" charoff="50" class="entry" startcol="2" valign="top"><div class="para" style="margin-left:0px;">September 1</div></td><td align="justify" charoff="50" class="entry" startcol="3" valign="top"><div class="para" style="margin-left:0px;">25%</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;"></div></td><td align="justify" charoff="50" class="entry" startcol="2" valign="top"><div class="para" style="margin-left:0px;">December 1</div></td><td align="justify" charoff="50" class="entry" startcol="3" valign="top"><div class="para" style="margin-left:0px;">50%</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;"></div></td><td align="justify" charoff="50" class="entry" startcol="2" valign="top"><div class="para" style="margin-left:0px;">March 1</div></td><td align="justify" charoff="50" class="entry" startcol="3" valign="top"><div class="para" style="margin-left:0px;">75%</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;"></div></td><td align="justify" charoff="50" class="entry" startcol="2" valign="top"><div class="para" style="margin-left:0px;">June 1</div></td><td align="justify" charoff="50" class="entry" startcol="3" valign="top"><div class="para" style="margin-left:0px;">100%</div></td></tr></tbody></table></div><div class="codeTable " style="border-color:"><table class=" frame frameNone"><colgroup><col style="width: 100%"></col></colgroup><tbody valign="top"><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     SECTION V. Budget</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (A)  Initial Budget</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Within sixty days after the initial Committee is organized, it shall prepare a reasonably detailed operating and maintenance budget covering expenses, if any, for the balance of the then calendar year. Copies of such proposed budget shall be submitted to the chairman of the finance or advisory committee of each member town and to the Mayor of each member city for their consideration. A budget shall be adopted not earlier than fourteen days but within twenty-one days after the proposed budget has been so submitted. The amount of the said budget shall be apportioned among the member municipalities according to the provisions of Section IV herein. The regional district treasurer shall certify to the treasurer of each member municipality its respective share of said budget. The sums thus certified shall be payable by the member municipalities to the regional district school committee but only from funds which may be or may have been appropriated by the member municipalities for such purpose.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (B)  Tentative Operating and Maintenance Budget</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Thereafter, the Committee shall annually prepare a tentative operating and maintenance budget for the ensuing fiscal year, attaching thereto provision for any installment of principal or interest to become due in such year on any bonds or other evidence of indebtedness of the District and any other capital costs to be apportioned to the member municipalities. On or before February 15 the said Committee shall submit to the Mayor of each member city and to the chairman of the finance or advisory committee of each member town a copy of such tentative operating and maintenance budget which shall be itemized as follows or be in such further detail as the Committee may deem advisable:</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          1. Administration</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          2. Instruction Day</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          3. Instruction Special Education</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          4. Other School Services</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          5. Operation and Maintenance</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          6. Fixed Changes - Insurance</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          7. Acquisition and Equipment</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          8. Debt Services</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (C) Final Operating and Maintenance Budget</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          The Committee shall adopt an annual operating and maintenance budget, including debt and interest charges and any other current capital costs as separate items, all in conformity with the provisions of Massachusetts General Laws, Chapter 71, Section <a class="statref" href="https://municipal.codes/MA/MGL/71-16B" target="_blank">16B</a>.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (D) Incurring of Debt</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Not later than seven days after the date on which the Committee authorizes the incurring of debt other than temporary debt in anticipation of revenue to be received from member municipalities, written notice of the date of said authorization, the sum authorized, and the general purpose or purposes for authorizing such debt shall be submitted to the city council of each member city and to the board of selectmen of each member town.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     SECTION VI. TRANSPORTATION</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          School transportation shall be provided by the regional school district and the cost thereof shall be apportioned to the member municipalities as an operating cost.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     SECTION VII. AMENDMENTS</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (A)  Limitations</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          This agreement may be amended from time to time in the manner hereinafter provided, but no amendment shall be made which shall substantially impair the rights of the holders of any bonds, notes or other obligations of the District then outstanding, or the rights of the District to procure the means for payment thereof, provided that nothing in this section shall prevent the admission of a new municipality or municipalities to the District and the reapportionment accordingly of capital costs of the District represented by bonds or notes of the District then outstanding and of interest thereon.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (B)  Procedure</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Any proposal for amendment, except a proposal for amendment providing for the withdrawal of a member municipality (which shall be acted upon as provided in Section IX), may be initiated by a majority vote of all the members of the Committee or by a petition signed by at least 10% of the registered voters of any one of the member municipalities. In the latter case, the said petition shall contain at the end thereof a certification by the town or city Clerk of such member municipality as to the number of registered voters in said municipality according to its most recent voting list and the number of signatures on the petition which appear to be the names of registered voters of said municipality and said petition shall be presented to the secretary of the Committee. In either case, the secretary of the Committee shall give notice in writing to the city council of each member city and to the board of selectmen of each member town that a proposal to amend this agreement has been made and shall enclose a copy of such proposal (without the signatures in the case of a proposal by petition). Such notice shall be given by mailing by registered or certified mail to the city or town Clerk of each member municipality. The selectmen of each member town shall include in the warrant for the next annual or a special town meeting called for the purpose an article stating the amendment or substance thereof. The city council of each member city shall vote on the question of accepting the proposal at a regular or a special meeting of the council within sixty days following receipt of such notice. Amendments shall take effect upon their acceptance by at least two thirds of all the member municipalities, acceptance by each member town to be by a majority vote at a town meeting as aforesaid and acceptance by each member city to be by a majority vote of all the members of its city council.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     SECTION VIII. Admission of additional municipalities to the district</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     By an amendment of this agreement adopted under and in accordance with Section VII above, any other municipality or municipalities may be admitted to the regional school district upon adoption as therein provided of such amendment and upon acceptance by the municipality or municipalities seeking admission of the agreement as so amended and also upon compliance with such provisions of law as may be applicable and such terms as may be set forth in such an amendment.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     SECTION IX. Withdrawal</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (A)  Limitations</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          The withdrawal of a member municipality from the District may be effected by an amendment to this agreement in the manner hereinafter provided by this section. Any member municipality seeking to withdraw shall, by vote at an annual or special town meeting in the case of a town or by vote of the city council in the case of a city, request the regional district school committee to draw up an amendment to this agreement setting forth the terms by which such municipality may withdraw from the District, provided (1) that the municipality seeking to withdraw shall remain liable for any unpaid operating costs which have been certified by the regional school district treasurer to the treasurer of the withdrawing municipality, including the full amount so certified for the year in which such withdrawal takes effect and (2) that the said municipality shall remain liable to the District for its share of the indebtedness of the District outstanding at the time of such withdrawal, and for interest thereon, to the same extent and in the same manner as though the municipality had not withdrawn from the District.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (B)  </div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          The Clerk of the municipality seeking to withdraw shall notify the Committee in writing that such municipality has voted to request the Committee to prepare an amendment to this agreement (enclosing a certified copy of such vote). Thereupon the Committee shall draw up an amendment to this agreement setting forth such terms of withdrawal as it seems advisable but subject to the limitations contained in subsection VII(A). The secretary of the Committee shall give notice in writing to the city council of each member city and to the board of selectmen of each member town that the Committee has drawn up an amendment to this agreement providing for the withdrawal of a member municipality (enclosing a copy of such amendment). Such notice shall be given by mailing by registered or certified mail to the city or town Clerk of each member municipality. The selectmen of each member town shall include in the warrant for the next annual or a special town meeting called for the purpose an article stating the amendment or substance thereof. The city council of each member city shall vote on the question of accepting such amendment at a regular or a special meeting of the council within sixty days following receipt of such notice. Such amendment shall take effect upon its acceptance by at least two thirds of all the member municipalities of which one shall be the member municipality seeking to withdraw, acceptance by each member town to be by a majority vote at a town meeting as aforesaid and acceptance by each member city to be by a majority vote of all the members of its city council.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (C)  Cessation of Term of Office of Withdrawing Municipality's Member</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Upon the effective date of withdrawal the term of office of the member serving on the Committee from the withdrawing municipality shall terminate and the total membership of the Committee shall be decreased accordingly.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (D)  Payments of Certain Capital Costs Made by a Withdrawing Municipality</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          Money received by the District from the withdrawing municipality for payment of funded indebtedness or interest thereon shall be used only for such purpose and until so used shall be deposited in trust in the name of the District with a Massachusetts bank or trust company having a combined capital and surplus of not less than $5,000,000.00.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     (E)  Apportionment of Costs After Withdrawal</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">          The withdrawing municipality's annual share of any future installment of principal and interest on obligations outstanding on the effective date of its withdrawal shall be fixed at the percentage prevailing for such municipality at the last annual apportionment made next prior to the effective date of the withdrawal. The remainder of any such installment after subtracting the shares of any municipality or municipalities which have withdrawn shall be apportioned to the remaining member municipalities in the manner provided in subsection IV (D) or as may be otherwise provided in the amendment providing for such withdrawal.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     SECTION X. Admission of pupils residing outside the District</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     The Committee may accept for enrollment in the regional district school pupils from municipalities other than the member municipalities on a tuition basis. Income received by the District from tuition pupils shall be deducted from the total operating costs in the next annual budget to be prepared after the receipt thereof, prior to apportionment under Section IV to the member municipalities.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     SECTION XI. Advisory Committees</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     The regional district school committee may, to assist it in the construction of any regional school building, appoint a building committee to advise it with respect to plans, specifications, appointment of architects, engineers, the letting of contracts, the supervision of construction, and any other assistance which the regional district school committee may desire. The members of any such committee shall serve without compensation.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     SECTION XII. Annual report</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">     The Committee shall submit an annual report to each of the member municipalities containing a detailed financial statement and a statement showing the method by which the annual charges assessed against each municipality were computed, together with such additional information relating to the operation and maintenance of the regional school as may be deemed necessary by the Committee or by the city council of any member city or by the selectmen of any member town.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">Amendment No. 1, which included Section V(A) and Section V(B), as amended by vote of the District School Committee meeting in special session on November 14, 1973, in accordance with the provisions of Chapter 1025 of the Acts of 1973.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">Amendment No. 2, which included Section I(C), Section I(C)4, and Section I(E), as amended by vote of the District School Committee meeting in regular session on September 12, 1991, in accordance with the provisions of Section VII of said Agreement, including the ratification of more than the required two-thirds of the member municipalities.</div></td></tr><tr class=""><td align="justify" charoff="50" class="entry" startcol="1" valign="top"><div class="para" style="margin-left:0px;">Amendment No. 3, which included Section IV(D), Section IV(E), Section V(B) and Section V(C), as amended by vote of the District School Committee meeting in regular session on November 14, 1991, in accordance with the provisions of Section VII of said Agreement, including the ratification of more than the required two-thirds of the member municipalities.</div></td></tr></tbody></table></div><div class="footnotes"></div></div>                </article>
+      </div>
+  </div>
+
+            </div>
+          </div>
+        </main>
+            <div id="page-extra-space"></div>
+    <footer id="footer">
+      <div id="footerContent">
+        <div class="tos">
+          <span class="bigOnly">By using <span class="eCodeStyle">eCode360</span> you agree to be legally bound by the </span><a href="https://ecode360.com/docs/TOS.html">Terms<span class="bigOnly"> of Use</span></a> and <a href="https://www.iccsafe.org/about/icc-online-privacy-policy/">Privacy<span class="bigOnly"> Policy</span></a>.
+        </div>
+        <div class="widget-container">
+              <a href="https://www.icccodesolutions.org/subscription-services/" id="purchase"><img alt="eCode360: Get a Professional Subscription" id="purchaseLinkIcon"
+                                                                  src='/legacy//images/ecode360-subscription-badge-green.svg'/></a>
+        </div>
+      </div>
+    </footer>
+          <div id="errorDialogContainer"></div>
+          <div id="messageQueue"></div>
+      </div>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="/legacy/js/trackback-1443cdeb6a2e4a7594f735e3ef601bbe.js" type="text/javascript"></script>
+<script type="text/javascript">
+  window.SERVER_DATA = {
+    
+    customer: {"id":79841,"county":"Middlesex","custId":"NO1817","customization":{"accentBorderColor":"164b39","accentColor":"164b39","accentTextColor":"3a58a0","adminLongName":"Admin","adminShortName":"Admin","adminX":4,"allowRemoteAuth":false,"banner":true,"bannerBackgroundColor":"3a7662","bannerBackgroundColorLight":false,"calculatorsEnabled":false,"canDoAudit":true,"codeLongName":"Code","codeShortName":"Code","codifiedLawViewEnabled":false,"created":"Jun 27, 2019, 2:22:30 PM","enhancedGraphics":false,"enhancedTocEnabled":true,"helpLongName":"Help","helpShortName":"Help","homeLongName":"Home","homePageMessage":"\u003cp style\u003d\"text-align: center;\"\u003eWelcome to the Town of North Reading, MA\u0027s municipal code site.\u003c/p\u003e\u003cp style\u003d\"text-align: center;\"\u003e\u003c/p\u003e\u003cp style\u003d\"text-align: center;\"\u003eThe town\u0027s municipal code is provided here as a convenience. As new bylaws, regulations, or other legislation is adopted by the town\u0027s legislative body, it will be supplemented into the code on a regular schedule. Items pending supplementation can be found in the \u003ca target\u003d\"_blank\" rel\u003d\"noopener noreferrer nofollow\" href\u003d\"https://ecode360.com/NO1817/laws\"\u003eNew Laws\u003c/a\u003e tab to the left or within the affected Chapters. Chapters with new legislation pending will have a gavel icon next to them.\u003c/p\u003e\u003cp style\u003d\"text-align: center;\"\u003e\u003c/p\u003e\u003cp style\u003d\"text-align: center;\"\u003eFor any questions about the code, or for items not included, please consult with the \u003ca target\u003d\"_blank\" rel\u003d\"noopener noreferrer nofollow\" href\u003d\"https://www.northreadingma.gov/201/Town-Clerk\"\u003eTown Clerk\u003c/a\u003e or the applicable \u003ca target\u003d\"_blank\" rel\u003d\"noopener noreferrer nofollow\" href\u003d\"https://www.northreadingma.gov/193/Departments\"\u003eDepartment\u003c/a\u003e.\u003c/p\u003e","homeShortName":"Home","ia2":false,"ia2ImportEnabled":true,"lawLedgerName":"Law Ledger","lawsLongName":"Laws","lawsShortName":"Laws","lawTitleField":"description","mixedContentEnabled":true,"muniAddress":"235 North Street, North Reading, MA 01864","muniContactPerson":"Susan Duplin - Town Clerk","muniEmail":"","muniPhone":"978-664-6000","muniUrl":"https://www.northreadingma.gov/","newLawsName":"New Laws","notesLongName":"Notes","notesShortName":"Notes","pubdocsDateDisabled":false,"pubdocsLongName":"Public Documents","pubdocsShortName":"Public Documents","questionsLongName":"Questions","questionsShortName":"Questions","seal":false,"shallowSchemeEnabled":false,"showCountyLine":true,"trackbackEnabled":false,"definitionLinkingEnabled":false,"aiNavigatorEnabled":false,"translate":false,"updated":"Jun 25, 2026, 12:23:14 PM","website":"https://www.northreadingma.gov/","websiteHeight":106,"websiteOffsetX":0,"websiteOffsetY":0,"websiteWidth":940,"zoningChapterName":"Zoning Chapter","zoningLongName":"Zoning","zoningMapName":"Zoning Map","zoningShortName":"Zoning"},"featureLevel":"Premium","govtype":"Town","municipality":"North Reading","name":"Town of North Reading, MA","population":15343,"pubDocsOnly":false,"state":"MA","zipcode":"01864","url":"https://ecode360.com/NO1817","pdfOnly":false,"subdivisionName":"County","subdivisionNamePlural":"Counties"},
+    custId: 'NO1817',
+    customerName: 'Town of North Reading, MA',
+    
+    archiveId: '',
+    pageType: 'CODE',
+    pageSubType: 'CODE',
+    versions: [{"id":332343,"build":"2.8.6","displayDate":"Includes legislation through 10-06-2025.","importTime":"2026-06-12T10:10:33.001","publishedRevision":4859095,"type":"code","updatedDate":"2025-10-06T00:00:00","versionNumber":19,"displayLabel":"2025-10-06","current":true,"year":2025}],
+    currentCodeId: 332343,
+    username: '',
+    userFirstName: '',
+    userLastName: '',
+    ipAddress: '',
+    grantedPermissions: ["CONTENT/PREVIEW","LAW/ALL/VIEW","LAW/LEDGER/VIEW","NOTIFICATION","SHARE","VIEW","DEFINITION/LINKING","PDF","EMAIL"],
+    useSearchSuggestionThrottle: false,
+    searchSuggestionWaitTime: 300,
+    helpTopics: {"multicodeSearchModal":"users#multicodesearch","search":"search","notes":"users#notelisting","adminManageUsers":"administration#adduser","advancedSearchModal":"search#advanced","newLaws":"laws","questions":"analysis","adminStats":"administration#dashboard","login":"users#login"},
+    helpVideos: {"search":"https://www.generalcode.com/training/#videosearch","multicodeSearchModal":"https://www.generalcode.com/training/#videomulticode","adminManageUsers":"https://www.generalcode.com/training/#videoadmin","newLaws":"https://www.generalcode.com/training/#videonewlaws","advancedSearchModal":"https://www.generalcode.com/training/#videosearch","login":"https://www.generalcode.com/training/#videologgingin","pubDocs":"https://www.generalcode.com/training/#videopubdocs"},
+    solrSearch: true,
+    contentPreviewDelay: 750,
+    contentPreviewSelector: 'a.xref,a.definition-ref,a.nonxml,a.nonxmlref,.content .footnoteref[href],#pageTitle .footnoteref[href],a.law,a.internal.textualQuickLink,#relatedLawsPreview',
+    compareDisclaimer: 'This comparison does not necessarily represent the markup in the amending laws',
+    compareVersionsLabel: 'Legislation Through',
+    compareVersionsLabelWithPubId: 'Versions',
+    pubDocsOnly: false,
+    pubDocTypes: [
+    ],
+    suggestedPubDocTypes: {
+        'Agendas': '',
+        'Budgets': '',
+        'Comprehensive Plans': '',
+        'Legislation': '',
+        'Minutes': '',
+        'Misc. Documents': '',
+        'Resolutions': '',
+    },
+    checkReminderIntervalDays: 3,
+    dueWarningDays: 14,
+    dueWarningIntervalHours: 24,
+    analysisChecked: false,
+    analysisFinalized: false,
+    analysisId: null,
+    questions: {},
+    reviewers: {},
+    displayedQuestionIds: null,
+    ia2FileTypes: '.png,.jpg,.jpeg,.gif,.tiff,.bmp,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.txt',
+    pubDocsFileTypes: '.bmp,.csv,.doc,.docm,.docx,.gif,.jpeg,.jpg,.ods,.odt,.pdf,.png,.ppt,.pptx,.rtf,.tif,.tiff,.txt,.xls,.xlsx,.mp3,.wav,.m4a,.flac,.mp4',
+    otherFileTypes: '.png,.jpg,.jpeg,.gif,.tiff,.bmp,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.txt',
+    termsOfUseUrl: 'https://ecode360.com/docs/TOS.html',
+    globalPublicMessage: '',
+    globalPublicMessageDismissalDays: '365',
+    pubDocsSidebarName: 'Public Documents',
+    showDiscussionText: 'Show Internal Review Discussion',
+    hideDiscussionText: 'Hide Internal Review Discussion',
+    multicodeStates: ["PA","MO","TX"],
+    zoningGuid: null,
+    lawCount: 0,
+    lawLedgerCount: 0,
+    lawLedgerCountWithoutDeleted: 0,
+    legislationTypes: [],
+    noteCount: 0,
+    myNotesCount: 0,
+    hasDashboardAccess: false,
+    calculators: {
+      bufferyards: false,
+      parking: false,
+      signage: false
+    },
+    customerWarnings: null,
+    searchResultsUrl: null,
+    searchResultsGuid: null,
+    noteLocationData: [],
+    hasDistributionData: true,
+    indexViewVisible: false,
+    adminOptionHide: false,
+    textQuickLinks: [],
+    quickLinks: [],
+    graphicalQuickLinks: [],
+    definitionLinkingEnabled: false,
+    ai: {
+      underLimit: true,
+    },
+  }
+</script>
+            <script type="module" src="/static/index-Bs1aa9Wk.js"></script>
+          <script src="/legacy/js/modal-413130ceb2a0854e4f9e406ec1fc9e7e.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    if (window.location.search.indexOf("needHash=true") !== -1) {
+      var newQuery = window.location.search.replace("needHash=true", "");
+      if (newQuery === '?') {
+        newQuery = '';
+      }
+      window.location.hash = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+      window.location.search = newQuery;
+    }
+  </script>
+
+        <script type="text/javascript">
+          window.generalcode = window.generalcode || {runScript: false};
+          loadError = function (oError) {
+            throw new URIError("The script " + oError.target.src + " didn't load correctly.");
+          };
+
+          addScript = function (url, onloadFunction) {
+            const newScript = document.createElement("script");
+            newScript.onerror = loadError;
+            if (onloadFunction) {
+              newScript.onload = onloadFunction;
+            }
+            document.body.appendChild(
+                newScript
+            );
+            newScript.src = url;
+          };
+          var loadScripts = function () {
+            if (window.generalcode.runScript === true) {
+              addScript("/legacy/js/code-9a27691f0232e7d638d1ca34d9b2c1b8.js");
+              addScript("/legacy/js/sticky-d176cdbb6aada10dbfa690f9427846f7.js");
+              addScript("/legacy/js/no-js-d6fc482fdb7ec34161c547b8c0c7a171.js");
+            } else {
+              setTimeout(loadScripts, 100);
+            }
+          };
+          loadScripts();
+
+        </script>
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"a457f590e3d9462c84271e2f355de6e7","spa":2}' crossorigin="anonymous"></script>
+</body>
+  </html>

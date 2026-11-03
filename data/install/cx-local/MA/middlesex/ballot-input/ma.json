@@ -1,0 +1,596 @@
+{
+  "kind": "ballot-contests",
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:35:24.188615+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+        "finalUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+        "httpStatus": 200,
+        "rawHash": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+        "retrievedAt": "2026-11-03T04:25:09.280370+00:00",
+        "publisher": "Town of Reading Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://www.readingma.gov/574/Sample-Ballots",
+        "reviewedEvidence": "Complete current official November3,2026 sample PDF, all pages retained and local office blocks checked. Reading contains two posted precinct group styles with identical three local candidate blocks. English printed names, case, party wording, vote limits and all named candidates retained exactly. Reader quotes come from privacy-filtered native text: only candidate residential address lines deleted; original bytes and complete native text are separately hashed. Blank write-in slots are not people and are distinct from named declared write-ins."
+      },
+      {
+        "requestedUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+        "finalUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+        "httpStatus": 200,
+        "rawHash": "5bfb4241582a612e7c223e62ae758bcf889329b44891100f13d5ae8e7523451d",
+        "retrievedAt": "2026-11-03T04:24:01.106654+00:00",
+        "publisher": "Town of Dracut Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://www.dracutma.gov/277/Elections-Information",
+        "reviewedEvidence": "Complete current official November3,2026 Dracut sample PDF, four Greater Lowell regional office blocks including Dunstable write-in-only field read in full. English printed names, case, party wording, vote limits and all named candidates retained exactly. Reader quotes come from privacy-filtered native text: only candidate residential address lines deleted; original bytes and complete native text are separately hashed. Blank write-in slots are not people and are distinct from named declared write-ins."
+      },
+      {
+        "requestedUrl": "https://ecode360.com/10398016",
+        "finalUrl": "https://ecode360.com/10398016",
+        "httpStatus": 200,
+        "rawHash": "a255aed0acd362dc0627046cd09bb247f5025fcfc96dae55e38d196b58e7ab10",
+        "retrievedAt": "2026-11-03T04:25:09.373572+00:00",
+        "publisher": "Town of North Reading — Municipal Code Chapter550 §550-1",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "sourceUiUrl": "https://ecode360.com/10398016",
+        "reviewedEvidence": "Town of North Reading municipal code Chapter550 §550-1: all12member communities and districtwide at-large elections with one resident per municipality; vacancy successor elected at next biennial state election. Official municipal law publisher, supplemental exact electoral territory evidence. Installed16 whole-municipality districtMemberships collectively, supported by current2026 printed regional ballots and current official member lists. Town/city names designate entire member municipalities; no CDP,county fallback or residency-seat narrowing."
+      },
+      {
+        "requestedUrl": "https://resources.finalsite.net/images/v1722006508/gltechorg/dbzkhks4ed71apy2ffth/EstablishmentOfVocationalSchool.pdf",
+        "finalUrl": "https://resources.finalsite.net/images/v1722006508/gltechorg/dbzkhks4ed71apy2ffth/EstablishmentOfVocationalSchool.pdf",
+        "httpStatus": 200,
+        "rawHash": "f5144e0263455df85d9f2158553d23200747f95fa882e606172649dc0d32baab",
+        "retrievedAt": "2026-11-03T04:26:36.042211+00:00",
+        "publisher": "Greater Lowell Regional Vocational Technical School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "sourceUiUrl": "https://www.gltech.org/about-us/school-committee/school-charter",
+        "reviewedEvidence": "School-published charter archive with2015 court consent amendment establishes districtwide biennial-state elections, residency-designated seats and four-year terms. Current2026 Dracut ballot independently expressly says all regional voters may vote every position regardless of residence in District. Installed16 whole-municipality districtMemberships collectively, supported by current2026 printed regional ballots and current official member lists. Town/city names designate entire member municipalities; no CDP,county fallback or residency-seat narrowing."
+      }
+    ]
+  },
+  "ballots": {
+    "MA:ma-2026-11-03": {
+      "election": {
+        "id": "ma-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 State Election",
+        "state": "MA"
+      },
+      "contests": [
+        {
+          "id": "ma-cx-local-2026-district-attorney-northern",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/county:middlesex",
+          "divisionVintage": "2026",
+          "title": "District Attorney — Northern District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Northern prosecutorial district is exactly Middlesex County under Massachusetts General Laws Chapter12 §13; unrelated to the separate Northern/Southern Registry of Deeds districts.",
+          "provenance": {
+            "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+            "sourceOrg": "Town of Reading Town Clerk",
+            "collectedAt": "2026-11-03T04:25:09.280370+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.280370+00:00",
+            "quote": "DISTRICT ATTORNEY\nNORTHERN DISTRICT\nVote for not more than ONE\nMARIAN T. RYAN\nDemocratic\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-middlesex-register-of-probate",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/county:middlesex",
+          "divisionVintage": "2026",
+          "title": "Register of Probate — Middlesex County",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Entire Middlesex County, as explicitly printed; not either northern or southern Registry of Deeds district.",
+          "provenance": {
+            "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+            "sourceOrg": "Town of Reading Town Clerk",
+            "collectedAt": "2026-11-03T04:25:09.280370+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.280370+00:00",
+            "quote": "REGISTER OF PROBATE\nMIDDLESEX COUNTY\nVote for not more than ONE\nTARA E. DeCRISTOFARO\nDemocratic\nCandidate for Re-election\nTARA MARTORELLA\nJustice for All\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "divisionVintage": "2026",
+          "title": "Northeastern Metropolitan Regional School Committee — Malden (to fill vacancy)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Districtwide at-large electorate of all12 Northeast Metropolitan member communities; Malden is a candidate residency seat, not the voting boundary. Ballot prints NORTHEASTERN METROPOLITAN; official regional agreement names Northeast Metropolitan. All12 whole-municipality reader memberships supplied through districtMemberships.",
+          "provenance": {
+            "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+            "sourceOrg": "Town of Reading Town Clerk",
+            "collectedAt": "2026-11-03T04:25:09.280370+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.280370+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nNORTHEASTERN METROPOLITAN\n(TO FILL VACANCY) MALDEN Vote for not more than ONE\nJAMES BANCROFT PERRY\nSEAN M. SALAZAR\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-greater-lowell-school-committee-dracut",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+          "divisionVintage": "2026",
+          "title": "Greater Lowell Regional School Committee — Dracut (4 years)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Districtwide electorate of Lowell,Dracut,Dunstable,Tyngsborough; Dracut is residency designation. Ballot expressly permits voting for every position regardless of residence within the district.",
+          "provenance": {
+            "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+            "sourceOrg": "Town of Dracut Town Clerk",
+            "collectedAt": "2026-11-03T04:24:01.106654+00:00",
+            "verifiedAt": "2026-11-03T04:24:01.106654+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) DRACUT\nVote for not more than ONE\nMATTHEW J. SHEEHAN\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-greater-lowell-school-committee-lowell",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+          "divisionVintage": "2026",
+          "title": "Greater Lowell Regional School Committee — Lowell (4 years)",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Districtwide electorate of Lowell,Dracut,Dunstable,Tyngsborough; Lowell is residency designation. Two positions, three named printed candidates; source capitalization McCARRON retained.",
+          "provenance": {
+            "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+            "sourceOrg": "Town of Dracut Town Clerk",
+            "collectedAt": "2026-11-03T04:24:01.106654+00:00",
+            "verifiedAt": "2026-11-03T04:24:01.106654+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) LOWELL\nVote for not more than TWO\nRALPH RICHARD HOGAN\nCandidate for Re-election\nBRADY OWEN McCARRON\nANTHONY ROBERT MILISCI\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-greater-lowell-school-committee-tyngsborough",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+          "divisionVintage": "2026",
+          "title": "Greater Lowell Regional School Committee — Tyngsborough (4 years)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Districtwide electorate of Lowell,Dracut,Dunstable,Tyngsborough; Tyngsborough is residency designation. All4 whole-municipality reader memberships supplied through districtMemberships.",
+          "provenance": {
+            "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+            "sourceOrg": "Town of Dracut Town Clerk",
+            "collectedAt": "2026-11-03T04:24:01.106654+00:00",
+            "verifiedAt": "2026-11-03T04:24:01.106654+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) TYNGSBOROUGH Vote for not more than ONE\nCAROL CHISOLM\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        }
+      ],
+      "heldContests": [
+        {
+          "id": "ma-cx-local-2026-greater-lowell-school-committee-dunstable",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+          "title": "Greater Lowell Regional School Committee — Dunstable (4 years)",
+          "provenance": {
+            "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+            "sourceOrg": "Town of Dracut Town Clerk",
+            "collectedAt": "2026-11-03T04:24:01.106654+00:00",
+            "verifiedAt": "2026-11-03T04:24:01.106654+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) DUNSTABLE\nVote for not more than ONE\nWRITE-IN SPACE ONLY"
+          },
+          "reason": "The current official November3,2026 sample prints only WRITE-IN SPACE ONLY for this Dunstable residency field and no named candidate. Named declared write-in certification has not been acquired. This real election field is held pending a supported named choice or explicit write-in representation; no generic person or no-election claim is added."
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ma-cx-local-2026-district-attorney-northern:marian-t-ryan",
+          "contestId": "ma-cx-local-2026-district-attorney-northern",
+          "givenName": "",
+          "familyName": "MARIAN T. RYAN",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+            "sourceOrg": "Town of Reading Town Clerk",
+            "collectedAt": "2026-11-03T04:25:09.280370+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.280370+00:00",
+            "quote": "DISTRICT ATTORNEY\nNORTHERN DISTRICT\nVote for not more than ONE\nMARIAN T. RYAN\nDemocratic\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-middlesex-register-of-probate:tara-e-decristofaro",
+          "contestId": "ma-cx-local-2026-middlesex-register-of-probate",
+          "givenName": "",
+          "familyName": "TARA E. DeCRISTOFARO",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+            "sourceOrg": "Town of Reading Town Clerk",
+            "collectedAt": "2026-11-03T04:25:09.280370+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.280370+00:00",
+            "quote": "REGISTER OF PROBATE\nMIDDLESEX COUNTY\nVote for not more than ONE\nTARA E. DeCRISTOFARO\nDemocratic\nCandidate for Re-election\nTARA MARTORELLA\nJustice for All\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-middlesex-register-of-probate:tara-martorella",
+          "contestId": "ma-cx-local-2026-middlesex-register-of-probate",
+          "givenName": "",
+          "familyName": "TARA MARTORELLA",
+          "partyLabel": "Justice for All",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+            "sourceOrg": "Town of Reading Town Clerk",
+            "collectedAt": "2026-11-03T04:25:09.280370+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.280370+00:00",
+            "quote": "REGISTER OF PROBATE\nMIDDLESEX COUNTY\nVote for not more than ONE\nTARA E. DeCRISTOFARO\nDemocratic\nCandidate for Re-election\nTARA MARTORELLA\nJustice for All\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy:james-bancroft-perry",
+          "contestId": "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy",
+          "givenName": "",
+          "familyName": "JAMES BANCROFT PERRY",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+            "sourceOrg": "Town of Reading Town Clerk",
+            "collectedAt": "2026-11-03T04:25:09.280370+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.280370+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nNORTHEASTERN METROPOLITAN\n(TO FILL VACANCY) MALDEN Vote for not more than ONE\nJAMES BANCROFT PERRY\nSEAN M. SALAZAR\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy:sean-m-salazar",
+          "contestId": "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy",
+          "givenName": "",
+          "familyName": "SEAN M. SALAZAR",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+            "sourceOrg": "Town of Reading Town Clerk",
+            "collectedAt": "2026-11-03T04:25:09.280370+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.280370+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nNORTHEASTERN METROPOLITAN\n(TO FILL VACANCY) MALDEN Vote for not more than ONE\nJAMES BANCROFT PERRY\nSEAN M. SALAZAR\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-greater-lowell-school-committee-dracut:matthew-j-sheehan",
+          "contestId": "ma-cx-local-2026-greater-lowell-school-committee-dracut",
+          "givenName": "",
+          "familyName": "MATTHEW J. SHEEHAN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+            "sourceOrg": "Town of Dracut Town Clerk",
+            "collectedAt": "2026-11-03T04:24:01.106654+00:00",
+            "verifiedAt": "2026-11-03T04:24:01.106654+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) DRACUT\nVote for not more than ONE\nMATTHEW J. SHEEHAN\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-greater-lowell-school-committee-lowell:ralph-richard-hogan",
+          "contestId": "ma-cx-local-2026-greater-lowell-school-committee-lowell",
+          "givenName": "",
+          "familyName": "RALPH RICHARD HOGAN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+            "sourceOrg": "Town of Dracut Town Clerk",
+            "collectedAt": "2026-11-03T04:24:01.106654+00:00",
+            "verifiedAt": "2026-11-03T04:24:01.106654+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) LOWELL\nVote for not more than TWO\nRALPH RICHARD HOGAN\nCandidate for Re-election\nBRADY OWEN McCARRON\nANTHONY ROBERT MILISCI\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-greater-lowell-school-committee-lowell:brady-owen-mccarron",
+          "contestId": "ma-cx-local-2026-greater-lowell-school-committee-lowell",
+          "givenName": "",
+          "familyName": "BRADY OWEN McCARRON",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+            "sourceOrg": "Town of Dracut Town Clerk",
+            "collectedAt": "2026-11-03T04:24:01.106654+00:00",
+            "verifiedAt": "2026-11-03T04:24:01.106654+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) LOWELL\nVote for not more than TWO\nRALPH RICHARD HOGAN\nCandidate for Re-election\nBRADY OWEN McCARRON\nANTHONY ROBERT MILISCI\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-greater-lowell-school-committee-lowell:anthony-robert-milisci",
+          "contestId": "ma-cx-local-2026-greater-lowell-school-committee-lowell",
+          "givenName": "",
+          "familyName": "ANTHONY ROBERT MILISCI",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+            "sourceOrg": "Town of Dracut Town Clerk",
+            "collectedAt": "2026-11-03T04:24:01.106654+00:00",
+            "verifiedAt": "2026-11-03T04:24:01.106654+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) LOWELL\nVote for not more than TWO\nRALPH RICHARD HOGAN\nCandidate for Re-election\nBRADY OWEN McCARRON\nANTHONY ROBERT MILISCI\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-greater-lowell-school-committee-tyngsborough:carol-chisolm",
+          "contestId": "ma-cx-local-2026-greater-lowell-school-committee-tyngsborough",
+          "givenName": "",
+          "familyName": "CAROL CHISOLM",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+            "sourceOrg": "Town of Dracut Town Clerk",
+            "collectedAt": "2026-11-03T04:24:01.106654+00:00",
+            "verifiedAt": "2026-11-03T04:24:01.106654+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) TYNGSBOROUGH Vote for not more than ONE\nCAROL CHISOLM\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "text": "Middlesex local candidate packet:7 complete printed office fields,10 named candidates, including Northern District Attorney,county Register of Probate,Northeast Metro Malden vacancy,and4 Greater Lowell residency fields. Dunstable field has0 named printed candidates; a blank write-in line is not a person. Exact official districtwide regional electorate is preserved; this packet is partial municipal/style coverage, not a54-municipality completeness claim.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ma/county:middlesex"
+            ]
+          }
+        },
+        {
+          "text": "Named declared write-in certifications have not been acquired. candidateListComplete describes the complete printed official specimen candidate block only. A generic blank WRITE-IN SPACE ONLY line does not identify a candidate.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ma/county:middlesex",
+              "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+              "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district"
+            ]
+          }
+        },
+        {
+          "text": "Two precise regional school district identities are connected to16 existing whole-municipality COUSUB divisions through districtMemberships. Northeast Metro uses all12 member cities/towns across Middlesex,Essex,Suffolk counties; Greater Lowell uses its4 whole member municipalities. Agreement/charter and current ballots establish districtwide voting; residency seats do not narrow the voting electorate. No new polygon or county fallback is used.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+              "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district"
+            ]
+          }
+        }
+      ],
+      "districtMemberships": [
+        {
+          "id": "ma-cx-local-2026-northeast-metro-member-chelsea",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:suffolk/place:chelsea_city",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://ecode360.com/10398016",
+            "sourceOrg": "Town of North Reading — Municipal Code Chapter550 §550-1",
+            "collectedAt": "2026-11-03T04:25:09.373572+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.373572+00:00",
+            "quote": "This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703). In consideration of the mutual promises herein contained, it is hereby agreed as follows: SECTION I. The Regional District School Committee (A) Composition. Reference to Non-Accepting Municipalities The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement. (B) Initial Committee Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified. (C) Elected Members 1. At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-member-malden",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:malden_city",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://ecode360.com/10398016",
+            "sourceOrg": "Town of North Reading — Municipal Code Chapter550 §550-1",
+            "collectedAt": "2026-11-03T04:25:09.373572+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.373572+00:00",
+            "quote": "This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703). In consideration of the mutual promises herein contained, it is hereby agreed as follows: SECTION I. The Regional District School Committee (A) Composition. Reference to Non-Accepting Municipalities The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement. (B) Initial Committee Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified. (C) Elected Members 1. At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-member-melrose",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:melrose_city",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://ecode360.com/10398016",
+            "sourceOrg": "Town of North Reading — Municipal Code Chapter550 §550-1",
+            "collectedAt": "2026-11-03T04:25:09.373572+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.373572+00:00",
+            "quote": "This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703). In consideration of the mutual promises herein contained, it is hereby agreed as follows: SECTION I. The Regional District School Committee (A) Composition. Reference to Non-Accepting Municipalities The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement. (B) Initial Committee Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified. (C) Elected Members 1. At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-member-north-reading",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:north_reading_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://ecode360.com/10398016",
+            "sourceOrg": "Town of North Reading — Municipal Code Chapter550 §550-1",
+            "collectedAt": "2026-11-03T04:25:09.373572+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.373572+00:00",
+            "quote": "This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703). In consideration of the mutual promises herein contained, it is hereby agreed as follows: SECTION I. The Regional District School Committee (A) Composition. Reference to Non-Accepting Municipalities The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement. (B) Initial Committee Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified. (C) Elected Members 1. At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-member-reading",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:reading_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://ecode360.com/10398016",
+            "sourceOrg": "Town of North Reading — Municipal Code Chapter550 §550-1",
+            "collectedAt": "2026-11-03T04:25:09.373572+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.373572+00:00",
+            "quote": "This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703). In consideration of the mutual promises herein contained, it is hereby agreed as follows: SECTION I. The Regional District School Committee (A) Composition. Reference to Non-Accepting Municipalities The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement. (B) Initial Committee Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified. (C) Elected Members 1. At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-member-revere",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:suffolk/place:revere_city",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://ecode360.com/10398016",
+            "sourceOrg": "Town of North Reading — Municipal Code Chapter550 §550-1",
+            "collectedAt": "2026-11-03T04:25:09.373572+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.373572+00:00",
+            "quote": "This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703). In consideration of the mutual promises herein contained, it is hereby agreed as follows: SECTION I. The Regional District School Committee (A) Composition. Reference to Non-Accepting Municipalities The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement. (B) Initial Committee Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified. (C) Elected Members 1. At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-member-saugus",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:saugus_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://ecode360.com/10398016",
+            "sourceOrg": "Town of North Reading — Municipal Code Chapter550 §550-1",
+            "collectedAt": "2026-11-03T04:25:09.373572+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.373572+00:00",
+            "quote": "This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703). In consideration of the mutual promises herein contained, it is hereby agreed as follows: SECTION I. The Regional District School Committee (A) Composition. Reference to Non-Accepting Municipalities The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement. (B) Initial Committee Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified. (C) Elected Members 1. At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-member-stoneham",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:stoneham_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://ecode360.com/10398016",
+            "sourceOrg": "Town of North Reading — Municipal Code Chapter550 §550-1",
+            "collectedAt": "2026-11-03T04:25:09.373572+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.373572+00:00",
+            "quote": "This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703). In consideration of the mutual promises herein contained, it is hereby agreed as follows: SECTION I. The Regional District School Committee (A) Composition. Reference to Non-Accepting Municipalities The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement. (B) Initial Committee Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified. (C) Elected Members 1. At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-member-wakefield",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:wakefield_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://ecode360.com/10398016",
+            "sourceOrg": "Town of North Reading — Municipal Code Chapter550 §550-1",
+            "collectedAt": "2026-11-03T04:25:09.373572+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.373572+00:00",
+            "quote": "This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703). In consideration of the mutual promises herein contained, it is hereby agreed as follows: SECTION I. The Regional District School Committee (A) Composition. Reference to Non-Accepting Municipalities The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement. (B) Initial Committee Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified. (C) Elected Members 1. At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-member-winchester",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:winchester_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://ecode360.com/10398016",
+            "sourceOrg": "Town of North Reading — Municipal Code Chapter550 §550-1",
+            "collectedAt": "2026-11-03T04:25:09.373572+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.373572+00:00",
+            "quote": "This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703). In consideration of the mutual promises herein contained, it is hereby agreed as follows: SECTION I. The Regional District School Committee (A) Composition. Reference to Non-Accepting Municipalities The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement. (B) Initial Committee Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified. (C) Elected Members 1. At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-member-winthrop",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:suffolk/place:winthrop_town_city",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://ecode360.com/10398016",
+            "sourceOrg": "Town of North Reading — Municipal Code Chapter550 §550-1",
+            "collectedAt": "2026-11-03T04:25:09.373572+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.373572+00:00",
+            "quote": "This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703). In consideration of the mutual promises herein contained, it is hereby agreed as follows: SECTION I. The Regional District School Committee (A) Composition. Reference to Non-Accepting Municipalities The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement. (B) Initial Committee Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified. (C) Elected Members 1. At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-northeast-metro-member-woburn",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:woburn_city",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://ecode360.com/10398016",
+            "sourceOrg": "Town of North Reading — Municipal Code Chapter550 §550-1",
+            "collectedAt": "2026-11-03T04:25:09.373572+00:00",
+            "verifiedAt": "2026-11-03T04:25:09.373572+00:00",
+            "quote": "This agreement is entered into pursuant to Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 by and among the cities of Chelsea, Malden, Melrose, Revere and Woburn, and the towns of North Reading, Reading, Saugus, Stoneham, Wakefield, Winchester and Winthrop (or by and among any two or more of said cities and any two or more of said towns as shall accept said Chapter 703). In consideration of the mutual promises herein contained, it is hereby agreed as follows: SECTION I. The Regional District School Committee (A) Composition. Reference to Non-Accepting Municipalities The powers and duties of the regional school district shall be vested in and exercised by a regional district school committee hereinafter sometimes referred to as the Committee. The Committee shall consist of one member from each member municipality. Members shall be elected except as provided in subsection I(B). All members shall serve until their respective successors are elected and qualified. Any references in this agreement to any municipality which does not accept the provisions of Chapter 703 of the Acts of 1962 as amended by Chapter 682 of the Acts of 1963 shall be deemed to be stricken from this agreement. (B) Initial Committee Within ten days after the establishment of the regional school district, the Mayor of each member city and the moderator of each member town shall appoint one member to serve on the Committee. Each of the members so appointed shall have been a member of the regional school district planning board which submitted this agreement if such a person is available and willing to serve. The members so appointed shall serve until their respective successors are elected as provided in subsection I(C) and qualified. (C) Elected Members 1. At the next biennial state election (first election held November 1996) when the District qualifies on the ballot pursuant to state election law and every fourth year thereafter, members of the Northeast Metropolitan Regional Vocational School Committee shall be elected by all voters in said District at district-wide, at-large elections with residency requirements. One member shall be a resident of each city or town."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-greater-lowell-member-dracut",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:dracut_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+          "provenance": {
+            "sourceUrl": "https://resources.finalsite.net/images/v1722006508/gltechorg/dbzkhks4ed71apy2ffth/EstablishmentOfVocationalSchool.pdf",
+            "sourceOrg": "Greater Lowell Regional Vocational Technical School District",
+            "collectedAt": "2026-11-03T04:26:36.042211+00:00",
+            "verifiedAt": "2026-11-03T04:26:36.042211+00:00",
+            "quote": "CITY OF LOWELL, \n) \nPlalntlfl' \n) \nv. \n) \n) \nGREATER LOWELL TECHNICAL HIGH ) \nSCHOOL, TOWN OF DRACUT, TOWN \n) \nOF TYNGSBOROUGH, AND TOWN OF \n) \nDUNSTABLE, \n) \nDefendants \n) \n11 flf e Sib CONSENT DECREE \nC.A. No.1:14-CV-12664-IT\nUpon agreement of the Parties after mediation in the above captioned matter, it is \nORDERED and ADJUDGED that: \n1.\nThe following language shall be stricken from Paragraph 1 of Section l(C) of the Greater\nLowell Technical High School's (\"GLTHS\") May 11, 1967 Agreement with Respect to\nthe Establishment of a Vocational Regional School District (Agreement):\na.\nThereafter, in every year in which the tenn of office of a member expires, the\nmember town concerned shall, at its annual town election, elect member for a\ntenn of three years. (Section 1 (C), Paragraph 1, Line 4-7);\nb.\n. .. and thereafter the said city of Lowell, at every biennial election, shall elect a\nmember or members for a tenn of four years. (Section l(C), Paragraph 1, Line 16-\n18).\n2.\nThe following language shall be added to Section 1 (C) of the Agreement, as the newly\ndesignated Paragraph 2:\n\n)..' \nCase 1:14-cv-12664-IT Document 42 Filed 06/03/15 Page 2 of 4 \na.\nMembers elected by the towns of Dracut, Tyngsborough, and Dunstable to the\nschool committee in the 2015 town elections shall serve until the biennial election\nof November 2018. Thereafter, all members of the regional district school\ncommittee shall be elected through district-wide elections to be held at the\nbiennial state election. Candidates must be a resident of their member\nmunicipality in order to hold that municipality's seat with the regional district\nschool committee. These election procedures shall be in accordance with M.G.L.\nc. 71, § 14E(3). All members of the school committee shall serve four year terms."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-greater-lowell-member-dunstable",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:dunstable_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+          "provenance": {
+            "sourceUrl": "https://resources.finalsite.net/images/v1722006508/gltechorg/dbzkhks4ed71apy2ffth/EstablishmentOfVocationalSchool.pdf",
+            "sourceOrg": "Greater Lowell Regional Vocational Technical School District",
+            "collectedAt": "2026-11-03T04:26:36.042211+00:00",
+            "verifiedAt": "2026-11-03T04:26:36.042211+00:00",
+            "quote": "CITY OF LOWELL, \n) \nPlalntlfl' \n) \nv. \n) \n) \nGREATER LOWELL TECHNICAL HIGH ) \nSCHOOL, TOWN OF DRACUT, TOWN \n) \nOF TYNGSBOROUGH, AND TOWN OF \n) \nDUNSTABLE, \n) \nDefendants \n) \n11 flf e Sib CONSENT DECREE \nC.A. No.1:14-CV-12664-IT\nUpon agreement of the Parties after mediation in the above captioned matter, it is \nORDERED and ADJUDGED that: \n1.\nThe following language shall be stricken from Paragraph 1 of Section l(C) of the Greater\nLowell Technical High School's (\"GLTHS\") May 11, 1967 Agreement with Respect to\nthe Establishment of a Vocational Regional School District (Agreement):\na.\nThereafter, in every year in which the tenn of office of a member expires, the\nmember town concerned shall, at its annual town election, elect member for a\ntenn of three years. (Section 1 (C), Paragraph 1, Line 4-7);\nb.\n. .. and thereafter the said city of Lowell, at every biennial election, shall elect a\nmember or members for a tenn of four years. (Section l(C), Paragraph 1, Line 16-\n18).\n2.\nThe following language shall be added to Section 1 (C) of the Agreement, as the newly\ndesignated Paragraph 2:\n\n)..' \nCase 1:14-cv-12664-IT Document 42 Filed 06/03/15 Page 2 of 4 \na.\nMembers elected by the towns of Dracut, Tyngsborough, and Dunstable to the\nschool committee in the 2015 town elections shall serve until the biennial election\nof November 2018. Thereafter, all members of the regional district school\ncommittee shall be elected through district-wide elections to be held at the\nbiennial state election. Candidates must be a resident of their member\nmunicipality in order to hold that municipality's seat with the regional district\nschool committee. These election procedures shall be in accordance with M.G.L.\nc. 71, § 14E(3). All members of the school committee shall serve four year terms."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-greater-lowell-member-lowell",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:lowell_city",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+          "provenance": {
+            "sourceUrl": "https://resources.finalsite.net/images/v1722006508/gltechorg/dbzkhks4ed71apy2ffth/EstablishmentOfVocationalSchool.pdf",
+            "sourceOrg": "Greater Lowell Regional Vocational Technical School District",
+            "collectedAt": "2026-11-03T04:26:36.042211+00:00",
+            "verifiedAt": "2026-11-03T04:26:36.042211+00:00",
+            "quote": "CITY OF LOWELL, \n) \nPlalntlfl' \n) \nv. \n) \n) \nGREATER LOWELL TECHNICAL HIGH ) \nSCHOOL, TOWN OF DRACUT, TOWN \n) \nOF TYNGSBOROUGH, AND TOWN OF \n) \nDUNSTABLE, \n) \nDefendants \n) \n11 flf e Sib CONSENT DECREE \nC.A. No.1:14-CV-12664-IT\nUpon agreement of the Parties after mediation in the above captioned matter, it is \nORDERED and ADJUDGED that: \n1.\nThe following language shall be stricken from Paragraph 1 of Section l(C) of the Greater\nLowell Technical High School's (\"GLTHS\") May 11, 1967 Agreement with Respect to\nthe Establishment of a Vocational Regional School District (Agreement):\na.\nThereafter, in every year in which the tenn of office of a member expires, the\nmember town concerned shall, at its annual town election, elect member for a\ntenn of three years. (Section 1 (C), Paragraph 1, Line 4-7);\nb.\n. .. and thereafter the said city of Lowell, at every biennial election, shall elect a\nmember or members for a tenn of four years. (Section l(C), Paragraph 1, Line 16-\n18).\n2.\nThe following language shall be added to Section 1 (C) of the Agreement, as the newly\ndesignated Paragraph 2:\n\n)..' \nCase 1:14-cv-12664-IT Document 42 Filed 06/03/15 Page 2 of 4 \na.\nMembers elected by the towns of Dracut, Tyngsborough, and Dunstable to the\nschool committee in the 2015 town elections shall serve until the biennial election\nof November 2018. Thereafter, all members of the regional district school\ncommittee shall be elected through district-wide elections to be held at the\nbiennial state election. Candidates must be a resident of their member\nmunicipality in order to hold that municipality's seat with the regional district\nschool committee. These election procedures shall be in accordance with M.G.L.\nc. 71, § 14E(3). All members of the school committee shall serve four year terms."
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-greater-lowell-member-tyngsborough",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:tyngsborough_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+          "provenance": {
+            "sourceUrl": "https://resources.finalsite.net/images/v1722006508/gltechorg/dbzkhks4ed71apy2ffth/EstablishmentOfVocationalSchool.pdf",
+            "sourceOrg": "Greater Lowell Regional Vocational Technical School District",
+            "collectedAt": "2026-11-03T04:26:36.042211+00:00",
+            "verifiedAt": "2026-11-03T04:26:36.042211+00:00",
+            "quote": "CITY OF LOWELL, \n) \nPlalntlfl' \n) \nv. \n) \n) \nGREATER LOWELL TECHNICAL HIGH ) \nSCHOOL, TOWN OF DRACUT, TOWN \n) \nOF TYNGSBOROUGH, AND TOWN OF \n) \nDUNSTABLE, \n) \nDefendants \n) \n11 flf e Sib CONSENT DECREE \nC.A. No.1:14-CV-12664-IT\nUpon agreement of the Parties after mediation in the above captioned matter, it is \nORDERED and ADJUDGED that: \n1.\nThe following language shall be stricken from Paragraph 1 of Section l(C) of the Greater\nLowell Technical High School's (\"GLTHS\") May 11, 1967 Agreement with Respect to\nthe Establishment of a Vocational Regional School District (Agreement):\na.\nThereafter, in every year in which the tenn of office of a member expires, the\nmember town concerned shall, at its annual town election, elect member for a\ntenn of three years. (Section 1 (C), Paragraph 1, Line 4-7);\nb.\n. .. and thereafter the said city of Lowell, at every biennial election, shall elect a\nmember or members for a tenn of four years. (Section l(C), Paragraph 1, Line 16-\n18).\n2.\nThe following language shall be added to Section 1 (C) of the Agreement, as the newly\ndesignated Paragraph 2:\n\n)..' \nCase 1:14-cv-12664-IT Document 42 Filed 06/03/15 Page 2 of 4 \na.\nMembers elected by the towns of Dracut, Tyngsborough, and Dunstable to the\nschool committee in the 2015 town elections shall serve until the biennial election\nof November 2018. Thereafter, all members of the regional district school\ncommittee shall be elected through district-wide elections to be held at the\nbiennial state election. Candidates must be a resident of their member\nmunicipality in order to hold that municipality's seat with the regional district\nschool committee. These election procedures shall be in accordance with M.G.L.\nc. 71, § 14E(3). All members of the school committee shall serve four year terms."
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "memberships": [
+    {
+      "municipality": "Chelsea",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:suffolk/place:chelsea_city",
+      "cousubGeoid": "2502513205",
+      "registeredName": "Chelsea city",
+      "membershipId": "ma-cx-local-2026-northeast-metro-member-chelsea",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "legalSourceUrl": "https://ecode360.com/10398016",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "municipality": "Malden",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:malden_city",
+      "cousubGeoid": "2501737875",
+      "registeredName": "Malden city",
+      "membershipId": "ma-cx-local-2026-northeast-metro-member-malden",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "legalSourceUrl": "https://ecode360.com/10398016",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "municipality": "Melrose",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:melrose_city",
+      "cousubGeoid": "2501740115",
+      "registeredName": "Melrose city",
+      "membershipId": "ma-cx-local-2026-northeast-metro-member-melrose",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "legalSourceUrl": "https://ecode360.com/10398016",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "municipality": "North Reading",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:north_reading_town",
+      "cousubGeoid": "2501748955",
+      "registeredName": "North Reading town",
+      "membershipId": "ma-cx-local-2026-northeast-metro-member-north-reading",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "legalSourceUrl": "https://ecode360.com/10398016",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "municipality": "Reading",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:reading_town",
+      "cousubGeoid": "2501756130",
+      "registeredName": "Reading town",
+      "membershipId": "ma-cx-local-2026-northeast-metro-member-reading",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "legalSourceUrl": "https://ecode360.com/10398016",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "municipality": "Revere",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:suffolk/place:revere_city",
+      "cousubGeoid": "2502556585",
+      "registeredName": "Revere city",
+      "membershipId": "ma-cx-local-2026-northeast-metro-member-revere",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "legalSourceUrl": "https://ecode360.com/10398016",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "municipality": "Saugus",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:essex/place:saugus_town",
+      "cousubGeoid": "2500960015",
+      "registeredName": "Saugus town",
+      "membershipId": "ma-cx-local-2026-northeast-metro-member-saugus",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "legalSourceUrl": "https://ecode360.com/10398016",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "municipality": "Stoneham",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:stoneham_town",
+      "cousubGeoid": "2501767665",
+      "registeredName": "Stoneham town",
+      "membershipId": "ma-cx-local-2026-northeast-metro-member-stoneham",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "legalSourceUrl": "https://ecode360.com/10398016",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "municipality": "Wakefield",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:wakefield_town",
+      "cousubGeoid": "2501772215",
+      "registeredName": "Wakefield town",
+      "membershipId": "ma-cx-local-2026-northeast-metro-member-wakefield",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "legalSourceUrl": "https://ecode360.com/10398016",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "municipality": "Winchester",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:winchester_town",
+      "cousubGeoid": "2501780510",
+      "registeredName": "Winchester town",
+      "membershipId": "ma-cx-local-2026-northeast-metro-member-winchester",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "legalSourceUrl": "https://ecode360.com/10398016",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "municipality": "Winthrop",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:suffolk/place:winthrop_town_city",
+      "cousubGeoid": "2502581005",
+      "registeredName": "Winthrop Town city",
+      "membershipId": "ma-cx-local-2026-northeast-metro-member-winthrop",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "legalSourceUrl": "https://ecode360.com/10398016",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "municipality": "Woburn",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:woburn_city",
+      "cousubGeoid": "2501781035",
+      "registeredName": "Woburn city",
+      "membershipId": "ma-cx-local-2026-northeast-metro-member-woburn",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "legalSourceUrl": "https://ecode360.com/10398016",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot"
+    },
+    {
+      "municipality": "Dracut",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:dracut_town",
+      "cousubGeoid": "2501717475",
+      "registeredName": "Dracut town",
+      "membershipId": "ma-cx-local-2026-greater-lowell-member-dracut",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "legalSourceUrl": "https://resources.finalsite.net/images/v1722006508/gltechorg/dbzkhks4ed71apy2ffth/EstablishmentOfVocationalSchool.pdf",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF"
+    },
+    {
+      "municipality": "Dunstable",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:dunstable_town",
+      "cousubGeoid": "2501717825",
+      "registeredName": "Dunstable town",
+      "membershipId": "ma-cx-local-2026-greater-lowell-member-dunstable",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "legalSourceUrl": "https://resources.finalsite.net/images/v1722006508/gltechorg/dbzkhks4ed71apy2ffth/EstablishmentOfVocationalSchool.pdf",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF"
+    },
+    {
+      "municipality": "Lowell",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:lowell_city",
+      "cousubGeoid": "2501737000",
+      "registeredName": "Lowell city",
+      "membershipId": "ma-cx-local-2026-greater-lowell-member-lowell",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "legalSourceUrl": "https://resources.finalsite.net/images/v1722006508/gltechorg/dbzkhks4ed71apy2ffth/EstablishmentOfVocationalSchool.pdf",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF"
+    },
+    {
+      "municipality": "Tyngsborough",
+      "wholeMunicipalityOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:tyngsborough_town",
+      "cousubGeoid": "2501771025",
+      "registeredName": "Tyngsborough town",
+      "membershipId": "ma-cx-local-2026-greater-lowell-member-tyngsborough",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "legalSourceUrl": "https://resources.finalsite.net/images/v1722006508/gltechorg/dbzkhks4ed71apy2ffth/EstablishmentOfVocationalSchool.pdf",
+      "wholeMunicipalityEvidence": "Agreement enters with named city/town as member and provides districtwide elections. Current2026 original regional ballot confirms residency-designated fields voted across district; independent current official member list corroborates current municipalities.",
+      "currentBallotSource": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF"
+    }
+  ],
+  "registryFile": "/workspace/meanwhile/data/derived/registration/ma.json",
+  "registrySha256": "6195a88fc4b78db055f691479223c9255988550484afd9a66a91387bc2411a16"
+}

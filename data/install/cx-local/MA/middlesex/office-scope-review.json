@@ -1,0 +1,118 @@
+[
+  {
+    "contestId": "ma-cx-local-2026-district-attorney-northern",
+    "sourceLabel": "reading-sample",
+    "physicalPage": 1,
+    "quote": "DISTRICT ATTORNEY\nNORTHERN DISTRICT\nVote for not more than ONE\nMARIAN T. RYAN\nDemocratic\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "printedNames": [
+      "MARIAN T. RYAN"
+    ],
+    "printedPartyLabels": [
+      "Democratic"
+    ],
+    "voteFor": 1,
+    "ocdId": "ocd-division/country:us/state:ma/county:middlesex",
+    "candidateListCompleteScope": "All named choices printed in current official sample office block; separate named declared write-in certification not acquired.",
+    "addressHandling": "Only complete filed residential address lines removed from this reader excerpt; original raw PDF and full native extraction retained separately."
+  },
+  {
+    "contestId": "ma-cx-local-2026-middlesex-register-of-probate",
+    "sourceLabel": "reading-sample",
+    "physicalPage": 1,
+    "quote": "REGISTER OF PROBATE\nMIDDLESEX COUNTY\nVote for not more than ONE\nTARA E. DeCRISTOFARO\nDemocratic\nCandidate for Re-election\nTARA MARTORELLA\nJustice for All\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "printedNames": [
+      "TARA E. DeCRISTOFARO",
+      "TARA MARTORELLA"
+    ],
+    "printedPartyLabels": [
+      "Democratic",
+      "Justice for All"
+    ],
+    "voteFor": 1,
+    "ocdId": "ocd-division/country:us/state:ma/county:middlesex",
+    "candidateListCompleteScope": "All named choices printed in current official sample office block; separate named declared write-in certification not acquired.",
+    "addressHandling": "Only complete filed residential address lines removed from this reader excerpt; original raw PDF and full native extraction retained separately."
+  },
+  {
+    "contestId": "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy",
+    "sourceLabel": "reading-sample",
+    "physicalPage": 1,
+    "quote": "REGIONAL SCHOOL COMMITTEE\nNORTHEASTERN METROPOLITAN\n(TO FILL VACANCY) MALDEN Vote for not more than ONE\nJAMES BANCROFT PERRY\nSEAN M. SALAZAR\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "printedNames": [
+      "JAMES BANCROFT PERRY",
+      "SEAN M. SALAZAR"
+    ],
+    "printedPartyLabels": [
+      null,
+      null
+    ],
+    "voteFor": 1,
+    "ocdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+    "candidateListCompleteScope": "All named choices printed in current official sample office block; separate named declared write-in certification not acquired.",
+    "addressHandling": "Only complete filed residential address lines removed from this reader excerpt; original raw PDF and full native extraction retained separately."
+  },
+  {
+    "contestId": "ma-cx-local-2026-greater-lowell-school-committee-dracut",
+    "sourceLabel": "dracut-sample",
+    "physicalPage": 1,
+    "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) DRACUT\nVote for not more than ONE\nMATTHEW J. SHEEHAN\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "printedNames": [
+      "MATTHEW J. SHEEHAN"
+    ],
+    "printedPartyLabels": [
+      null
+    ],
+    "voteFor": 1,
+    "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+    "candidateListCompleteScope": "All named choices printed in current official sample office block; separate named declared write-in certification not acquired.",
+    "addressHandling": "Only complete filed residential address lines removed from this reader excerpt; original raw PDF and full native extraction retained separately."
+  },
+  {
+    "contestId": "ma-cx-local-2026-greater-lowell-school-committee-dunstable",
+    "sourceLabel": "dracut-sample",
+    "physicalPage": 1,
+    "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) DUNSTABLE\nVote for not more than ONE\nWRITE-IN SPACE ONLY",
+    "printedNames": [],
+    "printedPartyLabels": [],
+    "voteFor": 1,
+    "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+    "candidateListCompleteScope": "All named choices printed in current official sample office block; separate named declared write-in certification not acquired.",
+    "addressHandling": "Only complete filed residential address lines removed from this reader excerpt; original raw PDF and full native extraction retained separately."
+  },
+  {
+    "contestId": "ma-cx-local-2026-greater-lowell-school-committee-lowell",
+    "sourceLabel": "dracut-sample",
+    "physicalPage": 1,
+    "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) LOWELL\nVote for not more than TWO\nRALPH RICHARD HOGAN\nCandidate for Re-election\nBRADY OWEN McCARRON\nANTHONY ROBERT MILISCI\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY\nWRITE-IN SPACE ONLY",
+    "printedNames": [
+      "RALPH RICHARD HOGAN",
+      "BRADY OWEN McCARRON",
+      "ANTHONY ROBERT MILISCI"
+    ],
+    "printedPartyLabels": [
+      null,
+      null,
+      null
+    ],
+    "voteFor": 2,
+    "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+    "candidateListCompleteScope": "All named choices printed in current official sample office block; separate named declared write-in certification not acquired.",
+    "addressHandling": "Only complete filed residential address lines removed from this reader excerpt; original raw PDF and full native extraction retained separately."
+  },
+  {
+    "contestId": "ma-cx-local-2026-greater-lowell-school-committee-tyngsborough",
+    "sourceLabel": "dracut-sample",
+    "physicalPage": 1,
+    "quote": "REGIONAL SCHOOL COMMITTEE\nGREATER LOWELL\n(4 YEARS) TYNGSBOROUGH Vote for not more than ONE\nCAROL CHISOLM\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "printedNames": [
+      "CAROL CHISOLM"
+    ],
+    "printedPartyLabels": [
+      null
+    ],
+    "voteFor": 1,
+    "ocdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+    "candidateListCompleteScope": "All named choices printed in current official sample office block; separate named declared write-in certification not acquired.",
+    "addressHandling": "Only complete filed residential address lines removed from this reader excerpt; original raw PDF and full native extraction retained separately."
+  }
+]

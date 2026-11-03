@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-11-03T04:43:35.800Z",
+  "state": "MA",
+  "sources": 20,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 33,
+  "newContests": 6,
+  "refreshedContests": 0,
+  "candidacies": 10,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 232,
+  "unrelatedCandidateCoreFieldsPreserved": 304,
+  "unrelatedCandidateAliasEnrichments": 307,
+  "unmatchedReaderDivisionCount": 2,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+    "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+    "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

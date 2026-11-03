@@ -1,0 +1,126 @@
+{
+  "status": "PASS",
+  "method": "Actual divisionsWithDistrictMemberships() evaluated for all16 existing COUSUB members; each receives exactly its appropriate regional named contest fields. Billerica negative control receives neither region. Dunstable blank-only field remains held.",
+  "results": [
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:suffolk/place:chelsea_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:malden_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:melrose_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:north_reading_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:reading_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:suffolk/place:revere_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:saugus_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:stoneham_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:wakefield_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:winchester_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:suffolk/place:winthrop_town_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:woburn_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:dracut_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-greater-lowell-school-committee-dracut",
+        "ma-cx-local-2026-greater-lowell-school-committee-lowell",
+        "ma-cx-local-2026-greater-lowell-school-committee-tyngsborough"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:dunstable_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-greater-lowell-school-committee-dracut",
+        "ma-cx-local-2026-greater-lowell-school-committee-lowell",
+        "ma-cx-local-2026-greater-lowell-school-committee-tyngsborough"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:lowell_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-greater-lowell-school-committee-dracut",
+        "ma-cx-local-2026-greater-lowell-school-committee-lowell",
+        "ma-cx-local-2026-greater-lowell-school-committee-tyngsborough"
+      ]
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:tyngsborough_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:greater_lowell_regional_vocational_technical_school_district",
+      "selectedNamedContestIds": [
+        "ma-cx-local-2026-greater-lowell-school-committee-dracut",
+        "ma-cx-local-2026-greater-lowell-school-committee-lowell",
+        "ma-cx-local-2026-greater-lowell-school-committee-tyngsborough"
+      ]
+    }
+  ]
+}

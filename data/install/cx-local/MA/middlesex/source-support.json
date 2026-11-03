@@ -1,0 +1,287 @@
+[
+  {
+    "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+    "finalUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+    "sourceCheckedAt": "2026-11-03T04:25:09.280370+00:00",
+    "sha256": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceFile": "sources/6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c.source",
+    "excerptFile": "sources/edc0959bd2f8d5a26082898ff3e0aac86a39de9c8b8e1066cacc2fbbb4f792bf.txt",
+    "excerptSha256": "edc0959bd2f8d5a26082898ff3e0aac86a39de9c8b8e1066cacc2fbbb4f792bf",
+    "fullTextFile": "sources/ab4b70baa02cd62f290abfe1fb8b7593c3734a3d073283b09c8bc9c9375dc9d6.native.txt",
+    "fullTextSha256": "ab4b70baa02cd62f290abfe1fb8b7593c3734a3d073283b09c8bc9c9375dc9d6",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "sha256 fingerprints original unmodified PDF bytes. excerptSha256 fingerprints saved native office extraction after deletion of complete candidate residential address lines. fullTextSha256 fingerprints unredacted native extraction.",
+    "evidence": "Complete current official November3,2026 sample PDF, all pages retained and local office blocks checked. Reading contains two posted precinct group styles with identical three local candidate blocks. English printed names, case, party wording, vote limits and all named candidates retained exactly. Reader quotes come from privacy-filtered native text: only candidate residential address lines deleted; original bytes and complete native text are separately hashed. Blank write-in slots are not people and are distinct from named declared write-ins.",
+    "visualReview": {
+      "checked": "Original first-page complete candidate office blocks visually read; saved full-page render and office crop available in scratch. Native office text compared with independent current municipal samples.",
+      "scratchRender": "/workspace/cx-local-work/middlesex/reading-page1.png"
+    },
+    "officialLinkingPage": {
+      "url": "https://www.readingma.gov/574/Sample-Ballots",
+      "file": "sources/e37dd2b22b8fb50c66d22fd29dab9c6c39dba8e45703f5ff7bc325f4460cc8fc.source",
+      "sha256": "e37dd2b22b8fb50c66d22fd29dab9c6c39dba8e45703f5ff7bc325f4460cc8fc",
+      "sourceCheckedAt": "2026-11-03T04:25:09.378879+00:00"
+    }
+  },
+  {
+    "sourceUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+    "finalUrl": "https://www.dracutma.gov/DocumentCenter/View/6418/STATE-ELECTION-SAMPLE-BALLOT-NOVEMBER-3-2026-SAMPLEpdf-PDF",
+    "sourceCheckedAt": "2026-11-03T04:24:01.106654+00:00",
+    "sha256": "5bfb4241582a612e7c223e62ae758bcf889329b44891100f13d5ae8e7523451d",
+    "sourceFile": "sources/5bfb4241582a612e7c223e62ae758bcf889329b44891100f13d5ae8e7523451d.source",
+    "excerptFile": "sources/ab0855c801fb5b02d1571c49b0985ae718d77a4cb595345f29b867986dc61279.txt",
+    "excerptSha256": "ab0855c801fb5b02d1571c49b0985ae718d77a4cb595345f29b867986dc61279",
+    "fullTextFile": "sources/ad78ddab9f9b0ada6326dc808f57d1732e9430e30e48ef0ffdec75d18abe4fff.native.txt",
+    "fullTextSha256": "ad78ddab9f9b0ada6326dc808f57d1732e9430e30e48ef0ffdec75d18abe4fff",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "sha256 fingerprints original unmodified PDF bytes. excerptSha256 fingerprints saved native office extraction after deletion of complete candidate residential address lines. fullTextSha256 fingerprints unredacted native extraction.",
+    "evidence": "Complete current official November3,2026 Dracut sample PDF, four Greater Lowell regional office blocks including Dunstable write-in-only field read in full. English printed names, case, party wording, vote limits and all named candidates retained exactly. Reader quotes come from privacy-filtered native text: only candidate residential address lines deleted; original bytes and complete native text are separately hashed. Blank write-in slots are not people and are distinct from named declared write-ins.",
+    "visualReview": {
+      "checked": "Original first-page complete candidate office blocks visually read; saved full-page render and office crop available in scratch. Native office text compared with independent current municipal samples.",
+      "scratchRender": "/workspace/cx-local-work/middlesex/dracut-page1.png"
+    },
+    "officialLinkingPage": {
+      "url": "https://www.dracutma.gov/277/Elections-Information",
+      "file": "sources/325b7fbd5bd7452954813e425480dbfa85deb35fe4c7a5a43c0e1f0037a37661.source",
+      "sha256": "325b7fbd5bd7452954813e425480dbfa85deb35fe4c7a5a43c0e1f0037a37661",
+      "sourceCheckedAt": "2026-11-03T04:24:01.106773+00:00"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://cityofmalden.org/DocumentCenter/View/12117/32nd-Middlesex-District-Sample-Ballot-PDF",
+    "finalUrl": "https://cityofmalden.org/DocumentCenter/View/12117/32nd-Middlesex-District-Sample-Ballot-PDF",
+    "sourceCheckedAt": "2026-11-03T04:19:40.112243+00:00",
+    "sha256": "16b817fcfc2f7542efd4c37d9af2ac3fff76c90d0de0688ee0d23a0bf8f1d8a2",
+    "sourceFile": "sources/16b817fcfc2f7542efd4c37d9af2ac3fff76c90d0de0688ee0d23a0bf8f1d8a2.source",
+    "excerptFile": "sources/edc0959bd2f8d5a26082898ff3e0aac86a39de9c8b8e1066cacc2fbbb4f792bf.txt",
+    "excerptSha256": "edc0959bd2f8d5a26082898ff3e0aac86a39de9c8b8e1066cacc2fbbb4f792bf",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Original official Malden32nd-Middlesex style. Visually checked full English local candidate blocks from original first-page high-resolution crop; same five names and party labels as Reading. Image-based PDF; sparse native layer does not supply candidate names. Raw PDF bytes are distinct from saved checked English transcription.",
+    "hashScope": "Raw original PDF hash; separate excerpt hash fingerprints checked English field transcription excluding filed addresses and translations. Not claimed to be native PDF text.",
+    "visualReview": {
+      "scratchCrop": "/workspace/cx-local-work/middlesex/malden-local-crop.png",
+      "checked": "Complete English candidate/name/party/vote block visually read against original PDF first page, independently matched Reading native field extraction."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://cityofmalden.org/DocumentCenter/View/12118/33rd-Middlesex-District-Sample-Ballot-PDF",
+    "finalUrl": "https://cityofmalden.org/DocumentCenter/View/12118/33rd-Middlesex-District-Sample-Ballot-PDF",
+    "sourceCheckedAt": "2026-11-03T04:19:38.994723+00:00",
+    "sha256": "6b72f7a8a1dd3cbf26ca1564e14d735d9f8705475ce90a2ed9da8e3afc266491",
+    "sourceFile": "sources/6b72f7a8a1dd3cbf26ca1564e14d735d9f8705475ce90a2ed9da8e3afc266491.source",
+    "excerptFile": "sources/edc0959bd2f8d5a26082898ff3e0aac86a39de9c8b8e1066cacc2fbbb4f792bf.txt",
+    "excerptSha256": "edc0959bd2f8d5a26082898ff3e0aac86a39de9c8b8e1066cacc2fbbb4f792bf",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Original official Malden33rd-Middlesex style. Visually checked complete first-page English local office blocks against original crop; same complete fields as Reading. Image-based PDF; candidate transcription not misrepresented as native PDF bytes.",
+    "hashScope": "Raw original PDF hash; separate excerpt hash fingerprints checked English field transcription excluding filed addresses and translations. Not claimed to be native PDF text.",
+    "visualReview": {
+      "scratchCrop": "/workspace/cx-local-work/middlesex/malden-sample33-local-crop.png",
+      "checked": "Complete English candidate/name/party/vote block visually read against original PDF first page, independently matched Reading native field extraction."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://cityofmalden.org/DocumentCenter/View/12119/35th-Middlesex-District-Sample-Ballot-PDF",
+    "finalUrl": "https://cityofmalden.org/DocumentCenter/View/12119/35th-Middlesex-District-Sample-Ballot-PDF",
+    "sourceCheckedAt": "2026-11-03T04:19:40.135341+00:00",
+    "sha256": "ed207df2cfed0309084450443045ed3dc72ac1738a527622cfbb0182d5da8e17",
+    "sourceFile": "sources/ed207df2cfed0309084450443045ed3dc72ac1738a527622cfbb0182d5da8e17.source",
+    "excerptFile": "sources/edc0959bd2f8d5a26082898ff3e0aac86a39de9c8b8e1066cacc2fbbb4f792bf.txt",
+    "excerptSha256": "edc0959bd2f8d5a26082898ff3e0aac86a39de9c8b8e1066cacc2fbbb4f792bf",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Original official Malden35th-Middlesex style. Visually checked complete first-page English local office blocks against original crop; same complete fields as Reading.",
+    "hashScope": "Raw original PDF hash; separate excerpt hash fingerprints checked English field transcription excluding filed addresses and translations. Not claimed to be native PDF text.",
+    "visualReview": {
+      "scratchCrop": "/workspace/cx-local-work/middlesex/malden-sample35-local-crop.png",
+      "checked": "Complete English candidate/name/party/vote block visually read against original PDF first page, independently matched Reading native field extraction."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.northreadingma.gov/DocumentCenter/View/7837/11-3-26-State-election-ballotSAMPLE",
+    "finalUrl": "https://www.northreadingma.gov/DocumentCenter/View/7837/11-3-26-State-election-ballotSAMPLE",
+    "sourceCheckedAt": "2026-11-03T04:25:08.654233+00:00",
+    "sha256": "5b1dea6b2ca575566729710b0e59edf6a3232e30343632fa80bc40bbef13f854",
+    "sourceFile": "sources/5b1dea6b2ca575566729710b0e59edf6a3232e30343632fa80bc40bbef13f854.source",
+    "excerptFile": "sources/0d5f466a749880efc353a24b0d84a184aa7a255d78a0a89b7d2542e4da02fa13.txt",
+    "excerptSha256": "0d5f466a749880efc353a24b0d84a184aa7a255d78a0a89b7d2542e4da02fa13",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Original current official North Reading sample corroborates districtwide Northeast Metro Malden residency seat, its two named candidates, and county fields. No state or prepared measure data refreshed."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://s3.amazonaws.com/somervillema-live/s3fs-public/20261103-sample-ballot-11-12-13-14-21a.pdf",
+    "finalUrl": "https://s3.amazonaws.com/somervillema-live/s3fs-public/20261103-sample-ballot-11-12-13-14-21a.pdf",
+    "sourceCheckedAt": "2026-11-03T04:19:37.705670+00:00",
+    "sha256": "c84fd894c1de654fd57c12523b54b5b81b3dc3c9c56c4799f95df6dc9d64cdd3",
+    "sourceFile": "sources/c84fd894c1de654fd57c12523b54b5b81b3dc3c9c56c4799f95df6dc9d64cdd3.source",
+    "excerptFile": "sources/31ef7441a5cd0018743d5bf75567f9b94fe485cef625f39ad17c3c288625f3ba.txt",
+    "excerptSha256": "31ef7441a5cd0018743d5bf75567f9b94fe485cef625f39ad17c3c288625f3ba",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Original current official Somerville first posted precinct-group sample corroborates county District Attorney and both Probate candidates; no regional school field on reviewed style. Other Somerville styles remain unreviewed."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://billerica.gov/DocumentCenter/View/14723/Specimen-Ballot---Precincts-1-2-6-7-8-11--12",
+    "finalUrl": "https://billerica.gov/DocumentCenter/View/14723/Specimen-Ballot---Precincts-1-2-6-7-8-11--12",
+    "sourceCheckedAt": "2026-11-03T04:25:40.904314+00:00",
+    "sha256": "1f4fd533faa9dc18c5e671be1bbeda46eccd91b8e918ca8e54fa4e258beb4968",
+    "sourceFile": "sources/1f4fd533faa9dc18c5e671be1bbeda46eccd91b8e918ca8e54fa4e258beb4968.source",
+    "excerptFile": "sources/660f148c8cd400bd85d13a26a8ce3391ead432efef36004a77c2c33c0801ebc2.txt",
+    "excerptSha256": "660f148c8cd400bd85d13a26a8ce3391ead432efef36004a77c2c33c0801ebc2",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Original current official Billerica sample for precincts1,2,6,7,8,11,12 corroborates two county fields; no regional school candidate block on this reviewed style. Other Billerica style remains unreviewed."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://lowellma.gov/DocumentCenter/View/36602/2026-State-Election-Ballot-388-WD-1-WD-2-WD-4-PCT-4",
+    "finalUrl": "https://lowellma.gov/DocumentCenter/View/36602/2026-State-Election-Ballot-388-WD-1-WD-2-WD-4-PCT-4",
+    "sourceCheckedAt": "2026-11-03T04:26:35.120105+00:00",
+    "sha256": "c17337ddb03cc6418ae33d66b2ef497c133da89bec75ed8d753906fe5a627129",
+    "sourceFile": "sources/c17337ddb03cc6418ae33d66b2ef497c133da89bec75ed8d753906fe5a627129.source",
+    "excerptFile": "sources/b8db23e4fd21f347d12c67769402b67ff09a45586930855c67236aebd45f7f59.txt",
+    "excerptSha256": "b8db23e4fd21f347d12c67769402b67ff09a45586930855c67236aebd45f7f59",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Current official Lowell388 sample, all eight pages captured; all four Greater Lowell school fields have identical complete named candidate set as Dracut."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://lowellma.gov/DocumentCenter/View/36601/2026-State-Election-Ballot-389-WD-3-WD-4-PCTS-1-2-3A-WD-5-PCTS-1-2-4-WD-6-PCTS-3-4A-WD-8-PCT-4A",
+    "finalUrl": "https://lowellma.gov/DocumentCenter/View/36601/2026-State-Election-Ballot-389-WD-3-WD-4-PCTS-1-2-3A-WD-5-PCTS-1-2-4-WD-6-PCTS-3-4A-WD-8-PCT-4A",
+    "sourceCheckedAt": "2026-11-03T04:26:35.206598+00:00",
+    "sha256": "9ef6ab78debf833797dd27f1111d8471dde7d757bf784585c401d67ac6db1969",
+    "sourceFile": "sources/9ef6ab78debf833797dd27f1111d8471dde7d757bf784585c401d67ac6db1969.source",
+    "excerptFile": "sources/a211712ce812ba30aaeb3dc1590e029353e51423e235e7ee6ac9cf7a18ce9ea1.txt",
+    "excerptSha256": "a211712ce812ba30aaeb3dc1590e029353e51423e235e7ee6ac9cf7a18ce9ea1",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Current official Lowell389 sample, all eight pages captured; all four Greater Lowell school fields have identical complete named candidate set as Dracut."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://lowellma.gov/DocumentCenter/View/36600/2026-State-Election-Ballot-391-WD-4-PCTS-3-4A-WD-5-PCT-1A-WD-6-PCTS-1-2-3A-4-WD-7-WD-8",
+    "finalUrl": "https://lowellma.gov/DocumentCenter/View/36600/2026-State-Election-Ballot-391-WD-4-PCTS-3-4A-WD-5-PCT-1A-WD-6-PCTS-1-2-3A-4-WD-7-WD-8",
+    "sourceCheckedAt": "2026-11-03T04:26:35.298053+00:00",
+    "sha256": "d2fe78c01dd651aecaa6e7970e5744858fe9981c9432ed1a4ac248ed8f6e146e",
+    "sourceFile": "sources/d2fe78c01dd651aecaa6e7970e5744858fe9981c9432ed1a4ac248ed8f6e146e.source",
+    "excerptFile": "sources/9315667febf724ae088327bcb031e48433a5eccb31be762475242fe1cb9cb661.txt",
+    "excerptSha256": "9315667febf724ae088327bcb031e48433a5eccb31be762475242fe1cb9cb661",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Current official Lowell391 sample, all eight pages captured; all four Greater Lowell school fields have identical complete named candidate set as Dracut."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+    "finalUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+    "sourceCheckedAt": "2026-11-03T04:24:01.744826+00:00",
+    "sha256": "f35ff69a148cccf02c31e842afc045981d9bea48a2eb8167c597211be84314b2",
+    "sourceFile": "sources/f35ff69a148cccf02c31e842afc045981d9bea48a2eb8167c597211be84314b2.source",
+    "excerptFile": "sources/f35ff69a148cccf02c31e842afc045981d9bea48a2eb8167c597211be84314b2.txt",
+    "excerptSha256": "f35ff69a148cccf02c31e842afc045981d9bea48a2eb8167c597211be84314b2",
+    "captureFormat": "ORIGINAL_HTML",
+    "evidence": "Official Massachusetts Legislature General Laws Chapter12 §13 explicitly states Middlesex county constitutes the northern district. County ocdId is exact coterminous territory, not a fallback and not Northern Registry of Deeds."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.mass.gov/locations/middlesex-county-district-attorneys-office",
+    "finalUrl": "https://www.mass.gov/locations/middlesex-county-district-attorneys-office",
+    "sourceCheckedAt": "2026-11-03T04:24:01.256712+00:00",
+    "sha256": "aa1b14cdc0760943514f934c78fea6116ca98c2455f7e923506eca000a89f1f2",
+    "sourceFile": "sources/aa1b14cdc0760943514f934c78fea6116ca98c2455f7e923506eca000a89f1f2.source",
+    "excerptFile": "sources/aa1b14cdc0760943514f934c78fea6116ca98c2455f7e923506eca000a89f1f2.txt",
+    "excerptSha256": "aa1b14cdc0760943514f934c78fea6116ca98c2455f7e923506eca000a89f1f2",
+    "captureFormat": "ORIGINAL_HTML",
+    "evidence": "Official Mass.gov current Middlesex District Attorney location lists all54 Middlesex municipalities served."
+  },
+  {
+    "sourceUrl": "https://ecode360.com/10398016",
+    "finalUrl": "https://ecode360.com/10398016",
+    "sourceCheckedAt": "2026-11-03T04:25:09.373572+00:00",
+    "sha256": "a255aed0acd362dc0627046cd09bb247f5025fcfc96dae55e38d196b58e7ab10",
+    "sourceFile": "sources/a255aed0acd362dc0627046cd09bb247f5025fcfc96dae55e38d196b58e7ab10.source",
+    "excerptFile": "sources/7687dc61d00d8029c3682561089c4d15280d93296451f836b75f26c743d574a4.txt",
+    "excerptSha256": "7687dc61d00d8029c3682561089c4d15280d93296451f836b75f26c743d574a4",
+    "captureFormat": "ORIGINAL_HTML",
+    "evidence": "Town of North Reading municipal code Chapter550 §550-1: all12member communities and districtwide at-large elections with one resident per municipality; vacancy successor elected at next biennial state election. Official municipal law publisher, supplemental exact electoral territory evidence. Installed16 whole-municipality districtMemberships collectively, supported by current2026 printed regional ballots and current official member lists. Town/city names designate entire member municipalities; no CDP,county fallback or residency-seat narrowing.",
+    "hashScope": "sha256 fingerprints original unmodified official source bytes; excerptSha256 fingerprints saved normalized HTML text or native PDF extraction respectively."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.wakefieldma.gov/182/Northeast-School-Committee",
+    "finalUrl": "https://www.wakefieldma.gov/182/Northeast-School-Committee",
+    "sourceCheckedAt": "2026-11-03T04:25:15.002631+00:00",
+    "sha256": "c24d717ed5e43630eb8eb2d66cb7febcf51c60e89e731ba63fbd88f371ed160c",
+    "sourceFile": "sources/c24d717ed5e43630eb8eb2d66cb7febcf51c60e89e731ba63fbd88f371ed160c.source",
+    "excerptFile": "sources/c24d717ed5e43630eb8eb2d66cb7febcf51c60e89e731ba63fbd88f371ed160c.txt",
+    "excerptSha256": "c24d717ed5e43630eb8eb2d66cb7febcf51c60e89e731ba63fbd88f371ed160c",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "evidence": "Captured current official Wakefield municipal page text names all12 Northeast Metro member communities. Native403; reader200 capture separately identified, not original HTML bytes.",
+    "captureUrl": "https://r.jina.ai/https://www.wakefieldma.gov/182/Northeast-School-Committee",
+    "nativeHttpStatus": 403
+  },
+  {
+    "sourceUrl": "https://resources.finalsite.net/images/v1722006508/gltechorg/dbzkhks4ed71apy2ffth/EstablishmentOfVocationalSchool.pdf",
+    "finalUrl": "https://resources.finalsite.net/images/v1722006508/gltechorg/dbzkhks4ed71apy2ffth/EstablishmentOfVocationalSchool.pdf",
+    "sourceCheckedAt": "2026-11-03T04:26:36.042211+00:00",
+    "sha256": "f5144e0263455df85d9f2158553d23200747f95fa882e606172649dc0d32baab",
+    "sourceFile": "sources/f5144e0263455df85d9f2158553d23200747f95fa882e606172649dc0d32baab.source",
+    "excerptFile": "sources/ca2dbf0ad5ce3d000428c8677121c6d9ce3012dd714a6b84b535b3acaf73ad15.txt",
+    "excerptSha256": "ca2dbf0ad5ce3d000428c8677121c6d9ce3012dd714a6b84b535b3acaf73ad15",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "School-published charter archive with2015 court consent amendment establishes districtwide biennial-state elections, residency-designated seats and four-year terms. Current2026 Dracut ballot independently expressly says all regional voters may vote every position regardless of residence in District. Installed16 whole-municipality districtMemberships collectively, supported by current2026 printed regional ballots and current official member lists. Town/city names designate entire member municipalities; no CDP,county fallback or residency-seat narrowing.",
+    "hashScope": "sha256 fingerprints original unmodified official source bytes; excerptSha256 fingerprints saved normalized HTML text or native PDF extraction respectively."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://lowellma.gov/2233/2026-Sample-Ballots",
+    "finalUrl": "https://lowellma.gov/2233/2026-Sample-Ballots",
+    "sourceCheckedAt": "2026-11-03T04:26:33.473439+00:00",
+    "sha256": "5cff39c5ac6a9976ca567dc6cf52d8b7e9a359e4dec40f265a9de16a8b04223d",
+    "sourceFile": "sources/5cff39c5ac6a9976ca567dc6cf52d8b7e9a359e4dec40f265a9de16a8b04223d.source",
+    "excerptFile": "sources/5cff39c5ac6a9976ca567dc6cf52d8b7e9a359e4dec40f265a9de16a8b04223d.txt",
+    "excerptSha256": "5cff39c5ac6a9976ca567dc6cf52d8b7e9a359e4dec40f265a9de16a8b04223d",
+    "captureFormat": "ORIGINAL_HTML",
+    "evidence": "Official current Lowell sample index identifies all three posted November2026 styles388,389,391; all three originals acquired. Index also contains primary styles, which are not November candidate evidence."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.cambridgema.gov/-/media/files/electioncommission/2026stateelection/candidatesincambridgedistricts.pdf",
+    "finalUrl": "https://www.cambridgema.gov/-/media/files/electioncommission/2026stateelection/candidatesincambridgedistricts.pdf",
+    "sourceCheckedAt": "2026-11-03T04:19:39.244070+00:00",
+    "sha256": "f295146bd0d96e738343a7c83ad4a3ee76dbdd74baf0de11d4e613a15611509b",
+    "sourceFile": "sources/f295146bd0d96e738343a7c83ad4a3ee76dbdd74baf0de11d4e613a15611509b.source",
+    "excerptFile": "sources/b5f35eaf74203e83817e78795c16a4ffa47cc1e0e3280fc538f5abaa6c7d6574.txt",
+    "excerptSha256": "b5f35eaf74203e83817e78795c16a4ffa47cc1e0e3280fc538f5abaa6c7d6574",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Official current Cambridge Election Commission candidate roster corroborates county fields, not used as sample ballot or as evidence for absence of additional local offices."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+    "finalUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+    "sourceCheckedAt": "2026-11-03T04:18:55.977247+00:00",
+    "sha256": "e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382",
+    "sourceFile": "sources/e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382.source",
+    "excerptFile": "sources/e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382.txt",
+    "excerptSha256": "e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "evidence": "Full current official statewide November2026 candidate roster via reader after native503; only supplemental corroboration/discovery, contains filed addresses in raw capture. Reader candidate quotes use original municipal samples and exclude addresses.",
+    "captureUrl": "https://r.jina.ai/https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+    "nativeHttpStatus": 503
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.gltech.org/about-us/school-committee/district-members",
+    "finalUrl": "https://www.gltech.org/about-us/school-committee/district-members",
+    "captureUrl": "https://r.jina.ai/https://www.gltech.org/about-us/school-committee/district-members",
+    "sourceCheckedAt": "2026-11-03T04:34:07.732098+00:00",
+    "sha256": "e1bb8d7f2e88b793d64da693fc63c1a660bc450a62d7692581d000ae11394f95",
+    "sourceFile": "sources/e1bb8d7f2e88b793d64da693fc63c1a660bc450a62d7692581d000ae11394f95.source",
+    "excerptFile": "sources/e1bb8d7f2e88b793d64da693fc63c1a660bc450a62d7692581d000ae11394f95.txt",
+    "excerptSha256": "e1bb8d7f2e88b793d64da693fc63c1a660bc450a62d7692581d000ae11394f95",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "nativeHttpStatus": 403,
+    "evidence": "Current school-published district members page identifies Dracut,Dunstable,Lowell,Tyngsborough. Full reader capture corroborates current composition; native403 and reader200 are distinguished. Whole municipal electorate evidence comes from charter amendment plus current2026 ballot instruction, not from school student attendance boundaries."
+  }
+]

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:43:47.992198+00:00",
+  "preparedAt": "2026-11-03T04:57:30.803941+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -500,6 +500,20 @@
       ]
     },
     {
+      "state": "MA",
+      "county": "Middlesex",
+      "populationRank": 20,
+      "manifest": "MA/middlesex/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 6,
+      "measureContests": 0,
+      "candidacies": 10,
+      "newContests": 6,
+      "refreshedContests": 0,
+      "sourceInputSha256": "dbf34531dd7d20482977950017c76fe2af32cd7e3975b3d144e14326ce32b459",
+      "coverage": "See per-county manifest for exact source and reader scope."
+    },
+    {
       "state": "NY",
       "county": "New York",
       "populationRank": 21,
@@ -518,16 +532,19 @@
       ]
     }
   ],
+  "sourceReviewCounties": [],
   "totals": {
-    "countiesPrepared": 20,
-    "packetsPrepared": 21,
-    "candidateAndRetentionContests": 1653,
+    "countiesPrepared": 21,
+    "packetsPrepared": 22,
+    "candidateAndRetentionContests": 1659,
     "measureContests": 71,
-    "candidacyEntries": 3756,
-    "newContestEntriesAgainstCheckedInBaseline": 1359,
-    "distinctPreparedContestIds": 1715,
-    "distinctPreparedCandidateIds": 3735,
-    "distinctNewContestsAgainstCheckedInBaseline": 1353
+    "candidacyEntries": 3766,
+    "newContestEntriesAgainstCheckedInBaseline": 1365,
+    "distinctPreparedContestIds": 1721,
+    "distinctPreparedCandidateIds": 3745,
+    "distinctNewContestsAgainstCheckedInBaseline": 1359,
+    "sourceReviewCounties": 0,
+    "distinctCountyHandoffs": 21
   },
   "remainingWork": [
     {

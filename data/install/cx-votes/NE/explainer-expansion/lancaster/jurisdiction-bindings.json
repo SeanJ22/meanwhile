@@ -1,0 +1,122 @@
+[
+  {
+    "contestId": "ne-cx-2026-lincoln-volleyball-state-assistance",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:lincoln",
+      "place",
+      "3128000",
+      "Lincoln city"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated municipality or K12 district named by official question and dated current list, matched to existing Census2025 registry; not publisher county or similarly named county subdivision."
+  },
+  {
+    "contestId": "ne-cx-2026-lincoln-elections-2028",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:lincoln",
+      "place",
+      "3128000",
+      "Lincoln city"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated municipality or K12 district named by official question and dated current list, matched to existing Census2025 registry; not publisher county or similarly named county subdivision."
+  },
+  {
+    "contestId": "ne-cx-2026-lincoln-elections-2030-alternative",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:lincoln",
+      "place",
+      "3128000",
+      "Lincoln city"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated municipality or K12 district named by official question and dated current list, matched to existing Census2025 registry; not publisher county or similarly named county subdivision."
+  },
+  {
+    "contestId": "ne-cx-2026-lincoln-council-two-term-limit",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:lincoln",
+      "place",
+      "3128000",
+      "Lincoln city"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated municipality or K12 district named by official question and dated current list, matched to existing Census2025 registry; not publisher county or similarly named county subdivision."
+  },
+  {
+    "contestId": "ne-cx-2026-lincoln-council-three-term-limit-alternative",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:lincoln",
+      "place",
+      "3128000",
+      "Lincoln city"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated municipality or K12 district named by official question and dated current list, matched to existing Census2025 registry; not publisher county or similarly named county subdivision."
+  },
+  {
+    "contestId": "ne-cx-2026-lincoln-outside-city-voting",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:lincoln",
+      "place",
+      "3128000",
+      "Lincoln city"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated municipality or K12 district named by official question and dated current list, matched to existing Census2025 registry; not publisher county or similarly named county subdivision."
+  },
+  {
+    "contestId": "ne-cx-2026-freeman-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/school_district:freeman_public_schools",
+      "unsd",
+      "3100116",
+      "Freeman Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole Freeman Public Schools, Gage County School District0034, matches existing Census2025 K12 identity; all district territory retained, not publisher Lancaster County only."
+  },
+  {
+    "contestId": "ne-cx-2026-raymond-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:raymond",
+      "place",
+      "3140780",
+      "Raymond village"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated municipality or K12 district named by official question and dated current list, matched to existing Census2025 registry; not publisher county or similarly named county subdivision."
+  },
+  {
+    "contestId": "ne-cx-2026-sprague-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:sprague",
+      "place",
+      "3146380",
+      "Sprague village"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated municipality or K12 district named by official question and dated current list, matched to existing Census2025 registry; not publisher county or similarly named county subdivision."
+  },
+  {
+    "contestId": "ne-cx-2026-denton-trustee-recall",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:denton",
+      "place",
+      "3112770",
+      "Denton village"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Official current county list and individual question explicitly name Village of Denton Board of Trustees; bind only whole incorporated Denton village PLACE, not township or county."
+  }
+]

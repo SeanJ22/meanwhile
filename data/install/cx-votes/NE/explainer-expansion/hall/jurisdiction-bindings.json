@@ -1,0 +1,31 @@
+[
+  {
+    "contestId": "ne-cx-2026-hall-weed-board-dissolution",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/county:hall",
+      "county",
+      "31079",
+      "Hall County"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact Hall County electorate from current countywide publication sample and formalnotice. Nebraska RevisedStatute2-953(5) explicitly says county controlauthority board represents all ruralareas,cities,villages,townships within countyboundaries; native law companion archived. Bind whole Hall County, not rural-only territory.",
+    "additionalPrimarySource": {
+      "sourceUrl": "https://nebraskalegislature.gov/laws/statutes.php?statute=2-953",
+      "sourceSha256": "89a7a6fdb37c17c5fe13fb6e28c01c97b3221bf0de18688bd7a656a4a3167b7d",
+      "quote": "which board shall represent all rural areas and cities, villages, and townships within the county boundaries"
+    }
+  },
+  {
+    "contestId": "ne-cx-2026-doniphan-trumbull-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/school_district:doniphan_trumbull_public_schools",
+      "unsd",
+      "3100121",
+      "Doniphan-Trumbull Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole named Census2025 district, not publisher county as substitute for a school or same-named place."
+  }
+]

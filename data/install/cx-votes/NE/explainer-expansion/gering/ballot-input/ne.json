@@ -1,0 +1,119 @@
+{
+  "ballots": {
+    "NE:ne-2026-11-03": {
+      "election": {
+        "id": "ne-2026-11-03",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "NE"
+      },
+      "contests": [
+        {
+          "id": "ne-cx-2026-gering-middle-school-bonds",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/school_district:gering_public_schools",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Gering Public Schools — Middle school bonds and repayment tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://scottsbluffcountyne.gov/wp-content/uploads/sites/4/2026/10/Sample-ballots-batch-CRA-HLD.pdf",
+          "provenance": {
+            "sourceUrl": "https://scottsbluffcountyne.gov/wp-content/uploads/sites/4/2026/10/Sample-ballots-batch-CRA-HLD.pdf",
+            "sourceOrg": "Scotts Bluff County Nebraska Election Office",
+            "collectedAt": "2026-11-03T08:50:39.461692+00:00",
+            "verifiedAt": "2026-11-03T08:54:34.051227+00:00",
+            "quote": "Shall Scotts Bluff County School District 0016\n(Gering Public Schools) in the State of\nNebraska (the \"District\") issue general obligation\nbonds to pay the costs of additions, renovations,\nand improvements to the District's existing\nmiddle school buildings and facilities, which may\ninclude, without limitation, the following:\n\n• New secure single entrance to strengthen\ncampus safety and improve visitor access;\n\n• Approximately 61,054 square feet of new\nconstruction including 24 classrooms to\nsupport student academic achievement;\n\n• Approximately 25,361 square feet of\nrenovated space for Career and Technical\nEducation (CTE), improving hands-on\nlearning;\n\n• New competition gym, two-mat\nwrestling/multipurpose room, and athletic\nlocker rooms for physical education and\nathletics; and\n\n• Major site improvements including\nredesigned traffic flow, a dedicated bus\ndrop-off area, safer student walkways, and\n90 new dedicated parking spaces;\n\nwith such bonds to be issued in an aggregate\nstated principal amount not to exceed\nTwenty-Nine Million Seven Hundred and Fifty\nThousand Dollars ($29,750,000), in one or more\nseries, at such time or times, to bear interest at\nsuch rate or rates, to be sold at such prices and\nto become due at such time or times as may be\nfixed by, or determined at the direction of, the\nBoard of Education; and\n\n\"Shall the District cause to be levied and\ncollected annually a special levy of taxes\nagainst all the taxable property in the District\nsufficient in rate and amount to pay the principal\nof and interest on such bonds as the same\nbecome due?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ne-cx-2026-gering-middle-school-bonds:measure",
+          "contestId": "ne-cx-2026-gering-middle-school-bonds",
+          "questionText": "Shall Scotts Bluff County School District 0016\n(Gering Public Schools) in the State of\nNebraska (the \"District\") issue general obligation\nbonds to pay the costs of additions, renovations,\nand improvements to the District's existing\nmiddle school buildings and facilities, which may\ninclude, without limitation, the following:\n\n• New secure single entrance to strengthen\ncampus safety and improve visitor access;\n\n• Approximately 61,054 square feet of new\nconstruction including 24 classrooms to\nsupport student academic achievement;\n\n• Approximately 25,361 square feet of\nrenovated space for Career and Technical\nEducation (CTE), improving hands-on\nlearning;\n\n• New competition gym, two-mat\nwrestling/multipurpose room, and athletic\nlocker rooms for physical education and\nathletics; and\n\n• Major site improvements including\nredesigned traffic flow, a dedicated bus\ndrop-off area, safer student walkways, and\n90 new dedicated parking spaces;\n\nwith such bonds to be issued in an aggregate\nstated principal amount not to exceed\nTwenty-Nine Million Seven Hundred and Fifty\nThousand Dollars ($29,750,000), in one or more\nseries, at such time or times, to bear interest at\nsuch rate or rates, to be sold at such prices and\nto become due at such time or times as may be\nfixed by, or determined at the direction of, the\nBoard of Education; and\n\n\"Shall the District cause to be levied and\ncollected annually a special levy of taxes\nagainst all the taxable property in the District\nsufficient in rate and amount to pay the principal\nof and interest on such bonds as the same\nbecome due?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://scottsbluffcountyne.gov/wp-content/uploads/sites/4/2026/10/Sample-ballots-batch-CRA-HLD.pdf",
+            "sourceOrg": "Scotts Bluff County Nebraska Election Office",
+            "collectedAt": "2026-11-03T08:50:39.461692+00:00",
+            "verifiedAt": "2026-11-03T08:54:34.051227+00:00",
+            "quote": "Shall Scotts Bluff County School District 0016\n(Gering Public Schools) in the State of\nNebraska (the \"District\") issue general obligation\nbonds to pay the costs of additions, renovations,\nand improvements to the District's existing\nmiddle school buildings and facilities, which may\ninclude, without limitation, the following:\n\n• New secure single entrance to strengthen\ncampus safety and improve visitor access;\n\n• Approximately 61,054 square feet of new\nconstruction including 24 classrooms to\nsupport student academic achievement;\n\n• Approximately 25,361 square feet of\nrenovated space for Career and Technical\nEducation (CTE), improving hands-on\nlearning;\n\n• New competition gym, two-mat\nwrestling/multipurpose room, and athletic\nlocker rooms for physical education and\nathletics; and\n\n• Major site improvements including\nredesigned traffic flow, a dedicated bus\ndrop-off area, safer student walkways, and\n90 new dedicated parking spaces;\n\nwith such bonds to be issued in an aggregate\nstated principal amount not to exceed\nTwenty-Nine Million Seven Hundred and Fifty\nThousand Dollars ($29,750,000), in one or more\nseries, at such time or times, to bear interest at\nsuch rate or rates, to be sold at such prices and\nto become due at such time or times as may be\nfixed by, or determined at the direction of, the\nBoard of Education; and\n\n\"Shall the District cause to be levied and\ncollected annually a special levy of taxes\nagainst all the taxable property in the District\nsufficient in rate and amount to pay the principal\nof and interest on such bonds as the same\nbecome due?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ne-cx-2026-gering-middle-school-bonds",
+          "whatItDoes": "Authorizes up to $29.75 million in general-obligation bonds for middle school additions and renovations. Projects may include classrooms, career and technical education space, a secure entrance, athletic facilities, and traffic and parking improvements. Also authorizes an annual property-tax levy sufficient to repay principal and interest.",
+          "yesMeans": "Authorize the school bonds and the tax levy to repay them.",
+          "noMeans": "Do not authorize these bonds and repayment tax levy.",
+          "parts": [],
+          "sourceUrl": "https://scottsbluffcountyne.gov/wp-content/uploads/sites/4/2026/10/Sample-ballots-batch-CRA-HLD.pdf",
+          "sourceHash": "4ab7cfe202c6fc7cbb1ff6577635e84bcde9a2a2e31f9ab1125c7409576a683c",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:54:34.051227+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:54:34.051227+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "d27a071715896b8c82b8cce8d48200b4207ba10c44f1778f56f92c4efcd7cf96",
+        "retrievedAt": "2026-10-14T05:03:25.733599Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script parsed all federal and state office candidate rows in the final statewide November 3, 2026 general candidate list, including printed party and incumbency."
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "1694277901e6c793d3ab0994e72a65293d9532a52e9f2b636140b2ec0a83cd67",
+        "retrievedAt": "2026-10-14T05:03:26.245989Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script parsed both statewide Workers' Compensation Court retention rows and their exact ballot questions. Other listed retention judges are elected by judicial district."
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+        "httpStatus": 200,
+        "rawHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+        "retrievedAt": "2026-10-14T05:03:24.807443Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script extracted all three initiative numbers, ballot questions, official statements, and the official full-text PDF link."
+      },
+      {
+        "requestedUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+        "finalUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+        "httpStatus": 200,
+        "rawHash": "1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306",
+        "retrievedAt": "2026-10-14T05:04:38.936128Z",
+        "publisher": "Nebraska Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script extracted the enacted LR19CA ballot language and official full-text link for the November 2026 general election."
+      },
+      {
+        "requestedUrl": "https://scottsbluffcountyne.gov/wp-content/uploads/sites/4/2026/10/Sample-ballots-batch-CRA-HLD.pdf",
+        "finalUrl": "https://scottsbluffcountyne.gov/wp-content/uploads/sites/4/2026/10/Sample-ballots-batch-CRA-HLD.pdf",
+        "httpStatus": 200,
+        "rawHash": "5f7c60f5a0ab4588bf23c083b4fcd21e2133ebda5b6558e22b56d19a73b32fe0",
+        "retrievedAt": "2026-11-03T08:50:39.461692+00:00",
+        "publisher": "Scotts Bluff County Nebraska Election Office",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official120page sample batch linked by current government electionofficepage. Complete Gering school field appears nativepage2 of CastleRockAstyle; nativepage1 explicitlyNovember3,2026. Fullfield anddatevisuallyverified. Original complete nativePDF preserved; no extract falsely hashed as original."
+      }
+    ]
+  }
+}

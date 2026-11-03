@@ -1,0 +1,255 @@
+{
+  "ballots": {
+    "NE:ne-2026-11-03": {
+      "election": {
+        "id": "ne-2026-11-03",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "NE"
+      },
+      "contests": [
+        {
+          "id": "ne-cx-2026-chappell-sales-tax-continuation",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:chappell",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Chappell — Proposition 1: Continue sales and use tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+          "provenance": {
+            "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+            "sourceOrg": "Deuel County Nebraska Clerk and Election Authority",
+            "collectedAt": "2026-11-03T08:44:20.162971+00:00",
+            "verifiedAt": "2026-11-03T08:47:07.591957+00:00",
+            "quote": "Shall the City of Chappell, Nebraska, continue a sale and use tax currently imposed, by imposing a sales and use tax in the amount of one-half of one percent (1/2%) upon the same transactions within the City of Chappell on which the State of Nebraska is authorized to impose a tax, subject to the following terms and conditions:\nTermination of Tax.\nThe City sales and use tax referred to in Proposition No. 1 shall automatically terminate at the end of ten (10) years from the date on which, by operation of state law, the tax becomes effective, unless the tax is extended by a vote of the electorate prior to the end of such period.\nEconomic Development.\n100% of the net revenue received by the City of Chappell from this sales and use tax shall be used to fund the Chappell Economic Development Program as provided for in the Plan set out in Proposition No. 2?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-chappell-economic-development-program",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:chappell",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Chappell — Proposition 2: Continue economic development program",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+          "provenance": {
+            "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+            "sourceOrg": "Deuel County Nebraska Clerk and Election Authority",
+            "collectedAt": "2026-11-03T08:44:20.162971+00:00",
+            "verifiedAt": "2026-11-03T08:47:07.591957+00:00",
+            "quote": "Shall the City of Chappell, Nebraska continue an Economic Development Program currently in place, for an additional period of ten years from April 1, 2028, to March 31, 2039, in order to utilize the revenue of an estimated $112,000 per year for the term of the term of the tax to be appropriated from the sales and use tax set forth in Proposition No. 1?\nGeneral Description of the Program:  The goal of the Chappell Economic Development Program is to provide jobs, above minimum wage, to the citizens of Chappell.  The funds from the Program will be used to encourage and assist existing local and new qualifying businesses in the creation and retention of jobs.  The success of the Program will be measured by the number of jobs created and retained as well as income improvement for the length of the Program.  Eligible activities under the Program include, but are no limited to:  expenses to retain and/or expand a local qualifying business; direct loans or grants to qualifying businesses for fixed assets or working capital or both; grants for public works improvements which are essential to the location or expansion of, or the provision of new services by, a qualifying business; grants or loans for job training; the purchase of real estate, options for such purchases, and the renewal or extension of such options; the authority to issue bonds pursuant to the Act; contracting with an outside entity to implement the Program; the provision of technical assistance to businesses, and the expenses for the conduct of business recruitment activities.  The Program shall not be used to build City-owned buildings."
+          }
+        },
+        {
+          "id": "ne-cx-2026-big-springs-sales-use-tax",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:big_springs",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Big Springs — Proposition A: Sales and use tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+          "provenance": {
+            "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+            "sourceOrg": "Deuel County Nebraska Clerk and Election Authority",
+            "collectedAt": "2026-11-03T08:44:20.162971+00:00",
+            "verifiedAt": "2026-11-03T08:47:07.591957+00:00",
+            "quote": "Shall the Village of Big Springs, Nebraska, be authorized to impose a sales and use tax of one percent (1. 00%) upon the same transactions within the Village of Big Springs on which the State of Nebraska is authorized to impose a sales and use tax, to be imposed in perpetuity and applied to the Village’ s Economic Development Program or other purposes as provided by ordinance of the Village Board of Trustees?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-big-springs-economic-development-program",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:big_springs",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Big Springs — Proposition B: Economic development program",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+          "provenance": {
+            "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+            "sourceOrg": "Deuel County Nebraska Clerk and Election Authority",
+            "collectedAt": "2026-11-03T08:44:20.162971+00:00",
+            "verifiedAt": "2026-11-03T08:47:07.591957+00:00",
+            "quote": "Shall the Village of Big Springs, Nebraska, establish an Economic Development\nProgram as described below by appropriating annually from local sources of revenue\nnot more than the revenue received from the Village’s one percent sales and use tax in\nProposition A above for a period of 15 years ending upon expiration of such one percent\nsales and use tax?\nTerms, Conditions and Goals\nThe Village Board of Trustees of the Village of Big Springs, Nebraska, propose to\nprovide for an Economic Development Program in the Village after January 1, 2027.\nTerms, conditions and goals of the proposed Economic Development Program include\nthe following:\na. Length of time the program will be in existence. The length of time the Economic\nDevelopment Program will be in existence is beginning on January 1, 2027, and ending\nupon termination of the one percent (1.0%) sales and use tax in Proposition A above.\nb. The years that funds from local sources of revenue are to be collected. Collection of\nthe funds from local sources of revenue for the Economic Development Program shall\nbe established each year in the municipal budget for a period beginning January l,\n2027, and continuing while the program is in existence.\nc. Sources from which funds are to be collected. The sources from which funds are to\nbe collected will be a combination of funds from various local sources of revenue.\nlimited to funds derived from the Village’s one percent (1 .0%) local option sales and\nuse tax or any other general tax levied by the Village or generated from municipally\nowned utilities or grants, donations, or state and federal funds received by the Village,\nsubject to any restrictions of the granter, donor, or state or federal law; provided,\nhowever, property tax shall not be a source of funds or collected, appropriated or used\nfor purposes of this 15-year term of the Economic Development Program.\nd. Total amount to be collected for the program from local sources of revenue. The total\namount to be collected from local sources of revenue for the Economic Development\nProgram will not exceed an amount equal to the funds derived from the Village’s one\npercent (1 .00%) local option sales and use tax. The Village of Big Springs Board of\nTrustees will determine the portion of total collections of local sources of revenue that\nactually will be allocated for the Economic Development Program each fiscal year as\npart of the Village’s budgeting process.\ne. Proposal to issue bonds to provide funds to cany out the Economic Development\nProgram. The Village of Big Springs proposes to have authority to issue bonds pursuant\nto the Local Option Municipal Economic Development Act to provide funds to carry\nout the Economic Development Program.\nf. Additional funds to be sought from other non-village sources. Additional funds from\nother non-village sources will be sought beyond those derived from local sources of\nrevenue.\ng. Goals of the Economic Development Program. Goals of the Economic Development\nProgram are to create jobs and generate employment opportunities, retain existing jobs,\nexpand the labor markets of Big Springs and Deuel County, attract new capital\ninvestment to the community, broaden the tax base, assist existing businesses to be\nmore competitive and profitable, support the construction and rehabilitation of housing\nfor persons of low or moderate income and of workforce housing, support early\nchildhood care and education and other infrastructure needed to attract and retain a\nworkforce, develop tourism opportunities, and provide economic diversification to\nensure economic stability and vitality for the community of Big Springs, Nebraska and\nthe surrounding area.\nh. Economic Development Program Dependent on Renewal of Sales Tax.\nImplementation of the Economic Development Program is dependent upon the voter\napproval of the Village’s existing one percent (1.00%) local option sales and use tax in\nthe Village’s Proposition A on this ballot, and that if a majority of those voting on\nProposition A vote against the renewal of such sales and use tax, the Mayor and Village\nCouncil shall not implement the Economic Development Program."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ne-cx-2026-chappell-sales-tax-continuation:measure",
+          "contestId": "ne-cx-2026-chappell-sales-tax-continuation",
+          "officialNumber": "1",
+          "questionText": "Shall the City of Chappell, Nebraska, continue a sale and use tax currently imposed, by imposing a sales and use tax in the amount of one-half of one percent (1/2%) upon the same transactions within the City of Chappell on which the State of Nebraska is authorized to impose a tax, subject to the following terms and conditions:\nTermination of Tax.\nThe City sales and use tax referred to in Proposition No. 1 shall automatically terminate at the end of ten (10) years from the date on which, by operation of state law, the tax becomes effective, unless the tax is extended by a vote of the electorate prior to the end of such period.\nEconomic Development.\n100% of the net revenue received by the City of Chappell from this sales and use tax shall be used to fund the Chappell Economic Development Program as provided for in the Plan set out in Proposition No. 2?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+            "sourceOrg": "Deuel County Nebraska Clerk and Election Authority",
+            "collectedAt": "2026-11-03T08:44:20.162971+00:00",
+            "verifiedAt": "2026-11-03T08:47:07.591957+00:00",
+            "quote": "Shall the City of Chappell, Nebraska, continue a sale and use tax currently imposed, by imposing a sales and use tax in the amount of one-half of one percent (1/2%) upon the same transactions within the City of Chappell on which the State of Nebraska is authorized to impose a tax, subject to the following terms and conditions:\nTermination of Tax.\nThe City sales and use tax referred to in Proposition No. 1 shall automatically terminate at the end of ten (10) years from the date on which, by operation of state law, the tax becomes effective, unless the tax is extended by a vote of the electorate prior to the end of such period.\nEconomic Development.\n100% of the net revenue received by the City of Chappell from this sales and use tax shall be used to fund the Chappell Economic Development Program as provided for in the Plan set out in Proposition No. 2?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-chappell-economic-development-program:measure",
+          "contestId": "ne-cx-2026-chappell-economic-development-program",
+          "officialNumber": "2",
+          "questionText": "Shall the City of Chappell, Nebraska continue an Economic Development Program currently in place, for an additional period of ten years from April 1, 2028, to March 31, 2039, in order to utilize the revenue of an estimated $112,000 per year for the term of the term of the tax to be appropriated from the sales and use tax set forth in Proposition No. 1?",
+          "officialStatement": "General Description of the Program:  The goal of the Chappell Economic Development Program is to provide jobs, above minimum wage, to the citizens of Chappell.  The funds from the Program will be used to encourage and assist existing local and new qualifying businesses in the creation and retention of jobs.  The success of the Program will be measured by the number of jobs created and retained as well as income improvement for the length of the Program.  Eligible activities under the Program include, but are no limited to:  expenses to retain and/or expand a local qualifying business; direct loans or grants to qualifying businesses for fixed assets or working capital or both; grants for public works improvements which are essential to the location or expansion of, or the provision of new services by, a qualifying business; grants or loans for job training; the purchase of real estate, options for such purchases, and the renewal or extension of such options; the authority to issue bonds pursuant to the Act; contracting with an outside entity to implement the Program; the provision of technical assistance to businesses, and the expenses for the conduct of business recruitment activities.  The Program shall not be used to build City-owned buildings.",
+          "provenance": {
+            "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+            "sourceOrg": "Deuel County Nebraska Clerk and Election Authority",
+            "collectedAt": "2026-11-03T08:44:20.162971+00:00",
+            "verifiedAt": "2026-11-03T08:47:07.591957+00:00",
+            "quote": "Shall the City of Chappell, Nebraska continue an Economic Development Program currently in place, for an additional period of ten years from April 1, 2028, to March 31, 2039, in order to utilize the revenue of an estimated $112,000 per year for the term of the term of the tax to be appropriated from the sales and use tax set forth in Proposition No. 1?\nGeneral Description of the Program:  The goal of the Chappell Economic Development Program is to provide jobs, above minimum wage, to the citizens of Chappell.  The funds from the Program will be used to encourage and assist existing local and new qualifying businesses in the creation and retention of jobs.  The success of the Program will be measured by the number of jobs created and retained as well as income improvement for the length of the Program.  Eligible activities under the Program include, but are no limited to:  expenses to retain and/or expand a local qualifying business; direct loans or grants to qualifying businesses for fixed assets or working capital or both; grants for public works improvements which are essential to the location or expansion of, or the provision of new services by, a qualifying business; grants or loans for job training; the purchase of real estate, options for such purchases, and the renewal or extension of such options; the authority to issue bonds pursuant to the Act; contracting with an outside entity to implement the Program; the provision of technical assistance to businesses, and the expenses for the conduct of business recruitment activities.  The Program shall not be used to build City-owned buildings."
+          }
+        },
+        {
+          "id": "ne-cx-2026-big-springs-sales-use-tax:measure",
+          "contestId": "ne-cx-2026-big-springs-sales-use-tax",
+          "officialNumber": "A",
+          "questionText": "Shall the Village of Big Springs, Nebraska, be authorized to impose a sales and use tax of one percent (1. 00%) upon the same transactions within the Village of Big Springs on which the State of Nebraska is authorized to impose a sales and use tax, to be imposed in perpetuity and applied to the Village’ s Economic Development Program or other purposes as provided by ordinance of the Village Board of Trustees?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+            "sourceOrg": "Deuel County Nebraska Clerk and Election Authority",
+            "collectedAt": "2026-11-03T08:44:20.162971+00:00",
+            "verifiedAt": "2026-11-03T08:47:07.591957+00:00",
+            "quote": "Shall the Village of Big Springs, Nebraska, be authorized to impose a sales and use tax of one percent (1. 00%) upon the same transactions within the Village of Big Springs on which the State of Nebraska is authorized to impose a sales and use tax, to be imposed in perpetuity and applied to the Village’ s Economic Development Program or other purposes as provided by ordinance of the Village Board of Trustees?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-big-springs-economic-development-program:measure",
+          "contestId": "ne-cx-2026-big-springs-economic-development-program",
+          "officialNumber": "B",
+          "questionText": "Shall the Village of Big Springs, Nebraska, establish an Economic Development\nProgram as described below by appropriating annually from local sources of revenue\nnot more than the revenue received from the Village’s one percent sales and use tax in\nProposition A above for a period of 15 years ending upon expiration of such one percent\nsales and use tax?",
+          "officialStatement": "Terms, Conditions and Goals\nThe Village Board of Trustees of the Village of Big Springs, Nebraska, propose to\nprovide for an Economic Development Program in the Village after January 1, 2027.\nTerms, conditions and goals of the proposed Economic Development Program include\nthe following:\na. Length of time the program will be in existence. The length of time the Economic\nDevelopment Program will be in existence is beginning on January 1, 2027, and ending\nupon termination of the one percent (1.0%) sales and use tax in Proposition A above.\nb. The years that funds from local sources of revenue are to be collected. Collection of\nthe funds from local sources of revenue for the Economic Development Program shall\nbe established each year in the municipal budget for a period beginning January l,\n2027, and continuing while the program is in existence.\nc. Sources from which funds are to be collected. The sources from which funds are to\nbe collected will be a combination of funds from various local sources of revenue.\nlimited to funds derived from the Village’s one percent (1 .0%) local option sales and\nuse tax or any other general tax levied by the Village or generated from municipally\nowned utilities or grants, donations, or state and federal funds received by the Village,\nsubject to any restrictions of the granter, donor, or state or federal law; provided,\nhowever, property tax shall not be a source of funds or collected, appropriated or used\nfor purposes of this 15-year term of the Economic Development Program.\nd. Total amount to be collected for the program from local sources of revenue. The total\namount to be collected from local sources of revenue for the Economic Development\nProgram will not exceed an amount equal to the funds derived from the Village’s one\npercent (1 .00%) local option sales and use tax. The Village of Big Springs Board of\nTrustees will determine the portion of total collections of local sources of revenue that\nactually will be allocated for the Economic Development Program each fiscal year as\npart of the Village’s budgeting process.\ne. Proposal to issue bonds to provide funds to cany out the Economic Development\nProgram. The Village of Big Springs proposes to have authority to issue bonds pursuant\nto the Local Option Municipal Economic Development Act to provide funds to carry\nout the Economic Development Program.\nf. Additional funds to be sought from other non-village sources. Additional funds from\nother non-village sources will be sought beyond those derived from local sources of\nrevenue.\ng. Goals of the Economic Development Program. Goals of the Economic Development\nProgram are to create jobs and generate employment opportunities, retain existing jobs,\nexpand the labor markets of Big Springs and Deuel County, attract new capital\ninvestment to the community, broaden the tax base, assist existing businesses to be\nmore competitive and profitable, support the construction and rehabilitation of housing\nfor persons of low or moderate income and of workforce housing, support early\nchildhood care and education and other infrastructure needed to attract and retain a\nworkforce, develop tourism opportunities, and provide economic diversification to\nensure economic stability and vitality for the community of Big Springs, Nebraska and\nthe surrounding area.\nh. Economic Development Program Dependent on Renewal of Sales Tax.\nImplementation of the Economic Development Program is dependent upon the voter\napproval of the Village’s existing one percent (1.00%) local option sales and use tax in\nthe Village’s Proposition A on this ballot, and that if a majority of those voting on\nProposition A vote against the renewal of such sales and use tax, the Mayor and Village\nCouncil shall not implement the Economic Development Program.",
+          "provenance": {
+            "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+            "sourceOrg": "Deuel County Nebraska Clerk and Election Authority",
+            "collectedAt": "2026-11-03T08:44:20.162971+00:00",
+            "verifiedAt": "2026-11-03T08:47:07.591957+00:00",
+            "quote": "Shall the Village of Big Springs, Nebraska, establish an Economic Development\nProgram as described below by appropriating annually from local sources of revenue\nnot more than the revenue received from the Village’s one percent sales and use tax in\nProposition A above for a period of 15 years ending upon expiration of such one percent\nsales and use tax?\nTerms, Conditions and Goals\nThe Village Board of Trustees of the Village of Big Springs, Nebraska, propose to\nprovide for an Economic Development Program in the Village after January 1, 2027.\nTerms, conditions and goals of the proposed Economic Development Program include\nthe following:\na. Length of time the program will be in existence. The length of time the Economic\nDevelopment Program will be in existence is beginning on January 1, 2027, and ending\nupon termination of the one percent (1.0%) sales and use tax in Proposition A above.\nb. The years that funds from local sources of revenue are to be collected. Collection of\nthe funds from local sources of revenue for the Economic Development Program shall\nbe established each year in the municipal budget for a period beginning January l,\n2027, and continuing while the program is in existence.\nc. Sources from which funds are to be collected. The sources from which funds are to\nbe collected will be a combination of funds from various local sources of revenue.\nlimited to funds derived from the Village’s one percent (1 .0%) local option sales and\nuse tax or any other general tax levied by the Village or generated from municipally\nowned utilities or grants, donations, or state and federal funds received by the Village,\nsubject to any restrictions of the granter, donor, or state or federal law; provided,\nhowever, property tax shall not be a source of funds or collected, appropriated or used\nfor purposes of this 15-year term of the Economic Development Program.\nd. Total amount to be collected for the program from local sources of revenue. The total\namount to be collected from local sources of revenue for the Economic Development\nProgram will not exceed an amount equal to the funds derived from the Village’s one\npercent (1 .00%) local option sales and use tax. The Village of Big Springs Board of\nTrustees will determine the portion of total collections of local sources of revenue that\nactually will be allocated for the Economic Development Program each fiscal year as\npart of the Village’s budgeting process.\ne. Proposal to issue bonds to provide funds to cany out the Economic Development\nProgram. The Village of Big Springs proposes to have authority to issue bonds pursuant\nto the Local Option Municipal Economic Development Act to provide funds to carry\nout the Economic Development Program.\nf. Additional funds to be sought from other non-village sources. Additional funds from\nother non-village sources will be sought beyond those derived from local sources of\nrevenue.\ng. Goals of the Economic Development Program. Goals of the Economic Development\nProgram are to create jobs and generate employment opportunities, retain existing jobs,\nexpand the labor markets of Big Springs and Deuel County, attract new capital\ninvestment to the community, broaden the tax base, assist existing businesses to be\nmore competitive and profitable, support the construction and rehabilitation of housing\nfor persons of low or moderate income and of workforce housing, support early\nchildhood care and education and other infrastructure needed to attract and retain a\nworkforce, develop tourism opportunities, and provide economic diversification to\nensure economic stability and vitality for the community of Big Springs, Nebraska and\nthe surrounding area.\nh. Economic Development Program Dependent on Renewal of Sales Tax.\nImplementation of the Economic Development Program is dependent upon the voter\napproval of the Village’s existing one percent (1.00%) local option sales and use tax in\nthe Village’s Proposition A on this ballot, and that if a majority of those voting on\nProposition A vote against the renewal of such sales and use tax, the Mayor and Village\nCouncil shall not implement the Economic Development Program."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ne-cx-2026-chappell-sales-tax-continuation",
+          "whatItDoes": "Continues the existing 0.5% city sales and use tax for ten years after it becomes effective under state law, unless voters extend it. All net revenue would fund the Chappell Economic Development Program described in Proposition 2.",
+          "yesMeans": "Approve continuation of this sales and use tax under the stated terms.",
+          "noMeans": "Do not approve this tax continuation.",
+          "parts": [],
+          "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+          "sourceHash": "95b16b8d405f01eac29594171c45927bc8743a1f8e2a2e2bf39601be9cd81dee",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:47:07.591957+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-chappell-economic-development-program",
+          "whatItDoes": "Continues the economic development program supporting businesses and jobs, using an estimated $112,000 a year from the tax in Proposition 1. The printed term conflicts: it calls this a ten-year extension but gives April 1, 2028 through March 31, 2039, a span of eleven years.",
+          "yesMeans": "Approve the program continuation as printed.",
+          "noMeans": "Do not approve this proposed program continuation.",
+          "parts": [],
+          "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+          "sourceHash": "d83107be39151ce93d28fba0bbaeab5c6f69b9f1f9ea9ee1db3fc59e1f60220e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:47:07.591957+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-big-springs-sales-use-tax",
+          "whatItDoes": "Authorizes a 1% village sales and use tax with no expiration date, on transactions taxable by the state. Revenue could support the village’s economic development program or other purposes set by village ordinance.",
+          "yesMeans": "Authorize this 1% sales and use tax under the stated terms.",
+          "noMeans": "Do not authorize this tax proposal.",
+          "parts": [],
+          "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+          "sourceHash": "32fcaf9aa2cfba4542b65181987c2810a6bf3b642ba5abc0545ec1126c87fac8",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:47:07.591957+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-big-springs-economic-development-program",
+          "whatItDoes": "Creates an economic development program for jobs, businesses, housing, child care and tourism. Annual local funding is capped at revenue from the 1% tax; property taxes are excluded, and bonds are permitted. Implementation requires Proposition A’s approval. The term is unclear: B says fifteen years and ending when the tax expires, while A has no expiration date.",
+          "yesMeans": "Approve this program, subject to approval of the tax in Proposition A.",
+          "noMeans": "Do not establish this proposed program.",
+          "parts": [],
+          "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+          "sourceHash": "d3a121d56cb249062548325d978616844793273372d087fadb1ae24f50cdf63b",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:47:07.591957+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:47:07.591957+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "d27a071715896b8c82b8cce8d48200b4207ba10c44f1778f56f92c4efcd7cf96",
+        "retrievedAt": "2026-10-14T05:03:25.733599Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script parsed all federal and state office candidate rows in the final statewide November 3, 2026 general candidate list, including printed party and incumbency."
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "1694277901e6c793d3ab0994e72a65293d9532a52e9f2b636140b2ec0a83cd67",
+        "retrievedAt": "2026-10-14T05:03:26.245989Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script parsed both statewide Workers' Compensation Court retention rows and their exact ballot questions. Other listed retention judges are elected by judicial district."
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+        "httpStatus": 200,
+        "rawHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+        "retrievedAt": "2026-10-14T05:03:24.807443Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script extracted all three initiative numbers, ballot questions, official statements, and the official full-text PDF link."
+      },
+      {
+        "requestedUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+        "finalUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+        "httpStatus": 200,
+        "rawHash": "1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306",
+        "retrievedAt": "2026-10-14T05:04:38.936128Z",
+        "publisher": "Nebraska Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script extracted the enacted LR19CA ballot language and official full-text link for the November 2026 general election."
+      },
+      {
+        "requestedUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+        "finalUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+        "httpStatus": 200,
+        "rawHash": "f6cb0ec038897e16e54c2f810d6dc013b71d886fc990c9ff91416e5942d6b9b1",
+        "retrievedAt": "2026-11-03T08:44:20.162971+00:00",
+        "publisher": "Deuel County Nebraska Clerk and Election Authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native government HTML formal election notice explicitly dated for November3,2026 and signed/sealedbyDeuelClerk. Full bounded operative question and official program terms retained. Source is directlygovernment-hosted; nativeHTMLcredentialscan0findings."
+      }
+    ]
+  }
+}

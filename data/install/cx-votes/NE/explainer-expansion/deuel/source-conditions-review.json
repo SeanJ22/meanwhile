@@ -1,0 +1,27 @@
+{
+  "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/",
+  "nativeSourceSha256": "f6cb0ec038897e16e54c2f810d6dc013b71d886fc990c9ff91416e5942d6b9b1",
+  "dateScope": "Formal county notice explicitly forNovember3,2026, signedSeptember10 and publishedSeptember17.",
+  "questionInventory": {
+    "localQuestions": 4,
+    "prepared": 4,
+    "scope": "Only local questions published in this Deuel formal notice. Statewide title/text explicitly separatelypublished; no Nebraska all-local denominator."
+  },
+  "conflicts": [
+    {
+      "contestId": "ne-cx-2026-chappell-economic-development-program",
+      "printedTerm": "an additional period of ten years from April 1, 2028, to March 31, 2039",
+      "issue": "Named10year span differs from stated11year date interval.",
+      "disposition": "Canonical text unchanged. whatItDoes explicitly reports conflict; no controlling expiration chosen."
+    },
+    {
+      "contestId": "ne-cx-2026-big-springs-economic-development-program",
+      "printedTerm": "for a period of 15 years ending upon expiration of such one percent sales and use tax",
+      "companionQuestion": "PropositionA says tax to be imposed in perpetuity.",
+      "additionalTerms": "Program beginsJanuary1,2027 and endsuponterminationof1%tax. Propertytaxisexpresslyexcluded. ImplementationdependsPropositionAapproval.",
+      "disposition": "Canonical question and complete official program statement retained. whatItDoes explicitly reports incompatible expiration language; no fixed expiry invented."
+    }
+  ],
+  "independentSupportedFacts": "Tax rates, allocations, program purposes, property-tax exclusion, annual local-source funding cap and explicit A/B dependency separately supported. These do not depend on choosing between conflicting printed expiration terms.",
+  "status": "Source-backed explanation data with transparent material source limitations; no source correction or unstated legal rule."
+}

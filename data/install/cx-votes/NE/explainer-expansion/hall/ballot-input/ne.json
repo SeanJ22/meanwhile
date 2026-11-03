@@ -1,0 +1,163 @@
+{
+  "ballots": {
+    "NE:ne-2026-11-03": {
+      "election": {
+        "id": "ne-2026-11-03",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "NE"
+      },
+      "contests": [
+        {
+          "id": "ne-cx-2026-hall-weed-board-dissolution",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/county:hall",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Hall County — Weed board dissolution",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+          "provenance": {
+            "sourceUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+            "sourceOrg": "Hall County Nebraska Election Commission",
+            "collectedAt": "2026-11-03T08:51:19.567289+00:00",
+            "verifiedAt": "2026-11-03T08:51:53.958766+00:00",
+            "quote": "Shall the Hall County Weed District Board be\ndissolved and its duties and authority be\nexercised by the Hall County Board of\nCommissioners?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-doniphan-trumbull-school-bonds",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/school_district:doniphan_trumbull_public_schools",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Doniphan-Trumbull Public Schools — School bonds and repayment tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+          "provenance": {
+            "sourceUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+            "sourceOrg": "Hall County Nebraska Election Commission",
+            "collectedAt": "2026-11-03T08:51:19.567289+00:00",
+            "verifiedAt": "2026-11-03T08:51:53.958766+00:00",
+            "quote": "Shall Hall County School District 0126\n(Doniphan-Trumbull Public Schools) in the State\nof Nebraska issue its bonds in a total principal\namount not to exceed $17,500,000 for the\npurposes of financing the costs of (a) making\ncertain renovations and constructing one or\nmore additions to the District's existing school\nbuilding and related site improvements, and (b)\npurchasing certain equipment, furniture and\napparatus for such school building and\nadditions; said bonds to be issued from time to\ntime, to be sold at such prices, to bear interest\nat such rates, to become due at such times, and\nto have such other terms and provisions, all as\nmay be fixed and determined by the Board of\nEducation of the District; and\n\n\"Shall the District cause to be levied and\ncollected annually a special levy of taxes\nagainst all the taxable property in the District\nsufficient in rate and amount to pay the principal\nof, the premium, if any, and the interest on said\nbonds as the same become due?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ne-cx-2026-hall-weed-board-dissolution:measure",
+          "contestId": "ne-cx-2026-hall-weed-board-dissolution",
+          "questionText": "Shall the Hall County Weed District Board be\ndissolved and its duties and authority be\nexercised by the Hall County Board of\nCommissioners?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+            "sourceOrg": "Hall County Nebraska Election Commission",
+            "collectedAt": "2026-11-03T08:51:19.567289+00:00",
+            "verifiedAt": "2026-11-03T08:51:53.958766+00:00",
+            "quote": "Shall the Hall County Weed District Board be\ndissolved and its duties and authority be\nexercised by the Hall County Board of\nCommissioners?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-doniphan-trumbull-school-bonds:measure",
+          "contestId": "ne-cx-2026-doniphan-trumbull-school-bonds",
+          "questionText": "Shall Hall County School District 0126\n(Doniphan-Trumbull Public Schools) in the State\nof Nebraska issue its bonds in a total principal\namount not to exceed $17,500,000 for the\npurposes of financing the costs of (a) making\ncertain renovations and constructing one or\nmore additions to the District's existing school\nbuilding and related site improvements, and (b)\npurchasing certain equipment, furniture and\napparatus for such school building and\nadditions; said bonds to be issued from time to\ntime, to be sold at such prices, to bear interest\nat such rates, to become due at such times, and\nto have such other terms and provisions, all as\nmay be fixed and determined by the Board of\nEducation of the District; and\n\n\"Shall the District cause to be levied and\ncollected annually a special levy of taxes\nagainst all the taxable property in the District\nsufficient in rate and amount to pay the principal\nof, the premium, if any, and the interest on said\nbonds as the same become due?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+            "sourceOrg": "Hall County Nebraska Election Commission",
+            "collectedAt": "2026-11-03T08:51:19.567289+00:00",
+            "verifiedAt": "2026-11-03T08:51:53.958766+00:00",
+            "quote": "Shall Hall County School District 0126\n(Doniphan-Trumbull Public Schools) in the State\nof Nebraska issue its bonds in a total principal\namount not to exceed $17,500,000 for the\npurposes of financing the costs of (a) making\ncertain renovations and constructing one or\nmore additions to the District's existing school\nbuilding and related site improvements, and (b)\npurchasing certain equipment, furniture and\napparatus for such school building and\nadditions; said bonds to be issued from time to\ntime, to be sold at such prices, to bear interest\nat such rates, to become due at such times, and\nto have such other terms and provisions, all as\nmay be fixed and determined by the Board of\nEducation of the District; and\n\n\"Shall the District cause to be levied and\ncollected annually a special levy of taxes\nagainst all the taxable property in the District\nsufficient in rate and amount to pay the principal\nof, the premium, if any, and the interest on said\nbonds as the same become due?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ne-cx-2026-hall-weed-board-dissolution",
+          "whatItDoes": "Dissolves the Hall County Weed District Board and transfers its duties and authority to the Hall County Board of Commissioners.",
+          "yesMeans": "Dissolve the weed district board and transfer its responsibilities to the county commissioners.",
+          "noMeans": "Keep these responsibilities with the weed district board.",
+          "parts": [],
+          "sourceUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+          "sourceHash": "9c330ba06204a7f28431147ce4c51e67915ef1f01770c5d43e35e74b6a8bfc91",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:51:53.958766+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-doniphan-trumbull-school-bonds",
+          "whatItDoes": "Authorizes up to $17.5 million in school bonds for renovations, additions, equipment and site improvements at the existing school building. Also authorizes an annual property-tax levy sufficient to repay principal, interest and any premium on the bonds.",
+          "yesMeans": "Authorize the school bonds and the tax levy to repay them.",
+          "noMeans": "Do not authorize these bonds and repayment tax levy.",
+          "parts": [],
+          "sourceUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+          "sourceHash": "0dbab003ec412d945164164e32a57cd77e3e97dfca12e6b07f30955d9979d873",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:51:53.958766+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:51:53.958766+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "d27a071715896b8c82b8cce8d48200b4207ba10c44f1778f56f92c4efcd7cf96",
+        "retrievedAt": "2026-10-14T05:03:25.733599Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script parsed all federal and state office candidate rows in the final statewide November 3, 2026 general candidate list, including printed party and incumbency."
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "1694277901e6c793d3ab0994e72a65293d9532a52e9f2b636140b2ec0a83cd67",
+        "retrievedAt": "2026-10-14T05:03:26.245989Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script parsed both statewide Workers' Compensation Court retention rows and their exact ballot questions. Other listed retention judges are elected by judicial district."
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+        "httpStatus": 200,
+        "rawHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+        "retrievedAt": "2026-10-14T05:03:24.807443Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script extracted all three initiative numbers, ballot questions, official statements, and the official full-text PDF link."
+      },
+      {
+        "requestedUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+        "finalUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+        "httpStatus": 200,
+        "rawHash": "1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306",
+        "retrievedAt": "2026-10-14T05:04:38.936128Z",
+        "publisher": "Nebraska Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script extracted the enacted LR19CA ballot language and official full-text link for the November 2026 general election."
+      },
+      {
+        "requestedUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+        "finalUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+        "httpStatus": 200,
+        "rawHash": "3336e41b39bb2e59bb9d8c2ebc834e42e00b956188e390ed9cdab46772edda65",
+        "retrievedAt": "2026-11-03T08:51:19.567289+00:00",
+        "publisher": "Hall County Nebraska Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current four-page publication sample explicitly General Election November3,2026. Complete operative questions on native page3, corroborated by current formal notice lastupdatedSeptember14. Current government sample/notice pages link exact PDFs. Government-listed URL redirected to HTTP filehost; a separate direct HTTPS filehost request succeeded200 with byte-identical PDF. Receipt records actual HTTPS attempt/finalURL; redirect discovery retained in companion metadata."
+      }
+    ]
+  }
+}

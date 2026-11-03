@@ -1,0 +1,114 @@
+{
+  "sources": [
+    {
+      "requestedUrl": "https://www.lancaster.ne.gov/1337/2026-Nebraska-Statewide-General-Election",
+      "finalUrl": "https://www.lancaster.ne.gov/1337/2026-Nebraska-Statewide-General-Election",
+      "httpStatus": 200,
+      "rawHash": "c76903f6f368c3dd5da0dafbdaff43d4e946695406ff9e07f02c27407fcdcfb4",
+      "retrievedAt": "2026-11-03T08:38:20.012037+00:00",
+      "sourceFile": "sources/d19c50a4cb9760dbea95f71521ae093c7f21387eda6bfc361474e534741e91be.official-index.html",
+      "sourceTextFile": "sources/ne-lancaster-nov3-index.txt",
+      "originalSha256": "c76903f6f368c3dd5da0dafbdaff43d4e946695406ff9e07f02c27407fcdcfb4",
+      "archivedSha256": "d19c50a4cb9760dbea95f71521ae093c7f21387eda6bfc361474e534741e91be",
+      "representation": "SANITIZED_LINKING_HTML",
+      "sanitizer": "fx-cred-v1-2026-08-28"
+    },
+    {
+      "requestedUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33588",
+      "finalUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33588/Questions_Referenda-Listing-GN26?bidId=",
+      "httpStatus": 200,
+      "rawHash": "9be42622392e86c02879cdf602f597ea7000fa48fc09b7d8824ac89470ca884c",
+      "retrievedAt": "2026-11-03T08:38:39.452149+00:00",
+      "sourceFile": "sources/9be42622392e86c02879cdf602f597ea7000fa48fc09b7d8824ac89470ca884c.companion.pdf",
+      "sourceTextFile": "sources/ne-lancaster-nov3-questions.txt",
+      "originalSha256": "9be42622392e86c02879cdf602f597ea7000fa48fc09b7d8824ac89470ca884c",
+      "archivedSha256": "9be42622392e86c02879cdf602f597ea7000fa48fc09b7d8824ac89470ca884c"
+    },
+    {
+      "requestedUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33610",
+      "finalUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33610/Notice-of-Election---Lancaster---GN26?bidId=",
+      "httpStatus": 200,
+      "rawHash": "b702c90c80cfc2d3bb35f8e91050e8465a1ea53fccca0ab87740dd226f95db1d",
+      "retrievedAt": "2026-11-03T08:38:39.272373+00:00",
+      "sourceFile": "sources/b702c90c80cfc2d3bb35f8e91050e8465a1ea53fccca0ab87740dd226f95db1d.companion.pdf",
+      "sourceTextFile": "sources/ne-lancaster-nov3-notice.txt",
+      "originalSha256": "b702c90c80cfc2d3bb35f8e91050e8465a1ea53fccca0ab87740dd226f95db1d",
+      "archivedSha256": "b702c90c80cfc2d3bb35f8e91050e8465a1ea53fccca0ab87740dd226f95db1d"
+    }
+  ],
+  "nativeLinks": [
+    {
+      "label": "1",
+      "uriPrintedInNativeList": "http://www.lancaster.ne.gov/DocumentCenter/View/33589",
+      "requestedSource": "https://www.lancaster.ne.gov/DocumentCenter/View/33589",
+      "protocolUpgrade": "Same official host and document ID; native HTTPS request succeeded200."
+    },
+    {
+      "label": "2",
+      "uriPrintedInNativeList": "http://www.lancaster.ne.gov/DocumentCenter/View/33594",
+      "requestedSource": "https://www.lancaster.ne.gov/DocumentCenter/View/33594",
+      "protocolUpgrade": "Same official host and document ID; native HTTPS request succeeded200."
+    },
+    {
+      "label": "3",
+      "uriPrintedInNativeList": "http://www.lancaster.ne.gov/DocumentCenter/View/33595",
+      "requestedSource": "https://www.lancaster.ne.gov/DocumentCenter/View/33595",
+      "protocolUpgrade": "Same official host and document ID; native HTTPS request succeeded200."
+    },
+    {
+      "label": "4",
+      "uriPrintedInNativeList": "http://www.lancaster.ne.gov/DocumentCenter/View/33596",
+      "requestedSource": "https://www.lancaster.ne.gov/DocumentCenter/View/33596",
+      "protocolUpgrade": "Same official host and document ID; native HTTPS request succeeded200."
+    },
+    {
+      "label": "5",
+      "uriPrintedInNativeList": "http://www.lancaster.ne.gov/DocumentCenter/View/33597",
+      "requestedSource": "https://www.lancaster.ne.gov/DocumentCenter/View/33597",
+      "protocolUpgrade": "Same official host and document ID; native HTTPS request succeeded200."
+    },
+    {
+      "label": "6",
+      "uriPrintedInNativeList": "http://www.lancaster.ne.gov/DocumentCenter/View/33598",
+      "requestedSource": "https://www.lancaster.ne.gov/DocumentCenter/View/33598",
+      "protocolUpgrade": "Same official host and document ID; native HTTPS request succeeded200."
+    },
+    {
+      "label": "freeman",
+      "uriPrintedInNativeList": "http://www.lancaster.ne.gov/DocumentCenter/View/33583",
+      "requestedSource": "https://www.lancaster.ne.gov/DocumentCenter/View/33583",
+      "protocolUpgrade": "Same official host and document ID; native HTTPS request succeeded200."
+    },
+    {
+      "label": "raymond",
+      "uriPrintedInNativeList": "http://www.lancaster.ne.gov/DocumentCenter/View/33585",
+      "requestedSource": "https://www.lancaster.ne.gov/DocumentCenter/View/33585",
+      "protocolUpgrade": "Same official host and document ID; native HTTPS request succeeded200."
+    },
+    {
+      "label": "sprague",
+      "uriPrintedInNativeList": "http://www.lancaster.ne.gov/DocumentCenter/View/33586",
+      "requestedSource": "https://www.lancaster.ne.gov/DocumentCenter/View/33586",
+      "protocolUpgrade": "Same official host and document ID; native HTTPS request succeeded200."
+    },
+    {
+      "label": "denton",
+      "uriPrintedInNativeList": "http://www.lancaster.ne.gov/DocumentCenter/View/33584",
+      "requestedSource": "https://www.lancaster.ne.gov/DocumentCenter/View/33584",
+      "protocolUpgrade": "Same official host and document ID; native HTTPS request succeeded200."
+    }
+  ],
+  "chain": "Current government election page -> native Questions and Referenda Resolutions one-page list -> exact individual ballot-language PDFs. Current government page also links five-page formal Notice of Election corroborating all10questions.",
+  "dateScope": "General Election November3,2026 explicitly printed on native question inventory. Freeman standalone PDF also prints date. Other standalone questions dated by exact list association.",
+  "denominator": {
+    "listedLocalQuestionEntries": 10,
+    "prepared": 10,
+    "scope": "Only this current Lancaster county Questions/Referenda list; not all Nebraska local questions."
+  },
+  "materialConditions": {
+    "alternatives": "Questions2/3 and4/5 are paired competing charter alternatives. Each explanation describes its own proposal. Source questions do not state simultaneous-approval precedence, which remains unknown.",
+    "Freeman": "One ballot field combines school borrowing and annual repayment property-tax levy. Both included. Whole district retained across county lines.",
+    "Denton": "Published yes/no recall represented as MEASURE for whole village. No candidate rows or vacancy/replacement implications added.",
+    "sourceSelection": "Individual official ballot-language PDFs control canonical exact questions. Native notice is corroboration; minor typography/wording differences outside operative effects are retained in source bytes."
+  }
+}

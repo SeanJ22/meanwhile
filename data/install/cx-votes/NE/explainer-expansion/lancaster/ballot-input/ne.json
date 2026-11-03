@@ -1,0 +1,611 @@
+{
+  "ballots": {
+    "NE:ne-2026-11-03": {
+      "election": {
+        "id": "ne-2026-11-03",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "NE"
+      },
+      "contests": [
+        {
+          "id": "ne-cx-2026-lincoln-volleyball-state-assistance",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:lincoln",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lincoln — Question 1: Volleyball complex funding",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33589",
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33589",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.237560+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "N4VB, a Nebraska nonproﬁt corporation, and the City of Lincoln, Nebraska, propose to establish a\nvolleyball sports complex economic development project by appropriating annually from state\nassistance received by the City pursuant to the Sports Arena Facility Financing Assistance Act for the\npurpose of funding a volleyball sports complex to be owned by N4VB, and related infrastructure\nimprovements, which may include ﬁnancing of the privately owned sports complex through the\nissuance of revenue bonds to be repaid from such state assistance.\n\nShall the City of Lincoln, Nebraska establish a volleyball sports complex economic development\nproject as described above by appropriating annually from state assistance received by the City\npursuant to the Sports Arena Facility Financing Assistance Act?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-lincoln-elections-2028",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:lincoln",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lincoln — Question 2: City election schedule starting 2028",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33594",
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33594",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.009507+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "SHALL ARTICLES III AND IV OF THE LINCOLN CITY CHARTER BE AMENDED TO ALIGN\nCITY ELECTIONS WITH STATEWIDE ELECTIONS BEGINNING IN 2028 SO THAT MAYORAL\nAND DISTRICT COUNCIL MEMBER ELECTIONS ARE HELD IN BOTH 2027 AND 2028; AND\nTHAT AT-LARGE COUNCIL MEMBERS ELECTED IN 2025 SHALL SERVE UNTIL THEIR\nSUCCESSORS ARE ELECTED IN 2030; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-\nYEAR TERM FOR PURPOSES OF TERM LIMITS?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-lincoln-elections-2030-alternative",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:lincoln",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lincoln — Question 3: Alternative city election schedule starting 2030",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33595",
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33595",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.148574+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLES III AND IV OF THE LINCOLN CITY\nCHARTER BE AMENDED TO ALIGN CITY ELECTIONS WITH STATEWIDE\nELECTIONS BEGINNING IN 2030 SO THAT MAYORAL AND DISTRICT COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2027 AND 2030; AND THAT AT-LARGE COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2029 AND 2032; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-YEAR\nTERM FOR PURPOSES OF TERM LIMITS?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-lincoln-council-two-term-limit",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:lincoln",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lincoln — Question 4: Two-term council limit",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33596",
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33596",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.268525+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE AMENDED TO PROVIDE THAT COUNCIL\nMEMBERS SHALL NOT BE QUALIFIED TO HOLD OFFICE FOR MORE THAN TWO\nCONSECUTIVE FOUR-YEAR TERMS?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-lincoln-council-three-term-limit-alternative",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:lincoln",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lincoln — Question 5: Alternative three-term council limit",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33597",
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33597",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.054983+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE\nAMENDED TO PROVIDE THAT COUNCIL MEMBERS SHALL NOT BE QUALIFIED TO HOLD\nOFFICE FOR MORE THAN THREE CONSECUTIVE FOUR-YEAR TERMS?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-lincoln-outside-city-voting",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:lincoln",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lincoln — Question 6: Voting from outside city limits",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33598",
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33598",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.261951+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "SHALL ARTICLE III, SECTION 2 AND ARTICLE IV, SECTION 2A OF THE CHARTER BE AMENDED\nTO ALLOW ALL CITIZENS RESIDING IN THE THREE-MILE EXTRATERRITORIAL ZONING\nJURISDICTION AROUND THE CITY, BUT NOT WITHIN THE CITY’S CORPORATE LIMITS, TO\nVOTE IN ITS ELECTIONS?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-freeman-school-bonds",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/school_district:freeman_public_schools",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Freeman Public Schools — School bonds and repayment tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33583",
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33583",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.311687+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "Shall Gage County School District 0034 (Freeman Public Schools) in the State of Nebraska issue its\nbonds in a total principal amount not to exceed $13,995,000 for purposes of ﬁnancing the costs of (a)\nconstructing a new building on the District’s existing campus that will include career and trades\neducation and additional classroom areas, (b) renovating portions of the existing school building,\nincluding the expansion of the current kitchen and repurposing certain classrooms and areas in\nconnection with the construction of the new building, and (c) purchasing certain necessary\nequipment, furniture and apparatus for such new building and renovations, and making related site\nimprovements; said bonds to be issued from time to time, to be sold at such prices, to bear interest at\nsuch rates, to become due at such times, and to have such other terms and provisions, all as may be\nﬁxed and determined by the Board of Education of the District; and\n\nShall the District cause to be levied and collected annually a special levy of taxes against all the\ntaxable property in the District sufﬁcient in rate and amount to pay the principal of, the premium, if\nany, and the interest on said bonds as the same become due?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-raymond-sales-use-tax",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:raymond",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Raymond — Sales and use tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33585",
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33585",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.410242+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "Shall the governing body of the Village of Raymond, Lancaster County, Nebraska impose a sales and\nuse tax upon the same transactions within the municipality on which the State of Nebraska is\nauthorized to impose a tax, speciﬁcally, impose a tax of one and one-half percent (1.5%) for village\ncapital and infrastructure improvements including streets, utilities, parks, landscaping, beautiﬁcation\nand tree planting."
+          }
+        },
+        {
+          "id": "ne-cx-2026-sprague-sales-use-tax",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:sprague",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Sprague — Sales and use tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33586",
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33586",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.461167+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "The Village of Sprague, Nebraska proposes to impose a sales and use tax in the amount of one and\none-half percent (1.5%) upon certain transactions within the Village on which the State of Nebraska\nand Village of Sprague are authorized to impose pursuant to the Nebraska Local Option Revenue Act.\n\nShall the governing body of the incorporated municipality impose a sales and use tax in the amount\nof 1.5% upon the same transactions within such municipality on which the State of Nebraska is\nauthorized to impose a tax?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-denton-trustee-recall",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:denton",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Denton — Recall of village trustee Amanda Fangmeier",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33584",
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33584",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:42:25.063430+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "Shall Amanda Fangmeier be removed from the ofﬁce of the Village of Denton Board of Trustees?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ne-cx-2026-lincoln-volleyball-state-assistance:measure",
+          "contestId": "ne-cx-2026-lincoln-volleyball-state-assistance",
+          "officialNumber": "1",
+          "questionText": "N4VB, a Nebraska nonproﬁt corporation, and the City of Lincoln, Nebraska, propose to establish a\nvolleyball sports complex economic development project by appropriating annually from state\nassistance received by the City pursuant to the Sports Arena Facility Financing Assistance Act for the\npurpose of funding a volleyball sports complex to be owned by N4VB, and related infrastructure\nimprovements, which may include ﬁnancing of the privately owned sports complex through the\nissuance of revenue bonds to be repaid from such state assistance.\n\nShall the City of Lincoln, Nebraska establish a volleyball sports complex economic development\nproject as described above by appropriating annually from state assistance received by the City\npursuant to the Sports Arena Facility Financing Assistance Act?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33589",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.237560+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "N4VB, a Nebraska nonproﬁt corporation, and the City of Lincoln, Nebraska, propose to establish a\nvolleyball sports complex economic development project by appropriating annually from state\nassistance received by the City pursuant to the Sports Arena Facility Financing Assistance Act for the\npurpose of funding a volleyball sports complex to be owned by N4VB, and related infrastructure\nimprovements, which may include ﬁnancing of the privately owned sports complex through the\nissuance of revenue bonds to be repaid from such state assistance.\n\nShall the City of Lincoln, Nebraska establish a volleyball sports complex economic development\nproject as described above by appropriating annually from state assistance received by the City\npursuant to the Sports Arena Facility Financing Assistance Act?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-lincoln-elections-2028:measure",
+          "contestId": "ne-cx-2026-lincoln-elections-2028",
+          "officialNumber": "2",
+          "questionText": "SHALL ARTICLES III AND IV OF THE LINCOLN CITY CHARTER BE AMENDED TO ALIGN\nCITY ELECTIONS WITH STATEWIDE ELECTIONS BEGINNING IN 2028 SO THAT MAYORAL\nAND DISTRICT COUNCIL MEMBER ELECTIONS ARE HELD IN BOTH 2027 AND 2028; AND\nTHAT AT-LARGE COUNCIL MEMBERS ELECTED IN 2025 SHALL SERVE UNTIL THEIR\nSUCCESSORS ARE ELECTED IN 2030; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-\nYEAR TERM FOR PURPOSES OF TERM LIMITS?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33594",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.009507+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "SHALL ARTICLES III AND IV OF THE LINCOLN CITY CHARTER BE AMENDED TO ALIGN\nCITY ELECTIONS WITH STATEWIDE ELECTIONS BEGINNING IN 2028 SO THAT MAYORAL\nAND DISTRICT COUNCIL MEMBER ELECTIONS ARE HELD IN BOTH 2027 AND 2028; AND\nTHAT AT-LARGE COUNCIL MEMBERS ELECTED IN 2025 SHALL SERVE UNTIL THEIR\nSUCCESSORS ARE ELECTED IN 2030; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-\nYEAR TERM FOR PURPOSES OF TERM LIMITS?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-lincoln-elections-2030-alternative:measure",
+          "contestId": "ne-cx-2026-lincoln-elections-2030-alternative",
+          "officialNumber": "3",
+          "questionText": "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLES III AND IV OF THE LINCOLN CITY\nCHARTER BE AMENDED TO ALIGN CITY ELECTIONS WITH STATEWIDE\nELECTIONS BEGINNING IN 2030 SO THAT MAYORAL AND DISTRICT COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2027 AND 2030; AND THAT AT-LARGE COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2029 AND 2032; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-YEAR\nTERM FOR PURPOSES OF TERM LIMITS?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33595",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.148574+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLES III AND IV OF THE LINCOLN CITY\nCHARTER BE AMENDED TO ALIGN CITY ELECTIONS WITH STATEWIDE\nELECTIONS BEGINNING IN 2030 SO THAT MAYORAL AND DISTRICT COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2027 AND 2030; AND THAT AT-LARGE COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2029 AND 2032; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-YEAR\nTERM FOR PURPOSES OF TERM LIMITS?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-lincoln-council-two-term-limit:measure",
+          "contestId": "ne-cx-2026-lincoln-council-two-term-limit",
+          "officialNumber": "4",
+          "questionText": "SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE AMENDED TO PROVIDE THAT COUNCIL\nMEMBERS SHALL NOT BE QUALIFIED TO HOLD OFFICE FOR MORE THAN TWO\nCONSECUTIVE FOUR-YEAR TERMS?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33596",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.268525+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE AMENDED TO PROVIDE THAT COUNCIL\nMEMBERS SHALL NOT BE QUALIFIED TO HOLD OFFICE FOR MORE THAN TWO\nCONSECUTIVE FOUR-YEAR TERMS?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-lincoln-council-three-term-limit-alternative:measure",
+          "contestId": "ne-cx-2026-lincoln-council-three-term-limit-alternative",
+          "officialNumber": "5",
+          "questionText": "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE\nAMENDED TO PROVIDE THAT COUNCIL MEMBERS SHALL NOT BE QUALIFIED TO HOLD\nOFFICE FOR MORE THAN THREE CONSECUTIVE FOUR-YEAR TERMS?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33597",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.054983+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE\nAMENDED TO PROVIDE THAT COUNCIL MEMBERS SHALL NOT BE QUALIFIED TO HOLD\nOFFICE FOR MORE THAN THREE CONSECUTIVE FOUR-YEAR TERMS?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-lincoln-outside-city-voting:measure",
+          "contestId": "ne-cx-2026-lincoln-outside-city-voting",
+          "officialNumber": "6",
+          "questionText": "SHALL ARTICLE III, SECTION 2 AND ARTICLE IV, SECTION 2A OF THE CHARTER BE AMENDED\nTO ALLOW ALL CITIZENS RESIDING IN THE THREE-MILE EXTRATERRITORIAL ZONING\nJURISDICTION AROUND THE CITY, BUT NOT WITHIN THE CITY’S CORPORATE LIMITS, TO\nVOTE IN ITS ELECTIONS?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33598",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.261951+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "SHALL ARTICLE III, SECTION 2 AND ARTICLE IV, SECTION 2A OF THE CHARTER BE AMENDED\nTO ALLOW ALL CITIZENS RESIDING IN THE THREE-MILE EXTRATERRITORIAL ZONING\nJURISDICTION AROUND THE CITY, BUT NOT WITHIN THE CITY’S CORPORATE LIMITS, TO\nVOTE IN ITS ELECTIONS?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-freeman-school-bonds:measure",
+          "contestId": "ne-cx-2026-freeman-school-bonds",
+          "questionText": "Shall Gage County School District 0034 (Freeman Public Schools) in the State of Nebraska issue its\nbonds in a total principal amount not to exceed $13,995,000 for purposes of ﬁnancing the costs of (a)\nconstructing a new building on the District’s existing campus that will include career and trades\neducation and additional classroom areas, (b) renovating portions of the existing school building,\nincluding the expansion of the current kitchen and repurposing certain classrooms and areas in\nconnection with the construction of the new building, and (c) purchasing certain necessary\nequipment, furniture and apparatus for such new building and renovations, and making related site\nimprovements; said bonds to be issued from time to time, to be sold at such prices, to bear interest at\nsuch rates, to become due at such times, and to have such other terms and provisions, all as may be\nﬁxed and determined by the Board of Education of the District; and\n\nShall the District cause to be levied and collected annually a special levy of taxes against all the\ntaxable property in the District sufﬁcient in rate and amount to pay the principal of, the premium, if\nany, and the interest on said bonds as the same become due?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33583",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.311687+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "Shall Gage County School District 0034 (Freeman Public Schools) in the State of Nebraska issue its\nbonds in a total principal amount not to exceed $13,995,000 for purposes of ﬁnancing the costs of (a)\nconstructing a new building on the District’s existing campus that will include career and trades\neducation and additional classroom areas, (b) renovating portions of the existing school building,\nincluding the expansion of the current kitchen and repurposing certain classrooms and areas in\nconnection with the construction of the new building, and (c) purchasing certain necessary\nequipment, furniture and apparatus for such new building and renovations, and making related site\nimprovements; said bonds to be issued from time to time, to be sold at such prices, to bear interest at\nsuch rates, to become due at such times, and to have such other terms and provisions, all as may be\nﬁxed and determined by the Board of Education of the District; and\n\nShall the District cause to be levied and collected annually a special levy of taxes against all the\ntaxable property in the District sufﬁcient in rate and amount to pay the principal of, the premium, if\nany, and the interest on said bonds as the same become due?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-raymond-sales-use-tax:measure",
+          "contestId": "ne-cx-2026-raymond-sales-use-tax",
+          "questionText": "Shall the governing body of the Village of Raymond, Lancaster County, Nebraska impose a sales and\nuse tax upon the same transactions within the municipality on which the State of Nebraska is\nauthorized to impose a tax, speciﬁcally, impose a tax of one and one-half percent (1.5%) for village\ncapital and infrastructure improvements including streets, utilities, parks, landscaping, beautiﬁcation\nand tree planting.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33585",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.410242+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "Shall the governing body of the Village of Raymond, Lancaster County, Nebraska impose a sales and\nuse tax upon the same transactions within the municipality on which the State of Nebraska is\nauthorized to impose a tax, speciﬁcally, impose a tax of one and one-half percent (1.5%) for village\ncapital and infrastructure improvements including streets, utilities, parks, landscaping, beautiﬁcation\nand tree planting."
+          }
+        },
+        {
+          "id": "ne-cx-2026-sprague-sales-use-tax:measure",
+          "contestId": "ne-cx-2026-sprague-sales-use-tax",
+          "questionText": "The Village of Sprague, Nebraska proposes to impose a sales and use tax in the amount of one and\none-half percent (1.5%) upon certain transactions within the Village on which the State of Nebraska\nand Village of Sprague are authorized to impose pursuant to the Nebraska Local Option Revenue Act.\n\nShall the governing body of the incorporated municipality impose a sales and use tax in the amount\nof 1.5% upon the same transactions within such municipality on which the State of Nebraska is\nauthorized to impose a tax?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33586",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:40:05.461167+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "The Village of Sprague, Nebraska proposes to impose a sales and use tax in the amount of one and\none-half percent (1.5%) upon certain transactions within the Village on which the State of Nebraska\nand Village of Sprague are authorized to impose pursuant to the Nebraska Local Option Revenue Act.\n\nShall the governing body of the incorporated municipality impose a sales and use tax in the amount\nof 1.5% upon the same transactions within such municipality on which the State of Nebraska is\nauthorized to impose a tax?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-denton-trustee-recall:measure",
+          "contestId": "ne-cx-2026-denton-trustee-recall",
+          "questionText": "Shall Amanda Fangmeier be removed from the ofﬁce of the Village of Denton Board of Trustees?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33584",
+            "sourceOrg": "Lancaster County Nebraska Election Commissioner",
+            "collectedAt": "2026-11-03T08:42:25.063430+00:00",
+            "verifiedAt": "2026-11-03T08:43:03.391841+00:00",
+            "quote": "Shall Amanda Fangmeier be removed from the ofﬁce of the Village of Denton Board of Trustees?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ne-cx-2026-lincoln-volleyball-state-assistance",
+          "whatItDoes": "Allows Lincoln to use annual state assistance under the Sports Arena Facility Financing Assistance Act for a volleyball complex owned by nonprofit N4VB and related infrastructure. Financing may include revenue bonds repaid from that state assistance.",
+          "yesMeans": "Authorize the project and allocation of state assistance.",
+          "noMeans": "Do not authorize this project and funding allocation through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33589",
+          "sourceHash": "262464bbd25a103754cf73f6c3239f9d9a54250a84fad0d67dc90d298ca5b566",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:43:03.391841+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-lincoln-elections-2028",
+          "whatItDoes": "Changes the city charter to align city elections with statewide elections starting in 2028. Mayor and district council elections would occur in both 2027 and 2028; at-large council members elected in 2025 would serve until successors are elected in 2030. Transition terms would count as four-year terms toward term limits.",
+          "yesMeans": "Approve this election schedule and transition rules.",
+          "noMeans": "Do not adopt this proposed schedule and transition rules.",
+          "parts": [],
+          "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33594",
+          "sourceHash": "e46e6d2186b21b492ab303282bc55decfc9cd8372ec337274158af5a04dea372",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:43:03.391841+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-lincoln-elections-2030-alternative",
+          "whatItDoes": "Offers the city’s alternative charter change aligning city elections with statewide elections starting in 2030. Mayor and district council elections would occur in both 2027 and 2030, and at-large council elections in both 2029 and 2032. Transition terms would count as four-year terms toward term limits.",
+          "yesMeans": "Approve this alternative election schedule and transition rules.",
+          "noMeans": "Do not adopt this alternative schedule and transition rules.",
+          "parts": [],
+          "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33595",
+          "sourceHash": "f8f30c16c6a9320f9d52a9dc8a8117f68703e958dbda8c4285caf5eba4d8d159",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:43:03.391841+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-lincoln-council-two-term-limit",
+          "whatItDoes": "Changes the city charter to limit council members to two consecutive four-year terms, or eight consecutive years.",
+          "yesMeans": "Adopt the two-consecutive-term limit.",
+          "noMeans": "Do not adopt this proposed term limit.",
+          "parts": [],
+          "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33596",
+          "sourceHash": "5c6d6049df2f4220c24b18164dd9697128c485cc9b513168e46f33314364a2e7",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:43:03.391841+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-lincoln-council-three-term-limit-alternative",
+          "whatItDoes": "Offers the city’s alternative charter change limiting council members to three consecutive four-year terms, or twelve consecutive years.",
+          "yesMeans": "Adopt the three-consecutive-term limit.",
+          "noMeans": "Do not adopt this alternative term limit.",
+          "parts": [],
+          "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33597",
+          "sourceHash": "34f1b70a1067f4bbe737c2c7087a24c99ee729f55ef9b4916b168da24273e275",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:43:03.391841+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-lincoln-outside-city-voting",
+          "whatItDoes": "Changes the city charter to let citizens who live outside city limits but within Lincoln’s three-mile zoning jurisdiction vote in city elections.",
+          "yesMeans": "Allow these residents outside the city limits to vote in city elections.",
+          "noMeans": "Do not adopt this expansion of city voting eligibility.",
+          "parts": [],
+          "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33598",
+          "sourceHash": "45b4fbfa7261e94182b3b143c754512bad8b98f4441fdcafa28c9a1d6bd6874c",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:43:03.391841+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-freeman-school-bonds",
+          "whatItDoes": "Authorizes up to $13.995 million in school bonds for a new building with career and trades education and classrooms, renovations including kitchen expansion, equipment and site improvements. Also authorizes an annual property-tax levy sufficient to repay principal, interest and any premium on the bonds.",
+          "yesMeans": "Authorize the school bonds and the tax levy to repay them.",
+          "noMeans": "Do not authorize these bonds and repayment tax levy.",
+          "parts": [],
+          "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33583",
+          "sourceHash": "cc98bd35866746cdd36f0215eeb247bb7c3b3ea7a35c8af6ac23774e725604c7",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:43:03.391841+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-raymond-sales-use-tax",
+          "whatItDoes": "Authorizes a 1.5% village sales and use tax on transactions taxable by the state, for capital and infrastructure improvements including streets, utilities, parks, landscaping, beautification and tree planting.",
+          "yesMeans": "Authorize the proposed 1.5% sales and use tax.",
+          "noMeans": "Do not authorize this proposed tax.",
+          "parts": [],
+          "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33585",
+          "sourceHash": "e8dc4cd1b0d000fb9d0620cfad8174edec36c0d0bfa8d38b75f73061e6992759",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:43:03.391841+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-sprague-sales-use-tax",
+          "whatItDoes": "Authorizes a 1.5% village sales and use tax on the same types of transactions that the state may tax.",
+          "yesMeans": "Authorize the proposed 1.5% sales and use tax.",
+          "noMeans": "Do not authorize this proposed tax.",
+          "parts": [],
+          "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33586",
+          "sourceHash": "211ac54eed21f984854251e00fad981c4dd0c44a1798a081a8912fcff0544997",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:43:03.391841+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-denton-trustee-recall",
+          "whatItDoes": "Asks whether to remove Amanda Fangmeier from the Village of Denton Board of Trustees.",
+          "yesMeans": "Remove Amanda Fangmeier from that office.",
+          "noMeans": "Keep Amanda Fangmeier in that office.",
+          "parts": [],
+          "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33584",
+          "sourceHash": "0d8a9f0b3375cc5d7d2a8e5ff0b9759cff64921d428b2a66f06b6cd4de41a197",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:43:03.391841+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:43:03.391841+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "d27a071715896b8c82b8cce8d48200b4207ba10c44f1778f56f92c4efcd7cf96",
+        "retrievedAt": "2026-10-14T05:03:25.733599Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script parsed all federal and state office candidate rows in the final statewide November 3, 2026 general candidate list, including printed party and incumbency."
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "1694277901e6c793d3ab0994e72a65293d9532a52e9f2b636140b2ec0a83cd67",
+        "retrievedAt": "2026-10-14T05:03:26.245989Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script parsed both statewide Workers' Compensation Court retention rows and their exact ballot questions. Other listed retention judges are elected by judicial district."
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+        "httpStatus": 200,
+        "rawHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+        "retrievedAt": "2026-10-14T05:03:24.807443Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script extracted all three initiative numbers, ballot questions, official statements, and the official full-text PDF link."
+      },
+      {
+        "requestedUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+        "finalUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+        "httpStatus": 200,
+        "rawHash": "1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306",
+        "retrievedAt": "2026-10-14T05:04:38.936128Z",
+        "publisher": "Nebraska Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script extracted the enacted LR19CA ballot language and official full-text link for the November 2026 general election."
+      },
+      {
+        "requestedUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33589",
+        "finalUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33589/City-of-Lincoln-Sports-Arena-Facility-Financing-Assistance?bidId=",
+        "httpStatus": 200,
+        "rawHash": "27dc75d4504f32f7d0b7465a025cbb5ecf84302aed0436027130999df08204b6",
+        "retrievedAt": "2026-11-03T08:40:05.237560+00:00",
+        "publisher": "Lancaster County Nebraska Election Commissioner",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native individual official ballot-language PDF linked by the native one-page Questions/Referenda list explicitly General Election November3,2026, itself linked by the current official county election page. Native five-page Notice of Election corroborates every question."
+      },
+      {
+        "requestedUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33594",
+        "finalUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33594/City-of-Lincoln-Charter-Amendment-2?bidId=",
+        "httpStatus": 200,
+        "rawHash": "54dc93970c367b9d5a147e9368b5bac413691e230e8e9e68598f3b02f823b98c",
+        "retrievedAt": "2026-11-03T08:40:05.009507+00:00",
+        "publisher": "Lancaster County Nebraska Election Commissioner",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native individual official ballot-language PDF linked by the native one-page Questions/Referenda list explicitly General Election November3,2026, itself linked by the current official county election page. Native five-page Notice of Election corroborates every question."
+      },
+      {
+        "requestedUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33595",
+        "finalUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33595/City-of-Lincoln-Charter-Amendment-3?bidId=",
+        "httpStatus": 200,
+        "rawHash": "903475c0a2faa0b04c7f2bde8ea8730e20e55538fb28263c0712a468a9e5c93d",
+        "retrievedAt": "2026-11-03T08:40:05.148574+00:00",
+        "publisher": "Lancaster County Nebraska Election Commissioner",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native individual official ballot-language PDF linked by the native one-page Questions/Referenda list explicitly General Election November3,2026, itself linked by the current official county election page. Native five-page Notice of Election corroborates every question."
+      },
+      {
+        "requestedUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33596",
+        "finalUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33596/City-of-Lincoln-Charter-Amendment-4?bidId=",
+        "httpStatus": 200,
+        "rawHash": "f9b841986281dc066cec850a784e633c61be1b9a7e1db5919ee02e636554875d",
+        "retrievedAt": "2026-11-03T08:40:05.268525+00:00",
+        "publisher": "Lancaster County Nebraska Election Commissioner",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native individual official ballot-language PDF linked by the native one-page Questions/Referenda list explicitly General Election November3,2026, itself linked by the current official county election page. Native five-page Notice of Election corroborates every question."
+      },
+      {
+        "requestedUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33597",
+        "finalUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33597/City-of-Lincoln-Charter-Amendment-5?bidId=",
+        "httpStatus": 200,
+        "rawHash": "6cf046eb94767ea15f963a735c9a59420c7d255af894ce4b82f43853d21241d1",
+        "retrievedAt": "2026-11-03T08:40:05.054983+00:00",
+        "publisher": "Lancaster County Nebraska Election Commissioner",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native individual official ballot-language PDF linked by the native one-page Questions/Referenda list explicitly General Election November3,2026, itself linked by the current official county election page. Native five-page Notice of Election corroborates every question."
+      },
+      {
+        "requestedUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33598",
+        "finalUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33598/City-of-Lincoln-Charter-Amendment-6?bidId=",
+        "httpStatus": 200,
+        "rawHash": "a62b5673db5e918815c2a84e4ffc2cf105fdfbae59d70474eb2e56fc814bbbda",
+        "retrievedAt": "2026-11-03T08:40:05.261951+00:00",
+        "publisher": "Lancaster County Nebraska Election Commissioner",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native individual official ballot-language PDF linked by the native one-page Questions/Referenda list explicitly General Election November3,2026, itself linked by the current official county election page. Native five-page Notice of Election corroborates every question."
+      },
+      {
+        "requestedUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33583",
+        "finalUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33583/Freeman-Public-Schools-School-Bond?bidId=",
+        "httpStatus": 200,
+        "rawHash": "9427f38a50e7858078d14ce1cc5b8144b37ce9f334531c05ec91f170dc1d33a3",
+        "retrievedAt": "2026-11-03T08:40:05.311687+00:00",
+        "publisher": "Lancaster County Nebraska Election Commissioner",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native individual official ballot-language PDF linked by the native one-page Questions/Referenda list explicitly General Election November3,2026, itself linked by the current official county election page. Native five-page Notice of Election corroborates every question."
+      },
+      {
+        "requestedUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33585",
+        "finalUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33585/Village-of-Raymond-Sales-and-Use-Tax?bidId=",
+        "httpStatus": 200,
+        "rawHash": "3f94e69b33c143e546acd265ae0b6af522f37e26ea2c5f4fd514f571fc3dddd3",
+        "retrievedAt": "2026-11-03T08:40:05.410242+00:00",
+        "publisher": "Lancaster County Nebraska Election Commissioner",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native individual official ballot-language PDF linked by the native one-page Questions/Referenda list explicitly General Election November3,2026, itself linked by the current official county election page. Native five-page Notice of Election corroborates every question."
+      },
+      {
+        "requestedUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33586",
+        "finalUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33586/Village-of-Sprague-Sales-and-Use-Tax?bidId=",
+        "httpStatus": 200,
+        "rawHash": "4ef281a7918ad60a420a5fe5cef83eaa0827a75717a98eef4663f19499b74836",
+        "retrievedAt": "2026-11-03T08:40:05.461167+00:00",
+        "publisher": "Lancaster County Nebraska Election Commissioner",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native individual official ballot-language PDF linked by the native one-page Questions/Referenda list explicitly General Election November3,2026, itself linked by the current official county election page. Native five-page Notice of Election corroborates every question."
+      },
+      {
+        "requestedUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33584",
+        "finalUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33584/Village-of-Denton-Board-of-Trustees-Recall?bidId=",
+        "httpStatus": 200,
+        "rawHash": "37a1b774861d4e7a9ddd5439845b563a924edfd89d9a3741d2953f12d60b7a64",
+        "retrievedAt": "2026-11-03T08:42:25.063430+00:00",
+        "publisher": "Lancaster County Nebraska Election Commissioner",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native individual official ballot-language PDF linked by the native one-page Questions/Referenda list explicitly General Election November3,2026, itself linked by the current official county election page. Native five-page Notice of Election corroborates every question."
+      }
+    ]
+  }
+}

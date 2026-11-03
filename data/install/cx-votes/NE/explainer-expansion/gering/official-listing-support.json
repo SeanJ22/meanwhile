@@ -1,0 +1,35 @@
+{
+  "listing": {
+    "sourceUrl": "https://scottsbluffcountyne.gov/election-office/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T08:49:50.479041+00:00",
+    "sourceFile": "sources/762acd2076a99ef6cf5a66ef315c95030a0e040c14c744686bb84cd61ad6527c.official-index.html",
+    "originalSha256": "762acd2076a99ef6cf5a66ef315c95030a0e040c14c744686bb84cd61ad6527c",
+    "archivedSha256": "762acd2076a99ef6cf5a66ef315c95030a0e040c14c744686bb84cd61ad6527c"
+  },
+  "companions": [
+    {
+      "sourceFile": "sources/ne-gering-native-field.png",
+      "sha256": "7f4332cf84a60104bc4828f43d9f481ab597bb923b79371e704e68931e598701"
+    },
+    {
+      "sourceFile": "sources/ne-gering-native-field.meta.json",
+      "sha256": "fbec09fa21831398d4151a7febc516a3974d123bf4b79d47b12e9560b0352b15"
+    },
+    {
+      "sourceFile": "sources/ne-gering-native-field-raw-ocr.txt",
+      "sha256": "47b43ac1dc59c3e87dc7254dbe5241848fcdf33de6914af8574eb2760e359367"
+    },
+    {
+      "sourceFile": "sources/ne-gering-native-date.png",
+      "sha256": "e200879f2d5bc6c64b69ff7da5b783fe622a0b451818a99a8d8fa55159854a56"
+    },
+    {
+      "sourceFile": "sources/ne-gering-native-date-ocr.txt",
+      "sha256": "5bfef0a739466c18cac459cadda4f67c30f26f99246ef48ddedb051b4c2fa884"
+    }
+  ],
+  "sourceScope": "Native120page complete advertised sample batch CRA–HLD retained. Exactly one Gering whole-school question sourcechecked here, on nativepage2 ofCastleRockAstyle. Nativepage1dateNovember3,2026. No all120page completeness assertion.",
+  "geography": "Schooldistrict question expressly levies all taxable property in the district; exact GeringPublicSchools CensusK12identity retained. Not CastleRockAprecinct-only scope.",
+  "conditions": "Both up29.75M general-obligation borrowing and annual principal/interest repayment property-tax authority included. Project list is may include withoutlimitation, not guaranteed exact construction configuration."
+}

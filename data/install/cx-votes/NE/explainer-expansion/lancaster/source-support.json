@@ -1,0 +1,299 @@
+[
+  {
+    "contestId": "ne-cx-2026-lincoln-volleyball-state-assistance",
+    "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33589",
+    "rawHash": "27dc75d4504f32f7d0b7465a025cbb5ecf84302aed0436027130999df08204b6",
+    "sourceFile": "sources/27dc75d4504f32f7d0b7465a025cbb5ecf84302aed0436027130999df08204b6.source",
+    "sourceTextFile": "sources/c7bdce8eb8edcacfe41afe6719d126647ea90d70f214859eb63b5fb70373e4da.txt",
+    "excerpt": "N4VB, a Nebraska nonproﬁt corporation, and the City of Lincoln, Nebraska, propose to establish a\nvolleyball sports complex economic development project by appropriating annually from state\nassistance received by the City pursuant to the Sports Arena Facility Financing Assistance Act for the\npurpose of funding a volleyball sports complex to be owned by N4VB, and related infrastructure\nimprovements, which may include ﬁnancing of the privately owned sports complex through the\nissuance of revenue bonds to be repaid from such state assistance.\n\nShall the City of Lincoln, Nebraska establish a volleyball sports complex economic development\nproject as described above by appropriating annually from state assistance received by the City\npursuant to the Sports Arena Facility Financing Assistance Act?",
+    "fields": {
+      "whatItDoes": [
+        "N4VB, a Nebraska nonproﬁt corporation, and the City of Lincoln, Nebraska, propose to establish a\nvolleyball sports complex economic development project by appropriating annually from state\nassistance received by the City pursuant to the Sports Arena Facility Financing Assistance Act for the\npurpose of funding a volleyball sports complex to be owned by N4VB, and related infrastructure\nimprovements, which may include ﬁnancing of the privately owned sports complex through the\nissuance of revenue bonds to be repaid from such state assistance.\n\nShall the City of Lincoln, Nebraska establish a volleyball sports complex economic development\nproject as described above by appropriating annually from state assistance received by the City\npursuant to the Sports Arena Facility Financing Assistance Act?"
+      ],
+      "yesMeans": [
+        "N4VB, a Nebraska nonproﬁt corporation, and the City of Lincoln, Nebraska, propose to establish a\nvolleyball sports complex economic development project by appropriating annually from state\nassistance received by the City pursuant to the Sports Arena Facility Financing Assistance Act for the\npurpose of funding a volleyball sports complex to be owned by N4VB, and related infrastructure\nimprovements, which may include ﬁnancing of the privately owned sports complex through the\nissuance of revenue bonds to be repaid from such state assistance.\n\nShall the City of Lincoln, Nebraska establish a volleyball sports complex economic development\nproject as described above by appropriating annually from state assistance received by the City\npursuant to the Sports Arena Facility Financing Assistance Act?"
+      ],
+      "noMeans": [
+        "N4VB, a Nebraska nonproﬁt corporation, and the City of Lincoln, Nebraska, propose to establish a\nvolleyball sports complex economic development project by appropriating annually from state\nassistance received by the City pursuant to the Sports Arena Facility Financing Assistance Act for the\npurpose of funding a volleyball sports complex to be owned by N4VB, and related infrastructure\nimprovements, which may include ﬁnancing of the privately owned sports complex through the\nissuance of revenue bonds to be repaid from such state assistance.\n\nShall the City of Lincoln, Nebraska establish a volleyball sports complex economic development\nproject as described above by appropriating annually from state assistance received by the City\npursuant to the Sports Arena Facility Financing Assistance Act?"
+      ]
+    },
+    "semanticConditions": [
+      "Individual question effect only; no unstated enactment date, household cost or legal rule inferred."
+    ],
+    "inventoryScope": "Current official Lancaster November3questions/referenda list contains10entries. This packet covers all10 published entries, including the Denton recall. Not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 1,
+      "scope": "Complete bounded question from native individual official ballot-language PDF, including any operative preamble needed to state identity/funding/purpose; no truncation."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ne-cx-2026-lincoln-elections-2028",
+    "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33594",
+    "rawHash": "54dc93970c367b9d5a147e9368b5bac413691e230e8e9e68598f3b02f823b98c",
+    "sourceFile": "sources/54dc93970c367b9d5a147e9368b5bac413691e230e8e9e68598f3b02f823b98c.source",
+    "sourceTextFile": "sources/7ce879f9d4a2029d099178fd21d697c228c6c336349373054ec4a392c4ae9cfe.txt",
+    "excerpt": "SHALL ARTICLES III AND IV OF THE LINCOLN CITY CHARTER BE AMENDED TO ALIGN\nCITY ELECTIONS WITH STATEWIDE ELECTIONS BEGINNING IN 2028 SO THAT MAYORAL\nAND DISTRICT COUNCIL MEMBER ELECTIONS ARE HELD IN BOTH 2027 AND 2028; AND\nTHAT AT-LARGE COUNCIL MEMBERS ELECTED IN 2025 SHALL SERVE UNTIL THEIR\nSUCCESSORS ARE ELECTED IN 2030; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-\nYEAR TERM FOR PURPOSES OF TERM LIMITS?",
+    "fields": {
+      "whatItDoes": [
+        "SHALL ARTICLES III AND IV OF THE LINCOLN CITY CHARTER BE AMENDED TO ALIGN\nCITY ELECTIONS WITH STATEWIDE ELECTIONS BEGINNING IN 2028 SO THAT MAYORAL\nAND DISTRICT COUNCIL MEMBER ELECTIONS ARE HELD IN BOTH 2027 AND 2028; AND\nTHAT AT-LARGE COUNCIL MEMBERS ELECTED IN 2025 SHALL SERVE UNTIL THEIR\nSUCCESSORS ARE ELECTED IN 2030; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-\nYEAR TERM FOR PURPOSES OF TERM LIMITS?"
+      ],
+      "yesMeans": [
+        "SHALL ARTICLES III AND IV OF THE LINCOLN CITY CHARTER BE AMENDED TO ALIGN\nCITY ELECTIONS WITH STATEWIDE ELECTIONS BEGINNING IN 2028 SO THAT MAYORAL\nAND DISTRICT COUNCIL MEMBER ELECTIONS ARE HELD IN BOTH 2027 AND 2028; AND\nTHAT AT-LARGE COUNCIL MEMBERS ELECTED IN 2025 SHALL SERVE UNTIL THEIR\nSUCCESSORS ARE ELECTED IN 2030; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-\nYEAR TERM FOR PURPOSES OF TERM LIMITS?"
+      ],
+      "noMeans": [
+        "SHALL ARTICLES III AND IV OF THE LINCOLN CITY CHARTER BE AMENDED TO ALIGN\nCITY ELECTIONS WITH STATEWIDE ELECTIONS BEGINNING IN 2028 SO THAT MAYORAL\nAND DISTRICT COUNCIL MEMBER ELECTIONS ARE HELD IN BOTH 2027 AND 2028; AND\nTHAT AT-LARGE COUNCIL MEMBERS ELECTED IN 2025 SHALL SERVE UNTIL THEIR\nSUCCESSORS ARE ELECTED IN 2030; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-\nYEAR TERM FOR PURPOSES OF TERM LIMITS?"
+      ]
+    },
+    "semanticConditions": [
+      "Individual question effect only; no unstated enactment date, household cost or legal rule inferred.",
+      "The county lists a competing city alternative. Individual official questions do not state how simultaneous approval would be resolved; no precedence, current term-limit rule or result of another question inferred."
+    ],
+    "inventoryScope": "Current official Lancaster November3questions/referenda list contains10entries. This packet covers all10 published entries, including the Denton recall. Not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 1,
+      "scope": "Complete bounded question from native individual official ballot-language PDF, including any operative preamble needed to state identity/funding/purpose; no truncation."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ne-cx-2026-lincoln-elections-2030-alternative",
+    "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33595",
+    "rawHash": "903475c0a2faa0b04c7f2bde8ea8730e20e55538fb28263c0712a468a9e5c93d",
+    "sourceFile": "sources/903475c0a2faa0b04c7f2bde8ea8730e20e55538fb28263c0712a468a9e5c93d.source",
+    "sourceTextFile": "sources/73f50174ae91b90d44aa3c6be79abf9398a76463d30d402e999b170f6f45939e.txt",
+    "excerpt": "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLES III AND IV OF THE LINCOLN CITY\nCHARTER BE AMENDED TO ALIGN CITY ELECTIONS WITH STATEWIDE\nELECTIONS BEGINNING IN 2030 SO THAT MAYORAL AND DISTRICT COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2027 AND 2030; AND THAT AT-LARGE COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2029 AND 2032; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-YEAR\nTERM FOR PURPOSES OF TERM LIMITS?",
+    "fields": {
+      "whatItDoes": [
+        "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLES III AND IV OF THE LINCOLN CITY\nCHARTER BE AMENDED TO ALIGN CITY ELECTIONS WITH STATEWIDE\nELECTIONS BEGINNING IN 2030 SO THAT MAYORAL AND DISTRICT COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2027 AND 2030; AND THAT AT-LARGE COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2029 AND 2032; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-YEAR\nTERM FOR PURPOSES OF TERM LIMITS?"
+      ],
+      "yesMeans": [
+        "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLES III AND IV OF THE LINCOLN CITY\nCHARTER BE AMENDED TO ALIGN CITY ELECTIONS WITH STATEWIDE\nELECTIONS BEGINNING IN 2030 SO THAT MAYORAL AND DISTRICT COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2027 AND 2030; AND THAT AT-LARGE COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2029 AND 2032; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-YEAR\nTERM FOR PURPOSES OF TERM LIMITS?"
+      ],
+      "noMeans": [
+        "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLES III AND IV OF THE LINCOLN CITY\nCHARTER BE AMENDED TO ALIGN CITY ELECTIONS WITH STATEWIDE\nELECTIONS BEGINNING IN 2030 SO THAT MAYORAL AND DISTRICT COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2027 AND 2030; AND THAT AT-LARGE COUNCIL MEMBER\nELECTIONS ARE HELD IN BOTH 2029 AND 2032; AND THAT ELECTED TERMS OF A LENGTH\nDIFFERENT THAN FOUR-YEARS DUE TO THIS PROVISION SHALL COUNT AS A FOUR-YEAR\nTERM FOR PURPOSES OF TERM LIMITS?"
+      ]
+    },
+    "semanticConditions": [
+      "Individual question effect only; no unstated enactment date, household cost or legal rule inferred.",
+      "The county lists a competing city alternative. Individual official questions do not state how simultaneous approval would be resolved; no precedence, current term-limit rule or result of another question inferred."
+    ],
+    "inventoryScope": "Current official Lancaster November3questions/referenda list contains10entries. This packet covers all10 published entries, including the Denton recall. Not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 1,
+      "scope": "Complete bounded question from native individual official ballot-language PDF, including any operative preamble needed to state identity/funding/purpose; no truncation."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ne-cx-2026-lincoln-council-two-term-limit",
+    "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33596",
+    "rawHash": "f9b841986281dc066cec850a784e633c61be1b9a7e1db5919ee02e636554875d",
+    "sourceFile": "sources/f9b841986281dc066cec850a784e633c61be1b9a7e1db5919ee02e636554875d.source",
+    "sourceTextFile": "sources/bc9a3ba463dd4452ee9446c82fcfd1730c9d9e58e79bc81c82aba170b5952f6d.txt",
+    "excerpt": "SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE AMENDED TO PROVIDE THAT COUNCIL\nMEMBERS SHALL NOT BE QUALIFIED TO HOLD OFFICE FOR MORE THAN TWO\nCONSECUTIVE FOUR-YEAR TERMS?",
+    "fields": {
+      "whatItDoes": [
+        "SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE AMENDED TO PROVIDE THAT COUNCIL\nMEMBERS SHALL NOT BE QUALIFIED TO HOLD OFFICE FOR MORE THAN TWO\nCONSECUTIVE FOUR-YEAR TERMS?"
+      ],
+      "yesMeans": [
+        "SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE AMENDED TO PROVIDE THAT COUNCIL\nMEMBERS SHALL NOT BE QUALIFIED TO HOLD OFFICE FOR MORE THAN TWO\nCONSECUTIVE FOUR-YEAR TERMS?"
+      ],
+      "noMeans": [
+        "SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE AMENDED TO PROVIDE THAT COUNCIL\nMEMBERS SHALL NOT BE QUALIFIED TO HOLD OFFICE FOR MORE THAN TWO\nCONSECUTIVE FOUR-YEAR TERMS?"
+      ]
+    },
+    "semanticConditions": [
+      "Individual question effect only; no unstated enactment date, household cost or legal rule inferred.",
+      "The county lists a competing city alternative. Individual official questions do not state how simultaneous approval would be resolved; no precedence, current term-limit rule or result of another question inferred."
+    ],
+    "inventoryScope": "Current official Lancaster November3questions/referenda list contains10entries. This packet covers all10 published entries, including the Denton recall. Not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 1,
+      "scope": "Complete bounded question from native individual official ballot-language PDF, including any operative preamble needed to state identity/funding/purpose; no truncation."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ne-cx-2026-lincoln-council-three-term-limit-alternative",
+    "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33597",
+    "rawHash": "6cf046eb94767ea15f963a735c9a59420c7d255af894ce4b82f43853d21241d1",
+    "sourceFile": "sources/6cf046eb94767ea15f963a735c9a59420c7d255af894ce4b82f43853d21241d1.source",
+    "sourceTextFile": "sources/7b8b2d41615d2a0e84529d8297be7d91e624dba0d061db9942ab833d629fcc9b.txt",
+    "excerpt": "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE\nAMENDED TO PROVIDE THAT COUNCIL MEMBERS SHALL NOT BE QUALIFIED TO HOLD\nOFFICE FOR MORE THAN THREE CONSECUTIVE FOUR-YEAR TERMS?",
+    "fields": {
+      "whatItDoes": [
+        "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE\nAMENDED TO PROVIDE THAT COUNCIL MEMBERS SHALL NOT BE QUALIFIED TO HOLD\nOFFICE FOR MORE THAN THREE CONSECUTIVE FOUR-YEAR TERMS?"
+      ],
+      "yesMeans": [
+        "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE\nAMENDED TO PROVIDE THAT COUNCIL MEMBERS SHALL NOT BE QUALIFIED TO HOLD\nOFFICE FOR MORE THAN THREE CONSECUTIVE FOUR-YEAR TERMS?"
+      ],
+      "noMeans": [
+        "CITY’S ALTERNATIVE AMENDMENT: SHALL ARTICLE III, SECTION 4 OF THE CHARTER BE\nAMENDED TO PROVIDE THAT COUNCIL MEMBERS SHALL NOT BE QUALIFIED TO HOLD\nOFFICE FOR MORE THAN THREE CONSECUTIVE FOUR-YEAR TERMS?"
+      ]
+    },
+    "semanticConditions": [
+      "Individual question effect only; no unstated enactment date, household cost or legal rule inferred.",
+      "The county lists a competing city alternative. Individual official questions do not state how simultaneous approval would be resolved; no precedence, current term-limit rule or result of another question inferred."
+    ],
+    "inventoryScope": "Current official Lancaster November3questions/referenda list contains10entries. This packet covers all10 published entries, including the Denton recall. Not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 1,
+      "scope": "Complete bounded question from native individual official ballot-language PDF, including any operative preamble needed to state identity/funding/purpose; no truncation."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ne-cx-2026-lincoln-outside-city-voting",
+    "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33598",
+    "rawHash": "a62b5673db5e918815c2a84e4ffc2cf105fdfbae59d70474eb2e56fc814bbbda",
+    "sourceFile": "sources/a62b5673db5e918815c2a84e4ffc2cf105fdfbae59d70474eb2e56fc814bbbda.source",
+    "sourceTextFile": "sources/3bcfe2966d60a9284056b899790a3b96c2fc3fa2db5362b7f75c15a737639a1f.txt",
+    "excerpt": "SHALL ARTICLE III, SECTION 2 AND ARTICLE IV, SECTION 2A OF THE CHARTER BE AMENDED\nTO ALLOW ALL CITIZENS RESIDING IN THE THREE-MILE EXTRATERRITORIAL ZONING\nJURISDICTION AROUND THE CITY, BUT NOT WITHIN THE CITY’S CORPORATE LIMITS, TO\nVOTE IN ITS ELECTIONS?",
+    "fields": {
+      "whatItDoes": [
+        "SHALL ARTICLE III, SECTION 2 AND ARTICLE IV, SECTION 2A OF THE CHARTER BE AMENDED\nTO ALLOW ALL CITIZENS RESIDING IN THE THREE-MILE EXTRATERRITORIAL ZONING\nJURISDICTION AROUND THE CITY, BUT NOT WITHIN THE CITY’S CORPORATE LIMITS, TO\nVOTE IN ITS ELECTIONS?"
+      ],
+      "yesMeans": [
+        "SHALL ARTICLE III, SECTION 2 AND ARTICLE IV, SECTION 2A OF THE CHARTER BE AMENDED\nTO ALLOW ALL CITIZENS RESIDING IN THE THREE-MILE EXTRATERRITORIAL ZONING\nJURISDICTION AROUND THE CITY, BUT NOT WITHIN THE CITY’S CORPORATE LIMITS, TO\nVOTE IN ITS ELECTIONS?"
+      ],
+      "noMeans": [
+        "SHALL ARTICLE III, SECTION 2 AND ARTICLE IV, SECTION 2A OF THE CHARTER BE AMENDED\nTO ALLOW ALL CITIZENS RESIDING IN THE THREE-MILE EXTRATERRITORIAL ZONING\nJURISDICTION AROUND THE CITY, BUT NOT WITHIN THE CITY’S CORPORATE LIMITS, TO\nVOTE IN ITS ELECTIONS?"
+      ]
+    },
+    "semanticConditions": [
+      "Individual question effect only; no unstated enactment date, household cost or legal rule inferred."
+    ],
+    "inventoryScope": "Current official Lancaster November3questions/referenda list contains10entries. This packet covers all10 published entries, including the Denton recall. Not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 1,
+      "scope": "Complete bounded question from native individual official ballot-language PDF, including any operative preamble needed to state identity/funding/purpose; no truncation."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ne-cx-2026-freeman-school-bonds",
+    "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33583",
+    "rawHash": "9427f38a50e7858078d14ce1cc5b8144b37ce9f334531c05ec91f170dc1d33a3",
+    "sourceFile": "sources/9427f38a50e7858078d14ce1cc5b8144b37ce9f334531c05ec91f170dc1d33a3.source",
+    "sourceTextFile": "sources/b7cacee4a15b0a1c44756cfe80f884ac896607c17ff1065b1f59d11afd58861c.txt",
+    "excerpt": "Shall Gage County School District 0034 (Freeman Public Schools) in the State of Nebraska issue its\nbonds in a total principal amount not to exceed $13,995,000 for purposes of ﬁnancing the costs of (a)\nconstructing a new building on the District’s existing campus that will include career and trades\neducation and additional classroom areas, (b) renovating portions of the existing school building,\nincluding the expansion of the current kitchen and repurposing certain classrooms and areas in\nconnection with the construction of the new building, and (c) purchasing certain necessary\nequipment, furniture and apparatus for such new building and renovations, and making related site\nimprovements; said bonds to be issued from time to time, to be sold at such prices, to bear interest at\nsuch rates, to become due at such times, and to have such other terms and provisions, all as may be\nﬁxed and determined by the Board of Education of the District; and\n\nShall the District cause to be levied and collected annually a special levy of taxes against all the\ntaxable property in the District sufﬁcient in rate and amount to pay the principal of, the premium, if\nany, and the interest on said bonds as the same become due?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Gage County School District 0034 (Freeman Public Schools) in the State of Nebraska issue its\nbonds in a total principal amount not to exceed $13,995,000 for purposes of ﬁnancing the costs of (a)\nconstructing a new building on the District’s existing campus that will include career and trades\neducation and additional classroom areas, (b) renovating portions of the existing school building,\nincluding the expansion of the current kitchen and repurposing certain classrooms and areas in\nconnection with the construction of the new building, and (c) purchasing certain necessary\nequipment, furniture and apparatus for such new building and renovations, and making related site\nimprovements; said bonds to be issued from time to time, to be sold at such prices, to bear interest at\nsuch rates, to become due at such times, and to have such other terms and provisions, all as may be\nﬁxed and determined by the Board of Education of the District; and\n\nShall the District cause to be levied and collected annually a special levy of taxes against all the\ntaxable property in the District sufﬁcient in rate and amount to pay the principal of, the premium, if\nany, and the interest on said bonds as the same become due?"
+      ],
+      "yesMeans": [
+        "Shall Gage County School District 0034 (Freeman Public Schools) in the State of Nebraska issue its\nbonds in a total principal amount not to exceed $13,995,000 for purposes of ﬁnancing the costs of (a)\nconstructing a new building on the District’s existing campus that will include career and trades\neducation and additional classroom areas, (b) renovating portions of the existing school building,\nincluding the expansion of the current kitchen and repurposing certain classrooms and areas in\nconnection with the construction of the new building, and (c) purchasing certain necessary\nequipment, furniture and apparatus for such new building and renovations, and making related site\nimprovements; said bonds to be issued from time to time, to be sold at such prices, to bear interest at\nsuch rates, to become due at such times, and to have such other terms and provisions, all as may be\nﬁxed and determined by the Board of Education of the District; and\n\nShall the District cause to be levied and collected annually a special levy of taxes against all the\ntaxable property in the District sufﬁcient in rate and amount to pay the principal of, the premium, if\nany, and the interest on said bonds as the same become due?"
+      ],
+      "noMeans": [
+        "Shall Gage County School District 0034 (Freeman Public Schools) in the State of Nebraska issue its\nbonds in a total principal amount not to exceed $13,995,000 for purposes of ﬁnancing the costs of (a)\nconstructing a new building on the District’s existing campus that will include career and trades\neducation and additional classroom areas, (b) renovating portions of the existing school building,\nincluding the expansion of the current kitchen and repurposing certain classrooms and areas in\nconnection with the construction of the new building, and (c) purchasing certain necessary\nequipment, furniture and apparatus for such new building and renovations, and making related site\nimprovements; said bonds to be issued from time to time, to be sold at such prices, to bear interest at\nsuch rates, to become due at such times, and to have such other terms and provisions, all as may be\nﬁxed and determined by the Board of Education of the District; and\n\nShall the District cause to be levied and collected annually a special levy of taxes against all the\ntaxable property in the District sufﬁcient in rate and amount to pay the principal of, the premium, if\nany, and the interest on said bonds as the same become due?"
+      ]
+    },
+    "semanticConditions": [
+      "Individual question effect only; no unstated enactment date, household cost or legal rule inferred.",
+      "Question contains BOTH bond authority and annual repayment property-tax authority; both retained.",
+      "Principal cap is not total repayment. Tax rate, household bill, repayment term and approval percentage unknown."
+    ],
+    "inventoryScope": "Current official Lancaster November3questions/referenda list contains10entries. This packet covers all10 published entries, including the Denton recall. Not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 1,
+      "scope": "Complete bounded question from native individual official ballot-language PDF, including any operative preamble needed to state identity/funding/purpose; no truncation."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ne-cx-2026-raymond-sales-use-tax",
+    "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33585",
+    "rawHash": "3f94e69b33c143e546acd265ae0b6af522f37e26ea2c5f4fd514f571fc3dddd3",
+    "sourceFile": "sources/3f94e69b33c143e546acd265ae0b6af522f37e26ea2c5f4fd514f571fc3dddd3.source",
+    "sourceTextFile": "sources/99e74fa3ee8d616fbf2d1f863b452294dc0e72b4516a16384f5ff0007c7fed8a.txt",
+    "excerpt": "Shall the governing body of the Village of Raymond, Lancaster County, Nebraska impose a sales and\nuse tax upon the same transactions within the municipality on which the State of Nebraska is\nauthorized to impose a tax, speciﬁcally, impose a tax of one and one-half percent (1.5%) for village\ncapital and infrastructure improvements including streets, utilities, parks, landscaping, beautiﬁcation\nand tree planting.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the governing body of the Village of Raymond, Lancaster County, Nebraska impose a sales and\nuse tax upon the same transactions within the municipality on which the State of Nebraska is\nauthorized to impose a tax, speciﬁcally, impose a tax of one and one-half percent (1.5%) for village\ncapital and infrastructure improvements including streets, utilities, parks, landscaping, beautiﬁcation\nand tree planting."
+      ],
+      "yesMeans": [
+        "Shall the governing body of the Village of Raymond, Lancaster County, Nebraska impose a sales and\nuse tax upon the same transactions within the municipality on which the State of Nebraska is\nauthorized to impose a tax, speciﬁcally, impose a tax of one and one-half percent (1.5%) for village\ncapital and infrastructure improvements including streets, utilities, parks, landscaping, beautiﬁcation\nand tree planting."
+      ],
+      "noMeans": [
+        "Shall the governing body of the Village of Raymond, Lancaster County, Nebraska impose a sales and\nuse tax upon the same transactions within the municipality on which the State of Nebraska is\nauthorized to impose a tax, speciﬁcally, impose a tax of one and one-half percent (1.5%) for village\ncapital and infrastructure improvements including streets, utilities, parks, landscaping, beautiﬁcation\nand tree planting."
+      ]
+    },
+    "semanticConditions": [
+      "Individual question effect only; no unstated enactment date, household cost or legal rule inferred."
+    ],
+    "inventoryScope": "Current official Lancaster November3questions/referenda list contains10entries. This packet covers all10 published entries, including the Denton recall. Not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 1,
+      "scope": "Complete bounded question from native individual official ballot-language PDF, including any operative preamble needed to state identity/funding/purpose; no truncation."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ne-cx-2026-sprague-sales-use-tax",
+    "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33586",
+    "rawHash": "4ef281a7918ad60a420a5fe5cef83eaa0827a75717a98eef4663f19499b74836",
+    "sourceFile": "sources/4ef281a7918ad60a420a5fe5cef83eaa0827a75717a98eef4663f19499b74836.source",
+    "sourceTextFile": "sources/d99546ee3d7587971c6535db635184e560a784cf16e1c531dbb48e652f24b0dc.txt",
+    "excerpt": "The Village of Sprague, Nebraska proposes to impose a sales and use tax in the amount of one and\none-half percent (1.5%) upon certain transactions within the Village on which the State of Nebraska\nand Village of Sprague are authorized to impose pursuant to the Nebraska Local Option Revenue Act.\n\nShall the governing body of the incorporated municipality impose a sales and use tax in the amount\nof 1.5% upon the same transactions within such municipality on which the State of Nebraska is\nauthorized to impose a tax?",
+    "fields": {
+      "whatItDoes": [
+        "The Village of Sprague, Nebraska proposes to impose a sales and use tax in the amount of one and\none-half percent (1.5%) upon certain transactions within the Village on which the State of Nebraska\nand Village of Sprague are authorized to impose pursuant to the Nebraska Local Option Revenue Act.\n\nShall the governing body of the incorporated municipality impose a sales and use tax in the amount\nof 1.5% upon the same transactions within such municipality on which the State of Nebraska is\nauthorized to impose a tax?"
+      ],
+      "yesMeans": [
+        "The Village of Sprague, Nebraska proposes to impose a sales and use tax in the amount of one and\none-half percent (1.5%) upon certain transactions within the Village on which the State of Nebraska\nand Village of Sprague are authorized to impose pursuant to the Nebraska Local Option Revenue Act.\n\nShall the governing body of the incorporated municipality impose a sales and use tax in the amount\nof 1.5% upon the same transactions within such municipality on which the State of Nebraska is\nauthorized to impose a tax?"
+      ],
+      "noMeans": [
+        "The Village of Sprague, Nebraska proposes to impose a sales and use tax in the amount of one and\none-half percent (1.5%) upon certain transactions within the Village on which the State of Nebraska\nand Village of Sprague are authorized to impose pursuant to the Nebraska Local Option Revenue Act.\n\nShall the governing body of the incorporated municipality impose a sales and use tax in the amount\nof 1.5% upon the same transactions within such municipality on which the State of Nebraska is\nauthorized to impose a tax?"
+      ]
+    },
+    "semanticConditions": [
+      "Individual question effect only; no unstated enactment date, household cost or legal rule inferred."
+    ],
+    "inventoryScope": "Current official Lancaster November3questions/referenda list contains10entries. This packet covers all10 published entries, including the Denton recall. Not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 1,
+      "scope": "Complete bounded question from native individual official ballot-language PDF, including any operative preamble needed to state identity/funding/purpose; no truncation."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ne-cx-2026-denton-trustee-recall",
+    "sourceUrl": "https://www.lancaster.ne.gov/DocumentCenter/View/33584",
+    "rawHash": "37a1b774861d4e7a9ddd5439845b563a924edfd89d9a3741d2953f12d60b7a64",
+    "sourceFile": "sources/37a1b774861d4e7a9ddd5439845b563a924edfd89d9a3741d2953f12d60b7a64.source",
+    "sourceTextFile": "sources/607585ae07769f135a3ae9b2802e9c2cb7b7a69847e8f6bbdacafa96bb84c9b7.txt",
+    "excerpt": "Shall Amanda Fangmeier be removed from the ofﬁce of the Village of Denton Board of Trustees?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Amanda Fangmeier be removed from the ofﬁce of the Village of Denton Board of Trustees?"
+      ],
+      "yesMeans": [
+        "Shall Amanda Fangmeier be removed from the ofﬁce of the Village of Denton Board of Trustees?"
+      ],
+      "noMeans": [
+        "Shall Amanda Fangmeier be removed from the ofﬁce of the Village of Denton Board of Trustees?"
+      ]
+    },
+    "semanticConditions": [
+      "Neutral yes/no recall MEASURE; no candidate, candidacy or office race rows added.",
+      "No reason for recall, vacancy-filling procedure, successor, timing or legal threshold inferred."
+    ],
+    "inventoryScope": "Current official Lancaster November3questions/referenda list contains10entries. This packet covers all10 published entries, including the Denton recall. Not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 1,
+      "scope": "Complete bounded question from native individual official ballot-language PDF, including any operative preamble needed to state identity/funding/purpose; no truncation."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

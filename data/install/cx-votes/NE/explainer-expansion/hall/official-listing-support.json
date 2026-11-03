@@ -1,0 +1,68 @@
+{
+  "sources": [
+    {
+      "requestedUrl": "https://hallcountyne.gov/departments/election_commission/sample_ballots.php",
+      "finalUrl": "https://hallcountyne.gov/departments/election_commission/sample_ballots.php",
+      "httpStatus": 200,
+      "rawHash": "45cc4a90133609b6deec1179831402491286c0ea8c1335fe9f77429077c6c333",
+      "retrievedAt": "2026-11-03T08:48:11.614526+00:00",
+      "sourceFile": "sources/45cc4a90133609b6deec1179831402491286c0ea8c1335fe9f77429077c6c333.official.html",
+      "sourceTextFile": "sources/ne-hall-sample-index.txt",
+      "originalSha256": "45cc4a90133609b6deec1179831402491286c0ea8c1335fe9f77429077c6c333",
+      "archivedSha256": "45cc4a90133609b6deec1179831402491286c0ea8c1335fe9f77429077c6c333"
+    },
+    {
+      "requestedUrl": "https://hallcountyne.gov/departments/election_commission/election_notices.php",
+      "finalUrl": "https://hallcountyne.gov/departments/election_commission/election_notices.php",
+      "httpStatus": 200,
+      "rawHash": "b39af46243071085e810e7942def75ebd8668a58a7d13d0c21aba0f38814cb8f",
+      "retrievedAt": "2026-11-03T08:48:11.557113+00:00",
+      "sourceFile": "sources/b39af46243071085e810e7942def75ebd8668a58a7d13d0c21aba0f38814cb8f.official.html",
+      "sourceTextFile": "sources/ne-hall-election-notices.txt",
+      "originalSha256": "b39af46243071085e810e7942def75ebd8668a58a7d13d0c21aba0f38814cb8f",
+      "archivedSha256": "b39af46243071085e810e7942def75ebd8668a58a7d13d0c21aba0f38814cb8f"
+    },
+    {
+      "requestedUrl": "https://hallcountyne.gov/GN26%20NOTICE%20OF%20GENERAL%20ELECTION%20.pdf?t=202610051336390",
+      "finalUrl": "http://files.hallcountyne.gov/GN26%20NOTICE%20OF%20GENERAL%20ELECTION%20.pdf?t=202610051336390",
+      "httpStatus": 200,
+      "rawHash": "a569745d4c8ea9af9265369b1b5f8d4f8583052853426c7b31f759fb0164befc",
+      "retrievedAt": "2026-11-03T08:48:36.241456+00:00",
+      "sourceFile": "sources/a569745d4c8ea9af9265369b1b5f8d4f8583052853426c7b31f759fb0164befc.companion.pdf",
+      "sourceTextFile": "sources/ne-hall-nov3-notice.txt",
+      "originalSha256": "a569745d4c8ea9af9265369b1b5f8d4f8583052853426c7b31f759fb0164befc",
+      "archivedSha256": "a569745d4c8ea9af9265369b1b5f8d4f8583052853426c7b31f759fb0164befc"
+    },
+    {
+      "requestedUrl": "https://nebraskalegislature.gov/laws/statutes.php?statute=2-953",
+      "finalUrl": "https://nebraskalegislature.gov/laws/statutes.php?statute=2-953",
+      "httpStatus": 200,
+      "rawHash": "89a7a6fdb37c17c5fe13fb6e28c01c97b3221bf0de18688bd7a656a4a3167b7d",
+      "retrievedAt": "2026-11-03T08:49:49.443121+00:00",
+      "sourceFile": "sources/89a7a6fdb37c17c5fe13fb6e28c01c97b3221bf0de18688bd7a656a4a3167b7d.official.html",
+      "sourceTextFile": "sources/ne-weed-county-district-law.txt",
+      "originalSha256": "89a7a6fdb37c17c5fe13fb6e28c01c97b3221bf0de18688bd7a656a4a3167b7d",
+      "archivedSha256": "89a7a6fdb37c17c5fe13fb6e28c01c97b3221bf0de18688bd7a656a4a3167b7d"
+    }
+  ],
+  "redirectDiscovery": {
+    "requestedUrl": "https://hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+    "finalUrl": "http://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+    "httpStatus": 200,
+    "rawHash": "3336e41b39bb2e59bb9d8c2ebc834e42e00b956188e390ed9cdab46772edda65",
+    "retrievedAt": "2026-11-03T08:48:36.169022+00:00",
+    "sourceFile": "sources/3336e41b39bb2e59bb9d8c2ebc834e42e00b956188e390ed9cdab46772edda65.source"
+  },
+  "primarySourceAttempt": {
+    "requestedUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+    "finalUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+    "httpStatus": 200,
+    "rawHash": "3336e41b39bb2e59bb9d8c2ebc834e42e00b956188e390ed9cdab46772edda65",
+    "retrievedAt": "2026-11-03T08:51:19.567289+00:00",
+    "sourceFile": "sources/3336e41b39bb2e59bb9d8c2ebc834e42e00b956188e390ed9cdab46772edda65.source"
+  },
+  "redirectDisposition": "Government-listed HTTPS URL redirected to HTTP filehost. Original fetch retained truthfully as companion. A separate direct HTTPS filehost request succeeded200, returned same exactPDF SHA3336e41...; actual HTTPS requested/finalURLs used in primary receipt. No redirect rewriting or inventedHTTPSstatus.",
+  "inventoryScope": "All2local measure fields in current four-page Hall countywide publication sample prepared; current formalnotice corroborates. Not Nebraska all-local completeness.",
+  "weedScope": "Question dissolves weedboard and transfers itsduties/authority, not weedcontrol. Statute2-953(5) establishes allcountyarea representation includingmunicipalities; wholeHallCounty retained.",
+  "schoolScope": "One operative ballot field includes BOTH up17.5Mborrowing and annualpropertytaxrepaymentauthority. WholeDoniphanTrumbullK12retained; no countyonly substitute."
+}

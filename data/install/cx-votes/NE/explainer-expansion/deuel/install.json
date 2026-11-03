@@ -1,0 +1,64 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NE",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NE",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ne-cx-2026-chappell-sales-tax-continuation",
+      "title": "Chappell — Proposition 1: Continue sales and use tax",
+      "ocdId": "ocd-division/country:us/state:ne/place:chappell",
+      "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/"
+    },
+    {
+      "id": "ne-cx-2026-chappell-economic-development-program",
+      "title": "Chappell — Proposition 2: Continue economic development program",
+      "ocdId": "ocd-division/country:us/state:ne/place:chappell",
+      "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/"
+    },
+    {
+      "id": "ne-cx-2026-big-springs-sales-use-tax",
+      "title": "Big Springs — Proposition A: Sales and use tax",
+      "ocdId": "ocd-division/country:us/state:ne/place:big_springs",
+      "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/"
+    },
+    {
+      "id": "ne-cx-2026-big-springs-economic-development-program",
+      "title": "Big Springs — Proposition B: Economic development program",
+      "ocdId": "ocd-division/country:us/state:ne/place:big_springs",
+      "sourceUrl": "https://deuelcountyne.gov/2026/09/17/notice-of-election/"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 4,
+    "newPlainLanguageExplanations": 4,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "NE",
+    "newMeasures": 4,
+    "newExplanations": 4,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "contestId": "ne-cx-2026-chappell-sales-tax-continuation",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:chappell",
+      "place",
+      "3108885",
+      "Chappell city"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated city/village named in official question matched to Census2025 PLACE identity, not county or same-named township."
+  },
+  {
+    "contestId": "ne-cx-2026-chappell-economic-development-program",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:chappell",
+      "place",
+      "3108885",
+      "Chappell city"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated city/village named in official question matched to Census2025 PLACE identity, not county or same-named township."
+  },
+  {
+    "contestId": "ne-cx-2026-big-springs-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:big_springs",
+      "place",
+      "3104895",
+      "Big Springs village"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated city/village named in official question matched to Census2025 PLACE identity, not county or same-named township."
+  },
+  {
+    "contestId": "ne-cx-2026-big-springs-economic-development-program",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:big_springs",
+      "place",
+      "3104895",
+      "Big Springs village"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated city/village named in official question matched to Census2025 PLACE identity, not county or same-named township."
+  }
+]

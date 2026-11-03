@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "ne-cx-2026-gering-middle-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/school_district:gering_public_schools",
+      "unsd",
+      "3100098",
+      "Gering Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole Gering Public Schools, ScottsBluffCounty SchoolDistrict0016, matches existing Census2025 K12identity. Not city ofGering, publisher county or printed CastleRockA precinct only."
+  }
+]

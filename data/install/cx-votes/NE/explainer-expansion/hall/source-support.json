@@ -1,0 +1,63 @@
+[
+  {
+    "contestId": "ne-cx-2026-hall-weed-board-dissolution",
+    "sourceUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+    "rawHash": "3336e41b39bb2e59bb9d8c2ebc834e42e00b956188e390ed9cdab46772edda65",
+    "sourceFile": "sources/3336e41b39bb2e59bb9d8c2ebc834e42e00b956188e390ed9cdab46772edda65.source",
+    "sourceTextFile": "sources/e06222b75034f05d59b990c2879b52adf2ee3e940b8d01a6b174100c6b57a09b.txt",
+    "excerpt": "Shall the Hall County Weed District Board be\ndissolved and its duties and authority be\nexercised by the Hall County Board of\nCommissioners?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Hall County Weed District Board be\ndissolved and its duties and authority be\nexercised by the Hall County Board of\nCommissioners?"
+      ],
+      "yesMeans": [
+        "Shall the Hall County Weed District Board be\ndissolved and its duties and authority be\nexercised by the Hall County Board of\nCommissioners?"
+      ],
+      "noMeans": [
+        "Shall the Hall County Weed District Board be\ndissolved and its duties and authority be\nexercised by the Hall County Board of\nCommissioners?"
+      ]
+    },
+    "semanticConditions": [
+      "No tax rate, household bill, unstated implementation date, term or legal threshold inferred.",
+      "Question dissolves the board and transfers its functions; it does not abolish weed control or dissolve county geographic territory."
+    ],
+    "inventoryScope": "Native current Hall four-page countywide publication sample has2local measure fields, both prepared; formalnotice corroborates. Not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout bounded native page3 column extraction",
+      "page1Based": 3,
+      "scope": "Complete operative ballot field. School field retains BOTH borrowing and annual property-tax repayment question."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ne-cx-2026-doniphan-trumbull-school-bonds",
+    "sourceUrl": "https://files.hallcountyne.gov/Documents/Departments/Election%20Commission/Sample%20Ballots/26GNEHALL_7_PUB.pdf?t=202610051349240",
+    "rawHash": "3336e41b39bb2e59bb9d8c2ebc834e42e00b956188e390ed9cdab46772edda65",
+    "sourceFile": "sources/3336e41b39bb2e59bb9d8c2ebc834e42e00b956188e390ed9cdab46772edda65.source",
+    "sourceTextFile": "sources/cf96d8d840f57dc012efa5c4cb3ab635dc30a5a004dcafc7493f5290dbdef47c.txt",
+    "excerpt": "Shall Hall County School District 0126\n(Doniphan-Trumbull Public Schools) in the State\nof Nebraska issue its bonds in a total principal\namount not to exceed $17,500,000 for the\npurposes of financing the costs of (a) making\ncertain renovations and constructing one or\nmore additions to the District's existing school\nbuilding and related site improvements, and (b)\npurchasing certain equipment, furniture and\napparatus for such school building and\nadditions; said bonds to be issued from time to\ntime, to be sold at such prices, to bear interest\nat such rates, to become due at such times, and\nto have such other terms and provisions, all as\nmay be fixed and determined by the Board of\nEducation of the District; and\n\n\"Shall the District cause to be levied and\ncollected annually a special levy of taxes\nagainst all the taxable property in the District\nsufficient in rate and amount to pay the principal\nof, the premium, if any, and the interest on said\nbonds as the same become due?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Hall County School District 0126\n(Doniphan-Trumbull Public Schools) in the State\nof Nebraska issue its bonds in a total principal\namount not to exceed $17,500,000 for the\npurposes of financing the costs of (a) making\ncertain renovations and constructing one or\nmore additions to the District's existing school\nbuilding and related site improvements, and (b)\npurchasing certain equipment, furniture and\napparatus for such school building and\nadditions; said bonds to be issued from time to\ntime, to be sold at such prices, to bear interest\nat such rates, to become due at such times, and\nto have such other terms and provisions, all as\nmay be fixed and determined by the Board of\nEducation of the District; and\n\n\"Shall the District cause to be levied and\ncollected annually a special levy of taxes\nagainst all the taxable property in the District\nsufficient in rate and amount to pay the principal\nof, the premium, if any, and the interest on said\nbonds as the same become due?"
+      ],
+      "yesMeans": [
+        "Shall Hall County School District 0126\n(Doniphan-Trumbull Public Schools) in the State\nof Nebraska issue its bonds in a total principal\namount not to exceed $17,500,000 for the\npurposes of financing the costs of (a) making\ncertain renovations and constructing one or\nmore additions to the District's existing school\nbuilding and related site improvements, and (b)\npurchasing certain equipment, furniture and\napparatus for such school building and\nadditions; said bonds to be issued from time to\ntime, to be sold at such prices, to bear interest\nat such rates, to become due at such times, and\nto have such other terms and provisions, all as\nmay be fixed and determined by the Board of\nEducation of the District; and\n\n\"Shall the District cause to be levied and\ncollected annually a special levy of taxes\nagainst all the taxable property in the District\nsufficient in rate and amount to pay the principal\nof, the premium, if any, and the interest on said\nbonds as the same become due?"
+      ],
+      "noMeans": [
+        "Shall Hall County School District 0126\n(Doniphan-Trumbull Public Schools) in the State\nof Nebraska issue its bonds in a total principal\namount not to exceed $17,500,000 for the\npurposes of financing the costs of (a) making\ncertain renovations and constructing one or\nmore additions to the District's existing school\nbuilding and related site improvements, and (b)\npurchasing certain equipment, furniture and\napparatus for such school building and\nadditions; said bonds to be issued from time to\ntime, to be sold at such prices, to bear interest\nat such rates, to become due at such times, and\nto have such other terms and provisions, all as\nmay be fixed and determined by the Board of\nEducation of the District; and\n\n\"Shall the District cause to be levied and\ncollected annually a special levy of taxes\nagainst all the taxable property in the District\nsufficient in rate and amount to pay the principal\nof, the premium, if any, and the interest on said\nbonds as the same become due?"
+      ]
+    },
+    "semanticConditions": [
+      "No tax rate, household bill, unstated implementation date, term or legal threshold inferred.",
+      "Question contains BOTH school borrowing and annual repayment property-tax authority. Principal cap is not total repayment cost.",
+      "Whole existing school district retained across county boundaries."
+    ],
+    "inventoryScope": "Native current Hall four-page countywide publication sample has2local measure fields, both prepared; formalnotice corroborates. Not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout bounded native page3 column extraction",
+      "page1Based": 3,
+      "scope": "Complete operative ballot field. School field retains BOTH borrowing and annual property-tax repayment question."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

@@ -1,0 +1,115 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.gunnisoncounty.org/143/Clerk-Recorders-Office",
+      "retrievedAt": "2026-11-03T07:19:12.135242+00:00",
+      "finalUrl": "https://www.gunnisoncounty.org/143/Clerk-Recorders-Office",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "21ace48910135b7a0c1128cf9365cec099c9a6e00c9fb063c0d33113faec47cc",
+      "bytes": 110047,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "gunnison-elections-index.html",
+      "savedFile": "sources/gunnison-elections-index.sanitized.html",
+      "savedSha256": "417a36224ec383c0140cc035ca51479cf0aae8c0145ad25623e46cb8c8718e5d",
+      "sanitization": {
+        "originalSha256": "21ace48910135b7a0c1128cf9365cec099c9a6e00c9fb063c0d33113faec47cc",
+        "savedSha256": "417a36224ec383c0140cc035ca51479cf0aae8c0145ad25623e46cb8c8718e5d",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "142ea3c41e7c",
+            "length": 39,
+            "line": 388,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.gunnisoncounty.org/136/Elections-Office",
+      "retrievedAt": "2026-11-03T07:22:36.957555+00:00",
+      "finalUrl": "https://www.gunnisoncounty.org/136/Elections-Office",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "2fbebb541f0238f220a78d683ef9108ee5ab034d8aca5c8d929f5f100c2b4a43",
+      "bytes": 140503,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "gunnison-current-elections-index.html",
+      "savedFile": "sources/gunnison-current-elections-index.sanitized.html",
+      "savedSha256": "8813b593caa91897ad5ba57e7269331b0a5cfa2ee1ff2cd7b97fadae6b7157fc",
+      "sanitization": {
+        "originalSha256": "2fbebb541f0238f220a78d683ef9108ee5ab034d8aca5c8d929f5f100c2b4a43",
+        "savedSha256": "8813b593caa91897ad5ba57e7269331b0a5cfa2ee1ff2cd7b97fadae6b7157fc",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "142ea3c41e7c",
+            "length": 39,
+            "line": 389,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Gunnison",
+      "to": "https://www.gunnisoncounty.org/143/Clerk-Recorders-Office"
+    },
+    {
+      "from": "https://www.gunnisoncounty.org/143/Clerk-Recorders-Office",
+      "linkText": "Elections Office",
+      "to": "https://www.gunnisoncounty.org/136/Elections-Office"
+    },
+    {
+      "from": "https://www.gunnisoncounty.org/136/Elections-Office",
+      "links": [
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17359",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17326",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17327",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17328",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17329",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17330",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17331",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17332",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17333",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17334",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17335",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17336",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17337",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17338",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17339",
+        "https://www.gunnisoncounty.org/DocumentCenter/View/17340"
+      ]
+    }
+  ]
+}

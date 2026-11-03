@@ -1,0 +1,34 @@
+{
+  "state": "CO",
+  "county": "gunnison",
+  "preparedAttachedMeasures": 3,
+  "pendingExactTerritory": 0,
+  "officialLocalSourceDenominator": 3,
+  "currentMeasureRecordContract": "PASS",
+  "originalAndStoredSourceHashes": "PASS",
+  "literalFieldQuotesChecked": 10,
+  "exactExistingRegisteredAttachments": 3,
+  "actualCurrentBallotReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/county:gunnison",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/place:mount_crested_butte",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/place:crested_butte",
+      "completeExplainers": 1
+    }
+  ],
+  "countyAndStateControlsDoNotReceiveOutOfScopeQuestions": "PASS",
+  "credentialScan": {
+    "scannedFiles": 32,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source/contract/current ballot selector checks only. Root independent semantic review and River data install/live checks remain."
+}

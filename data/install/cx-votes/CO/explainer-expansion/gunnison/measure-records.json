@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "co-gunnison-county-2026-ballot-1a",
+    "whatItDoes": "Add a countywide 0.5% sales tax, or 50 cents per $100, beginning January 1, 2027. The estimated first-year increase is $3,811,363, with later amounts depending on what the tax raises and no stated end date. Money would be dedicated to county-road and bridge safety, repair, maintenance and improvements, related transportation infrastructure, and planning, design, construction and reconstruction for current and future transportation needs. None of the revenue could be allocated to municipalities. The tax would be additional to other county taxes, with its revenue and investment income retained and spent under the proposed constitutional revenue-limit exception.",
+    "yesMeans": "Approve the additional countywide sales tax for county roads, bridges and transportation infrastructure and its revenue-limit exception.",
+    "noMeans": "Do not approve this additional county sales tax or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.gunnisoncounty.org/DocumentCenter/View/17359",
+    "sourceHash": "4a2f9c19b7a1f6361f5316847ac060b9a17660072e7719bf5f98a5fa8ad1ce24",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:30:27.079692+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-mount-crested-butte-2026-ballot-2a",
+    "whatItDoes": "Increase the town’s short-term-rental excise tax by 5 percentage points, from 4.9% to 9.9%, beginning January 1, 2027. The increase would apply only to rentals shorter than 30 days on properties the county assessor classifies as residential. It would raise money to create and retain community housing. The question sets the initial tax increase at no more than $2.5 million, with later amounts depending on revenue and no stated end date. Amounts from this tax, other revenues and their earnings could be collected and spent for these housing purposes outside the stated constitutional revenue limits.",
+    "yesMeans": "Approve the higher short-term-rental tax for housing and the stated revenue-limit exception.",
+    "noMeans": "Do not approve this short-term-rental tax increase or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.gunnisoncounty.org/DocumentCenter/View/17359",
+    "sourceHash": "4a2f9c19b7a1f6361f5316847ac060b9a17660072e7719bf5f98a5fa8ad1ce24",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:30:27.079692+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-crested-butte-2026-ballot-2b",
+    "whatItDoes": "Create an annual excise tax on residential parcels in town that are not a primary residence, and on vacant land. The question authorizes $1.25 million in the first full fiscal year, 2027, and whatever the tax raises later, with no stated end date. Charges would depend on total residential square footage on each parcel, with a separate vacant-land charge, as listed below. Amounts would increase annually by the preceding calendar year’s inflation rate as defined in the state constitution. All revenue would be dedicated to the town’s capital fund and could be collected and spent outside the stated constitutional revenue and spending limits.",
+    "yesMeans": "Approve the new parcel excise tax, inflation adjustments, capital-fund dedication and revenue-limit exception.",
+    "noMeans": "Do not approve this parcel excise tax or its proposed revenue-limit exception.",
+    "parts": [
+      {
+        "id": "co-crested-butte-2026-ballot-2b#parcel-charges",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Annual charges and the published threshold",
+        "what": "The question lists $1,400 for a parcel with less than 1,200 square feet of residential space; $2,400 for 1,200 through 2,200 square feet; $3,400 for 2,200 square feet or more; and $3,000 for vacant land. Exactly 2,200 square feet appears in both of the question’s residential brackets; the published wording does not resolve that overlap."
+      }
+    ],
+    "sourceUrl": "https://www.gunnisoncounty.org/DocumentCenter/View/17359",
+    "sourceHash": "4a2f9c19b7a1f6361f5316847ac060b9a17660072e7719bf5f98a5fa8ad1ce24",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:30:27.079692+00:00",
+    "citation": "measure-source"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "county": "Gunnison",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 3,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 3,
+  "currentBallotStylesChecked": 15,
+  "sourceCaveats": [
+    "All15current official precinct samples acquired. Thirteen contain only county1A; one also containsCrestedButte2B,and one also containsMtCrestedButte2A. The native current TABOR notice independently supplies the same three complete questions.",
+    "CrestedButte2B has overlapping brackets at exactly2,200sqft in both sample and notice. This source ambiguity is retained and explained, not silently repaired."
+  ],
+  "limits": "Current official15-precinct sample union and TABOR notice only; not statewide local completeness."
+}

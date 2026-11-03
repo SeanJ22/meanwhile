@@ -1,0 +1,877 @@
+{
+  "ballots": {
+    "OH:oh-2026-general": {
+      "election": {
+        "id": "oh-2026-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "OH"
+      },
+      "contests": [
+        {
+          "id": "oh-ba01-ohio-court-of-appeals-judge-court-of-appeals-1st-district-2-9-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/court_of_appeals:1",
+          "divisionVintage": "2026",
+          "title": "Ohio Court of Appeals — For Judge of the Court of Appeals (1st District) (Full term commencing 2-9-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Exact held First District identity retained. Current Ohio Revised Code2501.01(A) defines its sole whole-county member as Hamilton.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofAppeals (1st District) (Full term commencing 2-9-2027) (V ote for not mo re than 1) Ginger S. Bock \n\n> Democratic"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Full term commencing 1-1-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 1-1-2027) (V ote for not mo re than 1) Dont e Johnson Katie Casch"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Full term commencing 1-2-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 1-2-2027) (V ote for not mo re than 1) Betsy Sundermann Christian A. Jenkins"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-4-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Full term commencing 1-4-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 1-4-2027) (V ote for not mo re than 1) Chris Wagner"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Full term commencing 2-9-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-9-2027) (V ote for not mo re than 1) Jennifer Branch Roger Boucha rd"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Full term commencing 2-10-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-10 -2027) (V ote for not mor e than 1) Alan C. Triggs Dennis Charles Mahoney"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Full term commencing 2-11-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-11 -2027) (V ote for not mor e than 1) Lat oya S. Maley Rober t A. Goering"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Full term commencing 2-12-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-12 -2027) (V ote for not mor e than 1) Wende C. Cr oss"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-13-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Full term commencing 2-13-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-13 -2027) (V ote for not mor e than 1) Alison Hatheway"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-drug-court-divison-1-3-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Drug Court) (Full term commencing 1-3-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Drug Cou rt) (Full term commencing 1-3-2027) (V ote for not mor e than 1) Nicole L. Sanders"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (P rob at eDivision) (Full term commencing 2-9-2027) (V ote for not mor e than 1) Ralph Winkler Elizabeth A. Tye"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Juvenile Division) (Full term commencing 2-14-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (J uv enile Division) (Full term commencing 2-14 -2027) (V ote for not mor e than 1) Susan Luk en Kari L. Bloom"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Dom Rel) (Full term commencing 7-1-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Dom Rel) (Full term commencing 7-1-2027) (V ote for not mor e than 1) Tiffany Ev ans"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Unexpired term ending 1-3-2029)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Unexpir ed term ending 1-3-2029) (V ote for not mor e than 1) Chris McDow ell Sarah Henr y"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For Judge of the Court of Common Pleas (Unexpired term ending 1-14-2029)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Common Pleas sample prints no candidate party labels. Certified nomination-party labels are retained separately as roster facts, rather than presented as printed labels.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Unexpir ed term ending 1-14 -2029) (V ote for not mor e than 1) Manisha Kotian Leah Dink elack er"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-county-commissioner-1-1-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For County Commissioner (Full term commencing 1-1-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Current ordinary printed choices are Jonathan Pearson and Meeka Owens plus a generic blank write-in line. Qualified declared write-in Carrie R. Davis remains separately eligible with her exact held identity; no withdrawal or removal is asserted.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For County Commissioner (Full term commencing 1-1-2027) (V ote for not mor e than 1) Jonathan Pearson \n\n> Republican\n\nMeeka Ow ens \n\n> Democratic Write -in"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-county-auditor-3-8-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "divisionVintage": "2026",
+          "title": "Hamilton County — For County Auditor",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All Hamilton County electors, as current46day notice states for this office. Complete identical named list and vote limit across three current precinct witnesses. Current printed field has no term label; held March8 commencement context is supported by the current certified roster, retained ancillary.",
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For County Audit or (V ote for not mor e than 1) Jessica E. Miranda \n\n> Democratic"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "oh-ba01-ohio-court-of-appeals-judge-court-of-appeals-1st-district-2-9-2027-candidate-ginger-s-bock",
+          "contestId": "oh-ba01-ohio-court-of-appeals-judge-court-of-appeals-1st-district-2-9-2027",
+          "givenName": "",
+          "familyName": "Ginger S. Bock",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofAppeals (1st District) (Full term commencing 2-9-2027) (V ote for not mo re than 1) Ginger S. Bock \n\n> Democratic"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027-candidate-donte-johnson",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027",
+          "givenName": "",
+          "familyName": "Donte Johnson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 1-1-2027) (V ote for not mo re than 1) Dont e Johnson Katie Casch"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027-candidate-katie-casch",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027",
+          "givenName": "",
+          "familyName": "Katie Casch",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 1-1-2027) (V ote for not mo re than 1) Dont e Johnson Katie Casch"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027-candidate-betsy-sundermann",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027",
+          "givenName": "",
+          "familyName": "Betsy Sundermann",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 1-2-2027) (V ote for not mo re than 1) Betsy Sundermann Christian A. Jenkins"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027-candidate-christian-a-jenkins",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027",
+          "givenName": "",
+          "familyName": "Christian A. Jenkins",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 1-2-2027) (V ote for not mo re than 1) Betsy Sundermann Christian A. Jenkins"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-4-2027-candidate-chris-wagner",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-4-2027",
+          "givenName": "",
+          "familyName": "Chris Wagner",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 1-4-2027) (V ote for not mo re than 1) Chris Wagner"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027-candidate-jennifer-branch",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027",
+          "givenName": "",
+          "familyName": "Jennifer Branch",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-9-2027) (V ote for not mo re than 1) Jennifer Branch Roger Boucha rd"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027-candidate-roger-bouchard",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027",
+          "givenName": "",
+          "familyName": "Roger Bouchard",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-9-2027) (V ote for not mo re than 1) Jennifer Branch Roger Boucha rd"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027-candidate-alan-c-triggs",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027",
+          "givenName": "",
+          "familyName": "Alan C. Triggs",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-10 -2027) (V ote for not mor e than 1) Alan C. Triggs Dennis Charles Mahoney"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027-candidate-dennis-charles-mahoney",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027",
+          "givenName": "",
+          "familyName": "Dennis Charles Mahoney",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-10 -2027) (V ote for not mor e than 1) Alan C. Triggs Dennis Charles Mahoney"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027-candidate-latoya-s-maley",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027",
+          "givenName": "",
+          "familyName": "Latoya S. Maley",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-11 -2027) (V ote for not mor e than 1) Lat oya S. Maley Rober t A. Goering"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027-candidate-robert-a-goering",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027",
+          "givenName": "",
+          "familyName": "Robert A. Goering",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-11 -2027) (V ote for not mor e than 1) Lat oya S. Maley Rober t A. Goering"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027-candidate-wende-c-cross",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027",
+          "givenName": "",
+          "familyName": "Wende C. Cross",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-12 -2027) (V ote for not mor e than 1) Wende C. Cr oss"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-13-2027-candidate-alison-hatheway",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-13-2027",
+          "givenName": "",
+          "familyName": "Alison Hatheway",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-13 -2027) (V ote for not mor e than 1) Alison Hatheway"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-drug-court-divison-1-3-2027-candidate-nicole-l-sanders",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-drug-court-divison-1-3-2027",
+          "givenName": "",
+          "familyName": "Nicole L. Sanders",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Drug Cou rt) (Full term commencing 1-3-2027) (V ote for not mor e than 1) Nicole L. Sanders"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027-candidate-ralph-winkler",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027",
+          "givenName": "",
+          "familyName": "Ralph Winkler",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (P rob at eDivision) (Full term commencing 2-9-2027) (V ote for not mor e than 1) Ralph Winkler Elizabeth A. Tye"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027-candidate-elizabeth-a-tye",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027",
+          "givenName": "",
+          "familyName": "Elizabeth A. Tye",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (P rob at eDivision) (Full term commencing 2-9-2027) (V ote for not mor e than 1) Ralph Winkler Elizabeth A. Tye"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027-candidate-susan-luken",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027",
+          "givenName": "",
+          "familyName": "Susan Luken",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (J uv enile Division) (Full term commencing 2-14 -2027) (V ote for not mor e than 1) Susan Luk en Kari L. Bloom"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027-candidate-kari-l-bloom",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027",
+          "givenName": "",
+          "familyName": "Kari L. Bloom",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (J uv enile Division) (Full term commencing 2-14 -2027) (V ote for not mor e than 1) Susan Luk en Kari L. Bloom"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027-candidate-tiffany-evans",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027",
+          "givenName": "",
+          "familyName": "Tiffany Evans",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Dom Rel) (Full term commencing 7-1-2027) (V ote for not mor e than 1) Tiffany Ev ans"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29-candidate-chris-mcdowell",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29",
+          "givenName": "",
+          "familyName": "Chris McDowell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Unexpir ed term ending 1-3-2029) (V ote for not mor e than 1) Chris McDow ell Sarah Henr y"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29-candidate-sarah-henry",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29",
+          "givenName": "",
+          "familyName": "Sarah Henry",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Unexpir ed term ending 1-3-2029) (V ote for not mor e than 1) Chris McDow ell Sarah Henr y"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29-candidate-manisha-kotian",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29",
+          "givenName": "",
+          "familyName": "Manisha Kotian",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Unexpir ed term ending 1-14 -2029) (V ote for not mor e than 1) Manisha Kotian Leah Dink elack er"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29-candidate-leah-dinkelacker",
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29",
+          "givenName": "",
+          "familyName": "Leah Dinkelacker",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For Judge of the Cou rt ofCommon Pleas (Unexpir ed term ending 1-14 -2029) (V ote for not mor e than 1) Manisha Kotian Leah Dink elack er"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-county-commissioner-1-1-2027-candidate-jonathan-pearson",
+          "contestId": "oh-ba01-hamilton-county-county-commissioner-1-1-2027",
+          "givenName": "",
+          "familyName": "Jonathan Pearson",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For County Commissioner (Full term commencing 1-1-2027) (V ote for not mor e than 1) Jonathan Pearson \n\n> Republican\n\nMeeka Ow ens \n\n> Democratic Write -in"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-county-commissioner-1-1-2027-candidate-meeka-owens",
+          "contestId": "oh-ba01-hamilton-county-county-commissioner-1-1-2027",
+          "givenName": "",
+          "familyName": "Meeka Owens",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For County Commissioner (Full term commencing 1-1-2027) (V ote for not mor e than 1) Jonathan Pearson \n\n> Republican\n\nMeeka Ow ens \n\n> Democratic Write -in"
+          }
+        },
+        {
+          "id": "oh-ba01-hamilton-county-county-auditor-3-8-2027-candidate-jessica-e-miranda",
+          "contestId": "oh-ba01-hamilton-county-county-auditor-3-8-2027",
+          "givenName": "",
+          "familyName": "Jessica E. Miranda",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+            "sourceOrg": "Hamilton County Board of Elections",
+            "collectedAt": "2026-11-03T07:17:10.657017+00:00",
+            "verifiedAt": "2026-11-03T07:17:10.657017+00:00",
+            "quote": "For County Audit or (V ote for not mor e than 1) Jessica E. Miranda \n\n> Democratic"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "removals": [],
+      "districtMemberships": [
+        {
+          "id": "oh-ba01-hamilton-appeals-district-1",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:hamilton",
+          "districtOcdId": "ocd-division/country:us/state:oh/court_of_appeals:1",
+          "provenance": {
+            "sourceUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+            "sourceOrg": "Ohio General Assembly",
+            "collectedAt": "2026-11-03T07:18:41.140660+00:00",
+            "verifiedAt": "2026-11-03T07:18:41.140660+00:00",
+            "quote": "First district: Hamilton"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:26:28.418278+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+        "finalUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+        "publisher": "Hamilton County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "45731bdb907aa30b45b39fd4df11c0b2a46163babb6311545f2137f895785c45",
+        "retrievedAt": "2026-11-03T07:17:10.657017+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete current official Hamilton County November 3, 2026 sample PDF, four physical pages (three printed pages plus blank reverse). Public static precinct PDF route; no voter identity lookup. All seventeen local fields and twenty-seven ordinary names agree across all three captured witnesses; generic Write-in blank is not a person. Original native PDF currently403; capture hash covers exact complete public reader response."
+      },
+      {
+        "requestedUrl": "https://votehamiltoncountyohio.gov/files/ballots/N16010.pdf",
+        "finalUrl": "https://votehamiltoncountyohio.gov/files/ballots/N16010.pdf",
+        "publisher": "Hamilton County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "0a61cc51ee27e4735dbc3bce8db95926f8bac63ecab8cdac467c54dab0ed6ddf",
+        "retrievedAt": "2026-11-03T07:17:10.396557+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete current official Hamilton County November 3, 2026 sample PDF, four physical pages (three printed pages plus blank reverse). Public static precinct PDF route; no voter identity lookup. All seventeen local fields and twenty-seven ordinary names agree across all three captured witnesses; generic Write-in blank is not a person. Original native PDF currently403; capture hash covers exact complete public reader response."
+      },
+      {
+        "requestedUrl": "https://votehamiltoncountyohio.gov/files/ballots/N84010.pdf",
+        "finalUrl": "https://votehamiltoncountyohio.gov/files/ballots/N84010.pdf",
+        "publisher": "Hamilton County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "a9a871fc05a5beab40aede0110c61415aa903d48312b03a0cd919da961d55059",
+        "retrievedAt": "2026-11-03T07:18:11.917720+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete current official Hamilton County November 3, 2026 sample PDF, four physical pages (three printed pages plus blank reverse). Public static precinct PDF route; no voter identity lookup. All seventeen local fields and twenty-seven ordinary names agree across all three captured witnesses; generic Write-in blank is not a person. Original native PDF currently403; capture hash covers exact complete public reader response."
+      },
+      {
+        "requestedUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/10/November-2026-All-Certified-Candidates-Profile-.pdf",
+        "finalUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/10/November-2026-All-Certified-Candidates-Profile-.pdf",
+        "publisher": "Hamilton County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "16e937130de50739ce99e901d5c949b0cf6b75922e4184c0f8f2d2fe497fe950",
+        "retrievedAt": "2026-11-03T07:16:47.236701+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official October16 certified six-page list. Local inventory seventeen offices, twenty-seven ordinary candidates and one declared write-in. Roster is not an actual sample and addresses never enter provenance quotes. Nomination parties are kept in a separate roster inventory; only printed party labels populate ordinary sample records."
+      },
+      {
+        "requestedUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+        "finalUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+        "publisher": "Ohio General Assembly",
+        "httpStatus": 200,
+        "rawHash": "3d12dc79cf581f0136ce0cca5aacde4599b36393360bec27f9d613bda607960d",
+        "retrievedAt": "2026-11-03T07:18:41.140660+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current native Ohio Revised Code2501.01(A): First district: Hamilton. Exact held judicial district identity and whole-county membership reused, not a new county-wide replacement OCD."
+      }
+    ]
+  }
+}

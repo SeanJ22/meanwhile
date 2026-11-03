@@ -1,0 +1,216 @@
+{
+  "routes": [
+    {
+      "requestedUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/campaign-media/",
+      "finalUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/campaign-media/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:18:12.397584+00:00",
+      "sha256": "2519d216153b536bdde54e512ae03a922d3fb76745e51b77acdd162b4feb6983",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "campaign-reader"
+    },
+    {
+      "requestedUrl": "https://www.supremecourt.ohio.gov/courts/judicial-system/ohio-court-of-appeals/",
+      "finalUrl": "https://www.supremecourt.ohio.gov/courts/judicial-system/ohio-court-of-appeals/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:18:36.874160+00:00",
+      "sha256": "500fa1da2593a30303e8e776e9249857c194632f944fc36e15a6120b11a6a42a",
+      "contentType": "text/html; charset=utf-8",
+      "key": "court-directory"
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+      "finalUrl": "https://r.jina.ai/https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:18:38.001658+00:00",
+      "sha256": "f96285fd6ddeadca9eaf86b77d6ed562919086bb9fda70f394de1ec98d5937f2",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "court-law-reader"
+    },
+    {
+      "requestedUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+      "finalUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:18:41.140660+00:00",
+      "sha256": "3d12dc79cf581f0136ce0cca5aacde4599b36393360bec27f9d613bda607960d",
+      "contentType": "text/html;charset=UTF-8",
+      "key": "court-law"
+    },
+    {
+      "requestedUrl": "https://lawlibrary.hamiltoncountyohio.gov/research/self-help/which-court-does-what/",
+      "finalUrl": "https://lawlibrary.hamiltoncountyohio.gov/research/self-help/which-court-does-what/",
+      "httpStatus": 202,
+      "retrievedAt": "2026-11-03T07:18:36.517423+00:00",
+      "sha256": "825d9b86804a8b3441f191f6c11449f55653be211f1f2a6eed8dfb49c79c6104",
+      "contentType": "text/html",
+      "key": "court-which",
+      "portableResponseFile": "sources/failed-routes/court-which.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/november-2026-general-election/",
+      "finalUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/november-2026-general-election/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:16:01.239054+00:00",
+      "sha256": "e342236494a5e5f6589b9b7dcf1d8d013df4da90c89bd2073b1de0368d3faebd",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "election-reader"
+    },
+    {
+      "requestedUrl": "https://votehamiltoncountyohio.gov/november-2026-general-election/",
+      "finalUrl": "https://votehamiltoncountyohio.gov/november-2026-general-election/",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:15:17.011040+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "election",
+      "portableResponseFile": "sources/failed-routes/election.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/G26-46-Day-Notice-9-15-26.pdf",
+      "finalUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/G26-46-Day-Notice-9-15-26.pdf",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:16:45.952464+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "notice-native",
+      "portableResponseFile": "sources/failed-routes/notice-native.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/G26-46-Day-Notice-9-15-26.pdf",
+      "finalUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/G26-46-Day-Notice-9-15-26.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:16:46.848972+00:00",
+      "sha256": "e1d7271b456ee43150ae225e3ce45ba4644038e1c1d3b6dc3fd2e115ac7ee8de",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "notice-reader"
+    },
+    {
+      "requestedUrl": "https://votehamiltoncountyohio.gov/robots.txt",
+      "finalUrl": "https://votehamiltoncountyohio.gov/robots.txt",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:15:59.382895+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "robots",
+      "portableResponseFile": "sources/failed-routes/robots.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/10/November-2026-All-Certified-Candidates-Profile-.pdf",
+      "finalUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/10/November-2026-All-Certified-Candidates-Profile-.pdf",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:16:45.940323+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "roster-native",
+      "portableResponseFile": "sources/failed-routes/roster-native.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/wp-content/uploads/2026/10/November-2026-All-Certified-Candidates-Profile-.pdf",
+      "finalUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/wp-content/uploads/2026/10/November-2026-All-Certified-Candidates-Profile-.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:16:47.236701+00:00",
+      "sha256": "16e937130de50739ce99e901d5c949b0cf6b75922e4184c0f8f2d2fe497fe950",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "roster-reader"
+    },
+    {
+      "requestedUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+      "finalUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:17:09.134483+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "sample-06020-native",
+      "portableResponseFile": "sources/failed-routes/sample-06020-native.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+      "finalUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:17:10.657017+00:00",
+      "sha256": "45731bdb907aa30b45b39fd4df11c0b2a46163babb6311545f2137f895785c45",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "sample-06020-reader"
+    },
+    {
+      "requestedUrl": "https://votehamiltoncountyohio.gov/files/ballots/N16010.pdf",
+      "finalUrl": "https://votehamiltoncountyohio.gov/files/ballots/N16010.pdf",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:17:09.117521+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "sample-16010-native",
+      "portableResponseFile": "sources/failed-routes/sample-16010-native.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/files/ballots/N16010.pdf",
+      "finalUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/files/ballots/N16010.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:17:10.396557+00:00",
+      "sha256": "0a61cc51ee27e4735dbc3bce8db95926f8bac63ecab8cdac467c54dab0ed6ddf",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "sample-16010-reader"
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/files/ballots/N84010.pdf",
+      "finalUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/files/ballots/N84010.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:18:11.917720+00:00",
+      "sha256": "a9a871fc05a5beab40aede0110c61415aa903d48312b03a0cd919da961d55059",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "sample-84010-reader"
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/sample-ballot/",
+      "finalUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/sample-ballot/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:17:19.653749+00:00",
+      "sha256": "b2291dcf64c5c142da5fbe7dec22e85db1a0b36cbd005704f6187df5331f6829",
+      "requestHeaders": {
+        "X-Return-Format": "html"
+      },
+      "key": "sample-index-html"
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/sample-ballot/",
+      "finalUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/sample-ballot/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:16:01.743660+00:00",
+      "sha256": "59a199123ff416e418819e394e0498a18fa68ee3502a9e2bd92e5049161cc9cd",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "sample-index-reader"
+    },
+    {
+      "requestedUrl": "https://votehamiltoncountyohio.gov/sample-ballot/",
+      "finalUrl": "https://votehamiltoncountyohio.gov/sample-ballot/",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:15:17.014280+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "sample-index",
+      "portableResponseFile": "sources/failed-routes/sample-index.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/assets/js/main-8ec6d1a976739431c9f5.min.js?ver=1.0.0",
+      "finalUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/assets/js/main-8ec6d1a976739431c9f5.min.js?ver=1.0.0",
+      "httpStatus": 422,
+      "retrievedAt": "2026-11-03T07:18:11.406359+00:00",
+      "sha256": "00f324892f3710c18df91fec4dbf1365ed6affbd03b31bc0b749769aebe0a4ba",
+      "contentType": "application/json; charset=utf-8",
+      "key": "sample-js-reader",
+      "portableResponseFile": "sources/failed-routes/sample-js-reader.response",
+      "notCandidateEvidence": true
+    }
+  ],
+  "voterIdentitySubmitted": false,
+  "personalVoterRecordAcquired": false,
+  "sourceMethod": "Held exact static county sample URL led to current public PDF reader capture. Two more public static precinct URLs corroborate every field. Public lookup form inspected only; no identity fields submitted."
+}

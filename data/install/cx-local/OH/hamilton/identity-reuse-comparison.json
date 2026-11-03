@@ -1,0 +1,73 @@
+{
+  "inputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "sha256": "9a4084f3a393fb6226baa24189995bb862011d115760213c91a7b54fb5748182",
+      "contestsRead": 223
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/OH/cuyahoga/ballot-input/oh.json",
+      "sha256": "0808b69b23ee560a0454c51f28ea8a2f54dbeaf775f306672bbce048db2b81a3",
+      "contestsRead": 25
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/OH/franklin/ballot-input/oh.json",
+      "sha256": "69ff014b19249104dc9c549efbd2312689acf62454a83eb006199a88e48ed57d",
+      "contestsRead": 11
+    }
+  ],
+  "reusedOfficeIds": [
+    "oh-ba01-ohio-court-of-appeals-judge-court-of-appeals-1st-district-2-9-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-4-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-13-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-drug-court-divison-1-3-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29",
+    "oh-ba01-hamilton-county-county-commissioner-1-1-2027",
+    "oh-ba01-hamilton-county-county-auditor-3-8-2027"
+  ],
+  "reusedOrdinaryCandidateIds": [
+    "oh-ba01-ohio-court-of-appeals-judge-court-of-appeals-1st-district-2-9-2027-candidate-ginger-s-bock",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027-candidate-donte-johnson",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027-candidate-katie-casch",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027-candidate-betsy-sundermann",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027-candidate-christian-a-jenkins",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-4-2027-candidate-chris-wagner",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027-candidate-jennifer-branch",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027-candidate-roger-bouchard",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027-candidate-alan-c-triggs",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027-candidate-dennis-charles-mahoney",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027-candidate-latoya-s-maley",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027-candidate-robert-a-goering",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027-candidate-wende-c-cross",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-13-2027-candidate-alison-hatheway",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-drug-court-divison-1-3-2027-candidate-nicole-l-sanders",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027-candidate-ralph-winkler",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027-candidate-elizabeth-a-tye",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027-candidate-susan-luken",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027-candidate-kari-l-bloom",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027-candidate-tiffany-evans",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29-candidate-chris-mcdowell",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29-candidate-sarah-henry",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29-candidate-manisha-kotian",
+    "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29-candidate-leah-dinkelacker",
+    "oh-ba01-hamilton-county-county-commissioner-1-1-2027-candidate-jonathan-pearson",
+    "oh-ba01-hamilton-county-county-commissioner-1-1-2027-candidate-meeka-owens",
+    "oh-ba01-hamilton-county-county-auditor-3-8-2027-candidate-jessica-e-miranda"
+  ],
+  "reusedDeclaredWriteInId": "oh-ba01-hamilton-county-county-commissioner-1-1-2027-candidate-carrie-r-davis",
+  "newOfficeIds": [],
+  "newCandidateIds": [],
+  "heldOcdsPreserved": true,
+  "refreshedHeldMembershipId": "oh-ba01-hamilton-appeals-district-1",
+  "canonicalizationNote": "Existing court_of_appeals:1 OCD retained exactly. Do not mint court_of_appeals_district:1 alongside it merely to match a newer naming convention."
+}

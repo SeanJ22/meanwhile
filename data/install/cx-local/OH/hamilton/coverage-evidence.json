@@ -1,0 +1,361 @@
+{
+  "status": "COMPLETE_LOCAL_NAMED_BLOCKS_BY_CURRENT_CERTIFIED_INVENTORY_AND_THREE_ACTUAL_SAMPLE_WITNESSES",
+  "localCandidateFields": 17,
+  "ordinaryPrintedNames": 27,
+  "sampleWitnessCount": 3,
+  "physicalSamplePages": 12,
+  "completeOfficeOccurrencesCompared": 51,
+  "printedNameOccurrencesCompared": 81,
+  "allLocalBlocks": [
+    {
+      "contestId": "oh-ba01-ohio-court-of-appeals-judge-court-of-appeals-1st-district-2-9-2027",
+      "ocdId": "ocd-division/country:us/state:oh/court_of_appeals:1",
+      "printedTitle": "For Judge of the Court of Appeals (1st District) (Full term commencing 2-9-2027)",
+      "namedChoiceCount": 1,
+      "names": [
+        "Ginger S. Bock"
+      ],
+      "parties": [
+        "Democratic"
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofAppeals (1st District) (Full term commencing 2-9-2027) (V ote for not mo re than 1) Ginger S. Bock \n\n> Democratic",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Full term commencing 1-1-2027)",
+      "namedChoiceCount": 2,
+      "names": [
+        "Donte Johnson",
+        "Katie Casch"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 1-1-2027) (V ote for not mo re than 1) Dont e Johnson Katie Casch",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Full term commencing 1-2-2027)",
+      "namedChoiceCount": 2,
+      "names": [
+        "Betsy Sundermann",
+        "Christian A. Jenkins"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 1-2-2027) (V ote for not mo re than 1) Betsy Sundermann Christian A. Jenkins",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-4-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Full term commencing 1-4-2027)",
+      "namedChoiceCount": 1,
+      "names": [
+        "Chris Wagner"
+      ],
+      "parties": [
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 1-4-2027) (V ote for not mo re than 1) Chris Wagner",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Full term commencing 2-9-2027)",
+      "namedChoiceCount": 2,
+      "names": [
+        "Jennifer Branch",
+        "Roger Bouchard"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-9-2027) (V ote for not mo re than 1) Jennifer Branch Roger Boucha rd",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Full term commencing 2-10-2027)",
+      "namedChoiceCount": 2,
+      "names": [
+        "Alan C. Triggs",
+        "Dennis Charles Mahoney"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-10 -2027) (V ote for not mor e than 1) Alan C. Triggs Dennis Charles Mahoney",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Full term commencing 2-11-2027)",
+      "namedChoiceCount": 2,
+      "names": [
+        "Latoya S. Maley",
+        "Robert A. Goering"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-11 -2027) (V ote for not mor e than 1) Lat oya S. Maley Rober t A. Goering",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Full term commencing 2-12-2027)",
+      "namedChoiceCount": 1,
+      "names": [
+        "Wende C. Cross"
+      ],
+      "parties": [
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-12 -2027) (V ote for not mor e than 1) Wende C. Cr oss",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-13-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Full term commencing 2-13-2027)",
+      "namedChoiceCount": 1,
+      "names": [
+        "Alison Hatheway"
+      ],
+      "parties": [
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (Full term commencing 2-13 -2027) (V ote for not mor e than 1) Alison Hatheway",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-drug-court-divison-1-3-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Drug Court) (Full term commencing 1-3-2027)",
+      "namedChoiceCount": 1,
+      "names": [
+        "Nicole L. Sanders"
+      ],
+      "parties": [
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (Drug Cou rt) (Full term commencing 1-3-2027) (V ote for not mor e than 1) Nicole L. Sanders",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027)",
+      "namedChoiceCount": 2,
+      "names": [
+        "Ralph Winkler",
+        "Elizabeth A. Tye"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (P rob at eDivision) (Full term commencing 2-9-2027) (V ote for not mor e than 1) Ralph Winkler Elizabeth A. Tye",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Juvenile Division) (Full term commencing 2-14-2027)",
+      "namedChoiceCount": 2,
+      "names": [
+        "Susan Luken",
+        "Kari L. Bloom"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (J uv enile Division) (Full term commencing 2-14 -2027) (V ote for not mor e than 1) Susan Luk en Kari L. Bloom",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Dom Rel) (Full term commencing 7-1-2027)",
+      "namedChoiceCount": 1,
+      "names": [
+        "Tiffany Evans"
+      ],
+      "parties": [
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (Dom Rel) (Full term commencing 7-1-2027) (V ote for not mor e than 1) Tiffany Ev ans",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Unexpired term ending 1-3-2029)",
+      "namedChoiceCount": 2,
+      "names": [
+        "Chris McDowell",
+        "Sarah Henry"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (Unexpir ed term ending 1-3-2029) (V ote for not mor e than 1) Chris McDow ell Sarah Henr y",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For Judge of the Court of Common Pleas (Unexpired term ending 1-14-2029)",
+      "namedChoiceCount": 2,
+      "names": [
+        "Manisha Kotian",
+        "Leah Dinkelacker"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For Judge of the Cou rt ofCommon Pleas (Unexpir ed term ending 1-14 -2029) (V ote for not mor e than 1) Manisha Kotian Leah Dink elack er",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-county-commissioner-1-1-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For County Commissioner (Full term commencing 1-1-2027)",
+      "namedChoiceCount": 2,
+      "names": [
+        "Jonathan Pearson",
+        "Meeka Owens"
+      ],
+      "parties": [
+        "Republican",
+        "Democratic"
+      ],
+      "writeInSlotPrinted": true,
+      "quote": "For County Commissioner (Full term commencing 1-1-2027) (V ote for not mor e than 1) Jonathan Pearson \n\n> Republican\n\nMeeka Ow ens \n\n> Democratic Write -in",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-county-auditor-3-8-2027",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedTitle": "For County Auditor",
+      "namedChoiceCount": 1,
+      "names": [
+        "Jessica E. Miranda"
+      ],
+      "parties": [
+        "Democratic"
+      ],
+      "writeInSlotPrinted": false,
+      "quote": "For County Audit or (V ote for not mor e than 1) Jessica E. Miranda \n\n> Democratic",
+      "sourceKey": "sample-06020-reader",
+      "allThreeStylesCompared": true
+    }
+  ],
+  "candidateWhitespaceOnlyRepairs": [
+    {
+      "candidateId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027-candidate-donte-johnson",
+      "displayName": "Donte Johnson",
+      "reason": "Whitespace-only joining of current PDF reader glyph fragments. Original exact quote unchanged."
+    },
+    {
+      "candidateId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027-candidate-roger-bouchard",
+      "displayName": "Roger Bouchard",
+      "reason": "Whitespace-only joining of current PDF reader glyph fragments. Original exact quote unchanged."
+    },
+    {
+      "candidateId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027-candidate-latoya-s-maley",
+      "displayName": "Latoya S. Maley",
+      "reason": "Whitespace-only joining of current PDF reader glyph fragments. Original exact quote unchanged."
+    },
+    {
+      "candidateId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027-candidate-robert-a-goering",
+      "displayName": "Robert A. Goering",
+      "reason": "Whitespace-only joining of current PDF reader glyph fragments. Original exact quote unchanged."
+    },
+    {
+      "candidateId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027-candidate-wende-c-cross",
+      "displayName": "Wende C. Cross",
+      "reason": "Whitespace-only joining of current PDF reader glyph fragments. Original exact quote unchanged."
+    },
+    {
+      "candidateId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027-candidate-susan-luken",
+      "displayName": "Susan Luken",
+      "reason": "Whitespace-only joining of current PDF reader glyph fragments. Original exact quote unchanged."
+    },
+    {
+      "candidateId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027-candidate-tiffany-evans",
+      "displayName": "Tiffany Evans",
+      "reason": "Whitespace-only joining of current PDF reader glyph fragments. Original exact quote unchanged."
+    },
+    {
+      "candidateId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29-candidate-chris-mcdowell",
+      "displayName": "Chris McDowell",
+      "reason": "Whitespace-only joining of current PDF reader glyph fragments. Original exact quote unchanged."
+    },
+    {
+      "candidateId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29-candidate-sarah-henry",
+      "displayName": "Sarah Henry",
+      "reason": "Whitespace-only joining of current PDF reader glyph fragments. Original exact quote unchanged."
+    },
+    {
+      "candidateId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29-candidate-leah-dinkelacker",
+      "displayName": "Leah Dinkelacker",
+      "reason": "Whitespace-only joining of current PDF reader glyph fragments. Original exact quote unchanged."
+    },
+    {
+      "candidateId": "oh-ba01-hamilton-county-county-commissioner-1-1-2027-candidate-meeka-owens",
+      "displayName": "Meeka Owens",
+      "reason": "Whitespace-only joining of current PDF reader glyph fragments. Original exact quote unchanged."
+    }
+  ],
+  "unqueriedScope": "All individual county sample styles were not inventoried or captured. Countywide local-field completeness uses full current official certified list and46day office/electorate inventory; actual three styles independently prove every local complete block."
+}

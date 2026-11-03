@@ -1,0 +1,41 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+    "exactRegistryMatch": true,
+    "contestIds": [
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-4-2027",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-13-2027",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-drug-court-divison-1-3-2027",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29",
+      "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29",
+      "oh-ba01-hamilton-county-county-commissioner-1-1-2027",
+      "oh-ba01-hamilton-county-county-auditor-3-8-2027"
+    ],
+    "heldWholeMemberMembership": false,
+    "refreshedWholeMemberMembership": false,
+    "readerStatus": "EXISTING_REGISTRY_IDENTITY_LIVE_CHECK_NOT_PERFORMED",
+    "wholeCountyFallback": false,
+    "scopeEvidence": "Countywide electorate stated by official46day notice."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:oh/court_of_appeals:1",
+    "exactRegistryMatch": false,
+    "contestIds": [
+      "oh-ba01-ohio-court-of-appeals-judge-court-of-appeals-1st-district-2-9-2027"
+    ],
+    "heldWholeMemberMembership": true,
+    "refreshedWholeMemberMembership": true,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false,
+    "scopeEvidence": "Current Ohio Revised Code2501.01(A) expressly defines First District as Hamilton; whole-county membership is exact, not a fallback."
+  }
+]

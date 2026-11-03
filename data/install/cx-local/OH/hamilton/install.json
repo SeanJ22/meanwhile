@@ -1,0 +1,258 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "OH",
+  "county": "Hamilton County",
+  "countyFips": "39061",
+  "populationRank": 76,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:OH",
+  "inputDirectory": "ballot-input",
+  "counts": {
+    "localCandidateFields": 17,
+    "ordinaryPrintedNames": 27,
+    "reusedOfficeIds": 17,
+    "reusedOrdinaryCandidateIds": 27,
+    "reusedDeclaredWriteInIds": 1,
+    "newOfficeIds": 0,
+    "newCandidateIds": 0,
+    "currentSampleWitnesses": 3,
+    "physicalSamplePages": 12,
+    "officeOccurrencesCompared": 51,
+    "nameOccurrencesCompared": 81,
+    "unmatchedReaderDivisions": 1,
+    "declaredLocalWriteIns": 1
+  },
+  "subjects": [
+    {
+      "id": "oh-ba01-ohio-court-of-appeals-judge-court-of-appeals-1st-district-2-9-2027",
+      "title": "Ohio Court of Appeals \u2014 For Judge of the Court of Appeals (1st District) (Full term commencing 2-9-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/court_of_appeals:1",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Full term commencing 1-1-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Full term commencing 1-2-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-4-2027",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Full term commencing 1-4-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Full term commencing 2-9-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Full term commencing 2-10-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Full term commencing 2-11-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Full term commencing 2-12-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-13-2027",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Full term commencing 2-13-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-drug-court-divison-1-3-2027",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Drug Court) (Full term commencing 1-3-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Juvenile Division) (Full term commencing 2-14-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Dom Rel) (Full term commencing 7-1-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Unexpired term ending 1-3-2029)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29",
+      "title": "Hamilton County \u2014 For Judge of the Court of Common Pleas (Unexpired term ending 1-14-2029)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-county-commissioner-1-1-2027",
+      "title": "Hamilton County \u2014 For County Commissioner (Full term commencing 1-1-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    },
+    {
+      "id": "oh-ba01-hamilton-county-county-auditor-3-8-2027",
+      "title": "Hamilton County \u2014 For County Auditor",
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-06020-reader"
+    }
+  ],
+  "coverage": "County-complete local named office inventory, all seventeen fields proved by complete current sample blocks. Three current precinct witnesses compared; not an all-style audit. Current certified roster and46day notice contain no additional municipal/school/special candidate offices.",
+  "writeInReclassifications": [
+    {
+      "id": "oh-ba01-hamilton-county-county-commissioner-1-1-2027-candidate-carrie-r-davis",
+      "contestId": "oh-ba01-hamilton-county-county-commissioner-1-1-2027",
+      "name": "Carrie R. Davis",
+      "to": "QUALIFIED_DECLARED_WRITE_IN_SEPARATE",
+      "eligibility": "CONTINUES; NO_WITHDRAWAL_OR_REMOVAL_ASSERTED",
+      "readerDisplay": "PENDING_RIVER_SEPARATE_STATUS_DISPLAY"
+    }
+  ],
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:oh/county:hamilton",
+      "exactRegistryMatch": true,
+      "contestIds": [
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-4-2027",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-13-2027",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-drug-court-divison-1-3-2027",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29",
+        "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29",
+        "oh-ba01-hamilton-county-county-commissioner-1-1-2027",
+        "oh-ba01-hamilton-county-county-auditor-3-8-2027"
+      ],
+      "heldWholeMemberMembership": false,
+      "refreshedWholeMemberMembership": false,
+      "readerStatus": "EXISTING_REGISTRY_IDENTITY_LIVE_CHECK_NOT_PERFORMED",
+      "wholeCountyFallback": false,
+      "scopeEvidence": "Countywide electorate stated by official46day notice."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:oh/court_of_appeals:1",
+      "exactRegistryMatch": false,
+      "contestIds": [
+        "oh-ba01-ohio-court-of-appeals-judge-court-of-appeals-1st-district-2-9-2027"
+      ],
+      "heldWholeMemberMembership": true,
+      "refreshedWholeMemberMembership": true,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false,
+      "scopeEvidence": "Current Ohio Revised Code2501.01(A) expressly defines First District as Hamilton; whole-county membership is exact, not a fallback."
+    }
+  ],
+  "unmatchedRegistryDivisions": [
+    "ocd-division/country:us/state:oh/court_of_appeals:1"
+  ],
+  "proofFiles": [
+    "source-support.json",
+    "coverage-evidence.json",
+    "sample-style-audit.json",
+    "identity-reuse-comparison.json",
+    "official-local-roster-inventory.json",
+    "declared-write-ins.json",
+    "separate-status-records.json",
+    "geography-dependencies.json",
+    "source-route-log.json",
+    "sample-audit-validation.json",
+    "validation.json",
+    "HANDOFF.md",
+    "held-native-frame-audit.json"
+  ],
+  "limits": [
+    "Native county routes currently403; current facts use clearly labeled exact complete public reader captures, not invented original PDF hashes. Held October21 original PDF supplied as dated corroboration only.",
+    "No voter identity, registered address or voter record used. All individual precinct styles not captured; current full official candidate inventory establishes countywide local office coverage.",
+    "Carrie R. Davis remains an eligible declared write-in with exact held identity; reader separate display support remains pending.",
+    "Common Pleas sample omits party labels; certified nomination parties remain ancillary.",
+    "Current held statewide, congressional, legislative races, measures and explanations preserved. Parent/River owns installation, latest merge and live reader checks."
+  ],
+  "dataOnly": true,
+  "productionWrites": false,
+  "createdAt": "2026-11-03T07:26:28.418278+00:00",
+  "validation": {
+    "sourceHashes": "PASS",
+    "sourceCaptures": 12,
+    "savedSourceQuotes": 45,
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "currentThreeStyleCompleteBlockParity": "PASS",
+    "independentDatedNativePdfVectorFrameAudit": "PASS",
+    "unrelatedContestsPreserved": 206,
+    "unrelatedCandidateCoreFieldsPreserved": 405,
+    "productionWrites": "NONE",
+    "sourceHashesAndQuotes": "PASS: 12 captured sources and 45 exact saved-source quotes"
+  }
+}

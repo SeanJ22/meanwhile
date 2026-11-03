@@ -1,0 +1,29 @@
+{
+  "count": 1,
+  "candidates": [
+    {
+      "id": "oh-ba01-hamilton-county-county-commissioner-1-1-2027-candidate-carrie-r-davis",
+      "contestId": "oh-ba01-hamilton-county-county-commissioner-1-1-2027",
+      "givenName": "",
+      "familyName": "Carrie R. Davis",
+      "partyLabel": null,
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/10/November-2026-All-Certified-Candidates-Profile-.pdf",
+        "sourceOrg": "Hamilton County Board of Elections",
+        "collectedAt": "2026-11-03T07:16:47.236701+00:00",
+        "verifiedAt": "2026-11-03T07:16:47.236701+00:00",
+        "quote": "Carrie  R.  Davis (WI)  County Commissioner  1/1/2027  Write-in candidate"
+      },
+      "status": "QUALIFIED_DECLARED_WRITE_IN",
+      "printedAsOrdinaryChoice": false,
+      "heldIdentityPreserved": true,
+      "readerDisplay": "PENDING_SEPARATE_WRITE_IN_STATUS_DISPLAY",
+      "classificationNote": "Continues eligible as named declared write-in, outside printed ordinary choices. No withdrawal, disqualification or removal is asserted."
+    }
+  ],
+  "genericBlankIsPerson": false,
+  "statewideWriteIns": "Outside this local input; held statewide and legislative records remain unchanged."
+}

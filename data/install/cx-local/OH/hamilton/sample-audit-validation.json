@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-03T07:29:12.314937+00:00",
+  "currentCompleteSampleWitnesses": 3,
+  "currentPhysicalPdfPages": 12,
+  "allThreeStyleOfficeOccurrences": 51,
+  "allThreeStylePrintedNameOccurrences": 81,
+  "uniqueLocalOffices": 17,
+  "uniquePrintedNames": 27,
+  "declaredWriteInsSeparate": 1,
+  "heldOfficeIdentitiesReused": 17,
+  "heldOrdinaryCandidateIdentitiesReused": 27,
+  "heldWriteInIdentityPreserved": true,
+  "newIds": 0,
+  "whitespaceOnlyDisplayRepairs": 11,
+  "independentDatedNativePdfFrameAudit": "PASS: seventeen vector office frames, twenty-seven names, four printed party labels, one blank write-in option",
+  "safeRosterQuotesWithoutAddressColumns": 28,
+  "exactExistingCourtCountyMembershipPreserved": true,
+  "allCountyStylesAudited": false,
+  "productionWrites": false
+}

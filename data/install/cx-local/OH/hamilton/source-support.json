@@ -1,0 +1,245 @@
+[
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+    "finalUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+    "sourceCheckedAt": "2026-11-03T07:17:10.657017+00:00",
+    "sha256": "45731bdb907aa30b45b39fd4df11c0b2a46163babb6311545f2137f895785c45",
+    "sourceFile": "sources/sample-06020-reader.txt",
+    "excerptFile": "sources/sample-06020-reader.txt",
+    "excerptSha256": "45731bdb907aa30b45b39fd4df11c0b2a46163babb6311545f2137f895785c45",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader HTTP response bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hamilton County November 3, 2026 sample PDF, four physical pages (three printed pages plus blank reverse). Public static precinct PDF route; no voter identity lookup. All seventeen local fields and twenty-seven ordinary names agree across all three captured witnesses; generic Write-in blank is not a person. Original native PDF currently403; capture hash covers exact complete public reader response.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete reader text, including PDF glyph whitespace",
+      "requestHeaders": {}
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N16010.pdf",
+    "finalUrl": "https://votehamiltoncountyohio.gov/files/ballots/N16010.pdf",
+    "sourceCheckedAt": "2026-11-03T07:17:10.396557+00:00",
+    "sha256": "0a61cc51ee27e4735dbc3bce8db95926f8bac63ecab8cdac467c54dab0ed6ddf",
+    "sourceFile": "sources/sample-16010-reader.txt",
+    "excerptFile": "sources/sample-16010-reader.txt",
+    "excerptSha256": "0a61cc51ee27e4735dbc3bce8db95926f8bac63ecab8cdac467c54dab0ed6ddf",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader HTTP response bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hamilton County November 3, 2026 sample PDF, four physical pages (three printed pages plus blank reverse). Public static precinct PDF route; no voter identity lookup. All seventeen local fields and twenty-seven ordinary names agree across all three captured witnesses; generic Write-in blank is not a person. Original native PDF currently403; capture hash covers exact complete public reader response.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/files/ballots/N16010.pdf",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete reader text, including PDF glyph whitespace",
+      "requestHeaders": {}
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N84010.pdf",
+    "finalUrl": "https://votehamiltoncountyohio.gov/files/ballots/N84010.pdf",
+    "sourceCheckedAt": "2026-11-03T07:18:11.917720+00:00",
+    "sha256": "a9a871fc05a5beab40aede0110c61415aa903d48312b03a0cd919da961d55059",
+    "sourceFile": "sources/sample-84010-reader.txt",
+    "excerptFile": "sources/sample-84010-reader.txt",
+    "excerptSha256": "a9a871fc05a5beab40aede0110c61415aa903d48312b03a0cd919da961d55059",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader HTTP response bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hamilton County November 3, 2026 sample PDF, four physical pages (three printed pages plus blank reverse). Public static precinct PDF route; no voter identity lookup. All seventeen local fields and twenty-seven ordinary names agree across all three captured witnesses; generic Write-in blank is not a person. Original native PDF currently403; capture hash covers exact complete public reader response.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/files/ballots/N84010.pdf",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete reader text, including PDF glyph whitespace",
+      "requestHeaders": {}
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://votehamiltoncountyohio.gov/november-2026-general-election/",
+    "finalUrl": "https://votehamiltoncountyohio.gov/november-2026-general-election/",
+    "sourceCheckedAt": "2026-11-03T07:16:01.239054+00:00",
+    "sha256": "e342236494a5e5f6589b9b7dcf1d8d013df4da90c89bd2073b1de0368d3faebd",
+    "sourceFile": "sources/election-reader.txt",
+    "excerptFile": "sources/election-reader.txt",
+    "excerptSha256": "e342236494a5e5f6589b9b7dcf1d8d013df4da90c89bd2073b1de0368d3faebd",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader HTTP response bytes, not original origin PDF/HTML bytes",
+    "evidence": "Official current county general election linking page identifies October16 certified roster and46day notice; no personal voter queries.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/november-2026-general-election/",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete reader text, including PDF glyph whitespace",
+      "requestHeaders": {}
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://votehamiltoncountyohio.gov/sample-ballot/",
+    "finalUrl": "https://votehamiltoncountyohio.gov/sample-ballot/",
+    "sourceCheckedAt": "2026-11-03T07:16:01.743660+00:00",
+    "sha256": "59a199123ff416e418819e394e0498a18fa68ee3502a9e2bd92e5049161cc9cd",
+    "sourceFile": "sources/sample-index-reader.txt",
+    "excerptFile": "sources/sample-index-reader.txt",
+    "excerptSha256": "59a199123ff416e418819e394e0498a18fa68ee3502a9e2bd92e5049161cc9cd",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader HTTP response bytes, not original origin PDF/HTML bytes",
+    "evidence": "Official sample discovery page requires voter identity fields; none submitted. Public static current sample URLs acquired directly, led by held exact source URL.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/sample-ballot/",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete reader text, including PDF glyph whitespace",
+      "requestHeaders": {}
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://votehamiltoncountyohio.gov/sample-ballot/",
+    "finalUrl": "https://votehamiltoncountyohio.gov/sample-ballot/",
+    "sourceCheckedAt": "2026-11-03T07:17:19.653749+00:00",
+    "sha256": "b2291dcf64c5c142da5fbe7dec22e85db1a0b36cbd005704f6187df5331f6829",
+    "sourceFile": "sources/sample-index-html.html",
+    "excerptFile": "sources/sample-index-html.extract.txt",
+    "excerptSha256": "5ea80a4e2afba4249a934d4aba9c40918b99331ebe060f7a6080763a93fa863f",
+    "captureFormat": "JINA_RENDERED_HTML_CAPTURE",
+    "hashScope": "Complete exact reader HTTP response bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete public rendered HTML of official sample discovery page. Empty voter form only; no identity submitted or voter record acquired.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/sample-ballot/",
+      "readerHttpStatus": 200,
+      "textExtraction": "All UTF-8 DOM text nodes after removal of script/style/svg",
+      "requestHeaders": {
+        "X-Return-Format": "html"
+      }
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://votehamiltoncountyohio.gov/campaign-media/",
+    "finalUrl": "https://votehamiltoncountyohio.gov/campaign-media/",
+    "sourceCheckedAt": "2026-11-03T07:18:12.397584+00:00",
+    "sha256": "2519d216153b536bdde54e512ae03a922d3fb76745e51b77acdd162b4feb6983",
+    "sourceFile": "sources/campaign-reader.txt",
+    "excerptFile": "sources/campaign-reader.txt",
+    "excerptSha256": "2519d216153b536bdde54e512ae03a922d3fb76745e51b77acdd162b4feb6983",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader HTTP response bytes, not original origin PDF/HTML bytes",
+    "evidence": "Official campaign toolbox links public county precinct/district mapping resources. No voter list acquired.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/campaign-media/",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete reader text, including PDF glyph whitespace",
+      "requestHeaders": {}
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/G26-46-Day-Notice-9-15-26.pdf",
+    "finalUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/G26-46-Day-Notice-9-15-26.pdf",
+    "sourceCheckedAt": "2026-11-03T07:16:46.848972+00:00",
+    "sha256": "e1d7271b456ee43150ae225e3ce45ba4644038e1c1d3b6dc3fd2e115ac7ee8de",
+    "sourceFile": "sources/notice-reader.txt",
+    "excerptFile": "sources/notice-reader.txt",
+    "excerptSha256": "e1d7271b456ee43150ae225e3ce45ba4644038e1c1d3b6dc3fd2e115ac7ee8de",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader HTTP response bytes, not original origin PDF/HTML bytes",
+    "evidence": "Current official14page46day federal write-in notice: complete local office inventory and exact Hamilton County electorate for all local candidate fields. Municipal/school/special sections contain questions rather than additional candidate offices.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/G26-46-Day-Notice-9-15-26.pdf",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete reader text, including PDF glyph whitespace",
+      "requestHeaders": {}
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.supremecourt.ohio.gov/courts/judicial-system/ohio-court-of-appeals/",
+    "finalUrl": "https://www.supremecourt.ohio.gov/courts/judicial-system/ohio-court-of-appeals/",
+    "sourceCheckedAt": "2026-11-03T07:18:36.874160+00:00",
+    "sha256": "500fa1da2593a30303e8e776e9249857c194632f944fc36e15a6120b11a6a42a",
+    "sourceFile": "sources/court-directory.html",
+    "excerptFile": "sources/court-directory.extract.txt",
+    "excerptSha256": "df2ac5ed2a945b87ae8d7aac71ac4cc3bd507935a2f6efa905623c25ba789267",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current native Ohio Supreme Court directory independently confirms First District County: Hamilton.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "All UTF-8 DOM text nodes after removal of script/style/svg",
+      "requestHeaders": {}
+    }
+  },
+  {
+    "role": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT",
+    "sourceUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/10/November-2026-All-Certified-Candidates-Profile-.pdf",
+    "finalUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/10/November-2026-All-Certified-Candidates-Profile-.pdf",
+    "sourceCheckedAt": "2026-11-03T07:16:47.236701+00:00",
+    "sha256": "16e937130de50739ce99e901d5c949b0cf6b75922e4184c0f8f2d2fe497fe950",
+    "sourceFile": "sources/roster-reader.txt",
+    "excerptFile": "sources/roster-reader.txt",
+    "excerptSha256": "16e937130de50739ce99e901d5c949b0cf6b75922e4184c0f8f2d2fe497fe950",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader HTTP response bytes, not original origin PDF/HTML bytes",
+    "evidence": "Current official October16 certified six-page list. Local inventory seventeen offices, twenty-seven ordinary candidates and one declared write-in. Roster is not an actual sample and addresses never enter provenance quotes. Nomination parties are kept in a separate roster inventory; only printed party labels populate ordinary sample records.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://votehamiltoncountyohio.gov/wp-content/uploads/2026/10/November-2026-All-Certified-Candidates-Profile-.pdf",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete reader text, including PDF glyph whitespace",
+      "requestHeaders": {}
+    }
+  },
+  {
+    "role": "GEOGRAPHY_AUTHORITY",
+    "sourceUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+    "finalUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+    "sourceCheckedAt": "2026-11-03T07:18:41.140660+00:00",
+    "sha256": "3d12dc79cf581f0136ce0cca5aacde4599b36393360bec27f9d613bda607960d",
+    "sourceFile": "sources/court-law.html",
+    "excerptFile": "sources/court-law.extract.txt",
+    "excerptSha256": "14c09cbdd97e431241feb0b28b64148d72a4489995df80dfa6351488fb3f38af",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current native Ohio Revised Code2501.01(A): First district: Hamilton. Exact held judicial district identity and whole-county membership reused, not a new county-wide replacement OCD.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "All UTF-8 DOM text nodes after removal of script/style/svg",
+      "requestHeaders": {}
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+    "finalUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+    "sourceCheckedAt": "2026-10-21T00:22:56.999629+00:00",
+    "sha256": "76df955b3c436e8a6352f65a9ace53201262ce51310c9a0d472cd17a08fc4e98",
+    "sourceFile": "sources/held-native-sample.pdf",
+    "excerptFile": "sources/held-native-sample.extract.txt",
+    "excerptSha256": "f40b65346c0ca4ecf368257f523261270659c4dcaced5e60a7566f18fd6bbbf2",
+    "captureFormat": "HELD_PREVIOUS_NATIVE_PDF_CAPTURE",
+    "hashScope": "Original PDF HTTP bytes captured October21,2026, not newly acquired native bytes",
+    "evidence": "Held original71KB four-page sample, read before work. Current November3 exact reader captures confirm unchanged local names/fields. Used only for independent native-PDF corroboration; current facts cite current reader capture and its actual hash/time.",
+    "captureMetadata": {
+      "requestedUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+      "finalUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-21T00:22:56.999629+00:00",
+      "rawHash": "76df955b3c436e8a6352f65a9ace53201262ce51310c9a0d472cd17a08fc4e98",
+      "contentType": "application/pdf"
+    }
+  }
+]

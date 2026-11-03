@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T07:34:46.788636+00:00",
+  "preparedAt": "2026-11-03T07:35:00.024415+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1724,6 +1724,20 @@
       "refreshedContests": 19,
       "sourceInputSha256": "5ce86022b2f38b49af449809a47d01ab314bb51cebfb2538bcef496145050bd6",
       "coverage": "COMPLETE_LOCAL_NAMED_BLOCKS_IN_ALL_11_CURRENT_COUNTY_POSTED_COMPOSITE_ENTITY_SAMPLES"
+    },
+    {
+      "state": "OH",
+      "county": "Hamilton County",
+      "populationRank": 76,
+      "manifest": "OH/hamilton/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 17,
+      "measureContests": 0,
+      "candidacies": 27,
+      "newContests": 0,
+      "refreshedContests": 17,
+      "sourceInputSha256": "c365ead7094aa551da6d23feeb9d448a8dc103ff632e1e13484d42219255bae4",
+      "coverage": "County-complete local named office inventory, all seventeen fields proved by complete current sample blocks. Three current precinct witnesses compared; not an all-style audit. Current certified roster and46day notice contain no additional municipal/school/special candidate offices."
     }
   ],
   "sourceReviewCounties": [
@@ -1778,17 +1792,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 67,
-    "packetsPrepared": 68,
-    "candidateAndRetentionContests": 3553,
+    "countiesPrepared": 68,
+    "packetsPrepared": 69,
+    "candidateAndRetentionContests": 3570,
     "measureContests": 115,
-    "candidacyEntries": 7916,
+    "candidacyEntries": 7943,
     "newContestEntriesAgainstCheckedInBaseline": 2966,
-    "distinctPreparedContestIds": 3607,
-    "distinctPreparedCandidateIds": 7793,
+    "distinctPreparedContestIds": 3624,
+    "distinctPreparedCandidateIds": 7820,
     "distinctNewContestsAgainstCheckedInBaseline": 2934,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 69
+    "distinctCountyHandoffs": 70
   },
   "remainingWork": [
     {

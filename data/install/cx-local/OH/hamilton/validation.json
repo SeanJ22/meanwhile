@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-11-03T07:34:58.357Z",
+  "state": "OH",
+  "sources": 12,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 45,
+  "newContests": 0,
+  "refreshedContests": 17,
+  "candidacies": 27,
+  "pdfNameWhitespaceNormalizations": 11,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 206,
+  "unrelatedCandidateCoreFieldsPreserved": 405,
+  "unrelatedCandidateAliasEnrichments": 412,
+  "unmatchedReaderDivisionCount": 1,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:oh/court_of_appeals:1"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:oh/court_of_appeals:1"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

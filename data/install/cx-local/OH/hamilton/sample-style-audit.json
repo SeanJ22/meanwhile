@@ -1,0 +1,26 @@
+[
+  {
+    "sourceKey": "sample-06020-reader",
+    "numberOfPdfPages": 4,
+    "localFields": 17,
+    "ordinaryPrintedNames": 27,
+    "localWriteInSlots": 1,
+    "completeNamedListMatch": "PASS"
+  },
+  {
+    "sourceKey": "sample-16010-reader",
+    "numberOfPdfPages": 4,
+    "localFields": 17,
+    "ordinaryPrintedNames": 27,
+    "localWriteInSlots": 1,
+    "completeNamedListMatch": "PASS"
+  },
+  {
+    "sourceKey": "sample-84010-reader",
+    "numberOfPdfPages": 4,
+    "localFields": 17,
+    "ordinaryPrintedNames": 27,
+    "localWriteInSlots": 1,
+    "completeNamedListMatch": "PASS"
+  }
+]

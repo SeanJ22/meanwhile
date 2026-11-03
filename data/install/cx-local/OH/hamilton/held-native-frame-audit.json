@@ -1,0 +1,301 @@
+{
+  "status": "PASS",
+  "originalSourceCheckedAt": "2026-10-21T00:22:56.999629+00:00",
+  "originalSourceHash": "76df955b3c436e8a6352f65a9ace53201262ce51310c9a0d472cd17a08fc4e98",
+  "method": "Vector office-frame and option-oval coordinates from dated held native PDF, independent of current reader-text parser. All seventeen field titles, twenty-seven names and four printed party labels agree with all three current reader captures. This is corroboration, not a new native capture.",
+  "fields": [
+    {
+      "contestId": "oh-ba01-ohio-court-of-appeals-judge-court-of-appeals-1st-district-2-9-2027",
+      "frame": [
+        47.625,
+        325.875,
+        213.375,
+        436.875
+      ],
+      "names": [
+        "Ginger S. Bock"
+      ],
+      "parties": [
+        "Democratic"
+      ],
+      "optionOvalCount": 1
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027",
+      "frame": [
+        47.625,
+        437.625,
+        213.375,
+        561.375
+      ],
+      "names": [
+        "Donte Johnson",
+        "Katie Casch"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "optionOvalCount": 2
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027",
+      "frame": [
+        47.625,
+        562.125,
+        213.375,
+        685.875
+      ],
+      "names": [
+        "Betsy Sundermann",
+        "Christian A. Jenkins"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "optionOvalCount": 2
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-4-2027",
+      "frame": [
+        47.625,
+        686.625,
+        213.375,
+        784.125
+      ],
+      "names": [
+        "Chris Wagner"
+      ],
+      "parties": [
+        null
+      ],
+      "optionOvalCount": 1
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027",
+      "frame": [
+        47.625,
+        784.875,
+        213.375,
+        908.625
+      ],
+      "names": [
+        "Jennifer Branch",
+        "Roger Bouchard"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "optionOvalCount": 2
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027",
+      "frame": [
+        220.875,
+        94.125,
+        386.625,
+        234.375
+      ],
+      "names": [
+        "Alan C. Triggs",
+        "Dennis Charles Mahoney"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "optionOvalCount": 2
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027",
+      "frame": [
+        220.875,
+        235.125,
+        386.625,
+        358.875
+      ],
+      "names": [
+        "Latoya S. Maley",
+        "Robert A. Goering"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "optionOvalCount": 2
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027",
+      "frame": [
+        220.875,
+        359.625,
+        386.625,
+        457.125
+      ],
+      "names": [
+        "Wende C. Cross"
+      ],
+      "parties": [
+        null
+      ],
+      "optionOvalCount": 1
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-13-2027",
+      "frame": [
+        220.875,
+        457.875,
+        386.625,
+        555.375
+      ],
+      "names": [
+        "Alison Hatheway"
+      ],
+      "parties": [
+        null
+      ],
+      "optionOvalCount": 1
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-drug-court-divison-1-3-2027",
+      "frame": [
+        220.875,
+        556.125,
+        386.625,
+        669.375
+      ],
+      "names": [
+        "Nicole L. Sanders"
+      ],
+      "parties": [
+        null
+      ],
+      "optionOvalCount": 1
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027",
+      "frame": [
+        220.875,
+        670.125,
+        386.625,
+        809.625
+      ],
+      "names": [
+        "Ralph Winkler",
+        "Elizabeth A. Tye"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "optionOvalCount": 2
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027",
+      "frame": [
+        220.875,
+        810.375,
+        386.625,
+        949.875
+      ],
+      "names": [
+        "Susan Luken",
+        "Kari L. Bloom"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "optionOvalCount": 2
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027",
+      "frame": [
+        393.375,
+        94.125,
+        559.125,
+        207.375
+      ],
+      "names": [
+        "Tiffany Evans"
+      ],
+      "parties": [
+        null
+      ],
+      "optionOvalCount": 1
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29",
+      "frame": [
+        393.375,
+        208.125,
+        559.125,
+        331.875
+      ],
+      "names": [
+        "Chris McDowell",
+        "Sarah Henry"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "optionOvalCount": 2
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29",
+      "frame": [
+        393.375,
+        332.625,
+        559.125,
+        456.375
+      ],
+      "names": [
+        "Manisha Kotian",
+        "Leah Dinkelacker"
+      ],
+      "parties": [
+        null,
+        null
+      ],
+      "optionOvalCount": 2
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-county-commissioner-1-1-2027",
+      "frame": [
+        393.375,
+        457.125,
+        559.125,
+        643.875
+      ],
+      "names": [
+        "Jonathan Pearson",
+        "Meeka Owens"
+      ],
+      "parties": [
+        "Republican",
+        "Democratic"
+      ],
+      "optionOvalCount": 3
+    },
+    {
+      "contestId": "oh-ba01-hamilton-county-county-auditor-3-8-2027",
+      "frame": [
+        393.375,
+        644.625,
+        559.125,
+        723.375
+      ],
+      "names": [
+        "Jessica E. Miranda"
+      ],
+      "parties": [
+        "Democratic"
+      ],
+      "optionOvalCount": 1
+    }
+  ],
+  "blankWriteInOptions": 1
+}
